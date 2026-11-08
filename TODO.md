@@ -36,7 +36,14 @@ injective escaped encoding. Stage A is installed (brief 710): the
 epoch-owned synchronous family index over the seven recorder seams, with the
 disabled path cheaper per call than base on all six seams, the stack
 identity exact and the whole-workload instruction total below every base
-draw; B renders, C accepts. The test
+draw. Stage B is installed (brief 711): the schema-v2 renderer over that
+index — the `N ∪ S ∪ A ∪ Z` union, the injective escaped keys, the mode
+header, all legacy bytes preserved — with the host workspace green at
+4,185/0/61. Stage C is queued behind a test-isolation repair (brief 712):
+the full lib at 8 threads flakes on both the stage-A base (5/12) and the
+candidate (3/12), because a lease test's process-global flags let
+concurrently running non-lease tests into profiling paths the lease does
+not gate. The test
 audit's Stage B and D03 are closed; LP05-LP08's promotion is done. The
 10-29 estimate in `docs/dev/security-hardening-progress.md` is pending a
 re-base (user ruling 2026-11-08: the Codex tier was upgraded and the
@@ -71,7 +78,17 @@ Test isolation, done:
   removal, and the gate's workspace is 4,048 passed / 0 failed. The record
   is in the brief;
 - the workspace thread-count measurement is done (2026-10-31); the default
-  is `RUST_TEST_THREADS=8` from the user ruling 2026-11-01.
+  is `RUST_TEST_THREADS=8` from the user ruling 2026-11-01;
+- **open — the lease's exclusion is incomplete (brief 712).** The stage-A
+  base flakes 5 of 12 full-lib runs at 8 threads (`lp05_resumed_finish`,
+  `lp05_a2_association_resumed_error_is_not_some`, `lp06_a2_catch_ok`,
+  `lp06_a2_catch_bypass_match`, `matcher_pattern_deep_two_suspensions`) and
+  the brief-711 candidate 3 of 12; both are green at 1 thread. A lease test
+  swaps process-global `AtomicU8` profiling flags for its duration, and
+  tests that do not take the lease still execute profiling paths the lease
+  does not gate (`profile_queue::attach_boundary`'s unconditional debug
+  assertion is one). The repair is design-first, with a repeated-run
+  falsifier on both arms.
 
 **The director's gate is a script** (brief-631, director tooling):
 `scripts/director-gate.py run NNN --stage S` runs the scope check, fmt, the

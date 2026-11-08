@@ -3858,3 +3858,59 @@ Method:
   binary moved 15 equal-call rows. A zero-tolerance all-function bar is a
   demand to fix noise; the bar belongs to the changed code's own path and
   the whole-workload total.
+
+## 2026-11-08 — LP08 schema-v2 stage B: the exhaustive snapshot renderer (brief 711)
+
+Stage B turns stage A's collected state into the published form. Every
+lexically configured `RumProfileSnapshot` call now emits one additive
+`rum-profile schema-v2 ` line — guest list text, built and never evaluated —
+before the legacy lexical header: a header (`schema`, label, epoch id or
+Null, validity, the sticky `diagnostic-cap` reason, the `+`-joined effective
+mode) followed by `logical`, `telemetry` and `durations` sections over the
+union `N ∪ S ∪ A ∪ Z`. Native rows come from the Q1 `Epoch::rows()` fold
+(the observing thread's running intervals included, basis named); the side
+index keeps its four stored duration slots; the Module aliases are projected
+once; the eight LP01 scalars are present as defaults and replaced, never
+duplicated. Keys encode context, name and semantic identity injectively
+(`%`, `|`, `,`, `(`, `)`, `#` escaped; the stored context's trailing
+backtick is literal), sort by encoded text, and a second owner or the unused
+native `RuleRhs` variant faults the epoch visibly instead of guessing a
+vector.
+
+The gate:
+
+- Scope: 16 modified + 12 added files, all inside the brief's MAY list;
+  `basic.rs` untouched, no public API/unsafe/manifest change, no new
+  warning. `Epoch::rows()` and `segments::running` are production-visible
+  with their bodies unchanged; the two obsolete cfg inventory rows retire
+  by canonical replay.
+- Contract: the five-mode host samples decode against an independent
+  enum-field oracle; 19-row union, 96-key no-truncation, identities 3/9,
+  adversarial context/name pairs, two-process determinism, the mid-interval
+  duration sandwich, and the cap/absent/sticky/collision lifecycles.
+- Cost: the four Function rows and the stack identity (18,304 / 12,392,
+  residual 0) match stage A; the change has no disabled-path call edge — the
+  new module is unreachable with profiling off and the one added call sits
+  inside `if lexical_configured`.
+- Acceptance: the host workspace at 8 threads is 4,185 passed / 0 failed /
+  61 ignored over 54 binaries at 6.90 GB; LP01 five modes keep 88,795
+  records with zero semantic differences; host legacy bytes are identical
+  over 30 deferred cases; ten mutants are red at 8 and 1 and restored.
+
+The finding: the worker's 8-thread workspace red (two runtime tests that
+pass at 1 thread) is a pre-existing test-isolation class, not stage B's. The
+stage-A base flakes 5 of 12 full-lib runs at 8 threads against the
+candidate's 3 of 12. A lease test swaps process-global profiling flags for
+its duration; non-lease tests running concurrently execute profiling paths
+the lease does not gate (`profile_queue::attach_boundary`'s unconditional
+debug assertion is one). Brief 712 owns the class-level repair; stage C is
+queued behind it.
+
+Method:
+
+- *A pinned example can contradict its own formula.* Four worked keys
+  omitted the context backtick that `Symbol::context()` stores; the STOP was
+  correct and the formula stood. Correct the instance, keep the invariant.
+- *A flaky gate needs a control on the same axis.* The worker's filtered
+  two-test base run could not see a scheduling flake; the full-suite control
+  on the untouched base at the same thread count is what named the class.

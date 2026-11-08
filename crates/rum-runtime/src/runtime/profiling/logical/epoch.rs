@@ -9,11 +9,6 @@ use std::sync::{
 };
 use std::time::Instant;
 
-#[cfg(any(
-    test,
-    feature = "test-builtin-memory-growth",
-    feature = "test-continuation-slots"
-))]
 mod snapshot;
 
 #[cfg(test)]
@@ -169,6 +164,25 @@ impl Epoch {
         self.data
             .lock()
             .unwrap()
+            .events
+            .iter()
+            .map(|(key, value)| (key, *value))
+            .collect()
+    }
+
+    /// Bounded side-index copy for publication; encoding happens after unlock.
+    pub(in crate::runtime) fn events(&self) -> Vec<(EventKey, EventValue)> {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+            return Vec::new();
+        }
+        self.data
+            .lock()
+            .unwrap_or_else(|poison| poison.into_inner())
             .events
             .iter()
             .map(|(key, value)| (key, *value))
@@ -396,6 +410,23 @@ pub(in crate::runtime) fn existing() -> Option<Arc<Epoch>> {
         return None;
     }
     current_slot().lock().unwrap().epoch.clone()
+}
+
+/// Capture the current identity, including sticky initial failure, without
+/// creating an epoch or borrowing a replacement during publication.
+pub(in crate::runtime) fn publication_state() -> (Option<Arc<Epoch>>, Option<u64>) {
+    let slot = current_slot()
+        .lock()
+        .unwrap_or_else(|poison| poison.into_inner());
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+        return (None, None);
+    }
+    (slot.epoch.clone(), slot.failed.map(|id| id.0))
 }
 
 pub(in crate::runtime) fn current() -> Option<Arc<Epoch>> {

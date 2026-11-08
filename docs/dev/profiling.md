@@ -129,14 +129,117 @@ removing other values, trace events or ordering.
 
 ## Additive snapshot schema v2
 
-`RumProfileSnapshot` continues to return `Null` and emit diagnostics. The target
-adds a labelled schema-v2 epoch header with validity, followed by every logical
-key exactly once in stable key order. Logical rows include the family's final
-vector and explicit open, abandoned and cancelled accounting. Separate labelled
-sections carry execution telemetry and durations. Existing ranked human timing
-displays remain additional summaries; they cannot substitute for exhaustive
-rows. A snapshot's own entered invocation is open while the snapshot runs.
-No new guest builtin or public host type is required.
+`RumProfileSnapshot` continues to return `Null` and emit the legacy diagnostics.
+When lexical profiling is configured, each valid call additionally emits one
+line before the legacy lexical snapshot header:
+
+```text
+rum-profile schema-v2 {"schema",2,"label",L,"epoch",E,"validity",V,"mode",M,"logical",{ROW,...},"telemetry",{"faults",F,"rows",{TELEMETRY_ROW,...}},"durations",{"basis","epoch-accrued+observing-thread-running","rows",{DURATION_ROW,...}}}
+```
+
+The expression is guest list syntax built as text, never evaluated. `L` is the
+label: no argument or a nonstring argument uses `"snapshot"`; a string argument
+uses its text, including an empty string. Excess arity retains the existing
+invalid-call behavior and emits no snapshot. Strings escape quotes, backslashes,
+newline, CR and tab as `\"`, `\\`, `\n`, `\r`, `\t`; other characters are literal.
+There is no raw newline in the schema line. Legacy label formatting is unchanged.
+
+`E` is the captured epoch's decimal id, or `Null` if none exists. `V` is
+`"valid"`, `"invalid"` or `"absent"`. A failed initial allocation publishes its
+sticky failed id, `"validity","invalid","reason","diagnostic-cap","mode",M`,
+with empty row lists. Only initial allocation failure carries that reason field;
+freeing diagnostic memory does not repair it, and reset clears it. An absent
+epoch is never created by publication. An existing invalid epoch publishes its
+retained rows and fault count without a reason field; it cannot certify parity.
+The telemetry and duration wrappers remain present even when their rows are `{}`.
+
+`M` lists the effective family gates, joined by `+` in this order: `lexical`,
+`builtin-timing`, `rule-rhs-timing`, `definition-rule-timing`, `cache`. If none
+is active it is `"none"`. Legacy detail flags do not enter this token. A
+lexical-configured but deferred process still emits the line, with absent epoch
+and mode `none` when every family is inactive. With lexical unconfigured, no
+schema line is emitted. A snapshot's own entered invocation stays open while
+the snapshot runs **where its family's gate is enabled**; its builtin row has
+`open = 1` and no terminal outcome. The header states those effective gates.
+Snapshot neither finishes nor restarts any open record.
+
+Rows have these exact forms:
+
+```text
+ROW = {"<key>","vector",{v,...},"open",o,"abandoned",a,"cancelled",c}
+TELEMETRY_ROW = {"<key>",{v,...}}
+DURATION_ROW = {"<key>",{v,...}}
+```
+
+Every logical key appears exactly once in each section, in the same bytewise
+order of encoded key text. There is no top-N, row cap or deduplication of distinct
+semantic identities. Ranked human timing displays remain additional summaries.
+
+Symbols encode their components injectively, including semantic identity:
+
+```text
+symbol(s) = "s(" ESC(s.context()) "," ESC(s.name()) "," (s.identity() decimal | "n") ")"
+source(None) = "-"
+source(Some(s)) = symbol(s)
+ESC: '%'->"%25"  '|'->"%7C"  ','->"%2C"  '('->"%28"  ')'->"%29"  '#'->"%23"
+
+runtime|{phase}|{source}
+builtin|{symbol}|{source}|{arity}
+definition-rule|{kind}|{symbol}|{index}
+rule-rhs|{phase}|{source}
+definition-dispatch|{kind}|{symbol}|{source}
+counter|{name}
+cache|{NAME}
+cache-symbol|{event}|{symbol}
+cache-source|{event}|{symbol}
+```
+
+The trailing backtick in stored contexts is literal: for example,
+``builtin|s(System`,RumProfileSnapshot,n)|-|1`` and
+``definition-rule|down_value_rhs_eval|s(Global`,witness,n)|0``.
+Context/name concatenations, interner ids, addresses and thread identities never
+define key identity or ordering. Phase, kind, event and scalar names are the
+closed recorder identifiers; arity and index are decimal text.
+
+The publication union contains every native `Epoch::rows()` row, every stored
+synchronous side-index row, Module aliases and eight fixed scalar defaults.
+Native `runtime|module.eval.total|<source>` rows project once into
+`counter|eval_module`, summing calls and open/abandoned/cancelled across sources;
+each present source also projects `cache-source|eval_module_by_source|<symbol>`
+with calls, accounting and native durations. There is no second alias writer.
+
+The defaults are `counter|definition_rhs_eval`, `counter|eval_module`,
+`cache|EVALUATE_ENTRY_COUNT`, `cache|DOWN_VALUE_SCAN_COUNT`,
+`cache|DOWN_VALUE_APPLICATION_COUNT`, `cache|SUB_VALUE_APPLICATION_COUNT`,
+`cache|BUILTIN_APPLICATION_COUNT` and `cache|EVAL_MODULE_ENTRY_COUNT`.
+For an existing epoch each is present with vector `{0}`, accounting zero,
+empty telemetry and durations `{0,0}` until replaced by its actual scalar or
+Module projection. Defaults never add duplicate rows. A second owner of one
+encoded key visibly faults the epoch. The unused native `RuleRhs` variant also
+faults: native `ok/err` cannot stand for RHS `changed/unchanged`.
+
+Logical vector widths are runtime 7, builtin and definition-rule 3, rule-rhs 3,
+definition-dispatch 6 (in the family table's order), and counter/cache/
+cache-symbol/cache-source 1. Synchronous side rows have zero lifecycle accounting.
+Native telemetry has 14 fields: `input_required`, pauses, segments, then eleven
+abandonment reasons in native `Retire` index order. Side telemetry is the one
+`input_required` field; defaults and alias-only rows have empty telemetry.
+
+Native durations and Module source aliases have `{nanos,self_nanos}`. All side
+rows have four stored slots: runtime/source `{nanos,self_nanos,0,0}`, RHS/scalar
+`{nanos,0,0,0}`, dispatch `{prefilter_nanos,fast_match_nanos,compiled_matcher_nanos,
+rhs_substitution_nanos}`, and cache zeros. Reserved slots are not logical fields.
+The duration basis **epoch-accrued+observing-thread-running** is the native fold:
+accrued intervals plus the observing thread's currently running intervals.
+Other threads' in-flight intervals are outside that basis. After closure the
+native and rendered duration vectors agree exactly.
+
+Publication captures the epoch once, copies each index under its own lock, and
+encodes and formats after unlocking. No cross-family atomicity is claimed.
+Validity and faults are read after copying, so a reset during the copy invalidates
+the captured receipt. Temporary copies and text are bounded by the retained
+epoch's storage and are not charged to its 16 MiB diagnostic budget a second
+time. Publication adds no public builtin, host type or guest evaluation.
 
 LP01's hidden native observer is available only in tests or with the existing
 `test-continuation-slots` feature. It reads all storage maps and flags, including
@@ -201,7 +304,6 @@ terminal error, and resumed ancestor completions, source context and Module
 native reentry are recorded logically. Every surviving cell is still red on a
 changed loss, unexpected key/vector, missing execution or duplicate.
 
-The public schema-v2 snapshot form is **not implemented yet**:
-`RumProfileSnapshot` still returns `Null` and emits the legacy diagnostics.
-That publication is the remaining LP08 obligation; the counter promotion does
-not depend on it.
+The public schema-v2 snapshot publishes the epoch-wide union described above;
+`RumProfileSnapshot` still returns `Null` and retains the legacy diagnostics.
+The counter promotion and its frozen oracle remain independent of publication.

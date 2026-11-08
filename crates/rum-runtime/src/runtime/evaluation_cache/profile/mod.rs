@@ -144,6 +144,12 @@ fn evaluation_cache_profile_enabled() -> bool {
     evaluation_cache_profile_configured() && evaluation_cache_profile_active()
 }
 
+impl Session {
+    pub(in crate::runtime) fn snapshot_cache_profile_enabled() -> bool {
+        evaluation_cache_profile_enabled()
+    }
+}
+
 #[inline]
 fn evaluation_cache_profile_configured() -> bool {
     match EVALUATION_CACHE_PROFILE_ENABLED.load(Ordering::Relaxed) {

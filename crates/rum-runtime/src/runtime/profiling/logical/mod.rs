@@ -9,6 +9,7 @@ pub(in crate::runtime) mod epoch;
 mod incoming;
 pub(in crate::runtime) mod index;
 pub(in crate::runtime) mod module;
+pub(in crate::runtime) mod publication;
 mod queue_api;
 mod record;
 pub(in crate::runtime) mod segments;

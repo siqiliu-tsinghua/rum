@@ -484,3 +484,110 @@ permission to add the private module and its tests. Continue exactly per the
 report's continuation action: install the canonical inventory output, replay
 every standing inventory, then run the functional gates, the ten mutants and
 the cost bars; nothing is accepted until the director's gate.
+
+## Director gate — 2026-11-08: stage B ACCEPTED; the parallel reds ruled
+
+### Scope and shape (diff read in full)
+
+16 tracked files modified (10 source/docs + 6 canonical inventories) and 12
+added (the private `publication/` module with `keys.rs`/`rows.rs`/
+`test_hooks.rs`, the seven-file `tests/publication/` module, and
+`crates/rum-host/tests/schema_v2_snapshot.rs`). Nothing outside the brief's
+MAY list. `debug_tools/basic.rs` untouched; `logical/mod.rs` gains one module
+declaration; `epoch.rs` removes the two ruled cfg guards, adds `events()`
+and `publication_state()` with the existing lease refusal, and leaves every
+body intact; `snapshot.rs` moves the test-only guard onto `assert_quiescent`;
+`summary.rs` adds the one call inside `if lexical_configured`;
+`evaluation_cache/profile/mod.rs` adds one gate accessor; `builtin_catalog/
+debug.rs` changes one description string, with the reference regenerated. No
+public API, feature, serde, manifest, dependency or `unsafe` change; no
+`unreachable!`/`expect`/panic in the production path; 0 new warnings (the
+three `register_test_*` dead-code warnings are identical on the base).
+
+Two director-brief corrections, both mine: the inventory scope line names
+`crates/rum-stdlib/src/tests/rum-retention/`, which does not exist; the
+canonical replay output lives in `ownership_graph/inventory/*` and
+`retention_closure/inventory/*`, and the ruling covered exactly the two cfg
+retirements. The promotion-set fingerprint moves are the canonical replay
+consequence of the one `Session` accessor, regenerated, never hand-edited.
+The module and test file splits are within the permission to add the private
+module and its tests.
+
+### What I reproduced myself
+
+- `report.py check 711`: OK, 2,353 citations; 7 PASS, 7 FLAGGED, 2 FAIL (the
+  two FAILs are the parallel workspace and its boundary step below).
+- The emitted grammar from the captured host samples, all five modes:
+  header order and `mode` tokens, injective escaped keys with the literal
+  context backtick (`s(System`,RumProfileSnapshot,n)`), `N ∪ S ∪ A ∪ Z` = 19
+  with equal keys summed, widths 7/3/3/3/6/1, telemetry 14/1/empty,
+  durations 2/4/2 with the exact basis token, Z defaults replaced not
+  duplicated, the own invocation open where its family is gated.
+- The runtime proofs and host test from the saved verdict lines, and the
+  native parity oracle: it compares decoded components with an independent
+  enum-field observer and bounds durations between the before/after folds.
+- Cost: re-parsed the raw two-build captures. The four Function rows match
+  the base exactly in own/incoming vectors and slopes (queued F6
+  `try_apply_function` 49; `finish_function_application` 57), both stack
+  arms print `18304 / 12392 / residual 0` at the same eight samples, and the
+  whole-workload deltas have opposite signs across builds (context under
+  Ruling 8). No fresh Callgrind this round is needed: the changed code has
+  no disabled-path call edge — the new module is unreachable with profiling
+  off and the one added call sits inside `if lexical_configured`.
+- The ten mutant reds and restored greens at 8 and 1 from the driver log;
+  the LP01 five-mode parents and host lifecycle from the acceptance driver
+  and the gate script's standing replay.
+- The gate script's nine deterministic steps, all PASS: fmt; check (the
+  three warnings are the pre-existing `register_test_*` dead-code ones,
+  identical on the base; the script reports no HEAD baseline this round);
+  ownership (self-reaching 61, UnknownHostPayload 79, UnknownConstruct
+  8,142; 0 replay rounds, nothing to regenerate); census 1,192
+  (11/1,143/38) paired with 0 retired, 0 new, 0 base-only, 0 cand-only;
+  oracle 1/0; standing LP01 1/0 and typed-slot 10/0; 68 fingerprints with
+  0 changed; both certificate feature builds pass with 0 promoted rows
+  merged; the 19 inventory tests pass against the same 1,192 frontier.
+- The final host workspace, my own run of the exact acceptance command
+  (the seven switch-gated skips) at 8 threads: **4,185 passed / 0 failed /
+  61 ignored over 54 test binaries, peak 6.90 GB of 14, rc=0**, with the
+  nine native ZeroMQ loopback tests green.
+
+### The parallel workspace reds — my ruling
+
+The worker's 8-thread workspace stopped on two runtime tests
+(`lp05_a2_association_resumed_error_is_not_some`,
+`matcher_pattern_deep_two_suspensions`); both pass at 1 thread, and the
+worker's serial run is red only on the nine sandbox socket denials. The
+worker's bounded base comparison filtered to those two tests is not a
+control for a scheduling flake.
+
+My control: the stage-A base `e9ba6dd7`, which contains none of this
+brief's changes, built with the same two test features, run as the full
+1393-test lib binary at 8 threads twelve times: **5 of 12 runs red**
+(`lp05_resumed_finish`, `lp05_a2_association_resumed_error_is_not_some`,
+`lp06_a2_catch_ok`, `lp06_a2_catch_bypass_match`,
+`matcher_pattern_deep_two_suspensions`). The candidate, same method:
+**3 of 12 runs red** (`lp07_lifecycle_reasons_scopes_and_storage`,
+`matcher_pattern_deep_two_suspensions`, a `guest_loading` session test).
+Both arms are green at 1 thread. The class is therefore pre-existing and
+not a regression of stage B.
+
+The mechanism the evidence supports: `engine_support::enabled()` swaps
+process-global `AtomicU8` profiling flags for a lease test's duration and
+holds the lease mutex; tests that do not take the lease still run
+concurrently and execute profiling paths while those flags are on. The
+lease refuses admitted epoch writes for unregistered threads at the epoch
+entry points, but not every profiling entry point is covered — the
+`profile_queue::attach_boundary` debug assertion is unconditional, and that
+is the assertion `matcher_pattern_deep_two_suspensions` trips. The exact
+ungated path for the lease tests' stray open row is the repair's first
+measurement, not a claim of this gate.
+
+**Ruling:** the two reds are not stage B's, and the acceptance bar is met
+on the host: my own run of the exact workspace command at 8 threads is
+green (4,185 / 0 / 61, 54 binaries, 6.90 GB, rc=0). A green draw does not
+make the class disappear, so a dedicated design-first brief (712) owns the
+class-level repair with a repeated-run falsifier on both arms; stage C is
+queued behind it because its own dispatch condition is a green workspace
+and one draw is not a stable gate. No assertion, skip or default was
+changed to reach this ruling.
+

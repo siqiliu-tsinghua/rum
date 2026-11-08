@@ -7,6 +7,7 @@ mod index;
 mod logical_totals;
 mod module;
 mod owner_filter;
+mod publication;
 mod queue_boundaries;
 mod record_engine;
 mod slot_boundary;

@@ -275,7 +275,7 @@ pub(super) const DEBUG_BUILTINS: &[BuiltinSpec] = &[
     .with_capability(Capability::Diagnostic),
     BuiltinSpec::ordinary(
         "RumProfileSnapshot",
-        "Internal diagnostic hook: prints rum runtime profile counters when profiling is enabled.",
+        "Internal diagnostic hook: returns Null and prints legacy profile diagnostics plus an exhaustive schema-v2 epoch snapshot when lexical profiling is configured.",
         builtin_rum_profile_snapshot,
         MemoryGrowthContract::Incremental,
     )

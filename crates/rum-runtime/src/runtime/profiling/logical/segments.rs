@@ -353,11 +353,6 @@ pub(in crate::runtime) fn active_count() -> usize {
     active_len()
 }
 
-#[cfg(any(
-    test,
-    feature = "test-builtin-memory-growth",
-    feature = "test-continuation-slots"
-))]
 pub(super) fn running(epoch: &Epoch) -> Vec<(RecordId, u64)> {
     if active_len() == 0 {
         return Vec::new();

@@ -2,6 +2,11 @@
 use super::*;
 
 impl Epoch {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
     pub(in crate::runtime) fn assert_quiescent(&self) {
         let (pending_children, terminal_parents, open_records) = {
             let data = self.data.lock().unwrap();

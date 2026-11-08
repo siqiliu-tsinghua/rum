@@ -38,6 +38,7 @@ pub(in crate::runtime) fn print_lexical_profile_snapshot(label: &str) {
     }
 
     if lexical_configured {
+        logical::publication::print(label);
         eprintln!("rum-profile lexical snapshot label={label}");
         print_lexical_profile_summary_body();
         mark_lexical_profile_summary_printed();

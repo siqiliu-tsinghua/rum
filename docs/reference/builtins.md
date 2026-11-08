@@ -4533,7 +4533,7 @@ Internal diagnostic hook: resets rum runtime profile counters when profiling is 
 
 ### RumProfileSnapshot
 
-Internal diagnostic hook: prints rum runtime profile counters when profiling is enabled.
+Internal diagnostic hook: returns Null and prints legacy profile diagnostics plus an exhaustive schema-v2 epoch snapshot when lexical profiling is configured.
 
 - Attributes: `Protected`
 - Capability: `Diagnostic`
