@@ -851,3 +851,76 @@ source edit -> the acceptance runs (full lib 3x at 8 threads, once at 1, the
 workspace, the release erasure, the test-name delta). Every surface compiles,
 formats and passes its lock audit before the next begins. Resume with
 `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-7 stop): Q12 the event bridge, and bridges inside the named conversions
+
+The round is where I asked it to be: Q10's strengthened witness measures both
+windows (`handoff_refunded=248 refunded=48`, sum asserted against the
+type-derived charges), the pre-Q8 mutant goes red exactly as predicted
+(`same_current_epoch=true handoff_refunded=0 refunded=296`) and restores
+green; Q11's `push`/`push_admitted` split is the ruled shape (wrapper admits,
+`None` reproduces the `missing` bookkeeping, one body, `storage_admitted`
+under the permit); the LP01 cache child passes at 8 and 1; the 14 focused
+gates are green; the census lists all 105 sites in 99 root bodies and 174
+root/permit bodies. The stop is Q12: 13 holders reach
+`add_admitted -> Epoch::event`, whose two failure branches call the admitting
+`fault()`/`retire()` wrappers, and `event_admitted` does not exist. My Q11
+clause covers this literally; the worker stopped instead of bridging on its
+own authority. Correct.
+
+### Q12 — the event bridge is authorized
+
+`Epoch::event` is a conversion the brief's Target names. Rule:
+
+- `event` stays the strict standalone wrapper: exact test cfg,
+  `let Some(access) = lease::admit() else { return; };`, then delegate with
+  the cfg-erased `&access`. The wrapper's `admit()` is the only
+  registration check; the admitted body carries no second check (the permit
+  is the enforcement).
+- The body moves **once** into
+  `event_admitted(&self, #[cfg(exact)] _access: &Admitted, key, delta, start)`.
+  The `event_birth` early-out, the equal-birth `fault` branch (drop the data
+  mutex first), the side-index insertion and its cap `retire` branch, keys,
+  deltas, budget behaviour and every return point are unchanged.
+- The only callee changes: the equal-birth branch calls
+  `fault_admitted(Some(_access))` and the cap branch calls
+  `retire_admitted(Some(_access), Retire::DiagnosticCap)` — both variants
+  exist. No new fault/retire helper, no new behaviour.
+- `synchronous::add_admitted` calls `event_admitted(_access, ...)`. The
+  standalone `add` wrapper is unchanged.
+- Tests keep calling `Epoch::event` (the wrapper): they hold leases at depth
+  0, so `admit()` returns `Some`; retired-epoch callers are rejected by the
+  body's `is_valid()` exactly as today.
+
+### Q12 clarification — bridges inside the named conversions are the conversion
+
+Q11's "anything needing a new admitting-free callee is a STOP" was aimed at
+the census finding *unbudgeted* expansion. The brief's Target already names
+the remaining conversion surfaces: the Epoch acquisition family, segments
+and context, summary/reset and budget. Inside those named surfaces, a
+converted body may create the private `_admitted` bridge it needs on an
+existing wrapper **without a new ruling**, under the same shape rules this
+brief has used throughout:
+
+- one body: the wrapper admits and delegates; no duplicated body, no
+  `#[allow]`, no TLS depth fallback, no fabricated permit, no shortened
+  transaction;
+- a strict cfg'd `&Admitted` parameter (or `Option<&Admitted>` only where a
+  caller-owned path must refuse), erased in production;
+- failure callees switched only to **existing** `_admitted` variants —
+  `fault_admitted`, `retire_admitted`, `storage_admitted`, `close_admitted`,
+  `abandon_owner_admitted`, `drop_belonging_admitted`, and the like;
+- no behaviour, control-flow, ordering, key, delta or budget change.
+
+A bridge that would need new semantics, a new control-flow path, or a
+production-shape change is still a STOP. Every new bridge is disclosed by
+updating the census rows, and closure is never claimed beyond the table.
+
+**Order after Q12.** The event bridge -> 14/14 plus LP01 at 8 and 1 -> the
+remaining named conversions in the brief's order (epoch callees,
+segments/context, summary/reset, budget), each compiled, formatted and
+lock-audited before the next -> the six mutants including the Q4 B/C arms
+and the Q10 handoff mutant -> the standing replays after the last source
+edit -> the acceptance runs (full lib 3x at 8 threads, once at 1, the
+workspace, the release erasure, the test-name delta). Resume with
+`CDX_FORK`.
