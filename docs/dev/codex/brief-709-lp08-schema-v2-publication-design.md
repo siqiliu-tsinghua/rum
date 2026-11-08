@@ -211,3 +211,82 @@ next action and the receipts already saved.
 
 Every run and verdict line quoted; the summary states the one measured
 answer and the draft's bar list.
+
+## Director gate — 2026-11-08: ACCEPTED as a design STOP; rulings issued
+
+The round did the right thing: it measured the selected form, reproduced the
+contract's duration limit instead of quietly widening the bar, and stopped.
+Verdict ACCEPTED as a design; the six questions are ruled below and stage A is
+authorized.
+
+### What I verified myself
+
+- Tree unchanged: `git status` clean; the worker's scope verdict says 2,670
+  live files, 0 changed/added/removed, writes confined to `.temp/brief-709`.
+  `report.py check` reproduces 830 citations.
+- The disabled cost rows in `evidence/costs-v5.json`: base and candidate
+  `try_apply_function` own/incoming vectors are byte-identical in both
+  independent builds (24,549/49,049 at N/2N, slope 49, call slope 1), and the
+  stack rows are identical in all four build×arm pairs (slope 18,304,
+  intercept 12,392, residual 0, the same eight absolute samples).
+- The full-table row (`extra-checks-final.log`): 96 native and 96 guest
+  definition keys, legacy ranks 64, 715 total keys, 0 duplicates; stable order
+  under reversed interner insertion; the two semantic identities survive.
+- The duration limit (`duration-limit-{1,2}.log`): an open native row reports
+  24,913 ns and 4,100 ns while the accrued-only schema row reports 0; after
+  closure both observers agree (123,743 ns / 37,968 ns). The gap is real and
+  the failure is honest.
+- The lifecycle rows (`candidate-final1-lifecycle.log`): absent, old epoch,
+  nested reset, drop-before-summary, repeated equal keys, distinct semantic
+  identities, cap (123 insertions), and fault all pass with the stated
+  observables. The 23-key witness is enumerated in `WITNESS-KEYS.md`.
+
+### Rulings
+
+- **Q1 — RULED: publish the native observation; do not build a mirror.** The
+  duration section's basis is epoch-accrued totals **plus the observing
+  thread's currently running intervals**, which is exactly what the existing
+  `Epoch::rows()` fold computes (`logical/epoch/snapshot.rs:30` via
+  `logical/segments.rs:361`). Stage B must source native rows from that fold,
+  make `rows()` and `segments::running` production-visible (their bodies are
+  unchanged; both are called only from the publication path), and name the
+  basis in the header. Cross-thread in-flight intervals stay outside the
+  basis, exactly as they are for the native observer; no process-wide active
+  mirror is authorized. The B gate must show guest == native mid-interval and
+  after closure.
+- **Q2 — RULED: qualify the sentence in `docs/dev/profiling.md`.** "A
+  snapshot's own entered invocation is open while the snapshot runs" holds
+  where its family's gate is enabled. In lexical/cache/disabled modes the
+  Builtin family does not exist; the header states the effective mode. Do not
+  widen flags and do not manufacture a row.
+- **Q3 — RULED: accept the current 23-key witness.** It is exhaustive,
+  re-derivable, and covers the same five families. The historical 21
+  identities were pruned and are unrecoverable; they are not a bar and no
+  count is forced. The substitution is recorded here.
+- **Q4 — RULED: no second charge.** The retained-ledger cap governs stored
+  rows only. Transient publication buffers are bounded by the captured
+  epoch's own budget, are not charged again, and a read cannot invalidate the
+  epoch. Reusing `Epoch::rows()` makes this concrete: the copy is bounded by
+  the 16 MiB diagnostic ceiling, and there is no new fallible-copy failure
+  path.
+- **Q5 — RULED: accept conservative invalidation.** A timed event whose start
+  equals the epoch birth cannot establish membership; a visible
+  `InstrumentationFault` is correct. It must never change the guest value or
+  the guest resource outcome.
+- **Q6 — RULED: adopt the injective key encoding.** Symbols render as
+  `s(ESC(context),ESC(name),identity-or-n)` with `% | , ( ) #` percent-escaped;
+  None source is `-`; Some always begins `s(`; rows sort by bytewise encoded
+  text. Interner ids and `Symbol::Ord` never appear. B carries the adversarial
+  host-created context/name tests and the identity-less/identity-bearing
+  duplicate tests.
+
+### Also confirmed
+
+- The publication channel stays as the 676 form: `RumProfileSnapshot` returns
+  `Null` and emits a `rum-profile schema-v2 ` diagnostic line; legacy
+  diagnostics are unchanged. `docs/reference/builtins.md` is updated in B.
+- The union `N ∪ S ∪ A ∪ Z` and the epoch-owned side index within the existing
+  budget are approved, as are the seven recorder seams and their
+  must-not-change list.
+- Stage A (`710`) is authorized from draft A with the rulings above; B and C
+  follow after A's gate.

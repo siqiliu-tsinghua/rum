@@ -26,7 +26,14 @@ Status checkpoint: 2026-11-08. The committed tree runs through:
 publication, G15-C2's remaining 353 rows on the final source, CM,
 `CHANGELOG.md`, and S10 onward. LP08's counter promotion has landed
 (`b9b39763`); `RumProfileSnapshot` still returns `Null`, so the public
-schema-v2 form in `docs/dev/profiling.md` is the open half. The test
+schema-v2 form in `docs/dev/profiling.md` is the open half. Brief 709
+(design, 2026-11-08) is accepted and its six questions are ruled: the
+duration basis reuses `Epoch::rows()` including the observing thread's
+running intervals; the own-invocation sentence is qualified by the family
+gate; the current 23-key handoff witness stands; transient buffers are not
+charged twice; equal clock readings invalidate visibly; symbol keys use an
+injective escaped encoding. Stage A (brief 710) is the epoch-owned
+synchronous family index; B renders, C accepts. The test
 audit's Stage B and D03 are closed; LP05-LP08's promotion is done. The
 10-29 estimate in `docs/dev/security-hardening-progress.md` is pending a
 re-base (user ruling 2026-11-08: the Codex tier was upgraded and the
