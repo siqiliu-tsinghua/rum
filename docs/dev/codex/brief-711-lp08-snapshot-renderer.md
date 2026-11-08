@@ -455,3 +455,32 @@ that the backtick is literal and must not be trimmed. The worker's evidence
 (two qualified stage-A binaries returning ``List["System`", "Global`"]``;
 zero live edits; `report.py check 711`, 40 citations) is reproduced from
 `rum-core` by the director. No design change.
+
+## Director ruling (2026-11-08): retire the two obsolete cfg rows
+
+Authorized exactly as requested. The two `UnknownConstruct` rows in
+`crates/rum-stdlib/src/tests/ownership_graph/inventory/unknown_attributes.tsv`
+(recorded at `crates/rum-runtime/src/runtime/profiling/logical/epoch.rs:12`
+and `crates/rum-runtime/src/runtime/profiling/logical/segments.rs:356`) are
+retired. The compilation guards they record are the ones the already
+authorized Q1 production-visibility change removes: `mod snapshot;` and
+`segments::running` must exist in production, so no `cfg` guard can remain.
+This is a **canonical retirement of an obsolete row**, not a
+reclassification, and not a weakening of any assertion: regenerate the
+inventory from the canonical replay and install that output, with the two
+retirements visible in the changed-row record.
+
+Verified by the director before this ruling: exactly 2 removed rows in both
+canonical deltas (`ownership-delta-{8,1}-v2.json`), both the cfg rows above;
+0 host-payload rows, 0 self-reaching rows, 0 new rows in untouched files;
+35 added `UnknownConstruct` rows and 164 position-only moves, identities and
+statuses retained. The v2 mapping (full unchanged function text) is
+authoritative; the first mapping attempts stay preserved as disclosed.
+
+No other retirement, reclassification or hand edit of any inventory is
+authorized. The publication module's internal file split (`keys.rs`,
+`rows.rs`) and the test module's split (including `decode.rs`) are within the
+permission to add the private module and its tests. Continue exactly per the
+report's continuation action: install the canonical inventory output, replay
+every standing inventory, then run the functional gates, the ten mutants and
+the cost bars; nothing is accepted until the director's gate.
