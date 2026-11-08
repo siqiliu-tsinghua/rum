@@ -220,3 +220,105 @@ differential engine. No git command. No live-tree edit: instrument copies
 only. A live edit, a weakened assertion, a skip, a changed default or a
 production-cost regression is a STOP. The director owns the gate, the
 rulings and every commit.
+
+## Director gate — 2026-11-08: design ACCEPTED; Q1-Q4 settled
+
+The round is accepted as the design it is. I reproduced the state it depends
+on: the live tree is byte-identical to `dd7c19e5` (`git status` clean; every
+authored file sits under the git-ignored `.temp/brief-712/`); `report.py
+check 712` is OK with 260 citations verified; the two named paths are real in
+the captured traces (trace10 seq155 `<held-pattern-2mib>` gen3/reg0 removes
+`[(1,129),(1,119),(1,7),(1,3)]` through `collector::take_stash`, seq168 the
+holder snapshots `open=1 records=[5,67,99,129]`, seq170 the same foreign
+thread restores them; trace-parent seq11 maps thread 157 to
+`matcher_pattern_deep_two_suspensions`, seq45 captures
+`resume -> adopted timing -> drain_matching -> take_stash`, seq856 reads
+`epoch=1888 record=1936 policy=None`); the deterministic probes are red2
+`(1,1,0)` / `stale_attach_no_fault=false` and green2 `(0,0,0)` / `true`; the
+base rate on the worker's machine is 4/12 at 8 threads with serial green. The
+389-row inventory (177 state rows, 212 consumers) is accepted as the working
+map. The six FLAGGED rows are instrument defects and disclosures, not
+evidence: `instrumentation`, `probe_control`, `concurrency`, `trace_budget`
+and `attribution_population` were corrected or excluded from every rate, and
+the extra parent-attribution draw (1,395 tests) is an attribution instrument
+only.
+
+**Erratum (mine).** My N = 24 example was arithmetically wrong:
+`(7/12)^24 = 2.41e-6`, not `4e-7`. The worker's correction stands, and the
+bar is derived per machine from that machine's measured `p_hat`: on its 4/12
+it is 37 consecutive full-lib greens at 8 threads, `(2/3)^37 = 3.05e-7`. My
+host measured 5/12 on the stage-A base and 3/12 on the stage-B candidate, and
+the worker measured 4/12 on the current tree; these are consistent samples of
+a schedule-dependent rate. No consumed draw may be rerun or replaced to
+obtain a friendlier N.
+
+### Rulings
+
+**Q1 - strict reads versus the no-lease cost shape: allowed, and the writer
+side is required.** The "one load, no lease" sentence in my brief described
+the early-out shape of `blocks_unregistered_thread()`; it is not a budget
+that forbids a transaction where the strict property needs one. Test-cfg
+payload transactions and flag getters may take the existing `lease::admit()`
+(the `WRITE_GATE` read) around the check and the access; production bodies
+stay exactly today's and every addition is cfg-erased. Two conditions the
+design must add: (a) every test helper that swaps a process-global flag - the
+twelve in `engine_support` / `publication::support::Flags`, the three cache
+flags through `Session::test_cache_profile_flags`, and any raw store - does
+so while holding the **write** side of the same fence, so a reader holding
+the read side cannot observe a modified flag across publication; no second
+lock is introduced. (b) No admission may span guest evaluation or a
+callback; admitted bodies take the permit and never re-acquire. A nested
+acquisition on a thread already holding the read side while a writer is
+queued is a deadlock and a STOP.
+
+**Q2 - prior-owned cleanup: preserved, never refused.** Cleanup of state a
+thread already owns is not a foreign access to the lease. A live owned
+object dropped or refunded after a different lease is enabled must complete:
+`tests/lease_release.rs:50`'s pre-enable drain stays as it is, and a refund
+is never early-returned (that leaks a charge). What is refused is a foreign
+thread's access to the **current** lease's state. The design must classify
+each retained/destructor path as *caller-owned* (complete, with provenance
+and lock proofs) or *lease state* (refuse before the first payload lock), and
+prove the caller-owned class cannot reach `CURRENT`, the current stash, the
+hook cells or the current epoch's rows. A bookkeeping-only teardown that
+cannot be run safely (for example a foreign `drop_session` taking the global
+stash) may be deferred to the next `reset_for_lease`, provided no charge is
+lost, no guest result changes, and the next lease's reset releases it before
+`drain_for_lease` waits on the process byte counter. Bottleneck warning: the
+drain waits on the *process* byte counter, so any refusal that defers a
+charge across it is a stall; the proof must cover that ordering.
+
+**Q3 - the old flag-observation fixture: authorized.** The setup-only change
+at `tests/unregistered_writes.rs:105-132` is ruled in: the first lease's
+**registered** holder captures the start token, the token is handed to a
+thread that is unregistered to the second lease, and the delayed write must
+leave the counter map unchanged. The full observer and the exact map equality
+stay; do not delete the cross-generation test. The old premise assertion (an
+unregistered worker's start is taken under the flag) must be inverted into
+its own deterministic observer - an unregistered start must be refused - and
+that observer must be red on the pre-fix tree.
+
+**Q4 - scope: the item-3 boundary.** The contract covers all state a lease
+can enable or modify: the flags it swaps, the epoch and side index, records,
+segments, stems, counters, stash, hook cells, queue owners, the budget, the
+legacy summary/scope/presence/timing state and the evaluation-cache profile
+state. Independent env-only profilers (`RUM_PROFILE_REPR`,
+substitution-sharing, association) are explicitly outside this repair because
+no lease helper modifies their gates; the inventory must state per profiler
+why it is lease-independent, the repair must not touch them, and any
+interference observed there is a separate design. This narrows the literal
+"any process-global profiling state" of my goal to the state the lease
+exposes; it does not weaken the measured class.
+
+### Option choice
+
+Option 1 (total exclusion at the state boundary, on the existing fence) is
+the repair. Option 2 (process isolation) leaves an unregistered worker inside
+a lease test able to observe or steal the holder's state, and so fails the
+deterministic class contract by itself; Option 3 (per-thread gates) does not
+shield the ungated state paths (hook cells, owners, retained handles,
+cleanup) and would need Option 1 as well; Option 4 (a take-only patch) is an
+instance fix the inventory refutes. The implementation brief is
+`brief-713-profiling-lease-exclusion.md`, written from the two drafts with
+these rulings built in; the 37-run campaign is a separate source-unchanged
+validation brief after the implementation gate.

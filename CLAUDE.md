@@ -191,9 +191,15 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   seams, the enabled bodies cold-outlined so the disabled path is cheaper
   per call than base on all six (13 -> 3, 23 -> 18, 18/20 -> 14/18) with
   every candidate whole-workload draw below every base draw, and the stack
-  identity exact (18,304 / 12,392 / residual 0). `RumProfileSnapshot` still
-  returns `Null`: stage B renders the snapshot, stage C accepts it.
-  `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  identity exact (18,304 / 12,392 / residual 0). **Stage B landed at
+  `a0c70615`** (brief 711): the additive `rum-profile schema-v2` line over
+  the side index, gate green (host workspace 4,185/0/61; five modes
+  88,795 records; ten mutants). Its gate exposed a pre-existing
+  test-isolation class (the lease's exclusion is incomplete: full lib at 8
+  threads 5/12 red on the stage-A base, 3/12 on the stage-B candidate, 4/12
+  on the current tree, serial green). Brief 712 (design) proved it and
+  brief 713 (implementation) closes it; **stage C is queued behind a green
+  workspace**. `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers
