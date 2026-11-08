@@ -441,6 +441,75 @@ Do not repeat the pre-repair reference run. Do not edit the production files
 in the live tree. Stop with the exact panel on any failed bar; a loose check
 or a re-baselined gold is never the answer.
 
+## Continuation B — director ruling after run A (2026-11-08)
+
+Run A delivered and I accept: M1–M5 each killed its named observers and
+reverted green in one private-target scratch copy; the final shape panel is
+green (module 9/9, both host children, host parent 3/3, source scope, fmt);
+the standing replays re-emitted the installed LP01 ledger byte-identically
+(1,592 keys and 875 receipts per mode, losses 0/15,463/19,468/18,757/22,772,
+union 88,795 records, 0 changed rows); typed-slot and frame-root passed; the
+census paired 1,162 rows with 0 added and 0 removed; State stayed
+104/8/232/248. It then stopped, correctly, at the required LP04 switch test
+(`lp04_definition_rows.rs:121`), reproduced at 8 and 1 threads:
+`definition.rhs.total` closed `[1, 1, 0, 0, 0, 0, 0, 0, 0, 0]` where the bar
+demanded a paused `err`.
+
+**The bar was mine; it encoded HEAD's local-close topology, and the install
+owns the change.** Measured, not argued: the 705-installed pre-repair tree
+has the same row `[1, 1, 0, ...]` and records **zero** physical
+`input_required` observations (the install's suspend path replaced
+`finish_input_required` with a counted pause, so the definition records
+stopped recording the pause at all); the repaired tree records exactly one
+`input_required` on `definition.rhs.total`, `definition.rhs.evaluate` and the
+`down_value_rhs_eval` row, and completes the retained call `ok` at its
+consumer. The test's own contract is "the pause is recorded on the
+definition record, not silently dropped"; `err > 0` was the side effect of
+HEAD closing the suspended call locally, not that contract. Under the
+accepted Option C the truthful row is one call, one `ok`, one physical
+observation; an `err` would contradict `calls == ok + err`. The amended bar
+is not weaker: it is red on the pre-repair install (which the old bar never
+caught) and green on the repair, while the falsifier's calibrated red
+(missing rows) is untouched.
+
+The amendment is director-owned and already in the live tree — do not touch
+it:
+
+- `Session::logical_profile_test_input_required_for(name)` in `logical/mod.rs`
+  (test-gated, `#[doc(hidden)]`) sums physical `input_required` for the
+  `Runtime` phase or `Definition` kind named `name`.
+- `lp04_definition_rows.rs`: the two paused branches assert
+  `input_required == 1` **and** `ok > 0`; every row/closure assertion is
+  unchanged. Values are exact, not `> 0`.
+- Calibration: on the pre-repair tree the amended bar is red with
+  `definition.rhs.total recorded no paused call: [1, 1, 0, ...]` (0 vs 1);
+  on the live tree the switch suite is green at 8 and 1 threads (lp03 3/3,
+  lp04 1/1, lp05 1/1), and the LP02 host test (3/3) and the nine-module
+  suite (9/9) stay green.
+- Live `mod.rs` differs from run A's reported hash by exactly the two
+  accessors (`reasons_for` was already present at run A's start; only
+  `input_required_for` is new here). The other five implementation files and
+  `retained_pause.rs` match run A's end hashes byte-for-byte.
+
+Remaining obligations, exactly (the STOP cut them; nothing else is added):
+
+1. **The acceptance set** of *Verification order and bars* §3 against the
+   amended tree: `fmt --check`; the LP02 host binary at 8 threads; the switch
+   suite command at 8 threads and again at 1; the workspace command with the
+   seven standing `--skip`s; the focused set at 8 and 1 threads.
+2. **LP01 five-mode parents** at 8 and 1 threads on the amended tree, same
+   canonical writer/installer (path constants only), the per-cell proof the
+   authority. Run A's 8-thread replay is the record of the expected values;
+   a fresh 8-thread run pairs with the 1-thread run.
+3. **Final audit**: the six source sha256 at end, no new warnings, scope
+   unchanged; report the amended tree's hashes including both accessors.
+
+Do not repeat the consumed reds (pre-repair reference, M1–M5). Do not edit
+`logical/mod.rs`, `lp04_definition_rows.rs`, the host test, `census/tests.rs`
+or any test. The scratch copy is the live tree as-is (amendments included)
+and must be byte-identical to it at the end. Stop with the exact panel on any
+failed bar; a loose check or a re-baselined gold is never the answer.
+
 ## Host discipline and hard rules
 
 One cargo command at a time in the dispatcher's 16G/no-swap scope, build jobs
