@@ -466,3 +466,115 @@ it.
 Everything else in the brief stands: the surface order, the lock-order table,
 the nine gate tests and their mutants, the standing replays after the last
 edit, and the acceptance runs. Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-08 (stage-3 stop): Q4-Q6 settled; the attach witness is a layer matrix
+
+The stage-3 checkpoint is accepted as a checkpoint: the collector and owner
+entries are converted, nine of the ten focused gates are green, the ordinary
+cache lock-order edge is closed, and two single-site mutants went red and
+were restored. The stop itself is correct on all three counts. This round
+names the remaining work precisely; no completeness is claimed.
+
+**Q4 — the attach witness: calibrate the layered property, not a masked
+single site.** With `take_stash`/`restore_stash`/`drain_attached` admitting
+first, the immutable outsider cannot reach `attach_boundary_admitted`; that
+masking is the class contract working, not a defect, and neither the probe
+nor its expectation changes. A layered property is calibrated as a matrix
+with the frame held fixed and one site varied:
+
+- Frame: in `lease.rs`, make `blocks_unregistered_thread()` return `false`
+  at its first line — a single-line mutation that disables the registration
+  predicate (the read-side exclusion layer) while leaving `WRITE_GATE`'s
+  read and write paths intact. It is the experimental condition, not a
+  second cause.
+- Arm A (measured): attach body mutated, frame intact -> green `true`. The
+  mask; already recorded.
+- Arm B: frame + the fixed attach body -> must be green `true`. Proves the
+  attach layer alone holds the property for this probe.
+- Arm C: frame + the attach body mutated (policy assertion before the owner
+  lookup, foreign check after it) -> must be red
+  `stale_attach_no_fault=false`.
+
+Between B and C the attach body is the only variable; the flip is the
+calibration. If arm B is red, that is a real defect in the attach body, not
+a calibration artifact: STOP. Disclose every mutated line per arm, restore
+byte-for-byte with the SHA, keep the logs under `evidence/mutants/`. The
+pre-fix red stays the falsifier's red arm.
+
+**Q5 — ownership candidate: accepted, with two dispositions.** I verified
+each flag against the source:
+
+- `collector.rs:20/32/45` (`DrainFn`/`ResetFn`/`DropFn`) are genuine status
+  changes. The production alias lines are unchanged text now guarded by
+  `#[cfg(not(any(...)))]`, each with a new test-cfg twin carrying the
+  `&Admitted` parameter. The item is conditionally defined where it was
+  unconditional; the new `ambiguous conditional definition` row is the
+  canonical record of that item, on an unchanged line because the production
+  variant's text did not move. Admitted as conversion-introduced, not
+  drift. Record the two variant lines per alias in the disposition note.
+- `epoch.rs:514` is the duplicate-descriptor pairing artifact, not a new
+  construct. The baseline row at `epoch.rs:479` is this same
+  `#[cfg(any(test, feature = ...))]` attribute on `reset_for_lease`, shifted
+  +35; the descriptor's multiplicity grew with the conversion's new cfg'd
+  parameters, and first-match pairing consumed the baseline instance
+  elsewhere. **Disposition: MOVE**, the same class as `counters.rs:74 -> :92`
+  and `:135 -> :177`. Name the consumed instance in the pairing note.
+
+`evidence/ownership-replayed-c3` is the replay's canonical output and may be
+copied unchanged; do not hand-edit a row. The accepted stage-2 copy stays
+live until that copy lands.
+
+**Q6 — rejection census: the predicate gains one multiplicity class.** The
+stage-2 predicate admitted the two new cfg reason classes only. It did not
+anticipate a new *instance* of a reason class the frontier already carries,
+which is what the conversion's new `selected` vector and `retain` closure
+produce. Extended predicate: a changed key is admitted iff (a) it lies in a
+file this brief converted, and (b) either its reason is one of the two new
+cfg classes or parameters, or its `(kind, callee, reason)` class already
+exists in the accepted frontier **and its source position is on a line this
+brief added** (a multiplicity addition from conversion-introduced code).
+Every added and removed row is listed in the report. The two flagged rows
+are admitted under the second class:
+
+- `collector.rs:175` `Vec::new`: the new selected vector. The baseline
+  instance at `:72` is the keep vector now at `:326` (the keyed pairing pairs
+  them); the class count is one old and one new.
+- `collector.rs:328` closure: the new `retain` predicate. The
+  closure-capture class exists in the baseline (`:15`, `:20`, `:59`, `:74`).
+
+Pinned counts in `retention_closure/census/tests.rs` are updated once, at
+the end of stage 3, with the per-class delta table; a key outside the
+predicate is a STOP.
+
+**Warnings — the scope extension by class now covers two named items.** The
+unused import is `profiling/mod.rs:41`, `lexical_profile_incremental_enabled`
+in the private `use config::{...}` list; `counters.rs` is clean. This
+supersedes the stage-2 "do not touch" sentence: the name became unused only
+because this brief's conversion moved its callers, so **remove that one name
+from the list; nothing else in the file changes.** The three unused owner
+wrappers — `clear_owners` (`profile_queue.rs:624`), `unregister_control`
+(`:654`), `attach_boundary` (`:724`) — are dead in every configuration
+because `register_owner` installs the `_admitted` bodies directly; I verified
+zero references. **Delete them.** Final acceptance must show no new warning
+in the default lib, the lib-test with both test features, the feature-library
+builds, and the workspace. The three `test_builtins` warnings are the
+pre-existing set.
+
+**Caller-owned cleanup inside the source timing entries: mandatory repair,
+not a flag.** `discard_module_source_timing` (`source.rs:179`),
+`record_current_source_timing` (`:223`) and
+`record_call_stability_source_head_timing` (`:526`) now refuse before
+popping the caller's own TLS timing frame. The frame is caller-owned: pop it
+and credit the parent's `child_nanos` before any refusal; the refusal may
+skip only the shared/global writes. A frame left on the stack across a
+refusal is the leak the Q2 rule forbids.
+
+**Resume order and the remaining gates.** Resume at the retained-alias and
+epoch `Option<Admitted>` propagation — the cache alias gate is red at 8 and
+at 1 threads, so it is a real gap, not a flake — then segments/context,
+summary/reset and budget; then the six still-unrun gate mutants (each must
+be red at its named observer), the standing replays after the last source
+edit, the full lib 3x at 8 threads and once at 1, the workspace, the release
+erasure check and the test-name delta. Every surface compiles, formats and
+passes its lock audit before the next begins. Everything else in the brief
+stands. Resume with `CDX_FORK`.
