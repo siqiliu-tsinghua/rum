@@ -186,8 +186,14 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   Acceptance green (workspace 4,156/0/61; focused 201/0/2 at 8 and 1;
   five-mode LP01 parents byte-identical); 708 reproduced every 702/703 bar
   with no new disabled-path work. LP01-LP07 closed from `3fd1885c` to
-  `a9cb067d`. `RumProfileSnapshot` still returns `Null`, so LP08's schema-v2
-  publication is open; `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  `a9cb067d`. **LP08's schema-v2 stage A landed at `e9ba6dd7`** (brief 710):
+  the epoch-owned side index collects the synchronous families from seven
+  seams, the enabled bodies cold-outlined so the disabled path is cheaper
+  per call than base on all six (13 -> 3, 23 -> 18, 18/20 -> 14/18) with
+  every candidate whole-workload draw below every base draw, and the stack
+  identity exact (18,304 / 12,392 / residual 0). `RumProfileSnapshot` still
+  returns `Null`: stage B renders the snapshot, stage C accepts it.
+  `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers
