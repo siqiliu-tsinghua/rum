@@ -1413,3 +1413,135 @@ the Q4 B/C arms and the Q10 handoff -> the standing replays with the once-only
 pinned census -> the acceptance runs (full lib 3x at 8 threads, once at 1,
 the workspace, the release erasure, the test-name delta). Resume with
 `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-13 stop): Q20 the reset family is the exclusive transaction on the existing WRITE_GATE
+
+Q19 is accepted in shape: one strict entry wrapper whose two callers are
+byte-identical, one `_admitted` body holding the single permit through
+`logical::summary()` and all 28 helpers, all 28 strict getter calls across
+the nine getters forwarded to their existing `_admitted` variants, the raw
+rewrite-counter helper taking the same permit, no dead strict wrapper, no
+output/order/logic change, production erased. Both permanent tests pass at
+8 and 1 with the C12 held-body nesting receipt as their red arm, and 15/15
+focused passes at both. The Q20 stop is correct: a shared read permit cannot
+exclude a registered sibling's reset, and it is a class hole, not a
+regression — the witness is new and `reset.rs` / `lease.rs` are C12-identical.
+
+### The gap, measured
+
+`admit()` takes `WRITE_GATE.read()`, so two registered sibling threads both
+receive permits and the fence orders nothing between them. The permanent
+witness holds a real summary permit and a registered sibling's real
+`reset_lexical_profile_counters` completes under it:
+
+    B713 SUMMARY_RESET before=7 while_held=0 reset_completed_while_held=true reset_fenced=false
+
+at 8 and 1, exit 101 on `while_held == before`. `publish()` is already
+excluded (it takes the write side); the reset is not.
+
+### Ruling — one exclusive acquisition, one forwardable permit, both reset entries
+
+1. **`admit_exclusive()` on the existing `WRITE_GATE`**, exact-cfg under the
+   same three predicates as `admit()`. Acquisition order, not negotiable:
+   `debug_assert_eq!(depth, 0)` -> wait-observable increment ->
+   `WRITE_GATE.write()` -> wait-observable decrement ->
+   `blocks_unregistered_thread()` (refuse with `None` before any depth
+   change) -> depth += 1 -> return the permit. The registration check stays
+   **after** the write acquisition: checked before, it can pass under
+   generation G-1, lose the race to `lease()`'s fence, acquire after the new
+   generation's `reset_for_lease`, and mutate the new lease's state. The one
+   acquisition order is written once: extract it into a private helper that
+   both `publish()` and `admit_exclusive()` call (the helper takes which
+   wait-observable to bump); `publish()`'s public shape and behaviour are
+   unchanged.
+
+2. **A dedicated wait observable.** `FENCING` stays the lease/publication
+   fence's observable; `admit_exclusive()` bumps its own exact-cfg counter
+   (getter in the style of `fencing()`), and `FENCING`'s three existing
+   pollers must not see the reset's wait. The class this brief exists to
+   close is cross-test interference, and three standing witnesses keep their
+   specificity only if the reset's wait is unmixed with theirs. No new
+   fence, no new lock: this is an instrument beside the existing
+   acquisition, not a second gate.
+
+3. **`Admitted`'s guard becomes an exact-cfg enum** over the two guard types
+   (`RwLockReadGuard` / `RwLockWriteGuard`); `admit()` builds the shared
+   variant, `admit_exclusive()` the exclusive one, Drop remains the single
+   depth decrement. Every `_admitted` leaf keeps `&Admitted` unchanged. No
+   leaf, no census row and no production byte changes; `Publication` keeps
+   its type and its Q1 meaning.
+
+4. **The exclusive root is a distinct type.** `admit_exclusive()` returns
+   `ExclusiveAdmitted`, a private-field wrapper over the `Admitted`, with
+   `admitted() -> &Admitted` for the leaves. It has no other constructor, so
+   a shared permit cannot compile into a reset body.
+   `reset.rs::reset_lexical_profile_counters` and `epoch::reset_for_lease`
+   acquire through it; `reset_unleased` and `reset_production` take
+   `&ExclusiveAdmitted` and hand `admitted()` to `retire_admitted`,
+   `clear_registrations_admitted`, `clear_stash_admitted` and every other
+   leaf, which keep `&Admitted`. The permit is held through every counter
+   store and TLS clear: those writes are the cut's own state, so Q16's
+   early release does not apply here and a release before them is a STOP.
+
+5. **Not authorized:** a second mutex or fence; per-section admission; a
+   `Publication`-to-`Admitted` conversion (the two tokens stay distinct and
+   must never nest); moving the registration check before the gate;
+   fabricating a guard; TLS depth; making the summary exclusive (the
+   observation stays shared — ordinary live increments remain concurrent by
+   design; the pair that must never interleave is the observation and the
+   global state cut); reclassifying `drop_session` as a cut (it removes one
+   session's own contribution, a lifecycle event a live profile may
+   legitimately observe; only the global zeroing/reset family is exclusive).
+
+6. **Disclosed consequences.** (a) An unregistered reset now waits at the
+   write gate for in-flight readers before being refused, exactly as
+   `publish()` does; today it is refused without waiting. It mutates
+   nothing either way. (b) A reset issued at depth >= 1 is a contract
+   violation: debug builds catch it at the `debug_assert_eq!`, release
+   feature builds would self-deadlock on the write acquisition. The
+   census/no-nesting scan is the enforcement; no new runtime check is
+   authorized. (c) The new observable is written only around the wait, so
+   the three `fencing()` pollers keep their meaning.
+
+7. **Falsifier, permanent.** The Q20 witness keeps its shape and takes its
+   fixed expectation (`while_held == before`, `!reset_completed_while_held`,
+   `reset_fenced`), and gains the completion proof: after `drop(access)` and
+   `join`, the counter must be zero, so green cannot mean "the reset never
+   ran". Replace the unbounded spin with a bounded wait in the project's
+   30 s deadline style; on expiry fail quoting both samples (a hang is not a
+   verdict). Add one witness for `reset_for_lease`: hold a permit, a
+   registered sibling calls `epoch::reset_for_lease(&lease)` while the main
+   thread polls the observable; while held the sibling has not completed;
+   after release and join the epoch id sampled at depth 0 differs from the
+   id sampled before. Both red on the pre-fix source at 8 and 1 (the first
+   red is recorded above), green after, both at 8 and 1.
+
+8. **Mutants.** M1 points `reset_lexical_profile_counters` back at `admit()`
+   -> the Q20 witness red with the quoted tuple; M2 the same for
+   `reset_for_lease` -> its witness red. Trace each predicted red to the
+   observer, quote the line, restore, show the restore green. The six
+   remaining mutants (Q4 B/C arms, Q10 handoff) still follow.
+
+9. **Class duty (scan, not a list).** Every body reachable from
+   `admit_exclusive` must reach only `_admitted` leaves: a reachable strict
+   wrapper, `admit()`, `publish()` or `lease()` is a STOP. Every
+   `Publication` / `Admitted` holder must reach neither reset entry (table
+   with dispositions), including `Enabled::drop`,
+   `logical_profile_test_reset`, the two `reset_for_lease` sites in
+   `logical/budget.rs`, `lease_drained` and `test_limit`; all are depth 0
+   with no payload lock, and any other disposition is a STOP. Re-run the
+   destructor census over the reset family: under a write guard an admitting
+   destructor deadlocks instead of tripping the debug assert, so the family
+   must show zero admitting destructors at the new shape. Every payload-lock
+   holder calling `admit_exclusive` is the reverse edge = STOP. A test whose
+   reset would now block on a sibling's permit must release or join it
+   first; a wait cycle is a STOP. The pinned census counts stay deferred to
+   the final source checkpoint, per-class table once.
+
+**Order after Q20.** The exclusive constructor + the guard enum + the
+exclusive root type + both reset entries + both permanent witnesses (red
+before, green after at 8 and 1) + M1/M2 -> budget -> the six mutants
+including the Q4 B/C arms and the Q10 handoff -> the standing replays with
+the once-only pinned census -> the acceptance runs (full lib 3x at 8
+threads, once at 1, the workspace, the release erasure, the test-name
+delta). Resume with `CDX_FORK`.
