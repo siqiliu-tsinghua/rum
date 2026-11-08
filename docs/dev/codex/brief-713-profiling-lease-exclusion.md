@@ -1105,3 +1105,88 @@ standing replays after the last source edit (with the once-only pinned
 census) -> the acceptance runs (full lib 3x at 8 threads, once at 1, the
 workspace, the release erasure, the test-name delta). Resume with
 `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-10 stop): Q16 the permit's transaction ends at the last shared access; Q17 the unchanged-caller class
+
+Q14 and Q15 are accepted in shape: the scope records and releases its own
+push, both mutants fired and were restored, the two-clause test is permanent,
+and the C9 ownership candidate was copied unchanged as ruled. C10 then
+converted segment acquisition/pause and the private Stack forwarding, and
+stopped at a real edge with a real measurement: `before=1 after=2`, a serial
+backtrace through `Segment::Drop -> end -> admit` at depth 1, while the
+original Context body is green on the identical schedule. The stop is
+correct; both questions are mine.
+
+### Q16 — release the permit after `restore_admitted`, not at function end
+
+The measured path: `retire()` stores `valid=false` before it closes
+RecordPaths, so a registered entry can observe an invalid epoch while the
+retained path is still open; `restore_admitted` then succeeds, `enter_active`
+discards the local `Option<Segment>` on its invalid return (or a `?` unwind),
+and the implicit destructor's `Segment::end` calls `admit()` under the entry
+permit. That is the nested admission.
+
+The repair is not a destructor owner. **A permit's transaction ends at its
+last shared access.** In `enter_active` that access is the `restore_admitted`
+call; everything after it — the validity check, `control.as_ref()?`, the
+source capture, the `EXECUTION_CONTROLS` push, the guard construction — is
+caller-owned TLS and atomics, and in production runs with no permit at all.
+
+Rule:
+
+1. Under the exact cfg, the wrappers hand the owned `Admitted` to
+   `enter_active` **by value**; the call to `restore_admitted` borrows it
+   (`&access`), and the very next statement is `drop(access)`. Every later
+   statement and every later destructor in the function runs at depth 0,
+   exactly as production does; the local segment's implicit drop admits on
+   its own account, as it does in production.
+2. Production keeps `enter_active`'s signature and body byte-unchanged (no
+   permit parameter exists there).
+3. `fault_admitted(Some(...))` in the double-entry path stays where it is,
+   before `enter_active`, under the same owned permit.
+4. This is **not** a shortened transaction: the permit exists to exclude a
+   lease from the shared read/write (the configured-flag read and the epoch's
+   segment restore). After the restore returns, no shared state is touched;
+   a segment end is a separate admitted transaction in production too, and
+   merging it into the entry permit was a drop-order accident, not a design.
+5. The owner shape in `evidence/c10-q16-context-drop.md` is **not**
+   authorized as the primary: it relies on `Segment::end`'s slot-identity
+   precheck to suppress a second admission after `end_admitted`, a non-local
+   invariant. Only if the early release is found to lose a shared access is
+   the owner the fallback — and that finding is a STOP with the access named.
+
+**Class duty.** The census must now, for every permit-holding body, list the
+locals whose destructors may admit (`Segment`, `Call`, boundary storage,
+collector or owner guards, anything whose Drop reaches `admit`/`publish`),
+and give each one a disposition: ended explicitly with the permit, or
+outside the permit by construction (released before the permit drops). The
+question is not just this `Option<Segment>`; it is every value that can be
+dropped inside an admitted scope.
+
+**Falsifier, mandatory.** The Q16 diagnostic (a real `retire()` on a second
+registered thread; `Epoch.data` held only to pin the real prefix) becomes a
+permanent test: red with the permit held to function end (nested admission,
+`before=1 after=2`), green with the early release, at 8 and 1 threads. Its
+scheduling must not fake validity, path state, storage or the permit.
+
+### Q17 — the unchanged-caller predicate extension
+
+The two new rejection keys (`resolution.rs:334`, `suspension/core/abandon.rs:30`)
+are `ExecutionScope::enter` call sites in files whose bytes equal the
+baseline; the reason is the Q14-required cfg split inside the converted
+callee. That is a class, not an exception: **when a converted callee gains
+cfg-separated alternatives, its unchanged callers' new conditional-function
+rejection keys are admitted**, provided (a) the caller's source is
+byte-identical to the baseline, (b) the reason names a cfg split introduced
+by a conversion in this brief, and (c) the row names both the callee and the
+conversion that caused it. No other new key in an unchanged file is covered;
+no scanner change, no hand edit. The once-only final count still happens at
+the final source checkpoint.
+
+**Order after Q16-Q17.** The early release + the permanent Q16 test -> the
+class census of admitting destructors -> 14/14 at 8 and 1 -> the remaining
+Context surface -> the remaining named conversions (summary/reset, budget)
+-> the six mutants including the Q4 B/C arms and the Q10 handoff mutant ->
+the standing replays with the once-only pinned census -> the acceptance runs
+(full lib 3x at 8 threads, once at 1, the workspace, the release erasure,
+the test-name delta). Resume with `CDX_FORK`.
