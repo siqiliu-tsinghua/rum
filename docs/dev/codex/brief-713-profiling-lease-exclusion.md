@@ -1621,3 +1621,66 @@ the final source checkpoint.
 the standing replays with the once-only pinned census -> the acceptance runs
 (full lib 3x at 8 threads, once at 1, the workspace, the release erasure,
 the test-name delta). Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-15 stop): Q23 the queue-arena admission precedes its payload lock
+
+Q21 and Q22 are accepted: M1' (the shared guard inside `admit_exclusive`)
+turns both permanent witnesses red at 8 and 1 with the pre-fix tuple and
+restores byte-for-byte to green; M3' (a zero `reset_waiting()`) makes both
+fail at their 30 s deadline quoting both samples without hanging, which
+calibrates the deadline path and proves the observable is load-bearing; and
+the accepted ownership candidate is copied unchanged with the exact cell
+green (61 self-reaching, 79 UnknownHostPayload, 8,765 UnknownConstruct).
+The Q23 stop is correct and the edge is real: `QueueArena::shared` holds
+`epoch.queue_arena` (profile_queue.rs:110) across `Epoch::storage` at
+116/117, whose wrapper admits at epoch.rs:134. It is a static forbidden
+edge, not a reproduced deadlock, and the brief's own hard rule makes it a
+STOP.
+
+### Q23 — authorize the narrow repair; the boundary is the edge, not one transaction
+
+The proposed repair is accepted as written:
+
+1. `QueueArena::shared` keeps its body and gains one exact-cfg `admit()` at
+   entry, **before** `epoch.queue_arena.lock()`; both storage calls inside
+   become `epoch.storage_admitted(&access, ...)`; the success path, the
+   `slot.take()` before the claims, and the `*slot = Some(...)` order stay
+   unchanged. Production erases the proof and keeps one source body.
+2. Do **not** convert the rest of `ProfileQueue::new`. `epoch.storage` at
+   :154, `Context::capture` at :169 and `Epoch::retire` at :200 all run at
+   depth 0 with no payload lock held today, and the hard rule is "no
+   admission under a payload lock", not "one transaction per constructor".
+   Pulling them into `shared`'s transaction would pull `capture_admitted`,
+   `retire_admitted` and `ProfileQueue::drop`'s `unregister_root` (an
+   admitting destructor) into a held-permit scope for no rule's sake —
+   over-generalized scope. Two sequential transactions (the queue's own
+   storage claim, then the arena's) are correct because nothing observable
+   needs them atomic.
+3. Refusal stays `None` before the lock: `admit()` performs the registration
+   check itself, an unregistered thread still falls back to the guest queue,
+   and no guest-visible behaviour changes.
+4. Class duty: run the reverse-edge scan (a live payload-lock guard whose
+   scope contains a strict admitting wrapper) as a recorded table over the
+   `rum-runtime` profiling, suspension and evaluation-cache surfaces. The
+   pre-fix red is this exact hit (quote the coordinates); the post-fix run
+   must show zero. `queue_arena` has exactly this one user, so the mutex's
+   class is provably closed. Any further hit whose admitting callees all
+   already have `_admitted` variants is converted under this same shape and
+   disclosed; a hit that would need a new bridge is a STOP.
+5. No second fence, no TLS fallback, no fabricated guard, no nested
+   acquisition in the lower-level claim/resize methods, and the owned
+   decreases, drops and `release_deferred_charge` stay unconditional.
+6. No runtime falsifier is constructible for this edge today: no writer
+   holds the write gate across `queue_arena`. The falsifier is the scan's
+   red -> green on the real pre-fix/post-fix source pair with both
+   coordinate sets quoted. Do not invent a writer to manufacture a deadlock.
+
+Then resume the budget classification (index/arena growth and owned
+refunds), which this repair does not close, and continue with the remaining
+mutants and acceptance.
+
+**Order after Q23.** The narrow repair + the reverse-edge scan table ->
+budget -> the remaining mutants including the Q4 B/C arms and the Q10
+handoff -> the standing replays with the once-only pinned census -> the
+acceptance runs (full lib 3x at 8 threads, once at 1, the workspace, the
+release erasure, the test-name delta). Resume with `CDX_FORK`.
