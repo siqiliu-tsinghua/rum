@@ -169,8 +169,9 @@ zero continuation-fault deltas remain gates. Missing a planned second pause is
 invalid, including when an early Throw prevented it.
 
 The indexed `logical-profile-losses.json` under the oracle inventory freezes
-118,991 counter-difference cells across the five flag modes, together with
-schema keys and independently executed receipts. Strings and integer vectors
+the surviving 76,460 counter-difference cells across the five flag modes
+(88,795 records including 1,592 keys and 875 receipts per mode), together
+with schema keys and independently executed receipts. Strings and integer vectors
 are interned to avoid duplicating long routes; records retain multiplicity one.
 Tag 0 is `(mode, program, delivery, source fingerprint, key vector)`, tag 1 is
 `(mode, program, key, producer, consumer route, phase, phase sites/routes, owner,
@@ -192,12 +193,15 @@ sites or unique logical invocations. No duration or pause field enters a loss.
 | LP07 | Module total/body/initializers, native initializer reentry and remaining source/entry aggregation |
 | LP08 | Public diagnostic schema v2 and final non-encoding counter-manifest promotion |
 
-Current code still treats `InputRequired` as an error at many terminal hooks,
-misses resumed ancestor completions and synchronous observations, loses source
-context, and counts Module native reentry physically. LP01 pins the exact
-current resumed/queued vectors with phase sites, source/consumer route and
-owner. A changed loss, unexpected key/vector, missing execution or duplicate is
-red. Each later adoption removes only its approved cells while retaining every
-other owned loss. Current losses are not killed-mutant evidence. Final promotion
-requires complete non-encoding parity and the owning steps' counter-only resume
-mutants, outcome-classification controls, identity and lifecycle gates.
+The staged adoptions are complete. LP01 pinned the exact initial resumed/queued
+vectors with phase sites, source/consumer route and owner; LP02–LP08 removed
+exactly their owned cells, each proved SAME per cell. `InputRequired` now
+closes an executing interval and leaves its record open instead of publishing a
+terminal error, and resumed ancestor completions, source context and Module
+native reentry are recorded logically. Every surviving cell is still red on a
+changed loss, unexpected key/vector, missing execution or duplicate.
+
+The public schema-v2 snapshot form is **not implemented yet**:
+`RumProfileSnapshot` still returns `Null` and emits the legacy diagnostics.
+That publication is the remaining LP08 obligation; the counter promotion does
+not depend on it.

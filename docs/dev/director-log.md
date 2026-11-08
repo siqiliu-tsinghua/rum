@@ -2,7 +2,7 @@
 
 Moved verbatim from `CLAUDE.md` on 2026-10-29 (the 200-line ruling). This is
 a point-in-time record of each line and its lessons, newest first, through
-brief-630's predecessors; it is not the roadmap. Present state lives in
+brief-708; it is not the roadmap. Present state lives in
 `TODO.md` and `docs/dev/security-hardening-progress.md`.
 
 ## Current direction (read these for state)

@@ -171,23 +171,23 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **Permission lists.** They get under-enumerated, so write a disclosure duty
   instead. An inventory rule must cover what new call edges make reachable.
 
-## Current state (2026-11-07)
+## Current state (2026-11-08)
 
-- **Nesting.** The security-hardening mainline (since 2026-09-02) contains
-  the retention line (paused at E0) and the active suspension branch.
-- **Branch queue:** LP03–LP08; G15-C2's remaining 353 rows then CM;
-  `CHANGELOG.md` (user ruling: before S10); G13 S10–S54, F1–F23, R; E2.
+- **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
+  retention line (paused at E0) and the active suspension branch.
+- **Branch queue:** LP08's schema-v2 publication; G15-C2's 353 rows; then
+  CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 with Q3, then Q1/Q2/Q4/Q5, the
-  binary snapshot format, audit items and threat-model critiques; then `v0.3.0`.
-- **Latest done:** LP07 closed (`a9cb067d`); LP08 at brief 695 (gated STOP):
-  both authorized forms measured red — the keyed completion interior
-  (terminal 55, stack +64/level, preparation/evaluation residuals) and the
-  entry split (terminal 55 only). The entry split is frozen as the placement
-  of record; brief 696 (design) tests a terminal-local ownership/liveness
-  change with the exact 54/one-load/base-sequence bar. The disabled workload
-  executes none of the new code, so the +1 is a whole-crate codegen effect,
-  not execution. A Mistral Vibe worker (`BRIEF_WORKER=mst`, GLM-5.3,
-  $150/month) is the Codex-outage fallback.
+  binary snapshot format, audit items and threat-model critiques; `v0.3.0`.
+- **Latest done:** LP08's counter promotion landed at `b9b39763` (install
+  705, repair 707, campaign 708): the frozen entry split and the one-line
+  `terminal_owner` ledger cut the terminal branch 54 -> 42, and the
+  silent-retention repair keeps the physical `input_required` observation.
+  Acceptance green (workspace 4,156/0/61; focused 201/0/2 at 8 and 1;
+  five-mode LP01 parents byte-identical); 708 reproduced every 702/703 bar
+  with no new disabled-path work. LP01-LP07 closed from `3fd1885c` to
+  `a9cb067d`. `RumProfileSnapshot` still returns `Null`, so LP08's schema-v2
+  publication is open; `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

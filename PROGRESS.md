@@ -3718,3 +3718,87 @@ Method:
 - *Make a worker's checkpoints a stop condition, and write it into the
   continuation.* agy lost its whole record by not writing one. grk, told to
   checkpoint, left a tree the director could finish from.
+
+## 2026-10-18 → 11-08 — G15 closes, the logical profiler lands LP01–LP08, and a protected oracle is re-based
+
+G15 finished in three stages and then stopped at its last unsettled class.
+**G15-A** (`afdcd02f`) has a status-object call complete the Function stage
+on resume: the status classifier takes no `Session`, the status branch
+returns the whole stage, and two typed frames carry the projection and the
+value. **G15-B** (`43a26c72`) gives a resumed definition LHS its matching-
+symbol cycle recovery back, on F0257's retained source. **G15-C1**
+(`b4f81ebe`) has a resumed `ReplaceAll` finish its own application, with
+two typed frames and a cold suspend helper. **G15-C2** (brief 623) settled
+1,006 → 353 residuals by classifying strict tails and identity frames first,
+and paused there.
+
+The user ruled on 2026-10-19 that the profiler must count logical calls
+across suspension (brief 624). That opened LP01–LP08, which ran from
+2026-10-20 to 2026-11-08:
+
+- **LP01** (`3fd1885c`): the target contract in `docs/dev/profiling.md` and
+  the test-only counter oracle — 875 bindings × 5 flag modes × 2 builds,
+  118,991 pinned loss cells in 74 groups, 240 encoding-owned tuples.
+- **LP02** (`17576575`): the record engine, queue boundaries, identity and
+  lifecycle machinery; fourteen continuations, several on Kimi K3.1 after
+  Codex's quota ran out. The off path pays nothing: the guards outline and
+  the queue dispatch keeps its base sequence.
+- **LP03–LP07** (`e924bb4f`, `504471a5`, `78fd58f3`, `5446cacc`,
+  `a9cb067d`): evaluator/fixed-point/head/dispatch/argument completions;
+  definition RHS and rule timing; assignment RHS and forwarded suspension;
+  builtin/control/callable completions; Module completion. Each adoption
+  removed exactly its own owned loss cells, and every removal is a per-cell
+  proof: the canonical ledger went 118,991 → 91,424 → 76,460 losses.
+- **LP08** (`b9b39763`): the frozen entry split and the one-line
+  `terminal_owner` ledger cut the terminal branch 54 → 42 instructions
+  (17 paired additions, 29 attributed removals, −6−7+1, one restore load,
+  no call, frame `0x2e8`, memory 9/11/1 → 8/10/1). Briefs 700–705 installed
+  the frozen form and replayed the five-mode ledger and the acceptance.
+
+Two unplanned repairs ran beside the line. **brief-629** (`60ca9585`) gave
+the native-stack guard the thread's own base; the guard had been measuring
+against another thread's stack, which is what made the Jupyter interrupt
+look like a flake. **brief-630** (`854cfa4a`, `1c115117`, `ba1e1e52`) made a
+cleanup that fails during abandonment report its error, and gave the
+retirement drain a host-controlled stop. **Briefs 633–636** closed the
+test-isolation class: private scratch constructors, one profiling lease per
+process, one shared parse; the lib at 32 threads went from four red in
+thirteen runs to twenty-five green in a row.
+
+**Brief 707's repair (Option C)** replaced HEAD's local
+`finish_input_required` close with silent retention plus transparent
+restored pause attribution: a retained phase keeps its physical
+`InputRequired` observation, the restored observer charges the pause to the
+record that owns it, and definitions defer. The reason inflation the first
+run stopped on was install-inherent — the same rows measured identical on
+the pre-repair tree — and the LP04 switch bar's old `err > 0` was HEAD's
+local close, not that test's contract. Both bars were re-based on the exact
+physical observation through test-gated accessors, watched red on the
+pre-repair tree and green on the repair.
+
+Brief 708 then measured the final source end to end: terminal 54 → 42 in
+all four cells, ownership `[1,2,1]`, 386 positions, stack 18,304/18,896,
+coverage 94/96/416/606, witnesses 145 → 129 / 108 → 84, the five
+falsifiers, M1/M2/M3, direct flush, 150 routes, the host contract, and the
+disabled path with no new executed work (largest positive label +2.71%,
+inside the layout envelope; 312 Callgrind captures with zero
+evaluator-work delta).
+
+Method:
+
+- *A logical counter is not a physical one.* The vector is defined over
+  operations that cross suspension, so the oracle compares the resumed path
+  with the queued path, per key, in the same epoch.
+- *An adoption removes only its own cells.* Every ledger step is a per-cell
+  proof; a changed total is never evidence on its own.
+- *A protected assertion can encode the old topology.* The 707 reason bars
+  were identical before and after the repair, and LP04's `err > 0` never
+  caught the install's dropped observation. Measure the pre-change tree
+  before calling a red a regression, and watch the replacement bar red on
+  the tree it should catch.
+- *A worker's gate is worth what its sandbox can run.* The final
+  continuation stopped on nine ZeroMQ loopback binds the sandbox denies; the
+  host ran the same command green, 4,156/0/61.
+- *Timing is secondary when the instruction instrument can settle it.* The
+  layout control calibrates the panel-wide noise floor, and the 312
+  Callgrind captures — not the milliseconds — decide the disabled path.

@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-11-06. The committed tree runs through:
+Status checkpoint: 2026-11-08. The committed tree runs through:
 - G13 step S9 (brief-617, control and cleanup; gated, below);
 - G15-A (brief-619, `afdcd02f`) and G15-B (brief-620, `43a26c72`);
 - the G15-C design (brief-621, accepted `8f77793c`) and G15-C1 (brief-622,
@@ -12,7 +12,8 @@ Status checkpoint: 2026-11-06. The committed tree runs through:
 - the logical profiler's LP01 (brief-625, `3fd1885c`), LP02 (brief-626,
   `17576575`), LP03 (brief-637, `e924bb4f`), LP04 (brief-638,
   `504471a5`), LP05 (brief-642, `78fd58f3`), LP06 (briefs 666-673,
-  `5446cacc`) and the LP07 source stage (brief 675);
+  `5446cacc`), the LP07 source stage (brief 675, `a9cb067d`) and LP08's
+  install and repair (briefs 700-708, `b9b39763`);
 - the native stack base per thread (brief-629, `60ca9585`) and the
   abandonment repairs (brief-630: B1 `854cfa4a`, B2 `1c115117`, B3
   `ba1e1e52`);
@@ -21,9 +22,12 @@ Status checkpoint: 2026-11-06. The committed tree runs through:
   `5184797c`, amendment 2 `f38657d0`) and the shared parse (brief-636);
 - the test audit's design stage (brief-639, `d6533dac`).
 
-**Next, in order** (the branch queue): LP08, then C2's remaining 353
-rows, CM, `CHANGELOG.md`, and S10 onward. The test audit's Stage B and D03
-are closed; LP05-LP07 are done. New briefs go to cdx for every brief (user
+**Next, in order** (the branch queue): LP08's remaining schema-v2
+publication, G15-C2's remaining 353 rows on the final source, CM,
+`CHANGELOG.md`, and S10 onward. LP08's counter promotion has landed
+(`b9b39763`); `RumProfileSnapshot` still returns `Null`, so the public
+schema-v2 form in `docs/dev/profiling.md` is the open half. The test
+audit's Stage B and D03 are closed; LP05-LP08's promotion is done. New briefs go to cdx for every brief (user
 ruling 2026-11-01); a cdx quota death is a stop and a question, never a
 silent fallback.
 
@@ -557,8 +561,10 @@ does the same work, only without its profiling hooks.
     failed / 61 ignored each), the required-switch host suites, the lease
     and `cargo fmt --check` are green. Gate in the brief.
 
-**LP08 is open** (design briefs 676/677/678 gated 2026-11-06; brief 679
-next). Brief 676 re-anchored the 624 LP08 draft on the post-675 tree
+**LP08's promotion has landed** (`b9b39763`; install brief 705, repair
+brief 707, final campaign brief 708). The history below is the design record
+from brief 676 to 699. Brief 676 re-anchored the 624 LP08 draft on the
+post-675 tree
 and returned STOP: the complete non-encoding counter promotion has
 91,424 in-set loss cells and no retaining promotion (ledger 103,759
 records = 7,960 key records + 91,424 losses + 4,375 receipts; owners
@@ -699,7 +705,10 @@ The acceptance on the final tree is green: workspace 4,156/0/61 (seven
 standing skips), focused 201/0/2 at 8 and 1 threads, and the five-mode LP01
 parents at 8 and 1 byte-identical (88,795 records, 0 semantic differences).
 Brief 708 reproduced every 702/703 campaign bar on fresh binaries and found
-no new executed work on the disabled path. Then come C2's remaining 353 rows on the final source, the manifest
+no new executed work on the disabled path. The promotion transaction has
+therefore passed. `RumProfileSnapshot` still returns `Null`, so LP08's
+schema-v2 publication half is still open; it follows the collector. Then
+come C2's remaining 353 rows on the final source, the manifest
 (CM, `.temp/brief-621/draft-G15-CM-obligation-manifest.md`), `CHANGELOG.md`
 (user ruling), and S10 from `.temp/brief-606/draft-S10.md`, with its
 owned-row table from `.temp/brief-621/draft-existing-owner-additions.md`. The

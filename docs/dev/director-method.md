@@ -214,6 +214,13 @@ Consequences for how I present and pick work:
   regression, and do not "fix" noise. Say plainly when you did NOT re-run a
   gate and why (e.g. no eval-hot-path code changed and the panel never calls the
   changed symbol) rather than performing the ceremony.
+- **A protected assertion can encode the old topology.** Before calling a red
+  a regression, measure the same assertion on the pre-change tree: brief 707's
+  reason bars were identical before and after the repair, so the install owned
+  the change and the bar was mine to correct. The replacement bar must be
+  watched red on the tree it should catch — LP04's old `err > 0` never caught
+  the install's dropped physical `input_required`, while the amended
+  exact-observation bar is red on that tree and green on the repair.
 - Profiling toolkit: `scripts/sample-self-time.py`,
   `scripts/sample-attribute-callers.py`, and the env-gated runtime counters;
   self-time + caller attribution + counters beat call trees for the recursive
