@@ -377,3 +377,59 @@ counts; the added-row spans against the current source lines
 baseline provenance (1,532 Rust files compared, 0 different); `census-pairing`
 and `census-span-proof` (1,162 paired, 0 removed, 30 added, 112 moved);
 `cargo fmt --check` clean after my edit.
+
+## Director gate — 2026-11-08 (continuation C): the disabled stack red is real, and the exact bar stands
+
+I accept the STOP as a real red, not a bar problem. I reproduced it myself on
+the two qualified binaries and then attributed it to a single frame.
+
+**The measurement.** Depth-three probe: base 67,304, candidate 67,368. Two
+independent builds of each arm: slope 18,304 vs 18,320, intercept 12,392 vs
+12,408, residual 0, the eight samples shifted by `96/176/256/336` bytes at
+depths 5/10/15/20. That is a reserved sixteen bytes per recursive level on the
+disabled path, which the hard line forbids even at zero executed instructions.
+
+**The attribution.** I re-ran the probe with `BRIEF611_BACKTRACE=1` on both
+arms, resolved every frame address against the binary's symbol table, and
+compared each chain function's prologue `sub rsp` between the two builds. The
+per-level chain carries two frames of
+`Session::try_apply_down_values_from_symbol` and one of
+`Session::try_apply_down_values`. Exactly one frame differs:
+`try_apply_down_values` is `0x288` (648) in base and `0x298` (664) in the
+candidate; `from_symbol` is 1,240 in both. Its source did not change. The
+candidate's `record_profile_down_value_scan` is a new 32-byte standalone symbol
+that base inlined into that frame; the dispatch/counter slow-path bodies the
+collector grew flipped that inlining. The executed work is unchanged — the
+campaign's instruction rows are identical — so the defect is the reserved slot,
+not new work, and it is still a violation.
+
+**Ruling 6 — the bar is unchanged; repair the frame, do not move the bar.**
+The disabled Function chain must return to exactly 18,304 bytes per level,
+intercept 12,392, residual 0, and the same eight absolute samples, in both
+builds, with the instruction rows still identical. No rebaseline, no padding,
+no work removal.
+
+A one-line shape is sufficient and I measured it: with `#[inline]` on
+`record_profile_down_value_scan` in a copy of the candidate tree, the probe
+returns 103,912 / 195,432 / 286,952 / 378,472 twice each (slope 18,304,
+intercept 12,392, residual 0) and `try_apply_down_values` is back to `0x288`.
+That is an existence proof of the fixed point, not a prescribed edit: choose
+the shape that keeps every disabled hot frame at its base size, and verify it
+with both the aggregate probe and a per-frame comparison of the evaluation
+chain (`BRIEF611_BACKTRACE=1` plus the prologue sizes), two builds per arm.
+
+**What any further source edit re-opens.** A source edit changes line spans
+and the contract fingerprint context, so the canonical ownership/census
+replays and fingerprints must run again after the repair, and the census
+assertion only moves if the edit genuinely changes its population — if it
+does, STOP and I rule it. Re-run the six mutants on the repaired source; their
+receipts are tied to the source they were measured on. The queued F6 control
+and every other 702/703 bar stay as they are.
+
+**What I verified myself.** The depth-three measurements above; the frame
+table of all 93 chain frames in both arms; the candidate's call list in
+`try_apply_down_values` (base inlines the two counter slow paths, the
+candidate calls the outlined wrapper); and the `#[inline]` experiment, built
+through the canonical probe builder at CGU 1 (`sha256
+cc8490e7b67c86919e4d0d609bba1bcfe4ad0487a9681a47f2d23ac4d8ec8581`), whose
+eight samples equal the standing bar exactly.
