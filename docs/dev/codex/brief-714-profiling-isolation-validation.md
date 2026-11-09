@@ -11,10 +11,11 @@ the profiling test-lease exclusion no longer flakes under the schedule that
 failed before the repair: **37 consecutive full-lib draws at 8 threads, every
 one exactly `1413 passed; 0 failed; 5 ignored; 0 measured; 2 filtered out`**
 with only the two standing root-context skips. Then prove that the repair has
-no production presence: the release artifact rebuilt from this frozen source
-must be byte-identical to the accepted C28 artifact
-`d9f2339d05f2babf3c37f6da750e6ec72702febf2d42785a96f600c493642627`, and the
-four-column erasure certificate must be re-emitted on it.
+no production presence: a fresh build from this frozen source must reproduce
+the accepted C28 artifact's object code — 16/16 members byte-identical to
+`d9f2339d05f2babf3c37f6da750e6ec72702febf2d42785a96f600c493642627` (R2: the
+rlib sha itself cannot be reproduced, measured) — and the four-column
+erasure certificate must be re-emitted on that fresh artifact.
 
 The pre-repair schedule failed 5/12 (stage-A base), 3/12 (brief-711
 candidate) and 4/12 (the brief-712 tree) at 8 threads; all arms were green at
@@ -85,10 +86,12 @@ earlier (7/12)^24 = 2.41e-6 is not the bar.
    `profiling::lease` namespace is absent; the pre-existing occurrences are
    enumerated with source provenance; `lib.rmeta` names are listed separately
    with the standalone rustc probe calibration. Because the source is frozen
-   and the accepted artifact was built from this same source, the rebuild
-   **must** be byte-identical to `d9f2339d…`; a mismatch is a STOP with the
-   member-by-member comparison, never a same-SHA claim and never a source
-   workaround.
+   and the accepted artifact was built from this same source, R2 sets the
+   bar, not the rlib sha: the fresh artifact's 16 object members must be
+   byte-identical to the live artifact's, `lib.rmeta` must have the same
+   size with differences confined to at most 7 runs of ≤ 16 contiguous
+   bytes, and anything else is a STOP with the member table — never a
+   same-SHA claim and never a source workaround.
 5. No disabled-path measurement beyond the artifact identity and the
    certificate: the repair is `cfg(test)`-only, and the director's member
    comparison already shows the release object code is symbol/address/
@@ -110,11 +113,14 @@ earlier (7/12)^24 = 2.41e-6 is not the bar.
 
 ## Verification (you run it)
 
-1. Source freeze: `git rev-parse HEAD` = `03b4c133…`, clean tree, no active
-   mutant; the binary SHA recorded once.
+1. Source freeze per R4, with no git: the director's
+   `.temp/director/freeze-714.json` quoted verbatim, the live artifact sha
+   (R2.1), and the one draw binary's sha (R3).
 2. The 37 draws, each count quoted verbatim, with the per-draw index.
 3. The features control.
-4. The release artifact and certificate; the archive SHA comparison.
+4. The fresh release artifact, the 16/16 object-code identity table against
+   the live artifact (R2.2), and the four-column certificate on the fresh
+   artifact (R2.3).
 5. `report.py` assembly and check; the final message is `report.py summary`.
    Stop for the director's gate; a green campaign does not authorize a
    commit.
@@ -146,7 +152,11 @@ STOP is accepted as well taken. Both premises of the contradiction are mine
 and wrong, and the preflight exposed a third defect before the 37-draw
 budget could be spent on it.
 
-### R1 — the freeze query is read-only and authorized
+### R1 — the freeze query is read-only and authorized — **WITHDRAWN by R4**
+
+R4 withdraws this section from the worker's duties: the worker runs no git
+command of any kind, and the freeze receipt is the director's. R1 stands
+only as the record of what was wrong with the original brief.
 
 The Scope required `git rev-parse HEAD` / `git status --porcelain` and then
 forbade "git" in the same document. "No git" forbids **mutation** — add,
