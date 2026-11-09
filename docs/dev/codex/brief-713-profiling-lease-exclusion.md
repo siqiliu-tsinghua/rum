@@ -2031,3 +2031,185 @@ The pin stays the C20 value unless the diagnosis adds an admitting body; if
 it does, re-pin once at the final source. Acceptance resumes only with the
 prescribed series green (full lib three consecutive times at 8 threads, once
 at 1) after the repair I rule. Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-21 stop): Q29 the reset clears unconditionally; the drain reaches the handoff first
+
+Run 21 is the diagnosis Q28 ordered, and it is accepted.
+
+- **Twelve exact full-8 draws** of the C20 binary: 4 red / 8 green; every
+  red is `lp07_lifecycle_reasons_scopes_and_storage` in the `reset`
+  iteration. The mode inference is accepted: the only assertion at
+  `module.rs:398` sits inside `if reset`, the captured prefix ends after the
+  three non-reset modes, and the instrumented run prints `mode=reset`
+  explicitly. These are diagnosis draws, not acceptance.
+- **Track A is the named class "a reset that does not clear the map."** The
+  trace is exact: `clear536` at `cache.reset.after_clear` in generation 195,
+  then the legitimate registered writer `537/538` (`ThreadId(414)`,
+  `REGISTERED_GEN=195`, `CURRENT_GEN=195`, epoch 32882 — the handoff test's
+  own scope worker) writes `f`; the handoff parent retires epoch 32882 at
+  539; the lifecycle generation 222 resets at 571/572 (retires epoch 34525),
+  and the cache reset at 573 reads `flag=2` and returns at 574. The boundary
+  assertion is quoted at `c21-a-trace-full8-03.log`:
+  `assertion failed: !snapshot.logical.contains_key("cache-source|eval_module_by_source|f")`,
+  `f=Some([1])`. No write follows 538 and no clear follows 536, so this
+  observation is neither a foreign-unregistered write, nor a leaked
+  registration, nor a pre-reset write settling after the reset — the scope
+  of that exclusion is this recorded failure. Source confirms the mechanism:
+  `reset_evaluation_cache_profile_counters` returns at
+  `evaluation_cache/profile/mod.rs:593-601` when the cache flag is disabled,
+  before the process-global `symbol_timing_profile_counters()` is cleared at
+  :646, and the snapshot emits `cache-source|{name}|{symbol}` from that map
+  at :845-859 unconditionally. The unchanged named-writer pair is red 1/1 at
+  8 on the exact binary; the traced pair's greens are retained and do not
+  exonerate.
+- **Track B is separate and now has its panic text.** Full serial with
+  `--nocapture` completed in 222.43 s, exit 101, 1403/5/5. All five failures
+  are `diagnostic drain stalled at 480 bytes` at `epoch.rs:1268`: the four
+  summary-bridge tests plus
+  `unregistered_writes_do_not_reach_a_held_window`. The fourth summary times
+  out inside `drain_for_lease` during `enabled() -> lease_drained()`, before
+  `TEST_LEASE` acquisition and before its scope, worker creation or join.
+  Mechanism: `logical_contract::profiling_observer_covers_every_map_and_flag_without_ranking`
+  takes a raw lease and calls `snapshot()`; `observe_module_completions`
+  calls `epoch::current()`, which creates and retains the process current
+  epoch; `TestLease::drop` clears the thread registration and generation but
+  leaves `current_slot`; the next fixture's `lease_drained()` waits for
+  process bytes zero before acquiring and resetting the lease. Controls:
+  each failing summary alone at 1/8 is green; the observer -> first summary
+  predecessor pair is red 1/1 at 30.01 s; the other three summary
+  predecessor pairs are green; the fifth failure is green alone at 1/8 and
+  its immediate predecessor pair is red 1/1 at 30.02 s. No Track A
+  absence-key assertion fails in the serial run; the two tracks are not
+  merged.
+- **Restoration and standing evidence are exact:** seven trace files
+  archived and restored, 1,602 hashes equal C20, census 1219 (14/1,167/38)
+  unchanged, 1,415 test names, all standing replays green, no active probe,
+  no new skip. The one instrument FLAG (a scratch replacement matched twice)
+  is settled and did not fix a failure. The ledger's 1405/5/5 sums two child
+  result lines; the authoritative result is 1403/5/5.
+
+### Q29-A — the reset clears; only activation is flag-gated
+
+The class is **a reset that consults a feature flag to decide whether to
+clear process-global state.** The instance is measured; the class is the
+shape: both reset entries early-return before clearing when their profile
+is not configured, and the state they own is process-global and can outlive
+a lease generation (test flags are swapped between generations; a prior
+generation can write while enabled, and a later generation can reset while
+disabled). "Disabled now" does not imply "nothing to clear".
+
+Ruling: in both entries, admission is unchanged; the configured predicate
+is still evaluated (it keeps the cold-load side effect); **every clear
+becomes unconditional**; only the activation tail
+(`LEXICAL_PROFILE_ACTIVE.store(1)` at `reset.rs:127` and
+`EVALUATION_CACHE_PROFILE_ACTIVE.store(1)` at `mod.rs:655`) stays behind
+`configured`.
+
+- `profiling/reset.rs:8`: `admit_exclusive()` first;
+  `let configured = config::lexical_profile_configured_admitted(_admitted.admitted());`
+  then unconditionally `reset_production`, the counter `reset!`, every TLS
+  clear and `LEXICAL_PROFILE_SUMMARY_PRINTED.store(0)`; then
+  `if configured { LEXICAL_PROFILE_ACTIVE.store(1); }`.
+- `evaluation_cache/profile/mod.rs:584`: `admit()` first;
+  `let configured = evaluation_cache_profile_configured_admitted(&access);`
+  then unconditionally the 21 atomics, the four maps and the TLS stacks and
+  depths; then
+  `if configured { EVALUATION_CACHE_PROFILE_ACTIVE.store(1); }`.
+- No other change: ordering preserved (activation last), no new admission,
+  no second fence, no cfg split of the clearing, no change to the frozen
+  test, its expectation, the two standing skips, the `RumProfileReset[]`
+  enabled-path output or the flag-getter behaviour. With the feature
+  disabled, an explicit reset now clears already-empty state and does **not**
+  activate the profile; the enabled path is unchanged.
+- Class scan duty: every `fn reset*` in `profiling/**` and
+  `evaluation_cache/**` with a disposition — the two entries above (fixed),
+  `reset_for_lease`/`reset_production`/`reset_unleased` (no flag in body,
+  unconditional), `reset_waiting` (an observable), `reset_hook` (an
+  unrelated hook); and every caller — `eval_rum_profile_reset`
+  (`debug_tools/basic.rs:111`), `logical_profile_reset`
+  (`runtime/mod.rs:125`) and the test fixtures — with no new caller.
+- Falsifiers, both halves of the class, mandatory and permanent:
+  1. A deterministic class witness written **before** the repair and run red
+     on the pre-fix C20 source at 8 and 1: generation 1 enables both
+     profiles and writes real state (a `cache-source|eval_module_by_source|f`
+     row through the real alias writer, and a lexical counter through the
+     real evaluation path); generation 2 takes the next lease, disables both
+     flags under `publish()`, calls both resets, and asserts the snapshot
+     contains neither the cache-source row nor the lexical counter. Pre-fix
+     it must fail quoting the surviving row; post-fix it must be green at 8
+     and 1. No direct static mutation in place of the real write path.
+  2. The named-writer pair
+     (`publication::handoff::five_modes_handoff_and_own_open` then
+     `lp07_lifecycle_reasons_scopes_and_storage`) at 8 threads: red on the
+     pre-fix binary (already 1/1), green 5/5 at 8 and once at 1 after the
+     repair.
+  3. `lp07_lifecycle_reasons_scopes_and_storage` alone at 1 and 8 after the
+     repair, all seven modes green, the assertion and both skips unchanged.
+  The pin stays 1219: neither the repair nor the witness adds an admitting
+  body; if one appears, re-pin once at the final source and say so.
+
+### Q29-B — the drain reaches the handoff before it waits
+
+The class is **a current epoch that outlives its lease, waited on before
+the only transaction that retires it.** `lease_drained` waits for
+`budget::process_bytes() == 0` before `lease()`; the current epoch's 480
+bytes are released only by the fenced handoff reset inside `lease()`
+(`reset_for_lease` -> `reset_unleased` -> epoch take + retire). The wait is
+unsatisfiable for that charge, and the 30 s assertion fires.
+
+Ruling: reorder `lease_drained` (`profiling/logical/epoch.rs:1250-1262`) so
+the fenced handoff is reached before the wait; the lease is still never
+held while waiting:
+
+```
+pub(in crate::runtime) fn lease_drained() -> crate::runtime::profiling::lease::TestLease {
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(30);
+    loop {
+        let lease = crate::runtime::profiling::lease::lease();   // Q8 handoff reset
+        reset_for_lease(&lease);                                 // keep the explicit reset
+        if budget::process_bytes() == 0 { return lease; }
+        drop(lease);                                             // a retained owner needs the lease
+        drain_for_lease(deadline);                               // wait WITHOUT the lease
+        std::thread::yield_now();
+    }
+}
+```
+
+- `drain_for_lease` stays private, its predicate, 30 s deadline and exact
+  message unchanged. The three call sites (`engine_support.rs:18`,
+  `module.rs:408`, `retained_pause.rs:425`) are unchanged. The invariant
+  stays literal: never wait for zero while holding `TEST_LEASE`.
+- Do **not** reset in `TestLease::drop`: the drop is not fenced by the
+  handoff, and a drop-time reset would mask the Q8 falsifier (removing
+  `reset_for_lease` from `lease()` must stay red). Do not extend the
+  deadline, serialize fixtures, change the thread default, add a skip, or
+  edit the raw-lease fixture
+  `logical_contract::profiling_observer_covers_every_map_and_flag_without_ranking`
+  — the helper must make any fixture safe. No new admission, no
+  payload-lock admission.
+- Class scan duty: every creator/retainer of the current epoch
+  (`epoch::current`, `storage`, `for_test`) and every drain/acquire path,
+  with the disposition of `TestLease::drop` (unchanged, because the fenced
+  handoff is the cut and the Q8 mutant depends on it); quote the invariant
+  per site.
+- Falsifiers: the two named predecessor pairs are red on the pre-fix source
+  at 1 (30.01 s and 30.02 s, 1/1; logs retained) and must be green 5/5 at 8
+  and once at 1 after the repair; the Q13 permanent falsifiers
+  `lease_acquisition_drains_a_prior_epoch_charge` and
+  `lease_drain_waits_without_holding_the_lease` must stay green at 1 and 8
+  (that is the no-regression proof for the reorder); then the full serial
+  with `--nocapture` and the 600 s bound must be green — 1408/0/5 with the
+  two root-context skips and the five ignores.
+
+### Order after Q29
+
+The class witness red on the pre-fix source -> both repairs -> the witness,
+the named-writer pair, the two predecessor pairs and the Q13 falsifiers
+green -> the full serial green -> the acceptance series (full lib three
+consecutive times at 8 threads, once at 1) -> the release erasure and the
+test-name delta. The workspace run, the 37-run validation and every
+performance gate stay mine. Acceptance is held until this series is green;
+no expectation change, no new skip, no deadline or serialization change, no
+`unsafe`, no repo change outside the MAY list.
+
+Resume with `CDX_FORK`.
