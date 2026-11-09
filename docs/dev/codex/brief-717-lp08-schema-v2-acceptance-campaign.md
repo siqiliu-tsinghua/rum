@@ -932,3 +932,47 @@ disposition for all 23 labels, naming each positive row's resolution. Then
 Stage E and F unchanged. No capture, panel, ledger draw or build is rerun.
 Dispatch run 10 forked from the run-9 session
 `01a1c20d-c2fd-7c53-8daf-2472ab562d24`.
+
+## Continuation run 10 Stage-D completion and mutant-driver STOP ruling (director, 2026-11-10)
+
+Stage D is complete and accepted on my own verification: the corrected
+analyzer (only the two ruled corrections) resolved all 23 labels over the
+552 saved profiles and the eight saved ledger draws. The whole-ledger scan
+covers 991 repo functions: 79 changed, 921 stable, and 9 positive same-call
+rows, of which the only stable one is the accepted once-called
+`drive_input_request` 54 -> 55 intercept; the other eight are unstable rows
+whose four-draw ranges overlap and whose owning sources I re-hashed
+byte-identical between the base arm and the final tree
+(`expr.rs`, `association_data.rs`, `control_data/mod.rs`,
+`branching_loops.rs`, `comparison.rs`, `cache.rs`, `stability.rs`,
+`builtin_catalog.rs`, `mutation_proofs.rs`); `changed_code_growth=0`. My
+own recomputation reproduces the counts and the nine rows. All 23 label
+dispositions are accepted: 62 positive rows, each with an owning source
+from that same nine-file proof set and overlapping slope ranges. Two labels
+exceed the layout envelope on timing
+(`association-part-key-read-width32000`, +0.07% Ir on a 605,638 slope;
+`appendto-list-incremental-small`, +0.13% Ir on a 2,643,218 slope, each
+inside its process band), and the instruction lane does not support the
+timing movement, so they stay recorded as noise. Stage E's completed part
+is verified: four LP01 parents, 40 comparisons byte-identical with 88,795
+records per parent; the 12 host cells green at 8 and 1; the two standing
+root reds 0/2/0 at 8 and 1; mutant 1 red 0/1/0 at 8 and 1 and restored to
+the forced-baseline SHA `b0e38205...`.
+
+**The mutant STOP is accepted as an instrument failure of the worker's
+driver, not a product signal.** Mutant 2's named observer
+(`model::determinism`) reddens: its test spawns two child processes, so the
+saved log carries three summaries, each `0 passed; 1 failed`, and the run
+exits 101 at 8 threads and at 1; the driver's added aggregate precondition
+expected one summary (0/1/0) and rejected the honest 0/3/0, and its STOP
+message ("no longer reddens") is inaccurate and stays preserved.
+**Ruling:** a mutant setting is accepted when every test-result summary the
+run emits for the named observer records that test as failed and the binary
+exits 101; the number of summaries is recorded, never asserted against a
+fixed count; the restoration must return to the forced-baseline SHA and the
+same run must be green at 8 and 1. Resume at mutant 2's restoration, then
+mutants 3-10 in order, then the frozen runtime suite at 8 and 1, fmt, and
+the workspace with the seven standing skips and the native ZeroMQ EPERM
+boundary reported with its serial reproduction; then Stage F. Dispatch run
+11 forked from the run-10 session
+`01a1c227-e8a8-7041-8b6d-49a84f392116`.
