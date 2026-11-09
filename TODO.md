@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-11-09. The committed tree runs through:
+Status checkpoint: 2026-11-10. The committed tree runs through:
 - G13 step S9 (brief-617, control and cleanup; gated, below);
 - G15-A (brief-619, `afdcd02f`) and G15-B (brief-620, `43a26c72`);
 - the G15-C design (brief-621, accepted `8f77793c`) and G15-C1 (brief-622,
@@ -22,7 +22,12 @@ Status checkpoint: 2026-11-09. The committed tree runs through:
   `5184797c`, amendment 2 `f38657d0`) and the shared parse (brief-636);
 - the test audit's design stage (brief-639, `d6533dac`);
 - the profiling lease's exclusion (brief 713, accepted 2026-11-09;
-  briefs C24-C28), which closes brief 712's class.
+  briefs C24-C28), which closes brief 712's class;
+- LP08's schema-v2 stages A (brief 710) and B (brief 711), brief 714's
+  stage-32 validation, the byte-delta witnesses (brief 716) and the
+  disabled source-timing seam's repair (brief 718, accepted 2026-11-10:
+  3 Ir/call on both campaign labels, helper at zero calls, workspace
+  4,212/0/61).
 
 **Next, in order** (the branch queue): LP08's remaining schema-v2
 publication, G15-C2's remaining 353 rows on the final source, CM,
@@ -36,16 +41,17 @@ gate; the current 23-key handoff witness stands; transient buffers are not
 charged twice; equal clock readings invalidate visibly; symbol keys use an
 injective escaped encoding. Stage A is installed (brief 710): the
 epoch-owned synchronous family index over the seven recorder seams, with the
-disabled path cheaper per call than base on all six seams, the stack
-identity exact and the whole-workload instruction total below every base
-draw. Stage B is installed (brief 711): the schema-v2 renderer over that
+disabled path cheaper per call than base on all six seams (the
+whole-workload instruction total is noise-limited and is recorded, not
+gated), the stack identity exact. Stage B is installed (brief 711): the schema-v2 renderer over that
 index — the `N ∪ S ∪ A ∪ Z` union, the injective escaped keys, the mode
 header, all legacy bytes preserved — with the host workspace green at
 4,185/0/61. The test-isolation repair (brief 712 design, brief 713 implementation,
 accepted 2026-11-09) carries a session's lease generation through
 contexts, the session span and both teardown entries, so the stage-A
 flake class is covered (workspace 4,212/0/61 at 8 threads; 1,420 test
-names). Stage C is next after brief 714's acceptance. The test
+names). Stage C is brief 717's acceptance campaign, and it restarts at
+Stage A on the brief-718 source after that seam repair. The test
 audit's Stage B and D03 are closed; LP05-LP08's promotion is done. The
 10-29 estimate in `docs/dev/security-hardening-progress.md` is pending a
 re-base (user ruling 2026-11-08: the Codex tier was upgraded and the

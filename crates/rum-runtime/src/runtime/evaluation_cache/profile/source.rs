@@ -249,6 +249,7 @@ pub(in crate::runtime) fn record_profile_module_body_substitution_by_source(
     record_current_source_timing("module_body_substitution_by_source", start);
 }
 
+#[inline(never)]
 fn record_current_source_timing(name: &'static str, start: Option<Instant>) {
     #[cfg(any(
         test,
@@ -265,14 +266,60 @@ fn record_current_source_timing(name: &'static str, start: Option<Instant>) {
     let Some(access) = crate::runtime::profiling::lease::admit() else {
         return;
     };
-    if !evaluation_cache_profile_enabled_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    if !evaluation_cache_profile_enabled_admitted(&access) {
+        return;
+    }
+    let Some(start) = start else {
+        return;
+    };
+
+    record_current_source_timing_enabled(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        timing,
         #[cfg(any(
             test,
             feature = "test-builtin-memory-growth",
             feature = "test-continuation-slots"
         ))]
         &access,
-    ) {
+        name,
+        start,
+    );
+}
+
+#[cold]
+#[inline(never)]
+fn record_current_source_timing_enabled(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    timing: Option<(u64, Option<SymbolTimingFrame>)>,
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    name: &'static str,
+    start: Instant,
+) {
+    #[cfg(not(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    )))]
+    if !evaluation_cache_profile_enabled_admitted() {
         return;
     }
 
@@ -282,7 +329,7 @@ fn record_current_source_timing(name: &'static str, start: Option<Instant>) {
             feature = "test-builtin-memory-growth",
             feature = "test-continuation-slots"
         ))]
-        &access,
+        _access,
     ) else {
         return;
     };
@@ -298,10 +345,10 @@ fn record_current_source_timing(name: &'static str, start: Option<Instant>) {
             feature = "test-builtin-memory-growth",
             feature = "test-continuation-slots"
         ))]
-        &access,
+        _access,
         name,
         symbol,
-        start,
+        Some(start),
     );
 }
 

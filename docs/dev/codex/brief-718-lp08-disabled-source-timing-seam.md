@@ -194,3 +194,84 @@ action, the tree's state, and anything the director needs to take over.
 Callgrind table and the ledger scan as `sections`; `changes` lists every
 touched file with line ranges and a one-line why. Final message is
 `python3 scripts/report.py summary 718` and nothing else.
+
+## Director gate — 2026-11-10: ACCEPTED
+
+**The STOP is accepted as an environment boundary, not a product signal.**
+The workspace at 8 threads read 4,203/9/61 over 63 summaries; all nine
+failures are native ZeroMQ loopback binds denied with EPERM inside the
+worker sandbox, reproduced in the same binary at 1 thread (143/9/0). That is
+the standing sandbox class (brief 707, continuation B); the same nine tests
+pass on the host. The worker stopped at its bar instead of weakening it,
+which is the contract working.
+
+**My host gate on the live tree.** `cargo fmt --check` clean;
+`cargo check -p rum-runtime --all-targets` rc=0. Runtime lib, 3 x 8 threads
+and 1 x 1 thread, each exactly
+`1413 passed; 0 failed; 5 ignored; 0 measured; 2 filtered out`. The focused
+profiling witnesses (the five named gates, `synchronous_families` and the
+`publication::` tests): 31/0/0 at 8 and at 1 threads. The full workspace at
+8 threads with the seven standing skips: **4,212 passed / 0 failed / 61
+ignored over 63 binaries**, in a 16G scope (peak 15,403,331,584 B, no OOM).
+The first attempt in a 14G scope was SIGKILLed in `rum_stdlib --lib` at the
+scope cap (`oom_kill=1` after 913 tests, exit 101): the suite's measured
+peak is above 14 GiB, so that is a scope-size environment boundary of mine,
+not a test failure, and the 16G rerun is the gate. Four-build warning
+matrix: 0 / 3 / 0 / 3 diagnostics, only the three standing `test_builtins`
+names in the two lib-test configurations. The report's run counts
+`runtime-8 1415/0/5` and `profiling-witnesses 33/0/0` are parse artifacts:
+the worker's own logs read `1413 passed` and `running 31 tests` + `31
+passed`, and my reruns reproduce both.
+
+**Cost, measured.** `record_current_source_timing` reads **3 Ir per call**
+on both campaign labels at 50 and 100 iterations, four draws per cell,
+primary and serial (bar <= 4, target 3), against 24 on the red arm and 22
+on base, at identical call counts; the cold helper
+`record_current_source_timing_enabled` has **0 calls and 0 self-Ir** in
+every disabled run; the caller `evaluate_definition_application_rhs` stays
+at 91 (downvalue) and 125 (width32000) per call. Fifty-six rows in all
+(two labels x three arms x two iteration counts x four draws, plus the
+eight serial reproductions). Disassembly of the green CLI: the outer is 13
+bytes, `cmpl $0x3b9aca00,%ecx; jne <helper>; retq` -- the `Option<Instant>`
+niche check, so the disabled start-None path returns before any flag load;
+the helper is 1,321 bytes and holds the old enabled body verbatim. The
+test-cfg order (`take_symbol_timing_frame` -> `admit()` -> admitted flag
+read -> start check) is preserved, and the enabled path records the same
+counters and `EventKey::CacheSource` entries. The worker's source is
+identical to my calibrated start-first tree except two blank lines.
+
+**Whole-workload ledger and scan.** Four fresh captures (base and green,
+two interleaved draws each). The six accepted seam rows are exact at
+identical call counts on both arms (13->3 at 103,920; 23->18 at 393,040;
+18->14 at 91,440; 20->18 at 49,008; 20->18 at 21,428; 18->14 at 7,003);
+cold helpers 0 self-Ir / 0 calls; the repaired seam moves 22->3 at 109,077
+calls (-2,072,463 Ir); the six-seam deterministic delta stays -3,539,044,
+so the ledger's deterministic total is **-5,611,507**. Deterministic scan:
+567 of 619 `rum_core`/`rum_runtime` rows are stable within each arm across
+both draws; on the stable intersection exactly nine rows change per call --
+the seven seam reductions, `Session::drop` 34->33 at one call, and the
+single accepted once-called intercept `drive_input_request` 54->55 (the
+708 fixed-intercept class). **Zero unaccepted growth rows.** Whole-workload
+totals are recorded, not gated: base 16,460,946,396 / 16,458,927,112;
+green 16,463,656,544 / 16,461,948,238. The process-level hash-seed spread
+(52 unstable rows per arm, about 8 million instructions) dominates the
+-5.6 million deterministic delta; this is the run-4/5 noise-limited row,
+and Stage D's re-frozen range clause is unchanged.
+
+**Scope.** Five files. `source.rs` is the repair: `#[inline(never)]` on the
+outer, the test-cfg admission and admitted flag read kept before the start
+check, the enabled body moved once into the `#[cold] #[inline(never)]`
+helper, `access` renamed `_access`, `start` passed as `Some(start)`; no
+duplicated body, no `unsafe`, no `#[allow]`, no test change. The four TSVs
+are canonical replays: 0 removed rows; identities, statuses, dispositions
+and exclusions unchanged; `unknown_attributes` +5 rows, exactly the five
+new cfg attributes; `unknown_captures` 0 rows; `local-contracts` only the
+68 fingerprint cells; `promoted` only the 2 certificate cells -- the
+established replay pattern (brief 716's gate moved the same two cells).
+**This acceptance sets the standing-inventory baseline for the 717
+restart.**
+
+**Verdict: brief 718 is ACCEPTED.** The disabled source-timing seam is
+repaired to the `record_timing` class. Consequence: brief 717 restarts at
+Stage A on this committed source, whole A-F, with no A/B/C receipt
+carried; its Stage A inventory replay is against this commit's rows.

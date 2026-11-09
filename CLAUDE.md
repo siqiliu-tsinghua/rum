@@ -185,9 +185,9 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   workspace 4,212/0/61 (63 binaries), six host targets at 8/1, Q30
   four-column certificate on the release artifact (fixed-SHA anchor
   retired: object code identical across the source change). **Brief 716
-  accepted; brief 714 stage 32: 37/37 green at 8 threads from `660eee7a`
-  (mine repeats 37/37), fresh release R5-identical 16/16. Next: LP08 stage
-  C.** `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  accepted; 714 stage 32 green 37/37; brief 718 accepted at 3 Ir/call
+  (workspace 4,212/0/61; ledger -5,611,507). Next: 717 restarts at Stage
+  A.** `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

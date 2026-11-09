@@ -691,3 +691,13 @@ ledger, the timing panel, the 168 profiles and the two instrument failures
 (the reducer's receipt collision, recovered without a rerun; the attribution
 selector's first symbol form) are retained and are not rerun. Stage E did not
 run.
+
+**Restart note (director, 2026-11-10).** Brief 718 is accepted and its
+repair is the committed source of this restart. Stage A's standing-inventory
+baseline is that commit's replayed rows, not the pre-repair set: the
+ownership inventory carries five new `UnknownConstruct` rows for the
+repair's cfg attributes with zero removed or changed identities, the 68
+retention contract fingerprints and the two promoted certificate cells were
+re-emitted canonically, and the typed-slot, LP01, ownership and rejection
+census replays are green on that source. A zero-delta replay against those
+committed rows is the Stage-A bar; a further moved row is still a STOP.
