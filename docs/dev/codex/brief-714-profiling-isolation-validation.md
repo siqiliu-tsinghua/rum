@@ -45,8 +45,10 @@ earlier (7/12)^24 = 2.41e-6 is not the bar.
 
 - Only `.temp/brief-714/`: evidence, logs, the extracted artifact, the draw
   index.
-- No live edit, no git, no inventory/census replay, no host suite, no
-  workspace run (the director's), no timing/instruction/microbench lane.
+- No live edit, no git mutation (the three read-only freeze queries in R1
+  below are the only authorized git commands), no inventory/census replay,
+  no host suite, no workspace run (the director's), no
+  timing/instruction/microbench lane.
 - Verify the source freeze without re-hashing git-tracked source (user
   ruling 2026-11-04): `git rev-parse HEAD` equals
   `03b4c1337f665a9d69aac06dd8887fa1399951be` and `git status --porcelain` is
@@ -123,8 +125,112 @@ failure stops with the index intact; never overwrite a completed draw.
 ## Hard rules
 
 `AGENTS.md` and `TEMPLATE.md`; the testing policy is rum-only (this campaign
-compares rum against itself); no git, no live edit, no network, no
-third-party engine, no new `unsafe`; a red is reproduced at
+compares rum against itself); no git mutation (the three read-only freeze
+queries in R1 are the only authorized git commands), no live edit, no
+network, no third-party engine, no new `unsafe`; a red is reproduced at
 `--test-threads=1` before it is called a defect; all output under `.temp/`;
 the report is `rum-report/1` JSON with copied verdicts and the
 command/log/exit/count table.
+
+---
+
+## Stage-29 ruling — 2026-11-09: run 29's preflight STOP is well taken; the freeze query is read-only, and the release bar is object-code identity
+
+Run 29 stopped at the source-freeze preflight and did nothing else: no
+build, no draw, no live edit, no git call. The draw index is empty, the
+report quotes the contradiction it found (`checks: 2 PASS, 1 FAIL, 3 NA`,
+Q1), and its evidence is archived at `.temp/brief-714/evidence/run29/`. The
+STOP is accepted as well taken. Both premises of the contradiction are mine
+and wrong, and the preflight exposed a third defect before the 37-draw
+budget could be spent on it.
+
+### R1 — the freeze query is read-only and authorized
+
+The Scope required `git rev-parse HEAD` / `git status --porcelain` and then
+forbade "git" in the same document. "No git" forbids **mutation** — add,
+commit, restore, checkout, switch, stash, clean, branch, tag, fetch, pull,
+push. Exactly these three read-only commands are authorized, once, at the
+start, stdout recorded verbatim in the report:
+
+1. `git rev-parse HEAD` — record the value. It is the docs commit carrying
+   this brief, not `03b4c133`.
+2. `git status --porcelain` — must be empty.
+3. `git diff --quiet 03b4c1337f665a9d69aac06dd8887fa1399951be HEAD --
+   Cargo.toml Cargo.lock crates` — must exit 0.
+
+(3) is the freeze measurement: the tree under test is the accepted
+`03b4c133` source. (1) is a receipt, not a bar, because this brief's own
+commits move HEAD. "No active mutant" needs no separate check: a live
+mutant would break (2) or (3), and mutant copies live under `.temp/`, not in
+the source tree. Any other git command, and any source rehash, remains
+prohibited. My own receipt at ruling time: HEAD
+`12ef177b60a9cd3e8d0cbafe1e41fb28c57425dc`, `git status --porcelain` empty,
+(3) exit 0; the worker records its own values after this ruling's commit.
+
+### R2 — the release bar is object-code identity; the rlib SHA cannot be reproduced
+
+The clause "the rebuild must be byte-identical to `d9f2339d…`" is refuted by
+my own measurement — the Q39 class again: an anchor a rebuild cannot
+reproduce is not a bar. Two fresh private-target builds of the frozen tree
+at different paths (`.temp/director/probe-714/`,
+`.temp/director/probe-714b/`; `cargo build --release --offline --locked
+-j8`, 28 s and 27 s wall, peak 2.35 GB) and the accepted artifact agree
+exactly where the source decides:
+
+- **all 16 object members of `librum_runtime-c71407e195689fc9.rlib` are
+  byte-identical across all three**;
+- `lib.rmeta` is 18,810,704 B in every one, and the only differences are
+  **7 sixteen-byte dependency-hash entries** at fixed offsets (1069, 1120,
+  1269, 1373, 1424, 1474, 18,809,661; 112 bytes fresh-vs-accepted, 111
+  fresh-vs-fresh);
+- both causes are named and are not source: `liblibmimalloc_sys`'s
+  `b85de32113adef8e-static.o` embeds the C compiler's `__TIME__`
+  (`11:20:51.Nov  9 2026` in the accepted artifact, `18:54:48.Nov  9 2026`
+  in a fresh one; 5 bytes, same size), and the `serde` / `thiserror` rmeta
+  embed their build-script `OUT_DIR`
+  (`…/target/release/build/serde-b83050e6dac453a9/out/private.rs` against
+  the `.temp/…` twin; 893,848 vs 893,880 B).
+
+The production-erasure bar is therefore:
+
+1. **Live identity (read-only; no build in the live target):**
+   `target/release/deps/librum_runtime-c71407e195689fc9.rlib` sha256 =
+   `d9f2339d05f2babf3c37f6da750e6ec72702febf2d42785a96f600c493642627`.
+2. **Fresh build:** `CARGO_TARGET_DIR=.temp/brief-714/target cargo build
+   --release --offline --locked -j 8`; artifact path and sha recorded;
+   extract it and the live artifact and require **16/16 object members
+   byte-identical** and `lib.rmeta` equal in size with differences confined
+   to at most 7 runs of ≤ 16 contiguous bytes; anything else is a STOP with
+   the member table.
+3. **The four-column certificate runs on the fresh artifact**, so it binds
+   an artifact this run built; it names both shas and carries the
+   object-identity table.
+4. `target/release/librum_runtime.rlib`, the uplifted copy with sha
+   `4118c335…` (the retired C24 anchor), is **not** the artifact: never
+   certificate it.
+
+### R3 — the draw binary is built fresh, privately, once
+
+In the warm live `./target` the same trap applies to the test binary, so it
+is built in the same private target:
+
+- `CARGO_TARGET_DIR=.temp/brief-714/target cargo test -p rum-runtime --lib
+  --offline --locked -j 8 --no-run` → the one draw binary, path and sha
+  recorded once; every draw runs that file directly, never `cargo test`
+  again;
+- the features control builds its own binary in the same private target
+  with `--features test-builtin-memory-growth,test-continuation-slots`,
+  separate from the 37 and not a bar;
+- bounds: each build ≤ 900 s, each draw ≤ 600 s (the frozen source's known
+  serial full-lib wall is ~600 s; an 8-thread draw is a fraction of it), all
+  other brief text unchanged.
+
+### State
+
+The dispatch log is archived as `.temp/logs/archive/cdx_brief_714.run29`;
+the draw index restarts empty and **no draw was consumed**. The series, the
+count bar (`1413 passed; 0 failed; 5 ignored; 0 measured; 2 filtered out`),
+the two standing skips, the failure protocol and the no-restart rule are
+unchanged. Resume with the run-29 session
+`01a1bfea-f759-7300-b535-0b938b990ba8` as fork; report and stop for the
+director's gate.
