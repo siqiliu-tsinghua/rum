@@ -849,3 +849,55 @@ F. The run-7 prepared label programs under
 `.temp/brief-717/continuation7/label-probes/` may be reused only when
 byte-identical to this ruling's construction. Dispatch run 8 forked from the
 run-7 session `01a1c1dc-356c-7211-8a62-4343de70669f`.
+
+## Continuation run 8 attribution STOP ruling (director, 2026-11-10)
+
+Run 8 completed the 13 remaining label panels under the sequential-
+construction ruling — 312 new profiles (each label at 50/100, three arms,
+four draws) plus the 240 consumed profiles copied byte-identically; both
+`-repeat` labels carry exactly 50/100 sequential exact-body statements and
+their runs exit 0 with the `probe-done-<label> N` marker; the unchanged
+reducer recorded all 23 labels (552 profiles, every function's self-Ir
+retained, self sums equal the totals), and the two source-timing bars read
+22/3/22 with callers 125/91 and helper 0. It then stopped at its
+attribution checker's rename-pair precondition.
+
+**The STOP is accepted as an instrument failure of mine, not a product
+signal.** The checker required, before normalization, equal aggregate
+self-Ir and call counts for each corresponding whole-ledger rename pair; on
+draw 1 `current_evaluation_profile_source_symbol` reads 4,144,392 / 230,244
+on base and `..._admitted` 4,143,528 / 230,196 on final, both exactly 18
+Ir/call. That aggregate is process-noise-limited: the four same-binary base
+draws span 90 calls (230,244 / 230,168 / 230,154 / 230,192) and the four
+final draws span 30 (230,196 / 230,184 / 230,180 / 230,166); the paired
+cross-arm difference is 48, inside the base's own spread, and its sign
+alternates (+48, -16, -26, +26). The self-Ir difference is exactly 18 x
+the call difference in every pair. The second pair,
+`lexical_profile_enabled`, is exact in all eight cells (193,644 / 17,604,
+11 per call, zero spread).
+
+**Rename proof, my own verification.** In the 23 label panels every rename
+pair is exact: 368 pair cells, all three arms equal in self-Ir and calls,
+zero coexistence of the two spellings in any capture, and in every cell
+the per-call cost is exactly 18 for
+`current_evaluation_profile_source_symbol` and 11 for
+`lexical_profile_enabled`. The rename is zero-net; the label-level
+equality is its proof, and the whole-ledger aggregate call count is
+recorded as noise-limited, never gated. I reproduced the reducer's medians
+on three labels, including `downvalue-exact-miss-repeat`
+(2,003,850.32 / 2,003,890.71 / 2,005,820.51), from the raw profiles.
+
+**Ruling.** The continuation completes the attribution with the corrected
+construction: in each capture the two rename spellings are normalized to
+the original name (each capture contains at most one spelling, asserted);
+the pair is accepted on per-call exactness in every cell plus the
+label-panel equality, with the aggregate counts and their within-arm
+spreads recorded. Then the whole-ledger scan runs over all repo functions
+across the eight draws: changed rows, stable rows and same-call growth rows
+are recorded; a growth row in changed code at identical call counts is
+still a STOP; the two once-called intercepts stay accepted; and the final
+corrected-703 disposition for each of the 23 labels must be named. Then
+Stage E and F unchanged, reusing the 552 profiles. No capture, panel or
+ledger draw is rerun; the unchanged reducer and the saved profiles are the
+inputs. Dispatch run 9 forked from the run-8 session
+`01a1c1f0-db8c-7ed0-8b99-6fce791e639d`.

@@ -179,14 +179,14 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   admission carries a session's lease through contexts, the session span
   and both teardown entries, with the paused-drop falsifier 8/1 and 1,420
   names. My gate: fmt clean, workspace 4,212/0/61 (63 binaries), six host
-  targets at 8/1, Q30 certificate on the release artifact (fixed-SHA anchor
-  retired). **Brief 716
+  targets at 8/1, Q30 certificate on the release artifact. **Brief 716
   accepted; 714 stage 32 green 37/37; brief 718 accepted at 3 Ir/call
-  (workspace 4,212/0/61; ledger -5,611,507). 717's restart is green through
-  Stage C and the D ledger; its label panel STOPed on the 5,000-iteration
-  `-repeat` wrap (the session iteration-work limit); a first continuation
-  stopped at its admission on the ruling commit's three docs, and it
-  continues on the 2026-11-10 rulings (sequential repeat; that doc set).**
+  (ledger -5,611,507). 717's restart is green through Stage C and the D
+  ledger; its label panel STOPed on the 5,000-iteration `-repeat` wrap
+  (the session iteration-work limit); its continuations finished all 23
+  panels (552 profiles) and both instrument STOPs — the three-doc
+  admission set and a noise-limited whole-ledger rename pair — are ruled;
+  the attribution completes, then Stages E and F.**
   `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
