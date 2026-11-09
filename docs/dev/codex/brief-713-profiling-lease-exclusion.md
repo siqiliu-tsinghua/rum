@@ -1877,7 +1877,7 @@ body. Making `blocks_unregistered_thread()` return `false` at its first line
 makes the function lie, and the frozen probe
 (`brief712_probe.rs:96`) asserts that same function is `true` for its
 outsider — the instrument contradicts the experiment's own frozen text
-before the barrie, so the attach body is never reached and the 30 s
+before the barrier, so the attach body is never reached and the 30 s
 timeouts (8 and 1) carry no attachment information. The coordinate
 correction (parent barrier :105, observer print :109) is accepted.
 
@@ -1961,3 +1961,73 @@ neither is a runtime red.
    erasure check, and the test-name delta. The workspace run stays mine.
 
 Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-20 stop): Q28 acceptance is held; diagnosis first, two separate tracks
+
+Q27 and the pre-acceptance work are accepted: one admission-class frame made
+both frozen gates red at 8 and 1 (all 15 flag reads and the start `true`,
+then SHA-exact restore green at both); the once-only census is pinned from
+the fresh canonical 1,219 (RET001 14 / RET002 1,167 / RET003 38); every
+standing replay was green before acceptance; runtime source is C18 and the
+1,602 hashes match the pre-acceptance freeze. The campaign driver's inference
+that any nonzero serial exit reproduced the parallel red is wrong and its
+correction is accepted.
+
+The acceptance STOP is correct and mandatory. A full-lib red at 8 threads
+that is green at 1 is the class this brief exists to close, not a flake:
+`lp07_lifecycle_reasons_scopes_and_storage` fails at `module.rs:398`
+because a post-reset snapshot still contains
+`cache-source|eval_module_by_source|f` (1407/1/5, exit 101). The serial
+attempt is **inconclusive, not a reproduction**: exit 124 at the 120 s
+bound, three summary-bridge FAILED lines without panic text, the original
+test never reached. The two observations stay separate until measured. Do
+not repair, weaken an expectation, add a skip, or rerun acceptance.
+
+### Track A — name the writer of the cache-source key
+
+1. Re-run the exact full-8 binary 12 draws with `--no-fail-fast`, and for
+   each draw record the failing test and the mode (the mode is not printed
+   today; a diagnostic message may add it — the expectation stays exactly
+   `!contains_key`). Keep every log; the rate and the failing mode are the
+   first data.
+2. Add an exact-cfg, test-only writer trace at every writer of the
+   `("eval_module_by_source", symbol)` cache-source map
+   (`evaluation_cache/profile/mod.rs:951/1003`) and at
+   `logical::synchronous::add`/`add_admitted`: monotonic sequence, thread id,
+   `REGISTERED_GEN`, `CURRENT_GEN`, epoch id, admitted-or-refused, and the
+   monotonic clock. The trace is inert in production; if kept, it stays
+   behind the exact cfg and is disclosed.
+3. On the failing assertion, dump the trace entries for symbol `f` together
+   with the reset's sequence point, and name the writer exactly one of:
+   - a foreign unregistered thread — the admission set is incomplete (a
+     class hole);
+   - a registered foreign thread — a fixture leaks registration across
+     tests;
+   - a pre-reset write that settled after the reset — the retained-alias
+     class;
+   - a reset that does not clear the map.
+   Each is a STOP with the trace quoted; no repair on the spot.
+4. Corroborate with pair runs at 8 threads: the failing test beside each
+   candidate writer test (`evaluation_cache/profile` tests,
+   `synchronous_families`, `brief713_timing_cleanup`, the lp07 siblings).
+   Pair green does not clear a named writer; pair red with the trace is the
+   class.
+
+### Track B — the serial summary-bridge failures are a separate instrument
+
+1. Run the full suite at 1 thread with `--nocapture` and a bound derived
+   from data (the prior same-shape serial was 23.43 s; use a per-test
+   watchdog or a whole-run bound of 600 s) so the panic text is captured.
+   The 120 s attempt lost it; do not repeat that bound.
+2. Record the first failing summary test's panic text, the test-order prefix
+   that precedes it, and whether the fourth test is blocked at a lock, a
+   deadline, or a scope join. Then run each failing summary test alone at 1
+   and 8 (control) and after its immediate predecessors.
+3. Do not merge Track A and Track B: different observers, different
+   mechanism candidates. A shared cause must be proven by the evidence, not
+   assumed.
+
+The pin stays the C20 value unless the diagnosis adds an admitting body; if
+it does, re-pin once at the final source. Acceptance resumes only with the
+prescribed series green (full lib three consecutive times at 8 threads, once
+at 1) after the repair I rule. Resume with `CDX_FORK`.
