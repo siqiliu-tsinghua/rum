@@ -353,9 +353,14 @@ step is launched on it.
 Resume at Stage B. Stage A's snapshots, manifests and receipts are
 consumed and are not repeated. The Stage B build and its binary are
 reused (the snapshot's target directory is warm); any fresh build still
-follows the brief's one-build-per-arm rule. Stages B-F, the bars, the
-exclusions, the host discipline and the deliverable are otherwise
-unchanged. The continuation's report extends `.temp/brief-717/report.json`
-with every new run, attempt and verdict line while keeping run 1's failed
-attempts; it does not overwrite them. Every script launched must exist and
-be readable first.
+follows the brief's one-build-per-arm rule. The base and layout arms used
+from here are the director-verified copies `.temp/brief-717/src/{base,layout}`
+(byte-identical to the retained 708 arms, 2,193 files each) bound by the
+retained 708 root receipts (`base-head-verification.json`,
+`source-identities.json`, `build-panel.json`); a 708 `src/` or `assembled/`
+subtree pruned by disk hygiene is not a missing snapshot. Stages B-F, the
+bars, the exclusions, the host discipline and the deliverable are
+otherwise unchanged. The continuation's report extends
+`.temp/brief-717/report.json` with every new run, attempt and verdict line
+while keeping run 1's failed attempts; it does not overwrite them. Every
+script launched must exist and be readable first.
