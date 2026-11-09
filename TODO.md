@@ -60,9 +60,9 @@ continuation then stopped at its admission check on the director's ruling
 commit (three docs; zero captures). The director rulings of 2026-11-10
 authorize exactly that three-document difference set and the sequential
 repeat construction; the 13 remaining panels are complete (552 profiles,
-all 23 labels recorded by the unchanged reducer), and a second stop on a
-noise-limited whole-ledger rename-pair count is ruled to finish the
-attribution, then run Stages E and F.
+all 23 labels recorded by the unchanged reducer); two further instrument
+stops (a noise-limited whole-ledger rename pair; a 376-vs-384 pair count)
+are ruled to finish the attribution, then run Stages E and F.
 The test
 audit's Stage B and D03 are closed; LP05-LP08's promotion is done. The
 10-29 estimate in `docs/dev/security-hardening-progress.md` is pending a

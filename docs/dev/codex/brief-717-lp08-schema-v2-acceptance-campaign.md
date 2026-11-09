@@ -901,3 +901,34 @@ Stage E and F unchanged, reusing the 552 profiles. No capture, panel or
 ledger draw is rerun; the unchanged reducer and the saved profiles are the
 inputs. Dispatch run 9 forked from the run-8 session
 `01a1c1f0-db8c-7ed0-8b99-6fce791e639d`.
+
+## Continuation run 9 attribution bookkeeping STOP ruling (director, 2026-11-10)
+
+Run 9 completed the corrected substantive checks and persisted
+`d-rename-equality-proofs.json` with 376 records — 368 label pairs (23
+labels x 50/100 x 4 draws) and 8 whole-ledger pairs (4 draws x 2 renames).
+Every label pair is aggregate-equal across the three arms; every capture is
+free of coexistence with exact 18 or 11 self-Ir per call; the
+noise-limited ledger pairs keep their aggregate differences recorded with
+no equality gate; and the two source-timing label bars read 22/3/22 with
+callers 125/91 and no helper calls. It then stopped on a worker-added
+cardinality assertion `len(rename_proofs) == 384`.
+
+**The STOP is accepted as a bookkeeping error in the worker's instrument,
+not a product signal and not the criterion's:** the ledger contributes 8
+pairs (4 draws x 2 renames), not 16; 16 is its arm-cell count. I verified
+the persisted proof myself: 376 records, the 368 label pairs all equal
+across three arms, the 8 ledger pairs carrying their raw counts and
+per-call exactness. The failed instrument and both logs are preserved
+unchanged.
+
+**Ruling.** The cardinality assertion is corrected to 376, and the
+progress label to the pair count actually used; nothing else changes in
+the analyzer, the reducer or the saved profiles. The corrected analyzer
+then completes the whole-ledger scan (all rum crates, eight saved draws;
+changed, stable and same-call growth rows recorded; a growth row in changed
+code at identical call counts is a STOP) and the final corrected-703
+disposition for all 23 labels, naming each positive row's resolution. Then
+Stage E and F unchanged. No capture, panel, ledger draw or build is rerun.
+Dispatch run 10 forked from the run-9 session
+`01a1c20d-c2fd-7c53-8daf-2472ab562d24`.

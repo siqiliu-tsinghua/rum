@@ -184,9 +184,9 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   (ledger -5,611,507). 717's restart is green through Stage C and the D
   ledger; its label panel STOPed on the 5,000-iteration `-repeat` wrap
   (the session iteration-work limit); its continuations finished all 23
-  panels (552 profiles) and both instrument STOPs — the three-doc
-  admission set and a noise-limited whole-ledger rename pair — are ruled;
-  the attribution completes, then Stages E and F.**
+  panels (552 profiles); its three instrument STOPs — the three-doc
+  admission set, a noise-limited rename pair, a 376-vs-384 count — are
+  ruled; the attribution completes, then Stages E and F.**
   `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
