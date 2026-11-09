@@ -2447,3 +2447,145 @@ Workspace, native-ZeroMQ, the 37-run validation and every performance gate
 remain mine.
 
 Resume with `CDX_FORK`.
+
+## Stage 24 ruling (Q33): a session's context carries its lease generation
+
+Run 24 is accepted as written. Q32 is green (primary 175 witnesses, fallback
+exactly `production_10`, test-support exact 0 and wrong E0308 at
+`source.rs:316`, the features-off falsifier red at that row, all 176 rows and
+the results schema kept), the full stdlib lib suite is `1111/0/53`, the Q30
+four-column certificate is built on the exact artifact
+`librum_runtime-c71407e195689fc9.rlib`, sha256
+`4118c33570e0f15e81d06d0c83f1216a08a81b410df3e6f7ead5fac87df042e6`, and
+the runtime source did not move. My own gate then found one real regression
+in the host surface.
+
+### The gate finding
+
+The host integration test `crates/rum-host/tests/logical_profile_lifecycle.rs`
+(the unchanged, pre-existing contract; outside the MAY list) fails on the
+implementation tree **deterministically at 8 and 1 threads**, with and
+without `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` in the runner (the test spawns
+its own child with the switch):
+
+```
+test logical_native_lifecycle ... FAILED
+thread 'logical_native_lifecycle' panicked at crates/rum-host/tests/logical_profile_lifecycle.rs:55:5:
+assertion `left == right` failed
+  left: [2, 1, 0, 0, 0, 0, 0, 0, 1, 0]
+ right: [2, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+```
+
+The parent's `:182` assert is the child's failure passing through. The
+failing section is the interleaved moved-session block (after
+`LP02_NATIVE session-drop abandoned-once`, before
+`LP02_NATIVE interleaved moved-session closed-once`): two sessions are
+paused on the main thread, session `a` is moved to a `std::thread::spawn`
+worker and resumed there, session `b` resumes on the main thread, then
+`closed([2, 2, ...])` expects both pauses recorded and none left in
+`input_required`. One pause is lost and one record stays in
+`input_required`.
+
+The pre-713 tree is green: a worktree at `a434f532`
+(`.temp/director/pre713`, own target) runs `logical_profile_lifecycle` 3/3
+at `--test-threads=1`. The regression is this brief's.
+
+Mechanism (measured, not argued): `Session::logical_profile_test_acquire`
+returns the thread-scoped `TestLease`; `lease()` sets `REGISTERED_GEN` on
+the acquiring thread only. The spawned thread resumes a session whose
+profiling context belongs to the current lease generation, but the new
+`admit()` refuses it (`lease.rs:93`, `REGISTERED_GEN` 0 != `CURRENT_GEN`),
+so `Context::enter_with_control` returns `None` and the pause write is
+dropped. My calibration (`.temp/director/probe-q33`, a byte copy of the live
+tree): the Q26 frame that deletes only `admit()`'s refusal branch makes the
+test 3/3 green at 1 thread. The frame is the diagnosis, not the repair.
+
+My gate's own instrument errors are recorded separately and are not the
+worker's: I omitted the seven standing skips (the two `lp655`/`lp656` reds
+and the five switch-gated host names), I ran the switch-gated suites without
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`, and my earlier probe left
+`__pycache__/*.pyc` under `crates/rum-stdlib/src/tests/retention_closure/
+compiler_oracle/` (now removed) which broke the frame-root source gate. The
+two falsifier reds, the switch-gated suites and the frame-root test are
+otherwise green on the implementation tree.
+
+### Ruling Q33
+
+The test-cfg lease must admit a thread **executing a session whose
+profiling context was captured under the current lease generation**, for the
+duration of that execution, and must keep refusing every thread that does
+not belong to the current lease.
+
+Required properties and shape:
+
+1. `Context` carries the lease generation it was captured under, recorded
+   only through an already-admitted capture (so it is the generation the
+   capture thread was registered for). Every added field is behind the
+   existing `cfg(any(test, feature = "test-builtin-memory-growth", feature =
+   "test-continuation-slots"))` gate; the production layout is unchanged.
+2. Session entry (`enter`, `enter_with_control` and the `_admitted` forms
+   reached from them) admits through a **generation-aware** admission: it
+   takes the `WRITE_GATE` read first, then accepts when the thread is
+   registered for the current generation **or** the context's generation
+   equals the current generation. `CURRENT_GEN == 0` stays unfenced as
+   today; a stale context (generation != current) stays refused.
+3. On success the entering thread's `REGISTERED_GEN` is set to the context's
+   generation and restored on the context guard's drop, on the entering
+   thread. Nested `admit()` calls inside the execution then pass, and any
+   write after a new lease publishes is still refused because each write
+   compares the registration against `CURRENT_GEN`.
+4. The exclusion is not weakened: a thread that never registered and never
+   enters a current-generation context is still refused; the unregistered-
+   writes witnesses and their mutants are unchanged. The Q26 frame is not
+   the repair.
+5. No production cost and no production path change: the machinery stays
+   test-cfg only; the default release artifact must stay byte-identical
+   (sha256 `4118c33...`, 16 object members, zero symbols/strings for every
+   machinery name in the Q30 certificate).
+6. No test change, no new skip, no assertion relaxation. The host test and
+   the rum-host tree are not touched.
+7. Class duty: list every admission entry reachable from an execution of a
+   session on a thread other than the one that captured the context, and
+   show for each whether the inherited registration covers it or it runs
+   before the context exists (then it must belong to the lease-owning
+   thread). Any entry that can run first on a foreign thread and cannot be
+   covered is a STOP.
+
+Scope: `profiling/lease.rs` and `profiling/logical/context.rs`;
+`profiling/logical/mod.rs` only if the capture-generation getter or the
+test lease object needs it. Nothing else. `exact.rs` pins and the oracle
+harness are not touched; if the new code adds a constructor context in a
+frontier body, the oracle count changes -- STOP and report, do not hand-edit
+the pin.
+
+### Calibration and acceptance
+
+1. `cargo test -p rum-host --test logical_profile_lifecycle` green 3/3 at
+   `--test-threads=8` and `=1` (its child sets the switch itself), quoting
+   the moved-session interleaved line and the two other tests. Also run
+   `logical_profile_abandonment`, `lp03_phase_rows`, `lp04_definition_rows`,
+   `lp05_assignment_rows` and `schema_v2_snapshot` green at 8 and 1.
+2. A permanent stale-generation witness: a context captured under lease N
+   must not write when it is entered on a spawned thread under lease N+1.
+   Calibrate it with a mutant that omits the generation comparison (accepts
+   any context generation): the witness must go red, and restore. The
+   positive arm is the moved-session test above.
+3. The unregistered-writes and foreign-thread pairs stay green at 8 and 1;
+   their single-site mutants stay red.
+4. After the last edit: the runtime lib acceptance series (full lib 3x at 8
+   threads and once at 1, each `1409/0/5` with the two standing skips), the
+   full stdlib lib suite to `1111/0/53` (the oracle re-runs on the changed
+   source; quote its `A1_ORACLE_ARMS` line and any row-count change as a
+   STOP), and the Q30 certificate rebuilt on the final tree with the same
+   artifact sha256.
+5. Runtime hashes: the Q33 edit is test-cfg only, so the production release
+   must be unchanged; report the source hash set delta relative to C24
+   (exactly the touched files).
+6. Report and stop for my full gate. A green series does not authorize a
+   commit; the host workspace, the native ZeroMQ checks, the 37-run
+   validation and every performance gate remain mine.
+
+The accepted Q29/Q32 series are superseded only by the re-run in item 4;
+nothing about the earlier evidence is withdrawn.
+
+Resume with `CDX_FORK`.
