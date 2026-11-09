@@ -59,9 +59,11 @@ Brief 714 (the 37-draw source-unchanged validation) is paused on a witness
 defect, not a product one: its second draw failed the collector witness,
 which asserts a delta of the process-global `PROCESS_BYTES` across a window
 that no drained lease makes quiescent. Brief 715 (design) proved the
-mechanism with a calibrated 4096-byte foreign refund and brief 716 replaces
-the seven raw-lease windows with owning-Budget observations; after that gate
-the series restarts from zero as stage 32, same bars.
+mechanism with a calibrated 4096-byte foreign refund, and brief 716
+(accepted 2026-11-09) replaced the seven raw-lease windows with
+owning-Budget observations, keeping the nine quiescent ones global; the
+collector now carries the calibrated refund permanently. The series
+restarts from zero as stage 32, same bars.
 
 **Open obligation, disclosed by brief 715 and not yet scheduled:**
 `crates/rum-runtime/src/runtime/evaluation_cache/tests.rs:185-218` compares

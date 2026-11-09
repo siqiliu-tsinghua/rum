@@ -264,3 +264,74 @@ command/log/exit/count table, every verdict line copied, every FLAGGED row
 settled, and explicit scope, replay, cost and falsifier evidence. Run
 `python3 -I scripts/report.py check 716` without any git option; the final
 message is exactly `python3 -I scripts/report.py summary 716` output.
+
+## Director gate — 2026-11-09: accepted; the release-identity bar is corrected, not the code
+
+**The STOP is well taken and the bar is mine — the third instance of one
+class.** I required a fresh release archive whose 16 object members are
+byte-identical to the accepted C28 artifact `d9f2339d…`; the fresh archive
+`94172a36…` differed in 14 of 16 members and `lib.rmeta` grew 18,810,704 →
+18,811,104 B. I compared the two archives myself:
+
+- Section sets are identical in every member (41,250 sections per side, the
+  per-member counts equal).
+- After normalizing rustc's `.llvm.<u64>` suffix in section names, **every
+  section of every member hashes identically**, except `.strtab`,
+  `.symtab` and `.shstrtab`, which carry the names.
+- Symbol tables are identical in entry count, value, size, type, bind,
+  visibility and index in every member, after the same normalization.
+- The suffix moved exactly once per crate, `3721675394416604558` →
+  `899173758429542867`, because the crate metadata moved by the 400 bytes
+  the `#[cfg(test)]` items record. It is the only difference in the
+  archive.
+
+So the object code is provably unchanged, and a raw byte-identity bar
+cannot hold across any source change — exactly what brief 714's R2 found
+for the rlib sha and Q39 for the fixed release-archive SHA. **Ruling R5:**
+release identity on this line is asserted on the section-name-normalized,
+content-hashed members plus the normalized symbol tables; a raw rlib or
+object byte-identity bar is retired. The certificate is
+`.temp/director/gate-716-erasure.json`: 16/16 members identical after
+normalization, fresh rlib sha256 `b8b6d951…`, and the four-column erasure
+table stands unchanged (the new identifiers occur zero times in object code
+and symbols; `BudgetProbe` appears once, in `lib.rmeta`).
+
+**One director edit, disclosed.** `tests/budget_witness.rs` asserted the
+foreign Budget's post-refund value against the literal `488` — a value
+taken from the observation, which this brief's own pitfalls forbid. It now
+captures `baseline` from the foreign epoch at creation and asserts
+`remaining == baseline` (`baseline=488` is printed). The meaning is
+unchanged: after the drop and join the foreign Budget must read exactly its
+own retained charge.
+
+**The derived cells moved because the source moved, and I replayed them.**
+My edit invalidated the 68 `local-contracts.tsv` fingerprints and the 2
+`promoted.tsv` certificate rows; the first workspace run I made therefore
+carried 17 `stale contract fingerprint` reds in `retention_closure`. I
+re-ran the canonical generator on the live tree (`regenerate_local_contract_fingerprints
+-- --ignored`), the two certificate emissions and the canonical
+`merge_promoted` helper, installed their outputs, and re-verified: default
+and no-default certificates 1/0 each, census 1/0, ownership exact 1/0,
+`-p rum-stdlib --lib` 1111/0/53. This is a replay, not a hand edit.
+
+**Accepted readings.** The test-name set is byte-identical to the 715
+reference (1,420 names, `diff` empty). M1-M6 each reddened exactly its
+predicted assertion at 8 and at 1 thread — `248 != 296` at
+`profile_queue/tests.rs:497`; `Some(120) != None` at `budget.rs:188`;
+`Some(4232) != None` at `tests/lease_release.rs:32`; `7104 != 0` at
+`budget.rs:159` (focused); `present=1024 minimum=32768` at
+`brief713_cleanup.rs:32`; `248 != 296` at `brief713_cleanup.rs:115` — and
+every restoration returned to the candidate binary sha `a32e56e6…`. The
+warning matrix is 0/0/3/3. The repaired collector under the permanent
+4096-byte foreign refund prints `refunded=296 expected=296`, which is the
+instrument this whole repair exists to leave behind.
+
+**My gate, on the final tree:** `cargo fmt --check` clean; full runtime lib
+`1413 passed; 0 failed; 5 ignored; 2 filtered out` at 8 threads and once at
+1; `cargo test --workspace --offline --locked -j 8 --no-fail-fast` with the
+seven standing skips `4,212 passed / 0 failed / 61 ignored` over 63
+binaries (the accepted 713 total); the six switch-gated host targets
+13/13 at 8 and at 1 under `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`;
+`-p rum-stdlib --lib` 1111/0/53.
+
+Brief 716 is accepted. Brief 714 restarts from zero as stage 32.

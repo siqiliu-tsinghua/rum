@@ -1394,3 +1394,14 @@ impl Epoch {
 #[cfg(test)]
 #[path = "../tests/brief713_context_drop.rs"]
 mod brief713_context_drop;
+
+#[cfg(test)]
+impl Epoch {
+    pub(in crate::runtime) fn test_budget_bytes(&self) -> usize {
+        self.budget.test_bytes()
+    }
+
+    pub(in crate::runtime) fn test_budget_probe(&self) -> BudgetProbe {
+        self.budget.test_probe()
+    }
+}

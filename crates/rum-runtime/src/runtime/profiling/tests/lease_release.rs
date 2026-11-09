@@ -20,12 +20,16 @@ fn logical_lease_drop_balances_thread_registration() {
         drop(session);
         assert_eq!(test_support::active(), 0);
         assert!(budget::process_bytes() > baseline);
+        let epoch = test_support::epoch();
+        let probe = epoch.test_budget_probe();
+        drop(epoch);
         drop(enabled);
 
         let _lease = test_support::lease();
+        let remaining = probe.bytes();
+        eprintln!("B716 LEASE_RELEASE remaining={remaining:?}");
         assert_eq!(
-            budget::process_bytes(),
-            baseline,
+            remaining, None,
             "lease drop must balance this thread's diagnostic registration"
         );
     }

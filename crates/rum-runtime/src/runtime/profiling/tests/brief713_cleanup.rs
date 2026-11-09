@@ -16,6 +16,7 @@ fn brief713_prior_generation_cleanup_completes() {
         },
         4,
     );
+    let probe = old.test_budget_probe();
     drop(old);
     drop(previous);
 
@@ -24,7 +25,11 @@ fn brief713_prior_generation_cleanup_completes() {
     let current = lease::lease();
     let epoch = epoch::current().unwrap();
     let rows = epoch.rows();
-    let bytes = budget::process_bytes();
+    let bytes = probe
+        .bytes()
+        .expect("old owners must retain their Budget before cleanup");
+    eprintln!("B716 OLD_CHARGE present={bytes} minimum={}", 32 * 1024);
+    assert!(bytes >= 32 * 1024);
     std::thread::spawn(move || {
         assert!(lease::blocks_unregistered_thread());
         drop(storage);
@@ -32,11 +37,13 @@ fn brief713_prior_generation_cleanup_completes() {
     })
     .join()
     .unwrap();
-    let refunded = bytes - budget::process_bytes();
+    let remaining = probe.bytes();
     let same_rows = format!("{:?}", epoch.rows()) == format!("{rows:?}");
     let faults = epoch.faults.load(Ordering::Relaxed);
-    eprintln!("B713 CLEANUP refunded={refunded} rows_unchanged={same_rows} faults={faults}");
-    assert!(refunded >= 32 * 1024);
+    eprintln!(
+        "B713 CLEANUP before={bytes} remaining={remaining:?} rows_unchanged={same_rows} faults={faults}"
+    );
+    assert_eq!(remaining, None);
     assert!(same_rows);
     assert_eq!(faults, 0);
     epoch::reset_for_lease(&current);
@@ -83,14 +90,16 @@ fn brief713_prior_boundary_settles_without_current_aliases() {
     let epoch = epoch::current().unwrap();
     let before = crate::runtime::profiling::logical_profile_snapshot();
     let rows = epoch.rows();
-    let bytes = budget::process_bytes();
+    let bytes = old.test_budget_bytes();
     std::thread::spawn(move || {
         assert!(lease::blocks_unregistered_thread());
         drop(boundary);
     })
     .join()
     .unwrap();
-    let refunded = bytes - budget::process_bytes();
+    let refunded = bytes
+        .checked_sub(old.test_budget_bytes())
+        .expect("owned charges unexpectedly grew in the refund window");
     let after = crate::runtime::profiling::logical_profile_snapshot();
     let counts = old.rows()[0].1;
     let same_rows = format!("{:?}", epoch.rows()) == format!("{rows:?}");
@@ -101,7 +110,10 @@ fn brief713_prior_boundary_settles_without_current_aliases() {
         "B713 BOUNDARY_CLEANUP refunded={refunded} old_calls={} old_open={} rows_unchanged={same_rows} aliases_unchanged={same_aliases}",
         counts.calls, counts.open
     );
-    assert!(refunded > 0);
+    assert_eq!(
+        refunded,
+        epoch::RECORD_PATH_STORAGE_BYTES + std::mem::size_of::<ProfileBoundary>() + 16
+    );
     assert_eq!((counts.calls, counts.abandoned, counts.open), (1, 1, 0));
     assert!(same_rows && same_aliases);
     assert_eq!(epoch.faults.load(Ordering::Relaxed), 0);
@@ -141,13 +153,15 @@ fn brief713_prior_boundary_cannot_settle_current_lease_rows() {
 
     // The handoff retires the old record path before a replacement epoch is
     // constructed. The retained boundary still owes its own storage refund.
-    let handoff_bytes = budget::process_bytes();
+    let handoff_bytes = old.test_budget_bytes();
     let current = lease::lease();
-    let handoff_refunded = handoff_bytes - budget::process_bytes();
+    let handoff_refunded = handoff_bytes
+        .checked_sub(old.test_budget_bytes())
+        .expect("owned charges unexpectedly grew in the refund window");
     let epoch = epoch::current().unwrap();
     let same_epoch = Arc::ptr_eq(&old, &epoch);
     let before = format!("{:?}", epoch.rows());
-    let bytes = budget::process_bytes();
+    let bytes = old.test_budget_bytes();
     let refused = std::thread::spawn(move || {
         let refused = lease::blocks_unregistered_thread();
         drop(boundary);
@@ -157,7 +171,9 @@ fn brief713_prior_boundary_cannot_settle_current_lease_rows() {
     .unwrap();
     let changed = format!("{:?}", epoch.rows()) != before;
     let counts = old.rows()[0].1;
-    let refunded = bytes - budget::process_bytes();
+    let refunded = bytes
+        .checked_sub(old.test_budget_bytes())
+        .expect("owned charges unexpectedly grew in the refund window");
     let faults = epoch.faults.load(Ordering::Relaxed);
     eprintln!(
         "B713 CURRENT_DROP same_current_epoch={same_epoch} unregistered={refused} current_rows_changed={changed} old_calls={} old_open={} handoff_refunded={handoff_refunded} refunded={refunded} faults={faults}",

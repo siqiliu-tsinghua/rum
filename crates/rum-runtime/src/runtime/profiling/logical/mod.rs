@@ -1546,3 +1546,10 @@ mod brief712_probe;
 #[cfg(test)]
 #[path = "../tests/brief713_cleanup.rs"]
 mod brief713_cleanup;
+
+#[cfg(test)]
+pub(in crate::runtime) use budget::BudgetProbe;
+
+#[cfg(test)]
+#[path = "../tests/budget_witness.rs"]
+pub(in crate::runtime) mod budget_witness;

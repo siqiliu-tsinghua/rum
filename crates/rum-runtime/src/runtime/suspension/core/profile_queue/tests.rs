@@ -235,7 +235,7 @@ fn brief713_failed_arena_allocation_returns_boundary_before_settlement() {
     assert!(ballast.resize(low));
     assert!(!ballast.resize(low + 1));
     assert!(epoch.is_valid());
-    let before = logical::brief713_probe_process_bytes();
+    let before = epoch.test_budget_bytes();
     let allocation = {
         let mut data = arena.data.lock().unwrap();
         data.allocate(cell)
@@ -251,7 +251,7 @@ fn brief713_failed_arena_allocation_returns_boundary_before_settlement() {
     assert_eq!(epoch.rows()[0].1.open, 1);
     // Peak reservation fails before reserve/slot insertion. Its unchanged
     // charge and empty sequence witness the unchanged arena on this path.
-    assert_eq!(logical::brief713_probe_process_bytes(), before);
+    assert_eq!(epoch.test_budget_bytes(), before);
     assert!(
         arena
             .data
@@ -411,6 +411,7 @@ fn brief713_collector_unwind_releases_owned_boundary() {
     use crate::runtime::profiling::{lease, logical};
     use logical::{AggregateKey, Owner};
     let lease = lease::lease();
+    let mut foreign = logical::budget_witness::ForeignRefund::charged(&lease, 4096);
     let epoch = Epoch::for_test(&lease, 1024 * 1024).unwrap();
     let control = Arc::new(crate::runtime::RequestInterruptState::new());
     let queue = ProfileQueue::new(GuestQueue::new(), Arc::clone(&epoch))
@@ -448,7 +449,8 @@ fn brief713_collector_unwind_releases_owned_boundary() {
     let (found, observed) = std::sync::mpsc::channel();
     let (retired, complete) = std::sync::mpsc::channel();
     ATTACHMENT_PAUSE.with(|slot| *slot.borrow_mut() = Some((found, complete)));
-    let bytes = logical::brief713_probe_process_bytes();
+    let bytes = epoch.test_budget_bytes();
+    foreign.refund_and_join();
     let (result, retired_rows) = std::thread::scope(|scope| {
         let lease = &lease;
         let epoch = &epoch;
@@ -477,7 +479,9 @@ fn brief713_collector_unwind_releases_owned_boundary() {
             .unwrap_or("");
         message.contains("assertion failed: matches!(") && message.contains("Policy::Expr")
     });
-    let refunded = bytes - logical::brief713_probe_process_bytes();
+    let refunded = bytes
+        .checked_sub(epoch.test_budget_bytes())
+        .expect("owned charges unexpectedly grew in the refund window");
     let expected = logical::epoch::RECORD_PATH_STORAGE_BYTES + boundary_bytes;
     let disposed = weak.upgrade().is_none();
     let rows_unchanged = format!("{:?}", epoch.rows()) == retired_rows;

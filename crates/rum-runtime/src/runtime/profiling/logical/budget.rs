@@ -165,13 +165,12 @@ fn logical_expired_queue_arena_stays_charged_until_weak_drop() {
     use crate::runtime::profiling::logical::Epoch;
     use crate::runtime::suspension::{FrameStorage, QueueArena};
     let lease = crate::runtime::profiling::lease::lease();
-    let before = PROCESS_BYTES.load(Ordering::Relaxed);
     let epoch = Epoch::for_test(&lease, 1024 * 1024).unwrap();
-    let initial = PROCESS_BYTES.load(Ordering::Relaxed);
+    let initial = epoch.test_budget_bytes();
     let mut queue = FrameStorage::new();
     queue.enable_profile(Arc::clone(&epoch));
     drop(queue);
-    let parked = PROCESS_BYTES.load(Ordering::Relaxed);
+    let parked = epoch.test_budget_bytes();
     assert_eq!(
         Arc::strong_count(&epoch),
         1,
@@ -181,6 +180,31 @@ fn logical_expired_queue_arena_stays_charged_until_weak_drop() {
         parked - initial,
         std::mem::size_of::<QueueArena>() + 2 * std::mem::size_of::<usize>()
     );
+    let probe = epoch.test_budget_probe();
     drop(epoch);
-    assert_eq!(PROCESS_BYTES.load(Ordering::Relaxed), before);
+    let remaining = probe.bytes();
+    eprintln!("B716 ARENA_RELEASE initial={initial} parked={parked} remaining={remaining:?}");
+    assert_eq!(remaining, None);
+}
+
+#[cfg(test)]
+pub(in crate::runtime) struct BudgetProbe(std::sync::Weak<Budget>);
+
+#[cfg(test)]
+impl BudgetProbe {
+    pub(in crate::runtime) fn bytes(&self) -> Option<usize> {
+        self.0
+            .upgrade()
+            .map(|budget| budget.bytes.load(Ordering::Relaxed))
+    }
+}
+
+#[cfg(test)]
+impl Budget {
+    pub(super) fn test_bytes(&self) -> usize {
+        self.bytes.load(Ordering::Relaxed)
+    }
+    pub(super) fn test_probe(self: &Arc<Self>) -> BudgetProbe {
+        BudgetProbe(Arc::downgrade(self))
+    }
 }

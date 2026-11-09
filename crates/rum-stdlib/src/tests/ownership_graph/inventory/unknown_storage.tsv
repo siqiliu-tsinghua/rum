@@ -113,6 +113,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1464	1	
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1468	1	module control_tests has 0 source candidates
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1542	1	module brief712_probe has 0 source candidates
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1546	1	module brief713_cleanup has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1553	1	module budget_witness has 0 source candidates
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	13	12	rum_runtime::runtime::profiling::logical::segments::Active.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/totals.rs	31	17	rum_runtime::runtime::profiling::logical::totals::ActiveId.thread: foreign representation std::thread::ThreadId: std :: thread :: ThreadId
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	484	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
@@ -126,6 +127,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_executi
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_generation.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_reset.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_timing_cleanup.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/budget_witness.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/control.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/definitions.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/evaluator.rs	1	1	source file is not reachable from a production or test module declaration
