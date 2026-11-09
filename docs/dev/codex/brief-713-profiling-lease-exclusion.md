@@ -1774,3 +1774,88 @@ growth, owned refunds) -> the remaining mutants including the Q4 B/C arms and
 the Q10 handoff -> the standing replays with the once-only pinned census -> the
 acceptance runs (full lib 3x at 8 threads, once at 1, the workspace, the release
 erasure, the test-name delta). Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-17 stop): Q25 the failed allocation returns its cell to its caller
+
+Q23 and Q24 are accepted as implemented. `QueueArena::shared` now admits before
+`epoch.queue_arena.lock()` and both claims go through `storage_admitted`; the
+Q16 fixture pins from its own scope worker with a retained `Arc<RecordPath>`
+for the open read, a readiness channel, a parent-local release sender and a
+bounded wait; the main thread keeps the TLS header, `Context::capture`, the
+real wrapper call and every expectation. Q16 is green 1/0/0 at 8 and 1, its
+hold-to-end mutant is red 0/1/0 at both with the nested-admission receipt,
+and the SHA-exact restore is green at both. Focused 15/15 at 8 and 1, the
+three queue neighbors 3/3, 1414 test names unchanged.
+
+The Q25 stop is correct and the edge is a production one:
+`ProfileQueue::add` holds `root` (:263) and `arena.data` (:264), moves the
+`Cell` by value into `Arena::allocate` (:279), and every `allocate` failure
+return (`arena.rs:191/199/205/220`) drops that parameter before the caller's
+`drop(data)`/`drop(root)` at :280/281 — so a sole `Kind::Boundary` Arc (or a
+`DownValuesView`-owned one) runs `ProfileBoundary::Drop` → `abandon` →
+`admit` at `logical/mod.rs:160` under both payload guards. Admitting before
+the locks would turn the same destruction into a nested admission; the
+`_admitted` leaves do not help because the admitting operation is an implicit
+`Drop`. It is a static forbidden edge, not a reproduced deadlock, and the
+direct-name scan could not see it.
+
+### Q25 — the allocation failure returns ownership; the caller drops after the unlock
+
+1. `Arena::allocate` becomes `fn allocate(&mut self, cell: Cell) ->
+   Result<CellId, Cell>`. Every failure return carries the cell back: the two
+   checked-arithmetic computations, the `storage.resize(peak)` refusal, the
+   `try_reserve_exact` refusal (keeping its existing rollback), the second
+   `storage.resize` refusal, and the free-slot invariant violation. Nothing
+   inside `allocate` drops it; restructure the `Node` construction so the
+   free-slot check precedes it (or return the field back out). `Result` is
+   `#[must_use]`, so no caller can ignore the failure arm.
+2. Every caller releases both guards, then drops the returned cell, then
+   performs its existing retire call, then returns exactly as today:
+   `ProfileQueue::add` (`drop(data); drop(root); drop(cell);
+   retire(Retire::DiagnosticCap); false`) — the boundary settles before the
+   epoch retires, as now; `ProfileQueue::new` collects the failed `Cell` in
+   the closure and drops it after `drop(data); drop(root);` before the retire
+   (its cells are `Guest`/`EvaluationReturn` today, so no observable change —
+   disclose); `attach_boundary_admitted` does the same with its existing
+   permit held (its boundary is a non-final clone borrowed from the Q18
+   owner, so its Drop cannot admit — record that proof in the table). Direct
+   sequence tests consume the `Err` arm explicitly.
+3. No permit is taken in `add`, `allocate` or any `Budget::claim`/
+   `Storage::resize`; no `_admitted` conversion, no TLS, no cfg-only
+   divergence, no fabricated guard. The success path moves the same values as
+   today; the function is unreachable without an epoch, so no default-path
+   cost — disclose the success-path codegen and any shape check the brief's
+   budget rules require.
+4. Class duty — the Q25 class is an implicit admitting destruction under
+   payload guards. Build the table of every site where a `Cell`, a
+   `Kind::Boundary` Arc, a `DownValuesView`, or a final `ProfileBoundary` Arc
+   can be destroyed, with the payload-guard state at the destruction:
+   `take_cell` + caller drop, the insert-failure `release` + drop,
+   `pop_metadata`, `retire_diagnostics`, `ProfileQueue::drop`, the
+   failed-allocation arms, the `new` residue, `insert_before_consumer`, and
+   the attach non-final clone. Every row must show no payload guard live, or
+   an ownership argument that the value is non-final. Any row that cannot be
+   closed is a STOP. Extend the reverse-edge scan's discovery to implicit
+   destructors whose type transitively owns an admitting Drop.
+5. MAY list: exactly one file is added — `suspension/core/profile_queue/arena.rs`
+   (the signature and the failure returns only).
+6. Falsifier: the scan's red -> green on the real source pair — pre-fix
+   `add` :263/264 → `allocate` :279/`arena.rs:191` → `mod.rs:275/284` →
+   `:154/160`; post-fix zero, with every cell drop at an after-unlock
+   statement. Calibrate it: a source mutant that drops the returned cell
+   inside `add`'s `Err` arm before the unlocks must be flagged red by the
+   scan, then restored byte-exactly and re-run to zero. Plus a permanent
+   test on the real failure path at 8 and 1: with a real budget cap, the
+   failing allocation returns `Err(cell)` still holding the sole
+   `Kind::Boundary` Arc, `add` returns false, the boundary's settlement
+   completes exactly once, the arena's slots and capacity are unchanged, and
+   nothing panics. No deadlock reproduction, no invented writer, no seam.
+
+### Order after Q25
+
+The repair and its class table -> the budget classification closes on it
+(index/arena growth and owned refunds) -> the remaining mutants including the
+Q4 B/C arms and the Q10 handoff -> the standing replays with the once-only
+pinned census -> the acceptance runs (full lib 3x at 8 threads, once at 1,
+the workspace, the release erasure, the test-name delta). Resume with
+`CDX_FORK`.
