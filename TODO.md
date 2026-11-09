@@ -45,8 +45,7 @@ header, all legacy bytes preserved — with the host workspace green at
 accepted 2026-11-09) carries a session's lease generation through
 contexts, the session span and both teardown entries, so the stage-A
 flake class is covered (workspace 4,212/0/61 at 8 threads; 1,420 test
-names). Stage C is queued behind brief 714, the 37-draw source-unchanged
-validation. The test
+names). Stage C is next after brief 714's acceptance. The test
 audit's Stage B and D03 are closed; LP05-LP08's promotion is done. The
 10-29 estimate in `docs/dev/security-hardening-progress.md` is pending a
 re-base (user ruling 2026-11-08: the Codex tier was upgraded and the
@@ -55,15 +54,17 @@ after the next few milestones on this period's measured pace). New briefs go to 
 ruling 2026-11-01); a cdx quota death is a stop and a question, never a
 silent fallback.
 
-Brief 714 (the 37-draw source-unchanged validation) is paused on a witness
-defect, not a product one: its second draw failed the collector witness,
-which asserts a delta of the process-global `PROCESS_BYTES` across a window
-that no drained lease makes quiescent. Brief 715 (design) proved the
-mechanism with a calibrated 4096-byte foreign refund, and brief 716
-(accepted 2026-11-09) replaced the seven raw-lease windows with
-owning-Budget observations, keeping the nine quiescent ones global; the
-collector now carries the calibrated refund permanently. The series
-restarts from zero as stage 32, same bars.
+Brief 714 (the 37-draw source-unchanged validation) is complete (accepted
+2026-11-09). Its stage-31 red was a witness defect, not a product one: the
+collector witness asserted a delta of the process-global `PROCESS_BYTES`
+across a window that no drained lease makes quiescent. Brief 715 (design)
+proved the mechanism with a calibrated 4096-byte foreign refund; brief 716
+(accepted) replaced the seven raw-lease windows with owning-Budget
+observations, kept the nine quiescent ones global, and carries the
+calibrated refund permanently. Stage 32 then drew 37/37 green at 8 threads
+on one private binary from `660eee7a` (each exactly `1413/0/5/0/2`), a
+series I repeated 37/37 myself; the fresh release archive is R5-identical
+16/16 to `d9f2339d…`. Stage C of LP08 is next.
 
 **Open obligation, disclosed by brief 715 and not yet scheduled:**
 `crates/rum-runtime/src/runtime/evaluation_cache/tests.rs:185-218` compares

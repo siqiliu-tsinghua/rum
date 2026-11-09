@@ -174,20 +174,20 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   binary snapshot format, audit items and threat-model critiques; `v0.3.0`.
 - **Latest done:** LP08's counter promotion at `b9b39763` (install 705,
   repair 707, campaign 708; workspace 4,156/0/61), schema-v2 stage A at
-  `e9ba6dd7` (side index; disabled path cheaper per call on all six seams;
-  stack identity 18,304 / 12,392, residual 0) and stage B at `a0c70615`
-  (`rum-profile schema-v2` line; five modes 88,795 records). Stage B's gate
-  exposed a pre-existing test-isolation class in the profiling lease; brief
-  712 (design) proved it and **brief 713 (implementation, briefs C24-C28)
-  closed it**: generation-aware admission carries a session's lease through
-  contexts, the session span and both teardown entries, with the direct
-  paused-drop falsifier calibrated 8/1 and the witness set at 1,420 names.
-  My gate: fmt clean, workspace 4,212/0/61 (63 binaries, the 3 standing
-  warnings), six host targets at 8/1, Q30 four-column certificate on the
-  release artifact (the fixed-SHA anchor retired: object code
-  symbol/address/string identical across the source change). **Next: brief
-  714, the 37-draw source-unchanged validation, then LP08 stage C.**
-  `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  `e9ba6dd7` (side index; disabled path cheaper per call on all six seams)
+  and stage B at `a0c70615` (`rum-profile schema-v2` line; five modes
+  88,795 records). Stage B's gate exposed a pre-existing test-isolation
+  class in the profiling lease; brief 712 (design) proved it and **brief
+  713 (implementation, briefs C24-C28) closed it**: generation-aware
+  admission carries a session's lease through contexts, the session span
+  and both teardown entries, with the direct paused-drop falsifier
+  calibrated 8/1 and the witness set at 1,420 names. My gate: fmt clean,
+  workspace 4,212/0/61 (63 binaries), six host targets at 8/1, Q30
+  four-column certificate on the release artifact (fixed-SHA anchor
+  retired: object code identical across the source change). **Brief 716
+  accepted; brief 714 stage 32: 37/37 green at 8 threads from `660eee7a`
+  (mine repeats 37/37), fresh release R5-identical 16/16. Next: LP08 stage
+  C.** `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

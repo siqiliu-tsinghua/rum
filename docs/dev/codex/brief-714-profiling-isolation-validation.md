@@ -383,3 +383,83 @@ test-name set is the same 1,420 names.
   foreign refunds by construction and carries its calibration permanently.
 - Builds ≤900 s, draws ≤600 s, one cargo command at a time at `-j8`,
   offline and locked, all scratch under `.temp/brief-714/`.
+
+## Stage-32 acceptance — 2026-11-09: the 37-draw validation is green on the repaired source; brief 714 is complete
+
+Run 32 (fork `01a1c042-d767-7b91-b049-85aacb6277b2`) is accepted and brief
+714 is complete. Under the stage-32 bars:
+
+- **One private build** from the frozen tree into an initially absent
+  `.temp/brief-714/target-c32` (`cargo test -p rum-runtime --lib --no-run`,
+  offline/locked, 22.42 s): binary `rum_runtime-95cd5fbb46da4f1c`, sha256
+  `24b1e5a0e59c2a255cc1dab552b05a3d2cf38b46800628bca6dfe81f470ca53c`. Every
+  draw ran that binary directly, and its sha was unchanged before and after
+  every draw and at the final audit.
+- **37/37 consecutive draws at 8 threads**, each exit 0 and exactly
+  `1413 passed; 0 failed; 5 ignored; 0 measured; 2 filtered out`, with only
+  the two standing skips (`lp655_root_context_falsifier`,
+  `lp656_public_root_context_falsifier`). The new index
+  `.temp/brief-714/draw-index-c32.json` runs draw 1 to 37 and carries no
+  draw of the abandoned series; the ledger's 37 draw rows are consecutive
+  (rows 3-39), all attempt 1, monotonic; no retry, restart or replacement.
+  Plug-in null probability (2/3)^37 = 3.05227328079e-7, as stated, not a
+  confidence bound.
+- **The features control** (separate binary `459c896a…`,
+  `test-builtin-memory-growth,test-continuation-slots`) is the same tuple
+  outside the 37.
+- **Fresh release** `a779eaca…` (features [], opt 3, test false, 26.5 s).
+  R5 identity against the live `d9f2339d…`: **16/16 members**, every
+  ordinary section byte (relocations included) and every symbol entry
+  identical after normalizing rustc's `.llvm.<u64>` suffix — 41,520
+  section entries and 54,593 symbol entries. `lib.rmeta` against the
+  director 716 artifact `b8b6d951…`: 18,811,104 B both, 111 differing
+  bytes in seven 16-byte dependency/root hash entries and zero outside
+  them; the +400 B ELF / +402 B payload over pre-716 is the accepted
+  cfg(test) metadata inventory.
+- **Erasure certificate** on the fresh artifact: 39 identifiers; the 35
+  qualified names occur zero times in object code and symbols and the
+  `profiling::lease` namespace is absent; the four common words
+  (`generation`, `lease`, `admit`, `publish`) are enumerated with
+  provenance as pre-existing; metadata names are listed separately against
+  the standalone rustc probe.
+
+**My gate (reproduced, not read).** I parsed all 37 draw logs myself: one
+totals line each, the exact tuple, exit 0, and the index's sha unchanged. I
+re-ran the campaign binary once as an extra draw (`1413/0/5/0/2`, sha
+unchanged), then ran a **full independent 37-draw series of my own on the
+same binary: 37/37 green, same tuple, sha unchanged** (three of my draws
+took 41-42 s because my own ELF comparison ran concurrently; all stayed
+green). I re-ran the features binary: the same tuple. I re-checked the
+freeze: `git status --porcelain` empty and `git diff --quiet 660eee7a
+HEAD -- Cargo.toml Cargo.lock crates` exit 0. I re-derived R5 with my own
+ELF comparator (`.temp/director/gate-714-compare.py`): 16/16 identical,
+including the normalized `.strtab` multiset. My own `lib.rmeta` diff
+reproduces the seven windows (1069, 1120, 1269, 1373, 1424, 1474,
+18810063). My own raw-byte scan of the fresh objects finds none of the 35
+qualified identifiers and only the four enumerated common words.
+
+**The two FLAGGED instrument failures, accepted and disposed.** (1) The
+first normalizer compared `.strtab` physical order and flagged 14 members
+with zero symbol differences; R5 exempts the name tables' storage order,
+and the corrected comparison over complete normalized name multisets is
+the bar — no content, symbol field or bar moved, and the failed script,
+JSON and log are retained. (2) The first certificate computed the final
+hash window from the ELF growth 400 instead of the `.rmeta` payload growth
+402 and flagged two bytes; both are the last two bytes of the known entry
+at 18810063, confirmed by my own diff. No rebuild and no redraw.
+**Deviations accepted:** the private `target-c32` (R3 and stage-31
+preservation), the release build's `--message-format=json`
+(instrumentation only; the profile row is features [] opt 3 test false), and
+the locally adapted certificate emitter — its outputs stand because my
+independent comparator reproduces them, not because the report says so.
+
+Scope: `changes: 0 files`; no git call, no tracked-source hash, no live
+edit, no inventory replay (no covered source changed; the NA verdicts are
+correct), no workspace/host/timing lane. Report `report.py check`: 367
+citations.
+
+**The profiling-isolation line's validation is closed:** the pre-repair
+schedule failed 5/12, 3/12 and 4/12 at 8 threads, and the repaired source
+is green in all 74 draws of this stage (the worker's 37 and my own 37).
+Next: LP08 stage C (draft
+`.temp/brief-709/drafts/C-acceptance-campaign.md`).
