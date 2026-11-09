@@ -2729,3 +2729,137 @@ test files under `profiling/tests/` are expected. Anything else is a STOP.
    every performance gate stay mine.
 
 Resume with `CDX_FORK`.
+
+## Stage 26 ruling (Q35): the teardown of the lease's own session is covered
+
+Run 26 is accepted as a STOP well taken. Q33/Q34 are implemented in the
+authorized shape (five Rust files, one new witness, the run-26 deltas read
+against my stage-24 copy of `context.rs`, `epoch.rs`, `storage.rs`,
+`profile_queue.rs` and `lease.rs`), the calibration clears at 8 and 1, and
+the full 177-state / 212-consumer / 137-root map is enumerated for the first
+time. The production claims are correctly withheld: no release rebuild and
+no same-SHA claim were made.
+
+### The two entries
+
+- `finish_completed_resumption` (`core.rs`:607) drops the completed
+  suspension after `drive_resuming_frames` has returned; `ProfileQueue::drop`
+  (`profile_queue.rs`:605) calls `unregister_root` (`profile_queue.rs`:693),
+  whose ordinary `admit()` is refused once the driver's ContextGuard has
+  restored the thread's registration.
+- `Session::drop` (`session_state.rs`:698) calls
+  `print_lexical_profile_summary_once` (`summary.rs`:3), whose
+  `lexical_profile_enabled()` (`config.rs`:4) is refused on a fresh worker
+  before `logical::drop_session`, so a current-generation session dropped on
+  a worker never reaches `abandon_owner(Retire::SessionDrop)`.
+
+### Ruling
+
+Cover both with the derived provenance. The Q1/Q2 deferral narrows to state
+that carries no provenance at all; it is not extended to the lease's own
+current-generation teardown.
+
+Why cover rather than defer:
+
+1. What is at stake is not only bookkeeping. A paused session dropped on a
+   worker loses its `SessionDrop` attribution: its records are either retired
+   with `LastDrop` by the queue's cell drops or left open until the reset,
+   while production records `SessionDrop` on any thread. That is record loss
+   on the lease's own session, which the class duty treats as uncovered. The
+   refused unregister also leaves an `OWNERS` entry holding the control,
+   root, arena and epoch alive until the reset.
+2. The Q1/Q2 deferral was ruled when the lease had no provenance: a foreign
+   thread could not prove the state was the lease's. Q33/Q34 supply that
+   proof, and the same predicate applies at teardown, from the session's or
+   the queue's retained epoch generation.
+3. The depth profile does not change. Both paths already call `admit()` today
+   at their existing depth (the destructor census has them outside permits);
+   the covering changes only whether that same call succeeds. No new admitting
+   destructor is introduced, the Q18 rule (no admitting destructor at depth
+   >= 1) is untouched, and the permit must not be held across the queue's
+   cell drops: release the permit first and keep only the registration, so
+   each cell's existing `ProfileBoundary::Drop` admission runs at depth 0.
+4. Refusals remain for exactly the state with no provenance: a stale queue or
+   session from lease M under lease N, and a session with no profiled state.
+   That is Q2's real domain and it stays deferred.
+
+Required shape:
+
+1. `print_lexical_profile_summary_once` takes one generation-aware admission
+   from the session's provenance for its lexical decision and for
+   `drop_session`; the flag read and the drop are the existing `_admitted`
+   leaves (`lexical_profile_enabled_admitted`, `drop_session_admitted`). The
+   admission is released before the printed-flag/summary-body block, which
+   keeps its own ordinary admission and therefore today's depth-0 shape. A
+   refusal leaves `lexical_enabled = false` and the rest of the function
+   (the repr path) byte-for-byte as today.
+2. `ProfileQueue::drop` takes the queue's own `lease_generation()` through
+   the same admission and calls the existing `unregister_root_admitted`; the
+   permit is released before the cell loop and the registration is held
+   across it. On refusal the cell loop still runs exactly as today: the
+   cells must never be skipped.
+3. No `model/session.rs` change: the Drop impl keeps calling
+   `print_lexical_profile_summary_once(self)`.
+4. The session-generation accessor's visibility widens to
+   `pub(in crate::runtime)` (test cfg) so `summary.rs` can read it. Nothing
+   else moves.
+5. Scope: `profiling/summary.rs`, `profiling/logical/context.rs`
+   (visibility only), `suspension/core/profile_queue.rs` (the drop path),
+   `profiling/config.rs` only if an admitted getter must be exposed (it
+   already exists), `profiling/logical/epoch.rs` only for visibility (the
+   admitted drop leaf is already `pub(in crate::runtime)`), plus new tests
+   under `profiling/tests/`. Anything else is a STOP.
+
+### The classified `d` rows, settled
+
+- `session_drop` and `post_resume_drop`: covered by this ruling, including
+  every state row on the two paths above.
+- `fixture_tail`: the lease owner runs on its own registered thread; the
+  fixture's activity is the lease's baseline by construction (Q1/Q4). Out of
+  the non-owning-thread class; the table records the owner registration as
+  the evidence.
+- `independent`: the env-only profilers (association, substitution, repr,
+  into-vec, shared-args) were expressly excluded from the lease scope by the
+  Q4 item-3 ruling and write no lease-exposed state. Out of class by
+  contract; the table records the exclusion and claims no coverage.
+
+A `d` row outside these three families is still a STOP.
+
+### Calibration and acceptance
+
+1. New permanent witness: one paused profiled session is cancelled, resumed
+   and dropped on the owning thread (arm A) and on a spawned worker (arm B);
+   the full epoch row set (every row, including abandonment reasons, `open`
+   and `abandoned` counts) and the teardown vector
+   `[pending, faults, contexts, active, bytes]` must be identical between the
+   arms, green at 8 and 1. Mutant: both teardown entries back to the ordinary
+   `admit()` -> arm B must lose the `SessionDrop` attribution (or retain the
+   registry charge) and the row sets must differ; restore -> identical. If no
+   observer can be made red, STOP and report the disposition; never weaken or
+   delete the witness.
+2. The stale arm stays refused: a stale session or queue (generation M)
+   dropped on a worker under lease N writes nothing and keeps the deferral;
+   the existing stale witness stays green.
+3. The moved-cancel and moved-resume witnesses keep `identical=true`.
+4. Then the full acceptance C26 left pending: `cargo fmt --check`;
+   `cargo check --workspace --all-targets`; the six named host targets at 8
+   and 1 with `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` where switch-gated; the
+   full runtime lib 3x at 8 threads and once at 1, each `1409/0/5` with
+   exactly `lp655_root_context_falsifier` and
+   `lp656_public_root_context_falsifier` skipped; the full stdlib lib suite
+   to `1111/0/53` with its `A1_ORACLE_ARMS` line; the LP01 five-mode replay
+   and child archive; typed-slot; the rejection census with keyed comparison;
+   frame-root; the standing replays (fingerprints 68, ownership, both
+   certificates, census 1219); the default release rebuild with the Q30
+   certificate on artifact sha256
+   `4118c33570e0f15e81d06d0c83f1216a08a81b410df3e6f7ead5fac87df042e6`,
+   16 object members, and the new machinery names (`admit_generation`,
+   `ThreadRegistration`, `lease_generation`, `logical_profile_generation`)
+   absent with proper qualified matching; the test-name count (1418 today,
+   +1 for the new witness); the source-hash delta = the touched files plus
+   the canonical inventories.
+5. Report and stop for my full gate. A green series does not authorize a
+   commit; the workspace, the native ZeroMQ checks, the 37-run validation and
+   every performance gate stay mine.
+
+Resume with `CDX_FORK`.
