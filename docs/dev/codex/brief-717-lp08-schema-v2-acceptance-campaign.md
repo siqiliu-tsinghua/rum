@@ -440,3 +440,85 @@ falsifiers, publication 14/14 at 8/1, host schema 4/0/0 at 8/1, 30 exact
 base-byte cases each) and its receipts stand. The report extends
 `.temp/brief-717/report.json` again, keeping every run-1 and run-2 entry;
 the failed 109/56 comparison stays in it as the historical reading.
+
+## Stage-C stack STOP ruling and continuation (director, 2026-11-09)
+
+Run 3 completed Stage C's source rows on build 2 — queued F6 57/49/20/71
+with incoming 501/1001, resumed 106/53/20 with incoming 50/100, equal to
+build 1's rows, call slopes 1 — and then STOPed at the first absolute stack
+sample: depth 5 read 103,416 against the unchanged 103,912, reproduced on
+the same binary at `--test-threads=1`. **The STOP is well taken:** Stage C
+says a changed absolute offset stops for a separately calibrated ruling,
+and the worker neither rebaselined nor resumed. The measurement below is
+that ruling. **Erratum (mine):** the previous appendix said the stack rows
+were "independent of the seam inlining". That sentence is refuted by this
+run — the stack probe runs in the same test-cfg build — and is withdrawn.
+
+### Re-calibration (my own measurement, instrument calibrated first)
+
+The standing bar is a lib-test-binary measurement. Against a known answer
+first: the pre-713 test binary
+`.temp/brief-711/continuation/bin/cost-runtime-candidate-1` (`65061efa…`,
+the binary that produced the accepted 711 row) reproduces the standing
+samples exactly in today's environment — 103,912 / 195,432 / 286,952 /
+378,472, two repeats each — so the instrument and the host agree with the
+bar and the movement is in the frozen binary, not the environment.
+
+The frozen runtime test binary `9f6d33c3…` gives, at the same protocol
+(`BRIEF611_MARKER=1 BRIEF611_SHAPE=function-body`, `RUST_TEST_THREADS=1`,
+`taskset -c 2`, serial, two repeats, four depths):
+
+| depth | 5 | 10 | 15 | 20 |
+|---|---|---|---|---|
+| observed | 103,416 | 194,456 | 285,496 | 376,536 |
+
+exactly on the line **12,376 + 18,208 × depth**, residual 0, identical
+across all four depths and both repeats. The line moves in both terms:
+slope 18,304 → 18,208 (−96 per level) and intercept 12,392 → 12,376 (−16).
+
+### Attribution (the same class as the Function-row ruling)
+
+The 137-frame recursion chain is symbol-for-symbol identical in both test
+binaries (same backtrace at the marker, same sequence). In the test build
+the flag path is now outlined at every measured seam: `try_apply_down_values`
+13 inline `LEXICAL_PROFILE_ENABLED` references and 11 inlined
+`initialize_lexical_profile_enabled` calls become 0 and 15 calls to
+`lexical_profile_enabled`; `resume_call_after_head` 7 → 0 and 7;
+`evaluate_atom_fast_path` 7 → 0 and 7; `evaluate_inner_unstable` 29 → 0 and
+29. That is brief 713's exact-cfg admission in `profiling/config.rs:4-21`,
+the cause already ruled on for the Function rows, and these functions'
+frame sizes move with the outlined bodies.
+
+The production lane does not move. In the release CLI every function of
+that chain — including every function whose test-build frame changed — has
+the **same prologue frame size** in the 711 candidate CLI and in the frozen
+CLI `32df5b02…`: `try_apply_down_values` 0x2b8, `resume_call_after_head`
+0x1f8, `evaluate_atom_fast_path` 0x130, `evaluate_inner_unstable` 0x4b8,
+`try_dispatch_builtin_call` unchanged, all four
+`try_apply_down_values_from_symbol` instantiations unchanged; the CLI
+per-block frame sum is 27,640 on both sides, delta 0. Production stack per
+level is therefore unchanged, and the −96/level is a test-build reading of
+the same instrument — negative, and not a product movement.
+
+### The re-frozen stack row (frozen source, test build)
+
+**18,208 bytes per level, intercept 12,376, residual zero; absolute
+samples at depths 5/10/15/20 equal to 103,416 / 194,456 / 285,496 /
+376,536, twice each, on both builds.** Both builds must give equal rows,
+and any sample off this line is a STOP. The old row (18,304 / 12,392 /
+103,912 … 378,472) stays in the report as the pre-713 historical record; it
+is not produced by this source and must not be re-asserted. The
+replacement is not a relaxation: the re-frozen line is stricter than the
+standing one at every depth.
+
+### Continuation scope
+
+Resume at Stage C with the stack panel on both reused build pairs
+(`9f6d33c3…` runtime twice, four depths, two repeats each), then Stages D,
+E and F unchanged. Stages A and B stand and are not rerun; the Function and
+F6 rows on both builds are accepted (build 1 measured in run 2, build 2 in
+run 3, binaries SHA-equal, rows equal, call slopes 1). The report extends
+`.temp/brief-717/report.json` again, keeping every run-1, run-2 and run-3
+entry; the failed 103,416-against-103,912 comparison stays in it as the
+historical reading. Dispatch the run-3 continuation forked from the 717
+session `01a1c105-103e-7ad2-a04f-13b452fd0e9f`.
