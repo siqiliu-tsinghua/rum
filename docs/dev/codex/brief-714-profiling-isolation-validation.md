@@ -336,7 +336,6 @@ as stage 32 of this brief, from zero, same bars.
 `7780ed57`.
 
 ### Stage-31 erratum — 2026-11-09: the class is narrower than the sentence above states
-
 Brief 715's inventory refutes part of the class statement above: the
 `brief713_teardown_paused.rs` zero and `budget.rs:159` are **not** in the
 class. Both hold a drained lease and join every owned thread, so at the
@@ -347,3 +346,40 @@ a drained lease plus joined owned threads**; `budget.rs:185` is in it,
 `budget.rs:159` is not. The plan below stands; brief 716's matrix carries
 both the converted rows and a global-only-decrement falsifier (M4) so the
 retained global contracts are shown to fire. See brief 715's ruling.
+
+## Stage-32 ruling — 2026-11-09: the series restarts from zero on the repaired source
+
+Brief 716 is accepted and pushed at `660eee7a`. The source under test is now
+that commit: the seven raw-lease byte windows observe their owning Budget,
+the nine quiescent windows keep the process counter, and the collector
+carries a permanent 4096-byte foreign refund inside its window while still
+asserting `refunded=296 expected=296` (`profile_queue/tests.rs:497`). The
+test-name set is the same 1,420 names.
+
+**What changes in this stage's bars:**
+
+- **R5 (supersedes "byte-for-byte").** The release-identity bar is the
+  normalized object identity, not raw bytes: a fresh private-target release
+  build of this source must have all 16 object members identical to
+  `target/release/deps/librum_runtime-c71407e195689fc9.rlib` (sha256
+  `d9f2339d…`) **after normalizing rustc's `.llvm.<u64>` suffix in symbol
+  and section names**, with every symbol entry identical and rmeta
+  differences confined to the known non-source classes. Any section
+  *content* difference is a STOP. This is the only erasure bar this line
+  uses from now on.
+- **The freeze is the director's** (R4): `.temp/director/freeze-714-stage32.json`
+  records HEAD `660eee7a`, an empty `git status --porcelain`, and
+  `git diff --quiet 660eee7a..HEAD -- Cargo.toml Cargo.lock crates` exit 0.
+  The worker runs no git command of any kind.
+- **The campaign starts from zero.** The draw index is new and empty; no
+  draw of the abandoned series is carried, and no archived log counts as a
+  draw. 37 consecutive full-lib draws at 8 threads on one binary built
+  privately from this source, each exactly `1413 passed; 0 failed;
+  5 ignored; 2 filtered`, with the two standing skips.
+- **The first red stops the series**, with the draw's log, the failed
+  assertion and a `--test-threads=1` reproduction of the same binary, and no
+  restart. Under the repaired witnesses a red is a real finding, not the
+  instrument defect stage 31 diagnosed: the owned equality is now immune to
+  foreign refunds by construction and carries its calibration permanently.
+- Builds ≤900 s, draws ≤600 s, one cargo command at a time at `-j8`,
+  offline and locked, all scratch under `.temp/brief-714/`.
