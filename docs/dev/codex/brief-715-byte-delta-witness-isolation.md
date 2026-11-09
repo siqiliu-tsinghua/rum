@@ -118,3 +118,113 @@ no third-party engine, no new `unsafe`; a red is reproduced at
 `--test-threads=1` before it is called a defect; all output under `.temp/`;
 the report is `rum-report/1` JSON with copied verdicts and the
 command/log/exit/count table.
+
+## Director's ruling — 2026-11-09: the design is accepted with three corrections; brief 716 implements the byte-delta class only
+
+**Gate.** `report.py check` OK, 228 citations. I reproduced the load-bearing
+receipts: the live binary is `66950c70a42b05b91c6a06c5d38bc7bd39ce76e078d090f2e91d79374ec56edd`,
+the same sha as brief 714's C31 artifact; draws 1-3 are `1413/0/5`, draw 4 is
+`1412/1/5` with the identical `refunded=976 expected=296` tuple, and the
+serial rerun is green; the twelve calibration rows hold at 8 and at 1 thread
+(control 296/296; injection 4392/296; M1 4344/248; restored 4392/296); the
+candidate and restored binaries are the same sha `aa0ca813…` and the mutant
+is `d0310704…`; `evidence/injection.diff` injects a real `Storage` through
+`storage_admitted` and drops it on an unregistered worker — it does not edit
+`PROCESS_BYTES`; the live tree is untouched (`git status --porcelain` empty,
+and the only files newer than the published commit are the two brief files,
+written before it). The two reducer STOPs are instrument defects, settled
+without rerunning a suite; the twelve calibration suites each ran once.
+
+**Accepted.** The mechanism is proven, not argued: a legal foreign `Storage`
+refund inside the window moves the process reading by exactly its size
+(296→4392) while the owning Budget does not move (296), at 8 and at 1 thread;
+with the boundary's 48 bytes withheld, the same anchor reads 248 while the
+process reading reads 4344. The product release-path audit is accepted as
+read — `reserve` rollback, `Storage`/`Budget` drop order, `resize` growth and
+shrink arithmetic, `Arc::into_inner` ownership, and the three `resize`
+callers — and its precision about empty frame storage being released at the
+last take (`logical/segments/stack.rs:182-185`) corrects my own earlier
+phrasing. An over-release found during implementation is a STOP, never an
+expected-value adjustment. The tiered repair is the right instrument:
+ownership claims get the owning Budget, quiescence claims keep the process
+counter.
+
+**Three corrections.**
+
+1. **The class predicate is narrower than my stage-31 sentence, and that
+   sentence is wrong.** I wrote that `brief713_teardown_paused.rs` and both
+   `budget.rs` samples carry the same shape. The inventory proves otherwise:
+   B13 and B04 hold a drained lease and join every owned thread, so at the
+   first sample `PROCESS_BYTES == 0` — no pending foreign charge can exist to
+   be refunded later, and no unregistered thread can create one; those rows
+   are valid and stay unchanged. The class is: **a process-global delta whose
+   window is not made quiescent by a drained lease plus joined owned
+   threads.** `budget.rs:185` (B05) is raw and is in the class;
+   `budget.rs:159` (B04) is not. An erratum is appended to brief 714's
+   stage-31 ruling.
+
+2. **B09's probe cannot be `None` after `drop(enabled)`.** `TestLease::drop`
+   (`lease.rs:236-243`) releases only the thread registration and zeroes the
+   generation; the old epoch is taken and retired by `reset_unleased` inside
+   the *next* `lease()` (`epoch.rs:1103-1150`: `slot.epoch.take()` then
+   `retire_admitted`). The probe-None assertion therefore belongs **after
+   `test_support::lease()` returns**, where the handoff reset has actually
+   dropped the old Budget. The raw reacquisition stays as the control and the
+   growth assertion at `lease_release.rs:22` stays.
+
+3. **The permanent injection lives inside B02, not in a new test.** Brief
+   714's stage-32 bar is exactly `1413/0/5` over a fixed name set; a new test
+   name would force a new bar. The repaired collector carries the 4096-byte
+   foreign refund in its own window and asserts the owned 296, so a
+   regression to a process-global anchor reds the first draw. The name set
+   stays 1413: no test added, removed, renamed or filtered.
+
+**Q1 — approved.** B01/B02/B05-B09 convert to the owning Budget;
+B03/B04/B10-B16 stay exactly as they are, global contracts included.
+
+**Q2 — half.** The global-only-decrement falsifier is bound **now**, as M4:
+after this repair seven global deltas leave the raw windows, so the remaining
+global coverage must be shown to fire on a broken global decrement, not
+merely asserted to. The enabled repr-counter exposure
+(`evaluation_cache/tests.rs:185-218` under `RUM_PROFILE_REPR`, no lease) is a
+**different class** — admitted counters, per-thread allocation, and no lane
+we run sets `RUM_PROFILE_REPR` — so it is not folded in; it is recorded in
+`TODO.md` as a named open obligation with its trigger (before any claim of
+comprehensive profiling-test isolation).
+
+**Calibration matrix for brief 716** — each mutant in a scratch copy, each
+run at 8 and at 1 thread, each predicted red traced to the named assertion,
+each restored to the candidate sha:
+
+| # | Mutant | Predicted observer | Predicted tuple |
+|---|---|---|---|
+| M1 | boundary whole-Storage refund withheld through the observer (715-calibrated) | B02 owned equality | 248 ≠ 296 |
+| M2 | the expired arena's Storage withheld through the observer | B05 `probe.bytes() == None` | `Some(…)` after `drop(epoch)` |
+| M3 | `release_thread_registration` skipped in `TestLease::drop` | B09 probe after the handoff reset | `Some(header)` |
+| M4 | `PROCESS_BYTES.fetch_sub` removed from `Storage::drop`, local kept (focused run of B04 alone) | B04 `PROCESS_BYTES == before` | `before + own ≠ before` |
+| M5 | the 32KiB old-epoch charge removed (test-side) | B06 present lower bound | `probe < 32KiB` |
+| M6 | the old boundary's refund withheld at B07's site | B07 exact `248 + 48` | 248 ≠ 296 |
+
+**Scope for brief 716** is the seven rows and their plumbing, nothing else:
+`logical/budget.rs` (cfg(test) probe and snapshot, and B05),
+`logical/epoch.rs` (cfg(test) wrappers), `logical/mod.rs` (cfg(test)
+re-export and the helper's `#[path]` mount beside the existing test mounts at
+`:1466`/`:1548`), a new `profiling/tests/budget_witness.rs` helper,
+`suspension/core/profile_queue/tests.rs` (B01/B02),
+`profiling/tests/brief713_cleanup.rs` (B06/B07/B08), and
+`profiling/tests/lease_release.rs` (B09), plus standing inventories and
+certificates **by replay only**. Product accounting, destruction, leases,
+charged fields and every public shape are out; touching them is a STOP.
+
+**Brief 716's acceptance** is: fmt clean; `1413 passed; 0 failed; 5 ignored;
+2 filtered` — the unchanged name set — on 3 draws at 8 threads and once at 1;
+`check --workspace --all-targets`; the four-build warning matrix 0/0/3/3;
+M1-M6 as above; B07's exact expectation from its own receipt or a STOP; the
+standing replays before the first acceptance suite; and a fresh release
+artifact whose object code is 16/16 identical to the accepted C28 artifact
+(`target/release/deps/librum_runtime-c71407e195689fc9.rlib`, sha256
+`d9f2339d…`), any object difference being a scope violation.
+
+After my gate on 716, brief 714's 37-draw series restarts **from zero as
+stage 32**, same bars, new private build and binary sha. No draw of the
+abandoned series is carried.

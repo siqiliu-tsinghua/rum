@@ -55,6 +55,25 @@ after the next few milestones on this period's measured pace). New briefs go to 
 ruling 2026-11-01); a cdx quota death is a stop and a question, never a
 silent fallback.
 
+Brief 714 (the 37-draw source-unchanged validation) is paused on a witness
+defect, not a product one: its second draw failed the collector witness,
+which asserts a delta of the process-global `PROCESS_BYTES` across a window
+that no drained lease makes quiescent. Brief 715 (design) proved the
+mechanism with a calibrated 4096-byte foreign refund and brief 716 replaces
+the seven raw-lease windows with owning-Budget observations; after that gate
+the series restarts from zero as stage 32, same bars.
+
+**Open obligation, disclosed by brief 715 and not yet scheduled:**
+`crates/rum-runtime/src/runtime/evaluation_cache/tests.rs:185-218` compares
+the process-global `shared_args_alloc` counter across a window with **no
+lease**, so any libtest thread can move it whenever `RUM_PROFILE_REPR`
+enables the counters. It is a different class from brief 716's — admitted
+counters, per-thread allocation — and no lane we run sets that variable; it
+must be designed (a cfg(test) per-thread observer or an existing isolated
+subprocess contract, exact 0/1 counts kept) before any claim of
+comprehensive profiling-test isolation. Do not fix it by weakening the
+equality or adding a skip.
+
 Test isolation, done:
 - the design (brief-633) is gated;
 - the test-artifact constructors (brief-634: `PrivateScratch` and

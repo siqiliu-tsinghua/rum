@@ -334,3 +334,16 @@ as stage 32 of this brief, from zero, same bars.
 `.temp/brief-714/evidence/run31/`; dispatch log as
 `.temp/logs/archive/cdx_brief_714.run31`; no live edit; tree clean at
 `7780ed57`.
+
+### Stage-31 erratum — 2026-11-09: the class is narrower than the sentence above states
+
+Brief 715's inventory refutes part of the class statement above: the
+`brief713_teardown_paused.rs` zero and `budget.rs:159` are **not** in the
+class. Both hold a drained lease and join every owned thread, so at the
+first sample `PROCESS_BYTES == 0` — there is no pending foreign charge left
+to be refunded inside the window, and no unregistered thread can create one.
+The class is **a process-global delta whose window is not made quiescent by
+a drained lease plus joined owned threads**; `budget.rs:185` is in it,
+`budget.rs:159` is not. The plan below stands; brief 716's matrix carries
+both the converted rows and a global-only-decrement falsifier (M4) so the
+retained global contracts are shown to fire. See brief 715's ruling.
