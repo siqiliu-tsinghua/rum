@@ -4434,3 +4434,748 @@ missing rather than reconstructing it silently.
 first item for the diagnostic re-settlement and the rebase table, and
 produce `rum-report/1` (`report.py check 623` OK). Stop at the report for
 my gate.
+
+
+## Continuation 3 — execution report (2026-11-10)
+C2 is **OPEN**. This is a checkpoint and a blocked report, not an exhaustive settlement. Mandatory historical calibration cannot be rebuilt from the surviving scene: 24 pre-G15 source files and 22 pre-C1 source files remain missing after a fingerprint search across 269,288 scratch files. The four independent semantic-control raw logs and their generator scene were also pruned. No historical tree, calibration receipt or outcome was fabricated. The current comparator is 32/32 SAME; current native observations are 796/796 SAME, covering all 750 non-encoding diagnostic bindings with current producer attribution. Fifteen diagnostic row mutants and the new outer caller mutant are caught. P0487's moved strict-tail omission survives. These facts are evidence, not permission to bypass calibration.
+
+No new Equal, Lost, Unreachable or NoObservableTail disposition is promoted. The working population is a **lower bound of 1,033 rows**, because the whole calibrated graph has not been rebuilt. Its 618 accepted fingerprint carries and 415 residuals include the original 353 residuals plus 61 expired/reopened dispositions and one new edge. The 16 old diagnostic Lost labels are not asserted as present-day losses; they are unresolved current rechecks. The separate 29 previously accepted Equal rows are retained as historical evidence outside this population. The production manifest is not complete.
+
+The two-batch stop-loss did **not** fire. The executed diagnostic batches made progress. Work stops at the unavailable mandatory calibration prerequisites; the original source-only review batches were not reused as a stop clock. A repository-local archive path was requested while the remaining independent evidence work continued. No path had been supplied when this report was prepared.
+
+### 1. Diagnostic re-settlement evidence and the rebase table
+
+```text
+C2 FINAL WORKING LEDGER {"C2": "Open", "diagnostic_nonencoding_bindings": 750, "diagnostic_programs": 796, "encoding_requirements": 18160, "fresh_source_reached_bindings": 750, "full_graph_rebase": "incomplete", "inherited_population": 1032, "known_new_edges": 1, "new_equal": 0, "new_lost": 0, "new_no_observable_tail": 0, "new_or_reopened_residuals": 62, "new_unreachable": 0, "original_residuals": 353, "outcomes": {"Boundary": 7, "Equal": 9, "Identity": 5, "Residual": 415, "Transferred": 594, "Unreachable": 3}, "population_lower_bound": 1033, "requirements": 75295, "residuals": 415, "retained_prior_equal_outside_population": 29, "stop_loss_nonprogress_batches": 0}
+C2 PORT PARTIAL source_entries=1033 requirements=75295 native_bindings=750 actual_fixture_programs=796 raw_native_receipts=796; no settlement promotion; historical missing artifacts explicit
+```
+
+```text
+C2 REBASE {"new_edges": "Pending calibrated whole-graph tool; simple AST call discovery is not the governing graph", "population": 1032, "recheck_by_prior_disposition": {"Boundary": 13, "Equal": 1, "Lost": 16, "NoObservableTail (proposal)": 1, "Residual": 78, "Transferred": 30}, "retired": 0, "states": {"FingerprintUnchanged": 893, "PairedNeedsFullRecheck": 90, "UnresolvedSiteNeedsRecheck": 49}, "unchanged_by_prior_disposition": {"Boundary": 7, "Equal": 9, "Identity": 5, "Residual": 275, "Transferred": 594, "Unreachable": 3}}
+```
+
+```text
+C2 CURRENT CALIBRATION {"DIFF": 0, "SAME": 32, "historical_controls": "not re-executed; source recovery incomplete", "invalid": 0, "total": 32}
+```
+
+```text
+C2 CALIBRATION BLOCKED {"current_comparator": "32/32 SAME", "historical_builds_executed": 0, "independent_semantic_controls_executed": 0, "new_settlements_authorized": false, "pre_c1_missing_files": 22, "pre_g15_missing_files": 24, "reason": "Mandatory calibration prerequisites unavailable; no unexplained semantic DIFF is claimed and no two-batch stop-loss is claimed", "required_semantic_controls": 4, "stop_loss_nonprogress_batches": 0}
+```
+The rebase uses the original `entry-hashes.json` as the reference, not a claimed version-control inspection. The target revision is the director's stated `7f9397d3`. Full unchanged-file hashes cover 823 rows. Recovered, hash-verified historical source files allow function-level checks that extend this to 893 rows. A conservative source slice includes preceding declaration/attribute text; unchanged function hashes are paired with both old and current file hashes in `port/rebase.tsv`. Of those 893 rows, 275 were already residuals and remain so; the other 618 accepted dispositions carry by the director's fingerprint rule. The other 139 original rows require current rechecks: 90 paired producer sites and 49 unresolved sites. An unresolved site is not marked Retired. Thirty old transfers and their Drop/caller proofs are reopened; none is carried through a changed body.
+
+The pre-G15/pre-C1 source absence was discovered before semantic settlement. The current comparer and native panels were executed as independent evidence gathering; no settlement relied on an uncalibrated historical or semantic-control result. The detailed recovery indexes name every surviving source origin and its exact expected hash. The original census's AST/macro/typed-frame schema generators, continuation-2 MIR/drop/dynamic-caller tables, raw batches, row mutants and port subdirectories are missing. This report does not claim that the smaller source-site inspector is a replacement for that calibrated whole graph.
+
+P0487 is paired from `evaluate_call` to `evaluate_unstable_call_head` at `eval_core/call.rs:164`. Its actual producer is still `resume_call_after_head(value, args)`. It is now the whole successful match-arm result. The local profile tokens have already been consumed; the remaining witness is `SlotWitness<Expr>`, a zero-sized `PhantomData<fn(I)->I>` without a Drop implementation (`suspension/typed/witness.rs:7`). That is the source explanation for its armed, surviving identity-shaped omission. A new edge, `C3.evaluate_call.unstable_head`, invokes this helper at `eval_core/call.rs:137` and owns the remaining `evaluate_call.total` completion at line 147. Its own actual-success omission is armed and caught. The new edge has its own row and 70 frozen requirements; P0487 is neither dropped nor silently treated as Equal. The calibrated strict-tail/Drop/caller re-establishment is still pending, so a new Transferred verdict is not asserted.
+
+Every diagnostic minimal witness is copied from the published LP01 plans, without new internal-encoding programs. The full collector retains the fixture checks for exact requests, effects, projections, traces, pause expectations and queue consumption and records the native ten-field outcome maps immediately after each subject, before guest projections. Cancellation/reset checks ran in the 16 minimal host cases; the 796-plan collector does not claim a separate full-corpus lifecycle replay. Pauses are logged separately, and elapsed durations are excluded from parity. The source-specific switch is enabled only after that producer was on the resumed pause stack; the queued arm returns its actual successful value before its local tail. No default carrier is fabricated.
+
+```text
+C2 DIAGNOSTIC BATCH {"armed": 16, "caught": 15, "mutants": 16, "outcomes_gained": 0, "real": {"DIFF": 0, "SAME": 16, "invalid": 0, "native_same": 16, "total": 16}, "reason": "No promotion before the required full matrix and complete calibration", "survived": 1}
+```
+
+```text
+C2 NATIVE REAL CORPUS {"DIFF": 0, "SAME": 796, "invalid": 0, "status": 0, "total": 796}
+```
+
+```text
+C2 NATIVE BATCH {"DIFF": 0, "SAME": 796, "armed": 17, "caught": 16, "exact_disabled_parity": 796, "invalid": 0, "mutants": 17, "outcomes_promoted": 0, "real": 796, "required_nonencoding_bound": 750, "survived": 1}
+```
+
+```text
+C2 DIAGNOSTIC REQUIREMENT BINDING {"bound": 750, "mutated_bindings": 0, "nonencoding_required": 750, "unbound_rows": []}
+```
+
+```text
+C2 DIAGNOSTIC COVERAGE REPLAY {"P0256": {"missing": 0, "producer_reached": 60, "required": 60}, "P0259": {"missing": 0, "producer_reached": 60, "required": 60}, "P0266": {"missing": 0, "producer_reached": 60, "required": 60}, "P0314": {"missing": 0, "producer_reached": 55, "required": 55}, "P0315": {"missing": 0, "producer_reached": 55, "required": 55}, "P0413": {"missing": 0, "producer_reached": 50, "required": 50}, "P0431": {"missing": 0, "producer_reached": 50, "required": 50}, "P0484": {"missing": 0, "producer_reached": 55, "required": 55}, "P0487": {"missing": 0, "producer_reached": 50, "required": 50}, "P0489": {"missing": 0, "producer_reached": 50, "required": 50}, "P0509": {"missing": 0, "producer_reached": 30, "required": 30}, "P0511": {"missing": 0, "producer_reached": 30, "required": 30}, "P0515": {"missing": 0, "producer_reached": 30, "required": 30}, "P0814": {"missing": 0, "producer_reached": 30, "required": 30}, "P1472": {"missing": 0, "producer_reached": 30, "required": 30}, "P1507": {"missing": 0, "producer_reached": 55, "required": 55}}
+C2 ATTRIBUTION PARSER CORRECTION first libtest-prefixed CASE recovered; raw producer pause was present; bindings=750 reached=750; new probes=0
+```
+The first attribution reducer missed libtest's prefix on the first CASE line. The raw pause already contained P0256. `coverage.py` fixes the generic line parser and regenerates all attribution records from unchanged logs: 750/750 bindings now reach their own producer. This was a reducer artifact, not a semantic regression, and caused no new probes or waived requirement. Both reducer attempts and both finalization/ledger attempts are retained.
+
+The earlier unmodified LP01 test also passed its published 875 bindings, but its legacy loss snapshot is not the new native logical contract. It printed the following original summary; the expected legacy counter-loss count is not a new loss finding:
+
+```text
+continuation-slot fault-occurrence delta=0; observations=13952
+LP01 required=1115 bound=875 executed=875 encoding-owned=240 programs={"correctness": 48, "frozen": 650, "minimum": 16, "new": 82} counter-losses=22772
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 498 filtered out; finished in 25.11s
+```
+The LP01 side files under the builder's active tree were not archived before that temporary tree was replaced. Its full stdout log survives, but those side files are not claimed as portable raw receipts. The new native collector instead retains the complete raw JSON for both pristine and disabled-copy builds, all 796 actual fixture programs, and the selected mutant logs under `.temp/g15-c2/`.
+
+All 16 diagnostic row results and the extra outer edge are listed below. `caught` is independently checked against the raw JSON and arm/hit logs, not trusted from a generated Boolean. The frozen full matrix, historical calibration and proof obligations still control promotion.
+
+```text
+row	bound_plan	armed	hits	caught	survived
+P0256	E1.0258.value.base	True	1	True	False
+P0259	E1.0327.value.base	True	1	True	False
+P0266	E1.2066.value.base	True	1	True	False
+P0314	E1.1648.value.base	True	5	True	False
+P0315	E1.0389.value.base	True	1	True	False
+P0413	E1.0614.value.base	True	6	True	False
+P0431	E1.0619.value.base	True	1	True	False
+P0484	E1.0935.phase_observation.trace	True	18	True	False
+P0487	E1.1245.phase_observation.trace	True	5	False	True
+P0489	E1.0935.phase_observation.trace	True	18	True	False
+P0509	E1.1190.phase_observation.trace	True	1	True	False
+P0511	E1.0935.phase_observation.trace	True	18	True	False
+P0515	E1.1648.phase_observation.trace	True	22	True	False
+P0814	E1.1268.phase_observation.trace	True	1	True	False
+P1472	E1.0935.phase_observation.trace	True	28	True	False
+P1507	E1.1991.phase_observation.trace	True	1	True	False
+C3.evaluate_call.unstable_head	E1.1245.phase_observation.trace	True	5	True	False
+```
+
+### 2. Frozen requirements
+
+```text
+C2 NEW EDGE FREEZE rows=1 added_required=70 population_lower_bound=1033 required=75295 original_required_preserved=75225 deleted=0 full_graph_rebase=INCOMPLETE
+```
+
+```text
+C2 FROZEN FINAL {"encoding": 240, "policy": "DefinitionLhsPreparation", "required": 945, "rows": 12}
+C2 FROZEN FINAL {"encoding": 0, "policy": "MatchingSymbolCycleRecovery", "required": 0, "rows": 0}
+C2 FROZEN FINAL {"encoding": 5280, "policy": "OptionalStage", "required": 20215, "rows": 264}
+C2 FROZEN FINAL {"encoding": 200, "policy": "FunctionResult", "required": 805, "rows": 10}
+C2 FROZEN FINAL {"encoding": 620, "policy": "ReturnBoundary", "required": 2985, "rows": 46}
+C2 FROZEN FINAL {"encoding": 720, "policy": "ErrorTransform", "required": 3150, "rows": 43}
+C2 FROZEN FINAL {"encoding": 1100, "policy": "PrefixLoop", "required": 4490, "rows": 55}
+C2 FROZEN FINAL {"encoding": 1040, "policy": "DefinitionStore", "required": 3710, "rows": 52}
+C2 FROZEN FINAL {"encoding": 680, "policy": "PrepareArgumentsRestore", "required": 2490, "rows": 34}
+C2 FROZEN FINAL {"encoding": 900, "policy": "OptionReader", "required": 3275, "rows": 45}
+C2 FROZEN FINAL {"encoding": 360, "policy": "ScopeCleanup", "required": 2705, "rows": 38}
+C2 FROZEN FINAL {"encoding": 260, "policy": "CaptureOutput", "required": 965, "rows": 13}
+C2 FROZEN FINAL {"encoding": 640, "policy": "PhaseOwnership", "required": 3320, "rows": 55}
+C2 FROZEN FINAL {"encoding": 3520, "policy": "MatchDecision", "required": 13485, "rows": 174}
+C2 FROZEN FINAL {"encoding": 5500, "policy": "RebuildTraversal", "required": 21525, "rows": 273}
+C2 FROZEN FINAL {"encoding": 2820, "policy": "ShapeDecode", "required": 11420, "rows": 141}
+C2 FROZEN FINAL {"encoding": 620, "policy": "ScalarFinish", "required": 2280, "rows": 31}
+C2 FROZEN FINAL {"encoding": 800, "policy": "ConditionalBranch", "required": 3400, "rows": 40}
+C2 FROZEN FINAL {"encoding": 640, "policy": "NativeCallbackBridge", "required": 2560, "rows": 32}
+C2 FROZEN FINAL {"encoding": 60, "policy": "GuestLoading", "required": 255, "rows": 3}
+C2 FROZEN FINAL {"encoding": 500, "policy": "HostRequestDriver", "required": 4145, "rows": 95}
+C2 FROZEN FINAL {"encoding": 6620, "policy": "ForwardResult", "required": 28135, "rows": 331}
+C2 FROZEN FINAL {"encoding": 0, "policy": "NonSuspending", "required": 0, "rows": 0}
+C2 FROZEN FINAL {"encoding": 0, "policy": "HostBatchBoundary", "required": 0, "rows": 0}
+C2 FROZEN FINAL {"encoding": 0, "policy": "RetiredBoundary", "required": 0, "rows": 0}
+```
+All 75,225 inherited keys are preserved; the known new outer edge adds 70, for 75,295. Counts overlap where a row has multiple policies. The exhaustive 25-policy vocabulary is unchanged, including zero-count arms. No internal-encoding requirement is removed or executed; 18,160 encoding keys remain recorded. The published LP01 table identifies the diagnostic encoding owners; other missing transport-owner evidence is not reconstructed by a blanket owner assignment. Changed source routes and full new-edge discovery remain incomplete, explicitly limiting the freeze's current-source certification.
+
+### 3. Outcomes, classes and source populations
+
+```text
+C2 FINAL WORKING LEDGER {"C2": "Open", "diagnostic_nonencoding_bindings": 750, "diagnostic_programs": 796, "encoding_requirements": 18160, "fresh_source_reached_bindings": 750, "full_graph_rebase": "incomplete", "inherited_population": 1032, "known_new_edges": 1, "new_equal": 0, "new_lost": 0, "new_no_observable_tail": 0, "new_or_reopened_residuals": 62, "new_unreachable": 0, "original_residuals": 353, "outcomes": {"Boundary": 7, "Equal": 9, "Identity": 5, "Residual": 415, "Transferred": 594, "Unreachable": 3}, "population_lower_bound": 1033, "requirements": 75295, "residuals": 415, "retained_prior_equal_outside_population": 29, "stop_loss_nonprogress_batches": 0}
+C2 PORT PARTIAL source_entries=1033 requirements=75295 native_bindings=750 actual_fixture_programs=796 raw_native_receipts=796; no settlement promotion; historical missing artifacts explicit
+```
+
+```text
+initial_class	verdict	rows
+caught mutant; incomplete real tuples	Equal	2
+caught mutant; incomplete real tuples	Residual	18
+compiled but no valid binding reached	Boundary	2
+compiled but no valid binding reached	Residual	53
+compiled but no valid binding reached	Transferred	135
+new C1 producer edge	Residual	8
+new continuation3 producer edge	Residual	1
+survived or no mutation hit	Equal	6
+survived or no mutation hit	Identity	5
+survived or no mutation hit	Residual	42
+survived or no mutation hit	Transferred	397
+unsupported schema	Boundary	5
+unsupported schema	Equal	1
+unsupported schema	Residual	293
+unsupported schema	Transferred	62
+unsupported schema	Unreachable	3
+```
+
+```text
+source_population	verdict	rows
+frame_carries	Equal	4
+frame_carries	Identity	3
+frame_carries	Residual	165
+frame_carries	Transferred	10
+new-C1-edge	Residual	8
+new_continuation3_producer_edge	Residual	1
+review_tail_correct	Boundary	2
+review_tail_correct	Equal	5
+review_tail_correct	Residual	84
+review_tail_correct	Transferred	170
+screen_effect-questions	Residual	16
+screen_frameless-direct-evaluate	Equal	2
+screen_frameless-direct-evaluate	Residual	13
+screen_frameless-direct-evaluate	Transferred	27
+screen_frameless-transforms	Residual	55
+screen_frameless-transforms	Transferred	103
+screen_optional-source-helpers	Residual	29
+screen_optional-source-helpers	Transferred	29
+screen_optional-source-helpers	Unreachable	3
+strict_tail_without_indexed_caller	Boundary	2
+strict_tail_without_indexed_caller	Residual	12
+strict_tail_without_indexed_caller	Transferred	235
+tool_unsettled	Boundary	5
+tool_unsettled	Equal	7
+tool_unsettled	Identity	2
+tool_unsettled	Residual	306
+tool_unsettled	Transferred	284
+```
+Source populations overlap; they are not a partition. All original 353 residuals remain. No new real-build DIFF was found in the executed panels, so there is no new Lost witness or repair mechanism. No new Unreachable proof and no new NoObservableTail proposal is made. The director-accepted assertion-only disposition is not automatically carried through its changed containing function. Missing raw receipts and expired proofs remain visible; they are not counted as new settlements.
+
+### 4. Loss groups and sequencing
+
+No new repair brief is drafted because no valid current-build loss was observed. The old diagnostic completion group is no longer asserted as a current loss: all 16 minimal native outcomes agree, and the broad native corpus agrees. Its source re-settlement is still gated by calibration and the current proof/graph work. C2 remains ahead of the manifest, CHANGELOG and S10. S10 cannot advance on this checkpoint.
+
+### 5. Exact residual list and stop state
+
+The following is the exact current 415-row list. It is larger than 353 because source changes expire 61 prior dispositions and a new caller edge has been discovered. This is not evidence of 62 regressions. No source-only review is counted as a zero-gain semantic batch.
+
+```text
+row	site	initial_class	prior_verdict	rebase	native_required	native_producer_reached	own_caught	what_remains
+P0001	crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:93	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0002	crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:110	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0004	crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:245	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0011	crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:26	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0012	crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:31	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0014	crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:59	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0016	crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:119	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0019	crates/rum-runtime/src/runtime/accounting_mode/options.rs:230	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0020	crates/rum-runtime/src/runtime/accounting_mode/retained.rs:88	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0021	crates/rum-runtime/src/runtime/accounting_mode/retained.rs:120	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0022	crates/rum-runtime/src/runtime/accounting_mode/retained.rs:134	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0028	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:111	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0030	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:113	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0034	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:149	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0036	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:153	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0043	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:202	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0044	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:204	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0126	crates/rum-runtime/src/runtime/debug_tools/monitor/options.rs:52	survived or no mutation hit	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0127	crates/rum-runtime/src/runtime/debug_tools/monitor/options.rs:61	compiled but no valid binding reached	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0145	crates/rum-runtime/src/runtime/debug_tools/reap/sow.rs:55	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0214	crates/rum-runtime/src/runtime/debug_tools/trace/filter/leaf.rs:141	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0216	crates/rum-runtime/src/runtime/debug_tools/trace/filter.rs:76	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0239	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:144	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0243	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:218	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0244	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:238	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0245	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:243	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0246	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:256	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0247	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:305	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0248	crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs:29	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0249	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:72	survived or no mutation hit	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0251	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:87	unsupported schema	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0252	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:100	survived or no mutation hit	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0255	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:204	survived or no mutation hit	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0256	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:234	survived or no mutation hit	Lost	PairedNeedsFullRecheck	60	60	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0257	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:262	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0258	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:295	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0259	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:339	survived or no mutation hit	Lost	PairedNeedsFullRecheck	60	60	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0260	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:368	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0262	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:388	survived or no mutation hit	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0263	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:391	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0265	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:434	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0266	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:478	survived or no mutation hit	Lost	PairedNeedsFullRecheck	60	60	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0267	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:521	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0270	crates/rum-runtime/src/runtime/definitions/application/replace_all/resume_frames.rs:66	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0271	crates/rum-runtime/src/runtime/definitions/application/replace_all/resume_frames.rs:99	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0275	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:90	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0276	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:105	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0278	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:147	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0281	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:188	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0284	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:391	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0287	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:20	survived or no mutation hit	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0289	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:26	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0290	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:35	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0292	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:60	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0294	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:66	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0296	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:76	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0301	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:138	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0302	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:157	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0304	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:181	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0305	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:211	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0307	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:231	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0308	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:238	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0310	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:283	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0311	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:327	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0312	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:365	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0314	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:108	survived or no mutation hit	Lost	PairedNeedsFullRecheck	55	55	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0315	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:190	survived or no mutation hit	Lost	PairedNeedsFullRecheck	55	55	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0316	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:209	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0317	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:225	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0320	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:320	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0321	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:394	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0322	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:413	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0323	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:451	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0325	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:91	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0326	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:121	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0327	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:152	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0328	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:162	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0329	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:205	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0336	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:150	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0338	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:185	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0339	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:201	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0340	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:206	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0341	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:217	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0342	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:222	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0344	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:237	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0345	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:401	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0346	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:423	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0347	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:448	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0348	crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:312	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0349	crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:335	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0350	crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:357	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0351	crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:380	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0353	crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:174	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0354	crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:165	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0366	crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:461	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0369	crates/rum-runtime/src/runtime/definitions/definition_tags.rs:14	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0372	crates/rum-runtime/src/runtime/definitions/definition_tags.rs:57	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0378	crates/rum-runtime/src/runtime/definitions/definition_tags.rs:269	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0379	crates/rum-runtime/src/runtime/definitions/definition_tags.rs:293	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0380	crates/rum-runtime/src/runtime/definitions/definition_updates/resume_frames.rs:26	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0381	crates/rum-runtime/src/runtime/definitions/definition_updates/resume_frames.rs:77	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0394	crates/rum-runtime/src/runtime/definitions/definition_updates.rs:234	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0396	crates/rum-runtime/src/runtime/definitions/definition_updates.rs:253	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0403	crates/rum-runtime/src/runtime/definitions/definitions/destructuring.rs:106	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0405	crates/rum-runtime/src/runtime/definitions/definitions/destructuring.rs:146	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0408	crates/rum-runtime/src/runtime/definitions/definitions/resume_frames.rs:24	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0410	crates/rum-runtime/src/runtime/definitions/definitions.rs:37	caught mutant; incomplete real tuples	Equal	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0413	crates/rum-runtime/src/runtime/definitions/definitions.rs:68	survived or no mutation hit	Lost	PairedNeedsFullRecheck	50	50	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0416	crates/rum-runtime/src/runtime/definitions/definitions.rs:91	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0417	crates/rum-runtime/src/runtime/definitions/definitions.rs:95	survived or no mutation hit	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0419	crates/rum-runtime/src/runtime/definitions/definitions.rs:112	compiled but no valid binding reached	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0425	crates/rum-runtime/src/runtime/definitions/definitions.rs:291	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0426	crates/rum-runtime/src/runtime/definitions/definitions.rs:320	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0428	crates/rum-runtime/src/runtime/definitions/definitions.rs:331	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0430	crates/rum-runtime/src/runtime/definitions/definitions.rs:340	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0431	crates/rum-runtime/src/runtime/definitions/definitions.rs:347	survived or no mutation hit	Lost	PairedNeedsFullRecheck	50	50	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0433	crates/rum-runtime/src/runtime/definitions/definitions.rs:477	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0435	crates/rum-runtime/src/runtime/definitions/part_assignment.rs:41	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0436	crates/rum-runtime/src/runtime/definitions/part_assignment.rs:46	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0437	crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:28	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0438	crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:56	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0439	crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:79	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0440	crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:98	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0441	crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:108	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0442	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:109	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0450	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:218	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0455	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:305	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0458	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:328	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0459	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:354	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0463	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:462	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0464	crates/rum-runtime/src/runtime/definitions/rule_lhs/continuation.rs:21	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0466	crates/rum-runtime/src/runtime/definitions/rule_lhs/continuation.rs:62	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0470	crates/rum-runtime/src/runtime/definitions/rule_lhs.rs:76	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0474	crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs:55	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0475	crates/rum-runtime/src/runtime/eval_call_prepare.rs:259	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0478	crates/rum-runtime/src/runtime/eval_call_prepare.rs:404	survived or no mutation hit	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0479	crates/rum-runtime/src/runtime/eval_call_prepare.rs:434	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0481	crates/rum-runtime/src/runtime/eval_call_prepare.rs:448	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0484	crates/rum-runtime/src/runtime/eval_core/call.rs:135	survived or no mutation hit	Lost	PairedNeedsFullRecheck	55	55	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0485	crates/rum-runtime/src/runtime/eval_core/call.rs:46	caught mutant; incomplete real tuples	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0487	crates/rum-runtime/src/runtime/eval_core/call.rs:164	survived or no mutation hit	Lost	UnresolvedSiteNeedsRecheck	50	50	False	Native counters SAME; own mutant survived; moved strict-tail transfer proof pending; calibration prerequisites unavailable
+P0489	crates/rum-runtime/src/runtime/eval_core/call.rs:191	survived or no mutation hit	Lost	PairedNeedsFullRecheck	50	50	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0492	crates/rum-runtime/src/runtime/eval_core/call.rs:235	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0494	crates/rum-runtime/src/runtime/eval_core/call.rs:281	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0496	crates/rum-runtime/src/runtime/eval_core/call.rs:359	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0498	crates/rum-runtime/src/runtime/eval_core/call.rs:407	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0502	crates/rum-runtime/src/runtime/eval_core/call.rs:549	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0503	crates/rum-runtime/src/runtime/eval_core/call.rs:609	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0504	crates/rum-runtime/src/runtime/eval_core/call.rs:673	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0505	crates/rum-runtime/src/runtime/eval_core/call.rs:722	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0508	crates/rum-runtime/src/runtime/eval_core/mod.rs:75	caught mutant; incomplete real tuples	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0509	crates/rum-runtime/src/runtime/eval_core/mod.rs:145	survived or no mutation hit	Lost	PairedNeedsFullRecheck	30	30	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0511	crates/rum-runtime/src/runtime/eval_core/mod.rs:152	survived or no mutation hit	Lost	PairedNeedsFullRecheck	30	30	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0515	crates/rum-runtime/src/runtime/eval_core/mod.rs:176	survived or no mutation hit	Lost	PairedNeedsFullRecheck	30	30	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0527	crates/rum-runtime/src/runtime/eval_core/symbol.rs:118	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0528	crates/rum-runtime/src/runtime/eval_core/symbol.rs:129	compiled but no valid binding reached	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0529	crates/rum-runtime/src/runtime/eval_core/symbol.rs:131	compiled but no valid binding reached	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0534	crates/rum-runtime/src/runtime/eval_core/symbol.rs:330	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0535	crates/rum-runtime/src/runtime/eval_core/symbol.rs:332	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0537	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:124	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0543	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:187	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0544	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:197	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0548	crates/rum-runtime/src/runtime/kernel_data/association_data/resume_frames.rs:56	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0549	crates/rum-runtime/src/runtime/kernel_data/association_data/resume_frames.rs:80	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0553	crates/rum-runtime/src/runtime/kernel_data/association_data.rs:735	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0554	crates/rum-runtime/src/runtime/kernel_data/association_data.rs:748	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0555	crates/rum-runtime/src/runtime/kernel_data/association_data.rs:753	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0558	crates/rum-runtime/src/runtime/kernel_data/association_data.rs:874	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0566	crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:24	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0567	crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:60	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0590	crates/rum-runtime/src/runtime/kernel_data/control_data/assertions.rs:181	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0591	crates/rum-runtime/src/runtime/kernel_data/control_data/assertions.rs:212	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0693	crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:93	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0694	crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:107	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0695	crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:205	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0696	crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:276	unsupported schema	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0697	crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:298	unsupported schema	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P0711	crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:167	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0712	crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:199	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0756	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs:61	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0757	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs:86	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0758	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs:112	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0759	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs:138	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0760	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs:164	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0765	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:286	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0767	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:299	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0769	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:374	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0772	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:421	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0773	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:427	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0775	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:467	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0812	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:102	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0813	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:104	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0814	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:105	survived or no mutation hit	Lost	PairedNeedsFullRecheck	30	30	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P0817	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:129	survived or no mutation hit	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0818	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:142	survived or no mutation hit	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0820	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:165	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0823	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:201	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0824	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:207	compiled but no valid binding reached	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0825	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:241	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0827	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:302	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0829	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:388	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0830	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:421	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0831	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:458	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0832	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:507	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0836	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:78	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0837	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:80	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0840	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:151	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0847	crates/rum-runtime/src/runtime/kernel_data/evaluated_part_selectors.rs:86	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0934	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/pattern_resolution.rs:30	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P0936	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/pattern_resolution.rs:64	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1037	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs:143	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1038	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs:159	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1070	crates/rum-runtime/src/runtime/kernel_data/structure_data/replace/guarded.rs:262	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1132	crates/rum-runtime/src/runtime/options/builtins.rs:265	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1139	crates/rum-runtime/src/runtime/options/core.rs:19	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1142	crates/rum-runtime/src/runtime/options/core.rs:96	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1147	crates/rum-runtime/src/runtime/options/core.rs:193	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1155	crates/rum-runtime/src/runtime/options/read_phase.rs:92	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1158	crates/rum-runtime/src/runtime/options/resume_frames.rs:21	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1159	crates/rum-runtime/src/runtime/options/resume_frames.rs:47	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1160	crates/rum-runtime/src/runtime/options/resume_frames.rs:49	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1193	crates/rum-runtime/src/runtime/pattern_matching/core.rs:116	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1238	crates/rum-runtime/src/runtime/pattern_matching/sequence/optional_sequence/choices.rs:137	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1240	crates/rum-runtime/src/runtime/pattern_matching/sequence/optional_sequence/choices.rs:173	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1310	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/collect.rs:149	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1312	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/collect.rs:172	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1331	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs:163	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1333	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs:177	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1335	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs:198	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1470	crates/rum-runtime/src/runtime/resolution/resume_frames.rs:37	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1471	crates/rum-runtime/src/runtime/resolution/resume_frames.rs:62	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1472	crates/rum-runtime/src/runtime/resolution.rs:325	survived or no mutation hit	Lost	PairedNeedsFullRecheck	30	30	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P1476	crates/rum-runtime/src/runtime/resolution.rs:466	survived or no mutation hit	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1477	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:18	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1480	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:34	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1482	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:42	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1483	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:47	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1486	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:87	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1487	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:107	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1507	crates/rum-runtime/src/runtime/scoping/lexical/module.rs:69	survived or no mutation hit	Lost	PairedNeedsFullRecheck	55	55	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+P1544	crates/rum-runtime/src/runtime/session/guest_loading/script.rs:69	survived or no mutation hit	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1551	crates/rum-runtime/src/runtime/session/session_eval.rs:183	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1552	crates/rum-runtime/src/runtime/session/session_eval.rs:190	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1553	crates/rum-runtime/src/runtime/session/session_eval.rs:200	compiled but no valid binding reached	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1555	crates/rum-runtime/src/runtime/session/session_eval.rs:257	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1556	crates/rum-runtime/src/runtime/session/session_eval.rs:297	survived or no mutation hit	Boundary	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1557	crates/rum-runtime/src/runtime/session/session_eval.rs:304	compiled but no valid binding reached	Boundary	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1558	crates/rum-runtime/src/runtime/session/session_eval.rs:332	caught mutant; incomplete real tuples	Boundary	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1559	crates/rum-runtime/src/runtime/session/session_eval.rs:340	compiled but no valid binding reached	Boundary	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1560	crates/rum-runtime/src/runtime/session/session_eval.rs:414	compiled but no valid binding reached	Boundary	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1562	crates/rum-runtime/src/runtime/session/session_requests.rs:170	survived or no mutation hit	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1563	crates/rum-runtime/src/runtime/session/session_requests.rs:193	compiled but no valid binding reached	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1564	crates/rum-runtime/src/runtime/session/session_requests.rs:235	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1565	crates/rum-runtime/src/runtime/session/session_requests.rs:245	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1566	crates/rum-runtime/src/runtime/session/session_requests.rs:259	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1567	crates/rum-runtime/src/runtime/session/session_requests.rs:293	survived or no mutation hit	NoObservableTail (proposal)	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1568	crates/rum-runtime/src/runtime/session/session_requests.rs:329	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1569	crates/rum-runtime/src/runtime/session/session_requests.rs:389	unsupported schema	Boundary	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1571	crates/rum-runtime/src/runtime/session/session_requests.rs:423	unsupported schema	Boundary	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1573	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:22	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1574	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:65	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1575	crates/rum-runtime/src/runtime/suspension/core/fault.rs:126	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1576	crates/rum-runtime/src/runtime/suspension/core.rs:631	unsupported schema	Transferred	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P1577	crates/rum-runtime/src/runtime/suspension/core.rs:682	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1578	crates/rum-runtime/src/runtime/suspension/core.rs:753	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1579	crates/rum-runtime/src/runtime/suspension/core.rs:776	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1580	crates/rum-runtime/src/runtime/suspension/core.rs:788	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1581	crates/rum-runtime/src/runtime/suspension/core.rs:825	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1582	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:49	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1583	crates/rum-runtime/src/runtime/test_builtins.rs:510	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1585	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:21	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1586	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:45	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1587	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:69	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1588	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:95	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1589	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:121	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1590	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:147	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1591	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:179	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1592	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:234	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1595	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:48	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1597	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:74	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1599	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:97	compiled but no valid binding reached	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1610	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:238	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1613	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:283	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1615	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:325	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1621	crates/rum-runtime/src/runtime/tree_walkers/position/options.rs:42	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1625	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:21	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1626	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:47	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1627	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:76	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1628	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:122	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1630	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:166	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1636	crates/rum-runtime/src/runtime/tree_walkers/position.rs:178	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1637	crates/rum-runtime/src/runtime/tree_walkers/position.rs:207	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1640	crates/rum-runtime/src/runtime/tree_walkers/position.rs:275	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1708	crates/rum-stdlib/src/associations/basic.rs:219	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1802	crates/rum-stdlib/src/associations/missing/target.rs:145	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1803	crates/rum-stdlib/src/associations/missing/target.rs:148	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1804	crates/rum-stdlib/src/associations/missing/target.rs:210	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1805	crates/rum-stdlib/src/associations/missing/target.rs:261	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1806	crates/rum-stdlib/src/associations/missing/target.rs:331	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1810	crates/rum-stdlib/src/associations/missing.rs:76	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1814	crates/rum-stdlib/src/associations/mutation.rs:234	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1817	crates/rum-stdlib/src/associations/mutation.rs:363	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1818	crates/rum-stdlib/src/associations/mutation.rs:530	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1880	crates/rum-stdlib/src/control_flow.rs:29	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1936	crates/rum-stdlib/src/functional_ops/arrays/mod.rs:31	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P1937	crates/rum-stdlib/src/functional_ops/arrays/mod.rs:55	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2127	crates/rum-stdlib/src/integer_digits.rs:104	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2128	crates/rum-stdlib/src/integer_digits.rs:180	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2132	crates/rum-stdlib/src/lazy/machine.rs:27	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2133	crates/rum-stdlib/src/lazy/machine.rs:68	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2134	crates/rum-stdlib/src/lazy/machine.rs:79	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2135	crates/rum-stdlib/src/lazy/machine.rs:107	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2137	crates/rum-stdlib/src/lazy/source.rs:65	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2146	crates/rum-stdlib/src/lazy.rs:446	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2175	crates/rum-stdlib/src/number_theory.rs:137	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2176	crates/rum-stdlib/src/number_theory.rs:167	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2177	crates/rum-stdlib/src/number_theory.rs:193	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2178	crates/rum-stdlib/src/number_theory.rs:219	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2179	crates/rum-stdlib/src/number_theory.rs:250	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2226	crates/rum-stdlib/src/predicates/collections.rs:365	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2227	crates/rum-stdlib/src/predicates/collections.rs:385	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2299	crates/rum-stdlib/src/schema.rs:130	survived or no mutation hit	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2348	crates/rum-stdlib/src/strings/patterns/search/guarded/replace.rs:109	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2354	crates/rum-stdlib/src/strings/patterns/search/guarded/replace.rs:231	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2379	crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:138	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2381	crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:191	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2385	crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:265	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2387	crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:326	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2409	crates/rum-stdlib/src/strings/patterns/search/rules.rs:131	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2411	crates/rum-stdlib/src/strings/patterns/search/rules.rs:187	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2416	crates/rum-stdlib/src/strings/patterns/search/rules.rs:296	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2418	crates/rum-stdlib/src/strings/patterns/search/rules.rs:332	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2544	crates/rum-stdlib/src/structure_ops/list_plumbing.rs:30	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2547	crates/rum-stdlib/src/structure_ops/list_plumbing.rs:151	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2591	crates/rum-stdlib/src/structure_ops/sequence/take_drop.rs:81	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2593	crates/rum-stdlib/src/structure_ops/surface.rs:83	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2595	crates/rum-host/src/session.rs:352	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2596	crates/rum-host/src/session.rs:373	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2599	crates/rum-host/src/session.rs:436	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2600	crates/rum-host/src/session.rs:482	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2601	crates/rum-host/src/session.rs:557	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2602	crates/rum-host/src/session.rs:561	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2603	crates/rum-host/src/session.rs:592	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2604	crates/rum-host/src/session.rs:708	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2605	crates/rum-jupyter/src/adapter/execute.rs:20	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2606	crates/rum-jupyter/src/adapter/execute.rs:245	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2607	crates/rum-jupyter/src/adapter/execute.rs:248	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2608	crates/rum-jupyter/src/adapter/input_retirement.rs:15	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2609	crates/rum-jupyter/src/adapter/worker.rs:185	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2610	crates/rum-jupyter/src/adapter/worker.rs:339	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2611	crates/rum-jupyter/src/adapter/worker.rs:358	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2612	crates/rum-jupyter/src/adapter/worker.rs:369	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2613	crates/rum-jupyter/src/adapter/worker.rs:374	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2614	crates/rum-jupyter/src/adapter/worker.rs:387	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2615	crates/rum-cli/src/eval_tests.rs:38	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2616	crates/rum-cli/src/eval_tests.rs:58	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2617	crates/rum-cli/src/eval_tests.rs:59	unsupported schema	Boundary	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P2618	crates/rum-cli/src/eval_tests.rs:60	unsupported schema	Boundary	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P2619	crates/rum-cli/src/eval_tests.rs:61	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2620	crates/rum-cli/src/eval_tests.rs:62	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2621	crates/rum-cli/src/eval_tests.rs:62	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2622	crates/rum-cli/src/eval_tests.rs:79	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2623	crates/rum-cli/src/input_retirement.rs:15	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2624	crates/rum-cli/src/main.rs:43	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2625	crates/rum-cli/src/main.rs:67	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2626	crates/rum-cli/src/main.rs:92	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2627	crates/rum-cli/src/main.rs:107	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2629	crates/rum-cli/src/main.rs:113	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2630	crates/rum-cli/src/main.rs:115	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2631	crates/rum-cli/src/main.rs:116	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2632	crates/rum-cli/src/main.rs:120	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2633	crates/rum-cli/src/main.rs:122	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2635	crates/rum-cli/src/main.rs:224	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2636	crates/rum-cli/src/main.rs:231	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2637	crates/rum-cli/src/main.rs:231	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2638	crates/rum-cli/src/main.rs:243	unsupported schema	Boundary	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P2639	crates/rum-cli/src/main.rs:239	unsupported schema	Boundary	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P2640	crates/rum-cli/src/main.rs:255	unsupported schema	Boundary	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P2641	crates/rum-cli/src/main.rs:248	unsupported schema	Boundary	PairedNeedsFullRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+P2642	crates/rum-cli/src/main.rs:260	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2643	crates/rum-cli/src/main.rs:297	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2644	crates/rum-cli/src/main.rs:315	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2645	crates/rum-cli/src/main.rs:323	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2646	crates/rum-repl/src/lib.rs:138	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2647	crates/rum-repl/src/lib.rs:152	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2648	crates/rum-repl/src/lib.rs:181	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2649	crates/rum-repl/src/lib.rs:195	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2650	crates/rum-repl/src/lib.rs:287	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2651	crates/rum-repl/src/request.rs:134	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2652	crates/rum-repl/src/request.rs:181	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2653	crates/rum-repl/src/request.rs:184	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2654	crates/rum-repl/src/request.rs:195	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2655	crates/rum-repl/src/request.rs:206	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2656	crates/rum-repl/src/request.rs:219	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+P2657	crates/rum-repl/src/request.rs:252	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+S002	crates/rum-runtime/src/runtime/debug_tools/monitor/options.rs:138	unsupported schema	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+618.frameless-transforms.033	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:71	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+618.frameless-transforms.076	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:74	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+618.optional-source-helpers.007	crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs:44	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+618.optional-source-helpers.019	crates/rum-runtime/src/runtime/definitions/incremental_append.rs:8	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+618.optional-source-helpers.023	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:223	unsupported schema	Residual	PairedNeedsFullRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+618.optional-source-helpers.025	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/table_fast_path.rs:11	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+618.optional-source-helpers.027	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:71	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+618.optional-source-helpers.042	crates/rum-runtime/src/runtime/scoping/lexical/block/continuation.rs:573	unsupported schema	Residual	FingerprintUnchanged	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+618.effect-questions.004	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:98	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+618.effect-questions.005	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:103	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+C1.P0942	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:65	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+C1.P0943	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:67	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+C1.P0949	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:148	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+C1.P0950	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:150	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+C1.P0952	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:180	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+C1.P0953	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:190	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	0	0	False	Changed/missing enclosing source requires full current recheck; mandatory calibration prerequisites unavailable
+C1.P0956	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all_application.rs:23	new C1 producer edge	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+C1.P0957	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all_application.rs:46	new C1 producer edge	Residual	UnresolvedSiteNeedsRecheck	0	0	False	Full non-encoding concrete carrier/native/drop/caller work remains; prior residual not silently settled
+C3.evaluate_call.unstable_head	crates/rum-runtime/src/runtime/eval_core/call.rs:137	new continuation3 producer edge		NewEdgeNeedsFullGraphAndCalibration	0	0	True	Native counters SAME; own mutant caught; calibration prerequisites unavailable
+```
+### 6. Port tables, ledger controls, runs and integrity
+
+The partial port is under `.temp/g15-c2/port/`: `source-entries.jsonl`, `rebase.tsv`, the unchanged original keys plus the new frozen keys, `diagnostic-receipts.tsv`, `diagnostic-mutants.json`, `fixture-programs.jsonl`, and 796 actual `.rum`/`.setup.rum` programs with input metadata. Every published diagnostic binding keeps its policy, variant, context and consumer route. The 29 separate accepted rows are copied unchanged as historical evidence. All build recipes, binary hashes, original JSON logs, source mutations and outstanding proof/coverage status are retained. This is not a complete production manifest or a claim to reconstruct pruned historical binary checksums.
+
+The mandatory negatives use current raw evidence. The local positive seed P0259 really has a complete measured native matrix and an own caught bound mutant; the global calibration guard independently rejects promotion. This prevents the negative cases from being vacuously red merely because calibration is blocked. No control promotion is written to the actual ledger.
+
+```text
+C2 LEDGER positive: GREEN owner=Open identities=1033 carried=618 residuals=415; global calibration remains blocked
+C2 LEDGER local positive control: P0259 current raw matrix and own mutant accepted; global calibration guard still RED; no promotion written
+C2 LEDGER NEGATIVE C2-done-with-residuals: RED (G15-C2 marked Done while residuals remain)
+C2 LEDGER NEGATIVE delete-a-row: RED (source ledger identities differ from frozen population)
+C2 LEDGER NEGATIVE duplicate-a-row: RED (duplicate source ledger row)
+C2 LEDGER NEGATIVE wrong-row-mutant: RED (caught mutant row differs from promoted row: P0487 <- P0259; no authentic own caught mutant: P0487)
+C2 LEDGER NEGATIVE surviving-identity-mutant-promoted: RED (no authentic own caught mutant: P0487)
+C2 LEDGER NEGATIVE incomplete-matrix-promoted: RED (incomplete real required matrix: P0259)
+C2 LEDGER CONTROLS mandatory=6 rejected=6 unexpected_green=0; current calibration guard independently RED; C2 OPEN
+```
+Standing inventories were not edited or weakened. The live production `.rs`, `.py` and `.toml` files were untouched, so no live standing inventory was expired and no replay was triggered. The targeted copied-tree observations are not a production acceptance suite. No suite red was attributed to a fingerprint, certificate or source-position drift.
+
+```text
+C2 STANDING INVENTORIES NA live production source edits=0; expired fingerprints/certificates/positions=0; no replay required; no inventory hand edits
+```
+
+Executed: bounded offline copied-tree release builds, 32 current comparator cases, the existing enabled LP01 panel, 16 minimal native pairs and 16 own mutants, 796 pristine native pairs, 796 disabled-copy parity pairs, 17 bound own mutants, source/hash recovery and rebase inspection, the raw attribution replay, and all six ledger negatives. Tests in copied targets ran serially. No timing decisions were made.
+
+Not run: historical pre-G15/pre-C1 rebuilds, all four fresh independent semantic controls, a calibrated complete current census, renewed MIR/drop/caller proofs, the 353-row concrete residual campaign, new internal-encoding probes, production cargo fmt/workspace/two-feature acceptance, performance gates, production repairs or the manifest port. No work beyond the report is authorized by this result.
+
+One scratch lock-generation attempt selected newer cached dependency versions. That build completed but was rejected before any semantic execution; its artifacts and log remain. The successful measurement builds retain all 137 original Cargo.lock package records and add only the scratch probe package. The canonical `scripts/probe-build.py` algorithm is used through the target/path adapter, as in brief 717, so every builder path stays under `.temp/g15-c2/`. No production build profile was changed.
+
+```text
+C2 LOCK PASS existing_packages=137 unchanged; one scratch c2-probe package added; generated-lock attempt rejected before semantic execution
+```
+
+```text
+C2 SOURCE INTEGRITY {"brief_append_only": false, "brief_prefix_preserved": true, "changed_files": [], "complete_report_match": false, "entry_files": 2707, "entry_tree_sha256": "1cb4ed537684f3a49b08a0a9fc209764d9afb632fd60307c5d552f00c831ca43", "final_files": 2707, "final_tree_sha256": "1cb4ed537684f3a49b08a0a9fc209764d9afb632fd60307c5d552f00c831ca43", "network_requests": 0, "nonbrief_files_unchanged": 2706, "production_source_changes": 0, "version_control_commands": 0}
+```
+
+```text
+C2 INHERITED SCENE HASHES files=8 changed=0
+C2 PARTIAL LEDGER VERIFIED identities=1033 inherited=1032 new_edges=1 carried=618 residuals=415 new_promotions=0; whole graph remains incomplete
+C2 REQUIREMENT PRESERVATION original=75225 preserved=75225 added=70 deleted=0 current=75295 encoding_retained=18160
+C2 RAW NATIVE RECHECK pristine=796/796 SAME disabled_exact=796/796 designated_producer_bindings=750/750
+C2 RAW MUTANT RECHECK actual_arms=17 mutants_with_hits=17 native_differences=16 survivor=P0487; no generated caught flag trusted
+C2 PORT PROGRAM RECHECK programs=796 source_setup_input_hashes=796/796 new_internal_encoding=0
+C2 BUILD RECEIPT RECHECK binaries=6 hash_matches=6; rejected dependency-drift binary retained separately and never executed
+C2 HANDOFF VALIDATION PASS evidence preserved; calibration prerequisites BLOCKED; no closure or new settlement authorized
+```
+The final tree hash and the post-append prefix check are recorded in `.temp/g15-c2/postappend-integrity.json` and the structured report. The report text cannot contain its own whole-tree digest without a circular hash. `.temp/g15-c2/artifact-hashes.json` fingerprints the retained evidence, source copies and current binaries, excluding mutable checkpoint/report files and disposable build/cache directories; it does not claim any historical overwritten binary checksum.
+
+### 7. Open questions and recommendations
+
+- **Historical calibration inputs:** provide an intact repository-local archive matching the named hashes, or issue an explicit director ruling about retaining historical red receipts and replacing the missing fresh controls. Recommendation: restore the missing files and original generator/raw-control scene; no substitute historical build has been guessed.
+- **Missing continuation-2 evidence:** restore the Drop/MIR, dynamic-caller, strict-classifier and raw receipt directories if archived. Recommendation: carry the 618 unchanged accepted dispositions by the authorized fingerprint rule, but re-establish every changed proof and keep missing raw artifacts explicit.
+- **P0487 and the new caller:** finish the calibrated strict-tail and Drop/caller check, then attach the producer's transfer to the new outer edge and its own caught mutant. Recommendation: preserve both source identities and their separate ownership.
+- **Continuation:** resume from `.temp/g15-c2/PROGRESS.md` and the preserved native receipts after the calibration prerequisite is resolved. The whole-graph rebase and the 353 concrete residuals still require execution; do not rerun completed panels or claim that the two-batch stop-loss fired here.
+
+## Director continuation 4 (2026-11-10) — the historical bases are restored; calibration and the campaign resume
+
+Continuation 3 stopped before promoting any settlement because its
+mandatory calibration inputs were pruned. **The STOP is accepted as a
+genuine dependency failure, not a product signal**, and the refusal to
+promote anything without calibration is correct. Its work is accepted and
+reusable: the rebase (1,032 original rows: 893 unchanged-function, 90
+paired rechecks, 49 unresolved; one new edge; 618 accepted carries), the
+diagnostic preparation (16 rows; 17 armed bound mutants, 16 caught; P0487
+surviving), the corrected CASE reducer (749 -> 750, recovering an existing
+P0256 pause from the unchanged raw log, no probe added), and the
+dependency-drift guard (a generated-lock build rejected before execution,
+the original lock restored in scratch, the production lock never edited).
+The five FLAGGED rows are dispositions of this STOP, not product findings.
+
+**Q1 — the historical sources are restored from git.** I exported the
+exact commits the brief-619/622 base-source copies were made from:
+
+- pre-G15: `git archive d0876e10` -> `.temp/g15-c2/restored/pre-g15`
+  (2,079 files);
+- pre-C1: `git archive a6ff0332` -> `.temp/g15-c2/restored/pre-c1`
+  (2,089 files);
+- per-file `manifest-pre-g15.sha256` / `manifest-pre-c1.sha256`, and
+  `.temp/g15-c2/restored/README.md` with the exact commands.
+
+Every one of the 24 pre-G15 and 22 pre-C1 paths continuation 3 listed as
+missing is present. Verify your required historical hashes against the
+manifests; a mismatch is a STOP. The trees are read-only inputs: build
+and run only in copies. The surviving calibration inputs are
+`.temp/brief-621/calibration-cases.jsonl` (34 G15A/G15B cases) and
+`.temp/brief-622/c1-fixtures.json` (24 C1 fixtures; the C1 case file is
+gone, so rebuild that panel from the fixtures — run all 24 and record
+which are pre-C1 DIFF and current SAME, at least the two recorded
+witnesses).
+
+**Calibration basis (replaces the unrecoverable scene).**
+
+- The current comparator stays as run: 32/32 SAME on the final tree.
+- Historical panels: build the restored trees and run the surviving
+  G15A/G15B cases against pre-G15 and the C1 fixtures against pre-C1.
+  Require the recorded witnesses to DIFF there and be SAME on the final
+  tree (G15A 3 and G15B 12, the ids in `calibration-checks.json`; C1 at
+  least the two recorded).
+- The four semantic controls' case files and patches are gone. Rebuild
+  them **fresh on the final tree**, one per mechanism, from the committed
+  policy-shape table in brief-621 (`### One copied-tree mutant schema and
+  measured settlement`) and the row-level `mutant-schema.tsv`:
+  - `Some` — an OptionalStage omission at a producer seam with a known
+    tail, observed through the actual native Option-slot output before
+    the lenient decoder; the public pair may stay SAME; never manufacture
+    `None`;
+  - `G15A` — the FunctionResult value-stage omission (skip the value-stage
+    Return absorption/finish while retaining the slot conversion);
+  - `G15B` — the MatchingSymbolCycleRecovery omission (bypass
+    `finish_definition_lhs_active_expr` in exactly one awaited variant);
+  - `C1` — the ReplaceAll application evaluation finish.
+  Each must red its named observer with final-value comparison disabled,
+  and the recipe (row, site, patch) and raw log are recorded. A mechanism
+  that cannot be built from the committed record is a STOP with the
+  missing ingredient named; never substitute an unrelated mutant.
+
+**Q2 — the pruned continuation-2 raw scene cannot be restored.** No copy
+exists outside the pruned subdirectories; nothing will be fabricated. The
+618 unchanged-function carries stand under the continuation-3 fingerprint
+ruling: the ledger row with its function and file hashes is the evidence
+of record. Every reopened or changed row (61 prior dispositions and 78
+residual rows) is re-checked in full, and the 49 unresolved rows are
+paired by source with proofs. Any new `Equal` or `NoObservableTail` needs
+fresh raw evidence.
+
+**Q3 — resume.** After calibration: re-settle the 16 diagnostic rows
+first, with fresh receipts under the logical accounting (the prepared
+plans and the 16 caught bound mutants are reusable); then the residual
+groups in the leverage order of the residual table; then P0487 and
+C3.evaluate_call.unstable_head as separate identities; then the port
+tables. The stop-loss and hard rules are unchanged, and a hard row parked
+after one bounded attempt is not a stop.
+
+**Report.** Append continuation 4 in the brief's format and produce the
+`rum-report/1`; stop for my gate.
