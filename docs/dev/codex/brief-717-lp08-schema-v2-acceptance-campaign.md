@@ -804,3 +804,48 @@ attempts. Stage E's workspace bar: the worker's sandbox cannot run the nine
 native ZeroMQ loopback tests (the standing EPERM boundary); report it with
 the serial reproduction as the brief already directs, and never call it a
 skip — my host run is the authoritative workspace.
+
+## Continuation run 7 admission STOP ruling (director, 2026-11-10)
+
+Run 7 stopped at its admission check before any capture, build or acceptance
+run: its `initialize.py` verified the live tree against the restart6 frozen
+snapshot and asserted that the only difference is this brief's appended
+ruling; it observed three differences and exited 1 at 8 threads, with the
+serial reproduction exiting 1 identically (`AssertionError:
+['CLAUDE.md', 'TODO.md',
+'docs/dev/codex/brief-717-lp08-schema-v2-acceptance-campaign.md']`). The
+worker wrote no new capture, no new build and no acceptance run.
+
+**The STOP is accepted as an instrument error of mine, not a product
+signal.** The difference is my ruling commit `dcc2b983` (`git show --stat`:
+three files, 119 insertions, 9 deletions — `CLAUDE.md`, `TODO.md`, this
+brief). The brief's "live tree frozen" rule is about the measurement input:
+source, tests, inventories and the canonical documents the campaign reads;
+the director owns the tree between runs, and a ruling commit's documentation
+updates are not product change. The admission bar expecting the brief append
+alone was the brief's omission, not worker carelessness.
+
+**My own verification** (`.temp/director/probe-717g/verify.py`, same
+exclusions `.git`, `target`, `.temp`): live 2,709 files, snapshot 2,709, 0
+missing, 0 extra, exactly 3 differing — `CLAUDE.md`, `TODO.md` and this
+brief. `git status --porcelain` empty at HEAD `dcc2b983`;
+`git diff --stat 68f2619a..HEAD` names exactly those three files. No source,
+test or inventory file differs.
+
+**Ruling.** The admission bar is the exact three-file set `['CLAUDE.md',
+'TODO.md', this brief]`: the worker asserts the observed difference list
+equals it and proceeds. Any fourth path is a STOP, and any difference under
+`crates/` or `scripts/` is a STOP regardless of the set. The rest of the
+admission stands: the base, layout and identity arms remain bound by their
+retained receipts, the parser calibration on the copied known profiles is
+re-run, and the consumed Stage A-C receipts, timing panel, ledger and ten
+label panels (240 profiles) are reused with no rerun. This appendix changes
+only this brief, which stays inside the set.
+
+**Continuation scope is unchanged:** capture the 13 remaining label panels
+(the two `-repeat` labels by the sequential construction; the other eleven
+wrapped), reduce all 23 under the corrected 703 criterion, then Stages E and
+F. The run-7 prepared label programs under
+`.temp/brief-717/continuation7/label-probes/` may be reused only when
+byte-identical to this ruling's construction. Dispatch run 8 forked from the
+run-7 session `01a1c1dc-356c-7211-8a62-4343de70669f`.

@@ -177,17 +177,17 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   class in the profiling lease; brief 712 (design) proved it and **brief
   713 (implementation, briefs C24-C28) closed it**: generation-aware
   admission carries a session's lease through contexts, the session span
-  and both teardown entries, with the direct paused-drop falsifier
-  calibrated 8/1 and the witness set at 1,420 names. My gate: fmt clean,
-  workspace 4,212/0/61 (63 binaries), six host targets at 8/1, Q30
-  four-column certificate on the release artifact (fixed-SHA anchor
-  retired: object code identical across the source change). **Brief 716
+  and both teardown entries, with the paused-drop falsifier 8/1 and 1,420
+  names. My gate: fmt clean, workspace 4,212/0/61 (63 binaries), six host
+  targets at 8/1, Q30 certificate on the release artifact (fixed-SHA anchor
+  retired). **Brief 716
   accepted; 714 stage 32 green 37/37; brief 718 accepted at 3 Ir/call
   (workspace 4,212/0/61; ledger -5,611,507). 717's restart is green through
   Stage C and the D ledger; its label panel STOPed on the 5,000-iteration
-  `-repeat` wrap (the session iteration-work limit) and continues on the
-  2026-11-10 ruling's sequential construction.** `BRIEF_WORKER=mst`
-  (GLM-5.3) is the fallback.
+  `-repeat` wrap (the session iteration-work limit); a first continuation
+  stopped at its admission on the ruling commit's three docs, and it
+  continues on the 2026-11-10 rulings (sequential repeat; that doc set).**
+  `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

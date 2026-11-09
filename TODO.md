@@ -55,9 +55,12 @@ brief-718 source is through Stage C (both builds SHA-equal, stack 18,208 x
 depth + 12,376) and Stage D's ledger (the source-timing seam at 3 Ir/call,
 the six accepted seams exact at identical call counts, deterministic delta
 -5,611,507), and it STOPed at the first `-repeat` label probe, whose wrapped
-5,000-iteration body exceeds the session's iteration-work limit; the
-director ruling of 2026-11-10 completes the remaining 13 panels with a
-sequential repeat construction, reduces all 23, then runs Stages E and F.
+5,000-iteration body exceeds the session's iteration-work limit; a first
+continuation then stopped at its admission check on the director's ruling
+commit (three docs; zero captures). The director rulings of 2026-11-10
+authorize exactly that three-document difference set, complete the remaining
+13 panels with a sequential repeat construction, reduce all 23, then run
+Stages E and F.
 The test
 audit's Stage B and D03 are closed; LP05-LP08's promotion is done. The
 10-29 estimate in `docs/dev/security-hardening-progress.md` is pending a
