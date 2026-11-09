@@ -274,3 +274,88 @@ no third-party engine, no new `unsafe`; a red is reproduced at
 the report is `rum-report/1` JSON with copied verdicts and the
 command/log/exit/count table. A campaign green does not authorize a commit:
 the director owns the authoritative gate.
+
+## Stage-B STOP ruling and continuation (director, 2026-11-09)
+
+Run 1 stopped in Stage B before any acceptance test ran: the worker's
+warning classifier fired on Cargo's summary line, its calibration then
+failed, and a follow-up launch exited 2 on a missing file. **The STOP is
+accepted as an instrument failure, not a product signal. Stage A is
+accepted and is not rerun; the campaign resumes at Stage B.**
+
+### Stage A accepted (my own verification)
+
+- The live tree is byte-identical to `.temp/brief-717/evidence/final-files.json`:
+  I hashed all 2,708 files myself (excluding `.git/`, `target/`, `.temp/`),
+  2,708 entries, 0 missing, 0 extra, 0 mismatched; `git status --porcelain`
+  empty at HEAD `80c85695ea9808ce3963cadba015d2efb805f8a8`.
+- The base and layout arms are byte-identical to the retained
+  `.temp/brief-708/src/{base,layout}` (2,193 files each, 0
+  missing/extra/differing). The base provenance receipt's 603 rows
+  (587 runtime, 16 prior scope) reconcile: 601 present and hash-equal, and
+  the two recorded-absent rows (`logical/collector.rs`,
+  `logical/completion.rs`) are absent from the snapshot exactly as
+  recorded. The run-1 assembly KeyError was that absent-row indexing
+  error; the finish driver's verification stands.
+- The identity arm is byte-identical to the retained
+  `.temp/brief-708/assembled/identity/downstream` (2,675 files), and its
+  canonical tree hash `357420d5dc418ee2b919bf4878e9a2aaede086465c7b1ddc6f30fd6a3a607f46`
+  equals the 708 probe build receipt.
+- The six standing inventories reproduce their accepted rows:
+  fingerprints 68; both certificate cells `1/0/0` with
+  `PRODUCTION_BODY_ROWS=2 PRODUCTION_INSTANCE_MARKS=3 FIXTURE_MARKS=0
+  PROBE_BODY_MARKS=4 HELPER_BODY_MARKS=0`; ownership 61 / 79 / 8,815 (the
+  brief-716-accepted counts); typed slots at the outer harness
+  `10 passed; 0 failed; 1 ignored` — the two nested `FAILED` lines in
+  `logs/a-typed-slots.log` are the designated forced-red scratch runs of
+  `removing_a_frame_in_a_scratch_copy_is_red` and
+  `removing_a_test_guard_in_a_scratch_copy_is_red`, and the report's
+  summed `(10, 2, 1)` is that honest aggregation; rejection census
+  1,220 = RET001 14 / RET002 1,168 / RET003 38.
+- `python3 -I scripts/report.py check 717`: OK, 129 citations.
+
+### The Stage-B STOP
+
+The build `cargo test -p rum-runtime --lib --no-run` (offline/locked, -j8)
+succeeded in 22.36 s and emitted exactly the three standing `test_builtins`
+unused-function warnings. The audit script counted the summary line
+`` `rum-runtime` (lib test) generated 3 warnings `` as a diagnostic, so its
+"no new warnings" assertion fired on that string; its calibration then
+required the entire eight-message reference (a feature-enabled probe build
+with five unrelated warnings) to equal the three observed messages and
+failed; and the following launch named a file that did not exist (exit 2).
+No acceptance test ran, so no implementation defect is claimed or
+available. The failed attempts are retained.
+
+### Warning-audit rules (the bar stands; the instrument is corrected)
+
+The bar "a new warning is a STOP" is unchanged. The audit compares the
+build it just made against that configuration's accepted baseline — never
+a cross-build superset:
+
+- `cargo test -p rum-runtime --lib` (default lib): 0 warnings.
+- `cargo test -p rum-runtime --lib --no-run` (lib test): exactly the three
+  standing `test_builtins` warnings (`register_test_if_builtin`,
+  `register_test_return_builtin`, `register_test_vm_template_builtins`),
+  the accepted baseline since brief 713.
+- Any other configuration: its own last accepted warning set.
+
+Cargo's `` generated N warnings `` summary line is not a diagnostic. The
+classifier is calibrated before it is believed: over the retained
+`logs/b-build-frozen-runtime.log` it must find the three standing
+diagnostics and zero new; over a copy with one synthetic `warning:` line
+injected it must find exactly one new. A classifier that fails either
+calibration is discarded; its red is not a campaign red and no dependent
+step is launched on it.
+
+### Continuation scope
+
+Resume at Stage B. Stage A's snapshots, manifests and receipts are
+consumed and are not repeated. The Stage B build and its binary are
+reused (the snapshot's target directory is warm); any fresh build still
+follows the brief's one-build-per-arm rule. Stages B-F, the bars, the
+exclusions, the host discipline and the deliverable are otherwise
+unchanged. The continuation's report extends `.temp/brief-717/report.json`
+with every new run, attempt and verdict line while keeping run 1's failed
+attempts; it does not overwrite them. Every script launched must exist and
+be readable first.
