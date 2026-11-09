@@ -976,3 +976,54 @@ the workspace with the seven standing skips and the native ZeroMQ EPERM
 boundary reported with its serial reproduction; then Stage F. Dispatch run
 11 forked from the run-10 session
 `01a1c227-e8a8-7041-8b6d-49a84f392116`.
+
+## Stage E and Stage F acceptance (director, 2026-11-10)
+
+Run 11 (`01a1c244-35ef-7e63-bf59-1a489aeb302a`, forked from the run-10
+session) completed the campaign under the run-10 mutant ruling, and the
+whole brief is accepted. Mutant 2's restoration and mutants 3-10 each
+redden their named observer at 8 threads and at 1 (mutant 2 emits three
+child summaries, mutants 3-10 one each; every summary reads `0 passed; 1
+failed` and every binary exits 101), and every restoration returns to the
+forced-baseline SHA `b0e38205...` and is green at both thread counts
+(mutant 2 three `1 passed` summaries, mutants 3-10 one each). The
+calibrated checker records summary multiplicity and asserts no fixed
+count; its calibration panel carries mutant 1's 0/1/0 and mutant 2's
+0/3/0. The runtime suite is exactly `1413 passed; 0 failed; 5 ignored; 2
+filtered out` at 8 threads and at 1 (worker 15.79 s / 71.92 s; my host
+reruns 15.69 s / 71.79 s, the same totals). **Instrument note:** the
+driver's summary table shows 1415/0/5 because the suite spawns two helper
+test runs whose `1 passed` summaries it sums; the suite's own `test
+result` line is the bar, and it is exact in both logs. `cargo fmt
+--check` is clean.
+
+The workspace is the standing sandbox boundary, not a product signal:
+4,203 passed / 9 failed / 61 ignored over 63 summaries, the nine failures
+all native ZeroMQ `TcpListener` EPERM, reproduced on the identical binary
+at 1 thread (0/9/0). **My host gate is authoritative: 4,212 passed / 0
+failed / 61 ignored over 63 summaries at 8 threads** with the seven
+standing skips, rc=0, peak 10,454,679,552 B in the 16G scope, no OOM.
+
+Stage F: `report.py check 717` OK (4,787 citations); every run, attempt,
+verdict line and excluded row is preserved (the 1,042 prior entries plus
+this run); `changes: 0 files`, and the three disclosed docs are the
+admission ruling's set; the final live tree is 2,709 files, the retained
+snapshots and accepted profiles are unchanged, and the frozen-input
+difference is still exactly `['CLAUDE.md','TODO.md',this brief]`.
+
+**Accepted: brief 717 in full, Stages A-F.** The schema-v2 publication is
+certified end to end on the frozen source: five-mode guest-vs-native
+parity with the independent decoder and its missing/duplicate/wrong-field
+falsifiers; both fresh builds' source and stack rows (F6 49; try / finish
+/ resume 106/53/20 with own vectors; `12,376 + 18,208 x depth`, residual
+0); the corrected-703 disabled-path decision over all 23 labels (552
+profiles, 991 repo functions, 9 positive same-call rows with only the
+accepted 54 -> 55 intercept stable, `changed_code_growth=0`); four LP01
+parents with 40 byte-identical comparisons at 88,795 records each; the
+twelve host cells; the two standing root reds 0/2/0; the ten renderer
+mutants red at 8 and 1 and restored to the same SHA; the runtime suite and
+the workspace as above. LP08's schema-v2 half is closed, and with it the
+LP08 line. Next: G15-C2's remaining 353 rows on the final source, CM,
+`CHANGELOG.md` (before S10), G13 S10-S54/F1-F23/R, E2; then retention from
+E0 + Q3, Q1/Q2/Q4/Q5, the binary snapshot format, the audit items,
+`v0.3.0`. No tags.

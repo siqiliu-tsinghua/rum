@@ -181,12 +181,12 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   names. My gate: fmt clean, workspace 4,212/0/61 (63 binaries), six host
   targets at 8/1, Q30 certificate on the release artifact. **Brief 716
   accepted; 714 stage 32 green 37/37; brief 718 accepted at 3 Ir/call
-  (ledger -5,611,507). 717's restart is green through Stage C and the D
-  ledger; its label panel STOPed on the 5,000-iteration `-repeat` wrap
-  (the session iteration-work limit); its continuations finished all 23
-  panels (552 profiles) and its four instrument STOPs — admission set,
-  noise-limited rename pair, pair count, mutant child summaries — are
-  ruled; Stage D is accepted, Stage E continues after mutant 1.**
+  (ledger -5,611,507). Brief 717 is accepted in full (Stages A-F): the
+  schema-v2 publication is certified on the frozen source — five-mode
+  parity, both builds' source and stack rows, all 23 labels disposed with
+  `changed_code_growth=0`, the ten mutants red at 8/1 and restored to
+  `b0e38205…`, runtime `1413/0/5` at 8 and 1, workspace `4,212/0/61` over
+  63 binaries. LP08 is closed; next is G15-C2's 353 rows.**
   `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 

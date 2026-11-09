@@ -29,11 +29,11 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   3 Ir/call on both campaign labels, helper at zero calls, workspace
   4,212/0/61).
 
-**Next, in order** (the branch queue): LP08's remaining schema-v2
-publication, G15-C2's remaining 353 rows on the final source, CM,
-`CHANGELOG.md`, and S10 onward. LP08's counter promotion has landed
-(`b9b39763`); `RumProfileSnapshot` still returns `Null`, so the public
-schema-v2 form in `docs/dev/profiling.md` is the open half. Brief 709
+**Next, in order** (the branch queue): G15-C2's remaining 353 rows on the
+final source, CM, `CHANGELOG.md`, and S10 onward. LP08's counter promotion
+has landed (`b9b39763`) and its schema-v2 publication is certified by
+brief 717; `RumProfileSnapshot` keeps its protected `Null` behaviour in
+every mode. Brief 709
 (design, 2026-11-08) is accepted and its six questions are ruled: the
 duration basis reuses `Epoch::rows()` including the observing thread's
 running intervals; the own-invocation sentence is qualified by the family
@@ -50,21 +50,25 @@ header, all legacy bytes preserved — with the host workspace green at
 accepted 2026-11-09) carries a session's lease generation through
 contexts, the session span and both teardown entries, so the stage-A
 flake class is covered (workspace 4,212/0/61 at 8 threads; 1,420 test
-names). Stage C is brief 717's acceptance campaign; its restart on the
-brief-718 source is through Stage C (both builds SHA-equal, stack 18,208 x
-depth + 12,376) and Stage D's ledger (the source-timing seam at 3 Ir/call,
-the six accepted seams exact at identical call counts, deterministic delta
--5,611,507), and it STOPed at the first `-repeat` label probe, whose wrapped
-5,000-iteration body exceeds the session's iteration-work limit; a first
-continuation then stopped at its admission check on the director's ruling
-commit (three docs; zero captures). The director rulings of 2026-11-10
-authorize exactly that three-document difference set and the sequential
-repeat construction; the 13 remaining panels are complete (552 profiles)
-and the attribution is accepted: all 23 labels disposed, 991 repo functions
-scanned, 9 positive same-call rows with only the accepted 54->55 intercept
-stable, changed_code_growth=0. A third instrument stop in the mutant driver
-(a child-summary aggregate) is ruled to finish mutants 2-10, the runtime
-suite, fmt and the workspace, then Stage F.
+names). Stage C is brief 717's acceptance campaign, **accepted 2026-11-10
+in full**. Its restart on the brief-718 source passed Stages A-C and the
+Stage-D ledger (the source-timing seam at 3 Ir/call, the six accepted
+seams exact at identical call counts, deterministic delta -5,611,507) and
+STOPed at the first `-repeat` label probe, whose wrapped 5,000-iteration
+body exceeds the session's iteration-work limit; its continuations used
+the sequential exact-body construction for those two labels and completed
+all 23 panels (552 profiles). The attribution disposed every label: 991
+repo functions scanned, 9 positive same-call rows with only the accepted
+54->55 intercept stable, `changed_code_growth=0`. The four instrument
+STOPs of the chain (the three-doc admission set, the noise-limited
+rename pair, the 376-pair count, the mutant child summaries) are ruled.
+Stage E is green: mutants 2-10 red at 8/1 on their named observers and
+restored to the forced baseline `b0e38205…`; runtime `1413/0/5` at 8 and
+1; fmt clean; workspace 4,212/0/61 over 63 binaries at 8 threads on the
+host (the worker's 9 native ZeroMQ EPERM failures reproduce serially and
+are the sandbox boundary, not skips). Stage F: `report.py check 717` OK
+(4,787 citations), 0 files changed. LP08's schema-v2 half is closed, and
+with it the LP08 line.
 The test
 audit's Stage B and D03 are closed; LP05-LP08's promotion is done. The
 10-29 estimate in `docs/dev/security-hardening-progress.md` is pending a
