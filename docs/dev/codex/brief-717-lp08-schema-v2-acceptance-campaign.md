@@ -613,3 +613,81 @@ draw 1's seam receipts are consumed and reused. The report keeps every
 earlier entry, including the stopped pair as the historical reading.
 Dispatch the run-4 continuation forked from the 717 session
 `01a1c117-0ba8-7773-b93d-afc8d124647c`.
+
+## Stage-D label STOP ruling and continuation (director, 2026-11-10)
+
+Run 5 completed the seam ledger under the re-frozen rule and ran all seven
+label probes, then STOPed on the first red: on
+`association-part-key-read-width32000` and
+`downvalue-guarded-decline-fallback`, `record_current_source_timing` executes
+22 instructions per call on the base arm, 22 on the layout arm and 24 on the
+final arm at identical call counts; four draws per cell and the same-binary
+serial reproductions all read 24. **The STOP is well taken.** The clause it
+enforces — new executed work in the changed code on any label is a STOP — is
+not a noise rule, and the row is deterministic.
+
+**Completed before the STOP, verified by me.** Four interleaved ledger draws
+per arm: base 16,458,580,255 / 16,460,786,361 / 16,468,383,817 /
+16,468,713,969; final 16,462,205,579 / 16,464,621,146 / 16,465,418,160 /
+16,465,490,586. The ranges overlap and the final range does not lie entirely
+above the base range, so the whole-workload row is recorded, not gated. Every
+draw reproduces the six accepted seam rows at identical call counts (13→3,
+23→18, 18→14, 20→18, 20→18, 18→14) with the cold helpers at zero self-Ir and
+zero calls; the deterministic seam delta is −3,539,044 instructions. All
+seven labels carry 24 profiles each (168 primary profiles) plus four
+same-binary serial reproductions.
+
+**My reproduction of the red** (`.temp/director/probe-717e/`): fresh
+Callgrind captures on the three arm binaries at 50/100 iterations, two draws
+per cell. `record_current_source_timing` reads 1,100/2,200 Ir at 50/100 calls
+on base and layout (22 per call) and 1,200/2,400 on final (24 per call), with
+50/100 incoming calls from `evaluate_definition_application_rhs` and no
+outgoing calls; the control `record_timing` reads 13 and 3. In the
+whole-workload ledger profiles the seam executes 109,077 calls in every draw:
+2,399,694 Ir on base (22 per call) against 2,617,848 on final (24 per call),
+**+218,154 instructions**.
+
+**Mechanism, measured.** Disassembly of the seam in both binaries: base
+performs the two callee-saved argument saves after the flag test (on the
+cold-load branch only); final hoists `movq %rsi,%rbx` and `movq %rdi,%r14`
+above the flag test, so the disabled return executes 24 instead of 22
+instructions (entry prologue, two flag tests, epilogue). The final body is
+1,321 bytes against 985. The cause is the stage-A side-index block in
+`record_symbol_timing_profile_counter` (`source.rs:383-403`), whose only
+caller is this seam and which the compiler inlines into it: a calibration
+build with that block removed (`77fb86e9…`, same probe, four draws) reads 22
+per call again, with the caller at 91 per call exactly as base.
+
+**Class.** The deterministic whole-workload scan over every executed function
+with an unchanged call count finds no other growth row in `rum_core` or
+`rum_runtime`; the six accepted reductions and the two accepted once-called
+intercepts (`drive_input_request` 54→55, `Session::drop` 34→33 — the 708
+fixed-intercept class) reproduce. The two positive profiling rows in
+`association-set-key-incremental-small`'s reduction are the 713 admission
+renames (`current_evaluation_profile_source_symbol` → `…_admitted`, 3,636;
+`lexical_profile_enabled` → `…_admitted`, 2,200), equal in magnitude and zero
+net.
+
+**Ruling.** A diagnostic seam that executes more instructions per call with
+profiling off is a default-path cost; the campaign does not record it as
+acceptable and does not waive the clause. The seam is repaired to the shape
+the line already uses: the disabled path an early return, the enabled body
+behind `#[cold] #[inline(never)]`, the seam kept out of line so its per-call
+row stays measurable, and the test-cfg admission and admitted flag read
+unchanged in order. My calibration of that shape — start-first early return,
+cold enabled body, pinned outer — reads **3 instructions per call** on both
+labels at 50/100 with two draws per cell, the helper at zero calls and the
+caller unchanged at 91 and 125 per call; the minimal cold outline without the
+start-first fast path reads 18. The bar is at or below 4 per call — the
+`record_timing` class — not merely at or below the base.
+
+**Consequence and continuation.** The repair changes the source, so the
+certification restarts: no Stage A/B/C receipt is carried across it. The
+campaign certifies a frozen tree, and a new tree is certified whole.
+Sequence: (1) brief 718 implements the repair and is gated by me; (2) brief
+717 restarts at Stage A on the repaired source, runs B, C, D and E in order,
+and reports at F. The run-5 evidence stands as the historical reading: the
+ledger, the timing panel, the 168 profiles and the two instrument failures
+(the reducer's receipt collision, recovered without a rerun; the attribution
+selector's first symbol form) are retained and are not rerun. Stage E did not
+run.
