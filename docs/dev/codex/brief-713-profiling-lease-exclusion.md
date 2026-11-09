@@ -2351,3 +2351,99 @@ move, so the Q29 acceptance series stands and is **not** rerun:
    mine.
 
 Resume with `CDX_FORK`.
+
+## Stage 23 ruling (Q32): the wrong-type control is configuration-aware
+
+Run 23 applied Q31 exactly and is accepted as written. The `exact.rs` diff
+is the one authorized comment line and the two pins (175->176, 177->178);
+both assertions pass, `legacy_clone_claims == 2` and both preserved-clone
+assertions are unchanged, and the corpus, the frontier and every other
+expectation are untouched. `production.tsv` now has 176 rows; row 176 is
+`production_10` at
+`evaluation_cache/profile/source.rs:316:16-20`
+(`std::option::Option::None`, `Option<Symbol>`).
+
+The later red is a real instrument gap, not a stale cell:
+`cargo test -p rum-stdlib --lib` is 1110/1/53 and the one failure is
+`exact_types_and_constructor_claims_match_rustc`, which the harness exits
+at `exact.py:266` with `production wrong-type control missed {'name':
+'production_10', ... 'start_line': '316', ... 'exact_type': 'Option <
+Symbol >'}`. The wrong batch exits 101 with seven live E0308 diagnostics
+(including `source.rs:344`); none at 316. Cause: the site sits in a
+statement carrying `#[cfg(any(test, feature = "test-builtin-memory-growth",
+feature = "test-continuation-slots"))]`, while the production arm compiles
+`cargo check -p rum-stdlib --lib` (with the existing
+`--no-default-features`/`hash` selection), where `rum-runtime` is a plain
+dependency (`features = []`, `test = false`). The statement is stripped, so
+the frozen expression is never compiled.
+
+I reproduced the mechanism end to end in `.temp/director/probe-q32.py` on a
+fresh scratch copy of the live tree (`target/brief-535/director-q32`,
+rustc 1.85.0):
+
+- `cargo check -p rum-runtime --lib --features
+  test-builtin-memory-growth,test-continuation-slots -j8` baseline: status
+  0.
+- the same build with `None` frozen as `std::convert::Infallible`: status
+  101, E0308 at `source.rs:316` (`mismatched types`).
+- the same build with `None` frozen as `Option < Symbol >`: status 0, no
+  diagnostic at 316.
+- the production command with the same wrong freeze: status 0, no E0308 at
+  316 -- the stripped statement compiles clean.
+
+**Erratum (mine).** The green bar I set in Q31 is wrong: the suite reports
+1164 tests with 53 ignored, so green is **1111/0/53**, not 1110/0/53. The
+worker's deviation 3 is correct and is accepted. The red line is 1110/1/53
+in both C22 and C23.
+
+**Ruling Q32.** Every production row's wrong-type control must be witnessed
+in a real build configuration that compiles its site. The production arm
+remains primary at exactly today's command. A row not witnessed there is
+re-run -- with the same batch and the same controls (same-name negative
+baseline, same-name negative, exact, wrong) -- in the **test-support arm**:
+`cargo +1.85.0 check --offline --locked --lib -p rum-runtime
+--message-format=json --features
+test-builtin-memory-growth,test-continuation-slots`, on the same scratch
+copy and build directory (only the command differs; the two features are
+exactly the `[dev-dependencies]` spec at `crates/rum-stdlib/Cargo.toml`).
+Conditions:
+
+- Every production row is witnessed in at least one arm; a row unwitnessed
+  in both is a STOP with the row quoted.
+- The fallback set is disclosed in the log; on this tree it must be exactly
+  `production_10`. Any other row in it is a STOP pending my ruling.
+- The test-support arm's exact compile must succeed for the batch; a
+  failure is a STOP with the diagnostics quoted.
+- Both pins stay 176/178; no row is dropped; no expectation is weakened; no
+  hand-pruned exclusion; `results.tsv` keeps its schema (the arm is printed
+  to the log, not added as a column).
+- No source change to dodge the walk: no `?` rewrite of the refusal, no
+  restructuring, no cfg removal, no new `#[allow]`.
+
+Scope extension: `compiler_oracle/exact.py` and `compiler_oracle/scratch.py`
+(only for the explicit second command/configuration, with the existing
+evidence, restore, originals and bounded-run behavior unchanged).
+`exact.rs` is not touched again by Q32.
+
+Calibration the run must show:
+
+1. The oracle test alone green, quoting: the `production_10` E0308 at
+   `source.rs:316` from the test-support arm, the exact-arm success, the
+   fallback set (exactly that row), the production-arm witness count (the
+   other 175 rows), and `A1_ORACLE_TOTAL agreements=... disagreements=0`.
+2. The fallback's own falsifier: the test-support command with the features
+   removed (or replaced by a non-enabling feature) must fail with
+   `production wrong-type control missed` for `production_10`; restore and
+   re-run green. Quote both.
+3. Full `cargo test -p rum-stdlib --lib --offline --locked -j 8
+   --no-fail-fast` to **1111/0/53**, quoting the line.
+4. Then Q30 as ruled (release rebuild, artifact sha256, four-column
+   certificate).
+5. Runtime source hashes unchanged from C22 (1603), census 1219, names
+   1416, the two standing skips; report and stop for my full gate.
+
+Q29's acceptance series is not rerun; the runtime source does not move.
+Workspace, native-ZeroMQ, the 37-run validation and every performance gate
+remain mine.
+
+Resume with `CDX_FORK`.
