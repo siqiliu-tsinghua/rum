@@ -2589,3 +2589,143 @@ The accepted Q29/Q32 series are superseded only by the re-run in item 4;
 nothing about the earlier evidence is withdrawn.
 
 Resume with `CDX_FORK`.
+
+## Stage 25 ruling (Q34): the session-span entry inherits the session's generation
+
+Run 25 is accepted as written. It stopped before any source edit and asked
+exactly the question the class duty required it to ask. I verified the
+no-edit claim independently rather than taking the report's word: no file
+under `crates/`, `docs/` or `scripts/` is newer than my own stage-24 edit of
+this brief (13:18:22, committed at `9f8f9d0a` at 13:18:39, dispatched at
+13:18:48); the working tree is still the accepted C24 set (62 entries: 10
+added, 52 modified); `report.py check 713` verifies 25 citations; the
+preserved release artifact is still
+`4118c33570e0f15e81d06d0c83f1216a08a81b410df3e6f7ead5fac87df042e6`.
+
+### The finding
+
+`HostSession` is `Send` (`docs/host-embedding-and-hardening.md`:103-105), so
+a paused profiled session can be moved to a fresh worker, whose
+`REGISTERED_GEN` is 0. A cancelled accepted request is routed to
+`finish_cancelled_pending_evaluation_request` (`session_requests.rs`:287-290)
+-> `abandon_pending_suspension` -> `drain_abandonment_worklist`, which at
+`abandon.rs:30` calls `ExecutionScope::enter(self)` **before**
+`begin_ordered_abandonment` and before `M::abandon` at `abandon.rs:78`
+enters any captured context (`profile_mode.rs`:44-47 ->
+`abandon_boundaries`/`enter_front` -> `ProfileQueue::enter_front` ->
+`Context::enter`). `ExecutionScope::enter` (`context.rs`:377-382) takes the
+ordinary `lease::admit()`, the fresh thread is refused at `lease.rs:93`, the
+scope records `pushed: false` and pushes no execution control, and the
+later, ContextGuard-scoped registration Q33 introduces cannot reach back to
+this earlier admission. The route is source-reachable on the unchanged host
+contract; it is not a measured host failure, and run 25 says so itself.
+
+### Ruling Q34
+
+The registration must follow the session's live profiler state, and the
+session-span entry must inherit it. Q33's context-level rule stands; this
+extends the same provenance one level up, to the span entry that comes
+before any context on the abandonment path.
+
+1. Provenance is derived, not remembered. The session roots suspended
+   evaluations in `pending_suspension`, `resuming_suspension` and
+   `abandonment_worklist`. A profiled suspension's queue carries the epoch it
+   was captured under, and the epoch carries the lease generation it was
+   created under (test-cfg only). An epoch is only ever constructed through
+   an admitted access (`Epoch::new_unleased` already takes one), so a
+   recorded generation always belongs to the lease of a registered thread.
+   The session's provenance is that generation.
+   - Not a field on `Session`, and not "the generation this session was once
+     used under": a remembered generation would authorize a scope whose
+     contexts then refuse (a split-brain admission) and would let a session
+     carried across leases re-authorize itself under a new lease.
+   - If a session roots profiled suspensions of more than one generation the
+     state is corrupt: fault or assert, never pick one.
+   - Refusals stay refusals: a session that holds no profiled state of the
+     current generation is foreign execution on that thread (today's
+     behaviour, not a regression).
+2. `ExecutionScope::enter` takes the generation-aware admission: the
+   `WRITE_GATE` read first, then accept when the thread is registered for the
+   current generation **or** the session's provenance generation equals the
+   current generation; a stale provenance is refused; `CURRENT_GEN == 0`
+   stays unfenced. On the provenance path the scope sets the entering
+   thread's `REGISTERED_GEN` to that generation for its own lifetime and
+   restores the previous value on the same thread at drop, with Q33's
+   nesting rule (a scope that did not register does not restore).
+   - Consequence: the scope's configured-flag read and its execution-control
+     push happen exactly as on the lease-owning thread, so the sessionless
+     profiling entries inside the span (`Call::start_from_active`,
+     `logical/mod.rs`:832-851, the only production consumer of
+     `execution_control`) are attributed to the session's control.
+3. Q33 is unchanged except in where the generation may live: a context's
+   generation may be carried on the epoch it captured under instead of
+   duplicated on `Context`. What is required is that contexts and the span
+   answer from the same notion of generation and that nothing drifts. Epoch
+   validity stays the context's own check; provenance is the generation.
+4. The exclusion is not weakened: a thread that never registered and never
+   executes a session holding current-generation profiler state is still
+   refused; the unregistered-writes witnesses, the flag-read and start
+   witnesses and their mutants keep their red arms. The Q26 frame is not the
+   repair; no new lease is taken; fixtures still do not register worker
+   threads; the host contract file is not touched.
+5. Production is unchanged: every new field and branch is behind the
+   existing test cfg, and the Q30 certificate must reproduce the same
+   artifact sha256 with zero symbols and strings for every machinery name.
+6. Class duty, completed in this run and not restarted-and-stopped: classify
+   every admission entry reachable from an execution on a thread other than
+   the one that captured the state, over the full C24 map (177 state rows /
+   212 consumers / 137 roots), each row exactly one of
+   (a) covered by a context guard's inherited registration (Q33);
+   (b) covered by a session span's inherited registration (Q34);
+   (c) provably runs only on the lease-owning thread before any profiler
+       state exists, with the reason the state cannot exist yet;
+   (d) STOP.
+   The table names the path and the covering guard for every row, and
+   includes the raw `blocks_unregistered_thread()` refusals (eleven sites
+   today), the `admit()` entries, the `publish()` writers and the two
+   `admit_exclusive()` resets. A row settled only by argument is an open
+   obligation, and record loss on the lease's own session counts as
+   uncovered even when no runtime-semantic difference is claimed.
+
+Scope: the stage-24 list (`profiling/lease.rs`,
+`profiling/logical/context.rs`, `profiling/logical/mod.rs` for the getter)
+plus `profiling/logical/epoch.rs` (the generation carrier and its accessor),
+`suspension/core/storage.rs` and `suspension/core/profile_queue.rs` (the
+accessors from frame storage to the queue's epoch generation;
+`suspension/core.rs` only if the pending-slot accessor needs it). Accessors
+and cfg plumbing only in those three suspension files; no logic may move
+there. No `Session` field: `model/session.rs` is not in scope. New permanent
+test files under `profiling/tests/` are expected. Anything else is a STOP.
+
+### Calibration and acceptance
+
+1. Moved-cancel witness, new and permanent, rum against rum: the same
+   cancellation (pause, cancel, resume with input) run on the owning thread
+   and on a spawned worker must produce identical row sets (all rows of the
+   session, not only the native ones), with `input_required` cleared, no
+   faults and no leaks; green at 8 and 1 threads. Mutant: the scope takes the
+   ordinary admission only (no provenance) -> the two row sets must differ;
+   restore -> identical. If no observer can be made red under the mutant,
+   STOP and report the disposition with the no-loss argument; do not weaken
+   or delete the witness.
+2. Stale witness, extended from Q33: profiler state captured under lease N,
+   executed on a spawned thread under lease N+1, writes nothing at either the
+   span or the contexts. Mutant: accept a provenance generation that differs
+   from `CURRENT_GEN` -> red; restore -> green. The positive arm remains the
+   moved-session resume.
+3. Q33's acceptance after the last edit: `logical_profile_lifecycle` green
+   3/3 at 8 and 1 with the moved-session interleaved line quoted;
+   `logical_profile_abandonment`, `lp03_phase_rows`, `lp04_definition_rows`,
+   `lp05_assignment_rows` and `schema_v2_snapshot` green at 8 and 1; the
+   unregistered-writes and foreign-thread pairs green with their mutants red.
+4. The full runtime lib series 3x at 8 threads and once at 1, each
+   `1409/0/5` with the two standing skips; the full stdlib lib suite to
+   `1111/0/53` (quote `A1_ORACLE_ARMS`; a row-count change is a STOP); the
+   Q30 certificate rebuilt on the final tree with the same artifact sha256.
+5. Source-hash delta relative to C24 exactly the touched files; no test
+   change, no new skip, no assertion relaxation.
+6. Report and stop for my full gate. A green series does not authorize a
+   commit; the workspace, the native ZeroMQ checks, the 37-run validation and
+   every performance gate stay mine.
+
+Resume with `CDX_FORK`.
