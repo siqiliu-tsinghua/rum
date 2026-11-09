@@ -21,15 +21,73 @@ pub(in crate::runtime) struct ContextGuard {
     rebuild: SourceStack<crate::runtime::Symbol>,
     lexical: SourceStack<&'static str>,
     sites: SourceStack<super::super::PresenceArgSite>,
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _registration: crate::runtime::profiling::lease::ThreadRegistration,
 }
 
 impl Context {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    fn lease_generation(&self) -> Option<u64> {
+        self.epoch.as_ref().map(|epoch| epoch.lease_generation())
+    }
+
     pub(in crate::runtime) fn capture(epoch: &Arc<Epoch>) -> Option<Arc<Self>> {
-        let records = segments::ancestry(epoch);
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return None;
+        };
+        Self::capture_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            epoch,
+        )
+    }
+
+    pub(in crate::runtime) fn capture_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+        epoch: &Arc<Epoch>,
+    ) -> Option<Arc<Self>> {
+        let records = segments::ancestry_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            epoch,
+        );
         use super::super::state::*;
         // The immutable ancestry path is shared; capture never scans records.
-        let storage =
-            epoch.storage(std::mem::size_of::<Self>() + 2 * std::mem::size_of::<usize>())?;
+        let storage = epoch.storage_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            std::mem::size_of::<Self>() + 2 * std::mem::size_of::<usize>(),
+        )?;
         epoch.contexts.fetch_add(1, Ordering::Relaxed);
         Some(Arc::new(Self {
             epoch: Some(Arc::clone(epoch)),
@@ -44,11 +102,110 @@ impl Context {
     }
 
     pub(in crate::runtime) fn enter(self: &Arc<Self>) -> Option<ContextGuard> {
-        self.enter_with_control(execution_control())
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some((access, _registration)) =
+            crate::runtime::profiling::lease::admit_generation(self.lease_generation())
+        else {
+            return None;
+        };
+        self.enter_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access,
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _registration,
+        )
+    }
+
+    pub(in crate::runtime) fn enter_admitted(
+        self: &Arc<Self>,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: crate::runtime::profiling::lease::Admitted,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _registration: crate::runtime::profiling::lease::ThreadRegistration,
+    ) -> Option<ContextGuard> {
+        self.enter_with_control_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _registration,
+            execution_control(),
+        )
     }
 
     pub(in crate::runtime) fn enter_with_control(
         self: &Arc<Self>,
+        control: Option<Arc<crate::runtime::RequestInterruptState>>,
+    ) -> Option<ContextGuard> {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some((access, _registration)) =
+            crate::runtime::profiling::lease::admit_generation(self.lease_generation())
+        else {
+            return None;
+        };
+        self.enter_with_control_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access,
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _registration,
+            control,
+        )
+    }
+
+    pub(in crate::runtime) fn enter_with_control_admitted(
+        self: &Arc<Self>,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: crate::runtime::profiling::lease::Admitted,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _registration: crate::runtime::profiling::lease::ThreadRegistration,
+
         control: Option<Arc<crate::runtime::RequestInterruptState>>,
     ) -> Option<ContextGuard> {
         let epoch = self.epoch.as_ref()?;
@@ -56,10 +213,31 @@ impl Context {
             return None;
         }
         if self.executing.swap(true, Ordering::Relaxed) {
-            epoch.fault();
+            epoch.fault_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(&_access),
+            );
             return None;
         }
-        let result = self.enter_active(control);
+        let result = self.enter_active(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _registration,
+            control,
+        );
         if result.is_none() {
             self.executing.store(false, Ordering::Relaxed);
         }
@@ -68,14 +246,55 @@ impl Context {
 
     fn enter_active(
         self: &Arc<Self>,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: crate::runtime::profiling::lease::Admitted,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _registration: crate::runtime::profiling::lease::ThreadRegistration,
+
         control: Option<Arc<crate::runtime::RequestInterruptState>>,
     ) -> Option<ContextGuard> {
         use super::super::state::*;
         let epoch = self.epoch.as_ref()?;
+        #[cfg(not(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        )))]
         let segment = self
             .records
             .as_ref()
             .and_then(|path| segments::restore(epoch, path));
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let segment = self.records.as_ref().and_then(|path| {
+            segments::restore_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                &_access,
+                epoch,
+                path,
+            )
+        });
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        drop(_access);
         if !epoch.is_valid() {
             control.as_ref()?;
             // A reset invalidates diagnostic ancestry, not the current frame's
@@ -87,6 +306,13 @@ impl Context {
             let sites = ARG_PREFILTER_SITE_STACK.with_borrow(Clone::clone);
             EXECUTION_CONTROLS.with_borrow_mut(|stack| stack.push(control));
             return Some(ContextGuard {
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                _registration,
+
                 context: Arc::clone(self),
                 segment: None,
                 evaluation,
@@ -107,6 +333,13 @@ impl Context {
         ARG_PREFILTER_SITE_DEPTH.with(|d| d.set(self.sites.len()));
         EXECUTION_CONTROLS.with_borrow_mut(|stack| stack.push(control));
         Some(ContextGuard {
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _registration,
+
             context: Arc::clone(self),
             segment,
             evaluation,
@@ -140,6 +373,12 @@ impl ContextGuard {
         let sites = ARG_PREFILTER_SITE_STACK.with_borrow(Clone::clone);
         EXECUTION_CONTROLS.with_borrow_mut(|stack| stack.push(Some(control)));
         Self {
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _registration: crate::runtime::profiling::lease::ThreadRegistration::inactive(),
             context,
             segment: None,
             evaluation,
@@ -191,14 +430,66 @@ thread_local! {
     };
 }
 
-/// Zero-sized scope marker: the state is the TLS stack, never the frame.
+/// Production is zero-sized; test builds remember ownership of the TLS push.
 pub(in crate::runtime) struct ExecutionScope {
     _private: (),
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    pushed: bool,
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _registration: crate::runtime::profiling::lease::ThreadRegistration,
 }
 
+#[cfg(not(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+)))]
+const _: () = assert!(std::mem::size_of::<ExecutionScope>() == 0);
+
 impl ExecutionScope {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    #[inline]
+    pub(in crate::runtime) fn enter(session: &crate::runtime::Session) -> Self {
+        let Some((access, _registration)) = crate::runtime::profiling::lease::admit_generation(
+            session.logical_profile_generation(),
+        ) else {
+            return Self {
+                _private: (),
+                pushed: false,
+                _registration: crate::runtime::profiling::lease::ThreadRegistration::inactive(),
+            };
+        };
+        let pushed = super::super::config::lexical_profile_configured_admitted(&access);
+        if pushed {
+            let control = session.request_interrupt_control.borrow();
+            EXECUTION_CONTROLS.with_borrow_mut(|stack| stack.push(Some(Arc::clone(&control))));
+        }
+        Self {
+            _private: (),
+            pushed,
+            _registration,
+        }
+    }
+
     /// The disabled path is the cold-load check itself: the configured body is
     /// outlined so no unconfigured entry pays a call.
+    #[cfg(not(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    )))]
     #[inline]
     pub(in crate::runtime) fn enter(session: &crate::runtime::Session) -> Self {
         if super::super::state::LEXICAL_PROFILE_ENABLED.load(Ordering::Relaxed) != 2 {
@@ -207,6 +498,11 @@ impl ExecutionScope {
         Self { _private: () }
     }
 
+    #[cfg(not(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    )))]
     #[cold]
     #[inline(never)]
     fn push_control(session: &crate::runtime::Session) {
@@ -217,6 +513,11 @@ impl ExecutionScope {
         EXECUTION_CONTROLS.with_borrow_mut(|stack| stack.push(Some(Arc::clone(&control))));
     }
 
+    #[cfg(not(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    )))]
     #[cold]
     #[inline(never)]
     fn pop_control() {
@@ -230,6 +531,25 @@ impl ExecutionScope {
 }
 
 impl Drop for ExecutionScope {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    #[inline(always)]
+    fn drop(&mut self) {
+        if self.pushed {
+            let _ = EXECUTION_CONTROLS.try_with(|stack| {
+                stack.borrow_mut().pop();
+            });
+        }
+    }
+
+    #[cfg(not(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    )))]
     #[inline(always)]
     fn drop(&mut self) {
         if super::super::state::LEXICAL_PROFILE_ENABLED.load(Ordering::Relaxed) != 2 {
@@ -252,7 +572,45 @@ pub(in crate::runtime) fn refresh_execution_control(
     previous: &Arc<crate::runtime::RequestInterruptState>,
     replacement: &Arc<crate::runtime::RequestInterruptState>,
 ) {
-    if !super::super::lexical_profile_configured() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    refresh_execution_control_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        previous,
+        replacement,
+    )
+}
+
+fn refresh_execution_control_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+
+    previous: &Arc<crate::runtime::RequestInterruptState>,
+    replacement: &Arc<crate::runtime::RequestInterruptState>,
+) {
+    if !super::super::config::lexical_profile_configured_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
     EXECUTION_CONTROLS.with_borrow_mut(|stack| {
@@ -262,4 +620,43 @@ pub(in crate::runtime) fn refresh_execution_control(
             }
         }
     });
+}
+
+#[cfg(test)]
+#[path = "../tests/brief713_execution_scope.rs"]
+mod brief713_execution_scope;
+
+#[cfg(test)]
+#[path = "../tests/brief713_generation.rs"]
+mod brief713_generation;
+
+#[cfg(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+))]
+impl crate::runtime::Session {
+    /// Read only immutable provenance in the three live suspension roots.
+    /// A session with no profiled owner does not gain a registration.
+    pub(in crate::runtime) fn logical_profile_generation(&self) -> Option<u64> {
+        let mut generation = None;
+        for candidate in self
+            .pending_suspension
+            .as_ref()
+            .into_iter()
+            .chain(self.resuming_suspension.as_ref())
+            .chain(self.abandonment_worklist.iter())
+            .filter_map(|suspension| suspension.frames.lease_generation())
+        {
+            if let Some(expected) = generation {
+                assert_eq!(
+                    candidate, expected,
+                    "mixed profiling lease generations in session roots"
+                );
+            } else {
+                generation = Some(candidate);
+            }
+        }
+        generation
+    }
 }

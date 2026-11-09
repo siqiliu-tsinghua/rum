@@ -283,14 +283,22 @@ fn logical_queue_representation_survives_a_disabled_global_gate() {
         begin(&mut session);
         session.logical_insert_boundary(token.pause().unwrap(), None, false);
         // 2 is disabled; 0 is uninitialized, and any cold load re-arms it.
-        let prior = LEXICAL_PROFILE_ACTIVE.swap(2, Ordering::Relaxed);
+        let prior = {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
+            LEXICAL_PROFILE_ACTIVE.swap(2, Ordering::Relaxed)
+        };
         let result = if abandon {
             session.abandon_pending_suspension(AbandonReason::CancelledRequest);
             Ok(Expr::string("reply"))
         } else {
             session.resume_suspended_evaluation("reply")
         };
-        LEXICAL_PROFILE_ACTIVE.store(prior, Ordering::Relaxed);
+        {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
+            LEXICAL_PROFILE_ACTIVE.store(prior, Ordering::Relaxed)
+        };
         assert_eq!(result.unwrap(), Expr::string("reply"));
         let c = test_support::epoch().rows()[0].1;
         assert_eq!((c.calls, c.open), (1, 0));

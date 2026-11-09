@@ -222,8 +222,8 @@ def run(workspace, directory, features):
                     batch = []
                     batches.append(batch)
                 batch.append(row)
-            for index, batch in enumerate(batches):
-                label = f'production-batch-{index}'
+            def check_batch(batch, label, arm):
+                # Both configurations run identical mutations on the same copy.
                 controls = []
                 for row in {r['file']: r for r in batch}.values():
                     path, original = scratch.text(row['file'])
@@ -232,20 +232,21 @@ def run(workspace, directory, features):
                     base = original[:-1] + control + '\n'
                     controls.append((row, base, name, original.count('\n')))
                     scratch.write(label + '-negative-baseline', path, base)
-                status, errors = scratch.compile(label + '-negative-baseline')
+                status, errors = scratch.compile(label + '-negative-baseline', arm)
                 assert status == 0, 'every production negative control must first compile'
                 scratch.restore()
                 for row, base, name, _ in controls:
                     path, _ = scratch.text(row['file'])
                     scratch.write(label + '-negative', path,
                                   base.replace(f'fn {name}()', f'fn {name}(__probe: ())'))
-                status, errors = scratch.compile(label + '-negative')
+                status, errors = scratch.compile(label + '-negative', arm)
                 scratch.restore()
                 for row, _, _, control_line in controls:
                     assert status != 0 and scratch.at(errors, row['file'], control_line, 'E0061'), f'production negative has no live witness: {row}'
                 for row in batch:
                     assert not scratch.at(errors, row['file'], row['start_line']), f'same-name production negative changed claimed site: {row}'
                 exact_ok = False
+                witnessed = set()
                 for mode in ['exact', 'wrong']:
                     edits = {}
                     for row in batch:
@@ -257,19 +258,45 @@ def run(workspace, directory, features):
                         for start, end, expected in sorted(changes, reverse=True):
                             text = text[:start] + freeze(text[start:end], expected) + text[end:]
                         scratch.write(label + '-' + mode, path, text)
-                    status, errors = scratch.compile(label + '-' + mode)
+                    status, errors = scratch.compile(label + '-' + mode, arm)
                     scratch.restore()
                     if mode == 'wrong':
                         for row in batch:
                             # freeze appends its invariant check after the original
                             # expression. Diagnostic end lines are unique within a file.
-                            assert status != 0 and scratch.at(errors, row['file'], row['end_line'], 'E0308'), f'production wrong-type control missed {row}'
+                            diagnostics = scratch.at(errors, row['file'], row['end_line'], 'E0308')
+                            if status != 0 and diagnostics:
+                                witnessed.add(row['name'])
+                                if arm == 'test-support':
+                                    print(f"A1_ORACLE_WITNESS arm={arm} {row['name']} E0308 site={row['file']}:{row['end_line']}", flush=True)
+                                    for diagnostic in diagnostics:
+                                        print(diagnostic['rendered'], flush=True)
                     else:
                         exact_ok = status == 0
+                        print(f'A1_ORACLE_EXACT arm={arm} batch={label} status={status}', flush=True)
+                        if arm == 'test-support':
+                            assert exact_ok, 'test-support exact compile failed:\n' + '\n'.join(d['rendered'] for d in errors)
+                return exact_ok, witnessed
+
+            primary_witnesses, fallback = set(), set()
+            for index, batch in enumerate(batches):
+                label = f'production-batch-{index}'
+                exact_ok, witnessed = check_batch(batch, label, 'production')
+                primary_witnesses.update(witnessed)
+                missing = [row for row in batch if row['name'] not in witnessed]
+                if missing:
+                    fallback.update(row['name'] for row in missing)
+                    print(f'A1_ORACLE_FALLBACK rows={sorted(fallback)}', flush=True)
+                    assert fallback == {'production_10'}, f'unexpected production fallback rows: {missing}'
+                    _, support_witnesses = check_batch(batch, label + '-test-support', 'test-support')
+                    for row in batch:
+                        assert row['name'] in support_witnesses, f'production wrong-type control missed {row}'
                 result = 'AGREEMENT' if exact_ok else 'DISAGREEMENT'
                 for row in batch:
                     results.append(('production-type', row['name'], result, row['file'], row['start_line'], row['exact_type']))
                     print(f"A1_ORACLE_PRODUCTION {row['name']} {result} site={row['file']}:{row['start_line']} target={row['target']} exact={row['exact_type']} wrong=E0308 negative_site_error=False", flush=True)
+            assert fallback == {'production_10'}, f'unexpected production fallback set: {sorted(fallback)}'
+            print(f'A1_ORACLE_ARMS production_witnesses={len(primary_witnesses)} fallback={sorted(fallback)}', flush=True)
             observed = [row[1] for row in results if row[0] == 'production-type']
             assert sorted(observed) == sorted(row['name'] for row in production_rows), 'batched oracle lost or duplicated a production claim'
         finally:

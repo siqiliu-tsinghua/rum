@@ -1,19 +1,12 @@
 # CLAUDE.md — director's notes for `rum`
 
-This file is **mine** (Claude). `AGENTS.md` is the operational guide that any
-coding agent reads. This file is how *I* operate: direction, diagnosis,
-delegation, and the authoritative gate.
-
-**Keep it under 200 lines** (user ruling 2026-10-29). It is read on every call.
-Anything longer belongs in a document read on demand:
-
-- `docs/dev/director-method.md`: the full method, with the incident behind
-  each rule (the long form of the sections below).
-- `docs/dev/director-log.md`: the direction log, line by line, with each
-  line's lessons. It is history, not the roadmap.
-- Present state: `TODO.md` (authoritative),
-  `docs/dev/security-hardening-progress.md` (the user's Chinese snapshot),
-  memory `suspension-continuation-branch.md`.
+This file is **mine** (Claude): direction, diagnosis, delegation and the
+authoritative gate. `AGENTS.md` is what coding agents read. **Keep it under
+200 lines** (user ruling 2026-10-29) — it is read on every call. The long
+form of each rule, with its incident, is in `docs/dev/director-method.md`;
+the direction log is `docs/dev/director-log.md` (history, not the roadmap);
+state lives in `TODO.md`, `docs/dev/security-hardening-progress.md` and
+memory `suspension-continuation-branch.md`.
 
 ## Role split
 
@@ -171,7 +164,7 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **Permission lists.** They get under-enumerated, so write a disclosure duty
   instead. An inventory rule must cover what new call edges make reachable.
 
-## Current state (2026-11-08)
+## Current state (2026-11-09)
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
@@ -179,27 +172,22 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 with Q3, then Q1/Q2/Q4/Q5, the
   binary snapshot format, audit items and threat-model critiques; `v0.3.0`.
-- **Latest done:** LP08's counter promotion landed at `b9b39763` (install
-  705, repair 707, campaign 708): the frozen entry split and the one-line
-  `terminal_owner` ledger cut the terminal branch 54 -> 42, and the
-  silent-retention repair keeps the physical `input_required` observation.
-  Acceptance green (workspace 4,156/0/61; focused 201/0/2 at 8 and 1;
-  five-mode LP01 parents byte-identical); 708 reproduced every 702/703 bar
-  with no new disabled-path work. LP01-LP07 closed from `3fd1885c` to
-  `a9cb067d`. **LP08's schema-v2 stage A landed at `e9ba6dd7`** (brief 710):
-  the epoch-owned side index collects the synchronous families from seven
-  seams, the enabled bodies cold-outlined so the disabled path is cheaper
-  per call than base on all six (13 -> 3, 23 -> 18, 18/20 -> 14/18) with
-  every candidate whole-workload draw below every base draw, and the stack
-  identity exact (18,304 / 12,392 / residual 0). **Stage B landed at
-  `a0c70615`** (brief 711): the additive `rum-profile schema-v2` line over
-  the side index, gate green (host workspace 4,185/0/61; five modes
-  88,795 records; ten mutants). Its gate exposed a pre-existing
-  test-isolation class (the lease's exclusion is incomplete: full lib at 8
-  threads 5/12 red on the stage-A base, 3/12 on the stage-B candidate, 4/12
-  on the current tree, serial green). Brief 712 (design) proved it and
-  brief 713 (implementation) closes it; **stage C is queued behind a green
-  workspace**. `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+- **Latest done:** LP08's counter promotion at `b9b39763` (install 705,
+  repair 707, campaign 708; workspace 4,156/0/61), schema-v2 stage A at
+  `e9ba6dd7` (side index; disabled path cheaper per call on all six seams;
+  stack identity 18,304 / 12,392, residual 0) and stage B at `a0c70615`
+  (`rum-profile schema-v2` line; five modes 88,795 records). Stage B's gate
+  exposed a pre-existing test-isolation class in the profiling lease; brief
+  712 (design) proved it and **brief 713 (implementation, briefs C24-C28)
+  closed it**: generation-aware admission carries a session's lease through
+  contexts, the session span and both teardown entries, with the direct
+  paused-drop falsifier calibrated 8/1 and the witness set at 1,420 names.
+  My gate: fmt clean, workspace 4,212/0/61 (63 binaries, the 3 standing
+  warnings), six host targets at 8/1, Q30 four-column certificate on the
+  release artifact (the fixed-SHA anchor retired: object code
+  symbol/address/string identical across the source change). **Next: brief
+  714, the 37-draw source-unchanged validation, then LP08 stage C.**
+  `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

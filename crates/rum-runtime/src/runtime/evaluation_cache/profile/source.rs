@@ -5,6 +5,10 @@ use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
 use std::time::Instant;
 
+#[cfg(test)]
+#[path = "../../profiling/tests/brief713_timing_cleanup.rs"]
+mod brief713_timing_cleanup;
+
 #[derive(Clone, Copy, Debug)]
 pub(super) struct SymbolTimingFrame {
     name: &'static str,
@@ -63,9 +67,25 @@ impl Drop for EvaluationProfileSourceGuard {
 
 #[cold]
 #[inline(never)]
-fn evaluation_profile_definition_source_enabled(symbol: Symbol) -> EvaluationProfileSourceGuard {
+fn evaluation_profile_definition_source_enabled(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    symbol: Symbol,
+) -> EvaluationProfileSourceGuard {
     EVALUATION_PROFILE_SOURCE_STACK.with(|stack| {
-        stack.borrow_mut().push(symbol);
+        stack.borrow_mut().push_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            symbol,
+        );
     });
     EVALUATION_PROFILE_SOURCE_DEPTH.with(|depth| depth.set(depth.get().saturating_add(1)));
     EvaluationProfileSourceGuard { active: true }
@@ -75,10 +95,33 @@ fn evaluation_profile_definition_source_enabled(symbol: Symbol) -> EvaluationPro
 pub(in crate::runtime) fn evaluation_profile_definition_source(
     symbol: Symbol,
 ) -> EvaluationProfileSourceGuard {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return EvaluationProfileSourceGuard { active: false };
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         EvaluationProfileSourceGuard { active: false }
     } else {
-        evaluation_profile_definition_source_enabled(symbol)
+        evaluation_profile_definition_source_enabled(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            symbol,
+        )
     }
 }
 
@@ -86,11 +129,33 @@ pub(in crate::runtime) fn evaluation_profile_definition_source(
 pub(in crate::runtime) fn evaluation_cache_profile_source_timing_start(
     name: &'static str,
 ) -> Option<Instant> {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return None;
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return None;
     }
 
-    let symbol = current_evaluation_profile_source_symbol()?;
+    let symbol = current_evaluation_profile_source_symbol_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )?;
     let start = Instant::now();
     EVALUATION_PROFILE_TIMING_STACK.with(|stack| {
         stack.borrow_mut().push(SymbolTimingFrame {
@@ -124,13 +189,52 @@ pub(in crate::runtime) fn record_profile_eval_module_by_source(
 #[cold]
 #[inline(never)]
 fn discard_module_source_timing(start: Option<Instant>) {
-    if !evaluation_cache_profile_enabled() {
-        return;
-    }
-    let Some(symbol) = current_evaluation_profile_source_symbol() else {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let timing = take_symbol_timing_frame(start);
+
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
         return;
     };
-    let _ = finish_symbol_timing_frame("eval_module_by_source", symbol, start);
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
+        return;
+    }
+    let Some(symbol) = current_evaluation_profile_source_symbol_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) else {
+        return;
+    };
+    let _ = finish_symbol_timing_frame(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        timing,
+        "eval_module_by_source",
+        symbol,
+        start,
+    );
 }
 
 pub(in crate::runtime) fn record_profile_module_init_substitution_by_source(
@@ -146,19 +250,97 @@ pub(in crate::runtime) fn record_profile_module_body_substitution_by_source(
 }
 
 fn record_current_source_timing(name: &'static str, start: Option<Instant>) {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let timing = take_symbol_timing_frame(start);
+
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return;
     }
 
-    let Some(symbol) = current_evaluation_profile_source_symbol() else {
+    let Some(symbol) = current_evaluation_profile_source_symbol_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) else {
         return;
     };
-    record_symbol_timing_profile_counter(name, symbol, start);
+    record_symbol_timing_profile_counter(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        timing,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        name,
+        symbol,
+        start,
+    );
 }
 
 pub(in crate::runtime::evaluation_cache) fn current_evaluation_profile_source_symbol()
 -> Option<Symbol> {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return None;
+    };
+    current_evaluation_profile_source_symbol_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )
+}
+
+pub(in crate::runtime::evaluation_cache) fn current_evaluation_profile_source_symbol_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) -> Option<Symbol> {
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return None;
     }
 
@@ -166,11 +348,35 @@ pub(in crate::runtime::evaluation_cache) fn current_evaluation_profile_source_sy
 }
 
 fn record_symbol_timing_profile_counter(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    timing: Option<(u64, Option<SymbolTimingFrame>)>,
+
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+
     name: &'static str,
     symbol: Symbol,
     start: Option<Instant>,
 ) {
-    let Some((elapsed_nanos, self_nanos)) = finish_symbol_timing_frame(name, symbol, start) else {
+    let Some((elapsed_nanos, self_nanos)) = finish_symbol_timing_frame(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        timing,
+        name,
+        symbol,
+        start,
+    ) else {
         return;
     };
 
@@ -179,7 +385,13 @@ fn record_symbol_timing_profile_counter(
         let mut delta = EventValue::count(1);
         delta.durations[0] = elapsed_nanos;
         delta.durations[1] = self_nanos;
-        synchronous::add(
+        synchronous::add_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
             EventKey::CacheSource {
                 event: name,
                 symbol,
@@ -199,8 +411,23 @@ fn record_symbol_timing_profile_counter(
 
 #[cold]
 #[inline(never)]
-fn call_stability_source_head_key_enabled(head: &Expr) -> Option<CallStabilitySourceHeadKey> {
-    let source = current_evaluation_profile_source_symbol()?;
+fn call_stability_source_head_key_enabled(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    head: &Expr,
+) -> Option<CallStabilitySourceHeadKey> {
+    let source = current_evaluation_profile_source_symbol_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    )?;
     Some(CallStabilitySourceHeadKey {
         source,
         head: call_stability_head_shape(head),
@@ -224,20 +451,59 @@ pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_ou
     head: &Expr,
     outcome: CallStabilityProfileOutcome,
 ) {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return;
     }
 
-    record_call_stability_source_head_outcome_enabled(head, outcome);
+    record_call_stability_source_head_outcome_enabled(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        head,
+        outcome,
+    );
 }
 
 #[cold]
 #[inline(never)]
 fn record_call_stability_source_head_outcome_enabled(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+
     head: &Expr,
     outcome: CallStabilityProfileOutcome,
 ) {
-    let Some(key) = call_stability_source_head_key_enabled(head) else {
+    let Some(key) = call_stability_source_head_key_enabled(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        head,
+    ) else {
         return;
     };
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
@@ -269,16 +535,45 @@ fn record_call_stability_source_head_outcome_enabled(
 }
 
 pub(in crate::runtime::evaluation_cache) fn call_stability_timing_start() {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return;
     }
 
-    call_stability_timing_start_enabled();
+    call_stability_timing_start_enabled(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
 }
 
 #[cold]
 #[inline(never)]
-fn call_stability_timing_start_enabled() {
+fn call_stability_timing_start_enabled(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     CALL_STABILITY_TIMING_STACK.with(|stack| {
         stack.borrow_mut().push(CallStabilityTimingFrame {
             start: Instant::now(),
@@ -291,32 +586,88 @@ pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_ti
     head: &Expr,
     outcome: CallStabilityProfileOutcome,
 ) {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let timing = take_call_stability_timing_frame();
+
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return;
     }
 
-    record_call_stability_source_head_timing_enabled(head, outcome);
+    record_call_stability_source_head_timing_enabled(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        timing,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        head,
+        outcome,
+    );
 }
 
 #[cold]
 #[inline(never)]
 fn record_call_stability_source_head_timing_enabled(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    timing: Option<(u64, u64)>,
+
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+
     head: &Expr,
     outcome: CallStabilityProfileOutcome,
 ) {
-    let timing = CALL_STABILITY_TIMING_STACK.with(|stack| {
-        let mut stack = stack.borrow_mut();
-        let frame = stack.pop()?;
-        let elapsed_nanos = elapsed_nanos_since(frame.start);
-        if let Some(parent) = stack.last_mut() {
-            parent.child_nanos = parent.child_nanos.saturating_add(elapsed_nanos);
-        }
-        Some((elapsed_nanos, frame.child_nanos))
-    });
+    #[cfg(not(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    )))]
+    let timing = take_call_stability_timing_frame();
     let Some((elapsed_nanos, child_nanos)) = timing else {
         return;
     };
-    let Some(key) = call_stability_source_head_key_enabled(head) else {
+    let Some(key) = call_stability_source_head_key_enabled(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        head,
+    ) else {
         return;
     };
     let self_nanos = elapsed_nanos.saturating_sub(child_nanos);
@@ -350,17 +701,56 @@ fn record_call_stability_source_head_timing_enabled(
 pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_insertion(
     head: &Expr,
 ) {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return;
     }
 
-    record_call_stability_source_head_insertion_enabled(head);
+    record_call_stability_source_head_insertion_enabled(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        head,
+    );
 }
 
 #[cold]
 #[inline(never)]
-fn record_call_stability_source_head_insertion_enabled(head: &Expr) {
-    let Some(key) = call_stability_source_head_key_enabled(head) else {
+fn record_call_stability_source_head_insertion_enabled(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    head: &Expr,
+) {
+    let Some(key) = call_stability_source_head_key_enabled(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        head,
+    ) else {
         return;
     };
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
@@ -373,17 +763,56 @@ fn record_call_stability_source_head_insertion_enabled(head: &Expr) {
 pub(in crate::runtime::evaluation_cache) fn record_call_stability_source_head_rewritten_dirty_skip(
     head: &Expr,
 ) {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return;
     }
 
-    record_call_stability_source_head_rewritten_dirty_skip_enabled(head);
+    record_call_stability_source_head_rewritten_dirty_skip_enabled(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        head,
+    );
 }
 
 #[cold]
 #[inline(never)]
-fn record_call_stability_source_head_rewritten_dirty_skip_enabled(head: &Expr) {
-    let Some(key) = call_stability_source_head_key_enabled(head) else {
+fn record_call_stability_source_head_rewritten_dirty_skip_enabled(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    head: &Expr,
+) {
+    let Some(key) = call_stability_source_head_key_enabled(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        head,
+    ) else {
         return;
     };
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
@@ -397,28 +826,60 @@ fn elapsed_nanos_since(start: Instant) -> u64 {
     start.elapsed().as_nanos().min(u128::from(u64::MAX)) as u64
 }
 
-fn finish_symbol_timing_frame(
-    name: &'static str,
-    symbol: Symbol,
-    start: Option<Instant>,
-) -> Option<(u64, u64)> {
-    let Some(start) = start else {
-        return None;
-    };
+fn take_symbol_timing_frame(start: Option<Instant>) -> Option<(u64, Option<SymbolTimingFrame>)> {
+    let start = start?;
     let elapsed_nanos = start.elapsed().as_nanos().min(u128::from(u64::MAX)) as u64;
-    let child_nanos = EVALUATION_PROFILE_TIMING_STACK.with(|stack| {
+    let frame = EVALUATION_PROFILE_TIMING_STACK.with(|stack| {
         let mut stack = stack.borrow_mut();
         let frame = stack.pop();
         if let Some(parent) = stack.last_mut() {
             parent.child_nanos = parent.child_nanos.saturating_add(elapsed_nanos);
         }
-
         frame
-            .filter(|frame| frame.name == name && frame.symbol == symbol)
-            .map(|frame| frame.child_nanos)
-            .unwrap_or(0)
     });
-    let self_nanos = elapsed_nanos.saturating_sub(child_nanos);
+    Some((elapsed_nanos, frame))
+}
 
+fn finish_symbol_timing_frame(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    timing: Option<(u64, Option<SymbolTimingFrame>)>,
+    name: &'static str,
+    symbol: Symbol,
+    start: Option<Instant>,
+) -> Option<(u64, u64)> {
+    #[cfg(not(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    )))]
+    let timing = take_symbol_timing_frame(start);
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let _ = start;
+    let (elapsed_nanos, frame) = timing?;
+    let child_nanos = frame
+        .filter(|frame| frame.name == name && frame.symbol == symbol)
+        .map(|frame| frame.child_nanos)
+        .unwrap_or(0);
+    let self_nanos = elapsed_nanos.saturating_sub(child_nanos);
     Some((elapsed_nanos, self_nanos))
+}
+
+fn take_call_stability_timing_frame() -> Option<(u64, u64)> {
+    CALL_STABILITY_TIMING_STACK.with(|stack| {
+        let mut stack = stack.borrow_mut();
+        let frame = stack.pop()?;
+        let elapsed_nanos = elapsed_nanos_since(frame.start);
+        if let Some(parent) = stack.last_mut() {
+            parent.child_nanos = parent.child_nanos.saturating_add(elapsed_nanos);
+        }
+        Some((elapsed_nanos, frame.child_nanos))
+    })
 }

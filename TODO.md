@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-11-08. The committed tree runs through:
+Status checkpoint: 2026-11-09. The committed tree runs through:
 - G13 step S9 (brief-617, control and cleanup; gated, below);
 - G15-A (brief-619, `afdcd02f`) and G15-B (brief-620, `43a26c72`);
 - the G15-C design (brief-621, accepted `8f77793c`) and G15-C1 (brief-622,
@@ -20,7 +20,9 @@ Status checkpoint: 2026-11-08. The committed tree runs through:
 - test isolation: the artifact constructors (brief-634, `467ff97a`), the
   profiler test lease (brief-635: stage 1 `b199d63c`, amendment 1
   `5184797c`, amendment 2 `f38657d0`) and the shared parse (brief-636);
-- the test audit's design stage (brief-639, `d6533dac`).
+- the test audit's design stage (brief-639, `d6533dac`);
+- the profiling lease's exclusion (brief 713, accepted 2026-11-09;
+  briefs C24-C28), which closes brief 712's class.
 
 **Next, in order** (the branch queue): LP08's remaining schema-v2
 publication, G15-C2's remaining 353 rows on the final source, CM,
@@ -39,11 +41,12 @@ identity exact and the whole-workload instruction total below every base
 draw. Stage B is installed (brief 711): the schema-v2 renderer over that
 index — the `N ∪ S ∪ A ∪ Z` union, the injective escaped keys, the mode
 header, all legacy bytes preserved — with the host workspace green at
-4,185/0/61. Stage C is queued behind a test-isolation repair (brief 712):
-the full lib at 8 threads flakes on both the stage-A base (5/12) and the
-candidate (3/12), because a lease test's process-global flags let
-concurrently running non-lease tests into profiling paths the lease does
-not gate. The test
+4,185/0/61. The test-isolation repair (brief 712 design, brief 713 implementation,
+accepted 2026-11-09) carries a session's lease generation through
+contexts, the session span and both teardown entries, so the stage-A
+flake class is covered (workspace 4,212/0/61 at 8 threads; 1,420 test
+names). Stage C is queued behind brief 714, the 37-draw source-unchanged
+validation. The test
 audit's Stage B and D03 are closed; LP05-LP08's promotion is done. The
 10-29 estimate in `docs/dev/security-hardening-progress.md` is pending a
 re-base (user ruling 2026-11-08: the Codex tier was upgraded and the
@@ -79,7 +82,8 @@ Test isolation, done:
   is in the brief;
 - the workspace thread-count measurement is done (2026-10-31); the default
   is `RUST_TEST_THREADS=8` from the user ruling 2026-11-01;
-- **open — the lease's exclusion is incomplete (brief 712).** The stage-A
+- **closed 2026-11-09 — the lease's exclusion (brief 712, repaired by brief
+  713).** The stage-A
   base flakes 5 of 12 full-lib runs at 8 threads (`lp05_resumed_finish`,
   `lp05_a2_association_resumed_error_is_not_some`, `lp06_a2_catch_ok`,
   `lp06_a2_catch_bypass_match`, `matcher_pattern_deep_two_suspensions`) and
@@ -87,8 +91,12 @@ Test isolation, done:
   swaps process-global `AtomicU8` profiling flags for its duration, and
   tests that do not take the lease still execute profiling paths the lease
   does not gate (`profile_queue::attach_boundary`'s unconditional debug
-  assertion is one). The repair is design-first, with a repeated-run
-  falsifier on both arms.
+  assertion is one). Brief 713 landed the generation-aware admission
+  (Q33/Q34/Q35) with its permanent witnesses — moved-cancel/moved-resume,
+  stale-generation, and the direct paused-drop falsifier red under the
+  two-site ordinary-admission mutant — and the class table at 177 states /
+  212 consumers / 137 roots. Brief 714 is the 37-draw source-unchanged
+  validation.
 
 **The director's gate is a script** (brief-631, director tooling):
 `scripts/director-gate.py run NNN --stage S` runs the scope check, fmt, the

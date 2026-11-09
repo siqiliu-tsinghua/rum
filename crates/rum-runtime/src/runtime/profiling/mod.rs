@@ -38,8 +38,7 @@ pub(in crate::runtime) mod tests;
 
 use config::{
     builtin_timing_enabled, definition_rule_timing_enabled, lexical_profile_bindings_enabled,
-    lexical_profile_configured, lexical_profile_incremental_enabled,
-    lexical_profile_provenance_enabled, lexical_profile_shapes_enabled,
+    lexical_profile_configured, lexical_profile_provenance_enabled, lexical_profile_shapes_enabled,
     lexical_profile_source_fingerprints_enabled, lexical_profile_sources_enabled,
     rule_rhs_timing_enabled,
 };

@@ -27,16 +27,22 @@ const CATCH: &[&str] = &[
 struct BuiltinEnabled(u8);
 impl BuiltinEnabled {
     fn new() -> Self {
-        Self(
+        Self({
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
             super::super::state::BUILTIN_TIMING_ENABLED
-                .swap(1, std::sync::atomic::Ordering::Relaxed),
-        )
+                .swap(1, std::sync::atomic::Ordering::Relaxed)
+        })
     }
 }
 impl Drop for BuiltinEnabled {
     fn drop(&mut self) {
-        super::super::state::BUILTIN_TIMING_ENABLED
-            .store(self.0, std::sync::atomic::Ordering::Relaxed);
+        {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
+            super::super::state::BUILTIN_TIMING_ENABLED
+                .store(self.0, std::sync::atomic::Ordering::Relaxed)
+        };
     }
 }
 
@@ -276,7 +282,11 @@ fn lp06_c1_builtin_gate_transition() {
             .unwrap();
         let token = session.builtin_timing_start_adopted(&symbol, 1).unwrap();
         let prior = if disable {
-            Some(LEXICAL_PROFILE_ACTIVE.swap(2, Ordering::Relaxed))
+            Some({
+                let _publication = crate::runtime::profiling::lease::publish()
+                    .expect("STOP: lease holder must publish profiling flags");
+                LEXICAL_PROFILE_ACTIVE.swap(2, Ordering::Relaxed)
+            })
         } else {
             None
         };
@@ -285,7 +295,11 @@ fn lp06_c1_builtin_gate_transition() {
             &Ok(Expr::small_integer(2)),
         );
         if let Some(prior) = prior {
-            LEXICAL_PROFILE_ACTIVE.store(prior, Ordering::Relaxed);
+            {
+                let _publication = crate::runtime::profiling::lease::publish()
+                    .expect("STOP: lease holder must publish profiling flags");
+                LEXICAL_PROFILE_ACTIVE.store(prior, Ordering::Relaxed)
+            };
         }
         parent.finish(super::Outcome::Ok);
         let rows = test_support::epoch()
@@ -1137,7 +1151,11 @@ fn lp655_deferred_enable_context_falsifier() {
         |session, _head, args| session.eval_rum_profile_reset(args.as_ref()),
         MemoryGrowthContract::NonAmplifying,
     ));
-    super::super::state::LEXICAL_PROFILE_ACTIVE.store(2, std::sync::atomic::Ordering::Relaxed);
+    {
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
+        super::super::state::LEXICAL_PROFILE_ACTIVE.store(2, std::sync::atomic::Ordering::Relaxed)
+    };
     assert_eq!(
         session
             .eval_text("RumProfileReset[]; 1")

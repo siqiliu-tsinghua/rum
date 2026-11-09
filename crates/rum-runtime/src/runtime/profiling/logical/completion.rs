@@ -37,7 +37,7 @@ impl crate::runtime::Session {
                 Arc::new(ProfileBoundary {
                     epoch: Arc::clone(&epoch),
                     record,
-                    _storage: storage,
+                    _storage: storage.into(),
                 }),
                 None,
                 false,

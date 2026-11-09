@@ -8,6 +8,14 @@ impl Epoch {
         feature = "test-continuation-slots"
     ))]
     pub(in crate::runtime) fn assert_quiescent(&self) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(_access) = crate::runtime::profiling::lease::admit() else {
+            return;
+        };
         let (pending_children, terminal_parents, open_records) = {
             let data = self.data.lock().unwrap();
             let mut counts = (0, 0, 0);
@@ -33,6 +41,33 @@ impl Epoch {
     }
 
     pub(in crate::runtime) fn rows(&self) -> Vec<(AggregateKey, Counts)> {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return Vec::new();
+        };
+        self.rows_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+        )
+    }
+
+    pub(in crate::runtime) fn rows_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+    ) -> Vec<(AggregateKey, Counts)> {
         let data = self.data.lock().unwrap();
         let mut rows: std::collections::BTreeMap<_, _> =
             data.rows.iter().map(|(k, c)| (k, *c)).collect();
@@ -41,7 +76,15 @@ impl Epoch {
             .iter()
             .map(|(id, r)| (id, (r.path.clone(), r.path.state.lock().unwrap().totals)))
             .collect();
-        for (record, nanos) in segments::running(self) {
+        for (record, nanos) in segments::running_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            self,
+        ) {
             if let Some((_, totals)) = pending.get_mut(&record) {
                 totals.nanos = totals.nanos.saturating_add(nanos);
                 totals.self_nanos = totals.self_nanos.saturating_add(nanos);

@@ -74,11 +74,18 @@ class Scratch:
         assert result.returncode not in (124, -9, -15), f"bounded compiler failed: {label} ({result.returncode})"
         return result
 
-    def compile(self, label):
-        command = ["cargo", "+1.85.0", "check", "--offline", "--locked", "--lib",
-                   "-p", "rum-stdlib", "--message-format=json"]
-        if self.features == "no-default-features":
-            command.append("--no-default-features")
+    def compile(self, label, arm="production"):
+        if arm == "production":
+            command = ["cargo", "+1.85.0", "check", "--offline", "--locked", "--lib",
+                       "-p", "rum-stdlib", "--message-format=json"]
+            if self.features == "no-default-features":
+                command.append("--no-default-features")
+        elif arm == "test-support":
+            command = ["cargo", "+1.85.0", "check", "--offline", "--locked", "--lib",
+                       "-p", "rum-runtime", "--message-format=json", "--features",
+                       "test-builtin-memory-growth,test-continuation-slots"]
+        else:
+            raise ValueError(f"unknown compiler arm: {arm}")
         result = self.run(label, command)
         diagnostics = []
         for line in result.stdout.splitlines():

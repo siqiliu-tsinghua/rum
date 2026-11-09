@@ -1,7 +1,21 @@
 use super::*;
 
-pub(super) fn print_presence_shape_summary() {
-    if !lexical_profile_shapes_enabled() {
+pub(super) fn print_presence_shape_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_shapes_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -35,8 +49,22 @@ pub(super) fn print_presence_shape_summary() {
     });
 }
 
-pub(super) fn print_presence_context_summary() {
-    if !lexical_profile_shapes_enabled() {
+pub(super) fn print_presence_context_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_shapes_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -70,8 +98,22 @@ pub(super) fn print_presence_context_summary() {
     });
 }
 
-pub(super) fn print_presence_context_shape_summary() {
-    if !lexical_profile_shapes_enabled() {
+pub(super) fn print_presence_context_shape_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_shapes_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -106,8 +148,22 @@ pub(super) fn print_presence_context_shape_summary() {
     });
 }
 
-pub(super) fn print_presence_arg_site_summary() {
-    if !lexical_profile_shapes_enabled() {
+pub(super) fn print_presence_arg_site_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_shapes_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 

@@ -141,7 +141,48 @@ impl Session {
 
 #[inline]
 fn evaluation_cache_profile_enabled() -> bool {
-    evaluation_cache_profile_configured() && evaluation_cache_profile_active()
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return false;
+    };
+    evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )
+}
+
+#[inline]
+pub(in crate::runtime) fn evaluation_cache_profile_enabled_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) -> bool {
+    evaluation_cache_profile_configured_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) && evaluation_cache_profile_active_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    )
 }
 
 impl Session {
@@ -151,7 +192,35 @@ impl Session {
 }
 
 #[inline]
+#[cfg(test)]
 fn evaluation_cache_profile_configured() -> bool {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return false;
+    };
+    evaluation_cache_profile_configured_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )
+}
+
+#[inline]
+pub(in crate::runtime) fn evaluation_cache_profile_configured_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) -> bool {
     match EVALUATION_CACHE_PROFILE_ENABLED.load(Ordering::Relaxed) {
         1 => true,
         2 => false,
@@ -160,7 +229,35 @@ fn evaluation_cache_profile_configured() -> bool {
 }
 
 #[inline]
+#[cfg(test)]
 fn evaluation_cache_profile_active() -> bool {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return false;
+    };
+    evaluation_cache_profile_active_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )
+}
+
+#[inline]
+pub(in crate::runtime) fn evaluation_cache_profile_active_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) -> bool {
     match EVALUATION_CACHE_PROFILE_ACTIVE.load(Ordering::Relaxed) {
         1 => true,
         2 => false,
@@ -169,7 +266,35 @@ fn evaluation_cache_profile_active() -> bool {
 }
 
 #[inline]
+#[cfg(test)]
 fn evaluation_cache_profile_incremental_enabled() -> bool {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return false;
+    };
+    evaluation_cache_profile_incremental_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )
+}
+
+#[inline]
+pub(in crate::runtime) fn evaluation_cache_profile_incremental_enabled_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) -> bool {
     match EVALUATION_CACHE_PROFILE_INCREMENTAL_ENABLED.load(Ordering::Relaxed) {
         1 => true,
         2 => false,
@@ -205,19 +330,68 @@ fn initialize_evaluation_cache_profile_incremental_enabled() -> bool {
 
 #[inline]
 pub(super) fn record_evaluation_cache_counter(counter: &AtomicU64, name: &str) {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return;
     }
 
-    record_evaluation_cache_counter_slow(counter, name);
+    record_evaluation_cache_counter_slow(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        counter,
+        name,
+    );
 }
 
 #[cold]
 #[inline(never)]
-fn record_evaluation_cache_counter_slow(counter: &AtomicU64, name: &str) {
-    crate::runtime::profiling::logical::synchronous::cache(name);
+fn record_evaluation_cache_counter_slow(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    counter: &AtomicU64,
+    name: &str,
+) {
+    crate::runtime::profiling::logical::synchronous::cache_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        name,
+    );
     let value = counter.fetch_add(1, Ordering::Relaxed) + 1;
-    if evaluation_cache_profile_incremental_enabled() && value.is_power_of_two() {
+    if evaluation_cache_profile_incremental_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) && value.is_power_of_two()
+    {
         eprintln!("rum-profile evaluation-cache {name}={value}");
     }
 }
@@ -253,16 +427,49 @@ fn symbol_timing_profile_counters()
 }
 
 pub(super) fn record_symbol_profile_counter(name: &'static str, symbol: &Symbol) {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return;
     }
 
-    record_symbol_profile_counter_slow(name, *symbol);
+    record_symbol_profile_counter_slow(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        name,
+        *symbol,
+    );
 }
 
 #[cold]
 #[inline(never)]
-fn record_symbol_profile_counter_slow(name: &'static str, symbol: Symbol) {
+fn record_symbol_profile_counter_slow(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    name: &'static str,
+    symbol: Symbol,
+) {
     if matches!(
         name,
         "down_value_scans"
@@ -272,7 +479,13 @@ fn record_symbol_profile_counter_slow(name: &'static str, symbol: Symbol) {
             | "eval_module_entries_by_source"
     ) {
         use crate::runtime::profiling::logical::synchronous::{self, EventKey, EventValue};
-        synchronous::add(
+        synchronous::add_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
             EventKey::CacheSymbol {
                 event: name,
                 symbol,
@@ -286,7 +499,15 @@ fn record_symbol_profile_counter_slow(name: &'static str, symbol: Symbol) {
         .expect("profile counter lock should not be poisoned");
     let value = counters.entry((name, symbol)).or_insert(0);
     *value += 1;
-    if evaluation_cache_profile_incremental_enabled() && value.is_power_of_two() {
+    if evaluation_cache_profile_incremental_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) && value.is_power_of_two()
+    {
         eprintln!("rum-profile evaluation-cache {name}[{symbol}]={value}");
     }
 }
@@ -297,7 +518,22 @@ pub(super) fn record_invalidation_site(
     target: Option<&Symbol>,
     location: &'static Location<'static>,
 ) {
-    if !evaluation_cache_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !evaluation_cache_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return;
     }
 
@@ -346,9 +582,22 @@ pub(super) fn record_invalidation_site(
 }
 
 pub(in crate::runtime) fn reset_evaluation_cache_profile_counters() {
-    if !evaluation_cache_profile_configured() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
         return;
-    }
+    };
+    let configured = evaluation_cache_profile_configured_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
 
     macro_rules! reset {
         ($($counter:ident),+ $(,)?) => {
@@ -401,11 +650,42 @@ pub(in crate::runtime) fn reset_evaluation_cache_profile_counters() {
     EVALUATION_PROFILE_TIMING_STACK.with(|stack| stack.borrow_mut().clear());
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| stats.borrow_mut().clear());
     CALL_STABILITY_TIMING_STACK.with(|stack| stack.borrow_mut().clear());
-    EVALUATION_CACHE_PROFILE_ACTIVE.store(1, Ordering::Relaxed);
+    if configured {
+        EVALUATION_CACHE_PROFILE_ACTIVE.store(1, Ordering::Relaxed);
+    }
 }
 
 #[cfg(any(test, feature = "test-continuation-slots"))]
 pub(crate) fn observe_logical_profile(out: &mut crate::runtime::profiling::LogicalProfileSnapshot) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    observe_logical_profile_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        out,
+    )
+}
+
+#[cfg(any(test, feature = "test-continuation-slots"))]
+pub(in crate::runtime) fn observe_logical_profile_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    out: &mut crate::runtime::profiling::LogicalProfileSnapshot,
+) {
     out.flags.insert(
         "EVALUATION_CACHE_PROFILE_ENABLED".into(),
         EVALUATION_CACHE_PROFILE_ENABLED.load(Ordering::Relaxed),
@@ -618,6 +898,8 @@ impl Session {
     }
 
     pub(in crate::runtime) fn test_cache_profile_flags(flags: [u8; 3]) -> [u8; 3] {
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
         [
             EVALUATION_CACHE_PROFILE_ENABLED.swap(flags[0], Ordering::Relaxed),
             EVALUATION_CACHE_PROFILE_ACTIVE.swap(flags[1], Ordering::Relaxed),
@@ -627,18 +909,95 @@ impl Session {
 }
 
 impl Session {
+    #[cfg(test)]
     pub(in crate::runtime) fn module_source_alias_completion(symbol: Symbol) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let access = crate::runtime::profiling::lease::admit();
+        Self::module_source_alias_completion_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access.as_ref(),
+            symbol,
+        )
+    }
+
+    pub(in crate::runtime) fn module_source_alias_completion_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+        symbol: Symbol,
+    ) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        if _access.is_none() {
+            return;
+        }
+
         let mut counters = symbol_timing_profile_counters().lock().unwrap();
         counters
             .entry(("eval_module_by_source", symbol))
             .or_default()
             .count += 1;
     }
+    #[cfg(test)]
     pub(in crate::runtime) fn module_source_alias_duration(
         symbol: Symbol,
         nanos: u64,
         self_nanos: u64,
     ) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let access = crate::runtime::profiling::lease::admit();
+        Self::module_source_alias_duration_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access.as_ref(),
+            symbol,
+            nanos,
+            self_nanos,
+        )
+    }
+
+    pub(in crate::runtime) fn module_source_alias_duration_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+
+        symbol: Symbol,
+        nanos: u64,
+        self_nanos: u64,
+    ) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        if _access.is_none() {
+            return;
+        }
+
         let mut counters = symbol_timing_profile_counters().lock().unwrap();
         let entry = counters
             .entry(("eval_module_by_source", symbol))
@@ -647,3 +1006,7 @@ impl Session {
         entry.self_nanos = entry.self_nanos.saturating_add(self_nanos);
     }
 }
+
+#[cfg(test)]
+#[path = "../../profiling/tests/brief713_cache.rs"]
+mod brief713_cache;

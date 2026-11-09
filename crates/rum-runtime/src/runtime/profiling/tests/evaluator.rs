@@ -282,7 +282,11 @@ fn lp657_handler(session: &mut Session, head: &Expr, _: &SharedArgs) -> Result<E
             use crate::runtime::profiling::{
                 runtime_path_timing_start, state::LEXICAL_PROFILE_ACTIVE,
             };
-            LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed);
+            {
+                let _publication = crate::runtime::profiling::lease::publish()
+                    .expect("STOP: lease holder must publish profiling flags");
+                LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed)
+            };
             assert!(runtime_path_timing_start("function.apply.evaluate").is_none());
             lp657_reset_root(session, "on-off-on-root");
         }
@@ -427,7 +431,11 @@ fn lp657_thread_handoff_resume() {
 #[test]
 fn lp657_off_to_on() {
     let _enabled = test_support::enabled();
-    crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed);
+    {
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
+        crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed)
+    };
     let mut s = lp657_session();
     assert_eq!(
         s.eval_text("LpProbeRoot[]").unwrap().value,
@@ -853,7 +861,11 @@ fn lp658_deferred_exact_record() {
         lp658_observe_deferred_compound,
         MemoryGrowthContract::NonAmplifying,
     ));
-    crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed);
+    {
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
+        crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed)
+    };
     assert_eq!(
         s.eval_text("RumProfileReset[];LpObserveDeferred[]")
             .unwrap()
@@ -941,7 +953,11 @@ fn lp660_deferred_nested(s: &mut Session, _: &Expr, _: &SharedArgs) -> Result<Ex
 fn lp660_combined_a_deferred_reset_nested_free() {
     let _enabled = test_support::enabled();
     let mut s = lp660_session();
-    crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed);
+    {
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
+        crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed)
+    };
     assert_eq!(
         s.eval_text("Lp660DeferredNested[]").unwrap().value,
         Expr::small_integer(1)
@@ -970,7 +986,11 @@ fn lp660_handoff(deferred: bool) {
     let enabled = test_support::enabled();
     let mut s = lp660_session();
     if deferred {
-        crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed);
+        {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
+            crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed)
+        };
     }
     assert!(
         s.eval_request("Lp660ResetSuspend[];Lp660Observe[]")
@@ -1041,7 +1061,11 @@ fn lp660_nested_resume(s: &mut Session, _: &Expr, _: &SharedArgs) -> Result<Expr
 fn lp660_combined_d_nested_other_session_resume() {
     let _enabled = test_support::enabled();
     let mut nested = lp660_session();
-    crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed);
+    {
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
+        crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed)
+    };
     assert!(
         nested
             .eval_request("Lp660ResetSuspend[];Lp660Observe[]")
@@ -1181,7 +1205,11 @@ fn lp664_reset_between_pause_and_resume(deferred: bool) {
     let _enabled = test_support::enabled();
     let mut s = lp660_session();
     if deferred {
-        crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed);
+        {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
+            crate::runtime::profiling::state::LEXICAL_PROFILE_ACTIVE.store(2, Ordering::Relaxed)
+        };
     }
     assert!(s.eval_request("InputString[];Lp660Observe[]").is_err());
     let mut other = lp657_session();

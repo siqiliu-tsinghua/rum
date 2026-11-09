@@ -16,16 +16,20 @@ struct Flags {
 
 impl Flags {
     fn set(logical: u8, active: u8, rhs: u8, timing: u8, cache: u8, cache_active: u8) -> Self {
-        let lexical = [
-            (&state::LEXICAL_PROFILE_ENABLED, logical),
-            (&state::LEXICAL_PROFILE_ACTIVE, active),
-            (&state::RULE_RHS_TIMING_ENABLED, rhs),
-            (&state::DEFINITION_RULE_TIMING_ENABLED, timing),
-            (&state::LEXICAL_PROFILE_INCREMENTAL_ENABLED, 2),
-        ]
-        .into_iter()
-        .map(|(flag, value)| (flag, flag.swap(value, Ordering::Relaxed)))
-        .collect();
+        let lexical = {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
+            [
+                (&state::LEXICAL_PROFILE_ENABLED, logical),
+                (&state::LEXICAL_PROFILE_ACTIVE, active),
+                (&state::RULE_RHS_TIMING_ENABLED, rhs),
+                (&state::DEFINITION_RULE_TIMING_ENABLED, timing),
+                (&state::LEXICAL_PROFILE_INCREMENTAL_ENABLED, 2),
+            ]
+            .into_iter()
+            .map(|(flag, value)| (flag, flag.swap(value, Ordering::Relaxed)))
+            .collect()
+        };
         Self {
             lexical,
             cache: Session::test_cache_profile_flags([cache, cache_active, 2]),
@@ -35,8 +39,12 @@ impl Flags {
 
 impl Drop for Flags {
     fn drop(&mut self) {
-        for (flag, value) in &self.lexical {
-            flag.store(*value, Ordering::Relaxed);
+        {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
+            for (flag, value) in &self.lexical {
+                flag.store(*value, Ordering::Relaxed);
+            }
         }
         Session::test_cache_profile_flags(self.cache);
     }
@@ -699,3 +707,6 @@ fn source_event_precedes_legacy_mutex_lock() {
     );
     assert_eq!(rows(&epoch)[&key].0, [1, 0, 0, 0, 0, 0, 0]);
 }
+
+#[path = "brief713_reset.rs"]
+mod brief713_reset;

@@ -405,8 +405,7 @@ fn lp07_lifecycle_reasons_scopes_and_storage() {
         drop(old);
         drop(enabled);
         // The test lease releases its TLS header before the zero-byte drain.
-        let lease = support::lease();
-        logical::epoch::drain_for_lease(&lease);
+        let _lease = logical::epoch::lease_drained();
         eprintln!(
             "LP07 lifecycle verdict: PASS {mode} open=0 leases=0 faults=0 retained_diagnostic_bytes=0"
         );

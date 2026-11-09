@@ -1,11 +1,39 @@
 use super::*;
 
 pub(in crate::runtime) fn print_lexical_profile_summary_once(session: &crate::runtime::Session) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let (lexical_enabled, _registration) =
+        match lease::admit_generation(session.logical_profile_generation()) {
+            Some((access, registration)) => {
+                let enabled = config::lexical_profile_enabled_admitted(&access);
+                if enabled {
+                    logical::epoch::drop_session_admitted(&access, session);
+                }
+                // Later summary transactions and caller-owned drops start at depth 0.
+                drop(access);
+                (enabled, registration)
+            }
+            None => (false, lease::ThreadRegistration::inactive()),
+        };
+    #[cfg(not(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    )))]
     let lexical_enabled = lexical_profile_enabled();
     let repr_enabled = rum_core::repr_profile_enabled();
     if !lexical_enabled && !repr_enabled {
         return;
     }
+    #[cfg(not(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    )))]
     if lexical_enabled {
         logical::drop_session(session);
     }
@@ -76,7 +104,40 @@ fn print_repr_profile_summary() {
 }
 
 fn print_lexical_profile_summary_body() {
-    logical::summary();
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    print_lexical_profile_summary_body_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )
+}
+
+fn print_lexical_profile_summary_body_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    logical::summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
     eprintln!(
         "rum-profile lexical summary definition_rhs_eval_count={} definition_rhs_eval_total_ns={} definition_rhs_eval_avg_ns={}",
         load(&DEFINITION_RHS_EVAL_COUNT),
@@ -174,32 +235,236 @@ fn print_lexical_profile_summary_body() {
         load(&PRESENCE_MULTI_SCAN_TRUE_COUNT),
         load(&PRESENCE_MULTI_SCAN_FALSE_COUNT),
     );
-    print_presence_shape_summary();
-    print_presence_context_summary();
-    print_presence_context_shape_summary();
-    print_presence_arg_site_summary();
-    print_presence_source_summary();
-    print_presence_source_shape_summary();
-    print_presence_source_target_shape_summary();
-    print_presence_source_fingerprint_summary();
-    print_presence_source_fingerprint_group_summary();
-    print_presence_provenance_summary();
-    print_presence_reuse_summary();
-    print_presence_reuse_group_summary();
-    print_presence_fingerprint_summary();
-    print_presence_fingerprint_group_summary();
-    print_presence_exact_fingerprint_group_summary();
-    print_expression_rebuild_summary();
-    print_expression_rebuild_group_summary();
-    print_expression_rebuild_exact_summary();
-    print_expression_rebuild_exact_group_summary();
-    print_rule_rhs_alpha_rename_summary();
-    print_rule_rhs_timing_summary();
-    print_definition_rule_timing_summary();
-    print_definition_dispatch_summary();
-    print_runtime_path_timing_summary();
-    print_builtin_timing_summary();
-    print_rewrite_rule_prefilter_summary();
-    print_presence_binding_summary();
-    print_presence_binding_name_summary();
+    print_presence_shape_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_context_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_context_shape_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_arg_site_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_source_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_source_shape_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_source_target_shape_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_source_fingerprint_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_source_fingerprint_group_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_provenance_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_reuse_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_reuse_group_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_fingerprint_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_fingerprint_group_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_exact_fingerprint_group_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_expression_rebuild_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_expression_rebuild_group_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_expression_rebuild_exact_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_expression_rebuild_exact_group_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_rule_rhs_alpha_rename_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_rule_rhs_timing_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_definition_rule_timing_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_definition_dispatch_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_runtime_path_timing_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_builtin_timing_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_rewrite_rule_prefilter_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_binding_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
+    print_presence_binding_name_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
 }
+
+#[cfg(test)]
+#[path = "tests/brief713_summary_bridge.rs"]
+mod brief713_summary_bridge;
+
+#[cfg(test)]
+#[path = "tests/brief713_teardown.rs"]
+mod brief713_teardown;

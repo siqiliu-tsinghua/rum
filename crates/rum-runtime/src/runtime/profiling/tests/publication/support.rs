@@ -17,41 +17,45 @@ impl Flags {
     pub fn mode(mode: &str) -> Self {
         let enabled = |value| if value { 1 } else { 2 };
         let timing = matches!(mode, "timing" | "all");
-        let flags = [
-            (&state::LEXICAL_PROFILE_ENABLED, enabled(mode != "disabled")),
-            (&state::LEXICAL_PROFILE_ACTIVE, enabled(mode != "deferred")),
-            (&state::BUILTIN_TIMING_ENABLED, enabled(timing)),
-            (&state::RULE_RHS_TIMING_ENABLED, enabled(timing)),
-            (&state::DEFINITION_RULE_TIMING_ENABLED, enabled(timing)),
-            (&state::LEXICAL_PROFILE_INCREMENTAL_ENABLED, 2),
-            (
-                &state::LEXICAL_PROFILE_DETAIL_ENABLED,
-                enabled(mode == "all"),
-            ),
-            (
-                &state::LEXICAL_PROFILE_SHAPES_ENABLED,
-                enabled(mode == "all"),
-            ),
-            (
-                &state::LEXICAL_PROFILE_BINDINGS_ENABLED,
-                enabled(mode == "all"),
-            ),
-            (
-                &state::LEXICAL_PROFILE_SOURCES_ENABLED,
-                enabled(mode == "all"),
-            ),
-            (
-                &state::LEXICAL_PROFILE_SOURCE_FINGERPRINTS_ENABLED,
-                enabled(mode == "all"),
-            ),
-            (
-                &state::LEXICAL_PROFILE_PROVENANCE_ENABLED,
-                enabled(mode == "all"),
-            ),
-        ]
-        .into_iter()
-        .map(|(flag, value)| (flag, flag.swap(value, Ordering::Relaxed)))
-        .collect();
+        let flags = {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
+            [
+                (&state::LEXICAL_PROFILE_ENABLED, enabled(mode != "disabled")),
+                (&state::LEXICAL_PROFILE_ACTIVE, enabled(mode != "deferred")),
+                (&state::BUILTIN_TIMING_ENABLED, enabled(timing)),
+                (&state::RULE_RHS_TIMING_ENABLED, enabled(timing)),
+                (&state::DEFINITION_RULE_TIMING_ENABLED, enabled(timing)),
+                (&state::LEXICAL_PROFILE_INCREMENTAL_ENABLED, 2),
+                (
+                    &state::LEXICAL_PROFILE_DETAIL_ENABLED,
+                    enabled(mode == "all"),
+                ),
+                (
+                    &state::LEXICAL_PROFILE_SHAPES_ENABLED,
+                    enabled(mode == "all"),
+                ),
+                (
+                    &state::LEXICAL_PROFILE_BINDINGS_ENABLED,
+                    enabled(mode == "all"),
+                ),
+                (
+                    &state::LEXICAL_PROFILE_SOURCES_ENABLED,
+                    enabled(mode == "all"),
+                ),
+                (
+                    &state::LEXICAL_PROFILE_SOURCE_FINGERPRINTS_ENABLED,
+                    enabled(mode == "all"),
+                ),
+                (
+                    &state::LEXICAL_PROFILE_PROVENANCE_ENABLED,
+                    enabled(mode == "all"),
+                ),
+            ]
+            .into_iter()
+            .map(|(flag, value)| (flag, flag.swap(value, Ordering::Relaxed)))
+            .collect()
+        };
         Self {
             flags,
             cache: Session::test_cache_profile_flags([
@@ -64,8 +68,12 @@ impl Flags {
 }
 impl Drop for Flags {
     fn drop(&mut self) {
-        for (flag, old) in &self.flags {
-            flag.store(*old, Ordering::Relaxed);
+        {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
+            for (flag, old) in &self.flags {
+                flag.store(*old, Ordering::Relaxed);
+            }
         }
         Session::test_cache_profile_flags(self.cache);
     }

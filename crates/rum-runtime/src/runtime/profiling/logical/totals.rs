@@ -70,6 +70,13 @@ impl RecordPath {
 }
 
 pub(super) fn terminal(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: Option<&crate::runtime::profiling::lease::Admitted>,
+
     path: &RecordPath,
     rows: &mut index::Index<AggregateKey, Counts>,
     outcome: Result<Outcome, Retire>,
@@ -85,12 +92,37 @@ pub(super) fn terminal(
         state.module_scalar_alias = false;
         state.module_source_alias = None;
     }
-    if state.module_scalar_alias {
+    if state.module_scalar_alias && {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        {
+            _access.is_some()
+        }
+        #[cfg(not(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        )))]
+        {
+            true
+        }
+    } {
         crate::runtime::profiling::state::EVAL_MODULE_COUNT
             .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
     }
     if let Some(source) = state.module_source_alias {
-        crate::runtime::Session::module_source_alias_completion(source);
+        crate::runtime::Session::module_source_alias_completion_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            source,
+        );
     }
     if let Some(counts) = rows.get_mut(path.key) {
         counts.finish(outcome);
@@ -102,6 +134,13 @@ pub(super) fn terminal(
 /// its budgeted node until that child settles; terminal outcomes are immediate.
 /// Cascading settlement is amortized over the records that were opened.
 pub(super) fn settle(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: Option<&crate::runtime::profiling::lease::Admitted>,
+
     path: Arc<RecordPath>,
     rows: &mut index::Index<AggregateKey, Counts>,
     mut remove: impl FnMut(RecordId),
@@ -114,12 +153,35 @@ pub(super) fn settle(
                 break;
             }
             state.settled = true;
-            if state.module_scalar_alias {
+            if state.module_scalar_alias && {
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                {
+                    _access.is_some()
+                }
+                #[cfg(not(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                )))]
+                {
+                    true
+                }
+            } {
                 crate::runtime::profiling::state::EVAL_MODULE_NANOS
                     .fetch_add(state.totals.nanos, std::sync::atomic::Ordering::Relaxed);
             }
             if let Some(source) = state.module_source_alias {
-                crate::runtime::Session::module_source_alias_duration(
+                crate::runtime::Session::module_source_alias_duration_admitted(
+                    #[cfg(any(
+                        test,
+                        feature = "test-builtin-memory-growth",
+                        feature = "test-continuation-slots"
+                    ))]
+                    _access,
                     source,
                     state.totals.nanos,
                     state.totals.self_nanos,

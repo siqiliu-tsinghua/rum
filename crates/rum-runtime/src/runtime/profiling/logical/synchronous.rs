@@ -60,15 +60,99 @@ impl EventValue {
 #[cold]
 #[inline(never)]
 pub(in crate::runtime) fn add(key: EventKey, delta: EventValue, start: Option<Instant>) {
-    if !crate::runtime::profiling::lexical_profile_enabled() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    add_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        key,
+        delta,
+        start,
+    );
+}
+
+pub(in crate::runtime) fn add_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    key: EventKey,
+    delta: EventValue,
+    start: Option<Instant>,
+) {
+    if !super::super::config::lexical_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
-    if let Some(epoch) = epoch::current() {
-        epoch.event(key, delta, start);
+    if let Some(epoch) = epoch::current_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
+        epoch.event_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            key,
+            delta,
+            start,
+        );
     }
 }
 
 pub(in crate::runtime) fn cache(name: &str) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    cache_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        name,
+    )
+}
+
+pub(in crate::runtime) fn cache_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    name: &str,
+) {
     let event = match name {
         "evaluate_entries" => "EVALUATE_ENTRY_COUNT",
         "down_value_scans" => "DOWN_VALUE_SCAN_COUNT",
@@ -78,13 +162,65 @@ pub(in crate::runtime) fn cache(name: &str) {
         "eval_module_entries" => "EVAL_MODULE_ENTRY_COUNT",
         _ => return,
     };
-    add(EventKey::Cache(event), EventValue::count(1), None);
+    add_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        EventKey::Cache(event),
+        EventValue::count(1),
+        None,
+    );
 }
 
 pub(in crate::runtime) fn counter(name: &str, start: Instant, nanos: u64) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    counter_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        name,
+        start,
+        nanos,
+    );
+}
+
+pub(in crate::runtime) fn counter_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    name: &str,
+    start: Instant,
+    nanos: u64,
+) {
     if name == "definition_rhs_eval" {
         let mut delta = EventValue::count(1);
         delta.durations[0] = nanos;
-        add(EventKey::Counter("definition_rhs_eval"), delta, Some(start));
+        add_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            EventKey::Counter("definition_rhs_eval"),
+            delta,
+            Some(start),
+        );
     }
 }

@@ -79,6 +79,34 @@ pub(in crate::runtime) fn release_thread_registration() {
 }
 
 pub(in crate::runtime) fn ancestry(epoch: &Arc<Epoch>) -> Option<Arc<RecordPath>> {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return None;
+    };
+    ancestry_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        epoch,
+    )
+}
+
+pub(in crate::runtime) fn ancestry_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    epoch: &Arc<Epoch>,
+) -> Option<Arc<RecordPath>> {
     if active_len() == 0 {
         return None;
     }
@@ -88,6 +116,35 @@ pub(in crate::runtime) fn ancestry(epoch: &Arc<Epoch>) -> Option<Arc<RecordPath>
     })
 }
 pub(in crate::runtime) fn owner(
+    control: &Arc<crate::runtime::RequestInterruptState>,
+) -> Option<(Arc<Epoch>, Owner, RecordId)> {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return None;
+    };
+    owner_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        control,
+    )
+}
+
+pub(in crate::runtime) fn owner_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+
     control: &Arc<crate::runtime::RequestInterruptState>,
 ) -> Option<(Arc<Epoch>, Owner, RecordId)> {
     if active_len() == 0 {
@@ -110,13 +167,77 @@ pub(in crate::runtime) fn active_len() -> usize {
         .saturating_sub(1)
 }
 pub(in crate::runtime) fn executing_epoch() -> Option<Arc<Epoch>> {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return None;
+    };
+    executing_epoch_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )
+}
+
+pub(in crate::runtime) fn executing_epoch_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) -> Option<Arc<Epoch>> {
     if active_len() == 0 {
         return None;
     }
     ACTIVE.with_borrow(|stack| Some(Arc::clone(&stack.frame(stack.top?)?.epoch)))
 }
 pub(in crate::runtime) fn enter(epoch: &Arc<Epoch>, record: RecordId) -> Option<Segment> {
-    let path = epoch.path(record)?;
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return None;
+    };
+    enter_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        epoch,
+        record,
+    )
+}
+
+pub(in crate::runtime) fn enter_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    epoch: &Arc<Epoch>,
+    record: RecordId,
+) -> Option<Segment> {
+    let path = epoch.path_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        Some(_access),
+        record,
+    )?;
     let parent = path.parent.as_deref().map(|p| p.record);
     let matches = if active_len() == 0 {
         parent.is_none()
@@ -133,10 +254,27 @@ pub(in crate::runtime) fn enter(epoch: &Arc<Epoch>, record: RecordId) -> Option<
         )
     };
     if !matches {
-        epoch.fault();
+        epoch.fault_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(_access),
+        );
         return None;
     }
-    install(epoch, path, false)
+    install(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        epoch,
+        path,
+        false,
+    )
 }
 /// The local-key classification is independent of current openness. Explicit
 /// phase carriers still observe pauses; retained records may remain open.
@@ -146,15 +284,52 @@ fn locally_closed(key: &AggregateKey) -> bool {
 }
 
 pub(super) fn restore(epoch: &Arc<Epoch>, path: &Arc<RecordPath>) -> Option<Segment> {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return None;
+    };
+    restore_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        epoch,
+        path,
+    )
+}
+
+pub(super) fn restore_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    epoch: &Arc<Epoch>,
+    path: &Arc<RecordPath>,
+) -> Option<Segment> {
     // Retained records restore as execution/timing records. Pause attribution
     // separately selects the explicit observer behind transparent retention.
     if !path.is_open() {
         if locally_closed(&path.key) {
-            return path
-                .parent
-                .clone()
-                .into_inner()
-                .and_then(|parent| restore(epoch, &parent));
+            return path.parent.clone().into_inner().and_then(|parent| {
+                restore_admitted(
+                    #[cfg(any(
+                        test,
+                        feature = "test-builtin-memory-growth",
+                        feature = "test-continuation-slots"
+                    ))]
+                    _access,
+                    epoch,
+                    &parent,
+                )
+            });
         }
         // Terminal parent only. The invalid-epoch clause stays out unless a
         // probe fails without it.
@@ -168,19 +343,52 @@ pub(super) fn restore(epoch: &Arc<Epoch>, path: &Arc<RecordPath>) -> Option<Segm
         // A record that already settled is not a new fault. Resume walks to
         // its parent, including after ProfileReset has settled the old epoch.
         if closed && settled && children == 0 {
-            return path
-                .parent
-                .clone()
-                .into_inner()
-                .and_then(|parent| restore(epoch, &parent));
+            return path.parent.clone().into_inner().and_then(|parent| {
+                restore_admitted(
+                    #[cfg(any(
+                        test,
+                        feature = "test-builtin-memory-growth",
+                        feature = "test-continuation-slots"
+                    ))]
+                    _access,
+                    epoch,
+                    &parent,
+                )
+            });
         }
-        epoch.fault();
+        epoch.fault_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(_access),
+        );
         return None;
     }
-    install(epoch, Arc::clone(path), true)
+    install(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        epoch,
+        Arc::clone(path),
+        true,
+    )
 }
 
-fn pause_observer<'a>(epoch: &Epoch, path: &'a RecordPath) -> Option<&'a RecordPath> {
+fn pause_observer<'a>(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: Option<&crate::runtime::profiling::lease::Admitted>,
+    epoch: &Epoch,
+    path: &'a RecordPath,
+) -> Option<&'a RecordPath> {
     if !path.state.lock().unwrap().pause_transparent {
         return Some(path);
     }
@@ -205,20 +413,52 @@ fn pause_observer<'a>(epoch: &Epoch, path: &'a RecordPath) -> Option<&'a RecordP
         if !settled && children > 0 {
             return None;
         }
-        epoch.fault();
+        epoch.fault_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+        );
         return None;
     }
     None
 }
 
-fn install(epoch: &Arc<Epoch>, path: Arc<RecordPath>, restored: bool) -> Option<Segment> {
+fn install(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    epoch: &Arc<Epoch>,
+    path: Arc<RecordPath>,
+    restored: bool,
+) -> Option<Segment> {
     let head = path.state.lock().unwrap().active;
     if head.is_some_and(|id| id.thread != std::thread::current().id()) {
-        epoch.fault();
+        epoch.fault_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(_access),
+        );
         return None;
     }
     let header = if ACTIVE_STATE.with(Cell::get) == 0 {
-        Some(epoch.storage(size_of::<RefCell<Stack>>() + 4096)?)
+        Some(epoch.storage_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            size_of::<RefCell<Stack>>() + 4096,
+        )?)
     } else {
         None
     };
@@ -228,10 +468,28 @@ fn install(epoch: &Arc<Epoch>, path: Arc<RecordPath>, restored: bool) -> Option<
             stack.header = Some(header);
             ACTIVE_STATE.with(|s| s.set(1));
         }
-        stack.push(epoch, path, restored)
+        stack.push(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            epoch,
+            path,
+            restored,
+        )
     });
     let Some((index, segment)) = appended else {
-        epoch.retire(Retire::DiagnosticCap);
+        epoch.retire_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(_access),
+            Retire::DiagnosticCap,
+        );
         return None;
     };
     Some(Segment {
@@ -244,9 +502,41 @@ fn install(epoch: &Arc<Epoch>, path: Arc<RecordPath>, restored: bool) -> Option<
 }
 impl Segment {
     pub(in crate::runtime) fn pause(&self) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let access = crate::runtime::profiling::lease::admit();
+        self.pause_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access.as_ref(),
+        )
+    }
+
+    pub(in crate::runtime) fn pause_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+    ) {
         ACTIVE.with_borrow_mut(|stack| {
             if stack.top != Some(self.index) {
-                self.epoch.fault();
+                self.epoch.fault_admitted(
+                    #[cfg(any(
+                        test,
+                        feature = "test-builtin-memory-growth",
+                        feature = "test-continuation-slots"
+                    ))]
+                    _access,
+                );
                 return;
             }
             let Some(active) = stack.frame_mut(self.index) else {
@@ -258,7 +548,16 @@ impl Segment {
             active.park(Instant::now());
             active.paused = true;
             let observed = if active.restored {
-                pause_observer(&self.epoch, &active.path)
+                pause_observer(
+                    #[cfg(any(
+                        test,
+                        feature = "test-builtin-memory-growth",
+                        feature = "test-continuation-slots"
+                    ))]
+                    _access,
+                    &self.epoch,
+                    &active.path,
+                )
             } else {
                 Some(&*active.path)
             };
@@ -284,6 +583,50 @@ impl Segment {
         });
     }
     pub(in crate::runtime) fn end(&self) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        if !ACTIVE
+            .try_with(|cell| {
+                let stack = cell.borrow();
+                stack.frame(self.index).is_some_and(|active| {
+                    active.segment == self.segment
+                        && active.epoch.id == self.epoch.id
+                        && active.path.record == self.record
+                })
+            })
+            .unwrap_or(false)
+        {
+            return;
+        }
+
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let access = crate::runtime::profiling::lease::admit();
+        self.end_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access.as_ref(),
+        )
+    }
+
+    pub(in crate::runtime) fn end_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+    ) {
         if active_len() == 0 {
             return;
         }
@@ -300,10 +643,24 @@ impl Segment {
             }
             let ordered = stack.top == Some(self.index);
             if !ordered {
-                self.epoch.fault();
+                self.epoch.fault_admitted(
+                    #[cfg(any(
+                        test,
+                        feature = "test-builtin-memory-growth",
+                        feature = "test-continuation-slots"
+                    ))]
+                    _access,
+                );
             }
             let Some(mut active) = stack.take(self.index) else {
-                self.epoch.fault();
+                self.epoch.fault_admitted(
+                    #[cfg(any(
+                        test,
+                        feature = "test-builtin-memory-growth",
+                        feature = "test-continuation-slots"
+                    ))]
+                    _access,
+                );
                 return;
             };
             if !ordered {
@@ -326,17 +683,60 @@ impl Drop for Segment {
     }
 }
 pub(in crate::runtime) fn finish_active(epoch: &Arc<Epoch>, record: RecordId) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let access = crate::runtime::profiling::lease::admit();
+    finish_active_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        access.as_ref(),
+        epoch,
+        record,
+    )
+}
+
+pub(in crate::runtime) fn finish_active_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: Option<&crate::runtime::profiling::lease::Admitted>,
+    epoch: &Arc<Epoch>,
+    record: RecordId,
+) {
     if active_len() == 0 {
         return;
     }
-    let Some(path) = epoch.path(record) else {
+    let Some(path) = epoch.path_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        record,
+    ) else {
         return;
     };
     let Some(id) = path.state.lock().unwrap().active else {
         return;
     };
     if id.thread != std::thread::current().id() {
-        epoch.fault();
+        epoch.fault_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+        );
         return;
     }
     let token = Segment {
@@ -346,7 +746,14 @@ pub(in crate::runtime) fn finish_active(epoch: &Arc<Epoch>, record: RecordId) {
         index: id.index,
         _native_thread: PhantomData,
     };
-    token.end();
+    token.end_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
 }
 #[cfg(test)]
 pub(in crate::runtime) fn active_count() -> usize {
@@ -354,6 +761,34 @@ pub(in crate::runtime) fn active_count() -> usize {
 }
 
 pub(super) fn running(epoch: &Epoch) -> Vec<(RecordId, u64)> {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return Vec::new();
+    };
+    running_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        epoch,
+    )
+}
+
+pub(super) fn running_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    epoch: &Epoch,
+) -> Vec<(RecordId, u64)> {
     if active_len() == 0 {
         return Vec::new();
     }

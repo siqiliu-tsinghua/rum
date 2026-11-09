@@ -1,7 +1,21 @@
 use super::*;
 
-pub(super) fn print_expression_rebuild_summary() {
-    if !lexical_profile_shapes_enabled() {
+pub(super) fn print_expression_rebuild_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_shapes_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -32,8 +46,22 @@ pub(super) fn print_expression_rebuild_summary() {
     });
 }
 
-pub(super) fn print_expression_rebuild_group_summary() {
-    if !lexical_profile_shapes_enabled() {
+pub(super) fn print_expression_rebuild_group_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_shapes_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -77,8 +105,22 @@ pub(super) fn print_expression_rebuild_group_summary() {
     });
 }
 
-pub(super) fn print_expression_rebuild_exact_summary() {
-    if !lexical_profile_shapes_enabled() {
+pub(super) fn print_expression_rebuild_exact_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_shapes_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -109,8 +151,22 @@ pub(super) fn print_expression_rebuild_exact_summary() {
     });
 }
 
-pub(super) fn print_expression_rebuild_exact_group_summary() {
-    if !lexical_profile_shapes_enabled() {
+pub(super) fn print_expression_rebuild_exact_group_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_shapes_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -154,8 +210,22 @@ pub(super) fn print_expression_rebuild_exact_group_summary() {
     });
 }
 
-pub(super) fn print_rule_rhs_alpha_rename_summary() {
-    if !lexical_profile_shapes_enabled() {
+pub(super) fn print_rule_rhs_alpha_rename_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_shapes_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -184,8 +254,22 @@ pub(super) fn print_rule_rhs_alpha_rename_summary() {
     });
 }
 
-pub(super) fn print_rule_rhs_timing_summary() {
-    if !rule_rhs_timing_enabled() {
+pub(super) fn print_rule_rhs_timing_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::rule_rhs_timing_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 

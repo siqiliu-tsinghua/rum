@@ -374,14 +374,26 @@ fn baseline(source: &Source) {
     // `fault()`/`synchronous::add`. Ruled by the director 2026-11-08: a new
     // call edge into unchanged code grows the analysed surface; no coverage
     // mark, classification or promotion set moved. Still no mark or coverage.
+    // Brief 713: the final canonical replay discovers 1219 rows (14/1167/38).
+    // Keyed by kind/file/callee/reason: 1151 paired, 68 added, 41 removed.
+    // Q3/Q6/Q15/Q17 authorize the converted cfg/parameter boundaries,
+    // duplicate Vec origin pairing, cfg-owned constructor rejections,
+    // and unchanged callers of the cfg-split ExecutionScope::enter.
+    // The fresh rows equal the accepted C18 discovery; the final pin
+    // changes no classification, coverage mark or promotion.
+    // Brief 713 Q37: the final-source replay is 1220 (14/1168/38).
+    // Its sole addition to the accepted C24 frontier is epoch.rs:101:31,
+    // `lease_generation: _access.generation()`, from the accepted C26
+    // provenance field. Every other kind/file/callee/reason multiplicity
+    // stays unchanged; no rejection status, coverage or promotion moves.
     assert_eq!(
         options.rejected.len(),
-        1192,
+        1220,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 11), (Kind::RET002, 1143), (Kind::RET003, 38)])
+        BTreeMap::from([(Kind::RET001, 14), (Kind::RET002, 1168), (Kind::RET003, 38)])
     );
     let wrapper = regions::frontier(
         source,

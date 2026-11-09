@@ -10,6 +10,18 @@ pub(in crate::runtime) enum FrameStorage {
 }
 
 impl FrameStorage {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    pub(in crate::runtime) fn lease_generation(&self) -> Option<u64> {
+        match self {
+            Self::Guest(_) => None,
+            Self::Profiled(queue) => queue.lease_generation(),
+        }
+    }
+
     #[inline]
     pub(in crate::runtime) fn new() -> Self {
         Self::Guest(GuestQueue::new())

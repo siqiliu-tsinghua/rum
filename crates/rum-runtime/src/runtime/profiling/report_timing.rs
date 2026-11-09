@@ -1,7 +1,21 @@
 use super::*;
 
-pub(super) fn print_definition_rule_timing_summary() {
-    if !definition_rule_timing_enabled() {
+pub(super) fn print_definition_rule_timing_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::definition_rule_timing_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -34,8 +48,22 @@ pub(super) fn print_definition_rule_timing_summary() {
     });
 }
 
-pub(super) fn print_definition_dispatch_summary() {
-    if !lexical_profile_enabled() {
+pub(super) fn print_definition_dispatch_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -107,7 +135,10 @@ pub(super) fn print_definition_dispatch_summary() {
             );
         }
 
-        if definition_rule_timing_enabled() {
+        if config::definition_rule_timing_enabled_admitted(
+#[cfg(any(test, feature = "test-builtin-memory-growth", feature = "test-continuation-slots"))]
+_access,
+) {
             eprintln!(
                 "rum-profile definition-dispatch-time summary prefilter_ns={} fast_match_ns={} compiled_matcher_ns={} rhs_substitution_ns={}",
                 totals.prefilter_nanos,
@@ -168,8 +199,22 @@ fn definition_dispatch_timing_total(stats: &DefinitionDispatchStats) -> u64 {
         .saturating_add(stats.rhs_substitution_nanos)
 }
 
-pub(super) fn print_runtime_path_timing_summary() {
-    if !lexical_profile_enabled() {
+pub(super) fn print_runtime_path_timing_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -242,8 +287,22 @@ pub(super) fn print_runtime_path_timing_summary() {
     });
 }
 
-pub(super) fn print_builtin_timing_summary() {
-    if !builtin_timing_enabled() {
+pub(super) fn print_builtin_timing_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::builtin_timing_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -308,7 +367,14 @@ pub(super) fn print_builtin_timing_summary() {
     });
 }
 
-pub(super) fn print_rewrite_rule_prefilter_summary() {
+pub(super) fn print_rewrite_rule_prefilter_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     let candidates = load(&REWRITE_RULE_CANDIDATE_COUNT);
     if candidates == 0 {
         return;

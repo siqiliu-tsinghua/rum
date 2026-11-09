@@ -11,6 +11,9 @@ use std::time::Instant;
 
 mod snapshot;
 
+pub(in crate::runtime) const RECORD_PATH_STORAGE_BYTES: usize =
+    std::mem::size_of::<RecordPath>() + 2 * std::mem::size_of::<usize>();
+
 #[cfg(test)]
 #[path = "../tests/synchronous_families.rs"]
 mod synchronous_families;
@@ -32,6 +35,12 @@ fn current_slot() -> &'static Mutex<Current> {
 }
 
 pub(in crate::runtime) struct Epoch {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    lease_generation: u64,
     pub(in crate::runtime) id: EpochId,
     pub(in crate::runtime) valid: AtomicBool,
     pub(in crate::runtime) contexts: AtomicUsize,
@@ -55,10 +64,27 @@ struct Data {
 }
 
 impl Epoch {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    pub(in crate::runtime) fn lease_generation(&self) -> u64 {
+        self.lease_generation
+    }
+
     pub(in crate::runtime) fn is_valid(&self) -> bool {
         self.valid.load(Ordering::Relaxed)
     }
-    fn new_unleased(limit: usize) -> Option<Arc<Self>> {
+    fn new_unleased(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+        limit: usize,
+    ) -> Option<Arc<Self>> {
         let budget = Budget::new(limit)?;
         let storage =
             budget.claim(std::mem::size_of::<Self>() + 2 * std::mem::size_of::<usize>())?;
@@ -67,6 +93,12 @@ impl Epoch {
         let deferred_storage = budget.claim(0)?;
         let event_storage = budget.claim(0)?;
         Some(Arc::new(Self {
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            lease_generation: _access.generation(),
             id: EpochId(next_id()),
             valid: AtomicBool::new(true),
             contexts: AtomicUsize::new(0),
@@ -94,28 +126,73 @@ impl Epoch {
         lease: &crate::runtime::profiling::lease::TestLease,
         limit: usize,
     ) -> Option<Arc<Self>> {
-        let _ = lease;
-        Self::new_unleased(limit)
-    }
-
-    pub(in crate::runtime) fn storage(&self, bytes: usize) -> Option<Storage> {
-        // An unregistered thread must not charge this epoch while a test
-        // lease is current. The header lives in that thread's TLS until the
-        // thread exits, which outlives the test. Production builds omit this.
         #[cfg(any(
             test,
             feature = "test-builtin-memory-growth",
             feature = "test-continuation-slots"
         ))]
-        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
             return None;
-        }
+        };
+        let _ = lease;
+        Self::new_unleased(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            limit,
+        )
+    }
+
+    pub(in crate::runtime) fn storage(&self, bytes: usize) -> Option<Storage> {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return None;
+        };
+        self.storage_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            bytes,
+        )
+    }
+
+    pub(in crate::runtime) fn storage_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+        bytes: usize,
+    ) -> Option<Storage> {
+        // An unregistered thread must not charge this epoch while a test
+        // lease is current. The header lives in that thread's TLS until the
+        // thread exits, which outlives the test. Production builds omit this.
         if !self.valid.load(Ordering::Relaxed) {
             return None;
         }
         let claim = self.budget.claim(bytes);
         if claim.is_none() {
-            self.retire(Retire::DiagnosticCap);
+            self.retire_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(_access),
+                Retire::DiagnosticCap,
+            );
         }
         claim
     }
@@ -131,9 +208,34 @@ impl Epoch {
             feature = "test-builtin-memory-growth",
             feature = "test-continuation-slots"
         ))]
-        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
             return;
-        }
+        };
+        self.event_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            key,
+            delta,
+            start,
+        );
+    }
+
+    pub(in crate::runtime) fn event_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+        key: EventKey,
+        delta: EventValue,
+        start: Option<Instant>,
+    ) {
         let mut data = self.data.lock().unwrap();
         if !self.is_valid() || start.is_some_and(|start| start < data.event_birth) {
             return;
@@ -141,12 +243,27 @@ impl Epoch {
         // Equal clock readings cannot prove membership in this epoch.
         if start.is_some_and(|start| start == data.event_birth) {
             drop(data);
-            self.fault();
+            self.fault_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(_access),
+            );
             return;
         }
         if data.events.get(key).is_none() && !data.events.insert(key, EventValue::default()) {
             drop(data);
-            self.retire(Retire::DiagnosticCap);
+            self.retire_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(_access),
+                Retire::DiagnosticCap,
+            );
             return;
         }
         data.events.get_mut(key).unwrap().add(delta);
@@ -158,9 +275,38 @@ impl Epoch {
         feature = "test-continuation-slots"
     ))]
     pub(in crate::runtime) fn event_rows(&self) -> Vec<(EventKey, EventValue)> {
-        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
             return Vec::new();
-        }
+        };
+        self.event_rows_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+        )
+    }
+
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    pub(in crate::runtime) fn event_rows_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+    ) -> Vec<(EventKey, EventValue)> {
         self.data
             .lock()
             .unwrap()
@@ -177,9 +323,28 @@ impl Epoch {
             feature = "test-builtin-memory-growth",
             feature = "test-continuation-slots"
         ))]
-        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
             return Vec::new();
-        }
+        };
+        self.events_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+        )
+    }
+
+    pub(in crate::runtime) fn events_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+    ) -> Vec<(EventKey, EventValue)> {
         self.data
             .lock()
             .unwrap_or_else(|poison| poison.into_inner())
@@ -196,16 +361,45 @@ impl Epoch {
         key: AggregateKey,
         policy: Policy,
     ) -> Option<RecordId> {
-        // Refuse before taking the data lock. A refusal must not retire the
-        // epoch: the caller is not this lease's thread.
         #[cfg(any(
             test,
             feature = "test-builtin-memory-growth",
             feature = "test-continuation-slots"
         ))]
-        if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
             return None;
-        }
+        };
+        self.open_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            owner,
+            parent,
+            key,
+            policy,
+        )
+    }
+
+    pub(in crate::runtime) fn open_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+
+        owner: Owner,
+        parent: Option<RecordId>,
+        key: AggregateKey,
+        policy: Policy,
+    ) -> Option<RecordId> {
+        // Refuse before taking the data lock. A refusal must not retire the
+        // epoch: the caller is not this lease's thread.
+
         let mut data = self.data.lock().unwrap();
         if !self.valid.load(Ordering::Relaxed) {
             return None;
@@ -217,22 +411,42 @@ impl Epoch {
                 .is_some_and(|r| r.owner.same(&owner) && r.path.is_open())
         }) {
             drop(data);
-            self.fault();
+            self.fault_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(_access),
+            );
             return None;
         }
         if data.rows.get(key).is_none() && !data.rows.insert(key, Counts::default()) {
             drop(data);
-            self.retire(Retire::DiagnosticCap);
+            self.retire_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(_access),
+                Retire::DiagnosticCap,
+            );
             return None;
         }
         let id = RecordId(next_id());
         let parent_path = parent.and_then(|id| data.records.get(id).map(|r| Arc::clone(&r.path)));
-        let Some(storage) = self
-            .budget
-            .claim(std::mem::size_of::<RecordPath>() + 2 * std::mem::size_of::<usize>())
-        else {
+        let Some(storage) = self.budget.claim(RECORD_PATH_STORAGE_BYTES) else {
             drop(data);
-            self.retire(Retire::DiagnosticCap);
+            self.retire_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(_access),
+                Retire::DiagnosticCap,
+            );
             return None;
         };
         let path = Arc::new(RecordPath {
@@ -255,7 +469,15 @@ impl Epoch {
             },
         ) {
             drop(data);
-            self.retire(Retire::DiagnosticCap);
+            self.retire_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(_access),
+                Retire::DiagnosticCap,
+            );
             return None;
         }
         if let Some(parent) = parent_path.as_deref() {
@@ -268,22 +490,100 @@ impl Epoch {
     }
 
     pub(in crate::runtime) fn close(&self, id: RecordId, outcome: Result<Outcome, Retire>) -> bool {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let access = crate::runtime::profiling::lease::admit();
+        self.close_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access.as_ref(),
+            id,
+            outcome,
+        )
+    }
+
+    pub(in crate::runtime) fn close_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+        id: RecordId,
+        outcome: Result<Outcome, Retire>,
+    ) -> bool {
         let mut data = self.data.lock().unwrap();
         let Some(path) = data.records.get(id).map(|r| Arc::clone(&r.path)) else {
             return false;
         };
         data.deferred.remove(id);
         let Data { records, rows, .. } = &mut *data;
-        if !super::totals::terminal(&path, rows, outcome) {
+        if !super::totals::terminal(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            &path,
+            rows,
+            outcome,
+        ) {
             return false;
         }
-        super::totals::settle(path, rows, |id| {
-            records.remove(id);
-        });
+        super::totals::settle(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            path,
+            rows,
+            |id| {
+                records.remove(id);
+            },
+        );
         true
     }
 
     pub(in crate::runtime) fn input_required(&self, id: RecordId) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return;
+        };
+        self.input_required_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            id,
+        )
+    }
+
+    pub(in crate::runtime) fn input_required_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+        id: RecordId,
+    ) {
         let mut data = self.data.lock().unwrap();
         let Some(key) = data.records.get(id).map(|record| record.path.key) else {
             return;
@@ -296,16 +596,91 @@ impl Epoch {
     /// Mark a record that only LP08 retention keeps open. Physical
     /// InputRequired observation is preserved for the total test accessor.
     pub(super) fn observe_silent_retention(&self, record: RecordId) {
-        let Some(path) = self.path(record) else {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return;
+        };
+        self.observe_silent_retention_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            record,
+        )
+    }
+
+    pub(super) fn observe_silent_retention_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+        record: RecordId,
+    ) {
+        let Some(path) = self.path_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(_access),
+            record,
+        ) else {
             return;
         };
         path.state.lock().unwrap().pause_transparent = true;
         // Release record-state before taking epoch-data in input_required.
-        self.input_required(record);
+        self.input_required_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            record,
+        );
     }
 
     pub(in crate::runtime) fn inspect(
         &self,
+        id: RecordId,
+    ) -> Option<(Owner, Option<RecordId>, Policy)> {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return None;
+        };
+        self.inspect_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            id,
+        )
+    }
+
+    pub(in crate::runtime) fn inspect_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+
         id: RecordId,
     ) -> Option<(Owner, Option<RecordId>, Policy)> {
         self.data
@@ -318,6 +693,35 @@ impl Epoch {
     }
 
     pub(in crate::runtime) fn path(&self, id: RecordId) -> Option<Arc<RecordPath>> {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return None;
+        };
+        self.path_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(&access),
+            id,
+        )
+    }
+
+    pub(in crate::runtime) fn path_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+        id: RecordId,
+    ) -> Option<Arc<RecordPath>> {
         self.data
             .lock()
             .unwrap()
@@ -328,19 +732,78 @@ impl Epoch {
 
     #[cfg(test)]
     pub(in crate::runtime) fn interval(&self, id: RecordId, nanos: u64, child: u64) {
-        if let Some(path) = self.path(id) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return;
+        };
+        if let Some(path) = self.path_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(&access),
+            id,
+        ) {
             path.interval(nanos.saturating_sub(child), false);
         }
     }
 
     #[cfg(test)]
     pub(in crate::runtime) fn pause(&self, id: RecordId) {
-        if let Some(path) = self.path(id) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return;
+        };
+        if let Some(path) = self.path_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(&access),
+            id,
+        ) {
             path.pause();
         }
     }
 
     pub(in crate::runtime) fn retire(&self, reason: Retire) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let access = crate::runtime::profiling::lease::admit();
+        self.retire_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access.as_ref(),
+            reason,
+        )
+    }
+
+    pub(in crate::runtime) fn retire_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+        reason: Retire,
+    ) {
         if !self.valid.swap(false, Ordering::Relaxed) {
             return;
         }
@@ -348,8 +811,28 @@ impl Epoch {
         for _ in data.deferred.remove_matching(|_| true) {}
         let Data { records, rows, .. } = &mut *data;
         for record in records.remove_matching(|_| true) {
-            super::totals::terminal(&record.path, rows, Err(reason));
-            super::totals::settle(record.path, rows, |_| {});
+            super::totals::terminal(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                _access,
+                &record.path,
+                rows,
+                Err(reason),
+            );
+            super::totals::settle(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                _access,
+                record.path,
+                rows,
+                |_| {},
+            );
         }
         self.contexts.store(0, Ordering::Relaxed);
         // Reasons are a closed enum; printing does not retain an unbounded log.
@@ -360,12 +843,75 @@ impl Epoch {
     }
 
     pub(in crate::runtime) fn fault(&self) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let access = crate::runtime::profiling::lease::admit();
+        self.fault_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access.as_ref(),
+        )
+    }
+
+    pub(in crate::runtime) fn fault_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+    ) {
         self.faults.fetch_add(1, Ordering::Relaxed);
-        self.retire(Retire::InstrumentationFault);
+        self.retire_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            Retire::InstrumentationFault,
+        );
     }
 
     pub(in crate::runtime) fn abandon_owner(
         &self,
+        control: &Arc<crate::runtime::RequestInterruptState>,
+        reason: Retire,
+    ) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let access = crate::runtime::profiling::lease::admit();
+        self.abandon_owner_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access.as_ref(),
+            control,
+            reason,
+        )
+    }
+
+    pub(in crate::runtime) fn abandon_owner_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+
         control: &Arc<crate::runtime::RequestInterruptState>,
         reason: Retire,
     ) {
@@ -382,8 +928,28 @@ impl Epoch {
         }
         let Data { records, rows, .. } = &mut *data;
         for record in records.remove_matching(|r| Arc::ptr_eq(&r.owner.control, control)) {
-            super::totals::terminal(&record.path, rows, Err(reason));
-            super::totals::settle(record.path, rows, |_| {});
+            super::totals::terminal(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                _access,
+                &record.path,
+                rows,
+                Err(reason),
+            );
+            super::totals::settle(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                _access,
+                record.path,
+                rows,
+                |_| {},
+            );
         }
     }
 }
@@ -394,7 +960,23 @@ pub(in crate::runtime) fn test_limit(
     limit: usize,
 ) {
     reset_for_lease(lease);
-    current_slot().lock().unwrap().epoch = Epoch::new_unleased(limit);
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    current_slot().lock().unwrap().epoch = Epoch::new_unleased(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        limit,
+    );
 }
 
 /// The leased epoch when one already exists. Unlike `current`, this does not
@@ -406,44 +988,105 @@ pub(in crate::runtime) fn existing() -> Option<Arc<Epoch>> {
         feature = "test-builtin-memory-growth",
         feature = "test-continuation-slots"
     ))]
-    if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
         return None;
-    }
+    };
+    existing_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )
+}
+
+pub(in crate::runtime) fn existing_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) -> Option<Arc<Epoch>> {
     current_slot().lock().unwrap().epoch.clone()
 }
 
 /// Capture the current identity, including sticky initial failure, without
 /// creating an epoch or borrowing a replacement during publication.
 pub(in crate::runtime) fn publication_state() -> (Option<Arc<Epoch>>, Option<u64>) {
-    let slot = current_slot()
-        .lock()
-        .unwrap_or_else(|poison| poison.into_inner());
     #[cfg(any(
         test,
         feature = "test-builtin-memory-growth",
         feature = "test-continuation-slots"
     ))]
-    if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
         return (None, None);
-    }
+    };
+    publication_state_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )
+}
+
+pub(in crate::runtime) fn publication_state_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) -> (Option<Arc<Epoch>>, Option<u64>) {
+    let slot = current_slot()
+        .lock()
+        .unwrap_or_else(|poison| poison.into_inner());
+
     (slot.epoch.clone(), slot.failed.map(|id| id.0))
 }
 
 pub(in crate::runtime) fn current() -> Option<Arc<Epoch>> {
-    let mut slot = current_slot().lock().unwrap();
-    // Re-check under the slot lock, including when an epoch already exists.
-    // An unregistered thread must neither construct nor borrow the leased
-    // epoch. Production builds omit this check.
     #[cfg(any(
         test,
         feature = "test-builtin-memory-growth",
         feature = "test-continuation-slots"
     ))]
-    if crate::runtime::profiling::lease::blocks_unregistered_thread() {
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
         return None;
-    }
+    };
+    current_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    )
+}
+
+pub(in crate::runtime) fn current_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) -> Option<Arc<Epoch>> {
+    let mut slot = current_slot().lock().unwrap();
+
     if slot.epoch.is_none() && slot.failed.is_none() {
-        slot.epoch = Epoch::new_unleased(16 * 1024 * 1024);
+        slot.epoch = Epoch::new_unleased(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            16 * 1024 * 1024,
+        );
         if slot.epoch.is_none() {
             let id = EpochId(next_id());
             slot.failed = Some(id);
@@ -456,24 +1099,67 @@ pub(in crate::runtime) fn current() -> Option<Arc<Epoch>> {
     slot.epoch.clone()
 }
 
-fn reset_unleased() {
+fn reset_unleased(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::ExclusiveAdmitted,
+) {
     let mut slot = current_slot().lock().unwrap();
     slot.failed = None;
+    super::collector::clear_registrations_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access.admitted(),
+    );
     if let Some(old) = slot.epoch.take() {
-        super::collector::clear_registrations();
-        old.retire(Retire::ProfileReset);
-        // Records are already retired. Dropping a leftover boundary closes
-        // nothing and cannot fault a missing record.
-        super::collector::clear_stash();
+        old.retire_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(_access.admitted()),
+            Retire::ProfileReset,
+        );
     }
+    // Records are already retired. Dropping a leftover boundary closes
+    // nothing and cannot fault a missing record.
+    super::collector::clear_stash_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access.admitted(),
+    );
 }
 
 /// Production counter reset. Callers outside `profiling::reset` cannot mint
 /// `ProductionReset`, so a test cannot reach this without the lease.
 pub(in crate::runtime::profiling) fn reset_production(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::ExclusiveAdmitted,
+
     _token: super::super::reset::ProductionReset,
 ) {
-    reset_unleased();
+    reset_unleased(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    );
 }
 
 #[cfg(any(
@@ -482,19 +1168,86 @@ pub(in crate::runtime::profiling) fn reset_production(
     feature = "test-continuation-slots"
 ))]
 pub(in crate::runtime) fn reset_for_lease(lease: &crate::runtime::profiling::lease::TestLease) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit_exclusive() else {
+        return;
+    };
     let _ = lease;
-    reset_unleased();
+    reset_unleased(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
 }
 
 pub(in crate::runtime) fn drop_session(session: &crate::runtime::Session) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    drop_session_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        session,
+    )
+}
+
+pub(in crate::runtime) fn drop_session_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    session: &crate::runtime::Session,
+) {
     let control = Arc::clone(&session.request_interrupt_control.borrow());
-    super::collector::drop_belonging(&control);
+    super::collector::drop_belonging_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        &control,
+    );
     if let Some(epoch) = current_slot().lock().unwrap().epoch.as_ref() {
-        epoch.abandon_owner(&control, Retire::SessionDrop);
+        epoch.abandon_owner_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(_access),
+            &control,
+            Retire::SessionDrop,
+        );
     }
 }
 
-pub(in crate::runtime) fn summary() {
+pub(in crate::runtime) fn summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     let slot = current_slot().lock().unwrap();
     if let Some(epoch) = slot.epoch.as_ref() {
         eprintln!(
@@ -512,12 +1265,25 @@ pub(in crate::runtime) fn summary() {
     }
 }
 
-/// After resetting under the lease, wait for retired owners (including TLS
-/// destructors) to release their charges before a test takes its baseline.
-/// The current lease prevents unregistered threads from adding new charges.
+/// Retire the prior current epoch at handoff before waiting for retained owners.
+/// A prior owner may need to reacquire the lease to release its retained charge.
 #[cfg(test)]
-pub(in crate::runtime) fn drain_for_lease(_lease: &crate::runtime::profiling::lease::TestLease) {
+pub(in crate::runtime) fn lease_drained() -> crate::runtime::profiling::lease::TestLease {
     let deadline = std::time::Instant::now() + std::time::Duration::from_secs(30);
+    loop {
+        let lease = crate::runtime::profiling::lease::lease();
+        reset_for_lease(&lease);
+        if budget::process_bytes() == 0 {
+            return lease;
+        }
+        drop(lease);
+        drain_for_lease(deadline);
+        std::thread::yield_now();
+    }
+}
+
+#[cfg(test)]
+fn drain_for_lease(deadline: std::time::Instant) {
     while budget::process_bytes() != 0 {
         super::lease_release::release_deferred_charge();
         assert!(
@@ -531,16 +1297,83 @@ pub(in crate::runtime) fn drain_for_lease(_lease: &crate::runtime::profiling::le
 
 impl Epoch {
     pub(super) fn defer_definition(&self, record: RecordId) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return;
+        };
+        self.defer_definition_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            record,
+        )
+    }
+
+    pub(super) fn defer_definition_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+        record: RecordId,
+    ) {
         if !self.is_valid() {
             return;
         }
         let ok = self.data.lock().unwrap().deferred.insert(record, record);
         if !ok {
-            self.retire(Retire::DiagnosticCap);
+            self.retire_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(_access),
+                Retire::DiagnosticCap,
+            );
         }
     }
     pub(super) fn take_deferred_definition(
         &self,
+        control: &Arc<crate::runtime::RequestInterruptState>,
+    ) -> Option<RecordId> {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return None;
+        };
+        self.take_deferred_definition_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            control,
+        )
+    }
+
+    pub(super) fn take_deferred_definition_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+
         control: &Arc<crate::runtime::RequestInterruptState>,
     ) -> Option<RecordId> {
         let mut data = self.data.lock().unwrap();
@@ -557,3 +1390,7 @@ impl Epoch {
             .next()
     }
 }
+
+#[cfg(test)]
+#[path = "../tests/brief713_context_drop.rs"]
+mod brief713_context_drop;

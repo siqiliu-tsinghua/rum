@@ -152,7 +152,8 @@ fn logical_marker_refuses_an_active_recursive_peer() {
             record: a,
             _storage: epoch
                 .storage(std::mem::size_of::<ProfileBoundary>() + 2 * std::mem::size_of::<usize>())
-                .unwrap(),
+                .unwrap()
+                .into(),
         });
         if abandon {
             marker.abandon(Retire::LastDrop);
@@ -197,7 +198,8 @@ fn logical_active_abandonment_finishes_the_interval_once() {
         record: id,
         _storage: epoch
             .storage(std::mem::size_of::<ProfileBoundary>() + 16)
-            .unwrap(),
+            .unwrap()
+            .into(),
     });
     marker.abandon(Retire::LastDrop);
     assert_eq!(segments::active_count(), 0);

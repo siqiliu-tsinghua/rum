@@ -79,3 +79,37 @@ fn lease_acquisition_drains_a_prior_epoch_charge() {
     assert!(budget::process_bytes() > baseline);
     drop(enabled);
 }
+
+#[test]
+fn lease_drain_waits_without_holding_the_lease() {
+    let previous = test_support::enabled();
+    let storage = {
+        let epoch = super::Epoch::for_test(previous.lease(), 1024 * 1024).unwrap();
+        epoch.storage(32 * 1024).unwrap()
+    };
+    let (entered_drain, draining) = std::sync::mpsc::channel();
+    *DEFERRED_RELEASE.lock().unwrap() = Some(entered_drain);
+    drop(previous);
+
+    let start = std::time::Instant::now();
+    let waiter = std::thread::spawn(|| {
+        let _enabled = test_support::enabled();
+        assert_eq!(budget::process_bytes(), 0);
+    });
+    // The drain itself signals this channel. The charge remains owned until
+    // this thread has reacquired the lease across the deliberately open gap.
+    draining.recv().unwrap();
+    let next = test_support::lease();
+    drop(storage);
+    drop(next);
+    let result = waiter.join();
+    eprintln!(
+        "B713 DRAIN_GAP waiter_ok={} elapsed_ms={}",
+        result.is_ok(),
+        start.elapsed().as_millis()
+    );
+    assert!(
+        result.is_ok(),
+        "the drain must let the charge owner reacquire its lease"
+    );
+}

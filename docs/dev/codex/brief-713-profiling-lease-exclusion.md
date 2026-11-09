@@ -3018,3 +3018,112 @@ above). New tests stay under `profiling/tests/`. Anything else is a STOP.
     and every performance gate stay mine.
 
 Resume with `CDX_FORK`.
+
+## Stage 28 ruling (Q39): the lease exclusion is accepted; the release certificate binds its own artifact
+
+Run 28 delivered the Q36 falsifier and the full acceptance, and stopped only
+on the exact-archive-SHA cell. That cell was mine, and it is wrong for a
+changed source: it retires. Brief 713 is complete.
+
+### What I verified (my own gate, not the run's words)
+
+- **Q36 discriminates.** The direct paused drop prints
+  `generation=Some(1) unregistered_before=true` on the worker and
+  `generation=Some(1) unregistered_before=false` on the owner; both arms 15
+  rows identical, `SessionDrop 16/16`, `LastDrop 0/0`, teardown
+  `[1,0,0,0,9600]` on both, bytes 0 after reset. The two-site ordinary-
+  admission mutant at 8 and 1 leaves the worker at `SessionDrop 0` vs the
+  owner's 16 and `LastDrop 16` vs 0, rows differing in the last reason slot,
+  charges 13,696 vs 9,600, failing at
+  `brief713_teardown_paused.rs:89`; restored across the hash manifest and
+  green again at 8 and 1. The completed-lifecycle control prints
+  `generation=None` on both arms, 18=18 rows and `SessionDrop 0/0`.
+- **Q37.** The final-source replay is 1,220 (14/1,168/38); the pin and the
+  C26 provenance paragraph are in `census/tests.rs`; the keyed comparison is
+  +1/-0 against C24; `PUBLIC_WRAPPER=16` and `verify_promotions` pass.
+- **Q38.** The two inverse-cfg gates are in place; the four-build warning
+  table is default lib 0, feature lib 0, lib-test 3 (the standing
+  `test_builtins` names); the workspace carries no other warning.
+- **Scope.** Exactly five source files (four modified, one new) and the six
+  canonical inventories plus the two authorized census cells; `summary.rs`
+  is C27-byte-identical (only its mtime moved); no other source, host,
+  oracle or pin changed.
+- **The tree.** Names 1,420 (+1, 0 removed); full runtime lib 3x8 + 1x1 each
+  `1413/0/5` with the two standing skips; stdlib `1111/0/53` with
+  `A1_ORACLE_ARMS 175 / production_10`; the six host targets at 8 and 1;
+  focused `brief713` 24/0 and moved/stale 2/0; fingerprints 68; ownership
+  61/79/8,813 with 94 MOVE and the 2 NEW exactly the Q38 cfg attributes;
+  both certificates after the standing first-red artifact; LP01 five modes;
+  typed slots; frame-root 15/0; no active mutant.
+- **My host gate.** `cargo fmt --check` clean; the full workspace with the
+  seven standing skips at 8 threads: **4,212 passed / 0 failed / 61
+  ignored** over 63 binaries (exactly the accepted 4,185 plus brief 713's 27
+  new tests), 14.34 GB peak inside the 15.03 GB scope, only the three
+  standing `test_builtins` warnings; the six named host targets at 8 and 1
+  under `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` where gated.
+
+### Q39: the exact-SHA anchor retires; the certificate is the bar
+
+The required archive SHA `4118c33…` was recorded when the runtime source was
+C22-exact, and a fixed constant cannot hold across a legitimate source
+change: the crate hash moves with any source-span shift. The run refused to
+fake it, which is right.
+
+My independent analysis of the delta:
+
+- The C28 artifact `d9f2339d…` was built at 18:19:35, after the last source
+  edit (17:54:28); the archive name and its `-C metadata` hash
+  (`librum_runtime-c71407e195689fc9.rlib`) are unchanged.
+- Across all 16 object members, after normalizing the per-crate
+  `.llvm.<u64>` suffix, the symbol tables are identical in type, name, size
+  **and address**, and the string multisets are identical. The only object
+  byte differences are that suffix (a decimal crate-hash value embedded in
+  internal symbol names) and the symbol/string layout it induces;
+  `lib.rmeta` differs by +864 bytes (the new cfg-gated items' metadata and
+  spans). No instruction, constant, symbol or string of running code
+  changed.
+- The four-column erasure certificate passes on this artifact: every named
+  machinery item has zero object symbols and zero object strings across 16
+  objects, the qualified `profiling::lease` namespace is absent, the
+  pre-existing occurrences are enumerated with provenance, and the rmeta
+  names are listed separately with the standalone rustc probe calibration.
+
+Ruling: the exact-archive-SHA cell is retired. The Q30 bar is the
+four-column certificate plus the build record (features [], opt-level 3,
+test false, the archive path and its self-recorded sha256); the certificate
+binds the artifact it names, `d9f2339d05f2babf3c37f6da750e6ec72702febf2d42785a96f600c493642627`
+for this tree. Whenever the runtime source changes, the member-level
+equivalence against the previously certified artifact is recorded as
+evidence, not as a standing bar, and no same-SHA claim is ever made. No
+source workaround, suppression or rename is authorized by this ruling.
+
+With this, brief 713's acceptance list is closed. The 37-draw source-
+unchanged validation is brief 714; LP08 stage C follows it.
+
+## Director gate — 2026-11-09: brief 713 accepted
+
+- **Scope.** 66 files (13 added, 53 modified): the five source files of the
+  final round (four modified, one new witness), the six canonical
+  inventories, the two authorized census cells, and the thirteen test files
+  this brief added across C3-C28. No host, oracle, pin or manifest moved.
+- **Tests.** `cargo fmt --check` clean. My own full workspace with the seven
+  standing skips at 8 threads: **4,212 passed / 0 failed / 61 ignored** over
+  63 binaries (the accepted 4,185 plus brief 713's 27 new tests), 14.34 GB
+  peak inside the 15.03 GB scope, only the three standing `test_builtins`
+  warnings. The six named host targets green at 8 and 1 under
+  `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` where gated.
+- **Claims reproduced.** The Q36 paused-drop witness lines (both arms
+  `generation=Some(1)`, worker `unregistered_before=true`, 15=15 rows,
+  `SessionDrop 16/16`, teardown `[1,0,0,0,9600]`, bytes 0 after reset); the
+  two-site mutant red at 8 and 1 (`SessionDrop 0 vs 16`, `LastDrop 16 vs 0`,
+  13,696 vs 9,600 bytes) and restored green; the completed control 18=18;
+  the census 1,220 keyed +1/-0 against C24 with `PUBLIC_WRAPPER=16` and
+  promotions; the four-build warning table 0/0/3/3; the Q30 certificate on
+  the final artifact, including my own member comparison (symbol type, name,
+  size and address equal across all 16 objects, string multisets equal,
+  after normalizing the per-crate `.llvm.<u64>` suffix).
+- **Result.** Brief 713 is complete. The profiling lease's exclusion is
+  complete-class and the fixed-SHA release anchor is retired in favour of
+  the four-column certificate bound to its own artifact. The next unit is
+  brief 714, the 37-draw source-unchanged validation on this source; LP08
+  stage C follows it.

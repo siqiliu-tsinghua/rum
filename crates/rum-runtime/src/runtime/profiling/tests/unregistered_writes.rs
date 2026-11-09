@@ -79,7 +79,11 @@ fn unregistered_writes_do_not_reach_a_held_window() {
     ];
     let mut wrote = Vec::new();
     for (site, entry) in entries {
-        LEXICAL_PROFILE_SUMMARY_PRINTED.store(0, Ordering::Relaxed);
+        {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
+            LEXICAL_PROFILE_SUMMARY_PRINTED.store(0, Ordering::Relaxed)
+        };
         let before = process_wide();
         std::thread::spawn(entry).join().expect(site);
         let after = process_wide();
@@ -92,7 +96,11 @@ fn unregistered_writes_do_not_reach_a_held_window() {
             wrote.push(format!("{site}: {moved:?}"));
         }
     }
-    LEXICAL_PROFILE_SUMMARY_PRINTED.store(printed, Ordering::Relaxed);
+    {
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
+        LEXICAL_PROFILE_SUMMARY_PRINTED.store(printed, Ordering::Relaxed)
+    };
     assert!(
         wrote.is_empty(),
         "unregistered threads wrote while a lease was held: {wrote:#?}"
@@ -106,8 +114,8 @@ fn unregistered_timing_started_under_one_lease_does_not_land_in_the_next() {
     let (started_tx, started) = mpsc::channel();
     let (go, go_rx) = mpsc::channel::<()>();
     let first = test_support::enabled();
+    let start = lexical_profile_start();
     let worker = std::thread::spawn(move || {
-        let start = lexical_profile_start();
         started_tx.send(start.is_some()).unwrap();
         go_rx.recv().unwrap();
         record_profile_definition_rhs_eval(start);
@@ -159,7 +167,11 @@ fn a_new_lease_waits_for_an_admitted_write() {
 #[test]
 fn an_unregistered_reset_does_not_reach_a_held_window() {
     let _enabled = test_support::enabled();
-    let printed = LEXICAL_PROFILE_SUMMARY_PRINTED.swap(1, Ordering::Relaxed);
+    let printed = {
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
+        LEXICAL_PROFILE_SUMMARY_PRINTED.swap(1, Ordering::Relaxed)
+    };
     record_profile_arg_prefilter(true);
     let before = process_wide();
     std::thread::spawn(|| {
@@ -168,7 +180,11 @@ fn an_unregistered_reset_does_not_reach_a_held_window() {
     .join()
     .expect("unregistered reset");
     let after = process_wide();
-    LEXICAL_PROFILE_SUMMARY_PRINTED.store(printed, Ordering::Relaxed);
+    {
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
+        LEXICAL_PROFILE_SUMMARY_PRINTED.store(printed, Ordering::Relaxed)
+    };
     let moved: Vec<_> = before
         .iter()
         .filter(|(name, value)| after[*name] != **value)

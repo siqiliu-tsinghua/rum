@@ -1,5 +1,5 @@
 use super::super::state::{LEXICAL_PROFILE_ACTIVE, LEXICAL_PROFILE_ENABLED};
-use crate::runtime::profiling::lease::{self, TestLease};
+use crate::runtime::profiling::lease::TestLease;
 use crate::runtime::profiling::logical::{Epoch, epoch, segments};
 use std::sync::Arc;
 use std::sync::atomic::Ordering;
@@ -15,9 +15,9 @@ impl Enabled {
     }
 }
 pub(in crate::runtime) fn enabled() -> Enabled {
-    let lease = lease::lease();
-    epoch::reset_for_lease(&lease);
-    epoch::drain_for_lease(&lease);
+    let lease = epoch::lease_drained();
+    let _publication = crate::runtime::profiling::lease::publish()
+        .expect("STOP: lease holder must publish profiling flags");
     Enabled {
         configured: LEXICAL_PROFILE_ENABLED.swap(1, Ordering::Relaxed),
         active: LEXICAL_PROFILE_ACTIVE.swap(1, Ordering::Relaxed),
@@ -27,6 +27,8 @@ pub(in crate::runtime) fn enabled() -> Enabled {
 impl Drop for Enabled {
     fn drop(&mut self) {
         epoch::reset_for_lease(&self.lease);
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
         LEXICAL_PROFILE_ENABLED.store(self.configured, Ordering::Relaxed);
         LEXICAL_PROFILE_ACTIVE.store(self.active, Ordering::Relaxed);
     }

@@ -4,7 +4,22 @@ use super::*;
 use std::sync::atomic::{AtomicU64, Ordering};
 
 pub(in crate::runtime) fn print_evaluation_cache_profile_snapshot(label: &str) {
-    if !evaluation_cache_profile_configured() {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    if !evaluation_cache_profile_configured_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    ) {
         return;
     }
 
@@ -39,19 +54,96 @@ pub(in crate::runtime) fn print_evaluation_cache_profile_snapshot(label: &str) {
         load(&BUILTIN_APPLICATION_COUNT),
         load(&EVAL_MODULE_ENTRY_COUNT),
     );
-    print_symbol_profile_summary();
-    print_symbol_invalidation_profile_summary();
-    print_invalidation_site_profile_summary();
-    print_invalidation_family_profile_summary();
-    print_invalidation_critical_profile_summary();
-    print_symbol_timing_profile_summary();
-    print_call_stability_source_head_summary();
-    print_call_stability_source_head_invalidation_summary();
-    print_call_stability_source_head_timing_summary();
-    print_call_stability_source_head_invalidation_timing_summary();
+    print_symbol_profile_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
+    print_symbol_invalidation_profile_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
+    print_invalidation_site_profile_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
+    print_invalidation_family_profile_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
+    print_invalidation_critical_profile_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
+    print_symbol_timing_profile_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
+    print_call_stability_source_head_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
+    print_call_stability_source_head_invalidation_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
+    print_call_stability_source_head_timing_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
+    print_call_stability_source_head_invalidation_timing_summary(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+    );
 }
 
-fn print_symbol_profile_summary() {
+fn print_symbol_profile_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     let counters = symbol_profile_counters()
         .lock()
         .expect("profile counter lock should not be poisoned");
@@ -80,7 +172,14 @@ fn print_symbol_profile_summary() {
     }
 }
 
-fn print_symbol_invalidation_profile_summary() {
+fn print_symbol_invalidation_profile_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     let counters = symbol_profile_counters()
         .lock()
         .expect("profile counter lock should not be poisoned");
@@ -120,7 +219,14 @@ fn print_symbol_invalidation_profile_summary() {
     }
 }
 
-fn print_invalidation_site_profile_summary() {
+fn print_invalidation_site_profile_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     let counters = invalidation_site_profile_counters()
         .lock()
         .expect("profile invalidation-site counter lock should not be poisoned");
@@ -162,7 +268,14 @@ fn print_invalidation_site_profile_summary() {
     }
 }
 
-fn print_invalidation_family_profile_summary() {
+fn print_invalidation_family_profile_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     let counters = invalidation_family_profile_counters()
         .lock()
         .expect("profile invalidation-family counter lock should not be poisoned");
@@ -204,7 +317,14 @@ fn print_invalidation_family_profile_summary() {
     }
 }
 
-fn print_invalidation_critical_profile_summary() {
+fn print_invalidation_critical_profile_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     let counters = invalidation_family_profile_counters()
         .lock()
         .expect("profile invalidation-family counter lock should not be poisoned");
@@ -247,7 +367,14 @@ fn print_invalidation_critical_profile_summary() {
     }
 }
 
-fn print_symbol_timing_profile_summary() {
+fn print_symbol_timing_profile_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     let counters = symbol_timing_profile_counters()
         .lock()
         .expect("profile timing counter lock should not be poisoned");
@@ -325,7 +452,14 @@ fn print_symbol_timing_profile_summary() {
     }
 }
 
-fn print_call_stability_source_head_summary() {
+fn print_call_stability_source_head_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut entries = stats
             .borrow()
@@ -358,7 +492,14 @@ fn print_call_stability_source_head_summary() {
     });
 }
 
-fn print_call_stability_source_head_invalidation_summary() {
+fn print_call_stability_source_head_invalidation_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut entries = stats
             .borrow()
@@ -396,7 +537,14 @@ fn print_call_stability_source_head_invalidation_summary() {
     });
 }
 
-fn print_call_stability_source_head_timing_summary() {
+fn print_call_stability_source_head_timing_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut entries = stats
             .borrow()
@@ -434,7 +582,14 @@ fn print_call_stability_source_head_timing_summary() {
     });
 }
 
-fn print_call_stability_source_head_invalidation_timing_summary() {
+fn print_call_stability_source_head_invalidation_timing_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     CALL_STABILITY_SOURCE_HEAD_STATS.with(|stats| {
         let mut entries = stats
             .borrow()

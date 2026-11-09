@@ -11,6 +11,8 @@ fn a_cold_load_keeps_the_active_flag_published_after_its_load() {
     let held = EVALUATION_CACHE_PROFILE_ACTIVE.load(Ordering::Relaxed);
     let mut overwritten = Vec::new();
     for published in [1, 2] {
+        let _publication = crate::runtime::profiling::lease::publish()
+            .expect("STOP: lease holder must publish profiling flags");
         EVALUATION_CACHE_PROFILE_ACTIVE.store(published, Ordering::Relaxed);
         let answered = initialize_evaluation_cache_profile_active();
         let after = EVALUATION_CACHE_PROFILE_ACTIVE.load(Ordering::Relaxed);

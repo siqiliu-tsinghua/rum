@@ -182,13 +182,21 @@ impl Arena {
         }
     }
 
-    pub(super) fn allocate(&mut self, cell: Cell) -> Option<CellId> {
+    pub(super) fn allocate(&mut self, cell: Cell) -> Result<CellId, Cell> {
         if self.free.is_none() && self.slots.len() == self.slots.capacity() {
             let old = self.slots.capacity();
-            let capacity = old.checked_mul(2)?.max(4);
-            let peak = old.checked_add(capacity)?.checked_mul(size_of::<Slot>())?;
+            let Some(capacity) = old.checked_mul(2) else {
+                return Err(cell);
+            };
+            let capacity = capacity.max(4);
+            let Some(peak) = old
+                .checked_add(capacity)
+                .and_then(|peak| peak.checked_mul(size_of::<Slot>()))
+            else {
+                return Err(cell);
+            };
             if !self.storage.resize(peak) {
-                return None;
+                return Err(cell);
             }
             if self
                 .slots
@@ -196,15 +204,23 @@ impl Arena {
                 .is_err()
             {
                 self.storage.resize(old * size_of::<Slot>());
-                return None;
+                return Err(cell);
             }
             if !self
                 .storage
                 .resize(self.slots.capacity() * size_of::<Slot>())
             {
-                return None;
+                return Err(cell);
             }
         }
+        let free = if let Some(index) = self.free {
+            let Some(Slot::Free(next)) = self.slots.get(index) else {
+                return Err(cell);
+            };
+            Some((index, *next))
+        } else {
+            None
+        };
         let generation = crate::runtime::profiling::logical::epoch::next_id();
         let n = Node {
             generation,
@@ -215,18 +231,15 @@ impl Arena {
             right: None,
             height: 1,
         };
-        let index = if let Some(index) = self.free {
-            let Some(Slot::Free(next)) = self.slots.get(index) else {
-                return None;
-            };
-            self.free = *next;
+        let index = if let Some((index, next)) = free {
+            self.free = next;
             self.slots[index] = Slot::Live(n);
             index
         } else {
             self.slots.push(Slot::Live(n));
             self.slots.len() - 1
         };
-        Some(CellId { index, generation })
+        Ok(CellId { index, generation })
     }
     pub(super) fn release(&mut self, id: CellId) -> Option<Cell> {
         self.node(id)?;

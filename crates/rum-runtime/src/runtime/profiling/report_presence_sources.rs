@@ -1,7 +1,21 @@
 use super::*;
 
-pub(super) fn print_presence_source_summary() {
-    if !lexical_profile_sources_enabled() {
+pub(super) fn print_presence_source_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_sources_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -36,8 +50,22 @@ pub(super) fn print_presence_source_summary() {
     });
 }
 
-pub(super) fn print_presence_source_shape_summary() {
-    if !lexical_profile_sources_enabled() {
+pub(super) fn print_presence_source_shape_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_sources_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -73,8 +101,22 @@ pub(super) fn print_presence_source_shape_summary() {
     });
 }
 
-pub(super) fn print_presence_source_target_shape_summary() {
-    if !lexical_profile_sources_enabled() {
+pub(super) fn print_presence_source_target_shape_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_sources_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -111,8 +153,22 @@ pub(super) fn print_presence_source_target_shape_summary() {
     });
 }
 
-pub(super) fn print_presence_source_fingerprint_summary() {
-    if !lexical_profile_source_fingerprints_enabled() {
+pub(super) fn print_presence_source_fingerprint_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_source_fingerprints_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -151,8 +207,22 @@ pub(super) fn print_presence_source_fingerprint_summary() {
     });
 }
 
-pub(super) fn print_presence_source_fingerprint_group_summary() {
-    if !lexical_profile_source_fingerprints_enabled() {
+pub(super) fn print_presence_source_fingerprint_group_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_source_fingerprints_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 
@@ -211,8 +281,22 @@ pub(super) fn print_presence_source_fingerprint_group_summary() {
     });
 }
 
-pub(super) fn print_presence_provenance_summary() {
-    if !lexical_profile_provenance_enabled() {
+pub(super) fn print_presence_provenance_summary(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    if !config::lexical_profile_provenance_enabled_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+    ) {
         return;
     }
 

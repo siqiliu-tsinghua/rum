@@ -74,6 +74,8 @@ fn a_cold_load_keeps_a_flag_published_after_its_load() {
     for (name, flag, initialize) in flags {
         let held = flag.load(Ordering::Relaxed);
         for published in [1, 2] {
+            let _publication = crate::runtime::profiling::lease::publish()
+                .expect("STOP: lease holder must publish profiling flags");
             flag.store(published, Ordering::Relaxed);
             let answered = initialize();
             let after = flag.load(Ordering::Relaxed);

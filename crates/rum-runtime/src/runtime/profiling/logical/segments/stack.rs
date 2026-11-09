@@ -14,7 +14,16 @@ impl Stack {
             ActiveSlot::Free(_) => None,
         }
     }
-    fn reserve(&mut self, epoch: &Arc<Epoch>) -> Option<()> {
+    fn reserve(
+        &mut self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+        epoch: &Arc<Epoch>,
+    ) -> Option<()> {
         if self.free.is_some() || self.frames.len() < self.frames.capacity() {
             return Some(());
         }
@@ -28,7 +37,15 @@ impl Stack {
                 return None;
             }
         } else {
-            self.storage = Some(epoch.storage(peak)?);
+            self.storage = Some(epoch.storage_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                _access,
+                peak,
+            )?);
         }
         if self
             .frames
@@ -51,11 +68,26 @@ impl Stack {
     }
     pub(super) fn push(
         &mut self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+
         epoch: &Arc<Epoch>,
         path: Arc<RecordPath>,
         restored: bool,
     ) -> Option<(usize, SegmentId)> {
-        self.reserve(epoch)?;
+        self.reserve(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            epoch,
+        )?;
         let index = self.free.unwrap_or(self.frames.len());
         let segment = SegmentId(epoch::next_id());
         let previous_record = {

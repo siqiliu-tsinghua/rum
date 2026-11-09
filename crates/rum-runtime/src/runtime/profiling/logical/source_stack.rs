@@ -43,12 +43,60 @@ impl<T> SourceStack<T> {
     #[cold]
     #[inline(never)]
     pub(in crate::runtime) fn push(&mut self, value: T) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            self.missing = self.missing.saturating_add(1);
+            return;
+        };
+        self.push_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            value,
+        );
+    }
+    #[cold]
+    #[inline(never)]
+    pub(in crate::runtime) fn push_admitted(
+        &mut self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+        value: T,
+    ) {
         if self.missing != 0 {
             self.missing = self.missing.saturating_add(1);
             return;
         }
-        let storage =
-            epoch::current().and_then(|e| e.storage(size_of::<Node<T>>() + 2 * size_of::<usize>()));
+        let storage = epoch::current_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+        )
+        .and_then(|e| {
+            e.storage_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                _access,
+                size_of::<Node<T>>() + 2 * size_of::<usize>(),
+            )
+        });
         let Some(storage) = storage else {
             self.missing = 1;
             return;

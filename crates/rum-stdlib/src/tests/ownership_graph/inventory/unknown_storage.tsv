@@ -37,7 +37,9 @@ UnknownConstruct	crates/rum-runtime/src/runtime/definitions/application/replace_
 UnknownConstruct	crates/rum-runtime/src/runtime/definitions/unique_symbols.rs	7	12	rum_runtime::runtime::definitions::unique_symbols::UniqueSymbolCollector.index/std::option::Option[Own]/arg0/std::collections::HashSet[Own]/arg1: foreign default hasher representation std::collections::hash_map::RandomState
 UnknownConstruct	crates/rum-runtime/src/runtime/eval_core/stability/association_tail.rs	56	19	rum_runtime::runtime::eval_core::stability::association_tail::AssociationState.indexed_keys/std::option::Option[Own]/arg0/std::collections::HashSet[Own]/arg1: foreign default hasher representation std::collections::hash_map::RandomState
 UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/mutation_proofs.rs	7	35	rum_runtime::runtime::evaluation_cache::mutation_proofs::CallStabilityProof.bloom: unresolved conditional storage: StabilityBloom
-UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	17	12	rum_runtime::runtime::evaluation_cache::profile::source::CallStabilityTimingFrame.start: foreign representation std::time::Instant: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/mod.rs	1010	1	module brief713_cache has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	8	1	module brief713_timing_cleanup has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs	21	12	rum_runtime::runtime::evaluation_cache::profile::source::CallStabilityTimingFrame.start: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/file_io.rs	36	24	rum_runtime::runtime::file_io::FileProbe.resolved_path/std::option::Option[Own]/arg0: foreign representation std::path::PathBuf: PathBuf
 UnknownConstruct	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/once/depth.rs	64	13	rum_runtime::runtime::kernel_data::rewrite_data::replace::once::depth::ReplaceDepthStack.inline/array[unresolved length]: unresolved array length: [Option < ReplaceDepthFrame > ; INLINE_REPLACE_DEPTH_FRAMES]
 UnknownConstruct	crates/rum-runtime/src/runtime/model/cache.rs	125	19	rum_runtime::runtime::model::cache::AssociationKeyIndex.hash_builder: foreign representation std::collections::hash_map::RandomState: std :: collections :: hash_map :: RandomState
@@ -57,41 +59,73 @@ UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	107	51	rum_runt
 UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	123	42	rum_runtime::runtime::model::session::Session.eval_timeout/std::option::Option[Own]/arg0: foreign representation std::time::Duration: Duration
 UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	124	43	rum_runtime::runtime::model::session::Session.eval_deadline/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/options/tests/resume.rs	1	1	source file is not reachable from a production or test module declaration
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	24	13	rum_runtime::runtime::profiling::lease::TestLease._guard: unresolved conditional storage: MutexGuard < 'static , () >
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	25	17	rum_runtime::runtime::profiling::lease::TestLease.generation: unresolved conditional storage: u64
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	58	12	rum_runtime::runtime::profiling::lease::Admitted._gate: unresolved conditional storage: RwLockReadGuard < 'static , () >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	27	13	rum_runtime::runtime::profiling::lease::TestLease._guard: unresolved conditional storage: MutexGuard < 'static , () >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	28	17	rum_runtime::runtime::profiling::lease::TestLease.generation: unresolved conditional storage: u64
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	63	12	rum_runtime::runtime::profiling::lease::Admitted._gate: unresolved conditional storage: AdmittedGate
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	68	16	rum_runtime::runtime::profiling::lease::AdmittedGate.Shared._gate: unresolved conditional storage: RwLockReadGuard < 'static , () >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	71	16	rum_runtime::runtime::profiling::lease::AdmittedGate.Exclusive._gate: unresolved conditional storage: RwLockWriteGuard < 'static , () >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	77	13	rum_runtime::runtime::profiling::lease::ExclusiveAdmitted.access: unresolved conditional storage: Admitted
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	143	15	rum_runtime::runtime::profiling::lease::ThreadRegistration.previous: unresolved conditional storage: Option < u64 >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/lease.rs	144	14	rum_runtime::runtime::profiling::lease::ThreadRegistration._thread: unresolved conditional storage: std :: marker :: PhantomData < std :: rc :: Rc < () > >
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/budget.rs	16	12	rum_runtime::runtime::profiling::logical::budget::Budget.bytes: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/collector.rs	20	6	ambiguous conditional definition rum_runtime::runtime::profiling::logical::collector::DrainFn
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/collector.rs	32	6	ambiguous conditional definition rum_runtime::runtime::profiling::logical::collector::ResetFn
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/collector.rs	45	6	ambiguous conditional definition rum_runtime::runtime::profiling::logical::collector::DropFn
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/collector.rs	58	13	rum_runtime::runtime::profiling::logical::collector::AdmittedBoundary.access: unresolved conditional storage: & 'a crate :: runtime :: profiling :: lease :: Admitted
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/collector.rs	59	15	rum_runtime::runtime::profiling::logical::collector::AdmittedBoundary.boundary: unresolved conditional storage: Option < Arc < ProfileBoundary > >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/collector.rs	133	13	rum_runtime::runtime::profiling::logical::collector::AdmittedBoundaries.access: unresolved conditional storage: & 'a crate :: runtime :: profiling :: lease :: Admitted
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/collector.rs	134	17	rum_runtime::runtime::profiling::logical::collector::AdmittedBoundaries.boundaries: unresolved conditional storage: Vec < Arc < ProfileBoundary > >
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/collector.rs	203	13	rum_runtime::runtime::profiling::logical::collector::AdmittedBoundaryIter.access: unresolved conditional storage: & 'a crate :: runtime :: profiling :: lease :: Admitted
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/collector.rs	204	17	rum_runtime::runtime::profiling::logical::collector::AdmittedBoundaryIter.boundaries: unresolved conditional storage: std :: vec :: IntoIter < Arc < ProfileBoundary > >
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	13	16	rum_runtime::runtime::profiling::logical::context::Context.executing: foreign representation std::sync::atomic::AtomicBool: AtomicBool
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	14	1	module synchronous_families has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	36	35	rum_runtime::runtime::profiling::logical::epoch::Epoch.valid: foreign representation std::sync::atomic::AtomicBool: AtomicBool
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	37	38	rum_runtime::runtime::profiling::logical::epoch::Epoch.contexts: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	38	36	rum_runtime::runtime::profiling::logical::epoch::Epoch.faults: foreign representation std::sync::atomic::AtomicU64: AtomicU64
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	54	18	rum_runtime::runtime::profiling::logical::epoch::Data.event_birth: foreign representation std::time::Instant: Instant
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	87	12	rum_runtime::runtime::profiling::logical::DefinitionRuleRecord.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: std :: time :: Instant
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	404	12	rum_runtime::runtime::profiling::logical::LogicalProfileTestLease.inner: unresolved conditional storage: super :: lease :: TestLease
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	414	9	conditional public input signature logical_profile_test_acquire
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	421	9	conditional public input signature logical_profile_test_span
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	453	9	conditional public input signature logical_profile_test_source_scope
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	463	9	conditional public input signature logical_profile_test_rows
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	491	9	conditional public input signature logical_profile_test_leases
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	498	9	conditional public input signature logical_profile_test_assert_quiescent
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	505	9	conditional public input signature logical_profile_test_reset
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	510	9	conditional public input signature logical_profile_test_reasons
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	523	9	conditional public input signature logical_profile_test_pauses
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	535	9	conditional public input signature logical_profile_test_reasons_for
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	550	9	conditional public input signature logical_profile_test_pauses_for
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	568	9	conditional public input signature logical_profile_test_input_required_for
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1235	1	module evaluator has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1239	1	module retained_pause has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1243	1	module definitions has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1247	1	module assignments has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1251	1	module lease_release has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1255	1	module control_tests has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	29	20	rum_runtime::runtime::profiling::logical::context::ContextGuard._registration: unresolved conditional storage: crate :: runtime :: profiling :: lease :: ThreadRegistration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	441	13	rum_runtime::runtime::profiling::logical::context::ExecutionScope.pushed: unresolved conditional storage: bool
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	447	20	rum_runtime::runtime::profiling::logical::context::ExecutionScope._registration: unresolved conditional storage: crate :: runtime :: profiling :: lease :: ThreadRegistration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	625	1	module brief713_execution_scope has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/context.rs	629	1	module brief713_generation has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	17	1	module synchronous_families has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	43	23	rum_runtime::runtime::profiling::logical::epoch::Epoch.lease_generation: unresolved conditional storage: u64
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	45	35	rum_runtime::runtime::profiling::logical::epoch::Epoch.valid: foreign representation std::sync::atomic::AtomicBool: AtomicBool
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	46	38	rum_runtime::runtime::profiling::logical::epoch::Epoch.contexts: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	47	36	rum_runtime::runtime::profiling::logical::epoch::Epoch.faults: foreign representation std::sync::atomic::AtomicU64: AtomicU64
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	63	18	rum_runtime::runtime::profiling::logical::epoch::Data.event_birth: foreign representation std::time::Instant: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/epoch.rs	1394	1	module brief713_context_drop has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	51	6	ambiguous conditional definition rum_runtime::runtime::profiling::logical::BoundaryStorage
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	309	12	rum_runtime::runtime::profiling::logical::DefinitionRuleRecord.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: std :: time :: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	626	12	rum_runtime::runtime::profiling::logical::LogicalProfileTestLease.inner: unresolved conditional storage: super :: lease :: TestLease
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	636	9	conditional public input signature logical_profile_test_acquire
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	643	9	conditional public input signature logical_profile_test_span
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	675	9	conditional public input signature logical_profile_test_source_scope
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	685	9	conditional public input signature logical_profile_test_rows
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	713	9	conditional public input signature logical_profile_test_leases
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	720	9	conditional public input signature logical_profile_test_assert_quiescent
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	727	9	conditional public input signature logical_profile_test_reset
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	732	9	conditional public input signature logical_profile_test_reasons
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	745	9	conditional public input signature logical_profile_test_pauses
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	757	9	conditional public input signature logical_profile_test_reasons_for
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	772	9	conditional public input signature logical_profile_test_pauses_for
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	790	9	conditional public input signature logical_profile_test_input_required_for
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1448	1	module evaluator has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1452	1	module retained_pause has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1456	1	module definitions has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1460	1	module assignments has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1464	1	module lease_release has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1468	1	module control_tests has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1542	1	module brief712_probe has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1546	1	module brief713_cleanup has 0 source candidates
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	13	12	rum_runtime::runtime::profiling::logical::segments::Active.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/totals.rs	31	17	rum_runtime::runtime::profiling::logical::totals::ActiveId.thread: foreign representation std::thread::ThreadId: std :: thread :: ThreadId
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	485	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	490	12	rum_runtime::runtime::profiling::RuntimePathTimingToken.start: foreign representation std::time::Instant: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	484	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	489	12	rum_runtime::runtime::profiling::RuntimePathTimingToken.start: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/assignments.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief712_probe.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_cache.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_cleanup.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_context_drop.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_execution_scope.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_generation.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_reset.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_timing_cleanup.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/control.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/definitions.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/evaluator.rs	1	1	source file is not reachable from a production or test module declaration

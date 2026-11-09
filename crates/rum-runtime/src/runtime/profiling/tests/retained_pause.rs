@@ -421,7 +421,8 @@ fn repeated_restore_retirement_cap_and_completion_preserve_lifecycle() {
     drop((session, epoch));
     epoch::reset_for_lease(enabled.lease());
     segments::release_thread_registration();
-    epoch::drain_for_lease(enabled.lease());
+    drop(enabled);
+    let _lease = epoch::lease_drained();
     assert_eq!(budget::process_bytes(), 0);
 }
 

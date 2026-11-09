@@ -4,6 +4,12 @@ use std::sync::Arc;
 
 mod budget;
 mod collector;
+#[cfg(test)]
+pub(in crate::runtime) use collector::stash_boundary as brief713_probe_stash;
+#[cfg(test)]
+pub(in crate::runtime) fn brief713_probe_process_bytes() -> usize {
+    budget::process_bytes()
+}
 mod context;
 pub(in crate::runtime) mod epoch;
 mod incoming;
@@ -18,17 +24,38 @@ pub(in crate::runtime) mod synchronous;
 mod totals;
 
 pub(in crate::runtime) use budget::Storage;
-pub(in crate::runtime) use collector::{drain_attached, drain_attached_for, set_hooks};
+pub(in crate::runtime) use collector::{drain_attached, drain_attached_for, set_hooks_admitted};
 pub(in crate::runtime) use context::{
     Context, ContextGuard, ExecutionScope, refresh_execution_control,
 };
-pub(in crate::runtime) use epoch::{Epoch, drop_session, summary};
+#[cfg(not(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+)))]
+pub(in crate::runtime) use epoch::drop_session;
+pub(in crate::runtime) use epoch::{Epoch, summary};
 pub(in crate::runtime) use record::*;
+
+#[cfg(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+))]
+type BoundaryStorage = Option<Storage>;
+#[cfg(not(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+)))]
+type BoundaryStorage = Storage;
+
+const _: () = assert!(std::mem::size_of::<BoundaryStorage>() == std::mem::size_of::<Storage>());
 
 pub(in crate::runtime) struct ProfileBoundary {
     pub(in crate::runtime) epoch: Arc<Epoch>,
     pub(in crate::runtime) record: RecordId,
-    pub(in crate::runtime) _storage: Storage,
+    pub(in crate::runtime) _storage: BoundaryStorage,
 }
 
 impl ProfileBoundary {
@@ -36,20 +63,145 @@ impl ProfileBoundary {
         &self,
         control: &Arc<crate::runtime::RequestInterruptState>,
     ) -> bool {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return false;
+        };
+        self.belongs_to_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            control,
+        )
+    }
+
+    pub(in crate::runtime) fn belongs_to_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+
+        control: &Arc<crate::runtime::RequestInterruptState>,
+    ) -> bool {
         self.epoch
-            .inspect(self.record)
+            .inspect_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                _access,
+                self.record,
+            )
             .is_some_and(|(owner, _, _)| {
                 Arc::ptr_eq(&owner.control, control)
                     && owner.generation == control.logical_generation()
             })
     }
     pub(in crate::runtime) fn complete(&self, outcome: Outcome) {
-        segments::finish_active(&self.epoch, self.record);
-        self.epoch.close(self.record, Ok(outcome));
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let access = crate::runtime::profiling::lease::admit();
+        self.complete_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access.as_ref(),
+            outcome,
+        )
+    }
+
+    pub(in crate::runtime) fn complete_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+        outcome: Outcome,
+    ) {
+        segments::finish_active_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            &self.epoch,
+            self.record,
+        );
+        self.epoch.close_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            self.record,
+            Ok(outcome),
+        );
     }
     pub(in crate::runtime) fn abandon(&self, reason: Retire) {
-        segments::finish_active(&self.epoch, self.record);
-        self.epoch.close(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let access = crate::runtime::profiling::lease::admit();
+        self.abandon_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            access.as_ref(),
+            reason,
+        )
+    }
+
+    pub(in crate::runtime) fn abandon_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+        reason: Retire,
+    ) {
+        segments::finish_active_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            &self.epoch,
+            self.record,
+        );
+        self.epoch.close_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
             self.record,
             match reason {
                 Retire::Structural(crate::runtime::suspension::AbandonReason::CancelledRequest) => {
@@ -60,11 +212,81 @@ impl ProfileBoundary {
         );
     }
     pub(in crate::runtime) fn policy(&self) -> Option<Policy> {
-        self.epoch.inspect(self.record).map(|(_, _, p)| p)
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return None;
+        };
+        self.policy_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+        )
+    }
+
+    pub(in crate::runtime) fn policy_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: &crate::runtime::profiling::lease::Admitted,
+    ) -> Option<Policy> {
+        self.epoch
+            .inspect_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                _access,
+                self.record,
+            )
+            .map(|(_, _, p)| p)
     }
 }
+#[cfg(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+))]
+impl ProfileBoundary {
+    pub(in crate::runtime) fn release_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        access: &crate::runtime::profiling::lease::Admitted,
+        boundary: Arc<Self>,
+    ) {
+        let Some(mut boundary) = Arc::into_inner(boundary) else {
+            return;
+        };
+        let storage = boundary._storage.take();
+        boundary.abandon_admitted(Some(access), Retire::LastDrop);
+        drop(boundary);
+        drop(storage);
+    }
+}
+
 impl Drop for ProfileBoundary {
     fn drop(&mut self) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        if self._storage.is_none() {
+            return;
+        }
         self.abandon(Retire::LastDrop);
     }
 }
@@ -683,7 +905,7 @@ impl Call {
         Some(Arc::new(ProfileBoundary {
             epoch: Arc::clone(&self.inner.epoch),
             record: self.inner.record,
-            _storage: storage,
+            _storage: storage.into(),
         }))
     }
 }
@@ -1034,25 +1256,16 @@ pub(in crate::runtime) fn complete_phase(
 #[cold]
 #[inline(never)]
 fn publish_stashed_phases_slow(session: &mut crate::runtime::Session) {
-    let paused = collector::take_stash();
-    // Suspend publishes only after the owner exists. A completion that stashes
-    // first keeps the boundary until that owner is current, and never attaches
-    // a boundary whose control is a different session.
+    // No owner means no selection. Other sessions' boundaries stay stashed.
     if session.pending_suspension.is_none() {
-        collector::restore_stash(paused);
         return;
     }
-    session.flush_definition_boundaries();
     let control = session.request_interrupt_control.borrow().clone();
-    let mut keep = Vec::new();
+    let paused = collector::take_belonging(&control);
+    session.flush_definition_boundaries();
     for boundary in paused {
-        if !boundary.belongs_to(&control) {
-            keep.push(boundary);
-            continue;
-        }
         session.logical_insert_boundary(boundary, None, false);
     }
-    collector::restore_stash(keep);
 }
 
 #[inline]
@@ -1325,3 +1538,11 @@ fn pause_call_stage_at_finish_slow(session: &mut crate::runtime::Session, phase:
         }
     }
 }
+
+#[cfg(test)]
+#[path = "../tests/brief712_probe.rs"]
+mod brief712_probe;
+
+#[cfg(test)]
+#[path = "../tests/brief713_cleanup.rs"]
+mod brief713_cleanup;

@@ -11,14 +11,27 @@ pub(in crate::runtime) fn reset_lexical_profile_counters() {
         feature = "test-builtin-memory-growth",
         feature = "test-continuation-slots"
     ))]
-    let Some(_admitted) = crate::runtime::profiling::lease::admit() else {
+    let Some(_admitted) = crate::runtime::profiling::lease::admit_exclusive() else {
         return;
     };
-    if !lexical_profile_configured() {
-        return;
-    }
+    let configured = config::lexical_profile_configured_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _admitted.admitted(),
+    );
 
-    logical::epoch::reset_production(ProductionReset { _private: () });
+    logical::epoch::reset_production(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &_admitted,
+        ProductionReset { _private: () },
+    );
 
     macro_rules! reset {
         ($($counter:ident),+ $(,)?) => {
@@ -109,5 +122,7 @@ pub(in crate::runtime) fn reset_lexical_profile_counters() {
     EXPRESSION_REBUILD_SOURCE_STACK.with(|stack| stack.borrow_mut().clear());
     EXPRESSION_REBUILD_SOURCE_DEPTH.with(|depth| depth.set(0));
     LEXICAL_PROFILE_SUMMARY_PRINTED.store(0, Ordering::Relaxed);
-    LEXICAL_PROFILE_ACTIVE.store(1, Ordering::Relaxed);
+    if configured {
+        LEXICAL_PROFILE_ACTIVE.store(1, Ordering::Relaxed);
+    }
 }

@@ -107,14 +107,38 @@ impl DownValuesView {
 
 impl QueueArena {
     fn shared(epoch: &Arc<Epoch>) -> Option<Arc<Self>> {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let Some(access) = crate::runtime::profiling::lease::admit() else {
+            return None;
+        };
         let mut slot = epoch.queue_arena.lock().unwrap();
         if let Some(arena) = slot.as_ref().and_then(|(weak, _)| weak.upgrade()) {
             return Some(arena);
         }
         // Release the expired weak allocation before releasing its charge.
         slot.take();
-        let storage = epoch.storage(size_of::<Self>() + 2 * size_of::<usize>())?;
-        let buffer = epoch.storage(0)?;
+        let storage = epoch.storage_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            size_of::<Self>() + 2 * size_of::<usize>(),
+        )?;
+        let buffer = epoch.storage_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            0,
+        )?;
         let arena = Arc::new(Self {
             data: Mutex::new(Arena::new(buffer)),
             _epoch: Arc::clone(epoch),
@@ -169,6 +193,7 @@ impl ProfileQueue {
             let Some(context) = Context::capture(result.epoch.as_ref().unwrap()) else {
                 return Err(result.into_guest());
             };
+            let mut failed_cell = None;
             let mut root = result.root.lock().unwrap();
             let mut data = result.arena.as_ref().unwrap().data.lock().unwrap();
             let mut failed = false;
@@ -185,17 +210,22 @@ impl ProfileQueue {
                     context: Some(Arc::clone(&context)),
                     deferred: false,
                 };
-                if let Some(id) = data.allocate(cell) {
-                    let tail = data.last(*root);
-                    let next = data.insert(*root, tail, id);
-                    failed = next.is_none();
-                    *root = next;
-                } else {
-                    failed = true;
+                match data.allocate(cell) {
+                    Ok(id) => {
+                        let tail = data.last(*root);
+                        let next = data.insert(*root, tail, id);
+                        failed = next.is_none();
+                        *root = next;
+                    }
+                    Err(cell) => {
+                        failed_cell = Some(cell);
+                        failed = true;
+                    }
                 }
             });
             drop(data);
             drop(root);
+            drop(failed_cell);
             if failed {
                 result.epoch.as_ref().unwrap().retire(Retire::DiagnosticCap);
                 return Err(result.into_guest());
@@ -211,6 +241,15 @@ impl ProfileQueue {
     }
     pub(super) fn epoch(&self) -> Option<&Arc<Epoch>> {
         self.epoch.as_ref()
+    }
+
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    pub(in crate::runtime) fn lease_generation(&self) -> Option<u64> {
+        self.epoch.as_ref().map(|epoch| epoch.lease_generation())
     }
     pub(super) fn root_id(&self) -> Option<CellId> {
         *self.root.lock().unwrap()
@@ -252,11 +291,15 @@ impl ProfileQueue {
             return false;
         }
         let consumer = matches!(cell.kind, Kind::Guest);
-        let Some(id) = data.allocate(cell) else {
-            drop(data);
-            drop(root);
-            self.epoch.as_ref().unwrap().retire(Retire::DiagnosticCap);
-            return false;
+        let id = match data.allocate(cell) {
+            Ok(id) => id,
+            Err(cell) => {
+                drop(data);
+                drop(root);
+                drop(cell);
+                self.epoch.as_ref().unwrap().retire(Retire::DiagnosticCap);
+                return false;
+            }
         };
         let next = match before {
             Some(consumer) => data.insert_before(*root, consumer, id),
@@ -560,6 +603,26 @@ impl ProfileQueue {
 }
 impl Drop for ProfileQueue {
     fn drop(&mut self) {
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        let _registration = if let Some((access, registration)) =
+            crate::runtime::profiling::lease::admit_generation(self.lease_generation())
+        {
+            unregister_root_admitted(&access, &self.root);
+            // Cell drops may admit independently; retain only the registration.
+            drop(access);
+            Some(registration)
+        } else {
+            None
+        };
+        #[cfg(not(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        )))]
         unregister_root(&self.root);
         // Release each diagnostic owner after unlocking the arena. Marker drop
         // may retire records in the epoch; the registry owns no arena strongly.
@@ -585,14 +648,30 @@ pub(in crate::runtime) fn register_owner(
     control: Arc<crate::runtime::RequestInterruptState>,
     queue: &ProfileQueue,
 ) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
     let (Some(arena), Some(epoch)) = (queue.arena.clone(), queue.epoch.clone()) else {
         return;
     };
-    crate::runtime::profiling::logical::set_hooks(
-        attach_boundary,
-        clear_owners,
-        unregister_control,
+    crate::runtime::profiling::logical::set_hooks_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        attach_boundary_admitted,
+        clear_owners_admitted,
+        unregister_control_admitted,
     );
+    #[cfg(test)]
+    tests::pause_registration();
     let mut owners = owners().lock().unwrap();
     owners.retain(|owner| !Arc::ptr_eq(&owner.control, &control));
     owners.push(OwnerReg {
@@ -601,45 +680,100 @@ pub(in crate::runtime) fn register_owner(
         arena,
         epoch,
     });
+    #[cfg(test)]
+    tests::observe_registration();
 }
 
-fn clear_owners() {
+fn clear_owners_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
     owners().lock().unwrap().clear();
 }
 
-fn unregister_control(control: &Arc<crate::runtime::RequestInterruptState>) {
+fn unregister_control_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    control: &Arc<crate::runtime::RequestInterruptState>,
+) {
     owners()
         .lock()
         .unwrap()
         .retain(|owner| !Arc::ptr_eq(&owner.control, control));
 }
 
+#[cfg(not(any(
+    test,
+    feature = "test-builtin-memory-growth",
+    feature = "test-continuation-slots"
+)))]
 fn unregister_root(root: &Arc<Mutex<Option<CellId>>>) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    unregister_root_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        root,
+    )
+}
+
+fn unregister_root_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    root: &Arc<Mutex<Option<CellId>>>,
+) {
     owners()
         .lock()
         .unwrap()
         .retain(|owner| !Arc::ptr_eq(&owner.root, root));
 }
 
-fn attach_boundary(boundary: &Arc<ProfileBoundary>) -> bool {
-    debug_assert!(matches!(
-        boundary.policy(),
-        Some(
-            Policy::Expr
-                | Policy::OptionalExpr
-                | Policy::Bool
-                | Policy::Prepared
-                | Policy::Match
-                | Policy::ApplicableExpr
-                | Policy::Incoming(_)
-        )
-    ));
+fn attach_boundary_admitted(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    boundary: &Arc<ProfileBoundary>,
+) -> bool {
     let found = {
         let owners = owners().lock().unwrap();
         owners
             .iter()
             .find(|owner| {
-                Arc::ptr_eq(&owner.epoch, &boundary.epoch) && boundary.belongs_to(&owner.control)
+                Arc::ptr_eq(&owner.epoch, &boundary.epoch)
+                    && boundary.belongs_to_admitted(
+                        #[cfg(any(
+                            test,
+                            feature = "test-builtin-memory-growth",
+                            feature = "test-continuation-slots"
+                        ))]
+                        _access,
+                        &owner.control,
+                    )
             })
             .map(|owner| {
                 (
@@ -652,11 +786,40 @@ fn attach_boundary(boundary: &Arc<ProfileBoundary>) -> bool {
     let Some((root, arena, epoch)) = found else {
         return false;
     };
+    #[cfg(test)]
+    tests::pause_attachment_after_owner();
+    debug_assert!(matches!(
+        boundary.policy_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+        ),
+        Some(
+            Policy::Expr
+                | Policy::OptionalExpr
+                | Policy::Bool
+                | Policy::Prepared
+                | Policy::Match
+                | Policy::ApplicableExpr
+                | Policy::Incoming(_)
+        )
+    ));
     if !epoch.is_valid() {
         // The retired epoch must not stay alive through a stashed boundary.
         return true;
     }
-    let Some(context) = Context::capture(&epoch) else {
+    let Some(context) = Context::capture_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access,
+        &epoch,
+    ) else {
         return false;
     };
     let mut root = root.lock().unwrap();
@@ -665,7 +828,14 @@ fn attach_boundary(boundary: &Arc<ProfileBoundary>) -> bool {
     if after.is_some_and(|id| !data.belongs(*root, id)) {
         drop(data);
         drop(root);
-        epoch.fault();
+        epoch.fault_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(_access),
+        );
         return true;
     }
     let cell = Cell {
@@ -673,11 +843,23 @@ fn attach_boundary(boundary: &Arc<ProfileBoundary>) -> bool {
         context: Some(context),
         deferred: false,
     };
-    let Some(id) = data.allocate(cell) else {
-        drop(data);
-        drop(root);
-        epoch.retire(Retire::DiagnosticCap);
-        return true;
+    let id = match data.allocate(cell) {
+        Ok(id) => id,
+        Err(cell) => {
+            drop(data);
+            drop(root);
+            drop(cell);
+            epoch.retire_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(_access),
+                Retire::DiagnosticCap,
+            );
+            return true;
+        }
     };
     if let Some(next) = data.insert(*root, after, id) {
         *root = Some(next);
@@ -687,7 +869,14 @@ fn attach_boundary(boundary: &Arc<ProfileBoundary>) -> bool {
         drop(data);
         drop(root);
         drop(cell);
-        epoch.fault();
+        epoch.fault_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(_access),
+        );
         true
     }
 }
