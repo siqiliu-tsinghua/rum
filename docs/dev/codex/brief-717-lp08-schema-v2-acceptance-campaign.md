@@ -364,3 +364,79 @@ otherwise unchanged. The continuation's report extends
 `.temp/brief-717/report.json` with every new run, attempt and verdict line
 while keeping run 1's failed attempts; it does not overwrite them. Every
 script launched must exist and be readable first.
+
+## Stage-C STOP ruling and continuation (director, 2026-11-09)
+
+Run 2 stopped at Stage C before build 2 and before the stack rows: the
+resumed Function source rows read try 106, finish 53, resume 20 per
+iteration against the accepted 109/56/20, while F6 49 and the queued rows
+match exactly. The STOP is accepted as well taken — the brief forbids
+loosening a bar. The panel is attributed in this ruling, and the frozen
+source's test-build row is re-frozen here. The pre-713 reading 109/56/20
+stays recorded as the historical measurement of the pre-713 test build;
+nothing is deleted or re-labelled.
+
+### Attribution (my own measurement)
+
+- The bar's source is the same instrument the run used:
+  `.temp/brief-710/continuation-c/evidence/costs.json` and
+  `.temp/brief-711/continuation/evidence/costs.json` — the byte-identical
+  `brief677_probe.rs` fixture, the same canonical builder
+  (`cargo test -p rum-runtime --lib --no-run --release`, CGU=1, stable
+  path) and the same Callgrind invocation. Both recorded 109/56/20 in two
+  builds and both arms.
+- The frozen test binary reads 106/53/20. The same-binary serial captures
+  reproduce each own vector exactly, the incoming calls stay 50/100 with
+  slope 1, and `resume` stays 20 — the call structure is unchanged and
+  only the per-call own count moved, downward.
+- Mechanism: brief 713's exact-cfg admission in
+  `crates/rum-runtime/src/runtime/profiling/config.rs:4-21` made
+  `lexical_profile_enabled()` take a lease admission under
+  `cfg(any(test, feature = "test-builtin-memory-growth",
+  "test-continuation-slots"))`. In the test build the body grows and LLVM
+  stops inlining it into `finish_function_application` and
+  `try_apply_function`. Disassembly: the pre-713 candidate test binary
+  `65061efa…` inlines the `LEXICAL_PROFILE_ENABLED` load and the
+  `initialize_lexical_profile_enabled` slow call inside both functions;
+  the frozen test binary `9f6d33c3…` emits `call lexical_profile_enabled`
+  in both. The caller's own count drops by three per iteration and the
+  callee's work moves to `lexical_profile_enabled`'s own frame. The seam
+  still returns false in the disabled run, so the observed behaviour is
+  unchanged.
+- The production path did not move. The CLI is built without test cfg,
+  where the cfg block is erased. In the frozen CLI `32df5b02…`, the
+  production `finish_function_application` (234 instructions) and
+  `try_apply_function` (594 instructions) are instruction-for-instruction
+  identical, after normalizing addresses and call targets, to the 711
+  candidate CLI; the queued F6 rows reproduce 57/49/20/71 with incoming
+  501/1001 exactly. Nothing on the production lane moved.
+- The movement is therefore a test-build inlining reading, not a
+  source-path regression, and it is negative. The bar it replaces exists
+  to catch default-path growth; that duty is carried by the exact CLI rows
+  and the unchanged release object code, both of which are green.
+
+### The re-frozen rows (frozen source, test build)
+
+- Resumed Function: `try` 106, `finish` 53, `resume` 20 instructions per
+  iteration; own vectors at N=50/100 exactly [5300,10600], [2650,5300],
+  [1000,2000], incoming [50,100], call slope 1.
+- F6 queued: 49 unchanged (CLI own rows 57/49/20/71 exact).
+- Stack: 18,304 bytes per level, intercept 12,392, residual 0, absolute
+  samples 103,912 / 195,432 / 286,952 / 378,472 twice each — unchanged and
+  independent of the seam inlining.
+- Both independent builds must give identical rows; a difference between
+  builds is a STOP. No other bar moves. The replacement is not a
+  relaxation: it is calibrated to the frozen source's build kind and
+  bound to the unchanged production lane.
+
+### Continuation scope
+
+Resume at Stage C with build 2: build the final runtime and CLI a second
+time under the same rule (forced rebuild equal SHA), reproduce the
+re-frozen Function rows and the stack samples on both builds, then run
+Stages D, E and F unchanged. Do not rerun Stage A or B; run 2 passed
+Stage B (five modes, 20 processes, 40 guest captures, 96 rejected decoder
+falsifiers, publication 14/14 at 8/1, host schema 4/0/0 at 8/1, 30 exact
+base-byte cases each) and its receipts stand. The report extends
+`.temp/brief-717/report.json` again, keeping every run-1 and run-2 entry;
+the failed 109/56 comparison stays in it as the historical reading.
