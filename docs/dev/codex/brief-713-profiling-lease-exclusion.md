@@ -1911,3 +1911,53 @@ Then the remaining mutants including Q4 arm C and the Q10 handoff, the
 standing replays with the once-only pinned census, and the acceptance runs
 (full lib 3x at 8 threads, once at 1, the workspace, the release erasure,
 the test-name delta). Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-19 stop): Q27 the flag and start gates are calibrated by the same admission-class frame
+
+Q26 is accepted and the matrix is calibrated: with the frame that deletes
+only `admit()`'s registration-refusal branch, arm B prints
+`stale_attach_no_fault=true` green and arm C prints `false` red at 8 and 1,
+and the unframed restoration is green at both; the predicate stayed truthful
+and the write-side check untouched. The publication, cache-writer, refund,
+nested-call and final Q10 handoff mutants are also accepted: each red at its
+own observer at 8 and 1 and green after the SHA-exact restore. The source is
+unchanged (1,602 hashes equal C18), focused 16/16 at 8 and 1, 1,415 test
+names.
+
+The Q27 stop is correct. The prescribed literal "delete the getter's
+admission" is inexpressible under the conversion: the admitted body takes
+`&Admitted` (`config.rs:76`), so deleting the acquisition leaves its proof
+argument undefined — E0425 at `config.rs:57:10`, quoted. The start route has
+no local admission to delete at all: `lexical_profile_start()` delegates to
+the strict getter. Both facts are the type working (Q21's precedent), and
+neither is a runtime red.
+
+### Q27 — one admission-class mutant, two gate observers
+
+1. The flag-read gate and the unregistered-start gate are calibrated by ONE
+   admission-class mutant: exactly the Q26 frame — delete only
+   `admit()`'s registration-refusal branch (`lease.rs:93-95`), leaving
+   `blocks_unregistered_thread()` truthful, `acquire_write()`'s check,
+   `WRITE_GATE` and the depth assertions intact. It is the same experimental
+   condition as the Q4 matrix, not a per-getter edit.
+2. Required reds at 8 and 1:
+   - `brief713_unregistered_flag_read_is_refused` prints `B713 FLAG_READ`
+     with all 15 values `true` and fails its `all(!enabled)` assertion;
+   - `brief713_unregistered_start_is_refused` prints
+     `B713 START unregistered_start=true` and fails.
+   Record the exact tuples and exit codes, then restore `lease.rs`
+   byte-exactly (fixed SHA `2ea56da9…`) and re-run both gates green at 8
+   and 1.
+3. The mutant table gains one row with these two observers and the compile
+   evidence for the prescribed literal edits (E0425 at `config.rs:57:10`;
+   the start route has no local admission). Do not duplicate a getter body,
+   add a cfg bypass, weaken the `&Admitted` parameter, fabricate a permit,
+   or change either gate's expectation. A gate whose red cannot be produced
+   this way is a STOP.
+4. This closes the mutant table. Then: the once-only pinned census on the
+   final source, the standing replays after the last edit, and the
+   acceptance runs — full lib three consecutive times at 8 threads and once
+   at 1 with exactly the two standing root-context skips, the release
+   erasure check, and the test-name delta. The workspace run stays mine.
+
+Resume with `CDX_FORK`.
