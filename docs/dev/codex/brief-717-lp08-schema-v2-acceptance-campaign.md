@@ -522,3 +522,94 @@ run 3, binaries SHA-equal, rows equal, call slopes 1). The report extends
 entry; the failed 103,416-against-103,912 comparison stays in it as the
 historical reading. Dispatch the run-3 continuation forked from the 717
 session `01a1c105-103e-7ad2-a04f-13b452fd0e9f`.
+
+## Stage-D whole-workload STOP ruling and continuation (director, 2026-11-10)
+
+Run 4 completed Stage C in full (16 stack samples, both builds, the
+re-frozen line, residual 0) and Stage D's timing collection (120 labels,
+three arms, four interleaved passes, layout envelope median 0.61% / p90
+2.58% / max 9.42%) and the first ledger draw of both arms: all six seam
+rows exact at identical call counts with cold helpers at zero self-Ir and
+zero calls. It then STOPed on the whole-workload row: base 16,458,580,255;
+final primary 16,464,621,146 (+6,040,891); final same-binary serial
+16,459,014,281 (+434,026). Under the brief's literal clause — "every
+candidate whole-workload draw below every base draw" — that pair fails.
+
+**The STOP is well taken under the clause as written. The clause is my
+instrument error and is withdrawn as a gate.** The evidence is measured,
+not argued.
+
+### The row cannot decide at this scale (my own interleaved series)
+
+Eight fresh Callgrind draws on the same two binaries and the same saved
+workload, interleaved base/final, profiling environment cleared, serial,
+`taskset -c 2`, the same `--dump-instr --collect-jumps` flags:
+
+| arm | draw totals |
+|---|---|
+| base | 16,471,180,283 / 16,464,422,699 / 16,483,577,484 / 16,460,054,782 |
+| final | 16,460,369,464 / 16,460,206,646 / 16,458,536,769 / 16,466,720,760 |
+
+- Same-binary spread: base 23,522,702 instructions (0.143%); final
+  8,183,991. With the worker's own draws the base spans
+  16,458,580,255–16,483,577,484 (24,997,229, 0.152%) and the final spans
+  16,458,536,769–16,466,720,760 (8,183,991); the worker's two runs of the
+  identical final binary already differ by 5,606,865.
+- The distributions overlap: max final 16,466,720,760 exceeds min base
+  16,460,054,782. The stopped pair was the worst pairing of the two
+  distributions (base at its minimum, final at its maximum).
+- The medians sit in the directed direction: base 16,464,422,699 against
+  final 16,460,288,055, the final lower by 4,134,644 — consistent with the
+  deterministic seam saving below and inside the overlap, so it is
+  recorded, not claimed as a separation.
+- The clause it replaces never had this resolving power: in stage A the
+  recorded separation was 2,056,129 (candidate max 16,456,887,219 against
+  base min 16,458,943,348), smaller than the base's own stage-A spread of
+  4,533,874 (16,463,477,222 − 16,458,943,348). The stage-A sentence is
+  hereby recorded as not established by that row.
+- Mechanism (already named in 710 Ruling 8): the workload's own
+  `rumMicroEmit` prints `ToString[seconds]`, so the measured duration's
+  digit count feeds back into the formatted output's instruction count,
+  on top of the process-level hash-seed nondeterminism. A total that
+  contains a timing-dependent printout cannot gate at the 0.04% scale.
+
+### The deterministic lanes, and the re-frozen Stage-D rule
+
+The default-path verdict is carried by the deterministic evidence, all of
+which is green in run 4:
+
+- The six seam rows at identical call counts: `record_timing` 13→3,
+  `record_profile_rule_rhs_timing` 23→18, the four dispatch wrappers
+  18→14 / 20→18 / 20→18 / 18→14 (calls 103,920 / 393,040 / 91,440 /
+  49,008 / 21,428 / 7,003), with the cold helpers at zero self-Ir and zero
+  calls. At these counts the final arm executes **3,539,044 fewer**
+  instructions in the six seams.
+- The corrected 703 label probes on every residual label, still pending:
+  `association-part-key-read-width32000`,
+  `association-set-key-incremental-small`,
+  `deletecases-leaf-delete-small`,
+  `downvalue-guarded-decline-fallback`, `replace-leaf-rebuild-small`,
+  `stringreplace-single-literal-unguarded`, `symbol-ownvalue-read`
+  (`association-part-key-read-width4000` stays excluded by the standing
+  brief-620 calibration failure). New executed work in the changed code on
+  any label is a STOP; inside-envelope movement with equal executed
+  instructions is recorded as noise; equal instructions outside the
+  envelope are recorded as timing movement without instruction support.
+
+**Re-frozen rule:** the ledger completes its four interleaved draws per arm
+and the report records both ranges, the medians and the deterministic
+seam delta. The whole-workload row is recorded as noise-limited, not
+gated; it may STOP only if the final range lies entirely above the base
+range, or if any seam row deviates, or if the cold helpers are called.
+
+### Continuation scope
+
+Resume at Stage D: complete the ledger's draws 2–4 per arm under the
+re-frozen rule, run the seven residual label probes (24 profiles each,
+50/100 iterations, four draws per cell, three arms), reduce them under the
+corrected 703 criterion, then Stages E and F unchanged. Stages A, B and C
+stand and are not rerun; the run-4 timing panel, the layout envelope and
+draw 1's seam receipts are consumed and reused. The report keeps every
+earlier entry, including the stopped pair as the historical reading.
+Dispatch the run-4 continuation forked from the 717 session
+`01a1c117-0ba8-7773-b93d-afc8d124647c`.
