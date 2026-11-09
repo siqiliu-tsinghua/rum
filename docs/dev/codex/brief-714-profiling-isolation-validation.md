@@ -281,3 +281,56 @@ measured; 2 filtered out`), the two standing skips, the failure protocol and
 the no-restart rule. Resume with the run-30 session
 `01a1bff6-dd94-7ca3-9cb6-8cd02384aa0a` as fork; report and stop for the
 director's gate.
+
+## Stage-31 ruling — 2026-11-09: the draw-2 red is the witness's process-global assertion, not a second exclusion hole
+
+Run 31 built the binary privately (`rum_runtime-95cd5fbb46da4f1c`, sha
+`66950c70a42b05b91c6a06c5d38bc7bd39ce76e078d090f2e91d79374ec56edd`,
+24.46 s), took the R4 receipts, and ran the series: draw 1 green
+`1413/0/5` (13.42 s), draw 2 red `1412/1/5` (14.44 s) with
+`brief713_collector_unwind_releases_owned_boundary` failing at
+`crates/rum-runtime/src/runtime/suspension/core/profile_queue/tests.rs:492`:
+`refunded=976` against `expected=296`; the same binary at 1 thread is green
+`1413/0/5`. **The STOP is accepted** — Deliverable 2 worked exactly as
+written: a non-green draw ended the series, the log is saved, the same
+binary was reproduced once at 1 thread, and nothing was retried, restarted
+or relabelled. The 37-draw series is over at draw 2; it will be rerun from
+zero as a new stage after the repair and no draw is carried over.
+
+**The red is the witness, not the product.** The failing assertion is
+`bytes - brief713_probe_process_bytes()` (`tests.rs:451/480-492`) — the
+delta of `PROCESS_BYTES`, a **process-global** counter
+(`crates/rum-runtime/src/runtime/profiling/logical/budget.rs:8`) claimed at
+`Budget::new`/`Budget::claim` (`:36/:49`) and released in `Storage::drop`,
+`Budget::drop` and `Storage::resize` (`:64/:79/:89`). The lease serializes
+lease holders (`TEST_LEASE`, `lease.rs:9/31`) but gates no refund: a
+thread-local `Storage` is refunded when its thread is destroyed
+(`logical/segments.rs:43-44` header charged at `:452-461`; the budget test
+at `budget.rs:117-160` documents exactly this lifetime), and libtest runs
+each test on its own thread, so another test's thread exit can refund its
+storage inside our witness's window. The witness's own charges inside the
+window are exactly `RECORD_PATH_STORAGE_BYTES` 248 + boundary 48 = 296
+(`tests.rs:435/481`); +680 cannot be a double refund of anything this test
+owns, and every substantive assertion held
+(`original_assertion_caught=true no_nested_admission=true disposed=true
+rows_unchanged_since_retire=true`, `faults=0`).
+
+**The class:** any assertion on the delta of a process-global counter
+across a window, under parallel test execution, is invalid — however rare
+the collision. Brief 713 shipped two (`tests.rs:492` and
+`tests/brief713_teardown_paused.rs`'s "bytes 0 after reset"), and
+`budget.rs:159/185` carry the same shape. The instrument is what must be
+repaired — not by weakening it: the replacement must still redden when a
+refund is missing.
+
+**Plan:** brief 715 (design-only, Scope NONE) diagnoses the class and
+proposes the isolation mechanism with a calibrated injection (a known-size
+concurrent refund moves the current reading and must not move the repaired
+one), the class inventory, and the missing-refund falsifier and mutant. I
+rule on it; brief 716 implements; my gate; then a **fresh 37-draw series**
+as stage 32 of this brief, from zero, same bars.
+
+**State:** run 31's report, draw index and `c31-*` logs archived at
+`.temp/brief-714/evidence/run31/`; dispatch log as
+`.temp/logs/archive/cdx_brief_714.run31`; no live edit; tree clean at
+`7780ed57`.
