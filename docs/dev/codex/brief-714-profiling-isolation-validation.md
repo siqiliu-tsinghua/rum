@@ -45,15 +45,18 @@ earlier (7/12)^24 = 2.41e-6 is not the bar.
 
 - Only `.temp/brief-714/`: evidence, logs, the extracted artifact, the draw
   index.
-- No live edit, no git mutation (the three read-only freeze queries in R1
-  below are the only authorized git commands), no inventory/census replay,
-  no host suite, no workspace run (the director's), no
+- No live edit, no git of any kind (R4: the dispatch prompt forbids it and
+  the freeze receipt is the director's), no inventory/census replay, no host
+  suite, no workspace run (the director's), no
   timing/instruction/microbench lane.
-- Verify the source freeze without re-hashing git-tracked source (user
-  ruling 2026-11-04): `git rev-parse HEAD` equals
-  `03b4c1337f665a9d69aac06dd8887fa1399951be` and `git status --porcelain` is
-  empty at the start. The built test binary's SHA-256 is the untracked-
-  artifact receipt that must not change across the campaign.
+- The source freeze is bound without git and without re-hashing
+  git-tracked source (user rulings 2026-11-04 and the dispatch prompt's git
+  prohibition), per R4: quote the director's receipt
+  (`.temp/director/freeze-714.json`, written after this ruling's commit),
+  measure the live artifact's sha (R2.1) and the fresh build's 16/16
+  object-code identity (R2.2), and record the one draw binary's sha. The
+  built test binary's SHA-256 is the untracked-artifact receipt that must
+  not change across the campaign.
 
 ## Deliverable
 
@@ -125,8 +128,7 @@ failure stops with the index intact; never overwrite a completed draw.
 ## Hard rules
 
 `AGENTS.md` and `TEMPLATE.md`; the testing policy is rum-only (this campaign
-compares rum against itself); no git mutation (the three read-only freeze
-queries in R1 are the only authorized git commands), no live edit, no
+compares rum against itself); no git of any kind (R4), no live edit, no
 network, no third-party engine, no new `unsafe`; a red is reproduced at
 `--test-threads=1` before it is called a defect; all output under `.temp/`;
 the report is `rum-report/1` JSON with copied verdicts and the
@@ -231,6 +233,41 @@ The dispatch log is archived as `.temp/logs/archive/cdx_brief_714.run29`;
 the draw index restarts empty and **no draw was consumed**. The series, the
 count bar (`1413 passed; 0 failed; 5 ignored; 0 measured; 2 filtered out`),
 the two standing skips, the failure protocol and the no-restart rule are
-unchanged. Resume with the run-29 session
-`01a1bfea-f759-7300-b535-0b938b990ba8` as fork; report and stop for the
+unchanged. Report and stop for the director's gate.
+
+## Stage-30 ruling — 2026-11-09: the freeze receipt is the director's; the worker runs no git
+
+Run 30's second preflight STOP is well taken for the same reason as the
+first, one level up: the dispatch prompt itself carries a user-level
+instruction, "Do not run git in any form, not even git status: the director
+owns git", which outranks a ruling inside the brief. R1 is inoperable as
+written and is withdrawn from the worker's duties: git stays entirely mine.
+Run 30 did no build, no draw and no edit (0/37, empty index; its evidence is
+archived at `.temp/brief-714/evidence/run30/`).
+
+The starting freeze is bound by four receipts, each quoted in the report:
+
+1. **Director receipt** (`.temp/director/freeze-714.json`, written by me
+   after this ruling's commit and push): the committed HEAD, `git status
+   --porcelain` empty, `git diff --quiet
+   03b4c1337f665a9d69aac06dd8887fa1399951be HEAD -- Cargo.toml Cargo.lock
+   crates` exit 0. It is a director measurement; quote it verbatim.
+2. **Live artifact identity** (worker, R2.1): sha256 of
+   `target/release/deps/librum_runtime-c71407e195689fc9.rlib` =
+   `d9f2339d05f2babf3c37f6da750e6ec72702febf2d42785a96f600c493642627`.
+3. **Source binding by code** (worker, R2.2): the fresh private-target
+   build's 16/16 object-code identity with the live artifact. Object code
+   is a function of source and flags alone — my two-path probe reproduced
+   all 16 members byte-for-byte while only metadata hashes moved — so the
+   tree this build compiles is the tree the accepted artifact came from.
+4. **No live edit** (worker): the report's `changes: 0 files`; the director
+   re-runs the git checks at the gate.
+
+The worker runs no git command of any kind and rehashes no tracked source.
+Everything else stands unchanged: R2's live-identity, fresh-build,
+object-identity and certificate bars; R3's build discipline and bounds; the
+37-draw series, its count bar (`1413 passed; 0 failed; 5 ignored; 0
+measured; 2 filtered out`), the two standing skips, the failure protocol and
+the no-restart rule. Resume with the run-30 session
+`01a1bff6-dd94-7ca3-9cb6-8cd02384aa0a` as fork; report and stop for the
 director's gate.
