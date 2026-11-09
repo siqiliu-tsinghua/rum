@@ -2213,3 +2213,141 @@ no expectation change, no new skip, no deadline or serialization change, no
 `unsafe`, no repo change outside the MAY list.
 
 Resume with `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-22 stop): Q30 the erasure bar is the machinery; Q31 the constructor pin moves by the added context
+
+Run 22 is accepted for Q29.
+
+- **Shape.** Exactly three existing repair bodies changed — `profiling/reset.rs`
+  (configured local, unconditional clear, gated activation),
+  `evaluation_cache/profile/mod.rs` (same shape) and `profiling/logical/epoch.rs`
+  (`lease_drained`: acquire, reset, check zero, drop, drain without the
+  lease) — plus the new witness test. `TestLease::drop` is SHA-exact; no
+  other production source moved.
+- **Witness.** Pre-fix it is red at 8 and 1 with
+  `seeded cache-source|eval_module_by_source|f=Some([1]) counter|eval_module=Some([1])`
+  and `cache_cleared=false lexical_cleared=false`; after the repair it is
+  green at 8 and 1 with `cache-source=None`, `counter=Some([0])`, both
+  cleared, and all four profile flags still `2` (the reset does not
+  activate a disabled profile). The fixture seeds through a real
+  `f[]:=Module[{x=3},x];f[]` evaluation and `Flags::set` publish swaps; no
+  direct static seed.
+- **Focused gates.** The named-writer pair, the observer summary pair and
+  the timing pair are each 5/5 at 8 threads and green once at 1; `lp07`
+  alone is green at 1 and 8 in all seven modes; both Q13 drain falsifiers
+  are green at 1 and 8.
+- **Acceptance.** Full serial with `--nocapture` and the 600 s bound:
+  1409/0/5. Then three consecutive full-8 runs and one full-1 run, each
+  1409/0/5 with exactly the two root-context skips; the fixed binary SHA is
+  unchanged across them. Names 1416 (+1 witness); census 1219; all standing
+  replays green. The three instrument FLAGs are settled and none fixed a
+  failure; no assertion was weakened.
+
+### Q30 — the erasure bar covers the added machinery, not common identifiers
+
+The literal bar ("`lease`, `Admitted`, `Publication`, `WRITE_GATE`,
+`CURRENT_GEN`, `admit` and `publish` have no symbols and no strings") is
+unsatisfiable as worded, and the words are not the bar's subject.
+
+- The scanned artifact is the exact release unit from
+  `cargo build --release`: `librum_runtime-c71407e195689fc9.rlib`,
+  sha256 `4118c33570e0f15e81d06d0c83f1216a08a81b410df3e6f7ead5fac87df042e6`,
+  features `[]`, opt-level 3, `test: false`.
+- The 38 `lease` symbols and 70 `lease` strings are all
+  `accounting_mode::lease` (pre-existing production accounting:
+  `RetentionLease`, `FrozenCapacityVisitor`, `Mode` impls);
+  `ReportedOutput::publish` and `ProfileQueue::publish_stashed_after_consumer`
+  are pre-existing production; `profiling::config::publish_cold_load`
+  predates 713 (brief-635 amendment 2, `f38657d0`); the one `admit` string
+  is a rustdoc sentence. Renaming any of them is outside the MAY list and
+  would be a false erasure.
+- The added machinery is absent from object code: over all 16 extracted
+  `.rcgu.o` members, zero symbols and zero strings for `TestLease`,
+  `Admitted`, `ExclusiveAdmitted`, `AdmittedGate`, `Publication`,
+  `WRITE_GATE`, `CURRENT_GEN`, `FENCING`, `RESET_WAITING`,
+  `AdmittedBoundary*`, `LogicalProfileTestLease`, `admit_exclusive`,
+  `blocks_unregistered_thread`, `fence_admitted_writes`, `lease_drained`,
+  `drain_for_lease`, and no mangled `profiling6lease` namespace. I
+  reproduced these zeros independently.
+- The remaining hits live in `lib.rmeta` only. Rustc 1.85 encodes
+  cfg-stripped item names in the metadata name table by design. My
+  calibration: a standalone minimal crate (`.temp/director/probe-cfg`,
+  rustc 1.85.0) with `#[cfg(test)] pub fn test_only_fn`,
+  `#[cfg(any(test, feature = "f1"))] pub fn feature_only_fn` and
+  `#[cfg(test)] mod uniquetestmod;` built `--release` with features off
+  shows each name once in `lib.rmeta` and zero times in every object file
+  and in `nm`. The metadata name table is not evidence of compiled code in
+  either direction.
+
+Ruling: the certificate is qualitative, scripted and four-columned.
+
+1. **Object code**: zero symbols and zero strings for the added machinery
+   over the extracted object members, per name, with the per-name zero
+   quoted.
+2. **Symbols**: zero for the same names; the qualified `profiling::lease`
+   mangled namespace absent.
+3. **Pre-existing**: every unqualified `lease`/`admit`/`publish` occurrence
+   enumerated with provenance — `accounting_mode::lease` 38/70,
+   `ReportedOutput::publish`, `ProfileQueue::publish_stashed_after_consumer`,
+   `profiling::config::publish_cold_load` (brief 635), the rustdoc `admit`
+   sentence — and excluded from the bar; no renaming.
+4. **Metadata**: every added-machinery name present in `lib.rmeta` listed
+   separately, with the standalone probe calibration quoted, and excluded
+   from the bar.
+5. **Reproducibility**: exact artifact sha256, `ar x`, per-member `nm` and
+   `strings`, the probe, and the counts. Define the matching rule for each
+   column (exact qualified names for the machinery; substring enumeration
+   with provenance for the excluded words).
+
+The certificate replaces the literal word list; it does not relax the
+erasure requirement — it moves it onto object code and per-name precision.
+No source change is needed for Q30; no metadata suppression, no renaming,
+no other bar touched.
+
+### Q31 — the constructor pin moves by this brief's own added context
+
+The stdlib lib suite is `1110/1/53`: `exact.rs:178` sees 176 live
+constructor contexts against the pin 175 (and the combined pin 177 would be
+178). The evidence is a clean +1/0: one added row — file
+`crates/rum-runtime/src/runtime/evaluation_cache/profile/source.rs`, target
+`std::option::Option::None` — and zero removed; the source file's hash is
+C18-identical and unchanged through C20, C21, C22-start and
+C22-preaccept; the pin file is unedited. The added context is this brief's
+own test-cfg admission refusal in `current_evaluation_profile_source_symbol`
+(`source.rs:316`); the pre-brief file's equivalent was the inherited
+configured-disabled `return None` (old `:162`), and the wrapper adds its
+own. The count is a hand-maintained assertion whose comment block records
+every prior source-driven update (LP03 174, LP04 175); the source is the
+authority.
+
+Ruling: update the two pins to 176 and 178, with one comment line naming
+the brief-713 admission-refusal `None` at
+`evaluation_cache/profile/source.rs:316`; keep `legacy_clone_claims == 2`
+and both preserved-clone assertions exactly; do not touch the corpus, the
+frontier or any other expectation. Re-run
+`cargo test -p rum-stdlib --lib --offline --locked -j 8 --no-fail-fast`
+to `1110/0/53`, quote the two new assertion values, the unchanged legacy
+pair and the new row. The `production.tsv`/fingerprint/cache delta from the
+176th row is derived and expected; disclose it. This is a stale-count
+refresh forced by this brief's own source, not a weakening: the exact
+count remains enforced.
+
+### Order after Q30/Q31
+
+Q31 is one test-expectation update in
+`crates/rum-stdlib/src/tests/retention_closure/compiler_oracle/exact.rs`;
+Q30 is a certificate with no source change. The runtime source does not
+move, so the Q29 acceptance series stands and is **not** rerun:
+
+1. Apply the Q31 pins.
+2. Stdlib lib suite green (`1110/0/53`), quote the counts and the new row.
+3. Build the Q30 certificate on the final tree with the exact release
+   command; record the artifact sha256 (the rum-runtime unit is unaffected
+   by the stdlib test edit, but rebuild and record it).
+4. Confirm the runtime source hashes are unchanged from C22 (1603),
+   census 1219, names 1416 and the two standing skips.
+5. Report and stop for my full gate. The workspace run, the native-ZeroMQ
+   host checks, the 37-run validation and every performance gate remain
+   mine.
+
+Resume with `CDX_FORK`.
