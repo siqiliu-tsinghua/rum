@@ -156,11 +156,8 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   noise floor. Say plainly when a gate was not rerun, and why.
 - **Hot recursive frames.** Move locals, not control flow. Stack bytes per
   level are a first-class cost; put the check where the growth is.
-- **Codex's recurring failure modes.**
-  - optimizing sub-second hotspots;
-  - fixing at the wrong layer;
-  - masking a per-op cost;
-  - over-generalized scope.
+- **Codex's recurring failure modes.** Optimizing sub-second hotspots;
+  fixing at the wrong layer; masking a per-op cost; over-generalized scope.
 - **Permission lists.** They get under-enumerated, so write a disclosure duty
   instead. An inventory rule must cover what new call edges make reachable.
 
@@ -186,8 +183,11 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   four-column certificate on the release artifact (fixed-SHA anchor
   retired: object code identical across the source change). **Brief 716
   accepted; 714 stage 32 green 37/37; brief 718 accepted at 3 Ir/call
-  (workspace 4,212/0/61; ledger -5,611,507). Next: 717 restarts at Stage
-  A.** `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  (workspace 4,212/0/61; ledger -5,611,507). 717's restart is green through
+  Stage C and the D ledger; its label panel STOPed on the 5,000-iteration
+  `-repeat` wrap (the session iteration-work limit) and continues on the
+  2026-11-10 ruling's sequential construction.** `BRIEF_WORKER=mst`
+  (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

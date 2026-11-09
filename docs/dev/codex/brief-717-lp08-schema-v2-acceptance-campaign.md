@@ -701,3 +701,106 @@ retention contract fingerprints and the two promoted certificate cells were
 re-emitted canonically, and the typed-slot, LP01, ownership and rejection
 census replays are green on that source. A zero-delta replay against those
 committed rows is the Stage-A bar; a further moved row is still a STOP.
+
+## Restart Stage-D label STOP ruling and continuation (director, 2026-11-10)
+
+The restart STOPed at the first red of the 23-label instruction panel, before
+any reduction: on `downvalue-exact-miss-repeat` the base probe — the exact
+benchmark body `Do[fExact[2], {5000 * rumMicroScale}]` wrapped in the
+protocol's outer `Do[..., {i, 1, 50}]` — requests a static nested iteration
+product of 250,000 against the session's iteration-work limit of 100,000 and
+exits 1 at `evaluation exceeded iteration work limit (100000)` before any
+evaluation; the identical binary reproduces it at 100. **The STOP is well
+taken.**
+
+**The construction is the protocol's precedent, and the wall is mine.** The
+probe generator wraps every label body in `Do[body, {i, 1, n}]` at n = 50/100
+— the accepted width32000 shape, whose body is itself a 40-iteration `Do`
+(40 x 100 = 4,000), and `block-symbol-only-repeat` (1,000 x 100 = 100,000,
+exactly at the limit and accepted). The two `-repeat` downvalue labels carry
+a 5,000-iteration body, so the same shape cannot exist: 5,000 x 50 = 250,000.
+The protocol assumed a body whose own iteration count is small against the
+limit; for these two labels that assumption is false. The runtime enforces
+the product statically at the iterator-spec setup
+(`crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/
+iteration/spec.rs:312`), so the program never begins. No candidate result
+exists, no product regression is established, and no workload, limit or
+source repair was attempted — none is authorized.
+
+**My reproduction and calibration** (`.temp/director/probe-717f/`; the
+restart's base binary `3a3d9035…`, stdin closed, profiling off):
+
+- The worker's exact program at n = 50 and n = 100: exit 1,
+  `evaluation exceeded iteration work limit (100000)`, no completion marker.
+- The exact body repeated N times as N sequential top-level statements:
+  exit 0 and the completion marker at N = 50 and N = 100 on the same binary.
+  The iteration budget is a nested product scoped to one iterator and
+  restored on exit, so sequential statements keep each body at 5,000 and
+  never accumulate.
+- Callgrind on that shape (base and final, n = 50/100, one draw each,
+  0.5-0.7 s per capture): the seam is not called on this label at all (0
+  calls, 0 self-Ir in both arms); per-function rows show only the 713
+  admission rename pairs (12,294 = 12,294 and 22 = 22, zero net), the
+  accepted once-called intercept `drive_input_request` 54->55,
+  `Session::drop` 34->33, and hash-seed rows. No new work in the changed
+  code.
+- `downvalue-pattern-miss-repeat`, the second 5,000-iteration label: the
+  wrapped form fails identically; the sequential form completes at 50 and
+  100.
+
+**Ruling.** The two `-repeat` labels are probed with the exact benchmark body
+repeated N times as N sequential top-level statements at N = 50/100, with
+the label's standard setup lines and marker `probe-done-<label> N`; every
+other element of the protocol is unchanged (four draws per cell, three arms,
+Callgrind, the same binaries, stdin closed, profiling off). The body text
+and the 50/100 repetition counts are preserved; only the repetition
+mechanism changes, and only because the session's own static nested-product
+limit forbids the wrapped form. The report discloses the construction and
+keeps the failed wrapped attempts. The other eleven unrun labels use the
+standard wrapped construction. The prepared reducer is unchanged: its unit
+stays one body repetition at N = 50/100.
+
+**What stands** (verified from the restart's receipts): Stage A's zero-delta
+replays against the 718 baseline — fingerprints 68, both certificate cells,
+ownership 61/79/8,820, typed slots 10/0/1 with the two designated forced-red
+scratch controls, rejection census unchanged; the base and layout source
+copies are byte-identical to the retained arms (my own `diff -rq`: 0
+differences) and the frozen snapshot equals the live tree (my own diff: 0
+differences; `git status --porcelain` empty). Stage B: five modes, 20
+process captures, 40 cases, 96 decoder calibrations,
+`semantic_differences=0`; publication 14/0/0 at 8 and 1; host schema 4/0/0
+at 8 and 1 with 30 legacy byte comparisons. Stage C: both builds SHA-equal
+on the forced rebuild (`4172f097…` runtime, `e5ad1b9b…` CLI); queued F6
+57/49/20/71 at 501/1001 calls; resumed own vectors
+[5300,10600]/[2650,5300]/[1000,2000] at 50/100 calls, slopes 106/53/20, call
+slope 1; stack 18,208 x depth + 12,376, residual 0, samples
+103,416/194,456/285,496/376,536 twice on both builds; the test build's
+warning set is the three standing `test_builtins` plus the five accepted
+probe-fixture names, no new. Stage D's timing panel: 12 passes over 120
+labels, layout envelope median 0.41% / p90 1.52% / max 7.25%, 23 labels
+require instruction settlement (the seven named plus every residual except
+the standing width4000 exclusion). The ledger: four interleaved draws per
+arm; the six seams exact at identical call counts in every draw
+(13/23/18/20/20/18 -> 3/18/14/18/18/14); cold helpers 0 self-Ir / 0 calls;
+the source-timing seam 109,077 calls, 22 -> 3 per call; deterministic delta
+-3,539,044 (plus the source-timing 2,072,463, recorded alongside); and the
+final range lies entirely below the base range
+(16,456,664,763-16,459,564,722 against 16,462,010,680-16,469,760,476),
+recorded, not gated. The ten completed label panels carry 240 profiles; on
+the two source-timing labels base/final/layout read 22/3/22 per call at
+50/100 calls, caller 125 (width32000) and 91 (guarded-fallback) unchanged,
+helper 0.
+
+**Continuation scope.** Complete the 13 unrun label panels (the two
+`-repeat` labels under this ruling's construction; the other eleven
+standard), reduce all 23 under the corrected 703 criterion — per-function
+self-Ir at identical call counts, the layout envelope, the 713 admission
+rename pairs only where both spellings carry equal self-Ir and equal call
+counts in the same capture, the two accepted once-called intercepts, and a
+growth row in changed code is a STOP — then Stage E and F unchanged. Do not
+rerun the ten completed panels, the timing panel or the ledger draws; Stages
+A-C stand and are not rerun; keep every raw profile and both failed
+attempts. Stage E's workspace bar: the worker's sandbox cannot run the nine
+native ZeroMQ loopback tests (the standing EPERM boundary); report it with
+the serial reproduction as the brief already directs, and never call it a
+skip — my host run is the authoritative workspace.
