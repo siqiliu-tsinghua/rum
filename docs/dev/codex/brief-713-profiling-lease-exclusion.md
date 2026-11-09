@@ -1859,3 +1859,55 @@ Q4 B/C arms and the Q10 handoff -> the standing replays with the once-only
 pinned census -> the acceptance runs (full lib 3x at 8 threads, once at 1,
 the workspace, the release erasure, the test-name delta). Resume with
 `CDX_FORK`.
+
+## Director ruling — 2026-11-09 (stage-18 stop): Q26 the Q4 frame disables the refusal, not the predicate
+
+Q25 is accepted as implemented: `Arena::allocate` returns `Result<CellId,
+Cell>` with every failure path carrying the cell (the free-slot check now
+precedes `Node` construction, no drop inside), and all three callers release
+both guards before disposal and retirement; the real-cap sole-boundary
+witness passes at 8 and 1, the implicit-drop scan is red before, zero after,
+red under its caller-side mutant, and zero after SHA-exact restoration;
+focused 16/16 at 8 and 1; 1,415 test names. The new `arena.rs` closure and
+the ownership candidate (43 MOVE / 1 NEW, exact 61/79/8,769) are recorded for
+my gate.
+
+The Q26 stop is correct and the fault is in my Q4 frame, not in the attach
+body. Making `blocks_unregistered_thread()` return `false` at its first line
+makes the function lie, and the frozen probe
+(`brief712_probe.rs:96`) asserts that same function is `true` for its
+outsider — the instrument contradicts the experiment's own frozen text
+before the barrie, so the attach body is never reached and the 30 s
+timeouts (8 and 1) carry no attachment information. The coordinate
+correction (parent barrier :105, observer print :109) is accepted.
+
+### Q26 — the frame removes `admit()`'s refusal branch; the predicate stays truthful
+
+The alternative is authorized exactly as proposed:
+
+1. The frame deletes only `admit()`'s registration-refusal branch
+   (`lease.rs:93-95`): after `WRITE_GATE.read()`, no `blocks_unregistered_thread()`
+   check, then the unchanged depth increment and `Some(Admitted)`. The
+   helper keeps its body and its meaning; `acquire_write()` keeps its check;
+   `WRITE_GATE`'s read and write protocol and the depth assertions are
+   untouched. The experimental condition is "the read-side exclusion layer
+   does not refuse", not "the predicate is false".
+2. The probe and its expectation are unchanged, and its registration
+   assertion stays truthful and load-bearing: it still proves the outsider
+   is unregistered while every admission in the window succeeds.
+3. Arms: A (fixed body, frame intact) green `stale_attach_no_fault=true` —
+   the recorded mask, unchanged. B (frame + fixed attach) must be green
+   `true` at 8 and 1. C (frame + the assertion-before-lookup mutation) must
+   be red `false` at 8 and 1. Between B and C the attach body is the only
+   variable.
+4. Restore the frame byte-exactly (fixed `lease.rs` SHA `2ea56da9…`),
+   re-run the unframed fixed attach green at 8 and 1, disclose every mutated
+   line per arm, and keep the logs under `evidence/mutants/`.
+5. Never mutate `blocks_unregistered_thread()`'s body for this matrix again;
+   a frame that needs the predicate's answer to change is a STOP, not a
+   calibration.
+
+Then the remaining mutants including Q4 arm C and the Q10 handoff, the
+standing replays with the once-only pinned census, and the acceptance runs
+(full lib 3x at 8 threads, once at 1, the workspace, the release erasure,
+the test-name delta). Resume with `CDX_FORK`.
