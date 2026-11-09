@@ -4361,3 +4361,76 @@ internal-encoding ones is C2-settled for everything else. Its encoding
 tuples become `OwnedObligation { owner: <the G13 step that types that
 slot> }`, as the transport classification already assigns them. C2 closes
 when no row has an open non-encoding tuple.
+
+## Director continuation 3 (2026-11-10) — C2 resumes on the final source
+
+The pause condition is satisfied. Brief 717's acceptance at `7f9397d3`
+certifies LP08's schema-v2 publication and closes the logical-profiler
+line; brief 624's correctness question is answered in its accepted design
+(no semantic loss: the ordinary and resumed paths perform the same
+remaining comparisons, stability tests and trace updates, and only the
+ordinary path records those phases), so the 16 diagnostic `Lost` rows are
+re-settled under the logical accounting rather than carried.
+
+**Source.** The measurement input is the committed tree at `7f9397d3`,
+frozen for this run. Nothing tracked may change; the report append to this
+brief is the only tracked edit. Record the entry and final tree hashes.
+
+**Rebase once** (ruling of 2026-10-20):
+
+- `entry-hashes.json` (2,093 files from `f205e535`, after G15-C1) is the
+  fingerprint baseline. A row whose enclosing function is byte-identical
+  on the final source carries its accepted evidence by fingerprint; the
+  receipt names the function fingerprint and the file hash.
+- A row whose enclosing function changed or moved is re-checked in full
+  against the final source — required tuples, coverage and mutant receipt
+  — and the re-check is recorded per row. `Transferred` and drop proofs in
+  changed functions are re-established, not carried.
+- A new producer edge is a new row; a site that is gone is `Retired` with
+  the change cited; a moved site is paired, never dropped.
+- The **16 diagnostic `Lost` rows** (P0256, P0259, P0266, P0314, P0315,
+  P0413, P0431, P0484, P0487, P0489, P0509, P0511, P0515, P0814, P1472,
+  P1507) are re-settled first, under the logical contract: a paused and
+  resumed call records one final outcome as on the queued path, and
+  pauses get their own counters. Each either closes with its receipt
+  (`Equal` or its proper class) or remains `Lost` with a minimized
+  mechanism and a drafted repair brief.
+
+**The 353 residuals.** The settlement rules, calibration, mandatory
+negative controls, checkpointing and stop-loss are unchanged from this
+brief. The residual ledger is `residuals.tsv` / `residual-list.tsv`: 280
+unsupported schema, 37 compiled-no-binding, 18 survived, 16
+caught-incomplete, 2 C1 edge; 328 LocalTail, 13 StrictDropGap, 7
+StrictCallerGap, 5 StrictOtherCarrier. Its three `what_remains` groups are
+the work plan: 284 need the concrete local continuation/carrier phase or
+variant (never a fabricated default), 25 the closed Drop-type or
+caller/dispatch proof, 44 the native request/adapter lifecycle driver.
+
+**Execution, not review.** The two zero-gain batches that stopped
+continuation 2 were source-only residual-family reviews with no probe
+executed. This continuation's stop-loss clock starts fresh and counts only
+batches that execute the concrete mutant/carrier work the residual table
+names; a review batch that gains nothing is not a batch for that clock.
+Park a hard row after one bounded attempt and move on.
+
+**Closure.** C2 closes when no row has an open non-encoding tuple. A row
+whose only open tuples are internal-encoding ones is settled with
+`OwnedObligation { owner: <the G13 step that types that slot> }`.
+`NoObservableTail` stays a proposal grouped by mechanism for my ruling. Any
+valid real-build DIFF keeps C2 open and drafts its repair brief. The port
+tables are readied as the final deliverable.
+
+**Scene and scratch.** `.temp/brief-621/continuation3/` is gone (the
+hygiene pass prunes subdirectories of old brief roots); this brief's own
+copies at `.temp/brief-623/` are the scene — `settled.tsv` (1,032 rows and
+their verdicts), the residual ledgers, `frozen-policies.tsv`,
+`required-tuples.tsv`, the mutant schema and the generators. **New scratch
+goes under `.temp/g15-c2/`** (a top-level root the hygiene pass does not
+prune), not into subdirectories of `.temp/brief-623/`; root-level ledger
+files of `.temp/brief-623/` may be updated in place. State plainly what is
+missing rather than reconstructing it silently.
+
+**Report.** Append the report to this brief in the format above, with a new
+first item for the diagnostic re-settlement and the rebase table, and
+produce `rum-report/1` (`report.py check 623` OK). Stop at the report for
+my gate.
