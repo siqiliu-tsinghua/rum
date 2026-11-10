@@ -488,3 +488,98 @@ stash population (14 entries), the third an inverted cleanup
 assertion; the final keyed arm is the evidence. The 20-record
 `InstrumentationFault` retirement is likewise a visible diagnostic
 property of the accepted fault, not a guest-language loss.
+
+## Director gate (2026-11-11) — continuation run 3: the copied formatter red is real, confined to the added lines, and the continuation formats the added code before stage B
+
+Run 3 (log `.temp/logs/cdx_brief_723.log`, 9,206 lines, sha256
+`a43489f2…`, memory-scope peak 3.64 GB, rc=0) completed the corrected
+duplicate bar, the missing-owner and zero-match fallback routes, the
+diagnostic-arena allocation cap, the permanent-regression calibration at
+8 and 1 threads, the per-source private base/candidate builds with the
+forced candidate SHA check, and the six-panel native re-read, then
+STOPed at stage A's copied `cargo fmt --check` (exit 1) with no live
+edit. **The STOP is well taken and the red is real; it is confined to
+the added lines.**
+
+**My own reproductions.** Live `cargo fmt --check` exits 0. On the
+copied candidate `.temp/brief-723/source-run3-regression-candidate-v2`,
+`cargo fmt --check` exits 1 with exactly the four file diffs; the copy's
+three production files hash exactly to `candidate-edits.json`'s `after`
+values (`0b2101bd…` collector, `21e89b00…` logical/mod, `4363ef94…`
+profile_queue) and the live files to its `before` values (`166c9f33…`,
+`205acce8…`, `90f8da7c…`). The diffs touch only added code — the two
+one-line `#[cfg(any(test, feature = …))]` attributes and the expression
+layout in the new `take_evaluation_pass_boundary`, the sort position of
+the new re-export and of `mod fixedpoint_pass;`, and the body layout of
+the new `publish_evaluation_pass_after_return` — and the only
+pre-existing text that moves is the unchanged use line and module list
+rustfmt re-orders. The live file's 85 existing
+`test-builtin-memory-growth` references already use the wrapped spelling
+rustfmt demands, so the one-line spelling is the outlier, not the
+surrounding file.
+
+**The executed evidence is reproduced from the raw logs.** Corrected
+duplicate: one fault, zero transfer, `second_select=None`,
+`second_fault=false`, the stash intact at 8, 20 records retired under
+`InstrumentationFault`, guest 73, reset stash 0, charged bytes 0, and
+the drain unable to attach retired records. Missing-owner and zero-match:
+transfer 0, stash intact, `faults=0`, the existing
+`publish_stashed_after_consumer` publishes later, no lost boundary,
+guest 73. Allocation cap: the arena requires growth, a real `add`
+failure retires 19 records under `DiagnosticCap` and one under
+`LastDrop`, no panic, language identical. Permanent regression: base
+`0/2` red and candidate `2/2` green at 8 and 1, P1470 `0/2` red, P1471
+`1/1` red at both (the two-pause Throw control green), every red
+confined to `evaluate.once_unstable` counters with language equal.
+Native re-read: 579 records per arm whole-record equal to the accepted
+receipts (base 90 records / 10 DIFF, 12 / 8, 470 / 0 valid 468, fresh
+2 / 2, nested 1 / 1, extensions 4 / 3; candidate 0 DIFF except fresh 2
+and extensions 2). Forced rebuild: fresh compile, `spot_check=pass`,
+candidate and force SHA equal at `0eefa70a…`, CGU=1, offline/locked.
+Entry manifest 2,713 files with exactly my three ruling files as the
+delta; both artifact indices 457 files hash-exact, run-1 and run-2
+receipts preserved; the four protected scenes have no file newer than
+the run start; `report.py check 723` OK, 668 citations; `git` clean and
+`live-hash-delta-run3.json` empty.
+
+**Ruling.**
+
+1. The copied `fmt` / `check --all-targets` gates are real: stage B's
+   acceptance and the live tree's gate both require a fmt-clean tree.
+   The accepted candidate's added code was never fmt-checked (brief 722
+   recorded that deviation); this run is its first execution. No design
+   or behavior is implicated.
+2. **The repair is formatter-only.** In the copied candidate run
+   `cargo fmt`. The receipt is the full accepted-candidate → formatted
+   diff, which must be exactly rustfmt's output: four files, no token
+   change beyond the reflow and the two sort orders, no hand edit, and
+   the test body and declaration text unchanged. Then `cargo fmt
+   --check` exits 0 and `cargo check --all-targets` exits 0 (stage-A
+   item 6). Apply the same formatter pass to the `tests/mod.rs`
+   declaration in every copied arm that carries it, so the arms differ
+   only by the mechanism they name.
+3. **Formatting is not a shape change.** The accepted design, the
+   three-file organization and every mechanism stay exactly as accepted
+   at brief 722; the formatted bytes are the installable shape. Stage B
+   installs the formatted candidate, and the three install hashes
+   become the formatted hashes (not `0b2101bd…` / `21e89b00…` /
+   `4363ef94…`). My byte-identity check against brief 722's accepted
+   candidate is superseded on formatting only, which the diff forces;
+   every other acceptance criterion is unchanged.
+4. **Re-anchor the candidate-side receipts on the formatted source.**
+   Rebuild the candidate (private target, one CGU, Rust 1.85.0
+   offline+locked, `--force` spot check) and re-run the four corrected
+   probes, the permanent-regression calibration (candidate `2/2` green
+   at 8/1, P1470 `0/2`, P1471 `1/1`) and the six candidate native
+   panels (579 records, whole-record equal to the accepted receipts).
+   The base-side receipts stand — the base copy contains none of the
+   added lines — provided the continuation first verifies it is
+   byte-identical to run 3's base copy.
+5. No assertion, witness, inventory, exclusion or bar is weakened or
+   changed. `standing replays` and the whole of stage B remain
+   unexecuted.
+
+Next: format, re-run the copied sanity gates and the re-anchored
+receipts, then stage B exactly as written. The three foreign-probe
+calibration failures, the two copied-probe compiler launch failures and
+the setup launch failure remain recorded, not gated.

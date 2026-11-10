@@ -216,11 +216,46 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   permanent test (existing accessors only; no probe seam), per-source
   rebuilds plus the `--force` spot check, copied fmt/check; then stage B.
 
-**Next, in order** (the branch queue): **brief 723 continuation 2**, the
-implementation of the fixed-point pass publication (stage A's remaining
-failure-frontier proof and the permanent-regression calibration, then
-stage B's live insertion with the standing replays, the disabled cost
-gate and the acceptance suites); then continuation 9 of brief 623 re-settles
+  **Brief 723 stage A run 3 STOPs at the copied formatter; the STOP is
+  well taken and the red is confined to the added lines.** Run 3 (9,206
+  lines, sha256 `a43489f2…`, peak 3.64 GB) passed the corrected duplicate
+  bar (one fault, zero transfer, second select `None` with no second
+  fault, stash intact at 8, 20 records retired under
+  `InstrumentationFault`, guest 73, reset releasing the stash to zero
+  charged bytes), missing-owner and zero-match (the existing publisher
+  still publishes later, `faults=0`, no lost boundary), the allocation
+  cap (19 `DiagnosticCap` + 1 `LastDrop` retirement, no panic), the
+  permanent-regression calibration (base `0/2` red, candidate `2/2`
+  green at 8/1, P1470 `0/2`, P1471 `1/1` with its two-pause Throw
+  control green), the per-source private builds with a fresh forced
+  rebuild SHA-equal at `0eefa70a…`, and the six-panel native re-read
+  (579 records per arm exact); then `cargo fmt --check` on the copied
+  candidate exited 1. My gate: live fmt exits 0; the copy exits 1 with
+  exactly four file diffs; the copy's three production files hash
+  exactly to `candidate-edits.json`'s `after` values and the live files
+  to its `before` values; every diff token is in added code and the
+  live file's 85 existing long-cfg references already use the wrapped
+  spelling; entry manifest 2,713 files with exactly my three ruling
+  files as the delta; artifact indices 457+457 hash-exact; protected
+  scenes untouched (0 files newer than the run start); report check 668
+  citations. **Ruled:** the continuation formats only the added code
+  (the full accepted→formatted diff is the receipt, rustfmt-only, no
+  hand edit), runs `fmt --check` and `check --all-targets` green,
+  applies the same declaration formatting to every copied arm, and
+  re-anchors the candidate-side receipts on the formatted source
+  (rebuild plus forced spot check, the four probes, the regression
+  calibration, the six candidate panels); the base-side receipts stand
+  on a verified byte-identical base copy. Formatting is not a shape
+  change: the formatted bytes become the installable shape and its
+  three hashes supersede the brief-722 candidate hashes on formatting
+  only. Then stage B exactly as written.
+
+**Next, in order** (the branch queue): **brief 723 continuation 4**, the
+implementation of the fixed-point pass publication (the formatter-only
+repair of the candidate's added code, the copied `fmt`/`check` gates and
+the re-anchored candidate receipts, then stage B's live insertion with
+the standing replays, the disabled cost gate and the acceptance suites);
+then continuation 9 of brief 623 re-settles
 P1470/P1471 and takes up the `call.stage.prepare_arguments` finding, then
 the remaining groups (270 LocalTail, 45 reopened, 22 strict, the five 719
 edges) — CM, `CHANGELOG.md`, and S10 onward.
