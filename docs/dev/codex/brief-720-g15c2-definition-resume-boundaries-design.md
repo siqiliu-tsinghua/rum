@@ -362,3 +362,83 @@ controls, the two remaining decline records still red until mechanism
 B, the four independent mutants), keeping mechanisms B and C, the
 closed inventory, the drafts and every replay unchanged. Stop for my
 gate; no question is open.
+
+## Director review (2026-11-10) — continuation 2: the route is accepted;
+publication rides the enabled-only profiled queue join
+
+**What I reproduced myself.** Every required number re-derives from the
+raw files with the canonical reader. **Cost:** the explicit caller
+`resume_eval_request_from_checkpoint` is 81,588 instructions / 30 calls
+in all three draws on base, the forced same-source rebuild, publication
+and sampling; the indexed cohort is 86,950 / 32 on its four arms,
+point-equal by draw. All 60 required rows are constant across arms and
+draws, and my own parse matches the submitted tables on every cell (0
+mismatches). My sweep of every `rum_runtime` row outside the 60 finds no
+deterministic equal-call difference against base in any arm.
+Whole-process totals vary as before and are recorded, not gated.
+**Records:** base 21 minimized 8 DIFF / 13 SAME, publication 2 DIFF
+(exactly `C7.loss.P0312.false_guard` and `C7.loss.P0323.false_guard`),
+sampling 0; base 470 frozen 147 valid DIFF / 468 valid / 2 invalid,
+publication 0, sampling 0. The 470-record outputs are byte-identical to
+the accepted run-1 sampling records, and the base outputs to run-1's
+base. Mutants: omit-publication 147, before-recovery 125, omit-sub 1,
+omit-up 1, and in each the changed-id set equals its DIFF set exactly.
+The three Return witnesses read `[1,0,1,0,0,1,0,0,0,0]` under
+misplacement and `[1,1,0,1,0,0,0,0,0,0]` repaired. **Actual edge:** in
+the raw probe log all 147 bound ids have at least one queue-join
+publication, the typed frontier target and a nested pause; the saved
+reach file is exactly that id set. **Builds:** the four arm receipts
+hash-match their binaries and assembled trees; base and the forced
+rebuild share tree, toolchain, command and path, the rebuild is
+`cache_hit=false` with `cargo_exit=0`; the rebuilt binary is
+byte-identical to the old one — a deterministic recompilation with fresh
+executed counts, not a cached artifact. **Scope:** the live tree matches
+the entry manifest (2,710 files, 0 changed, 0 missing, 0 extra); the C7
+scene is 25,251 files with equal size+mtime and the five frozen
+witnesses byte-equal; the 62 distinct commands contain no git and no
+network; `report.py check` verifies 1,552 citations. Source deltas:
+base→publication exactly two files, base→sampling four, base→maintenance
+those four plus the two tests and six generated inventories; driver, the
+mode trait, storage dispatch, the three typed frontiers and Return
+recovery are byte-identical.
+
+**Why the route satisfies the ruling.** The publication lives in
+`ProfileQueue::append`, reached only from the cold, non-inlined
+`append_profiled` and only when the storage is profiled, so the disabled
+path executes nothing new: the 24 disabled captures show zero
+instructions in the flush, the publisher, the shared constructor and
+`Profiled::pause`, and the caller row is exactly where it was. On the
+enabled side it is the queue's own insertion shape — `Context::capture`,
+a charged `Kind::Boundary` cell, `deferred=false`, at the nested
+frontier after the RHS recovery and before the carried suffix join. The
+owner lookup matches root and epoch in the existing registry, drains
+only that control and generation, manufactures nothing when ownership is
+missing, and leaves foreign records deferred; the dedicated foreign test
+proves it across all three families and both joins. The shared
+one-record constructor has exactly two callers, the existing Session
+publisher and the new join, and the extraction is behaviorally identical
+to the loop it replaces.
+
+**Recorded, not gated.** (1) The forced rebuild happens to reproduce the
+old binary byte-for-byte; the control is the fresh compile and the fresh
+executed counts. (2) The owner lookup is a linear scan under the
+existing registry mutex on the enabled-only append; no enabled
+performance claim is made, and the default path carries none of it. (3)
+The campaign arms carry the scratch probe module and native fixture
+while the maintenance arm does not; all cost arms share one scaffold, so
+the A/B is fair, and the installed tree is the four production files.
+(4) The native fixture and the lifecycle test are scratch in this round;
+the implementation installs the foreign and lifecycle regressions and
+re-runs the campaign from a copy.
+
+**Ruled.** The route is accepted: it meets the hard line (enabled-only,
+caller 81,588/30 with three draws and a genuine same-source control), it
+repairs the whole matrix, and it is the queue API's own insertion path
+rather than a new mechanism. Mechanism B remains the accepted private
+sampling change, byte-identical to its accepted records. No question is
+open. Next: my implementation brief 721 installs publication and Return
+first and sampling second, with the permanent foreign and lifecycle
+regressions, the canonical inventory refreshes and the full acceptance
+(the caller-inclusive 60-row cost lane, the 470-case rum-vs-rum matrix,
+the focused and workspace suites, the microbench lane). The two dead
+ends stay dead, and the historical STOP stays visible.

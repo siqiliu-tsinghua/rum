@@ -74,10 +74,28 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   publication must ride enabled-only code outside the disabled path.
   The continuation must find and prove that route (caller row 81,588/30,
   three draws, same-source control) before re-running the whole matrix.
+  **Continuation 2 (2026-11-10) is accepted:** publication now rides the
+  existing enabled-only profiled queue join — the driver, mode trait,
+  storage dispatch, the three typed frontiers and RHS recovery stay
+  byte-identical — and the explicit caller is 81,588/30 in all three
+  draws on base, the forced same-source rebuild, publication and
+  sampling (indexed 86,950/32), with all 60 required rows point-equal.
+  Publication closes the 144 terminal-open records and the three Return
+  witnesses (147 → 0 on the 470 frozen campaign, 8 → 2 on the 21
+  minimized, leaving only the two declining `false_guard` records);
+  sampling closes those two; the four mutants are caught at 147, 125, 1
+  and 1; all 147 bound ids reach the actual join at the typed frontier
+  with a nested pause; the foreign-deferred test passes on all three
+  families. I reproduced every number from the raw captures and records,
+  and the live tree, the C7 scene (25,251 entries) and the no-git/no-
+  network scope are clean. The route is the queue API's own insertion
+  shape, inserted after the RHS recovery and before the suffix join, so
+  the disabled path executes nothing new.
 
-**Next, in order** (the branch queue): brief 720 continuation 2 (find
-an instruction-identical publication route; no attribute or outlining
-retries), then my implementation brief and its gate, then continuation 8
+**Next, in order** (the branch queue): brief 721 (implementation of the
+accepted route — stage P publication/Return first, stage S sampling
+second, permanent foreign and lifecycle regressions, canonical inventory
+refreshes, full acceptance) and its gate, then continuation 8
 of 623 (re-settle the three Lost rows; then the 270 LocalTail rows, the
 45 reopened rows, the 22 strict Drop/caller rows and the five new 719
 edges) — CM, `CHANGELOG.md`, and S10 onward. The two root-context reds

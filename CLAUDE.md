@@ -165,12 +165,10 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
-- **Branch queue:** G15-C2's remaining rows (719 repaired P0248; 720 run 1
-  accepted in substance with one cost STOP on the shared publication hook;
-  continuation 1 confirmed the STOP but attempted no working route; next is
-  continuation 2 — find an instruction-identical publication route — then
-  its implementation, then continuation 8 at 342 residuals + 3 Lost);
-  then CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
+- **Branch queue:** G15-C2's remaining rows (719 repaired P0248; 720's cost
+  STOP is resolved by continuation 2 at 81,588/30; next is brief 721, then
+  continuation 8 at 342 residuals + 3 Lost); then CM, `CHANGELOG.md`
+  (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`, schema-v2 stages A/B, seam
   718, 717 certified `changed_code_growth=0`). **Brief 719:** P0248's
@@ -178,16 +176,18 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   36/36 bindings SAME, workspace `4,215/0/61`). **Continuations 5-7:**
   25 rows Equal, ten `NoObservableTail` groups over 27 rows, 1,485 cells
   re-read SAME, 77,930 keys, three **Lost** rows (147 bound differences).
-  **Brief 720 run 1 accepted in substance:** the copy reproduces 21/21
-  minimized and 470/470 records, publication closes the 147, sampling
-  the two declining-stage records, four mutants are caught, 18 lifecycle
-  cells pass — but the shared `Mode::pause` route costs the disabled
-  caller +957 at 30 identical calls. **Continuation 1 STOPs on the same
-  row:** its cold/noinline "revision" is codegen-identical to the
-  publication, and my own outline probe is 82,563/30 — the +957 is
-  shared-caller layout, so nothing in `drive_frames` restores it;
-  continuation 2 must ride enabled-only code outside the disabled path.
-  `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  **Brief 720 run 1:** the copy reproduced 21/21 minimized and 470/470
+  records and closed the 147, but its shared `Mode::pause` hook cost the
+  disabled caller +957. **Continuation 1 refutes the driver shape:** its
+  cold/noinline "revision" is codegen-identical, and my own outline probe
+  is 82,563/30, so the +957 is shared-caller layout.
+  **Continuation 2 accepted:** publication rides the enabled-only
+  profiled queue join (driver, mode, storage dispatch, frontiers and RHS
+  recovery byte-identical); the caller is 81,588/30 in three draws on
+  every arm (indexed 86,950/32), all 60 rows equal, 147 → 0, the three
+  Return witnesses `[1,1,0,1,0,0,0,0,0,0]`, sampling closing the two
+  `false_guard` records, four mutants caught at 147/125/1/1; brief 721
+  installs it. `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers
