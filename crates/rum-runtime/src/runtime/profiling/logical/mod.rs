@@ -24,6 +24,7 @@ pub(in crate::runtime) mod synchronous;
 mod totals;
 
 pub(in crate::runtime) use budget::Storage;
+pub(in crate::runtime) use collector::take_evaluation_pass_boundary;
 pub(in crate::runtime) use collector::{drain_attached, drain_attached_for, set_hooks_admitted};
 pub(in crate::runtime) use context::{
     Context, ContextGuard, ExecutionScope, refresh_execution_control,

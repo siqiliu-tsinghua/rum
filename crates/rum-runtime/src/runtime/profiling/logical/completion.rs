@@ -6,6 +6,31 @@ impl ProfileBoundary {
             |p| matches!(p.key, AggregateKey::Runtime {phase, ..} if phase == expected),
         )
     }
+
+    pub(super) fn has_runtime_key_admitted(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        access: &crate::runtime::profiling::lease::Admitted,
+        expected: &str,
+    ) -> bool {
+        self.epoch
+            .path_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                Some(access),
+                self.record,
+            )
+            .is_some_and(
+                |p| matches!(p.key, AggregateKey::Runtime {phase, ..} if phase == expected),
+            )
+    }
 }
 
 impl Call {

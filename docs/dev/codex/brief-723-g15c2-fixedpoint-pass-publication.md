@@ -685,3 +685,123 @@ brief 713's admitted class: a body holding an `Admitted` calls only
 Next: repair, calibrate in that order, re-anchor, then finish stage B.
 The two compiler launch failures, the three preparation-helper failures
 and the setup failure of this round remain recorded, not gated.
+
+## Director gate (2026-11-11) — continuation run 5: the admission repair is accepted, and both STOP legs are known classes (the hash-seed interner rows and the switch-gated baseline reds); the host gate closes stage B
+
+Run 5 (log `.temp/logs/cdx_brief_723.log`, 12,238 lines, sha256
+`2b18bb9a…`, memory-scope peak 11.45 GB, rc=0) executed the authorized
+repair exactly as ruled. `completion.rs` gains only the admitted
+companion `has_runtime_key_admitted` (reading `path_admitted` under the
+held permit, the strict helper and its seven callers byte-identical);
+the selector calls it at `collector.rs:898` and calls
+`epoch.fault_admitted(Some(&access))` in the duplicate branch
+(`collector.rs:911`); the other four installed files are byte-identical
+to run 4's install. The class table covers every callee of both new
+functions. Calibration B produced the predicted second-site red and
+calibration C the both-fixed green; every receipt was re-anchored on
+the repaired source, the standing replays were replayed, and the run
+then STOPed on two legs: the six rum-core interner rows and the
+unfiltered workspace run.
+
+**My own reproductions of the repair and its calibration.** Live hashes
+`7b6eaedb…` (collector), `e9bdaf65…` (completion), and `dd855b77…`,
+`f1f93cd0…`, `045577c0…`, `51617544…` for the four run-4 files. The
+site-1-only debug arm fails exactly as ruled: `nested profiling
+admission` (left 1, right 0) at `lease.rs:89:33`, stack `admit ←
+Epoch::fault (epoch.rs:851:22) ← take_evaluation_pass_boundary
+(collector.rs:923:9)`, harness exit 101; the stash guard is dropped
+before the fault, so there is no poisoned-mutex destructor abort and
+the worker disclosed that difference rather than claiming one. The
+both-fixed duplicate probe reads one fault, no nesting, transfer 0,
+20 `InstrumentationFault` retirements, stash reset 0 and charged 0.
+I ran the LP01 parent myself on the live debug binary: five modes green
+at 8 threads (163.29 s) and at 1 thread (162.23 s), exit 0, where run 4
+aborted. The permanent-regression calibration reads base `0/2` red at 8
+and 1, candidate `2/2` green, P1470 `0/2`, P1471 `1/2` with the
+two-pause Throw control green. My own JSON comparison of the native
+re-reads shows all six families whole-record equal to the run-3
+accepted records (90/12/470/2/1/4 = 579); the two final mutant arms'
+104-record disabled panels are byte-equal to the accepted ones with
+the 20/14 omissions. The forced rebuild is a fresh compile
+(`cache_hit=false`, 65.3 s) with `spot_check=pass` and sha
+`ae5985f7…` equal to the candidate's.
+
+**My host gate closes the acceptance.** `cargo fmt --check` clean;
+`cargo check --all-targets` rc=0 with zero warnings; the seven focused
+families 56/56 at 8 and at 1 threads; the runtime lib `1420/0/5` with
+only the two standing skips at 8 and 1 (the unfiltered run is
+`1420/2/5`, the two failures being `lp655`/`lp656`); the six
+switch-gated host targets 13/0/0 at both counts under
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`; the workspace `4,219/0/61` over
+63 binaries at 8 threads, peak 13.76 GB of 16, `oom_kill=0`; the
+canonical replays idempotent (the live ownership TSVs byte-equal to the
+canonical generated copies, `local-contracts.tsv` byte-equal to
+`target/brief-544/local-contracts.tsv`); `report.py check 723` OK with
+1,717 citations.
+
+**STOP leg 1, the disabled cost, is disposed.** My own
+`callgrind_annotate` parses of the raw captures (definition and
+fixed-point, draw 1, three arms) reproduce the worker's numbers: the 13
+required rows exact with matched calls (e.g. 81,588/30 and 58,208/26),
+both new helpers absent, and the six variable rows confined to
+`Symbol::system`, `intern_symbol_text` and `intern_text`. Those rows
+are nondeterministic **within the same executable**: on definition
+`intern_text` the SHA-identical force binary's three draws span 8,782
+instructions (6,303,468..6,312,250) while the base max to
+candidate/force union min gap is 203; and the same row moves *below*
+base on the fixed-point panel (candidate 3,609,788 against base
+3,617,820 in draw 1). A row that varies within identical binaries is
+not a deterministic row, and the brief's bar is the exactness of
+deterministic rows with no deterministic increase. The cost gate
+passes on its own bar: the six rows are recorded as the hash-seed
+class, no exclusion is added to the instrument, no cost fix is
+authorized, and the forced SHA and 18 raw captures stand.
+
+**STOP leg 2, the acceptance reds, is the known baseline class.** The
+worker's single workspace run was unfiltered and stopped at the
+switch-gated `lp03_phase_rows` target, whose tests record only under
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`; it reproduced at 1 thread and on
+the copied base with unchanged test source, and the two runtime
+failures are the standing `lp655`/`lp656` root-context reds. My host
+gate runs the accepted procedure (the seven standing skips, then the
+six switch-gated targets with the switch), so both reds are the
+documented classes, not product signals. The brief's own text did not
+restate the seven standing skips; that omission is mine and is recorded,
+not carried against the worker.
+
+**The timing lane, run at the gate.** The worker's STOP ended the round
+before item 6, so I ran the brief-637/703 protocol myself: base,
+candidate and layout-control release `rum-cli` binaries from the
+verified snapshots at one path with one codegen unit (`e057e4c8…`,
+`36d504b4…`, `30c71ded…`, fresh compiles, offline and locked), four
+interleaved passes per arm with the lane's idle guard, all 14 profiling
+switches off, 120 labels, in-kernel `AbsoluteTiming`. The four tier
+medians (candidate / layout control) are 0.9946 / 0.9955 under 50 µs,
+1.0001 / 0.9952 at 50–200 µs, 0.9989 / 0.9971 at 200 µs–1 ms and
+1.0023 / 1.0003 over 1 ms; the layout envelope is median 0.51%, p90
+2.74%, max 10.37% |movement|. Four labels separate positively, all
+inside the envelope: `cases-wide-no-match` +0.66%,
+`replace-leaf-rebuild-small` +0.50%,
+`rewrite-guarded-decline-fallback` +0.55%,
+`sort-symbol-default-width16000` +0.81%. The 703-style instruction
+probes on those exact bodies (n = 50/100, four serial draws per cell,
+three arms, profiling off) show no separated distribution: per
+iteration, medians base / candidate / layout are 2,503,244 / 2,503,212
+/ 2,503,197 for `cases-wide-no-match`, 72,461 / 72,455 / 72,526 for
+`replace-leaf-rebuild-small`, 76,548 / 76,516 / 76,545 for
+`rewrite-guarded-decline-fallback` and 23,592,087 / 23,592,557 /
+23,591,832 for `sort-symbol-default-width16000`, every range
+overlapping. The instruction lane decides and reads identical; the
+timing movements are recorded as layout noise, not a regression.
+
+**Ruled.** The installed tree is the accepted implementation of brief
+723 stage B: the fixed-point pass publication, the two admitted call
+sites, the fourth production file for the bridge only, and the six
+canonical inventory replays. Nothing is weakened: no assertion,
+witness, inventory, exclusion or bar changed; the protected scenes and
+every prior receipt are byte-exact; the run made no git call. Next:
+commit and push the install, archive the log as `cdx_brief_723.run5`,
+and dispatch continuation 9 of brief 623, which re-settles P1470/P1471
+on the repaired source and takes up the `call.stage.prepare_arguments`
+finding. The two standing root reds remain a separate obligation.
+

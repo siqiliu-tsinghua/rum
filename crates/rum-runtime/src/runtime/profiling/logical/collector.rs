@@ -868,3 +868,55 @@ pub(in crate::runtime) fn drop_belonging_admitted(
         );
     }
 }
+
+/// Transfer only the completed pass stashed immediately before its witnessed
+/// EvaluationReturn. The owning queue and epoch select exactly one boundary.
+#[cold]
+#[inline(never)]
+pub(in crate::runtime) fn take_evaluation_pass_boundary(
+    epoch: &Arc<super::Epoch>,
+    control: &Arc<crate::runtime::RequestInterruptState>,
+) -> Option<Arc<ProfileBoundary>> {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let access = crate::runtime::profiling::lease::admit()?;
+    let mut queued = stash().lock().unwrap();
+    let mut matches = queued.iter().enumerate().filter(|(_, boundary)| {
+        Arc::ptr_eq(&boundary.epoch, epoch)
+            && boundary.belongs_to_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                &access,
+                control,
+            )
+            && boundary.has_runtime_key_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                &access,
+                "evaluate.once_unstable",
+            )
+    });
+    let (index, _) = matches.next()?;
+    if matches.next().is_some() {
+        drop(queued);
+        epoch.fault_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            Some(&access),
+        );
+        return None;
+    }
+    Some(queued.remove(index))
+}

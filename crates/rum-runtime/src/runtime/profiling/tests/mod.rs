@@ -3,6 +3,7 @@ mod context_scaling;
 mod engine_scaling;
 pub(in crate::runtime) mod engine_support;
 mod epoch_contract;
+mod fixedpoint_pass;
 mod index;
 mod logical_totals;
 mod module;

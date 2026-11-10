@@ -166,12 +166,12 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
 - **Branch queue:** G15-C2's rows (721 installed the definition-resume
-  repair; continuation 8 found P1470/P1471 Lost; brief 722 accepted the
-  fixed-point publication design; brief 723 reproduced it; its four
-  STOPs are ruled and continuation 5 repairs two nested-admission call
-  sites, then finishes stage B; C2 at 334 residuals + 2 Lost + 35
-  `NoObservableTail`; prepare-arguments → continuation 9); then CM,
-  `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
+  repair; 722 accepted the fixed-point design; 723 installed it — the
+  pass publishes before the next pass resumes, both nested-admission
+  sites repaired, LP01 five modes green at 8/1; C2 at 334 residuals + 2
+  Lost + 35 `NoObservableTail`; continuation 9 re-settles P1470/P1471
+  and takes prepare-arguments); then CM, `CHANGELOG.md` (before S10),
+  G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Briefs 719-721:** P0248's
   fallback repaired (8/8 recipes, 36/36 bindings SAME); publication
@@ -181,11 +181,11 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   P2604 settle Equal (470/470), and P1470/P1471 are new Lost rows.
   **Brief 722 accepted (design):** the copy repairs all 18 fixed-point
   differences with 84 controls exact and both omissions caught (20/14).
-  **Brief 723 stage A:** 90/12/470 reproduced (74/74), lifecycle and
-  foreign probes pass, the duplicate fault reads one visible fault,
-  zero transfer and guest 73; run 4 re-anchored the formatted receipts,
-  installed the five files, replayed the standings, and STOPed on a
-  real nested admission at LP01 — continuation 5 repairs both sites.
+  **Brief 723 accepted (run 5):** the fixed-point pass publication is
+  installed — run 4's LP01 nested admission is repaired at both sites —
+  and LP01 five modes are green at 8/1; native 579 records and the 20/14
+  omissions re-anchor; the interner cost rows are the hash-seed class
+  and the workspace red the switch-gated class; `4,219/0/61`.
   `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 

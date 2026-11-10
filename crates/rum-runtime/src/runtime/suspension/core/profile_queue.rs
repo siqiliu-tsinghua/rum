@@ -353,7 +353,51 @@ impl ProfileQueue {
         ) {
             return false;
         }
-        consumer || self.return_inserted()
+        if consumer {
+            true
+        } else if !self.return_inserted() {
+            false
+        } else {
+            self.publish_evaluation_pass_after_return()
+        }
+    }
+    /// Enabled-only frontier: the resource-check event is already appended,
+    /// and the witnessed fixed-point consumer has not been pushed yet.
+    #[cold]
+    #[inline(never)]
+    fn publish_evaluation_pass_after_return(&mut self) -> bool {
+        let Some(epoch) = self.epoch.as_ref().filter(|e| e.is_valid()).cloned() else {
+            return true;
+        };
+        let control = {
+            let owners = owners().lock().unwrap();
+            owners
+                .iter()
+                .find(|owner| {
+                    Arc::ptr_eq(&owner.root, &self.root) && Arc::ptr_eq(&owner.epoch, &epoch)
+                })
+                .map(|owner| Arc::clone(&owner.control))
+        };
+        let Some(control) = control else {
+            return true;
+        };
+        let Some(boundary) =
+            crate::runtime::profiling::logical::take_evaluation_pass_boundary(&epoch, &control)
+        else {
+            return true;
+        };
+        let Some(context) = Context::capture(&epoch) else {
+            return false;
+        };
+        self.add(
+            Cell {
+                kind: Kind::Boundary(boundary),
+                context: Some(context),
+                deferred: false,
+            },
+            self.frontier(),
+            None,
+        )
     }
     // Only the existing Profiled typed-push arm calls this after success.
     // The registry identifies this queue; foreign controls stay stashed.

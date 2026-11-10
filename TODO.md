@@ -277,14 +277,39 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   green and five modes at 8/1), then re-anchor and finish stage B items
   3-7. Production semantics identical; nothing weakened.
 
-**Next, in order** (the branch queue): **brief 723 continuation 5**, the
-nested-admission repair (the admitted companion and the `fault_admitted`
-call sites), its calibrated falsifiers and the re-anchored receipts,
-then stage B's acceptance, final native matrix, disabled cost gate,
-timing lane and definition neighbour; then continuation 9 of brief 623 re-settles
-P1470/P1471 and takes up the `call.stage.prepare_arguments` finding, then
-the remaining groups (270 LocalTail, 45 reopened, 22 strict, the five 719
-edges) — CM, `CHANGELOG.md`, and S10 onward.
+  **Brief 723 stage B run 5 accepted: the admission repair is installed
+  and stage B is closed, and both STOP legs are known classes.** Run 5
+  (12,238 lines, sha256 `2b18bb9a…`, peak 11.45 GB) installed the
+  admitted companion in `completion.rs` (`e9bdaf65…`) and the selector's
+  two admitted calls (`7b6eaedb…`), the other four files byte-identical
+  to run 4. Calibration B reproduced the predicted second-site red
+  (`Epoch::fault` → `lease.rs:89`, exit 101; the stash guard is already
+  dropped, so no poisoned-mutex abort and the worker disclosed it),
+  calibration C one fault with no nesting. My own gate: LP01 five modes
+  green at 8 and 1 threads (163.29 s / 162.23 s); the six native panels
+  whole-record equal to the run-3 accepted records (90/12/470/2/1/4 =
+  579) and the two mutant arms' 104 disabled records byte-equal (20/14
+  omissions); runtime `1420/0/5` at 8 and 1 with the two standing skips;
+  focused 56/56; six switch-gated host targets 13/0/0 at 8 and 1;
+  workspace `4,219/0/61`; canonical replays idempotent; report 1,717
+  citations. The six variable rum-core interner rows vary within the
+  same binary (the SHA-identical force's own three draws span 8,782 Ir
+  against a 203 base-to-union gap, and the same row moves below base on
+  the fixed-point panel), so they are recorded as the hash-seed class
+  with no exclusion added and the cost gate passes on its own bar. The
+  workspace red was the unfiltered switch-gated lp03 target plus the two
+  standing root reds, both reproduced on the base. The timing lane
+  (mine) reads four tier medians 0.9946/1.0001/0.9989/1.0023 against the
+  layout control with a 10.37% envelope; its four separated labels all
+  settle by instruction probes at four overlapping draws, so the
+  instruction lane reads identical and the timing is layout noise.
+
+**Next, in order** (the branch queue): **brief 623 continuation 9**, which
+re-settles P1470/P1471 on the repaired source, takes up the
+`call.stage.prepare_arguments` finding, and continues with the remaining
+groups (270 LocalTail, 45 reopened, 22 strict, the five 719
+edges), then
+CM, `CHANGELOG.md`, and S10 onward.
 The two root-context reds
 (`lp655`/`lp656`) remain a separate standing obligation. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by

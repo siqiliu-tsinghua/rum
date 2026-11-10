@@ -9136,3 +9136,35 @@ the implementation brief; after the repair's gate, continuation 9 of
 623 re-settles P1470/P1471 and continues with the remaining groups (the
 270 LocalTail rows, the 45 reopened rows, the 22 strict Drop/caller rows
 and the five 719 edges). Stop for my gate; no question is open.
+
+## Director gate (2026-11-11) — continuation 9 of 623, after brief 723's acceptance
+
+Brief 723 is accepted and installed: the fixed-point pass publishes
+before its next pass resumes, both nested-admission call sites of the
+accepted selector are repaired, and the LP01 five-mode parent is green
+at 8 and 1 threads on the installed source. The repaired source is the
+baseline for this continuation.
+
+Continuation 9's order:
+
+1. Re-settle P1470 and P1471 on the repaired source under the unchanged
+   settlement rules: the ten bound native differences, the twelve
+   minimized cases, the 84 exact controls, the two own-row omissions
+   (20/14) and the 470-record definition panel must reproduce, and the
+   two rows must carry their own fresh caught omissions and
+   rum-vs-rum cells. A row that does not settle stays residual with its
+   reason; no assertion, witness or inventory is weakened.
+2. Take up the pre-existing `call.stage.prepare_arguments` difference
+   observed in the surrounding-Return records of the fixed-point
+   witnesses (brief 722 Q2). Measure it as its own observation: is it a
+   resumed-only diagnostic loss, a queued-path value, or a phase that
+   the consumer legitimately cannot observe? Settle it with its own
+   caught omission if it is a row, or carry it as a named residual with
+   the source proof; do not fold it into the fixed-point receipt.
+3. Continue with the remaining groups in the tail's order (the 270
+   LocalTail rows, the 45 reopened rows, the 22 strict Drop/caller rows
+   and the five 719 edges), replaying the standing inventories before
+   the first acceptance suite and quoting every verdict.
+4. Stop for my gate with the report; no git, no commit, no tag, and the
+   protected scenes untouched.
+
