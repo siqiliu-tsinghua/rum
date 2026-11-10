@@ -324,22 +324,22 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   report 1,203 citations. C2 is Open at 328 residuals (256 LocalTail, 45
   reopened, 22 strict, 5 719 edges) + 1 Lost (P0492).
 
-**Next, in order** (the branch queue): **brief 724 continuation 1, the
-design-only prepared-stage sampling repair** for P0492 (the resumed
-preparation samples the consumer's later Return/Throw as the earlier
-preparation outcome). Run 1 is accepted as a STOP: the mandatory P0496
-reach is unsatisfiable — PrepareArguments is always stage 0, both
-suspension resumes pass `stage_index + 1`, and the external LHS entry
-passes index 0 prepared — so the obligation is amended to that source
-invariant, and the repair's single insertion at the shared
-`resume_prepared_call_dispatch_frame` covers both prepared-suspension
-constructors by construction. Continuation 1 finishes the copied insertion
-experiments, falsifiers, disabled-cost gate and TEMPLATE drafts; then the
-implementation brief, then brief 623 continuation 10 over the remaining
-tail (256 LocalTail, 45 reopened, 22 strict, the five 719 edges); then CM,
+**Next, in order** (the branch queue): **brief 725, the implementation of the
+accepted prepared-stage family2 shape** for P0492. The design (brief 724,
+run 1 + continuation 1) is accepted: the enabled-only
+`ProfiledPreparedDispatchFrame` delegates to one shared const-generic resume;
+the exact owned boundary is bound to the witnessed consumer cell and
+completed as `None` after installation/normalization and before later
+dispatch; the two extension records that duplicate the witnesses are
+permitted to repair; the core interner rows are the recorded hash-seed class
+(no exclusion); family1 was refused on the disabled neighbor. Stage A
+reproduces the copied matrix and calibrates the permanent test base-red /
+candidate-green / omission-red; stage B installs, replays all seven standing
+inventories, runs the suites, the disabled instruction gate and the
+microbench lane. Then brief 623 continuation 10 over the remaining tail (256
+LocalTail, 45 reopened, 22 strict, the five 719 edges); then CM,
 `CHANGELOG.md`, and S10 onward. P0496's ledger disposition (expected
-unreachable/source-closed) belongs to the C2 settlement round, not this
-design.
+unreachable/source-closed) belongs to the C2 settlement round.
 The two root-context reds
 (`lp655`/`lp656`) remain a separate standing obligation. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by

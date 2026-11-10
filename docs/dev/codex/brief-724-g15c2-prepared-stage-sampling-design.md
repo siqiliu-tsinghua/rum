@@ -189,3 +189,80 @@ Rulings the continuation must carry:
 5. Stop for the director gate with the experiment matrix, falsifier
    calibration, cost receipts and drafts. The two-concrete-family
    zero-progress stop applies.
+
+## Director ruling (2026-11-11) — continuation 1 accepted: family2 is the shape, G1 and G2 are ruled, and brief 725 implements it
+
+Run 2 (log `.temp/logs/cdx_brief_724.log`, 36,174 lines, sha256
+`8e53de44…`, memory-scope peak 3.95 GB, oom 0, rc=0) completed the copied
+design deliverables and stopped at G1/G2. **My gate:** live tree 2,715
+files 0 missing / 0 extra / 0 changed against the continuation entry; the
+five protected scenes replay 132,998 files 0 changed (C9 33,294, C8
+36,460, C7 25,251, brief-623 151, brief-724 37,842). The 16 C9 records:
+all 16 resumed/queued whole lists equal; exactly the nine witnesses differ
+from run 1, and the omission mutant reproduces run 1's 16 records
+whole-record exactly; the seven controls are unchanged. The matrix:
+90/12/fresh2/nested1/definition470 (468 valid) have zero whole-record
+changes; `extension4` has exactly two changed records — the two B722
+extension duplicates — with only the prepare_arguments phase changed and
+the queued arm and language byte-equal. The fixed-point panel reads 104
+instrument-equal, 84 controls equal, P1470 20 and P1471 14 omissions exact
+to C9; P0248 36 whole records equal to a fresh current-base run (the
+historical 719 delta is debug symbol ids only — re-verified by
+normalization); native 60 exact. The five falsifiers' raw event order
+holds: installed < publication < dispatch; omit leaves the record open
+after the actual producer pause; before/after move the publication and are
+caught by the recorded order even with equal totals; wrong-owner closes
+record 200 and leaves record 230 open with the same epoch, control and
+generation; two real pauses yield one bind and one completion. My own
+independent Callgrind parse of the six definition captures reads
+self-sum == summary on every capture and reproduces every required row and
+all 13 differing rows of the submitted table exactly; candidate2 and
+force2 are one SHA (`a7c37947…`).
+
+**G1 ruled: permit exactly the two extension repairs.** The extension
+panel's two changed records are the same two witnesses as
+`C9.arguments.B722.shape.surrounding-return` and
+`C9.arguments.B722.shape.return-effects`; the P0492 defect is what put
+them in the extension panel, so a repair that left them defective would be
+wrong. The bar is amended, not waived: every adjacent record stays
+whole-record exact except those two, whose only permitted change is the
+`call.stage.prepare_arguments` phase moving to the queued value with the
+queued arm, every other phase and the whole language observation
+unchanged — verified phase-confined. The remaining two extension records
+(one retained invalid, one exact) stay byte-equal.
+
+**G2 ruled: the nine interner rows are the standing hash-seed class —
+recorded, not excluded, not gated.** They are the three `rum-core`
+interer functions (`Symbol::system`, `intern_symbol_text`, `intern_text`)
+on all three panels, with identical call counts. The same row moves below
+base on the arguments panel and above on the definition panel, so no
+uniform added per-call work can explain it. The identical binary
+(candidate2 == force2, one SHA) spans 16,878 Ir across four draws on the
+definition `Symbol::system` row; the closest same-binary draw sits 199 Ir
+above base's maximum, against that 16,878 spread, and the candidate-only
+range is 4,899 above it. The only runtime rows that move are two
+decreases (the cold suspension helper −252/−312 Ir at 21/26 calls, the
+flag getter −21/−26 calls). The ordinary dispatch body, the unreachable
+preparation branch, the fixed-point publication and the definition
+publication are byte-exact. The implementation's cost gate re-runs the
+same protocol and must reproduce this class or STOP; no new exclusion, no
+universal no-cost claim, and no causality claim beyond the recorded
+evidence.
+
+**Family2 is accepted as the implementation shape:** six files (five
+modified plus the new `profile_queue/prepared.rs`), the enabled-only
+`ProfiledPreparedDispatchFrame` wrapper over the existing ordinary frame,
+one shared const-generic resume body, the queue-owned binding of the exact
+boundary to the just-inserted witnessed consumer cell, and the completion
+that reads only that resuming queue's first generational cell while
+validating epoch, request-control Arc, logical generation, record and
+OptionalExpr policy. No public TypedFrame or driver change, no phase-name
+or active-stack search, no evaluator-body duplication; the family1
+const-generic-frame refusal on the +1 instruction/call neighbor is
+accepted and recorded. Recorded, not gated: the extra-cancel self-check
+that also fails on base; the missing-binary and builder-lock attempts; the
+P0248 historical harness id delta; the probe-builder scratch adapter; the
+initial seal ordering artifact.
+
+Next: brief 725 implements this shape in two stages, and P0496's ledger
+disposition stays with the C2 settlement round.
