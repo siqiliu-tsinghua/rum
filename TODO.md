@@ -133,12 +133,45 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   files unchanged, C7 25,251 + brief-623 151 protected, 14 build
   receipts, 1,168 fixtures, 36,447 sealed files, 1,715 citations.
 
-**Next, in order** (the branch queue): brief 722, the design-only round
-for the fixed-point phase record's producer-before-consumer sampling
-(P1470/P1471, over the retained C8 draft); then the implementation
-brief; then continuation 9 of brief 623 re-settles P1470/P1471 and
-carries the remaining groups (270 LocalTail, 45 reopened, 22 strict, the
-five 719 edges) — CM, `CHANGELOG.md`, and S10 onward.
+  **Brief 722 (design, 2026-11-11) is accepted:** the copied experiment
+  proves the producer-before-consumer pass publication. All 90 fixed-point
+  records and all 12 minimized records reproduce whole-record from the
+  frozen C8 logs; the candidate reads 0 DIFF with the 84 non-DIFF records
+  exact, both fresh witnesses and the explicit nested witness SAME, and
+  the 470 definition records exact against brief-721 (468 valid, the same
+  two invalid). The probe-disabled arm equals the candidate byte-for-byte
+  and both omissions are caught (P1470 20 records, P1471 14, every one
+  exactly one one-pass Throw/Return signature, the two-pause Throw green
+  under P1471); the frontier receipts read 714 + 215 at
+  `after=EvaluationReturn before=fixed_point_consumer`. My own parse of
+  the 18 raw Callgrind captures re-derives every selected row
+  (fixed-point caller 58,208/26; definition caller 81,588/30), every
+  deterministic rum row equal across base/candidate/forced control, every
+  named call count equal, both new helpers absent, and the forced sha
+  equal; the only differing rows are the standing symbol-less
+  libc/ld/helper address class. The extra surrounding-Return probes expose
+  an unchanged `call.stage.prepare_arguments` difference (semantic-SAME,
+  language exact) — a separate measured finding, not part of this
+  selector. Live tree 2,712 files unchanged (digest `388f7e69…`), C7
+  25,251 + C8 36,460 + brief-623 151 protected, 172 sealed artifacts,
+  448 citations. **Ruled:** accepted in full; Q1 stage A executes the
+  fresh resource-return rejection, both-pause cancel/abandon/restart,
+  foreign/interleaved generation and cap/registration-race probes with
+  real producers before any live edit; Q2 the prepare-arguments finding
+  stays outside and continuation 9 takes it up; Q3 keep the exact
+  epoch/control/generation matching (duplicate faults visibly and
+  transfers nothing; zero match and missing owner leave the stash intact
+  and the existing publisher still publishes); Q4 the three-file
+  organization exception stands and the split stays deferred.
+
+**Next, in order** (the branch queue): **brief 723**, the implementation
+of the fixed-point pass publication (stage A: the copied failure-frontier
+proof and the permanent-regression calibration; stage B: the live
+insertion with the standing replays, the disabled cost gate and the
+acceptance suites); then continuation 9 of brief 623 re-settles
+P1470/P1471 and takes up the `call.stage.prepare_arguments` finding, then
+the remaining groups (270 LocalTail, 45 reopened, 22 strict, the five 719
+edges) — CM, `CHANGELOG.md`, and S10 onward.
 The two root-context reds
 (`lp655`/`lp656`) remain a separate standing obligation. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by
