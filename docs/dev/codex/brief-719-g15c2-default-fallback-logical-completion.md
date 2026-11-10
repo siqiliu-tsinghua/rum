@@ -335,3 +335,74 @@ measurement stop the round. Source-only reviews do not start the clock.
 **State.** C2 Open at 394 residuals + 1 Lost; no manifest, no CHANGELOG, no
 S10; brief 719's repair line open. Resume after a route proves both bars,
 or on a STOP.
+
+## Director continuation 2 (2026-11-10) — the native-stack lifecycle STOP is well taken; the caller's frame must return to base
+
+**What I reproduced.**
+
+- Scope: the diff is 15 files — the four permitted source files, the
+  authorized one-line `RuntimePathTimingToken` derive, nine canonical
+  inventory replays and the new test file; `completion.rs` and
+  `queue_api.rs` are untouched; the report checks (4,117 citations).
+- Probes, my own runs on the sha-bound campaign binaries: base red on
+  `C4.loss.decline`, `C4.loss.both` and `C4.loss.decline_trace`; the
+  candidate makes all eight recipes SAME; the 36 frozen P0248 bindings
+  are 36/36 SAME on both arms with exact real/disabled parity.
+- Disabled instruction rows, my own six fresh Callgrind captures
+  (three per arm, the fourteen `RUM_PROFILE_*` at 0): `try_apply_down_values`
+  192,000 instructions at 400 calls in both arms, deterministic. The
+  instruction bar is met.
+- The new permanent tests are red on the base tree (0/3 at 8 and 1) and
+  green on the candidate (3/3 at 8 and 1); runtime `1416/0/5`, stdlib
+  `1111/0/53`, the host profiling suites green at 8 and 1, workspace
+  `4,204/11/61` — read from the raw logs, not rerun by me, because the
+  candidate is not acceptable and will change.
+- **The STOP, reproduced directly:** `native_stack_thread_scope` on the
+  candidate binary (`0ac4207c…`) is 6 passed / 2 failed at 8 and at 1
+  threads; the matched base binary (`60afc075…`) is 8/0 at both. The
+  nested-session control fails on the solo `dive[24]` recipe: the
+  candidate prints nothing before `StackLimit`, the base prints
+  `past-first-poll`. Deterministic, not a sandbox boundary.
+
+**The mechanism (measured).** The candidate's `try_apply_down_values`
+stack frame grew from `0x2b8` to `0x2f8` (+64 bytes) in the release CLI
+build and from `0x7d8` to `0x9e8` (+528 bytes) in the debug acceptance
+build; `default_fallback::suspend` grew from `0x138` to `0x228`. The
+source is the new by-value `Option<RuntimePathTimingToken>` argument at
+the existing `InputRequired` arm's `suspend` call site. The native-stack
+guard measures `base - current` against the 1 MiB budget; the `dive[24]`
+control sits at the 16-level boundary, and 16 x 528 bytes is enough to
+flip it. This is the hot-recursive-frame rule: stack bytes per level are
+a first-class cost, and the instruction gate cannot see them.
+
+**Ruling.** The STOP is well taken. The candidate is not accepted; P0248
+stays open and C2 stays Open. Everything else measured stands as evidence
+for the next round: the probe matrix, the frozen bindings, the class
+dispositions, the replays, the instruction rows and the three new tests.
+
+**The continuation's fix.** `try_apply_down_values`'s frame must equal the
+base's in both builds, so no new by-value aggregate may cross the `suspend`
+call site: the call returns to the base shape and the profiled selection
+must come from the enabled machinery's own state — the enabled record body
+already runs there and already holds the token, and the opened direct
+phase is the natural marker — preserving today's admission consistency
+between the start, the record and the suspension. `suspend`'s signature
+returns to base. The `profiling/mod.rs` derive is authorized only while
+the final route needs it; revert it if not.
+
+**The copied experiment now carries the stack gate.** On a copied tree,
+show the base red (the three witnesses) and the route green on all eight
+recipes and all 36 frozen bindings with exact real/disabled parity; the
+disabled instruction rows unchanged (192,000 at 400 calls) with the 34
+edges unchanged; `try_apply_down_values`'s frame equal to the base's in
+both the release CLI build and the debug acceptance build; and the
+native-stack lifecycle suite 8/0 at 8 and 1 threads. Only a route green
+on all of these goes live. A route that cannot restore the frames without
+losing the witness is a STOP with the measured rows.
+
+**Stop-loss** unchanged: two consecutive executed bounded attempts with no
+new witness row, no newly closed tuple, no new source fact and no new cost
+or stack measurement stop the round.
+
+**State.** C2 Open at 394 residuals + 1 Lost; no manifest, no CHANGELOG, no
+S10; brief 719's repair line open.
