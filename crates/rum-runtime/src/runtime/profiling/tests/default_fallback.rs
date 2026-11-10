@@ -209,3 +209,71 @@ fn default_fallback_error_return_repeat_and_lifecycle() {
         }
     }
 }
+
+// Regression coverage for definition-resume cancellation and abandonment.
+#[test]
+fn brief720_definition_resume_lifecycle_probe() {
+    let enabled = test_support::enabled();
+    for (kind, setup, source) in [
+        (
+            "down_value_rhs_eval",
+            "f[x_Integer]:=((InputString[\"r1\"];InputString[\"r2\"];83)/;(InputString[\"g\"];True))",
+            "f[2]",
+        ),
+        (
+            "sub_value_rhs_eval",
+            "f[a_][x_Integer]:=((InputString[\"r1\"];InputString[\"r2\"];83)/;(InputString[\"g\"];True))",
+            "f[1][2]",
+        ),
+        (
+            "up_value_rhs_eval",
+            "TagSetDelayed[a,f[a,x_Integer],((InputString[\"r1\"];InputString[\"r2\"];83)/;(InputString[\"g\"];True))]",
+            "f[a,2]",
+        ),
+    ] {
+        for answers in [0, 1, 2] {
+            for reason in [
+                AbandonReason::CancelledRequest,
+                AbandonReason::HelperBestEffortDiscard,
+            ] {
+                let mut session =
+                    crate::runtime::test_builtins::session_with_test_control_builtins();
+                session.eval_text(setup).unwrap();
+                epoch::reset_for_lease(enabled.lease());
+                assert!(matches!(
+                    session.eval_text(source),
+                    Err(EvalError::InputRequired { .. })
+                ));
+                for _ in 0..answers {
+                    assert!(matches!(
+                        session.resume_suspended_evaluation("answer"),
+                        Err(EvalError::InputRequired { .. })
+                    ));
+                }
+                session.abandon_pending_suspension(reason);
+                let rows = Session::logical_profile_test_rows();
+                session.abandon_pending_suspension(reason);
+                assert_eq!(rows, Session::logical_profile_test_rows());
+                let found: Vec<_> = rows.iter().filter(|(key, _)| key.contains(kind)).collect();
+                if answers == 0 {
+                    assert!(found.is_empty());
+                } else {
+                    assert_eq!(found.len(), 1);
+                    let counts = found[0].1;
+                    assert_eq!(counts[0], 1);
+                    assert_eq!(counts[9], 0);
+                    if reason == AbandonReason::CancelledRequest {
+                        assert_eq!((counts[2], counts[8]), (1, 0));
+                    } else {
+                        assert_eq!((counts[2], counts[8]), (0, 1));
+                    }
+                }
+                Session::logical_profile_test_assert_quiescent();
+                assert_eq!(test_support::active(), 0);
+                eprintln!(
+                    "BRIEF720 LIFECYCLE PASS kind={kind} answered={answers} reason={reason:?} definition={found:?} duplicate_abandon=unchanged terminal_open=0"
+                );
+            }
+        }
+    }
+}

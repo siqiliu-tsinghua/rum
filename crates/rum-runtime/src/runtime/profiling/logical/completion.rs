@@ -29,21 +29,25 @@ impl crate::runtime::Session {
             return;
         };
         let control = self.request_interrupt_control.borrow().clone();
-        while let Some(record) = epoch.take_deferred_definition(&control) {
-            let Some(storage) = epoch.storage(std::mem::size_of::<ProfileBoundary>() + 16) else {
-                return;
-            };
-            self.logical_insert_boundary(
-                Arc::new(ProfileBoundary {
-                    epoch: Arc::clone(&epoch),
-                    record,
-                    _storage: storage.into(),
-                }),
-                None,
-                false,
-            );
+        while let Some(boundary) = take_deferred_definition_boundary(&epoch, &control) {
+            self.logical_insert_boundary(boundary, None, false);
         }
     }
+}
+
+/// Drain one record for the exact request control and generation. Both the
+/// Session publisher and the profiled queue join use the same charged owner.
+pub(in crate::runtime) fn take_deferred_definition_boundary(
+    epoch: &Arc<Epoch>,
+    control: &Arc<crate::runtime::RequestInterruptState>,
+) -> Option<Arc<ProfileBoundary>> {
+    let record = epoch.take_deferred_definition(control)?;
+    let storage = epoch.storage(std::mem::size_of::<ProfileBoundary>() + 16)?;
+    Some(Arc::new(ProfileBoundary {
+        epoch: Arc::clone(epoch),
+        record,
+        _storage: storage.into(),
+    }))
 }
 
 impl ProfileBoundary {

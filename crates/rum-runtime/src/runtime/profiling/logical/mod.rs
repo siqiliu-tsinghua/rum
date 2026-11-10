@@ -1527,9 +1527,12 @@ fn pause_call_stage_at_finish_slow(session: &mut crate::runtime::Session, phase:
     if let Some(key) = PhaseKey::from_name(phase) {
         if matches!(
             key,
-            PhaseKey::CallStageDownValues | PhaseKey::DownValuesDirectDefaultLookup
+            PhaseKey::CallStageDownValues
+                | PhaseKey::CallStageSubValues
+                | PhaseKey::CallStageUpValues
+                | PhaseKey::DownValuesDirectDefaultLookup
         ) {
-            // These two producers return the witnessed Option consumed next.
+            // These definition producers return the witnessed Option consumed next.
             // The witnessed dispatch consumer has just been pushed; bind this
             // invocation before another push can replace its insertion handle.
             let Some(entry) = take_phase(key) else {
@@ -1539,7 +1542,7 @@ fn pause_call_stage_at_finish_slow(session: &mut crate::runtime::Session, phase:
                 return;
             };
             if let Some(boundary) = call.retain() {
-                session.logical_insert_down_values_before_consumer(boundary);
+                session.logical_insert_definition_stage_before_consumer(boundary);
             }
         } else {
             complete_phase(

@@ -166,7 +166,7 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
 - **Branch queue:** G15-C2's remaining rows (719 repaired P0248; 720's cost
-  STOP is resolved by continuation 2 at 81,588/30; next is brief 721, then
+  STOP resolved at 81,588/30; brief 721 installed the repair; next is
   continuation 8 at 342 residuals + 3 Lost); then CM, `CHANGELOG.md`
   (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
@@ -182,12 +182,11 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   cold/noinline "revision" is codegen-identical, and my own outline probe
   is 82,563/30, so the +957 is shared-caller layout.
   **Continuation 2 accepted:** publication rides the enabled-only
-  profiled queue join (driver, mode, storage dispatch, frontiers and RHS
-  recovery byte-identical); the caller is 81,588/30 in three draws on
-  every arm (indexed 86,950/32), all 60 rows equal, 147 → 0, the three
-  Return witnesses `[1,1,0,1,0,0,0,0,0,0]`, sampling closing the two
-  `false_guard` records, four mutants caught at 147/125/1/1; brief 721
-  installs it. `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  profiled queue join; the caller is 81,588/30 on every arm (indexed
+  86,950/32), 147 → 0, three Return witnesses fixed, four mutants caught
+  at 147/125/1/1. **Brief 721 accepted and installed** (records 8→2→0
+  and 147→0; workspace 4,217/0/61 on the host — the STOP was the
+  sandbox's nine loopback binds). `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

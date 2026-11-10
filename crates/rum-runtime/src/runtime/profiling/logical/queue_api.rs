@@ -3,9 +3,9 @@ use crate::runtime::Session;
 use std::sync::Arc;
 
 impl Session {
-    /// Sampling-position exception: the down-values stage's own Option slot.
+    /// Sampling-position exception: a definition stage's own Option slot.
     /// The pending owner is borrowed continuously from validation to insertion.
-    pub(in crate::runtime) fn logical_insert_down_values_before_consumer(
+    pub(in crate::runtime) fn logical_insert_definition_stage_before_consumer(
         &mut self,
         boundary: Arc<crate::runtime::profiling::logical::ProfileBoundary>,
     ) {

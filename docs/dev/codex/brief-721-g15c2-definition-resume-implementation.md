@@ -221,3 +221,125 @@ cost tables (caller row and all 60 rows), the indexed cohort, the forced
 rebuild receipt, the seven replay verdicts, the focused/runtime/stdlib/
 workspace/host results, the microbench rows, the scope diff and every raw
 artifact path. The director owns the authoritative gate and git.
+
+## Director gate (2026-11-10) — implementation accepted: the definition-resume repair is installed, and the STOP was the sandbox boundary
+
+**What I reproduced myself.** The four installed production files hash
+exactly to the accepted copies (`completion.rs` `e4652c8e…`,
+`profile_queue.rs` `90f8da7c…`, `mod.rs` `205acce8…`, `queue_api.rs`
+`09c85979…`), and the diff is exactly those four plus the two
+permanent-test files (pure appends; the bodies are byte-identical to the
+accepted scratch tests, the lifecycle header rewritten as authorized)
+and the six generated inventories. My own tree walk against the
+worker's entry manifest (2,711 files, whose 12 pre-change hashes equal
+`HEAD`) finds exactly those 12 changed, 0 missing, 0 extra; the 720
+scene (86,758 files) and the C7 scene (25,251 files) are byte-,
+size- and mtime-identical with no link change.
+
+From the 24 raw Callgrind captures I recomputed every cost row: the
+explicit caller `resume_eval_request_from_checkpoint` is
+**81,588 instructions / 30 calls in all three draws** on base, the
+forced same-source rebuild, publication and sampling, and
+**86,950 / 32** on the four indexed arms; all 60 required rows are
+point-equal across arms and my parse matches the submitted tables on
+every cell (0 mismatches); my sweep of every `rum_runtime` row outside
+the 60 finds no deterministic equal-call difference in any arm. The
+two new symbols do not appear in the disabled captures at all. From
+the raw record JSONs I recomputed the matrix: base 21 minimized
+**8 DIFF / 13 SAME**, stage P exactly the two declining-stage
+`false_guard` rows, stage S 0; base 470 frozen **147 valid DIFF** /
+468 valid / 2 invalid retained, stage P 0 and stage S 0. The
+P and S records are byte-identical to the continuation-2 accepted
+references, and so is the base. Mutants: omit-publication 147,
+before-recovery 125, omit-sub 1, omit-up 1, and in each the changed-id
+set equals its DIFF set exactly; the three Return witnesses read
+`[1,0,1,0,0,1,0,0,0,0]` under misplacement and
+`[1,1,0,1,0,0,0,0,0,0]` repaired, and the wrong-terminal-open negative
+control is rejected by the same whole-record comparator. The reach
+file is exactly the 147 base-DIFF ids, each with a queue-join
+publication, its typed frontier and a nested pause in the raw probe
+log, and the full-table artifact is a faithful projection of the raw
+records (491 rows × 3 arms, 0 mismatches). The shared constructor has
+exactly two call sites. `report.py check 721` verifies 5,221
+citations, and the seven sealed deliverables hash-match the final
+receipt.
+
+**The STOP is an environment boundary, not a product signal.** The
+worker's single workspace run read 4,208/9/61: exactly the nine native
+ZeroMQ tests panicking at
+`native ZeroMQ test cannot bind loopback: Operation not permitted`
+(`rum-jupyter` lib, 143 passed beside them). That is the standing
+worker-sandbox boundary every implementation round has hit; the nine
+tests bind loopback on the host. My own host run under the same seven
+standing skips is **4,217 passed / 0 failed / 61 ignored over 63
+binaries**, exit 0, peak 6.80 GB in a 14G scope — the brief's table
+exactly. The worker correctly added no skip, no filter and no rerun.
+
+**My host acceptance, same tree.** `cargo fmt --check` clean;
+`cargo check --workspace --all-targets` rc=0 with only the three
+standing `test_builtins` lib-test warnings and none in the default
+lib; focused `profiling::` 8 and 1 threads **221/2/2**, the two
+failures exactly `lp655_root_context_falsifier` and
+`lp656_public_root_context_falsifier`, assertions untouched; runtime
+lib 8 and 1 threads **1418/0/5** with the two standing skips; stdlib
+**1111/0/53**; typed slots **10/0/1**; frame roots **15/0**; the six
+switch-gated host targets at 8 and 1 threads under
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`, 13/0/0 each. The seven standing
+replays, run through the canonical generators at this gate, are green
+and rewrite nothing: ownership 61 / 79 / 8,828 with zero replay rounds;
+census 1,220 = 14 / 1,168 / 38 with all 1,220 rows paired and none
+retired, new, base-only or candidate-only; 68 contract fingerprints
+with 0 changed; both certificate builds GREEN with 0 promoted rows
+merged; the inventories run 19 passed / 0 failed at the same frontier;
+typed slots 10/0/1, frame roots 15/0 and the LP01 five-mode parent
+(88,795 records asserted, 0 semantic differences) green in the same
+runs. The six installed TSVs hash exactly as before the replays.
+
+**The timing lane, run at the gate.** The worker's STOP ended the round
+before the timing lane, so I ran the brief-637/703 protocol myself on
+this host: base, candidate and layout-control release `rum-cli`
+binaries at one path with one codegen unit, four interleaved passes per
+arm, 120 labels, `AbsoluteTiming` in-kernel, profiling off. The four
+tier medians (candidate / layout control) are 0.9959 / 0.9945 under
+50 µs, 0.9996 / 1.0000 at 50–200 µs, 1.0006 / 0.9994 at 200 µs–1 ms
+and 0.9993 / 1.0006 over 1 ms; the layout envelope is median 0.29%,
+p90 1.28%, max 13.04% |movement|. The 703 reducer flags the two named
+calibration labels (−1.3%, −1.1%) and three separated labels —
+`symbol-ownvalue-guarded-read` +2.3%, `table-iterator-null` +4.9%,
+`table-count-null` +11.6% — none outside the envelope. I ran the
+703-style instruction probes on those five exact benchmark bodies
+(n = 50/100, four serial draws per cell, three arms, profiling off):
+the per-iteration executed-instruction distributions overlap and no
+arm is separated in any label — `table-count-null` 2,004,724 /
+2,004,740 / 2,004,758 (medians base/final/layout out of ~2.0 M per
+iteration), `table-iterator-null` 429,761 / 429,750 / 429,799,
+`symbol-ownvalue-guarded-read` 3,541 / 3,535 / 3,527 (within-arm
+spreads 70–155), `downvalue-guarded-decline-fallback` 20,796 / 20,785
+/ 20,791, `stringreplace-single-literal-unguarded` 37,112 / 37,059 /
+37,105. The instruction lane decides, and it reads identical; the
+timing movements are recorded as noise, not a regression. (The lane's
+idle guard was adapted for this host: the director harness process is
+excluded by name and every other process must stay under 0.5 s of CPU
+per second, so a real build or test still trips it by an order of
+magnitude.)
+
+**Recorded, not gated.** (1) The worker's workspace red is the
+sandbox's loopback denial; no skip was added and the opt-in was not
+used. (2) The certificate-emission runs red on the stale promoted
+cells and the canonical merge settles them — an ordering artifact of a
+derived cell moving with the source, as in every source-change round.
+(3) The typed-slot compiler-control and certificate-emission discovery
+attempts that fail by design are preserved as raw evidence. (4) The
+timing lane is non-decisive by the brief's own rule; the instruction
+lane decides and reads identical, and the per-label probes settle every
+flagged label without separation.
+
+**Ruled.** The implementation is accepted: the installed tree is
+byte-identical to the accepted route, the disabled caller and the
+whole 60-row table are exactly where continuation 2 left them, and the
+21/470 matrix, the mutants, the reach proof and the permanent
+regressions all reproduce. The continuation-2 route stands as the
+repair; the two dead ends stay dead. Next: continuation 8 of brief 623
+re-settles P0267/P0312/P0323 and carries the 270 LocalTail rows, the
+45 reopened rows, the 22 strict rows and the five 719 edges to the
+gate.

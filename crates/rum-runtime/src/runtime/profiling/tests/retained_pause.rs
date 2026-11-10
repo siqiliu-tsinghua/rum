@@ -437,3 +437,80 @@ fn diagnostic_state_layout_and_charge_are_reported() {
         size_of::<RecordPath>() + 2 * size_of::<usize>()
     );
 }
+
+#[test]
+fn brief720_queue_join_preserves_foreign_deferred_definition() {
+    let enabled = test_support::enabled();
+    for (kind, symbol, setup, source) in [
+        (
+            "down_value_rhs_eval",
+            "f",
+            r#"f[x_Integer]:=((InputString["r1"];InputString["r2"];83)/;(InputString["g"];True))"#,
+            "f[2]",
+        ),
+        (
+            "sub_value_rhs_eval",
+            "f",
+            r#"f[a_][x_Integer]:=((InputString["r1"];InputString["r2"];83)/;(InputString["g"];True))"#,
+            "f[1][2]",
+        ),
+        (
+            "up_value_rhs_eval",
+            "a",
+            r#"TagSetDelayed[a,f[a,x_Integer],((InputString["r1"];InputString["r2"];83)/;(InputString["g"];True))]"#,
+            "f[a,2]",
+        ),
+    ] {
+        let mut session = crate::runtime::test_builtins::session_with_test_control_builtins();
+        session.eval_text(setup).unwrap();
+        epoch::reset_for_lease(enabled.lease());
+        let epoch = test_support::epoch();
+        assert!(matches!(
+            session.eval_text(source),
+            Err(EvalError::InputRequired { .. })
+        ));
+        let mut foreign = Session::new();
+        let foreign_key = AggregateKey::Definition {
+            kind: "down_value_rhs_eval",
+            symbol: Symbol::new("Global`", "foreign720"),
+            index: 0,
+        };
+        let deferred = Call::start(&foreign, foreign_key, Policy::OptionalExpr).unwrap();
+        let id = deferred.inner.record;
+        let path = epoch.path(id).unwrap();
+        let control = Arc::clone(&foreign.request_interrupt_control.borrow());
+        deferred.defer_definition();
+        foreign.begin_input_suspension(RuntimeInputRequest::new("foreign720"));
+        for answer in 0..3 {
+            let result = session.resume_suspended_evaluation("answer");
+            if answer < 2 {
+                assert!(matches!(result, Err(EvalError::InputRequired { .. })));
+            } else {
+                assert_eq!(result.unwrap().to_string(), "83");
+            }
+            assert!(
+                path.is_open(),
+                "another queue must not publish the foreign record"
+            );
+            assert_eq!(epoch.take_deferred_definition(&control), Some(id));
+            epoch.defer_definition(id);
+        }
+        let own_key = AggregateKey::Definition {
+            kind,
+            symbol: Symbol::new("Global`", symbol),
+            index: 0,
+        };
+        let own = row(&epoch, own_key);
+        assert_eq!((own.calls, own.some, own.open), (1, 1, 0));
+        foreign.flush_definition_boundaries();
+        foreign.resume_suspended_evaluation("reply").unwrap();
+        let found = row(&epoch, foreign_key);
+        assert_eq!((found.calls, found.some, found.open), (1, 1, 0));
+        assert!(!path.is_open());
+        drop((session, foreign, path, control));
+        quiet(&epoch);
+        eprintln!(
+            "BRIEF720C2 FOREIGN PASS kind={kind} join_pauses=2 foreign_deferred_until_own_flush=true own_some=1 foreign_some=1 terminal_open=0"
+        );
+    }
+}

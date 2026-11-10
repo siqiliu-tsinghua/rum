@@ -8975,3 +8975,47 @@ The definition-record repair area must handle both missing publication and this 
 ### State and the continuation-8 order
 
 C2 stays Open at 1,038 rows: 342 residuals + 3 Lost + 77,930 keys. The next step is the repair, and it is design-first: brief 720 is a design-only brief over the C7 draft, covering the three mechanisms — (a) the deferred definition RHS record's publication at the three resumed down/sub/up-value typed frontiers when the actual result is another `InputRequired`, (b) sub-/up-value producer-before-consumer sampling of the actual Option (the down-value before-consumer exception already exists), (c) the repeated-RHS Return recovery ordering — with the eight minimized native falsifiers, the thirteen controls and all 147 bound witnesses retained, a copied experiment for every insertion point, and the disabled-path cost gate. After its gate I write the implementation brief; after the repair's gate, continuation 8 of 623 re-settles P0267/P0312/P0323 and continues with the 270 LocalTail rows, the 45 reopened rows, the 22 strict rows and the five 719 edges. Stop for my gate; no question is open.
+
+## Director continuation 8 (2026-11-10) — the definition-resume repair is accepted and installed; continuation 8 re-settles the three Lost rows and carries the residual groups
+
+### State
+
+The definition-resume repair is installed and accepted. The deferred
+definition record opened inside a resumed down-, sub- or up-value RHS is
+published at the enabled-only profiled queue join, after its RHS
+recovery and before the carried suffix joins, and the sub-/up-value
+producers that decline to `false_guard` are sampled before their
+consumer. The four production files hash-match the accepted copies of
+brief 720 continuation 2; the two permanent regressions (foreign
+deferred record across all three families; the 18-cell cancellation and
+abandonment lifecycle) are installed. The disabled caller
+`resume_eval_request_from_checkpoint` is 81,588 instructions / 30 calls
+in three draws on every arm (indexed 86,950 / 32); the 21 minimized and
+470 frozen records are whole-record equal at the final stage; the four
+mutants are caught at 147 / 125 / 1 / 1; all 147 bound ids reach the
+actual join. My host acceptance: workspace 4,217/0/61 over 63 binaries,
+focused 221/2/2 at 8 and 1 (only the two standing root reds), runtime
+1418/0/5, stdlib 1111/0/53, six host targets 13/0/0 at 8 and 1, the
+seven standing replays canonical, and the timing lane recorded.
+
+C2 stands Open at 1,038 rows: 342 residuals + 3 Lost. The three Lost
+rows' 147 bound differences (49 each) are repaired on the live source,
+so continuation 8 re-settles them first.
+
+### The continuation-8 order
+
+1. Re-settle P0267, P0312 and P0323 on the repaired source: re-read
+   their 147 bound differences as whole records (valid, semantic-SAME,
+   native-SAME, resumed == queued) and move the three rows to their new
+   disposition under the C2 settlement rules, with their own caught
+   omissions.
+2. The 270 LocalTail rows, by mechanism group.
+3. The 45 reopened rows.
+4. The 22 strict Drop/caller rows.
+5. The five 719 edges.
+6. The port tables, then the gate.
+
+Preserve the C7 scene (`.temp/g15-c2/c7/`, 25,251 entries) and the
+623 scene (`.temp/brief-623/`) byte-for-byte; work only in `.temp/`.
+No git, no network, no production source change. Stop for my gate with
+the raw evidence and the updated ledger.

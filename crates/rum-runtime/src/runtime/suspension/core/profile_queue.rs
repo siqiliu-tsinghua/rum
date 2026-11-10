@@ -559,6 +559,52 @@ impl ProfileQueue {
             }
         }
     }
+    /// Only the existing profiled append edge reaches this frontier. The
+    /// ordinary queue/driver never calls it or loads another profiling flag.
+    fn publish_deferred_definitions_before_join(&mut self) -> bool {
+        let Some(epoch) = self
+            .epoch
+            .as_ref()
+            .filter(|epoch| epoch.is_valid())
+            .cloned()
+        else {
+            return true;
+        };
+        let control = {
+            let owners = owners().lock().unwrap();
+            owners
+                .iter()
+                .find(|owner| {
+                    Arc::ptr_eq(&owner.root, &self.root) && Arc::ptr_eq(&owner.epoch, &epoch)
+                })
+                .map(|owner| Arc::clone(&owner.control))
+        };
+        let Some(control) = control else {
+            return true;
+        };
+        while let Some(boundary) =
+            crate::runtime::profiling::logical::completion::take_deferred_definition_boundary(
+                &epoch, &control,
+            )
+        {
+            let Some(context) = Context::capture(&epoch) else {
+                return false;
+            };
+            if !self.add(
+                Cell {
+                    kind: Kind::Boundary(boundary),
+                    context: Some(context),
+                    deferred: false,
+                },
+                self.frontier(),
+                None,
+            ) {
+                return false;
+            }
+        }
+        true
+    }
+
     pub(super) fn append(&mut self, suffix: &mut Self) -> bool {
         // All pause-after-push insertions finish before the driver joins queues.
         // Unclaimed insertion handles must not be inherited by a later owner.
@@ -587,6 +633,11 @@ impl ProfileQueue {
             return false;
         }
         if !self.epoch.as_ref().is_some_and(|e| e.is_valid()) {
+            return false;
+        }
+        // The nested RHS recovery is already in this queue. Publish at its
+        // tail before joining the carried suffix, while both owners are live.
+        if !self.publish_deferred_definitions_before_join() {
             return false;
         }
         let mut own = self.root.lock().unwrap();

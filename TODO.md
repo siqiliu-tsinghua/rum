@@ -91,14 +91,32 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   network scope are clean. The route is the queue API's own insertion
   shape, inserted after the RHS recovery and before the suffix join, so
   the disabled path executes nothing new.
+  **Brief 721 (2026-11-10) is accepted:** the accepted route is installed
+  on the live tree — the four production files hash-match the accepted
+  copies, the two permanent regressions (foreign-deferred across three
+  families; the 18-cell cancellation/abandonment lifecycle) are in place,
+  and the six inventories are canonical. The 21 minimized read 8 DIFF at
+  base → 2 at stage P → 0, the 470 frozen 147 → 0 → 0 (the records are
+  byte-identical to the continuation-2 accepted references), the four
+  mutants are caught at 147/125/1/1, the three Return witnesses repair to
+  `[1,1,0,1,0,0,0,0,0,0]`, all 147 bound ids reach the actual join, and
+  the disabled caller is 81,588/30 on every arm (indexed 86,950/32) with
+  all 60 required rows point-equal and no other deterministic increase.
+  The worker's single workspace run stopped at 4,208/9/61 on the nine
+  sandbox-denied loopback binds; my host run over the same seven skips is
+  **4,217/0/61**, focused 221/2/2 at 8 and 1 (only the two standing root
+  reds), runtime 1418/0/5, stdlib 1111/0/53, the six host targets 13/0/0
+  at 8 and 1, and the seven canonical replays rewrite nothing. The timing
+  lane was not run before the STOP; I ran the four-pass three-arm panel
+  at the gate (tier medians 0.9959–1.0006, layout envelope median 0.29% /
+  max 13.04%) and the 703-style instruction probes on the five flagged
+  labels settle every residual with no separated distribution.
 
-**Next, in order** (the branch queue): brief 721 (implementation of the
-accepted route — stage P publication/Return first, stage S sampling
-second, permanent foreign and lifecycle regressions, canonical inventory
-refreshes, full acceptance) and its gate, then continuation 8
-of 623 (re-settle the three Lost rows; then the 270 LocalTail rows, the
-45 reopened rows, the 22 strict Drop/caller rows and the five new 719
-edges) — CM, `CHANGELOG.md`, and S10 onward. The two root-context reds
+**Next, in order** (the branch queue): continuation 8 of brief 623 on the
+repaired source (re-settle the three Lost rows P0267/P0312/P0323; then
+the 270 LocalTail rows, the 45 reopened rows, the 22 strict Drop/caller
+rows and the five new 719 edges) — CM, `CHANGELOG.md`, and S10 onward.
+The two root-context reds
 (`lp655`/`lp656`) remain a separate standing obligation. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by
 brief 717; `RumProfileSnapshot` keeps its protected `Null` behaviour in
