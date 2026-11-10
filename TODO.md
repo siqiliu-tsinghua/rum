@@ -164,11 +164,37 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   and the existing publisher still publishes); Q4 the three-file
   organization exception stands and the split stays deferred.
 
-**Next, in order** (the branch queue): **brief 723**, the implementation
-of the fixed-point pass publication (stage A: the copied failure-frontier
-proof and the permanent-regression calibration; stage B: the live
-insertion with the standing replays, the disabled cost gate and the
-acceptance suites); then continuation 9 of brief 623 re-settles
+  **Brief 723 stage A run 1 STOPs at the lifecycle restart probe; the
+  STOP is accepted and the restart probe is the worker's.** Run 1
+  (17,988 lines, sha256 `2436ed74…`, peak 3.05 GB) reproduced the frozen
+  panels, applied the accepted diff, ran both omission mutants and the
+  resource-return frontier, then stopped with no live edit. My own gate
+  (74/74): live tree 2,713 files exact (digest `8dd26c55…`), C7 25,251 +
+  C8 36,460 + brief-623 151 + brief-722 46,086 protected and hash-equal;
+  all 90 and 12 base records whole-record equal to the frozen C8
+  `C2_NATIVE` logs; the copied candidate byte-identical to brief 722's
+  accepted candidate, 0 DIFF, 84 controls exact, fresh 2/2 and nested
+  base-red/candidate-green, 470 exact vs brief-721 (468 valid); both
+  omission mutants 20/14 with one single-entry one-pass delta and the
+  queued arm untouched, P1471's two-pause Throw green; the real
+  `TimeConstrained` producer passes both rows with a before-event
+  equality red at the same key; artifacts 144 hash-exact, report check
+  299 citations. The red is `eval_request` on a pending input at
+  `lifecycle_frontier.rs:42` against the settled guard at
+  `session_requests.rs:105-108` — a probe error, not a product signal.
+  **Ruled:** the continuation (brief 723, forked from run 1) corrects
+  restart to the documented cancel/abandon-then-fresh-request sequence,
+  completes both-pause lifecycle, foreign/interleaved, duplicate,
+  missing-owner/zero-match and allocation-cap probes, calibrates the
+  permanent regression test red/green/omission-red at 8 and 1, closes the
+  shared-target deviation with per-source rebuilds plus the `--force` sha
+  spot check, then stage B exactly as written.
+
+**Next, in order** (the branch queue): **brief 723 continuation**, the
+implementation of the fixed-point pass publication (stage A's remaining
+failure-frontier proof and the permanent-regression calibration, then
+stage B's live insertion with the standing replays, the disabled cost
+gate and the acceptance suites); then continuation 9 of brief 623 re-settles
 P1470/P1471 and takes up the `call.stage.prepare_arguments` finding, then
 the remaining groups (270 LocalTail, 45 reopened, 22 strict, the five 719
 edges) — CM, `CHANGELOG.md`, and S10 onward.

@@ -167,27 +167,27 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   retention line (paused at E0) and the active suspension branch.
 - **Branch queue:** G15-C2's rows (721 installed the definition-resume
   repair; continuation 8 found P1470/P1471 Lost; brief 722 accepted the
-  fixed-point publication design; brief 723 installs it, stages A/B; C2
-  at 334 residuals + 2 Lost + 35 `NoObservableTail`; the
-  `call.stage.prepare_arguments` finding goes to continuation 9); then
-  CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
+  fixed-point publication design; brief 723 stage A reproduced it on the
+  copies and STOPed at the worker's restart probe, so a continuation
+  completes stage A then stage B's live install; C2 at 334 residuals +
+  2 Lost + 35 `NoObservableTail`; the prepare-arguments finding goes to
+  continuation 9); then CM, `CHANGELOG.md` (before S10), G13 S10–S54,
+  F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Brief 719:** P0248's
   fallback repaired (8/8 recipes, 36/36 bindings SAME). **Continuations
   5-7:** 25 rows Equal, ten `NoObservableTail` groups, 1,485 cells SAME,
-  77,930 keys, three **Lost** rows (147 differences).
-  **Brief 720/721:** the copy reproduced 21/21 and 470/470 but the shared
-  `Mode::pause` hook cost +957; continuation 1 refuted its driver
-  (codegen-identical; my outline probe 82,563/30); continuation 2 moved
-  publication to the enabled-only profiled queue join (caller 81,588/30
-  every arm; 147 → 0; mutants 147/125/1/1), and 721 installed it.
-  **Continuation 8 accepted:** the repaired rows and P2604 settle Equal
-  (470/470 equal the 721 panel), five `NoObservableTail` rows accepted,
-  P1470/P1471 are new Lost rows (334 residuals + 2 Lost).
-  **Brief 722 accepted (design):** the copy repairs all 18 fixed-point
-  differences with 84 controls exact and both omissions caught (20/14);
-  my 18-capture parse reads every rum row equal; brief 723 installs it.
-  `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  77,930 keys, three **Lost** rows (147 differences). **Brief 720/721:**
+  continuation 2 moved publication to the enabled-only profiled queue
+  join (caller 81,588/30 every arm; 147 → 0), and 721 installed it.
+  **Continuation 8:** the repaired rows and P2604 settle Equal (470/470
+  equal the 721 panel), five `NoObservableTail` rows accepted,
+  P1470/P1471 are new Lost rows. **Brief 722 accepted (design):** the
+  copy repairs all 18 fixed-point differences with 84 controls exact and
+  both omissions caught (20/14). **Brief 723 stage A run 1:** 90/12/470
+  reproduced (my gate 74/74), then STOPed at the worker's
+  eval_request-on-pending probe; the continuation completes stage A,
+  then stage B. `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

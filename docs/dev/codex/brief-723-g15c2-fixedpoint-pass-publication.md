@@ -327,3 +327,96 @@ named.
 
 Stop and report for the director's authoritative gate; do not commit,
 tag or close anything.
+
+## Director gate (2026-11-11) — the stage-A STOP is accepted; the restart probe is the worker's and the continuation completes stage A
+
+Run 1 (session `01a1c674-3261-7a91-986d-91d2a0eab5a4`; log
+`.temp/logs/cdx_brief_723.log`, 17,988 lines, sha256 `2436ed74…`,
+memory-scope peak 3.05 GB, rc=0) reproduced the frozen panels on the
+copies, applied the accepted diff, ran both own-row omission mutants and
+the resource-return frontier, then STOPed at the lifecycle restart route
+with no live edit. **The STOP is well taken:** stage A is incomplete, so
+the stage-B prohibition holds; the tree is entry-identical, no inventory
+moved, and the full suites never started.
+
+**My own reproductions (74/74 checks, `.temp/director/gate-723/verify.py`):**
+live tree 2,713 files exact (digest `8dd26c55…`), protected C7 25,251 /
+C8 36,460 / brief-623 151 / brief-722 46,086 hash-equal, `git` clean,
+`live-hash-delta.json` empty. All 90 fixed-point and all 12 minimized
+records read from the frozen C8 `C2_NATIVE` raw logs are whole-record
+equal to the round's base records (10 and 8 DIFF, each only
+`evaluate.once_unstable`, language SAME; the frozen witnesses and the 12
+minimized verdicts agree with my derivation, and the wrong-field negative
+is rejected). The copied candidate is byte-identical to brief 722's
+accepted candidate (three file hashes and all three patches), reads 0
+DIFF over 90+12, keeps all 84 non-DIFF records and the 102 queued arms
+and language exact, passes both fresh witnesses and the explicit nested
+witness (base red → candidate green), preserves the two surrounding-Return
+records and the invalid exploratory fixture, and keeps the 470 definition
+records whole-record equal to brief-721's accepted panel (468 valid). The
+two probe-disabled arms are byte-identical to the candidate; P1470 changes
+exactly 20 records and P1471 exactly 14, each with one single-entry
+one-pass Throw/Return delta and an untouched queued arm, and P1471 leaves
+the two-pause Throw green. The resource probe uses a real producer whose
+`TimeConstrained` deadline expires at the return check; both rows read
+equal ten counters and language, and the separate before-event arm fails
+the same-key equality in the predicted direction (the first, malformed
+negative is disclosed and not used). First-pause cancel, drop and abandon
+pass with zero charged bytes and the existing reasons. Artifact index 144
+files hash-exact; `report.py check` 299 citations.
+
+**The red is the probe, not the product.** `lifecycle_frontier.rs:42`
+calls `eval_request("91")` while the session awaits host input; the
+settled request-freshness contract at `session_requests.rs:105-108`
+refuses it and says the host must resume or reset first (it has its own
+tests, e.g. `crates/rum-stdlib/tests/sow_trace_continuations/lifecycle.rs:17`).
+The brief's lifecycle item authorises cancel, drop and abandon; a
+"restart" is the documented sequence, not a direct supersession, and
+`SupersededOrQueuedInputDiscard` belongs to queued input driving
+(`builtins_input.rs:234`), not to a new host request. No guard is
+weakened and no production file moves.
+
+**Ruled for the continuation (brief 723, forked from
+`01a1c674-3261-7a91-986d-91d2a0eab5a4`):**
+
+1. Keep every executed receipt; none is rerun to reconstruct a log.
+   Re-run only what the corrected probes and the missing stage-A gates
+   need.
+2. Correct the restart arm to the documented lifecycle: first settle the
+   pending request (cancel and drive the cancellation, or explicitly
+   abandon the pending suspension), then start the fresh evaluation and
+   let it complete. A direct `eval_request` while input is pending is the
+   documented refusal, never a positive arm. Observe that the retired
+   records settle under the chosen route's existing reason and that
+   charged bytes return to zero.
+3. Complete the failure frontier at both pauses: cancel, drop, abandon,
+   restart and the completed-resume/drop control; foreign and interleaved
+   generation; the duplicate-match visible fault that transfers nothing;
+   missing owner and zero match (stash intact, existing
+   `publish_stashed_after_consumer` still publishes later); and the
+   diagnostic-arena allocation-cap failure with an unchanged guest
+   result.
+4. Complete the permanent regression test: drive the two-pause and
+   three-pause producers in-process on both arms, assert the whole ten-
+   counter records and language, red on the base copy, green on the
+   candidate copy, red under the stage-3 omission mutation, and pass at
+   8 and 1 threads. Do not weaken assertions; if the in-tree facilities
+   cannot express it, STOP and report. Install it only after the copied
+   gates pass.
+5. Close the two executed-layout deviations: rebuild the base and the
+   candidate with per-source private target directories and run the
+   required one `--force` sha256 spot check, then re-read the panels on
+   the fresh binaries and require the same record files. Copied
+   `cargo fmt --check` and `cargo check --all-targets` follow.
+6. Then stage B exactly as written: live base snapshot, the exact
+   accepted shape plus the calibrated test, canonical replays quoted
+   before any acceptance suite, `fmt`/`check --all-targets`, focused and
+   runtime suites at 8/1, the workspace once (or the sandbox boundary
+   with the raw log), the copied final native matrix, the 18-capture
+   disabled cost gate with the exact rows, the timing lane, the 470
+   definition panel, and the report.
+
+Nothing else changes: the accepted mechanism, the three-file scope, the
+hard rules and the stop-for-the-gate discipline stand. Next: append this
+ruling, commit and push, archive the run-1 log as `cdx_brief_723.run1`,
+and dispatch the continuation forked from the run-1 session.
