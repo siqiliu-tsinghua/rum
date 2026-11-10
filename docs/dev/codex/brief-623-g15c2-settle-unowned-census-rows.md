@@ -5179,3 +5179,1353 @@ after one bounded attempt is not a stop.
 
 **Report.** Append continuation 4 in the brief's format and produce the
 `rum-report/1`; stop for my gate.
+
+
+## Continuation 4 — execution report (2026-11-10)
+
+**C2 remains OPEN. The required stop-loss fired after two executed concrete carrier families gained no new requirement, real coverage cell, armed source row, caught source row or outcome.** This continuation adds 20 raw-verified Equal outcomes and one minimized diagnostic-accuracy Lost outcome. The 1,033-row population is still a lower bound: 594 Transferred, 29 Equal, 5 Identity, 7 Boundary, 3 Unreachable, 1 Lost and 394 Residual. The separate 29 earlier accepted Equal rows remain unchanged, outside this population. The 618 accepted unchanged-function carries retain the director-authorized function/file fingerprints as their evidence of record; the pruned historical raw scene has not been reconstructed.
+
+All new source edits are in copied scratch trees under `.temp/g15-c2/`. Live production source, Cargo.lock, tests, standing inventories and project documents are unchanged except this appended report. No version-control command, network request, third-party engine comparison or new unsafe was used. No new internal-encoding program ran. This report is evidence for the director's gate; it does not authorize a production repair, all-green manifest, CHANGELOG update or S10.
+### 0. Diagnostic re-settlement and source rebase
+
+The sixteen former diagnostic losses were addressed first after calibration. Fifteen are now Equal. P0487 remains a separate residual: its producer moved into a strict return arm of `evaluate_unstable_call_head`, while the new `C3.evaluate_call.unstable_head` edge owns the outer `evaluate_call` completion. P0487's actual omission survives. The new outer edge's actual omission is caught. Neither fact supplies the missing closed Drop/caller proof or the complete source-policy/route proof for the new identity.
+
+The accepted rebase remains 893 unchanged-function rows, 90 paired full rechecks, 49 unresolved rows, plus one known new edge. A new syntax pass additionally pairs 15 of those 49 by a unique exact expression in the same file, retaining complete current file/function hashes. Those pairings are not retirements or completed proof rechecks. The original rebase table remains intact; `additional-source-pairings.json` is the explicit overlay. The whole graph is still incomplete; no unseen edge is declared absent.
+
+```text
+C2 REBASE {"new_edges": "Pending calibrated whole-graph tool; simple AST call discovery is not the governing graph", "population": 1032, "recheck_by_prior_disposition": {"Boundary": 13, "Equal": 1, "Lost": 16, "NoObservableTail (proposal)": 1, "Residual": 78, "Transferred": 30}, "retired": 0, "states": {"FingerprintUnchanged": 893, "PairedNeedsFullRecheck": 90, "UnresolvedSiteNeedsRecheck": 49}, "unchanged_by_prior_disposition": {"Boundary": 7, "Equal": 9, "Identity": 5, "Residual": 275, "Transferred": 594, "Unreachable": 3}}
+```
+
+```text
+C2 C4 DIAGNOSTIC SETTLEMENT {"equal": 15, "ids": ["P0256", "P0259", "P0266", "P0314", "P0315", "P0413", "P0431", "P0484", "P0489", "P0509", "P0511", "P0515", "P0814", "P1472", "P1507"], "outcomes": {"Boundary": 7, "Equal": 24, "Identity": 5, "Residual": 400, "Transferred": 594, "Unreachable": 3}, "protected_encoding": "G13-transport; retained without execution", "raw_real": 796, "raw_same": 796, "required_bindings": 750, "residual": ["P0487"], "residuals": 400}
+```
+
+```text
+C2 C4 OUTER EDGE PORT BINDING row=C3.evaluate_call.unstable_head original_diagnostic_batch_real_SAME=50 source_reached=50 own_raw_mutant=caught identity_distinct_from=P0487 new_semantic_executions=0 outcome=Residual missing=complete_current_policy_and_route_proof
+```
+
+The outer-edge port reducer binds its 50 already-executed diagnostic cells separately. This completes a port index from the saved native panel; it executes zero new programs and does not change either row’s outcome or restart the post-stop campaign.
+
+| row | fresh non-encoding SAME | own mutant | current disposition |
+| --- | ---: | --- | --- |
+| P0256 | 60/60 | caught | Equal |
+| P0259 | 60/60 | caught | Equal |
+| P0266 | 60/60 | caught | Equal |
+| P0314 | 55/55 | caught | Equal |
+| P0315 | 55/55 | caught | Equal |
+| P0413 | 50/50 | caught | Equal |
+| P0431 | 50/50 | caught | Equal |
+| P0484 | 55/55 | caught | Equal |
+| P0487 | 50/50 | armed, hit, survived | Residual |
+| P0489 | 50/50 | caught | Equal |
+| P0509 | 30/30 | caught | Equal |
+| P0511 | 30/30 | caught | Equal |
+| P0515 | 30/30 | caught | Equal |
+| P0814 | 30/30 | caught | Equal |
+| P1472 | 30/30 | caught | Equal |
+| P1507 | 55/55 | caught | Equal |
+| C3.evaluate_call.unstable_head | 50/50 | caught | Residual: current policy/route proof incomplete |
+
+Current syntax analysis is calibrated on the pre-G15 status producer, the pre-G15 LHS recovery, a plain forwarding wrapper, P0487 and the new outer edge. Its result is syntax only; it does not substitute for a closed live Drop inventory or resolved dynamic dispatch. No new Transferred or Identity outcome is claimed.
+
+```text
+C2 C4 STRICT CALIBRATION PASS control=pre-G15 status producer strict_syntax=false file=crates/rum-runtime/src/runtime/scoping/callable.rs:33
+C2 C4 STRICT CALIBRATION PASS control=pre-G15 LHS incoming result strict_syntax=false file=crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:504
+C2 C4 STRICT CALIBRATION PASS control=plain whole-Result wrapper strict_syntax=true file=crates/rum-stdlib/src/control_flow.rs:29
+C2 C4 STRICT CALIBRATION PASS control=P0487 moved result arm strict_syntax=true file=crates/rum-runtime/src/runtime/eval_core/call.rs:164
+C2 C4 STRICT CALIBRATION PASS control=C3 outer completion owner strict_syntax=false file=crates/rum-runtime/src/runtime/eval_core/call.rs:137
+C2 C4 STRICT REVIEW {"by_class": {"caught mutant; incomplete real tuples": {"local-or-conversion": 19, "unpaired": 1}, "compiled but no valid binding reached": {"local-or-conversion": 25, "strict": 156, "unpaired": 9}, "new C1 producer edge": {"unpaired": 8}, "new continuation3 producer edge": {"unpaired": 1}, "survived or no mutation hit": {"local-or-conversion": 37, "strict": 407, "unpaired": 6}, "unsupported schema": {"local-or-conversion": 249, "strict": 81, "unpaired": 34}}, "closed_Drop_proofs_new": 0, "closed_dynamic_caller_proofs_new": 0, "full_graph_complete": false, "population": 1033, "syntax": {"local-or-conversion": 330, "strict": 644, "unpaired": 59}, "transfers_promoted": 0}
+C2 C4 SOURCE PAIRING unique_exact_expression=15 unresolved_prior=49 full_rechecks_still_required=true retired=0
+```
+
+### 1. Rebase inputs and calibration
+
+The restored pre-G15 and pre-C1 trees were read-only inputs. Every required historical source hash and every restored manifest entry matched; builds ran only in copies. Original dependency package records were retained with offline, locked builds; the only dependency additions were copied probe-package records. Calibration completed before any new settlement.
+
+```text
+C2 C4 ENTRY files=2707 tree_sha256=8b19433397bc9048beddd9c1eb719d40c5233ec0b0ea2e75e7e20da1b614a335 source_edits=0
+C2 C4 HISTORICAL HASH PASS arm=pre-g15 manifest=2079/2079 required=1507/1507 formerly_missing=24/24 required_mismatches=0
+C2 C4 HISTORICAL HASH PASS arm=pre-c1 manifest=2089/2089 required=1514/1514 formerly_missing=22/22 required_mismatches=0
+```
+
+```text
+C2 C4 HISTORICAL PANEL {"DIFF": 15, "SAME": 11, "arm": "pre-g15", "invalid": 4, "raw": ".temp/g15-c2/logs/c4-panel-pre-g15-1.log", "total": 30}
+C2 C4 WITNESS G15A DIFF=3/3 ids=G15A.01,G15A.02,G15A.03
+C2 C4 WITNESS G15B DIFF=12/12 ids=G15B.01,G15B.02,G15B.03,G15B.04,G15B.05,G15B.06,G15B.07,G15B.08,G15B.09,G15B.10,G15B.11,G15B.14
+```
+
+```text
+C2 C4 HISTORICAL PANEL {"DIFF": 12, "SAME": 12, "arm": "pre-c1", "invalid": 0, "raw": ".temp/g15-c2/logs/c4-panel-pre-c1-1.log", "total": 24}
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_red_atom verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_red_list verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_red_pattern_test verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_red_guard_then_value verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_red_two_guards verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_red_nested verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_control_untraced verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_control_rhs_logs verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_control_return verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_control_target verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_control_value_only verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.all_control_decline verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_red_atom verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_red_list verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_red_pattern_test verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_red_guard_then_value verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_red_two_guards verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_red_nested verdict=DIFF prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_control_untraced verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_control_rhs_logs verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_control_return verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_control_target verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_control_value_only verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=pre-c1 id=C1.unheld_control_decline verdict=SAME prompts_match=True
+```
+
+```text
+C2 C4 HISTORICAL PANEL {"DIFF": 0, "SAME": 24, "arm": "current-c1", "invalid": 0, "raw": ".temp/g15-c2/logs/c4-panel-current-c1-1.log", "total": 24}
+C2 C4 C1 CASE arm=current-c1 id=C1.all_red_atom verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_red_list verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_red_pattern_test verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_red_guard_then_value verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_red_two_guards verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_red_nested verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_control_untraced verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_control_rhs_logs verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_control_return verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_control_target verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_control_value_only verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.all_control_decline verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_red_atom verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_red_list verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_red_pattern_test verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_red_guard_then_value verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_red_two_guards verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_red_nested verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_control_untraced verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_control_rhs_logs verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_control_return verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_control_target verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_control_value_only verdict=SAME prompts_match=True
+C2 C4 C1 CASE arm=current-c1 id=C1.unheld_control_decline verdict=SAME prompts_match=True
+```
+
+The 34 saved G15 cases include four forbidden internal-encoding cases; those four were explicitly excluded from new execution and retained in `historical-encoding-exclusions.json`. All 30 permitted cases ran. Pre-G15 has 15 valid DIFF, 11 SAME and four invalid historical cases (G15B.12, .13, .15, .16: the old recovery path requests additional input beyond the frozen recipe). These four are not calibration witnesses and are not asserted language regressions. The three recorded G15A witnesses and twelve G15B witnesses are red. The accepted current 32/32 comparator is reused exactly. All 24 C1 fixtures were reconstructed from the surviving recipes: pre-C1 has 12 DIFF and 12 SAME; current has 24 SAME, including both recorded atom witnesses.
+
+Four fresh mechanism controls red their named observer with final-value comparison disabled. Some inspects the actual optional output before the decoder and retains a public SAME pair; it never fabricates None. G15A skips FunctionResult value finish while retaining the Some slot conversion. G15B bypasses the actual LHS recovery finish in the awaited CallArgument variant. C1 omits the actual ReplaceAll application finish. Raw logs, current recipe sites, patches and source hashes are retained. `semantic-controls-schema-original.json` preserves the initial labels; the corrected schema distinguishes the Some output seam P1486 from producer P1477 and the C1 finish seams C1.P0956/P0957 from producers P0941/P0946. These are mechanism calibrations, not producer settlements.
+
+```text
+C2 C4 SEMANTIC PASS {"armed": true, "baseline_same": 1, "control": "Some", "exact_disabled_parity": true, "final_value_comparison_disabled": true, "hits": ["C4_CONTROL_HIT\tSome\tP1486.actual-option-output-encode"], "logs": {"baseline": ".temp/g15-c2/logs/c4-semantic-Some-baseline-1.log", "mutant": ".temp/g15-c2/logs/c4-semantic-Some-mutant-1.log", "real": ".temp/g15-c2/logs/c4-semantic-Some-real-1.log"}, "mutant_public_same": 1, "observer": {"baseline": ["InternalContinuationSome[5]"], "kind": "actual-native-option-slot-before-decoder", "mutant": ["5"]}, "observer_red": true, "pass": true, "real_same": 1, "total": 1}
+C2 C4 SEMANTIC PASS {"armed": true, "baseline_same": 1, "control": "G15A", "exact_disabled_parity": true, "final_value_comparison_disabled": true, "hits": ["C4_CONTROL_HIT\tG15A\tP1483.value-stage-finish"], "logs": {"baseline": ".temp/g15-c2/logs/c4-semantic-G15A-baseline-1.log", "mutant": ".temp/g15-c2/logs/c4-semantic-G15A-mutant-1.log", "real": ".temp/g15-c2/logs/c4-semantic-G15A-real-1.log"}, "mutant_public_same": 0, "observer": {"differing_fields": {"SEM.G15A": ["projections", "snapshot"]}, "kind": "effects-state-trace-with-final-values-disabled"}, "observer_red": true, "pass": true, "real_same": 1, "total": 1}
+C2 C4 SEMANTIC PASS {"armed": true, "baseline_same": 1, "control": "G15B", "exact_disabled_parity": true, "final_value_comparison_disabled": true, "hits": ["C4_CONTROL_HIT\tG15B\tCallArgument.finish_definition_lhs_active_expr"], "logs": {"baseline": ".temp/g15-c2/logs/c4-semantic-G15B-baseline-1.log", "mutant": ".temp/g15-c2/logs/c4-semantic-G15B-mutant-1.log", "real": ".temp/g15-c2/logs/c4-semantic-G15B-real-1.log"}, "mutant_public_same": 0, "observer": {"differing_fields": {"SEM.G15B": ["messages", "projections", "snapshot"]}, "kind": "effects-state-trace-with-final-values-disabled"}, "observer_red": true, "pass": true, "real_same": 1, "total": 1}
+C2 C4 SEMANTIC PASS {"armed": true, "baseline_same": 2, "control": "C1", "exact_disabled_parity": true, "final_value_comparison_disabled": true, "hits": ["C4_CONTROL_HIT\tC1\tC1.P0956.application-evaluation-finish", "C4_CONTROL_HIT\tC1\tC1.P0957.application-evaluation-finish"], "logs": {"baseline": ".temp/g15-c2/logs/c4-semantic-C1-baseline-1.log", "mutant": ".temp/g15-c2/logs/c4-semantic-C1-mutant-1.log", "real": ".temp/g15-c2/logs/c4-semantic-C1-real-1.log"}, "mutant_public_same": 0, "observer": {"differing_fields": {"C1.all_red_atom": ["trace"], "C1.unheld_red_atom": ["trace"]}, "kind": "effects-state-trace-with-final-values-disabled"}, "observer_red": true, "pass": true, "real_same": 2, "total": 2}
+```
+
+```text
+C2 C4 CALIBRATION PASS current=32/32 reused C1_current=24/24 historical_G15A=3/3 historical_G15B=12/12 historical_C1=12/24_DIFF semantic_controls=4/4 final_value_comparison_disabled=true
+```
+
+### 2. Frozen requirements and executed batches
+
+Every original key remains. There are 75,475 requirements: the inherited 75,225, 70 already-frozen outer-edge requirements and 180 explicit public host eval/call/timeout route requirements. All 18,160 internal-encoding keys remain. Settled rows retain those cells as G13 transport OwnedObligation under the director's ruling; ownership is not relabeled as a current SAME execution. No context was deleted to permit a promotion. Policy memberships overlap; the four unused policies have zero rows/requirements.
+
+```text
+C2 C4 FROZEN REQUIREMENTS total=75475 inherited_original=75225 outer_edge=70 host_routes=180 preserved_C3=75295 encoding=18160 deleted_keys=0
+C2 C4 POLICY {"encoding": 260, "nonencoding": 705, "policy": "CaptureOutput", "required": 965, "rows": 13}
+C2 C4 POLICY {"encoding": 800, "nonencoding": 2600, "policy": "ConditionalBranch", "required": 3400, "rows": 40}
+C2 C4 POLICY {"encoding": 240, "nonencoding": 705, "policy": "DefinitionLhsPreparation", "required": 945, "rows": 12}
+C2 C4 POLICY {"encoding": 1040, "nonencoding": 2670, "policy": "DefinitionStore", "required": 3710, "rows": 52}
+C2 C4 POLICY {"encoding": 720, "nonencoding": 2430, "policy": "ErrorTransform", "required": 3150, "rows": 43}
+C2 C4 POLICY {"encoding": 6620, "nonencoding": 21515, "policy": "ForwardResult", "required": 28135, "rows": 331}
+C2 C4 POLICY {"encoding": 200, "nonencoding": 605, "policy": "FunctionResult", "required": 805, "rows": 10}
+C2 C4 POLICY {"encoding": 60, "nonencoding": 195, "policy": "GuestLoading", "required": 255, "rows": 3}
+C2 C4 POLICY {"encoding": 0, "nonencoding": 0, "policy": "HostBatchBoundary", "required": 0, "rows": 0}
+C2 C4 POLICY {"encoding": 500, "nonencoding": 3825, "policy": "HostRequestDriver", "required": 4325, "rows": 95}
+C2 C4 POLICY {"encoding": 3520, "nonencoding": 9965, "policy": "MatchDecision", "required": 13485, "rows": 174}
+C2 C4 POLICY {"encoding": 0, "nonencoding": 0, "policy": "MatchingSymbolCycleRecovery", "required": 0, "rows": 0}
+C2 C4 POLICY {"encoding": 640, "nonencoding": 1920, "policy": "NativeCallbackBridge", "required": 2560, "rows": 32}
+C2 C4 POLICY {"encoding": 0, "nonencoding": 0, "policy": "NonSuspending", "required": 0, "rows": 0}
+C2 C4 POLICY {"encoding": 900, "nonencoding": 2375, "policy": "OptionReader", "required": 3275, "rows": 45}
+C2 C4 POLICY {"encoding": 5280, "nonencoding": 14935, "policy": "OptionalStage", "required": 20215, "rows": 264}
+C2 C4 POLICY {"encoding": 560, "nonencoding": 2460, "policy": "PhaseOwnership", "required": 3020, "rows": 55}
+C2 C4 POLICY {"encoding": 1100, "nonencoding": 3370, "policy": "PrefixLoop", "required": 4470, "rows": 55}
+C2 C4 POLICY {"encoding": 680, "nonencoding": 1810, "policy": "PrepareArgumentsRestore", "required": 2490, "rows": 34}
+C2 C4 POLICY {"encoding": 5500, "nonencoding": 16025, "policy": "RebuildTraversal", "required": 21525, "rows": 273}
+C2 C4 POLICY {"encoding": 0, "nonencoding": 0, "policy": "RetiredBoundary", "required": 0, "rows": 0}
+C2 C4 POLICY {"encoding": 620, "nonencoding": 2365, "policy": "ReturnBoundary", "required": 2985, "rows": 46}
+C2 C4 POLICY {"encoding": 620, "nonencoding": 1660, "policy": "ScalarFinish", "required": 2280, "rows": 31}
+C2 C4 POLICY {"encoding": 340, "nonencoding": 2340, "policy": "ScopeCleanup", "required": 2680, "rows": 38}
+C2 C4 POLICY {"encoding": 2820, "nonencoding": 8600, "policy": "ShapeDecode", "required": 11420, "rows": 141}
+```
+
+All logical-native collectors compare all ten outcome fields (calls, ok, err, some, none, return, throw, cancelled, abandoned, open), plus the semantic observations, effects/state/projections, ordered trace, prefix, queue and fresh-request checks. Only declared elapsed-duration leaves are normalized. Native counters are read before follow-up projections. Real and disabled copied instrumentation are compared exactly. No production contract or standing inventory was weakened.
+
+These are program counts per real panel, not distinct programs across all batches. Mutant counts are executions; arms, hits and catches come from raw output. The builtin-route row reuses the structured real panel and does not add 440 new executions. The final two proof families share one 195-program real/disabled collector and use disjoint 65/130 subsets. A collector's successful process exit is not an equality verdict.
+
+| batch | real programs | SAME | DIFF | invalid | disabled exact | mutant runs | armed | hit | caught | survived | new Equal |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| diagnostic | 796 | 796 | 0 | 0 | 796 | 17 | 17 | 17 | 16 | 1 | 15 |
+| carrier | 1327 | 1296 | 0 | 31 | 1327 | 638 | 638 | 498 | 12 | 335 | 3 |
+| optional | 675 | 639 | 36 | 0 | 675 | 348 | 348 | 278 | 8 | 270 | 1 |
+| structured | 440 | 417 | 3 | 20 | 440 | 147 | 147 | 147 | 3 | 144 | 1 |
+| host-family | 180 | 180 | 0 | 0 | 180 | 5 | 5 | 5 | 0 | 5 | 0 |
+| outer-options | 120 | 120 | 0 | 0 | 120 | 2 | 2 | 2 | 2 | 0 | 0 |
+| builtin-route (reused real panel) | 440 | 417 | 3 | 20 | 440 | 1 | 1 | 1 | 1 | 0 | 0 |
+| cycle-finish | 20 | 20 | 0 | 0 | 20 | 15 | 15 | 15 | 0 | 15 | 0 |
+| proof-carriers | 195 | 195 | 0 | 0 | 195 | 195 | 195 | 195 | 0 | 195 | 0 |
+| native host ownership observer | 5 | 5 | 0 | 0 | 5 | 5 | 5 | 5 | 5 | 0 | 0 |
+
+The optional panel's 36 valid DIFF cells and the structured panel's three minimized DIFF cases are one P0248 diagnostic loss, recorded below. The carrier's 31 invalid real programs and the structured panel's 20 invalid programs retain their original pause/queue failures as incomplete recipes. They are not SAME coverage and not inventory ordering artifacts. Carrier mutants have 140 armed runs with no omission hit and 151 hit runs invalid under mutation; optional mutants have 70 armed runs with no omission hit. None is counted as a caught or surviving valid omission.
+
+The concrete Expr attempt selected 82 rows and compiled 79; P0417/P0419/P0695 lacked a safe current AST owner. The optional attempt selected 36 and compiled 32; P0247/P0267/P0312/P0323 require an explicit outer closure owner. The structured attempt selected 34 and compiled 25; macro/unpaired sites and closure-owned typed phases remain parked, with names/reasons in the port. Its first compile exposed stale P1159/P1160 carrier metadata: the actual helper returns Result<Expr>; the copied mutation now wraps the actual result into FrameAction while preserving the slot conversion. No fabricated default carrier was introduced. The host copy's first compile lacked a direct probe dependency on rum-runtime; only the copied probe manifest/lock record was corrected. The rejected attempts and compiler logs are retained.
+
+The original P0012 carrier omission occurred inside the producer closure and therefore could not prove omission of the outer adoption tail. Its result was not promoted. The explicit outer-options follow-up fixes that boundary in copies, covers both memory modes (120 SAME cells), and catches both actual outer omissions. They remain residual because the installed certified OptionReentry routes are not closed. The host P2604 mutation omits actual timeout cleanup at the outer guard result; public observations survive because a later guarded snapshot call clears that ownership. Reading the actual owns_eval_timeout field before that follow-up catches all five cases; 7 arm events belong to 5 armed cases. Generic host callers are still incomplete.
+
+```text
+C2 C4 DIAGNOSTIC BATCH {"DIFF": 0, "SAME": 796, "armed": 17, "caught": 16, "exact_disabled_parity": 796, "invalid": 0, "mutants": 17, "outcomes_promoted": 0, "raw_attribution": ".temp/g15-c2/logs/c4-native-disabled-corpus-1.log", "raw_real": ".temp/g15-c2/logs/c4-native-real-corpus-1.log", "real": 796, "required_nonencoding_bound": 750, "survived": 1}
+```
+
+```text
+C2 C4 CARRIER BATCH {"DIFF": 0, "SAME": 1296, "armed": 638, "attempted_family_rows": 82, "caught": 12, "caught_rows": 12, "compiled_mutants": 79, "coverage_cells": 1246, "coverage_rows": 26, "disabled_exact": 1327, "hit": 498, "invalid": 31, "mutant_probes": 638, "outcomes_promoted": 0, "probe_cap": 1329, "survived": 335, "total": 1327}
+```
+
+```text
+C2 C4 CARRIER SETTLEMENT {"equal": ["P0416", "P0820", "P0825"], "other_caught_rows_retained": ["P0287", "P0485", "P0817", "P0818", "P1142", "P1147", "P1155", "P1814", "P1817"], "outcomes": {"Boundary": 7, "Equal": 27, "Identity": 5, "Residual": 397, "Transferred": 594, "Unreachable": 3}, "raw_verified_nonencoding": 170, "reason": "Other catches retain incomplete matrices, source rechecks, or unresolved generic consumer routes", "residuals": 397}
+```
+
+```text
+C2 C4 OPTIONAL BATCH {"DIFF": 36, "SAME": 639, "armed": 348, "attempted_family_rows": 36, "caught": 8, "caught_rows": 8, "compiled_mutants": 32, "coverage_cells": 734, "coverage_rows": 15, "disabled_exact": 675, "hit": 278, "invalid": 0, "mutant_probes": 348, "outcomes_promoted": 0, "probe_cap": 770, "survived": 270, "total": 675}
+```
+
+```text
+C2 C4 OPTIONAL SETTLEMENT {"equal": ["P2593"], "other_caught_rows_retained": ["P0249", "P0426", "P0428", "P0494", "P0498", "P1139", "P1937"], "outcomes": {"Boundary": 7, "Equal": 28, "Identity": 5, "Residual": 396, "Transferred": 594, "Unreachable": 3}, "raw_verified_nonencoding": 50, "reason": "Other catches retain incomplete matrices, source rechecks, or unresolved generic consumer routes", "residuals": 396}
+```
+
+```text
+C2 C4 STRUCTURED BATCH {"DIFF": 3, "SAME": 417, "armed": 147, "attempted_family_rows": 34, "caught": 3, "caught_rows": 3, "compiled_mutants": 25, "coverage_cells": 310, "coverage_rows": 9, "disabled_exact": 440, "hit": 147, "invalid": 20, "mutant_probes": 147, "outcomes_promoted": 0, "probe_cap": 512, "survived": 144, "total": 440}
+```
+
+```text
+C2 C4 STRUCTURED SETTLEMENT {"equal": ["P1477"], "other_caught_rows_retained": ["P0292", "P2137"], "outcomes": {"Boundary": 7, "Equal": 29, "Identity": 5, "Residual": 395, "Transferred": 594, "Unreachable": 3}, "raw_verified_nonencoding": 60, "reason": "Other catches retain incomplete matrices, source rechecks, or unresolved generic consumer routes", "residuals": 395}
+```
+
+```text
+C2 C4 HOST FAMILY {"DIFF": 0, "SAME": 180, "armed": 5, "caught": 0, "coverage_cells": 369, "coverage_rows": 7, "disabled_exact": 180, "invalid": 0, "mutant_probes": 5, "outcomes_promoted": 0, "requirements_added": 180, "survived": 5, "total": 180}
+```
+
+```text
+C2 C4 HOST OBSERVER COUNT RECHECK armed_mutants=5 armed_pause_events=7 hits=5 caught=5 original_event_total=retained
+```
+
+```text
+C2 C4 OUTER_OPTIONS BATCH {"DIFF": 0, "SAME": 120, "armed": 2, "attempted_family_rows": 2, "caught": 2, "caught_rows": 2, "compiled_mutants": 2, "coverage_cells": 120, "coverage_rows": 2, "disabled_exact": 120, "hit": 2, "invalid": 0, "mutant_probes": 2, "outcomes_promoted": 0, "probe_cap": 120, "survived": 0, "total": 120}
+```
+
+```text
+C2 C4 BUILTIN_ROUTE BATCH {"DIFF": 3, "SAME": 417, "armed": 1, "attempted_family_rows": 1, "caught": 1, "caught_rows": 1, "compiled_mutants": 1, "coverage_cells": 43, "coverage_rows": 1, "disabled_exact": 440, "hit": 1, "invalid": 20, "mutant_probes": 1, "outcomes_promoted": 0, "probe_cap": 55, "survived": 0, "total": 440}
+```
+
+```text
+C2 C4 CYCLE_FINISH BATCH {"DIFF": 0, "SAME": 20, "armed": 15, "attempted_family_rows": 4, "caught": 0, "caught_rows": 0, "compiled_mutants": 4, "coverage_cells": 15, "coverage_rows": 3, "disabled_exact": 20, "hit": 15, "invalid": 0, "mutant_probes": 15, "outcomes_promoted": 0, "probe_cap": 20, "survived": 15, "total": 20}
+```
+
+```text
+C2 C4 PROOF FAMILY {"DIFF": 0, "SAME": 65, "additional_armed_tuple_receipts": 65, "armed": 65, "caught": 0, "consecutive_nonprogress": 1, "coverage_cells": 65, "disabled_exact": 65, "disposition": "Residual: current closed Drop/caller proof is not established", "family": "caller-proof-carriers", "hit": 65, "invalid": 0, "mutant_probes": 65, "progress": {"armed_rows": 0, "caught_rows": 0, "coverage_cells": 0, "outcomes": 0, "requirements": 0}, "real_panel": "shared proof-carriers panel; per-family subsets counted", "real_programs": 65, "required": 65, "rows": ["P1880"], "source_only": false, "survived": 65}
+C2 C4 PROOF FAMILY {"DIFF": 0, "SAME": 130, "additional_armed_tuple_receipts": 130, "armed": 130, "caught": 0, "consecutive_nonprogress": 2, "coverage_cells": 130, "disabled_exact": 130, "disposition": "Residual: current closed Drop/caller proof is not established", "family": "drop-proof-carriers", "hit": 130, "invalid": 0, "mutant_probes": 130, "progress": {"armed_rows": 0, "caught_rows": 0, "coverage_cells": 0, "outcomes": 0, "requirements": 0}, "real_panel": "shared proof-carriers panel; per-family subsets counted", "real_programs": 130, "required": 130, "rows": ["P2226", "P2227"], "source_only": false, "survived": 130}
+```
+
+```text
+C2 C4 HOST RAW RECHECK armed_cases=5 armed_pause_events=7 caught=5 timeout_ownership_only=true
+```
+
+### 3. Outcomes and new loss
+
+The twenty new Equal rows are the fifteen diagnostic rows above plus P0416, P0820, P0825, P2593 and P1477. Their complete non-encoding real matrices contain 980 cells; each row has its own raw caught omission. The five non-diagnostic promotions have unchanged producer-function fingerprints, complete current concrete carrier recipes and no unresolved generic route claim. Changed-function catches and incomplete/generic matrices remain residual. No new Unreachable, Boundary, Retired, Duplicate, Identity, Transferred or NoObservableTail outcome is proposed.
+
+| new Equal row | family | non-encoding SAME | own mutant raw log |
+| --- | --- | ---: | --- |
+| P0256 | diagnostic | 60 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0256-1.log` |
+| P0259 | diagnostic | 60 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0259-1.log` |
+| P0266 | diagnostic | 60 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0266-1.log` |
+| P0314 | diagnostic | 55 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0314-1.log` |
+| P0315 | diagnostic | 55 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0315-1.log` |
+| P0413 | diagnostic | 50 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0413-1.log` |
+| P0416 | carrier | 50 | `.temp/g15-c2/logs/c4-carrier-mutant-P0416-1.log` |
+| P0431 | diagnostic | 50 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0431-1.log` |
+| P0484 | diagnostic | 55 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0484-1.log` |
+| P0489 | diagnostic | 50 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0489-1.log` |
+| P0509 | diagnostic | 30 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0509-1.log` |
+| P0511 | diagnostic | 30 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0511-1.log` |
+| P0515 | diagnostic | 30 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0515-1.log` |
+| P0814 | diagnostic | 30 | `.temp/g15-c2/logs/c4-native-bound-mutant-P0814-1.log` |
+| P0820 | carrier | 60 | `.temp/g15-c2/logs/c4-carrier-mutant-P0820-1.log` |
+| P0825 | carrier | 60 | `.temp/g15-c2/logs/c4-carrier-mutant-P0825-1.log` |
+| P1472 | diagnostic | 30 | `.temp/g15-c2/logs/c4-native-bound-mutant-P1472-1.log` |
+| P1477 | structured | 60 | `.temp/g15-c2/logs/c4-structured-mutant-P1477-1.log` |
+| P1507 | diagnostic | 55 | `.temp/g15-c2/logs/c4-native-bound-mutant-P1507-1.log` |
+| P2593 | optional | 50 | `.temp/g15-c2/logs/c4-optional-mutant-P2593-1.log` |
+
+The following emitted totals include every class and source-population membership. Source populations overlap; class totals partition the population.
+
+```text
+C2 C4 OUTCOMES {"by_class": {"caught mutant; incomplete real tuples": {"Equal": 5, "Residual": 15}, "compiled but no valid binding reached": {"Boundary": 2, "Residual": 53, "Transferred": 135}, "new C1 producer edge": {"Residual": 8}, "new continuation3 producer edge": {"Residual": 1}, "survived or no mutation hit": {"Equal": 21, "Identity": 5, "Residual": 27, "Transferred": 397}, "unsupported schema": {"Boundary": 5, "Equal": 3, "Lost": 1, "Residual": 290, "Transferred": 62, "Unreachable": 3}}, "by_source_population_overlapping": {"frame_carries": {"Equal": 10, "Identity": 3, "Residual": 159, "Transferred": 10}, "new-C1-edge": {"Residual": 8}, "new_continuation3_producer_edge": {"Residual": 1}, "review_tail_correct": {"Boundary": 2, "Equal": 19, "Residual": 70, "Transferred": 170}, "screen_effect-questions": {"Residual": 16}, "screen_frameless-direct-evaluate": {"Equal": 3, "Residual": 12, "Transferred": 27}, "screen_frameless-transforms": {"Equal": 3, "Residual": 52, "Transferred": 103}, "screen_optional-source-helpers": {"Equal": 2, "Residual": 27, "Transferred": 29, "Unreachable": 3}, "strict_tail_without_indexed_caller": {"Boundary": 2, "Residual": 12, "Transferred": 235}, "tool_unsettled": {"Boundary": 5, "Equal": 23, "Identity": 2, "Lost": 1, "Residual": 289, "Transferred": 284}}, "exported_current_factory_fixtures": 2174, "fresh_current_coverage_cells": 3577, "full_graph_complete": false, "new_no_observable_tail": 0, "new_retired": 0, "new_unreachable": 0, "outcomes": {"Boundary": 7, "Equal": 29, "Identity": 5, "Lost": 1, "Residual": 394, "Transferred": 594, "Unreachable": 3}, "population_lower_bound": 1033, "port_fixture_programs": 2780, "preserved_prior_Equal_outside_population": 29, "requirements": 75475, "residual_by_class": {"caught mutant; incomplete real tuples": 15, "compiled but no valid binding reached": 53, "new C1 producer edge": 8, "new continuation3 producer edge": 1, "survived or no mutation hit": 27, "unsupported schema": 290}, "residual_by_inherited_mechanism": {"LocalTail": 322, "ReopenedOrNew": 47, "StrictCallerGap": 7, "StrictDropGap": 13, "StrictOtherCarrier": 5}, "residuals": 394, "source_entries": 1033}
+```
+
+The three retained Unreachable rows below introduce no new proof claim. Their previously accepted evidence is carried only by the unchanged function/file fingerprints, as authorized after the old raw scene was pruned.
+
+```json
+[
+  {
+    "id": "618.optional-source-helpers.038",
+    "file": "crates/rum-runtime/src/runtime/lowering.rs",
+    "line": "168",
+    "function": "crates/rum-runtime/src/runtime/lowering.rs:168:::lower_decimal_atom",
+    "target": "",
+    "sources": "screen_optional-source-helpers",
+    "verdict": "Unreachable",
+    "policy": "OptionalStage",
+    "contexts": "required:consumer_routes;guest_heads;held_and_splice;prefix_and_tail;return_boundary;value",
+    "probe_ids": "623.pure.decimal",
+    "evidence": "unreachable-proofs.tsv; pure-receipts.tsv; pure/real.jsonl; pure/disabled.jsonl; pure/disabled.log",
+    "tail_observed": "Concrete closed callee chain cannot evaluate guest code or produce InputRequired; zero counters supplement the source proof.",
+    "owner": "G15-C2",
+    "disposition": "Settled",
+    "required_tuple_count": "70",
+    "mutant_schema": "Unsupported",
+    "mutant_probe": "",
+    "mutant_result": "NotApplicableAcceptedProof",
+    "ledger_kind": "Settled",
+    "initial_class": "unsupported schema",
+    "current_row": "618.optional-source-helpers.038",
+    "settlement_evidence": "Director continuation 3 fingerprint carry; port/rebase.tsv; Screen identity lower_decimal_atom is crates/rum-runtime/src/runtime/lowering.rs:168-205. It takes only &str, splits a decimal/exponent, validates ASCII digits, parses BigInt values, scales integer numerator/denominator, and constructs Rational/Expr data. Its only fallible helper split_decimal_exponent (:207-220) maps parse failure to EvalError::InvalidInteger; multiply_by_power_of_ten (:222-226) only multiplies a BigInt. Neither helper receives a Session, callback, provider, continuation, or guest expression evaluator. Every explicit error constructor in this closed helper chain is InvalidInteger; no callee constructs or forwards InputRequired. Guest code in a parsed string is evaluated only by a later ToExpression consumer after this lowering helper has returned. The probe supplies a numeric string through InputString while also lowering a decimal literal; its 1 pause is outside this helper. The copied helper entry guard was entered 4 times and was absent at every pause.",
+    "attempts": "",
+    "prior_verdict": "Unreachable",
+    "current_rebase_status": "FingerprintUnchanged",
+    "current_function_sha256": "af4049c8a3a4fb182a2403fd15017540a4619ec441c8dce5e66230afe337440e",
+    "accepted_evidence_carried": "True"
+  },
+  {
+    "id": "618.optional-source-helpers.054",
+    "file": "crates/rum-stdlib/src/predicates/collections.rs",
+    "line": "462",
+    "function": "crates/rum-stdlib/src/predicates/collections.rs:462:::effective_same_test",
+    "target": "",
+    "sources": "screen_optional-source-helpers",
+    "verdict": "Unreachable",
+    "policy": "MatchDecision;OptionalStage",
+    "contexts": "required:consumer_routes;error_before_tail;guest_heads;held_and_splice;prefix_and_tail;return_boundary;value",
+    "probe_ids": "623.pure.same-predicate",
+    "evidence": "unreachable-proofs.tsv; pure-receipts.tsv; pure/real.jsonl; pure/disabled.jsonl; pure/disabled.log",
+    "tail_observed": "Concrete closed callee chain cannot evaluate guest code or produce InputRequired; zero counters supplement the source proof.",
+    "owner": "G15-C2",
+    "disposition": "Settled",
+    "required_tuple_count": "75",
+    "mutant_schema": "Unsupported",
+    "mutant_probe": "",
+    "mutant_result": "NotApplicableAcceptedProof",
+    "ledger_kind": "Settled",
+    "initial_class": "unsupported schema",
+    "current_row": "618.optional-source-helpers.054",
+    "settlement_evidence": "Director continuation 3 fingerprint carry; port/rebase.tsv; Screen identity effective_same_test is crates/rum-stdlib/src/predicates/collections.rs:462-474. For each borrowed RetainedOptions item it calls same_test_option_rule_value (:439-449), whose entire chain is an Expr::Call head/arity test and same_test_option_name (:452-460), a string/symbol-name read. It clones the selected RHS as data and filters the literal Automatic symbol. RetainedOptions IntoIterator is the concrete slice iterator in runtime/accounting_mode/options.rs:51-57; its Deref is a slice borrow (:44-48), with no guest dispatch. The helper has no Session or callback parameter and every return is Ok(None/Some(data)); there is no Err constructor. A SameTest Function, including an InputString inside it, remains inert here and is invoked only in the later resume_duplicate_free_same_test consumer. The strongest probe installs a SameTest function that actually pauses in that later comparison. It records 1 external pause, 1 helper entry, and 0 helper pauses.",
+    "attempts": "",
+    "prior_verdict": "Unreachable",
+    "current_rebase_status": "FingerprintUnchanged",
+    "current_function_sha256": "5101c7c56562171a4f796c9f25cd407e6f5cfb67c31d5d487bd14d50e268613d",
+    "accepted_evidence_carried": "True"
+  },
+  {
+    "id": "618.optional-source-helpers.055",
+    "file": "crates/rum-stdlib/src/structure_ops/ordering_sets.rs",
+    "line": "584",
+    "function": "crates/rum-stdlib/src/structure_ops/ordering_sets.rs:584:::effective_same_test",
+    "target": "",
+    "sources": "screen_optional-source-helpers",
+    "verdict": "Unreachable",
+    "policy": "OptionalStage;RebuildTraversal",
+    "contexts": "required:consumer_routes;guest_heads;held_and_splice;prefix_and_tail;return_boundary;value",
+    "probe_ids": "623.pure.same-set",
+    "evidence": "unreachable-proofs.tsv; pure-receipts.tsv; pure/real.jsonl; pure/disabled.jsonl; pure/disabled.log",
+    "tail_observed": "Concrete closed callee chain cannot evaluate guest code or produce InputRequired; zero counters supplement the source proof.",
+    "owner": "G15-C2",
+    "disposition": "Settled",
+    "required_tuple_count": "70",
+    "mutant_schema": "Unsupported",
+    "mutant_probe": "",
+    "mutant_result": "NotApplicableAcceptedProof",
+    "ledger_kind": "Settled",
+    "initial_class": "unsupported schema",
+    "current_row": "618.optional-source-helpers.055",
+    "settlement_evidence": "Director continuation 3 fingerprint carry; port/rebase.tsv; Screen identity effective_same_test is crates/rum-stdlib/src/structure_ops/ordering_sets.rs:584-596. It iterates the same concrete borrowed RetainedOptions slice, tests Rule/RuleDelayed head and arity with same_test_option_rule_value (:561-571), reads a string/symbol name with same_test_option_name (:574-582), clones the selected RHS, and filters Automatic. All returns are Ok; there is no Session, callback invocation, provider, error constructor or continuation decode. RetainedOptions iteration and Expr cloning only borrow/share data. Guest SameTest evaluation happens later in resume_set_same_test (:598 onward), after this helper has returned. The strongest Union probe actually invokes a pausing SameTest function there, recording 1 external pause, 1 helper entry, and 0 helper pauses.",
+    "attempts": "",
+    "prior_verdict": "Unreachable",
+    "current_rebase_status": "FingerprintUnchanged",
+    "current_function_sha256": "5101c7c56562171a4f796c9f25cd407e6f5cfb67c31d5d487bd14d50e268613d",
+    "accepted_evidence_carried": "True"
+  }
+]
+```
+
+**Lost P0248 — Default fallback logical completion.** This is diagnostic accuracy, not an observed language-semantic difference. Thirty-six frozen source-reached real cells are valid native DIFF and language SAME, with exact real/disabled parity. Eight minimized cases are all semantically SAME; three retain the native loss and five adjacent controls are fully SAME. Every counter field is retained.
+
+The producer/caller frontier is `crates/rum-runtime/src/runtime/definitions/application/down_values.rs:67-85`. The actual direct lookup returns None and `DirectDefaultFallbackFrame::resume` consumes it at `definitions/application/down_values/default_fallback.rs:29`, then supplies the fallback's Some at line 39. The resumed adopted direct-default marker closes after this consumption, classifying the fallback result instead of the direct result. In the two-pause variant, a definition RHS record created inside resumed fallback is deferred at its pause but lacks terminal publication at this completion. The relevant completion machinery is `profiling/timing.rs:686`, `profiling/logical/mod.rs:509`, `profiling/logical/completion.rs:22` and the explicit frontier API in `profiling/logical/queue_api.rs:41` (before-consumer API at line 8).
+
+Field order for every vector below: calls, ok, err, some, none, return, throw, cancelled, abandoned, open. The complete minimized recipes and all changed native records follow. Answer strings are literal `answer`; the trace variant enables the existing phase observer.
+
+C4.loss.decline: language SAME; native DIFF.
+
+```rum
+Default[x_]:=83;Default[d]:=73/;(InputString["guard"];False);
+Default[d]
+```
+
+```json
+{
+  "inputs": [
+    [
+      "InputString",
+      "guard",
+      "answer"
+    ]
+  ],
+  "native_changes": {
+    "Runtime { phase: \"down_values.direct_default_lookup\", source: None }": {
+      "resumed": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "queued": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "raw": ".temp/g15-c2/logs/c4-structured-real-1.log"
+}
+```
+
+C4.loss.both: language SAME; native DIFF.
+
+```rum
+Default[x_]:=(InputString["rhs"];83);Default[d]:=73/;(InputString["guard"];False);
+Default[d]
+```
+
+```json
+{
+  "inputs": [
+    [
+      "InputString",
+      "guard",
+      "answer"
+    ],
+    [
+      "InputString",
+      "rhs",
+      "answer"
+    ]
+  ],
+  "native_changes": {
+    "Definition { kind: \"down_value_rhs_eval\", symbol: Symbol { id: 35, identity: None, text: SymbolText { id: 35, context: \"System`\", name: \"Default\" } }, index: 2 }": {
+      "resumed": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "queued": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "Runtime { phase: \"down_values.direct_default_lookup\", source: None }": {
+      "resumed": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "queued": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "raw": ".temp/g15-c2/logs/c4-structured-real-1.log"
+}
+```
+
+C4.loss.decline_trace: language SAME; native DIFF.
+
+```rum
+Default[x_]:=83;Default[d]:=73/;(InputString["guard"];False);
+Default[d]
+```
+
+```json
+{
+  "inputs": [
+    [
+      "InputString",
+      "guard",
+      "answer"
+    ]
+  ],
+  "native_changes": {
+    "Runtime { phase: \"down_values.direct_default_lookup\", source: None }": {
+      "resumed": [
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "queued": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "raw": ".temp/g15-c2/logs/c4-structured-real-1.log"
+}
+```
+
+C4.loss.fallback: language SAME; native SAME.
+
+```rum
+Default[x_]:=(InputString["rhs"];83);Default[d]:=73/;False;
+Default[d]
+```
+
+```json
+{
+  "inputs": [
+    [
+      "InputString",
+      "rhs",
+      "answer"
+    ]
+  ],
+  "native_changes": {},
+  "raw": ".temp/g15-c2/logs/c4-structured-real-1.log"
+}
+```
+
+C4.loss.accept: language SAME; native SAME.
+
+```rum
+Default[x_]:=83;Default[d]:=73/;(InputString["guard"];True);
+Default[d]
+```
+
+```json
+{
+  "inputs": [
+    [
+      "InputString",
+      "guard",
+      "answer"
+    ]
+  ],
+  "native_changes": {},
+  "raw": ".temp/g15-c2/logs/c4-structured-real-1.log"
+}
+```
+
+C4.loss.direct_body: language SAME; native SAME.
+
+```rum
+Default[d]:=(InputString["rhs"];73);
+Default[d]
+```
+
+```json
+{
+  "inputs": [
+    [
+      "InputString",
+      "rhs",
+      "answer"
+    ]
+  ],
+  "native_changes": {},
+  "raw": ".temp/g15-c2/logs/c4-structured-real-1.log"
+}
+```
+
+C4.loss.outside: language SAME; native SAME.
+
+```rum
+Default[x_]:=83;Default[d]:=73/;False;
+InputString["outside"];Default[d]
+```
+
+```json
+{
+  "inputs": [
+    [
+      "InputString",
+      "outside",
+      "answer"
+    ]
+  ],
+  "native_changes": {},
+  "raw": ".temp/g15-c2/logs/c4-structured-real-1.log"
+}
+```
+
+C4.loss.fallback_twice: language SAME; native SAME.
+
+```rum
+Default[x_]:=(InputString["one"];InputString["two"];83);Default[d]:=73/;False;
+Default[d]
+```
+
+```json
+{
+  "inputs": [
+    [
+      "InputString",
+      "one",
+      "answer"
+    ],
+    [
+      "InputString",
+      "two",
+      "answer"
+    ]
+  ],
+  "native_changes": {},
+  "raw": ".temp/g15-c2/logs/c4-structured-real-1.log"
+}
+```
+
+```text
+C2 C4 LOSS VERIFIED row=P0248 bound_real_DIFF=36 minimized_cases=8 reproduced_native_DIFF=3 adjacent_controls_SAME=5 language_observations=SAME repair_draft=present production_repair=not_run C2=OPEN
+```
+
+### 4. Repair group and sequencing
+
+The separate draft is `.temp/g15-c2/c4/draft-repair-default-fallback-logical-profiling.md`, also copied into the port. It proposes an explicit direct-lookup completion before fallback consumes the actual Option and proper publication/joining of definition records created by resumed fallback. It preserves actual Some/None/error categories, every guest evaluation, request validation, cancellation and abandonment, all ten counter fields, and the cold enabled-only instrumentation path. A copied repair experiment still has to establish the precise insertion; no green repair or production edit is claimed.
+
+The draft includes base-red/candidate-green native falsifiers, the adjacent controls, lifecycle/error/Return coverage, standing inventory replay before acceptance, and the required rum-vs-rum hot-path A/B. The director must review and issue an implementation brief. **S10 cannot precede this repair if C2 closure is its prerequisite.** C2 also remains open on the 394 residuals and incomplete whole-graph rebase.
+
+```markdown
+# Draft — Default fallback logical completion boundaries
+
+Director review required; this draft is not dispatched. No production change is authorized by brief 623.
+
+## Goal
+
+Make the profiled `Default` fallback path publish the same logical completion categories and closed definition-rule records after input resumption as after queued input. Preserve every language observation, suspension and guest evaluation. This repair must land before G15-C2 closes and before S10 if S10 depends on C2 closure.
+
+## Context pointers
+
+- `AGENTS.md`, `docs/dev/codex/TEMPLATE.md`, brief 623 continuation 4.
+- `crates/rum-runtime/src/runtime/definitions/application/down_values.rs:67`: direct-default phase starts, actual `Result<Option<Expr>>` is recorded at line 76, and its suspended continuation is appended at line 85.
+- `crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs:21`: `DirectDefaultFallbackFrame::resume`; actual `Ok(None)` enters fallback at line 29, returning the fallback's `Some` result at line 39.
+- `crates/rum-runtime/src/runtime/profiling/timing.rs:686`: adopted phase completion retains a paused record, then drains attached records.
+- `crates/rum-runtime/src/runtime/profiling/logical/mod.rs:509`: an RHS result of `InputRequired` defers the definition record.
+- `crates/rum-runtime/src/runtime/profiling/logical/completion.rs:22`: deferred definitions are published by `flush_definition_boundaries`; the typed fallback return currently does not call it.
+- `crates/rum-runtime/src/runtime/profiling/logical/queue_api.rs:41`: explicit frontier placement; the existing before-consumer API is at line 8.
+- Evidence: `.temp/g15-c2/c4/loss-minimization-plans.json`, `loss-evidence.json`, and the raw `c4-structured-real-1.log` / disabled logs. All language observations match. All ten logical fields are compared; no durations are included.
+
+## Scope
+
+Proposed production scope, to be finalized by the director: the direct-default adoption site and fallback continuation; the enabled logical boundary insertion/completion helpers only if an existing explicit frontier cannot express the correct position; profiling tests and the oracle's logical-profile fixture set. Replay all affected standing inventories before acceptance. No public host, slot, value, serde or language-contract change. No unsafe, dependencies or inventory hand edits.
+
+## Reproduction and mechanism
+
+One-pause witness:
+
+```rum
+Default[x_]:=83;
+Default[d]:=73/;(InputString["guard"];False);
+Default[d]
+```
+
+Supply `answer` at `guard`, or queue it before evaluation. The direct lookup's real result is `None`; fallback returns `Some[83]`. The queued counter is `[1,1,0,0,1,0,0,0,0,0]`; resumed is `[1,1,0,1,0,0,0,0,0,0]`. Fields are calls, ok, err, some, none, return, throw, cancelled, abandoned, open. The resumed boundary observes the fallback's result after the caller consumes `None`, instead of the direct lookup's result at its producer/consumer frontier.
+
+Two-pause witness changes `Default[x_]` to `(InputString["rhs"];83)`. After answering both prompts, the `down_value_rhs_eval` record for `Default` index 2 is `[0,0,0,0,0,0,0,0,0,1]` resumed versus `[1,1,0,1,0,0,0,0,0,0]` queued. The definition record is opened inside the resumed fallback, deferred at its RHS pause, and has no terminal completion publication on this path. The direct-default category difference remains. P0248's existing required contexts reach this exact fallback producer and exhibit both differences. The precise insertion repair still needs a copied experiment; this draft does not claim a green repair build.
+
+## Proposed target shape and stages
+
+1. Reproduce the two witnesses and five adjacent equal controls on the frozen current tree. Add a copied diagnostic that identifies the direct-default boundary, its exact incoming Option and the deferred RHS record; never decode an invented transport value.
+2. Give the direct lookup an explicit completion boundary before `DirectDefaultFallbackFrame` consumes its Option. Complete it with the actual `Ok(None)` or `Ok(Some(_))`, or the actual error. Prefer the existing enabled-only frontier mechanism. Do not move, repeat or remove guest evaluation, and do not replace the optional category by an unconditional category.
+3. Publish and join definition records created by guest work inside this resumed fallback onto the new pending suspension at the RHS completion boundary. Preserve request generation/control validation, cancellation and abandonment ownership. Do not turn an open record into a terminal record merely during serialization; close it at its actual completion.
+4. Test the complete producer/caller route and re-run C2's changed rows and matrices. Only then consider re-settling P0248 and affected transfers.
+
+## Verification
+
+Keep the two minimized witnesses red on base and green on candidate with final-value equality disabled for the native assertion. The direct-default None and RHS Some categories must match; no terminal open records may remain. Preserve counts for guard-accept, direct-body pause, pause only in fallback, two pauses only in fallback, and a pause outside Default. Extend through Error, Return, repeated suspension, cancel/reset, and phase trace. Preserve all semantic effects, queue, prefix and fresh-request checks.
+
+Run bounded focused runtime profiling and oracle tests, then relevant runtime/stdlib and workspace acceptance in both required feature configurations after standing inventory replay. Any stale fingerprint/certificate/position red is an ordering artifact to fix by replay, never by weakening the inventory. Since evaluator/profile boundaries are hot, run the required sequential rum-vs-rum core-language microbench base/candidate A/B, with no concurrent heavy work. Preserve the cold env-gated diagnostic convention and ordinary-path costs.
+
+## Hard rules and stop-loss
+
+No git, network, new unsafe, fabricated receipt, new internal-encoding probes, discarded non-duration field, or unapproved production edit during the diagnostic stage. Keep full raw output and every failed attempt. Stage the copied proof before a director-written implementation brief. Stop on a changed existing ownership disposition, or after two consecutive executed bounded attempts with no new requirement, coverage, valid mutation or outcome; source-only reviews do not start that clock.
+
+## Report
+
+Produce `rum-report/1` with raw native/semantic receipts, the exact source and boundary ownership diff, replay verdicts, negative controls, A/B rows and unresolved questions. The director's gate authorizes any implementation and C2 closure.
+```
+
+### 5. Exact residual list and stop-loss
+
+There are 394 residuals: 347 inherited residual rows and 47 reopened/new rows. The inherited mechanism classes among them are 322 LocalTail, 13 StrictDropGap, 7 StrictCallerGap and 5 StrictOtherCarrier; the other 47 are reopened/new. The exact list below includes current paired sites, the remaining proof, current real coverage and all attempted families. Its complete keyed evidence is in `c4/port/source-entries.jsonl`, `fresh-bindings.jsonl`, `own-mutant-receipts.jsonl` and `residual-list.tsv`. Unpaired source is explicitly retained; a missing row or receipt is not called unreachable.
+
+The final caller-proof family (P1880) and Drop-proof family (P2226/P2227) executed 65 and 130 whole-Result mutants respectively, with 65 and 130 exact real/disabled SAME pairs. Each omission was already armed in the preceding explicit cycle/error family, and all 195 real coverage cells existed before these full matrices. These follow-ups added 195 armed tuple receipts, but no source row gained a frozen requirement, real coverage cell, first armed mutant, caught mutant or outcome. The missing closed current source proofs prevent an Identity/Transferred or NoObservableTail claim. This is the required two-family stop; no source-only review was counted. Artifact-only reducers and fixture exports afterward execute no guest program.
+
+```text
+C2 C4 PROOF FAMILY {"DIFF": 0, "SAME": 65, "additional_armed_tuple_receipts": 65, "armed": 65, "caught": 0, "consecutive_nonprogress": 1, "coverage_cells": 65, "disabled_exact": 65, "disposition": "Residual: current closed Drop/caller proof is not established", "family": "caller-proof-carriers", "hit": 65, "invalid": 0, "mutant_probes": 65, "progress": {"armed_rows": 0, "caught_rows": 0, "coverage_cells": 0, "outcomes": 0, "requirements": 0}, "real_panel": "shared proof-carriers panel; per-family subsets counted", "real_programs": 65, "required": 65, "rows": ["P1880"], "source_only": false, "survived": 65}
+C2 C4 PROOF FAMILY {"DIFF": 0, "SAME": 130, "additional_armed_tuple_receipts": 130, "armed": 130, "caught": 0, "consecutive_nonprogress": 2, "coverage_cells": 130, "disabled_exact": 130, "disposition": "Residual: current closed Drop/caller proof is not established", "family": "drop-proof-carriers", "hit": 130, "invalid": 0, "mutant_probes": 130, "progress": {"armed_rows": 0, "caught_rows": 0, "coverage_cells": 0, "outcomes": 0, "requirements": 0}, "real_panel": "shared proof-carriers panel; per-family subsets counted", "real_programs": 130, "required": 130, "rows": ["P2226", "P2227"], "source_only": false, "survived": 130}
+C2 C4 STOP-LOSS executed_concrete_families=2 consecutive_zero_gain=2 new_requirements=0 new_coverage_cells=0 newly_armed_rows=0 new_caught_rows=0 new_outcomes=0 additional_armed_tuple_receipts=195 source_only=false C2=Open
+```
+
+```text
+C2 C4 STOP CLOCK RAW RECHECK executed_families=2 prior_armed_rows=3 additional_armed_tuple_receipts=195 gained_requirement_cells=0 gained_real_cells=0 gained_armed_rows=0 gained_outcomes=0 source_only=false
+```
+
+```tsv
+row	site	initial_class	prior_verdict	source_state	classification	required_nonencoding	fresh_real_SAME	own_mutants	armed	caught	survived	attempted_families	what_remains
+P0001	crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:93	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0002	crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:110	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0004	crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:245	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0011	crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:26	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	60	60	1	1	1	0	carrier;outer-options	Actual outer Option adoption omission caught; installed certified OptionReentry consumer routes not closed
+P0012	crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:31	survived or no mutation hit	Residual	FingerprintUnchanged	LocalTail	60	60	61	61	1	40	carrier;outer-options	Actual outer Option adoption omission caught; installed certified OptionReentry consumer routes not closed
+P0014	crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:59	compiled but no valid binding reached	Residual	FingerprintUnchanged	StrictDropGap	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0016	crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:119	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0019	crates/rum-runtime/src/runtime/accounting_mode/options.rs:230	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0020	crates/rum-runtime/src/runtime/accounting_mode/retained.rs:88	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0021	crates/rum-runtime/src/runtime/accounting_mode/retained.rs:120	compiled but no valid binding reached	Residual	FingerprintUnchanged	StrictCallerGap	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0022	crates/rum-runtime/src/runtime/accounting_mode/retained.rs:134	compiled but no valid binding reached	Residual	FingerprintUnchanged	StrictCallerGap	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0028	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:111	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0030	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:113	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0034	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:149	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0036	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:153	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0043	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:202	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0044	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:204	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0126	crates/rum-runtime/src/runtime/debug_tools/monitor/options.rs:52	survived or no mutation hit	Transferred	AdditionalUniqueSourcePairingNeedsFullRecheck	ReopenedOrNew	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0127	crates/rum-runtime/src/runtime/debug_tools/monitor/options.rs:61	compiled but no valid binding reached	Transferred	AdditionalUniqueSourcePairingNeedsFullRecheck	ReopenedOrNew	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0145	crates/rum-runtime/src/runtime/debug_tools/reap/sow.rs:55	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0214	crates/rum-runtime/src/runtime/debug_tools/trace/filter/leaf.rs:141	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0216	crates/rum-runtime/src/runtime/debug_tools/trace/filter.rs:76	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0239	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:144	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0243	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:218	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	optional	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0244	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:238	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	optional	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0245	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:243	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0246	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:256	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0247	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:305	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	optional	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Typed optional output lives inside a closure; outer owner needs its own concrete omission
+P0249	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:72	survived or no mutation hit	Residual	PairedNeedsFullRecheck	LocalTail	55	47	1	1	1	0	optional	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 8/55 current source-reached non-encoding SAME cells
+P0251	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:87	unsupported schema	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0252	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:100	survived or no mutation hit	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0255	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:204	survived or no mutation hit	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0257	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:262	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0258	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:295	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0260	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:368	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0262	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:388	survived or no mutation hit	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0263	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:391	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0265	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:434	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0267	crates/rum-runtime/src/runtime/definitions/application/down_values.rs:521	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	optional	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Typed optional output lives inside a closure; outer owner needs its own concrete omission
+P0270	crates/rum-runtime/src/runtime/definitions/application/replace_all/resume_frames.rs:66	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0271	crates/rum-runtime/src/runtime/definitions/application/replace_all/resume_frames.rs:99	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	optional	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0275	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:90	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0276	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:105	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0278	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:147	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0281	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:188	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0284	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:391	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0287	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:20	survived or no mutation hit	Residual	PairedNeedsFullRecheck	LocalTail	55	47	6	6	1	5	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 8/55 current source-reached non-encoding SAME cells
+P0289	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:26	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0290	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:35	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0292	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:60	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	55	1	1	1	0	structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck
+P0294	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:66	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0	optional	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0296	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:76	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0	structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0301	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:138	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	carrier	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0302	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:157	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0304	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:181	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	LocalTail	60	0	0	0	0	0	optional	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0305	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:211	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0307	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:231	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0308	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:238	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0310	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:283	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0311	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:327	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	LocalTail	60	0	0	0	0	0	optional	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0312	crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:365	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	optional	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Typed optional output lives inside a closure; outer owner needs its own concrete omission
+P0316	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:209	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0317	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:225	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0320	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:320	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	LocalTail	60	0	0	0	0	0	optional	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0321	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:394	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0322	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:413	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0323	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:451	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	optional	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Typed optional output lives inside a closure; outer owner needs its own concrete omission
+P0325	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:152	unsupported schema	Residual	AdditionalUniqueSourcePairingNeedsFullRecheck	LocalTail	50	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0326	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:152	unsupported schema	Residual	AdditionalUniqueSourcePairingNeedsFullRecheck	LocalTail	50	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0327	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:152	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0328	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:162	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0329	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:205	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0336	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:150	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	carrier	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0338	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:185	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0339	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:201	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0340	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:401	unsupported schema	Residual	AdditionalUniqueSourcePairingNeedsFullRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0341	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:217	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0342	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:401	unsupported schema	Residual	AdditionalUniqueSourcePairingNeedsFullRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0344	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:237	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0345	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:401	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0346	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:423	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0347	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:448	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0348	crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:312	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0349	crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:335	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0350	crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:357	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0351	crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:380	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0353	crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation/resume_frames.rs:174	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	33	33	33	0	30	carrier	Missing 27/60 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P0354	crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:165	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0366	crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:461	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0369	crates/rum-runtime/src/runtime/definitions/definition_tags.rs:14	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	carrier	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0372	crates/rum-runtime/src/runtime/definitions/definition_tags.rs:57	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	carrier	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0378	crates/rum-runtime/src/runtime/definitions/definition_tags.rs:269	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	carrier	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0379	crates/rum-runtime/src/runtime/definitions/definition_tags.rs:293	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	carrier	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0380	crates/rum-runtime/src/runtime/definitions/definition_updates/resume_frames.rs:26	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0381	crates/rum-runtime/src/runtime/definitions/definition_updates/resume_frames.rs:77	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0394	crates/rum-runtime/src/runtime/definitions/definition_updates.rs:234	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0396	crates/rum-runtime/src/runtime/definitions/definition_updates.rs:253	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0403	crates/rum-runtime/src/runtime/definitions/definitions/destructuring.rs:106	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Generic consumer/dispatch routes not closed on current source; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0405	crates/rum-runtime/src/runtime/definitions/definitions/destructuring.rs:146	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	40	40	40	0	36	carrier	Missing 10/50 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P0408	crates/rum-runtime/src/runtime/definitions/definitions/resume_frames.rs:24	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	50	0	0	0	0	0	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0410	crates/rum-runtime/src/runtime/definitions/definitions.rs:37	caught mutant; incomplete real tuples	Equal	PairedNeedsFullRecheck	ReopenedOrNew	50	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0417	crates/rum-runtime/src/runtime/definitions/definitions.rs:95	survived or no mutation hit	Residual	UnresolvedSiteNeedsRecheck	LocalTail	50	0	0	0	0	0	carrier;structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Current call/owner remains unpaired; no guessed span or mutation; Current expression absent from paired AST; macro or moved carrier needs an explicit owner mutation
+P0419	crates/rum-runtime/src/runtime/definitions/definitions.rs:112	compiled but no valid binding reached	Residual	UnresolvedSiteNeedsRecheck	LocalTail	50	0	0	0	0	0	carrier;structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Current call/owner remains unpaired; no guessed span or mutation; Current expression absent from paired AST; macro or moved carrier needs an explicit owner mutation
+P0425	crates/rum-runtime/src/runtime/definitions/definitions.rs:291	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	50	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0426	crates/rum-runtime/src/runtime/definitions/definitions.rs:320	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	50	50	1	1	1	0	optional	Changed/moved or unresolved source needs complete current policy/route and proof recheck
+P0428	crates/rum-runtime/src/runtime/definitions/definitions.rs:331	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	50	50	1	1	1	0	optional	Changed/moved or unresolved source needs complete current policy/route and proof recheck
+P0430	crates/rum-runtime/src/runtime/definitions/definitions.rs:340	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	50	50	50	50	0	50	optional	Changed/moved or unresolved source needs complete current policy/route and proof recheck; No own caught omission; surviving/unhit mutants do not settle the row
+P0433	crates/rum-runtime/src/runtime/definitions/definitions.rs:477	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	50	50	50	0	50	structured	No own caught omission; surviving/unhit mutants do not settle the row
+P0435	crates/rum-runtime/src/runtime/definitions/part_assignment.rs:41	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0436	crates/rum-runtime/src/runtime/definitions/part_assignment.rs:46	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	structured	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0437	crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:28	unsupported schema	Residual	FingerprintUnchanged	StrictOtherCarrier	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0438	crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:56	unsupported schema	Residual	FingerprintUnchanged	StrictOtherCarrier	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0439	crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:79	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0440	crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:98	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0441	crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:108	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0442	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:109	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	structured	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0450	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:218	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0455	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:305	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0458	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:328	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0459	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:354	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0463	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:462	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0464	crates/rum-runtime/src/runtime/definitions/rule_lhs/continuation.rs:21	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	44	44	44	0	36	carrier	Missing 11/55 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P0466	crates/rum-runtime/src/runtime/definitions/rule_lhs/continuation.rs:62	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	carrier	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0470	crates/rum-runtime/src/runtime/definitions/rule_lhs.rs:76	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0474	crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs:55	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0475	crates/rum-runtime/src/runtime/eval_call_prepare.rs:434	unsupported schema	Residual	AdditionalUniqueSourcePairingNeedsFullRecheck	LocalTail	50	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0478	crates/rum-runtime/src/runtime/eval_call_prepare.rs:404	survived or no mutation hit	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	50	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0479	crates/rum-runtime/src/runtime/eval_call_prepare.rs:434	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	50	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0481	crates/rum-runtime/src/runtime/eval_call_prepare.rs:448	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	50	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0485	crates/rum-runtime/src/runtime/eval_core/call.rs:158	caught mutant; incomplete real tuples	Residual	AdditionalUniqueSourcePairingNeedsFullRecheck	LocalTail	50	50	11	11	1	0	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck
+P0487	crates/rum-runtime/src/runtime/eval_core/call.rs:164	survived or no mutation hit	Lost	AdditionalUniqueSourcePairingNeedsFullRecheck	ReopenedOrNew	50	50	1	1	0	1	diagnostic	Moved strict tail; full real matrix and own surviving omission retained; closed live Drop inventory and current named caller proof missing; No own caught omission; surviving/unhit mutants do not settle the row
+P0492	crates/rum-runtime/src/runtime/eval_core/call.rs:235	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0494	crates/rum-runtime/src/runtime/eval_core/call.rs:281	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	55	1	1	1	0	optional	Changed/moved or unresolved source needs complete current policy/route and proof recheck
+P0496	crates/rum-runtime/src/runtime/eval_core/call.rs:359	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0498	crates/rum-runtime/src/runtime/eval_core/call.rs:407	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	50	1	1	1	0	optional	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 5/55 current source-reached non-encoding SAME cells
+P0502	crates/rum-runtime/src/runtime/eval_core/call.rs:549	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	carrier	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0503	crates/rum-runtime/src/runtime/eval_core/call.rs:609	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	carrier	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0504	crates/rum-runtime/src/runtime/eval_core/call.rs:673	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	carrier	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0505	crates/rum-runtime/src/runtime/eval_core/call.rs:722	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	carrier	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0508	crates/rum-runtime/src/runtime/eval_core/mod.rs:75	caught mutant; incomplete real tuples	Residual	PairedNeedsFullRecheck	LocalTail	30	30	30	30	0	25	carrier	Generic consumer/dispatch routes not closed on current source; No own caught omission; surviving/unhit mutants do not settle the row
+P0527	crates/rum-runtime/src/runtime/eval_core/symbol.rs:118	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0528	crates/rum-runtime/src/runtime/eval_core/symbol.rs:330	compiled but no valid binding reached	Residual	AdditionalUniqueSourcePairingNeedsFullRecheck	LocalTail	30	0	0	0	0	0	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0529	crates/rum-runtime/src/runtime/eval_core/symbol.rs:332	compiled but no valid binding reached	Residual	AdditionalUniqueSourcePairingNeedsFullRecheck	LocalTail	30	0	0	0	0	0	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0534	crates/rum-runtime/src/runtime/eval_core/symbol.rs:330	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	structured	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Typed output has a local closure; explicit phase mutation required
+P0535	crates/rum-runtime/src/runtime/eval_core/symbol.rs:332	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	structured	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Typed output has a local closure; explicit phase mutation required
+P0537	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:124	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	structured	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0543	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:187	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0	structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0544	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:197	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	43	1	1	1	0	builtin-route;structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 12/55 current source-reached non-encoding SAME cells
+P0548	crates/rum-runtime/src/runtime/kernel_data/association_data/resume_frames.rs:56	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0549	crates/rum-runtime/src/runtime/kernel_data/association_data/resume_frames.rs:80	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0553	crates/rum-runtime/src/runtime/kernel_data/association_data.rs:735	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	50	50	50	0	50	structured	No own caught omission; surviving/unhit mutants do not settle the row
+P0554	crates/rum-runtime/src/runtime/kernel_data/association_data.rs:748	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0555	crates/rum-runtime/src/runtime/kernel_data/association_data.rs:753	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	structured	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0558	crates/rum-runtime/src/runtime/kernel_data/association_data.rs:874	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0566	crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:24	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0567	crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:60	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0590	crates/rum-runtime/src/runtime/kernel_data/control_data/assertions.rs:181	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0591	crates/rum-runtime/src/runtime/kernel_data/control_data/assertions.rs:212	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0693	crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:93	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0694	crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:107	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0695	crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:205	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	LocalTail	60	0	0	0	0	0	carrier;structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Current call/owner remains unpaired; no guessed span or mutation; Current expression absent from paired AST; macro or moved carrier needs an explicit owner mutation
+P0696	crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:276	unsupported schema	Transferred	UnresolvedSiteNeedsRecheck	ReopenedOrNew	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0697	crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:298	unsupported schema	Transferred	UnresolvedSiteNeedsRecheck	ReopenedOrNew	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0711	crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:167	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0712	crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:199	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0756	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs:61	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0757	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs:86	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	36	36	36	0	0	carrier	Missing 24/60 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P0758	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs:112	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0759	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs:138	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0760	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions/resume_frames.rs:164	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0765	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:286	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0767	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:299	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0769	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:374	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0772	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:421	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	35	0	0	0	0	0		Missing 35/35 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0773	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:427	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0775	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:467	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	35	0	0	0	0	0		Missing 35/35 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0812	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:102	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0813	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:104	compiled but no valid binding reached	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0817	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:129	survived or no mutation hit	Residual	PairedNeedsFullRecheck	LocalTail	65	60	1	1	1	0	carrier;cycle-finish	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 5/65 current source-reached non-encoding SAME cells
+P0818	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:142	survived or no mutation hit	Residual	PairedNeedsFullRecheck	LocalTail	60	60	1	1	1	0	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck
+P0823	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:201	unsupported schema	Residual	FingerprintUnchanged	LocalTail	65	0	0	0	0	0		Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0824	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:458	compiled but no valid binding reached	Residual	AdditionalUniqueSourcePairingNeedsFullRecheck	LocalTail	65	0	0	0	0	0	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0827	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:302	unsupported schema	Residual	FingerprintUnchanged	LocalTail	35	0	0	0	0	0		Missing 35/35 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0829	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:388	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0830	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:421	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0831	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:458	unsupported schema	Residual	FingerprintUnchanged	LocalTail	65	0	0	0	0	0	carrier	Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0832	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:507	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P0836	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:78	unsupported schema	Residual	FingerprintUnchanged	LocalTail	45	45	45	45	0	32	optional	No own caught omission; surviving/unhit mutants do not settle the row
+P0837	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:80	unsupported schema	Residual	FingerprintUnchanged	LocalTail	45	45	45	45	0	32	optional	No own caught omission; surviving/unhit mutants do not settle the row
+P0840	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:151	survived or no mutation hit	Residual	FingerprintUnchanged	LocalTail	50	50	50	50	0	36	optional	No own caught omission; surviving/unhit mutants do not settle the row
+P0847	crates/rum-runtime/src/runtime/kernel_data/evaluated_part_selectors.rs:86	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P0934	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/pattern_resolution.rs:30	survived or no mutation hit	Residual	FingerprintUnchanged	LocalTail	50	50	50	50	0	36	carrier	No own caught omission; surviving/unhit mutants do not settle the row
+P0936	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/pattern_resolution.rs:64	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1037	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs:143	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	60	48	48	48	0	0	carrier	Missing 12/60 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P1038	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs:159	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	50	38	38	38	0	0	carrier	Missing 12/50 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P1070	crates/rum-runtime/src/runtime/kernel_data/structure_data/replace/guarded.rs:262	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1132	crates/rum-runtime/src/runtime/options/builtins.rs:265	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	50	50	50	50	0	0	carrier	No own caught omission; surviving/unhit mutants do not settle the row
+P1139	crates/rum-runtime/src/runtime/options/core.rs:19	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	46	1	1	1	0	optional	Missing 4/50 current source-reached non-encoding SAME cells
+P1142	crates/rum-runtime/src/runtime/options/core.rs:96	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	50	50	1	1	1	0	carrier	Generic consumer/dispatch routes not closed on current source
+P1147	crates/rum-runtime/src/runtime/options/core.rs:193	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	50	50	1	1	1	0	carrier	Generic consumer/dispatch routes not closed on current source
+P1155	crates/rum-runtime/src/runtime/options/read_phase.rs:92	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	50	50	1	1	1	0	carrier	Generic consumer/dispatch routes not closed on current source
+P1158	crates/rum-runtime/src/runtime/options/resume_frames.rs:21	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1159	crates/rum-runtime/src/runtime/options/resume_frames.rs:47	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	structured	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1160	crates/rum-runtime/src/runtime/options/resume_frames.rs:49	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	structured	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1193	crates/rum-runtime/src/runtime/pattern_matching/core.rs:116	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	structured	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1238	crates/rum-runtime/src/runtime/pattern_matching/sequence/optional_sequence/choices.rs:137	survived or no mutation hit	Residual	FingerprintUnchanged	LocalTail	55	11	11	11	0	11	structured	Missing 44/55 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P1240	crates/rum-runtime/src/runtime/pattern_matching/sequence/optional_sequence/choices.rs:173	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	structured	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1310	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/collect.rs:149	survived or no mutation hit	Residual	FingerprintUnchanged	LocalTail	60	11	11	11	0	11	structured	Missing 49/60 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P1312	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/collect.rs:172	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0	structured	Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1331	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs:163	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1333	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs:177	survived or no mutation hit	Residual	FingerprintUnchanged	LocalTail	60	11	11	11	0	11	structured	Missing 49/60 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P1335	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs:198	survived or no mutation hit	Residual	FingerprintUnchanged	LocalTail	60	11	11	11	0	11	structured	Missing 49/60 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P1470	crates/rum-runtime/src/runtime/resolution/resume_frames.rs:37	unsupported schema	Residual	FingerprintUnchanged	LocalTail	40	0	0	0	0	0	structured	Missing 40/40 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Typed output has a local closure; explicit phase mutation required
+P1471	crates/rum-runtime/src/runtime/resolution/resume_frames.rs:62	unsupported schema	Residual	FingerprintUnchanged	LocalTail	40	0	0	0	0	0	structured	Missing 40/40 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Typed output has a local closure; explicit phase mutation required
+P1476	crates/rum-runtime/src/runtime/resolution.rs:466	survived or no mutation hit	Residual	PairedNeedsFullRecheck	LocalTail	30	2	2	2	0	2	carrier	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 28/30 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P1480	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:34	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	60	0	0	0	0	0	structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1482	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:42	compiled but no valid binding reached	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1483	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:47	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	60	0	0	0	0	0	structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1486	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:87	unsupported schema	Residual	FingerprintUnchanged	LocalTail	65	0	0	0	0	0	optional	Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1487	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:107	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1544	crates/rum-runtime/src/runtime/session/guest_loading/script.rs:69	survived or no mutation hit	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1551	crates/rum-runtime/src/runtime/session/session_eval.rs:183	compiled but no valid binding reached	Residual	FingerprintUnchanged	StrictCallerGap	65	0	0	0	0	0		Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1552	crates/rum-runtime/src/runtime/session/session_eval.rs:190	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1553	crates/rum-runtime/src/runtime/session/session_eval.rs:200	compiled but no valid binding reached	Residual	UnresolvedSiteNeedsRecheck	StrictCallerGap	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1555	crates/rum-runtime/src/runtime/session/session_eval.rs:257	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1556	crates/rum-runtime/src/runtime/session/session_eval.rs:310	survived or no mutation hit	Boundary	AdditionalUniqueSourcePairingNeedsFullRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1557	crates/rum-runtime/src/runtime/session/session_eval.rs:304	compiled but no valid binding reached	Boundary	UnresolvedSiteNeedsRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1558	crates/rum-runtime/src/runtime/session/session_eval.rs:332	caught mutant; incomplete real tuples	Boundary	PairedNeedsFullRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1559	crates/rum-runtime/src/runtime/session/session_eval.rs:340	compiled but no valid binding reached	Boundary	PairedNeedsFullRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1560	crates/rum-runtime/src/runtime/session/session_eval.rs:414	compiled but no valid binding reached	Boundary	UnresolvedSiteNeedsRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1562	crates/rum-runtime/src/runtime/session/session_requests.rs:170	survived or no mutation hit	Residual	UnresolvedSiteNeedsRecheck	LocalTail	30	0	0	0	0	0	structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Current expression absent from paired AST; macro or moved carrier needs an explicit owner mutation
+P1563	crates/rum-runtime/src/runtime/session/session_requests.rs:193	compiled but no valid binding reached	Residual	UnresolvedSiteNeedsRecheck	LocalTail	30	0	0	0	0	0	structured	Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; Current expression absent from paired AST; macro or moved carrier needs an explicit owner mutation
+P1564	crates/rum-runtime/src/runtime/session/session_requests.rs:235	compiled but no valid binding reached	Residual	FingerprintUnchanged	StrictCallerGap	65	0	0	0	0	0		Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1565	crates/rum-runtime/src/runtime/session/session_requests.rs:245	compiled but no valid binding reached	Residual	FingerprintUnchanged	StrictCallerGap	65	0	0	0	0	0		Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1566	crates/rum-runtime/src/runtime/session/session_requests.rs:259	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1567	crates/rum-runtime/src/runtime/session/session_requests.rs:293	survived or no mutation hit	NoObservableTail (proposal)	UnresolvedSiteNeedsRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1568	crates/rum-runtime/src/runtime/session/session_requests.rs:329	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1569	crates/rum-runtime/src/runtime/session/session_requests.rs:389	unsupported schema	Boundary	UnresolvedSiteNeedsRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1571	crates/rum-runtime/src/runtime/session/session_requests.rs:423	unsupported schema	Boundary	UnresolvedSiteNeedsRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1573	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:22	unsupported schema	Residual	PairedNeedsFullRecheck	StrictOtherCarrier	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1574	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:108	unsupported schema	Residual	AdditionalUniqueSourcePairingNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1575	crates/rum-runtime/src/runtime/suspension/core/fault.rs:126	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1576	crates/rum-runtime/src/runtime/suspension/core.rs:631	unsupported schema	Transferred	PairedNeedsFullRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1577	crates/rum-runtime/src/runtime/suspension/core.rs:682	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1578	crates/rum-runtime/src/runtime/suspension/core.rs:753	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	LocalTail	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1579	crates/rum-runtime/src/runtime/suspension/core.rs:776	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	LocalTail	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1580	crates/rum-runtime/src/runtime/suspension/core.rs:788	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1581	crates/rum-runtime/src/runtime/suspension/core.rs:825	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1582	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:49	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1583	crates/rum-runtime/src/runtime/test_builtins.rs:510	compiled but no valid binding reached	Residual	FingerprintUnchanged	StrictDropGap	65	0	0	0	0	0	carrier	Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1585	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:21	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1586	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:45	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1587	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:69	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1588	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:95	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1589	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:121	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1590	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:147	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1591	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:179	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1592	crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:234	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1595	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:48	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	carrier	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1597	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:74	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	carrier	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1599	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:97	compiled but no valid binding reached	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	carrier	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1610	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:238	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1613	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:283	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1615	crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:325	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1621	crates/rum-runtime/src/runtime/tree_walkers/position/options.rs:42	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1625	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:21	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1626	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:47	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1627	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:76	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0	carrier	Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1628	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:122	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1630	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:166	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1636	crates/rum-runtime/src/runtime/tree_walkers/position.rs:178	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1637	crates/rum-runtime/src/runtime/tree_walkers/position.rs:207	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1640	crates/rum-runtime/src/runtime/tree_walkers/position.rs:275	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1708	crates/rum-stdlib/src/associations/basic.rs:219	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	50	50	50	0	40	optional	No own caught omission; surviving/unhit mutants do not settle the row
+P1802	crates/rum-stdlib/src/associations/missing/target.rs:145	unsupported schema	Residual	FingerprintUnchanged	StrictOtherCarrier	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1803	crates/rum-stdlib/src/associations/missing/target.rs:148	unsupported schema	Residual	FingerprintUnchanged	StrictOtherCarrier	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1804	crates/rum-stdlib/src/associations/missing/target.rs:210	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	structured	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1805	crates/rum-stdlib/src/associations/missing/target.rs:261	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1806	crates/rum-stdlib/src/associations/missing/target.rs:331	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	structured	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1810	crates/rum-stdlib/src/associations/missing.rs:76	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	optional	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P1814	crates/rum-stdlib/src/associations/mutation.rs:234	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	50	49	1	1	1	0	carrier	Missing 1/50 current source-reached non-encoding SAME cells
+P1817	crates/rum-stdlib/src/associations/mutation.rs:363	caught mutant; incomplete real tuples	Residual	FingerprintUnchanged	LocalTail	50	49	1	1	1	0	carrier	Missing 1/50 current source-reached non-encoding SAME cells
+P1818	crates/rum-stdlib/src/associations/mutation.rs:530	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P1880	crates/rum-stdlib/src/control_flow.rs:29	survived or no mutation hit	Residual	FingerprintUnchanged	StrictCallerGap	65	65	130	130	0	111	carrier;cycle-finish;proof-carriers	All 65 whole-Result mutants armed and survived; current closed live Drop/named caller proof missing; No own caught omission; surviving/unhit mutants do not settle the row
+P1936	crates/rum-stdlib/src/functional_ops/arrays/mod.rs:31	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	50	50	50	0	40	optional	No own caught omission; surviving/unhit mutants do not settle the row
+P1937	crates/rum-stdlib/src/functional_ops/arrays/mod.rs:55	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	46	1	1	1	0	optional	Missing 4/50 current source-reached non-encoding SAME cells
+P2127	crates/rum-stdlib/src/integer_digits.rs:104	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	optional	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2128	crates/rum-stdlib/src/integer_digits.rs:180	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0	optional	Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2132	crates/rum-stdlib/src/lazy/machine.rs:27	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2133	crates/rum-stdlib/src/lazy/machine.rs:68	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2134	crates/rum-stdlib/src/lazy/machine.rs:79	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2135	crates/rum-stdlib/src/lazy/machine.rs:107	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2137	crates/rum-stdlib/src/lazy/source.rs:65	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	51	1	1	1	0	structured	Missing 4/55 current source-reached non-encoding SAME cells
+P2146	crates/rum-stdlib/src/lazy.rs:446	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2175	crates/rum-stdlib/src/number_theory.rs:137	unsupported schema	Residual	FingerprintUnchanged	LocalTail	45	0	0	0	0	0	optional	Missing 45/45 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2176	crates/rum-stdlib/src/number_theory.rs:167	unsupported schema	Residual	FingerprintUnchanged	LocalTail	45	0	0	0	0	0	optional	Missing 45/45 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2177	crates/rum-stdlib/src/number_theory.rs:193	unsupported schema	Residual	FingerprintUnchanged	LocalTail	45	0	0	0	0	0	optional	Missing 45/45 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2178	crates/rum-stdlib/src/number_theory.rs:219	unsupported schema	Residual	FingerprintUnchanged	LocalTail	45	0	0	0	0	0	optional	Missing 45/45 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2179	crates/rum-stdlib/src/number_theory.rs:250	unsupported schema	Residual	FingerprintUnchanged	LocalTail	45	0	0	0	0	0	optional	Missing 45/45 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2226	crates/rum-stdlib/src/predicates/collections.rs:365	survived or no mutation hit	Residual	FingerprintUnchanged	StrictDropGap	65	65	130	130	0	110	carrier;cycle-finish;proof-carriers	All 65 whole-Result mutants armed and survived; current closed live Drop/named caller proof missing; No own caught omission; surviving/unhit mutants do not settle the row
+P2227	crates/rum-stdlib/src/predicates/collections.rs:385	survived or no mutation hit	Residual	FingerprintUnchanged	StrictDropGap	65	65	130	130	0	114	carrier;cycle-finish;proof-carriers	All 65 whole-Result mutants armed and survived; current closed live Drop/named caller proof missing; No own caught omission; surviving/unhit mutants do not settle the row
+P2299	crates/rum-stdlib/src/schema.rs:130	survived or no mutation hit	Residual	FingerprintUnchanged	LocalTail	165	0	0	0	0	0		Missing 165/165 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2348	crates/rum-stdlib/src/strings/patterns/search/guarded/replace.rs:109	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2354	crates/rum-stdlib/src/strings/patterns/search/guarded/replace.rs:231	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2379	crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:138	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2381	crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:191	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2385	crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:265	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2387	crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:326	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2409	crates/rum-stdlib/src/strings/patterns/search/rules.rs:131	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2411	crates/rum-stdlib/src/strings/patterns/search/rules.rs:187	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2416	crates/rum-stdlib/src/strings/patterns/search/rules.rs:296	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2418	crates/rum-stdlib/src/strings/patterns/search/rules.rs:332	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2544	crates/rum-stdlib/src/structure_ops/list_plumbing.rs:30	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2547	crates/rum-stdlib/src/structure_ops/list_plumbing.rs:151	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2591	crates/rum-stdlib/src/structure_ops/sequence/take_drop.rs:81	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	50	50	50	0	40	optional	No own caught omission; surviving/unhit mutants do not settle the row
+P2595	crates/rum-host/src/session.rs:352	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	28	0	0	0	0	host-family	Missing 2/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2596	crates/rum-host/src/session.rs:373	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	30	0	0	0	0	host-family	No fresh executable own-mutant receipt
+P2599	crates/rum-host/src/session.rs:436	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	28	0	0	0	0	host-family	Missing 2/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2600	crates/rum-host/src/session.rs:482	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	30	0	0	0	0	host-family	No fresh executable own-mutant receipt
+P2601	crates/rum-host/src/session.rs:557	unsupported schema	Residual	FingerprintUnchanged	LocalTail	65	0	0	0	0	0	host-family	Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2602	crates/rum-host/src/session.rs:561	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	30	0	0	0	0	host-family	No fresh executable own-mutant receipt
+P2603	crates/rum-host/src/session.rs:592	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	15	0	0	0	0	host-family	Missing 15/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt
+P2604	crates/rum-host/src/session.rs:708	unsupported schema	Residual	FingerprintUnchanged	LocalTail	210	208	5	5	0	5	host-family	Actual timeout owner observer catches all 5 phase cases; generic HostSession.guard callers not closed; Missing 2/210 current source-reached non-encoding SAME cells; No own caught omission; surviving/unhit mutants do not settle the row
+P2605	crates/rum-jupyter/src/adapter/execute.rs:20	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2606	crates/rum-jupyter/src/adapter/execute.rs:245	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2607	crates/rum-jupyter/src/adapter/execute.rs:248	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2608	crates/rum-jupyter/src/adapter/input_retirement.rs:15	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2609	crates/rum-jupyter/src/adapter/worker.rs:185	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2610	crates/rum-jupyter/src/adapter/worker.rs:339	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2611	crates/rum-jupyter/src/adapter/worker.rs:358	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2612	crates/rum-jupyter/src/adapter/worker.rs:369	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2613	crates/rum-jupyter/src/adapter/worker.rs:374	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2614	crates/rum-jupyter/src/adapter/worker.rs:387	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2615	crates/rum-cli/src/eval_tests.rs:38	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2616	crates/rum-cli/src/eval_tests.rs:58	unsupported schema	Residual	PairedNeedsFullRecheck	StrictDropGap	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2617	crates/rum-cli/src/eval_tests.rs:59	unsupported schema	Boundary	PairedNeedsFullRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2618	crates/rum-cli/src/eval_tests.rs:60	unsupported schema	Boundary	PairedNeedsFullRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2619	crates/rum-cli/src/eval_tests.rs:61	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2620	crates/rum-cli/src/eval_tests.rs:62	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	StrictDropGap	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2621	crates/rum-cli/src/eval_tests.rs:62	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2622	crates/rum-cli/src/eval_tests.rs:79	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2623	crates/rum-cli/src/input_retirement.rs:15	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2624	crates/rum-cli/src/main.rs:43	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2625	crates/rum-cli/src/main.rs:67	unsupported schema	Residual	FingerprintUnchanged	LocalTail	35	0	0	0	0	0		Missing 35/35 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2626	crates/rum-cli/src/main.rs:92	unsupported schema	Residual	FingerprintUnchanged	StrictDropGap	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2627	crates/rum-cli/src/main.rs:107	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2629	crates/rum-cli/src/main.rs:113	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2630	crates/rum-cli/src/main.rs:115	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2631	crates/rum-cli/src/main.rs:116	unsupported schema	Residual	FingerprintUnchanged	StrictDropGap	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2632	crates/rum-cli/src/main.rs:120	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2633	crates/rum-cli/src/main.rs:122	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2635	crates/rum-cli/src/main.rs:224	unsupported schema	Residual	FingerprintUnchanged	StrictDropGap	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2636	crates/rum-cli/src/main.rs:231	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	StrictDropGap	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2637	crates/rum-cli/src/main.rs:231	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2638	crates/rum-cli/src/main.rs:243	unsupported schema	Boundary	UnresolvedSiteNeedsRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2639	crates/rum-cli/src/main.rs:239	unsupported schema	Boundary	PairedNeedsFullRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2640	crates/rum-cli/src/main.rs:255	unsupported schema	Boundary	UnresolvedSiteNeedsRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2641	crates/rum-cli/src/main.rs:248	unsupported schema	Boundary	PairedNeedsFullRecheck	ReopenedOrNew	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2642	crates/rum-cli/src/main.rs:260	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2643	crates/rum-cli/src/main.rs:297	unsupported schema	Residual	FingerprintUnchanged	StrictDropGap	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2644	crates/rum-cli/src/main.rs:315	unsupported schema	Residual	FingerprintUnchanged	StrictDropGap	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2645	crates/rum-cli/src/main.rs:323	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	30	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2646	crates/rum-repl/src/lib.rs:138	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2647	crates/rum-repl/src/lib.rs:152	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2648	crates/rum-repl/src/lib.rs:181	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2649	crates/rum-repl/src/lib.rs:195	unsupported schema	Residual	FingerprintUnchanged	StrictDropGap	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2650	crates/rum-repl/src/lib.rs:287	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2651	crates/rum-repl/src/request.rs:134	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2652	crates/rum-repl/src/request.rs:181	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2653	crates/rum-repl/src/request.rs:184	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2654	crates/rum-repl/src/request.rs:195	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2655	crates/rum-repl/src/request.rs:206	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2656	crates/rum-repl/src/request.rs:219	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+P2657	crates/rum-repl/src/request.rs:252	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+S002	crates/rum-runtime/src/runtime/debug_tools/monitor/options.rs:132	unsupported schema	Transferred	AdditionalUniqueSourcePairingNeedsFullRecheck	ReopenedOrNew	50	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+618.frameless-transforms.033	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:71	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	LocalTail	45	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 45/45 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+618.frameless-transforms.076	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:74	unsupported schema	Residual	FingerprintUnchanged	LocalTail	30	0	0	0	0	0		Missing 30/30 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+618.optional-source-helpers.007	crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs:44	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+618.optional-source-helpers.019	crates/rum-runtime/src/runtime/definitions/incremental_append.rs:8	unsupported schema	Residual	FingerprintUnchanged	LocalTail	50	0	0	0	0	0		Missing 50/50 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+618.optional-source-helpers.023	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:223	unsupported schema	Residual	PairedNeedsFullRecheck	LocalTail	55	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+618.optional-source-helpers.025	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/table_fast_path.rs:11	unsupported schema	Residual	FingerprintUnchanged	LocalTail	55	0	0	0	0	0		Missing 55/55 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+618.optional-source-helpers.027	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:71	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	LocalTail	45	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 45/45 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+618.optional-source-helpers.042	crates/rum-runtime/src/runtime/scoping/lexical/block/continuation.rs:573	unsupported schema	Residual	FingerprintUnchanged	LocalTail	60	0	0	0	0	0		Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+618.effect-questions.004	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:98	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	LocalTail	45	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 45/45 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+618.effect-questions.005	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:103	unsupported schema	Residual	UnresolvedSiteNeedsRecheck	LocalTail	45	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 45/45 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+C1.P0942	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:65	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	ReopenedOrNew	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+C1.P0943	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:67	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	ReopenedOrNew	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+C1.P0949	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:148	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	ReopenedOrNew	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+C1.P0950	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:150	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	ReopenedOrNew	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+C1.P0952	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:180	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	ReopenedOrNew	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+C1.P0953	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:190	new C1 producer edge	Transferred	UnresolvedSiteNeedsRecheck	ReopenedOrNew	65	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 65/65 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+C1.P0956	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all_application.rs:23	new C1 producer edge	Residual	UnresolvedSiteNeedsRecheck	LocalTail	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+C1.P0957	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all_application.rs:46	new C1 producer edge	Residual	UnresolvedSiteNeedsRecheck	LocalTail	60	0	0	0	0	0		Changed/moved or unresolved source needs complete current policy/route and proof recheck; Missing 60/60 current source-reached non-encoding SAME cells; No fresh executable own-mutant receipt; No new concrete family executed for this row before stop-loss; inherited attempts retained
+C3.evaluate_call.unstable_head	crates/rum-runtime/src/runtime/eval_core/call.rs:137	new continuation3 producer edge		NewEdge	ReopenedOrNew	50	50	1	1	1	0	new-edge	Distinct outer caller completion owner; own omission caught and real matrix SAME; complete new-row policy/route proof missing
+```
+
+### 6. Port tables, falsifiers and integrity
+
+`c4/port/` contains all 1,033 source entries, 75,475 frozen keys, 2,780 resolved fixture programs with `.rum` source/setup files and input hashes, every fresh binding, own-mutant receipt, current concrete mutation schema, the unchanged 29-row prior Equal table, and the minimized loss/repair draft. All retained source copies, build receipts and raw logs remain under `.temp/g15-c2/`. Programs inherited from current descriptor factories were materialized by a constructor-only exporter: zero new guest executions. Configuration provenance includes the retained factory source and native/host driver configuration; a program text alone is not the fixture.
+
+The port is intentionally partial evidence, not a completed all-green manifest. The 618 carries use their authorized enclosing-function/file fingerprints; no pruned historical fixture or raw receipt was invented. The residual rows name missing matrices, concrete mutation/closure owners, live Drop types, caller/dispatch closure, native drivers and changed-source proofs.
+
+```text
+C2 C4 SAVED FIXTURE EXPORT programs=2174 guest_executions=0 descriptor_factories_only=true
+```
+
+```text
+C2 C4 PORT READY source_rows=1033 required_keys=75475 fixtures=2780 fresh_bindings=4125 retained29=UNCHANGED inherited_carries=618 historical_raw_scene=pruned-and-disclosed residuals=394 all_green_manifest=false
+```
+
+The final ledger negatives are nonvacuous: the actual Open ledger and P0259 positive pass under successful calibration; each invalid ledger fails its intended predicate. No temporary promotion was written.
+
+```text
+C2 C4 LEDGER POSITIVE GREEN identities=1033 carried=618 new_Equal=20 new_Lost=1 residuals=394 calibration=PASS
+C2 C4 LEDGER LOCAL POSITIVE GREEN row=P0259 complete_real_matrix=true own_raw_mutant_caught=true calibration_guard_not_vacuous=true
+C2 C4 LEDGER NEGATIVE C2-done-with-residuals: RED (G15-C2 marked Done while residuals or loss remain)
+C2 C4 LEDGER NEGATIVE delete-a-row: RED (source ledger identities differ from frozen population)
+C2 C4 LEDGER NEGATIVE duplicate-a-row: RED (duplicate source ledger row)
+C2 C4 LEDGER NEGATIVE wrong-row-mutant: RED (caught mutant row differs from promoted row: P0487 <- P0259; no authentic own caught mutant: P0487)
+C2 C4 LEDGER NEGATIVE surviving-identity-mutant-promoted: RED (no authentic own caught mutant: P0487)
+C2 C4 LEDGER NEGATIVE incomplete-matrix-promoted: RED (incomplete real required matrix: P0259)
+C2 C4 LEDGER CONTROLS mandatory=6 rejected=6 unexpected_green=0 positive_current_ledger=GREEN positive_P0259=GREEN C2=Open
+C2 C4 FINAL RAW AUDIT {"accepted_carries": 618, "encoding_requirements": 18160, "fresh_Equal_nonencoding_cells": 980, "full_graph_rebase": "incomplete", "inherited_keys_preserved": 75295, "keys_added": 180, "keys_deleted": 0, "new_equal": 20, "new_internal_encoding_executions": 0, "new_lost": 1, "original_residuals": 347, "outcomes": {"Boundary": 7, "Equal": 29, "Identity": 5, "Lost": 1, "Residual": 394, "Transferred": 594, "Unreachable": 3}, "population_lower_bound": 1033, "production_changes": 0, "reopened_residuals": 47, "requirements": 75475, "stop_loss_nonprogress_batches": 2}
+```
+
+Standing inventories were not expired by this diagnostic work. No live covered source changed, no production acceptance suite ran, and no inventory was hand-edited. There was no acceptance-suite red caused by stale fingerprint, certificate or position cells. Copied compiler failures and invalid probe recipes above are explicitly different events; they are not claimed as production regressions.
+
+```text
+C2 C4 STANDING INVENTORY REPLAY NA production_source_changes=0 covered_live_source_changes=0 production_acceptance_suites=0 copied_diagnostic_collectors_only=true inventory_edits=0 stale_inventory_reds=0
+```
+
+```text
+C2 C4 BUILD ARTIFACT RECHECK receipts=21 source_tree_hashes=PASS binary_hashes=PASS original_lock_package_records=PASS network_builds=0
+C2 C4 PORT RECHECK rows=1033 required_keys=75475 bindings=4125 fixtures=2780 program_setup_input_hashes=PASS residuals=394 exact_residual_list=PASS retained29=UNCHANGED
+C2 C4 SEMANTIC CONTROL RAW RECHECK controls=4 actual_arms=4 actual_own_hits=4 observer_red=4 final_value_comparison_disabled=true
+C2 C4 PREAPPEND INTEGRITY {"brief_unchanged": true, "current_tree_sha256": "8b19433397bc9048beddd9c1eb719d40c5233ec0b0ea2e75e7e20da1b614a335", "entry_files": 2707, "entry_tree_sha256": "8b19433397bc9048beddd9c1eb719d40c5233ec0b0ea2e75e7e20da1b614a335", "new_guest_executions": 0, "production_changes": 0, "unchanged_files": 2707}
+```
+
+Not run: production cargo fmt/workspace/runtime/two-feature acceptance suites, production inventory replay, performance or instruction gates, production repair, new internal-encoding probes, a complete regenerated whole-graph census, renewed complete MIR/Drop/dynamic-caller proofs, or new CLI/REPL/Jupyter request-lifecycle drivers. The host eval/call/timeout panel did run. Build and test-child commands were bounded, offline and serial for cargo; no timing decision was made from these diagnostic durations.
+
+Entry tree fingerprint is recorded above. Finalization checks all 2,707 entry files and requires that only this brief change, that its original byte prefix remain exact, and that its appended bytes equal the complete `c4/REPORT.md`. The final whole-tree hash is in `c4/postappend-integrity.json` and the structured report, outside this text to avoid a circular digest. `c4/artifact-hashes.json` fingerprints retained evidence/source copies and binaries, and its independent replay reports exact missing/changed counts. Generated build/cache directories are disclosed separately from retained evidence.
+
+Every bounded run and failed attempt appears in a checked `rum-report/1` stage report at `.temp/brief-623/report-continuation4-<phase>.json`. The continuation summary references those stage reports and the complete command index. This keeps the final summary readable without omitting the child runs. The report-stage coverage check verifies every run is assigned exactly once. Initial failed preparations, both failed copied cargo builds, and the fixture-export reducer's first-record parsing error, and a syntax error in the final ledger-audit refinement are retained with their logs; the latter was corrected to accept libtest's line prefix without rerunning guest programs.
+
+### 7. Open questions and recommendations
+
+- **P0248 repair:** issue a director-reviewed implementation brief for the direct-default logical frontier and deferred RHS completion. Keep it ahead of C2 closure and S10. Do not relabel the native category/open-record loss as language loss.
+- **Continuation of residual work:** retain all 394 rows and resume only under a fresh director continuation after this required stop. Prioritize explicit closure/typed-phase mutants, current changed-source proofs and missing native request drivers; preserve the 20 new Equal receipts.
+- **Proof restoration:** rebuild the current closed Drop and named dynamic-caller inventories before new transfers. The source-only syntax classifier and the 15 additional pairings are useful indexes, not substitutes for those proofs or for exhaustive edge discovery.
+- **P0487 and the outer edge:** keep both identities. Finish P0487's transfer/Drop/caller proof independently of the new outer edge's full policy/route proof; do not use one row's caught mutant to promote the other.
+- **Manifest:** consume only the explicitly settled/fingerprint-carried rows now. Preserve the G13 transport obligations and every residual key. A complete green manifest, CHANGELOG update and S10 remain blocked on the stated work.
+
+## Director continuation 5 (2026-11-10) — the P0248 loss is real; the repair line opens before C2 resumes
+
+Continuation 4 executed the calibration on the restored bases, settled
+twenty rows Equal with fresh raw receipts, minimized one lost row to a
+reproducible native difference, and stopped on the required two-family
+stop-loss. **It is accepted in full, and its one FAIL is a real product
+finding.**
+
+### What I verified myself
+
+- **The two minimized witnesses reproduce on the current source.** With the
+  campaign's six `RUM_PROFILE_*` variables and the saved plans compiled into
+  `.temp/g15-c2/c4/source-structured-real`, the binary `structured-real`
+  reads, for `C4.loss.decline`
+  (`Default[x_]:=83;Default[d]:=73/;(InputString["guard"];False);Default[d]`,
+  one pause), `semantic_same=true`, `native_same=false`, and exactly one
+  changed row: `Runtime { phase: "down_values.direct_default_lookup" }`
+  resumed `[1,1,0,1,0,0,0,0,0,0]` against queued `[1,1,0,0,1,0,0,0,0,0,0]`.
+  For `C4.loss.both` (the fallback RHS pauses as well) the same row differs
+  and `Definition { kind: "down_value_rhs_eval", Default, index: 2 }` reads
+  resumed `[0,0,0,0,0,0,0,0,0,1]` (never closed) against queued
+  `[1,1,0,1,0,0,0,0,0,0]`. The five adjacent controls (`fallback`, `accept`,
+  `direct_body`, `outside`, `fallback_twice`) are all `valid=true`,
+  `semantic_same=true`, `native_same=true`. The language observations are
+  identical in every case: the direct lookup's actual result is `None` and
+  the fallback supplies `83`, on both paths.
+- **The calibration panels are as reported.** Re-counted from the raw logs:
+  pre-G15 30 cases = 11 SAME, 15 valid DIFF (G15A.01-.03 and G15B.01-.11,
+  .14 — exactly the recorded witnesses) and 4 invalid (G15B.12/.13/.15/.16,
+  the old recovery path asking input beyond the frozen recipe); pre-C1 24
+  fixtures = 12 DIFF / 12 SAME; current C1 = 24/24 SAME including both
+  recorded atom witnesses. The four fresh semantic controls hit their named
+  observers (`Some` P1486, `G15A` P1483, `G15B`
+  `CallArgument.finish_definition_lhs_active_expr`, `C1` P0956/P0957); the
+  `Some` raw shows baseline `C4_OPTION_SLOT InternalContinuationSome[5]`,
+  mutant `5`, and a public pair that stays SAME — the observer reddens
+  without manufacturing `None`.
+- **The twenty promotions carry their own caught mutant.** All twenty rows
+  read verdict `Equal`, `mutant_result=Caught`; the sampled raw logs
+  (`P0256`, `P0416`, `P1477`, `P2593`) each end `total=1 SAME=0 DIFF=1`. The
+  ledger identity is exact: 618 carries + 20 new Equal + 1 new Lost + 394
+  residuals = 1,033; the six negative controls all reject with no unexpected
+  green.
+- **The stop-loss fired on execution, not on review.** The proof-carrier
+  batch raw reads 65 and 130 whole-Result mutants, 65/130 armed, 65/130
+  real/disabled SAME pairs, 0 caught, every `progress` counter zero,
+  `source_only=false`, `consecutive_nonprogress=2`; the clock line records
+  195 additional armed tuple receipts with no new requirement, coverage
+  cell, armed row, caught row or outcome.
+- **No production byte moved.** `git status --porcelain` carries only this
+  brief; `git diff --numstat` is 1,216 additions / 0 deletions; entry and
+  final tree fingerprints are identical. The restored pre-G15 and pre-C1
+  trees still verify against their manifests (2,079/2,079 and 2,089/2,089,
+  rc=0).
+
+### Accepted
+
+- **Calibration PASS** on the restored bases, including the four rebuilt
+  semantic controls and the current 32/32 comparator.
+- **The twenty new Equal settlements** (15 diagnostic + P0416, P0820,
+  P0825, P2593, P1477), each with its complete non-encoding real matrix and
+  its own caught omission; the 29 prior Equal rows and the 618
+  fingerprint carries stand.
+- **The 394 residuals** are exact and preserved (347 inherited + 47
+  reopened/new; LocalTail 322, StrictDropGap 13, StrictCallerGap 7,
+  StrictOtherCarrier 5, ReopenedOrNew 47) with their per-row
+  `what_remains`.
+- **The two-family stop-loss.** Two consecutive executed concrete families
+  with zero row-level progress is the stop this campaign was told to take.
+  Nothing further executes under this continuation, and nothing is promoted
+  without evidence.
+
+### P0248 — the finding, accepted as a defect
+
+The row is `Lost`, and the loss reproduces. On the resumed path the adopted
+`down_values.direct_default_lookup` phase is closed with the fallback's
+`Some` instead of the direct lookup's `None`, and a definition record
+opened by guest work inside the resumed fallback is deferred at its pause
+and never published or closed. The language is unchanged; **the logical
+profiler's own record is wrong**, which is exactly what C2 exists to detect
+and cannot settle around. The queued path is the correct classification
+(the phase records `&direct_default` at `down_values.rs:78`); the resumed
+path is the defect. **The repair must land before C2 closes, and S10 cannot
+precede it.** The class is owed an inventory: every adopted phase whose
+pause path chains another computation after the pause, and every deferred
+definition boundary whose resume path can miss its publication.
+
+### The repair line — brief 719
+
+I wrote and dispatched **brief 719**, "G15-C2: the Default fallback logical
+completion": a copied red/green experiment first, then the implementation,
+then the acceptance. Its bars: the two minimized witnesses red on base and
+green on the repaired tree with the final-value comparison disabled; the
+five adjacent controls SAME; the 36 frozen P0248 bindings SAME; the
+definition record closed at its actual completion on every path; no
+terminal open record; language, suspension, cancellation and abandonment
+unchanged; the class inventory; the standing inventory replay; the full
+suites; and a disabled-path instruction gate proving the repair costs
+nothing when profiling is off (no off-state in a hot frame, the cold
+env-gated convention). A copied experiment that cannot reach green is a
+STOP, not a licence to guess.
+
+### Q repair, Q resume
+
+- **Repair: yes.** It is the line that must finish before C2 resumes; it is
+  not optional and it is not postponed.
+- **Resume, after 719's gate:** (1) re-settle P0248 with its full matrix on
+  the repaired profiler (36 bindings SAME, the row's own tail-skip mutant
+  armed and caught, the two witnesses green, five controls SAME), and
+  re-check every residual row whose required tuple names the direct-default
+  phase or a resumed-fallback definition record; (2) complete the
+  explicit-closure/typed-phase rows — the caught-mutant rows with
+  incomplete real tuples and the surviving rows whose omissions are already
+  armed — each to Equal or a named residual; (3) the 47 reopened/new rows'
+  complete current policy/route/proof rechecks; (4) rebuild the current
+  closed-Drop and named dynamic-caller inventories on the final source, then
+  settle the StrictDropGap/StrictCallerGap/StrictOtherCarrier groups and
+  P1880 / P2226 / P2227 with them — each row with its own caught omission or
+  a NoObservableTail proposal (every required tuple armed and SAME, plus the
+  mechanism source argument), reusing the 195 armed tuple receipts; (5) the
+  LocalTail 322 as mechanism-grouped NoObservableTail proposals with the
+  closed-source proofs; (6) P0487 and `C3.evaluate_call.unstable_head` stay
+  separate identities; then the port tables; stop for my gate. Whole-Result
+  carrier families that only repeat already-armed tuples do not restart the
+  clock.
+
+### State
+
+C2 remains **Open**: 394 residuals and one Lost (P0248); the whole-graph
+rebase stays FLAGGED and incomplete. No all-green manifest, no
+`CHANGELOG.md` update, no S10. The 20 new Equal receipts are preserved and
+the port tables are unchanged. After 719's gate a fresh continuation
+resumes at the order above.
