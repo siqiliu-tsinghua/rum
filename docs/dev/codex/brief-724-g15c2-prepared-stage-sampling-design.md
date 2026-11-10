@@ -108,3 +108,84 @@ suite. The two-concrete-family zero-progress stop-loss applies.
 inventory, per-candidate matrix, falsifier calibration, cost receipts,
 drafted briefs, and the exact residual obligations. C2 and S10 cannot close
 ahead of this repair.
+
+## Director ruling (2026-11-11) — run 1 STOP accepted; the P0496 reach is amended to the source invariant; continuation 1 finishes the design
+
+Run 1 (log `.temp/logs/cdx_brief_724.log`, 31,587 lines, sha256
+`ec8bfff8…`, memory-scope peak 2.87 GB, oom 0, rc=0) stopped at
+deliverable 1's mandatory P0496 reach before any insertion experiment,
+falsifier or cost capture, and left two conditional drafts. **The STOP is
+well taken and accepted.** No live file moved: 2,715 live files replay 0
+missing / 0 extra / 0 changed against `entry-hashes.json`, git is clean at
+`ebcc8475`, and the four protected scenes replay 95,156 files 0 changed
+(C9 33,294, C8 36,460, C7 25,251, brief-623 151). The fresh C9 baseline is
+exact: 16 records, the nine witnesses each changing exactly one phase
+(`Runtime { phase: "call.stage.prepare_arguments", source: None }`) with
+queued/resumed tuples equal to C9's canonical differences, the seven
+controls whole-list equal to C9, and every language observation equal. The
+two real route families ran 9 attempts / 8 valid / 1 retained invalid with
+zero P0496 hits; the head family enters the suspended dispatcher at stage 1
+with prepared state, and the definition family takes the stage-0 prepared
+skip. `report.py check` reads 80 citations. The five deviations and the
+one invalid fixture stay recorded, not gated.
+
+**My own source reading confirms the invariant behind G0.**
+`build_call_dispatch_plan` (`eval_dispatch/mod.rs:51-66`) returns a
+SpecialForm-only plan or pushes PrepareArguments first; the suspension
+resumes pass `stage_index + 1` (`eval_core/call.rs:479`, `:499`); the
+external LHS entry passes index 0 with `CallDispatchState::from_prepared`
+(`definitions/definition_lhs_preparation.rs:230-234`), which `call.rs:350`
+skips by `is_prepared`. The P0496 preparation branch (`call.rs:359`)
+cannot execute from any of the three production callers, and the type
+funnel makes the class duty structural: both prepared-suspension helpers
+(`call.rs:26`, `:46`) construct the shared `PreparedDispatchFrame`, whose
+sole resume is `resume_prepared_call_dispatch_frame` (`call.rs:462`), the
+P0505 consumer's call. A single insertion at that resume covers both
+construction sites; the dead branch keeps its existing success
+publication, is not edited, and is never exercised with a fabricated plan,
+carrier or result.
+
+**G0 is resolved by the first option.** Deliverable 1's sentence "Reach
+P0496 with a real earlier-stage continuation; never fabricate a prepared
+object or a suspended result." is amended to: "P0496's preparation branch
+is structurally unreachable from the current plan construction — a source
+invariant established by the three-caller closure, never by a finite probe
+count; never exercise it with a synthetic plan, carrier or result. Record
+the shared-frame funnel and the single resume insertion as the class
+discharge." The P0496 ledger row is not relabelled here; the C2 settlement
+round owns its disposition, with this source proof as the evidence.
+
+**Continuation 1** (this brief, forked from session
+`01a1c77e-38b0-7f61-9181-e27806c9b71e`) completes deliverables 2-5 on
+byte copies under the same Scope NONE and hard rules: the copied insertion
+experiments at the actual prepared-argument boundary, the calibrated
+falsifiers, the disabled-path instruction gate, and the TEMPLATE-shaped
+drafts. The run-1 baseline and route evidence stand and are not rerun.
+Rulings the continuation must carry:
+
+1. The completion fires only on a real `Ok(PreparedCallArguments)` resumed
+   outcome, after `install_prepared_call_arguments` installs and normalizes
+   the carrier and before `resume_suspended_call_with_dispatch_plan` can
+   Return or Throw; producer Return/Throw and the queued publication
+   (`call.rs:277-279`) keep their current, correct paths; repeated pauses
+   leave the boundary open until the real prepared boundary and complete
+   it exactly once.
+2. The retained boundary must be selected by exact queue ownership —
+   request control, logical generation, epoch and record — never by a
+   global phase-name scan; an independent wrong-owner falsifier is
+   required, alongside before/after placement and repeated-pause
+   falsifiers. An omission mutant must omit actual publication work.
+3. Disabled path: the caller row exact at unchanged call counts, and the
+   new symbols absent from every disabled capture. The 719-proven static
+   separation is the standing route for enabled-only work; an ungated flag
+   check added to the resume body is a STOP unless its disabled rows read
+   exact. No duplicated evaluator body for a diagnostic call.
+4. Any public TypedFrame trait or driver-order change is an explicit
+   G-question with its full ripple, never a default. Preserve the
+   fixed-point publication (`profile_queue.rs:368`), the definition
+   publication (`:608`) and the P0248/native repairs; the adjacent panels
+   (90/12/470/2/1/4, 84 controls, 20/14 omissions, definition, P0248 and
+   native) stay unchanged.
+5. Stop for the director gate with the experiment matrix, falsifier
+   calibration, cost receipts and drafts. The two-concrete-family
+   zero-progress stop applies.

@@ -171,7 +171,8 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   Equal, accepts P0503/P0504 and P0353 as `NoObservableTail`, and
   measures P0492 — the resumed `call.stage.prepare_arguments` samples
   the consumer's later Return/Throw; C2 at 328 residuals + 1 Lost; brief
-  724 designs its repair); then CM, `CHANGELOG.md` (before S10), G13
+  724 designs its repair — run 1's P0496 reach is amended to the source
+  invariant, continuation 1 in flight); then CM, `CHANGELOG.md` (before S10), G13
   S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Briefs 719-721:** P0248's
