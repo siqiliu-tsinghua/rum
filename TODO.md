@@ -40,14 +40,27 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   census with 76,030 keys). Continuation 6 is accepted too: eight more
   rows Equal (475/475 required cells SAME, each with its own caught
   omission), two mechanism groups over six rows accepted as
-  `NoObservableTail`, 77,755 keys and 362 residuals + 0 Lost. C2 stays
-  Open at 362 residuals + 0 Lost.
+  `NoObservableTail`, 77,755 keys and 362 residuals + 0 Lost.
+  Continuation 7 is accepted: four more rows Equal (P0408, P1139, P1142,
+  P1147; 1,485 required nonencoding cells re-read SAME from raw receipts,
+  the 23 frozen option routes each with their own caught omission),
+  three mechanism groups over thirteen rows accepted as
+  `NoObservableTail` (TagSet 1, control frames 10, integer threading 2),
+  77,930 keys, and **three genuine Lost rows** (P0267/P0312/P0323: 147
+  bound native differences = 144 terminal-open definition records + 3
+  repeated-RHS Return misclassifications, language observations SAME),
+  with a complete repair draft. C2 stays Open at 342 residuals + 3 Lost;
+  the definition-resume repair line opens before continuation 8.
 
-**Next, in order** (the branch queue): G15-C2's continuation 7 on the
-final source — the three remaining typed routes (1,150 obligations) and
-P0379's eight invalid cells, then the 290 LocalTail rows by mechanism,
-the 22 strict Drop/caller rows, the five new 719 edges and the 45
-reopened rows — CM, `CHANGELOG.md`, and S10 onward. LP08's counter promotion
+**Next, in order** (the branch queue): G15-C2's definition-resume repair
+— brief 720 (design-only: deferred definition RHS record publication at
+the three resumed down/sub/up-value frontiers, sub-/up-value
+producer-before-consumer None sampling, and the Return recovery
+ordering; all eight minimized falsifiers, thirteen controls and 147
+bound witnesses retained), then my implementation brief and its gate,
+then continuation 8 of 623 (re-settle the three Lost rows; then the 270
+LocalTail rows, the 45 reopened rows, the 22 strict Drop/caller rows and
+the five new 719 edges) — CM, `CHANGELOG.md`, and S10 onward. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by
 brief 717; `RumProfileSnapshot` keeps its protected `Null` behaviour in
 every mode. Brief 709
@@ -195,11 +208,12 @@ execution or by mechanical rule:
 | `Lost` | 16 |
 
 That leaves **353 residuals**. The 16 `Lost` rows are profiler counters, and
-they opened a new line. (2026-11-10 update: continuations 3-6 now stand at
-362 residuals + 0 Lost — 1,038-row lower bound, 618 carries, 50 Equal, 5
-Identity, 7 Boundary, 3 Unreachable, 17 `NoObservableTail` (11 accepted in
-C5, 6 accepted in C6) and 594 Transferred; brief 719 repaired P0248, and
-continuation 7 resumes on that source.)
+they opened a new line. (2026-11-10 update: continuations 3-7 now stand at
+342 residuals + 3 Lost — 1,038-row lower bound, 618 carries, 54 Equal, 5
+Identity, 7 Boundary, 3 Unreachable, 30 `NoObservableTail` (11 accepted in
+C5, 6 in C6, 13 in C7) and 594 Transferred; brief 719 repaired P0248,
+continuation 7 settled the four typed/Set rows and found the three
+definition-resume Lost rows, and the repair line resumes on that source.)
 
 **User ruling 2026-10-20: the profiler counts logical calls across
 suspension.** A call that pauses records one final outcome, as on the queued

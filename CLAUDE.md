@@ -165,25 +165,28 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
-- **Branch queue:** G15-C2's remaining rows (brief 719 accepted: the P0248
-  Default-fallback completion is repaired; continuation 5: 13 rows Equal;
-  continuation 6 accepted: eight rows Equal and two `NoObservableTail`
-  groups over six rows, 362 residuals + 0 Lost); then CM, `CHANGELOG.md`
+- **Branch queue:** G15-C2's remaining rows (brief 719 repaired P0248;
+  continuations 5-7 settled 25 rows Equal and ten `NoObservableTail`
+  groups; continuation 7 found **three Lost rows in the definition-resume
+  records** — next is brief 720 design, its implementation, then
+  continuation 8 at 342 residuals + 3 Lost); then CM, `CHANGELOG.md`
   (before S10), G13 S10–S54, F1–F23, R; E2.
-- **After the branch:** retention from E0 with Q3, then Q1/Q2/Q4/Q5, the
-  binary snapshot format, audit items and threat-model critiques; `v0.3.0`.
+- **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 is closed (counter promotion `b9b39763`, schema-v2
-  stages A/B `e9ba6dd7`/`a0c70615`, the profiling-lease isolation class
-  closed by 712-713, source-timing seam 718 at 3 Ir/call, the schema-v2
-  publication certified by 717 with `changed_code_growth=0`). **Brief 719
-  accepted:** P0248's Default-fallback completion is repaired (caller
-  frame back to base, base red, 8/8 recipes and 36/36 frozen bindings
-  SAME, workspace `4,215/0/61`). **Continuation 5 accepted:** 13 rows
-  Equal, five groups over eleven rows `NoObservableTail`, 618 carries,
-  376 residuals + 0 Lost. **Continuation 6 accepted:** eight rows Equal
-  (475/475 required cells SAME, own caught omissions), two groups over six
-  rows accepted as `NoObservableTail`, 1,038-row lower bound with 77,755
-  keys, 362 residuals + 0 Lost; next is continuation 7. `BRIEF_WORKER=mst`
+  stages A/B `e9ba6dd7`/`a0c70615`, seam 718, publication certified by
+  717 with `changed_code_growth=0`). **Brief 719 accepted:** P0248's
+  Default-fallback completion is repaired (caller frame back to base,
+  base red, 8/8 recipes and 36/36 frozen bindings SAME, workspace
+  `4,215/0/61`). **Continuation 5:** 13 rows Equal, five groups over
+  eleven rows `NoObservableTail`, 618 carries, 376 residuals.
+  **Continuation 6:** eight rows Equal (475/475 cells SAME), two groups
+  over six rows, 77,755 keys, 362 residuals + 0 Lost. **Continuation 7
+  accepted:** four rows Equal (the typed option routes with 23/23 own
+  route catches and the Set frame with 55/55 native-only catches; 1,485
+  cells re-read SAME), three groups over thirteen rows
+  `NoObservableTail` (770 own-armed cells), 77,930 keys, and three
+  **Lost** rows — 147 bound native differences in the resumed definition
+  RHS records (144 terminal-open, 3 Return), language SAME. `BRIEF_WORKER=mst`
   (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
