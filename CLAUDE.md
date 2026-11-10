@@ -167,27 +167,27 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   retention line (paused at E0) and the active suspension branch.
 - **Branch queue:** G15-C2's rows (721 installed the definition-resume
   repair; continuation 8 found P1470/P1471 Lost; brief 722 accepted the
-  fixed-point publication design; brief 723 stage A reproduced it on the
-  copies and STOPed at the worker's restart probe, so a continuation
-  completes stage A then stage B's live install; C2 at 334 residuals +
-  2 Lost + 35 `NoObservableTail`; the prepare-arguments finding goes to
-  continuation 9); then CM, `CHANGELOG.md` (before S10), G13 S10–S54,
-  F1–F23, R; E2.
+  fixed-point publication design; brief 723 stage A reproduced it, and
+  its two probe STOPs are ruled — the continuation completes stage A
+  then stage B's live install; C2 at 334 residuals + 2 Lost + 35
+  `NoObservableTail`; the prepare-arguments finding goes to continuation
+  9); then CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Brief 719:** P0248's
   fallback repaired (8/8 recipes, 36/36 bindings SAME). **Continuations
   5-7:** 25 rows Equal, ten `NoObservableTail` groups, 1,485 cells SAME,
-  77,930 keys, three **Lost** rows (147 differences). **Brief 720/721:**
-  continuation 2 moved publication to the enabled-only profiled queue
-  join (caller 81,588/30 every arm; 147 → 0), and 721 installed it.
-  **Continuation 8:** the repaired rows and P2604 settle Equal (470/470
-  equal the 721 panel), five `NoObservableTail` rows accepted,
+  77,930 keys, three **Lost** rows. **Brief 720/721:** publication rides
+  the enabled-only profiled queue join (caller 81,588/30 every arm;
+  147 → 0). **Continuation 8:** the repaired rows and P2604 settle Equal
+  (470/470 equal the 721 panel), five `NoObservableTail` rows accepted,
   P1470/P1471 are new Lost rows. **Brief 722 accepted (design):** the
   copy repairs all 18 fixed-point differences with 84 controls exact and
-  both omissions caught (20/14). **Brief 723 stage A run 1:** 90/12/470
-  reproduced (my gate 74/74), then STOPed at the worker's
-  eval_request-on-pending probe; the continuation completes stage A,
-  then stage B. `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  both omissions caught (20/14). **Brief 723 stage A:** 90/12/470
+  reproduced (my gate 74/74), ten lifecycle routes and the
+  foreign/interleaved probe pass, and the duplicate fault reads one
+  visible fault, zero transfer, the `InstrumentationFault` retirement
+  and guest 73 — my parenthetical bar is withdrawn; the reset-release
+  assertion replaces it. `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

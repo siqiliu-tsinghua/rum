@@ -190,7 +190,33 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   shared-target deviation with per-source rebuilds plus the `--force` sha
   spot check, then stage B exactly as written.
 
-**Next, in order** (the branch queue): **brief 723 continuation**, the
+  **Brief 723 stage A run 2 STOPs at the duplicate frontier; the STOP is
+  accepted and the failing bar is mine.** Run 2 (3,767 lines, sha256
+  `b75c4f2b…`, peak 3.43 GB) resolved restart exactly as ruled (all ten
+  lifecycle routes at both pauses, cancel → drive → fresh 91, zero charged
+  bytes, no faults), calibrated the foreign/interleaved probe (three
+  disclosed setup failures, then the final arm selects the exact own pass,
+  preserves the foreign and other-phase entries, completes six interleaved
+  replies, stash 0, faults 0), then the duplicate probe read one visible
+  fault, zero transfer, the stash intact at 8 entries, 20 records retired
+  under `InstrumentationFault`, and guest result 73. My gate: live 2,713
+  files exact to the continuation entry (digest `681581a6…`, delta exactly
+  my three ruling files), protected scenes hash-equal, both artifact
+  indices 208 files hash-exact, run-1 report and its 144-file index
+  preserved, `report.py check` 393 citations. The selector's duplicate
+  branch calls `epoch.fault()`; `retire_admitted` removes every record, so
+  `belongs_to_admitted` can never resolve the stashed boundaries again and
+  the existing consumer publisher requires a valid epoch — later owner
+  publication is impossible by construction. The stage-A parenthetical is
+  **withdrawn**; the corrected bar is the visible one-shot fault, zero
+  transfer, the intact stash, the visible `InstrumentationFault`
+  retirement, an unchanged guest, and the reset releasing the stash to
+  zero charged bytes. Remaining stage A: the corrected duplicate
+  assertions, missing-owner/zero-match, allocation cap, the calibrated
+  permanent test (existing accessors only; no probe seam), per-source
+  rebuilds plus the `--force` spot check, copied fmt/check; then stage B.
+
+**Next, in order** (the branch queue): **brief 723 continuation 2**, the
 implementation of the fixed-point pass publication (stage A's remaining
 failure-frontier proof and the permanent-regression calibration, then
 stage B's live insertion with the standing replays, the disabled cost

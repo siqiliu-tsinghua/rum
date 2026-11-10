@@ -420,3 +420,71 @@ Nothing else changes: the accepted mechanism, the three-file scope, the
 hard rules and the stop-for-the-gate discipline stand. Next: append this
 ruling, commit and push, archive the run-1 log as `cdx_brief_723.run1`,
 and dispatch the continuation forked from the run-1 session.
+
+## Director gate (2026-11-11) — continuation run 2: the duplicate-frontier red is my bar, not the product; the fault-path assertion is corrected and stage A continues
+
+Run 2 (session `01a1c68e-393e-7773-9c9c-e4f697e0d468`; log
+`.temp/logs/cdx_brief_723.log`, 3,767 lines, sha256 `b75c4f2b…`,
+memory-scope peak 3.43 GB, rc=0) resolved the restart probe exactly as
+ruled — all ten lifecycle routes at both pauses pass (cancel, Session
+drop, explicit abandon, cancellation-driven fresh restart returning 91,
+and the completed-resume/drop control), with `charged_bytes=0` and
+`faults=0` on every route — calibrated and passed the foreign and
+interleaved real-request probe, then STOPed at the duplicate frontier.
+**My own reproductions:** live tree 2,713 files exact to the
+continuation entry (digest `681581a6…`), whose only delta from run 1 is
+exactly my three ruling files; protected C7/C8/brief-623/brief-722
+hash-equal; both artifact indices 208 files hash-exact; the run-1
+report and its 144-file index preserved (the five mutable metadata
+files changed as disclosed); `report.py check` 393 citations.
+
+**The red is the bar.** The probe clones the actual paused
+`evaluate.once_unstable` boundary, pushes the clone into the stash, and
+calls the selector: one fault, zero transfer, stash unchanged (8
+entries). The selector's duplicate branch calls `epoch.fault()`
+(candidate `collector.rs:895`), and `fault_admitted`
+(`epoch.rs:862`) increments the fault counter then calls
+`retire_admitted` (`epoch.rs:797`), which sets `valid=false` and
+removes every record with `InstrumentationFault` (20 records here).
+`ProfileBoundary::belongs_to_admitted` resolves owner identity through
+those removed records (`mod.rs:85-108`), and the existing consumer
+publisher requires a valid epoch (`profile_queue.rs:362-374`, and the
+insertion guards at `:69-95`), so after the fault **no owner
+publication can occur by construction**. My stage-A parenthetical —
+"both boundaries remain and are later published by their owners" — is
+inconsistent with the accepted mechanism's own visible-fault semantics
+and is withdrawn. The guest still returns 73; the guest frames are not
+lost; the diagnostic records are retired visibly under the existing
+`InstrumentationFault` reason, which is the chosen oracle.
+
+**Corrected bar (the mechanism does not change):** the constructed
+duplicate match faults visibly exactly once, transfers nothing, and
+leaves the stash intact; the fault retires the epoch's open records
+under `InstrumentationFault` and the guest result and language are
+unchanged; a second selector call after the fault returns `None`
+without a second fault; `drain_attached_for` cannot attach retired
+records and leaves them stashed (a control, not a failure); the
+epoch/lease reset then releases the stash (`clear_stash_admitted` →
+`boundary.release()`, `collector.rs:751-782`) and `charged_bytes`
+returns to zero with an empty stash. Assert exactly that. Do not change
+the selector, the fault path or the epoch retirement.
+
+**Remaining stage A, in this order:** the corrected duplicate
+assertions; missing-owner and zero-match routes (these are pre-fault
+cases: the existing publisher still publishes the boundary later and no
+new fault is raised); the diagnostic-arena allocation cap; the
+permanent regression test (compile and calibrate red on base, green on
+the candidate, red under the stage-3 omission, at 8 and 1 threads,
+using only existing test accessors — the draft's shape is acceptable;
+do not install the copied probes' `hold_outer`/stash-injection seam,
+which is probe-only and not part of the accepted three files); the
+per-source base/candidate rebuilds with the `--force` sha256 spot
+check and the re-read panels; copied `fmt --check` and
+`check --all-targets`. Then stage B exactly as written.
+
+The three foreign-probe calibration failures are recorded, not gated:
+the first exposed an unheld cold drain, the second the real other-phase
+stash population (14 entries), the third an inverted cleanup
+assertion; the final keyed arm is the evidence. The 20-record
+`InstrumentationFault` retirement is likewise a visible diagnostic
+property of the accepted fault, not a guest-language loss.
