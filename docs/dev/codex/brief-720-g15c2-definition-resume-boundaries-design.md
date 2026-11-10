@@ -295,3 +295,70 @@ inventory, the drafts and every replay unchanged. Cost lanes carry the
 caller row and the same-source rebuild control; eight rows of the
 repaired shape are not a design if the caller still moves. Stop for my
 gate; no question is open.
+
+## Director review (2026-11-10) — continuation 1: the STOP is a
+measurement, the round is not a route, and the driver hook is refuted
+as a shape
+
+**What I reproduced myself.** The continuation's one executed family
+reproduces exactly from its twelve raw captures with the canonical
+reader: shipped base 81,588 instructions / 30 calls in all three draws,
+the refused publication 82,545 / 30 in all three, and the forced
+same-source rebuild 81,588 / 30 with all 60 required rows equal. The
+live tree matches the continuation's entry manifest (2,710 files, 0
+changed, 0 missing, 0 extra), the C7 scene is untouched (25,251
+entries), no git or network ran, and `report.py check` verifies 899
+citations. Scope is clean.
+
+**The attempted revision was not one.** The cold/noinline variant is
+codegen-identical to the refused publication: `publish` inlines
+`Profiled::pause`, `cold` outlines it at `0x144d30` (0x26 B), and both
+execute the identical caller row, 82,545 / 30, with an identical
+executed-opcode histogram. LLVM had already declined the `#[inline]`
+hint, so the attribute pair changed nothing and could not have.
+
+**The obvious structural alternative is worse, measured by me.**
+`.temp/director/probe-720/src-outline` is the publication tree with the
+profiled driver instantiation moved into an `#[inline(never)] fn
+drive_frames_profiled<O>`; its binary is `7f99edee…` and its three
+serial captures read 82,563 / 30 in every draw — +975 against base.
+The caller's call multiset is unchanged (279 direct calls in base, 280
+in publish, one extra indirect), so the +957 is not new work: it is
+code the disabled path executes, laid out differently, and it moves
+with any change to the profiled arm.
+
+**Ruled.** The driver's own code is shared by both instantiations. The
+const-PROFILED literal shape is what the `M` type parameter already
+provides; it is the refused publication under another spelling and is
+not to be retried. No wrapper, attribute or const in `drive_frames`
+can restore the row, and three measurements now say so. The next route
+must invoke the publication from enabled-only code that is not part of
+the disabled path — riding an existing call edge at the frontier with a
+body-neutral call-site change, or a frontier whose machinery already
+owns the session — and it must prove the caller row back at exactly
+81,588 / 30 at 30 calls, three draws, with the same-source rebuild
+control. The bar stands: a measurable default-path increase is a STOP,
+not a recorded deviation. The goal is fixed; the route is the worker's
+choice, and a route that silently changes when the flush runs is a
+STOP.
+
+The full publication/Return matrix was not re-run, which is correct
+under the STOP, and it must be re-run on the route that passes.
+Mechanisms B and C, the closed inventory, the drafts and the seven
+replay receipts are unchanged and were not touched. The continuation's
+two deviations are recorded, not gated: the route departed from the
+order's reference pattern, and its first whole-runtime reducer was
+stricter than the three-draw range floor; the corrected reduction
+keeps every row.
+
+**Continuation 2 order.** Do not retry the two measured dead ends
+(attributes on `Profiled::pause`; outlining the profiled driver). Find
+a route whose disabled caller is instruction-identical at identical
+calls, measure it with the caller row, three draws per arm and the
+same-source rebuild control, and only then re-run the whole publication
+and Return falsifier matrix (147 → 0, the three
+`[1,0,1,0,0,1,0,0,0,0]` witnesses to `[1,1,0,1,0,0,0,0,0,0]`, the 13
+controls, the two remaining decline records still red until mechanism
+B, the four independent mutants), keeping mechanisms B and C, the
+closed inventory, the drafts and every replay unchanged. Stop for my
+gate; no question is open.

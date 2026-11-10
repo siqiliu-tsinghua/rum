@@ -63,13 +63,21 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   `resume_eval_request_from_checkpoint` executes 82,545/30 against
   81,588/30, deterministic, with a same-source rebuild (81,588) and a
   signature-only variant (81,588) as controls; the 48-row cost table
-  omitted that caller. The continuation must re-measure the row and
-  move publication to a `const PROFILED` frontier route (the 719
-  pattern) or another instruction-identical route.
+  omitted that caller. **Continuation 1 (2026-11-10) STOPs on the same
+  row:** it reproduced 81,588/30 and 82,545/30 in three draws each with a
+  same-source rebuild control, but its "revision" (cold/noinline on
+  `Profiled::pause`) is codegen-identical to the refused publication, and
+  it did not attempt another route. I measured the obvious structural
+  alternative myself — outlining the profiled driver gives 82,563/30 —
+  so the +957 is shared-caller layout, not new work, and no wrapper,
+  attribute or const in `drive_frames` can restore the row. The
+  publication must ride enabled-only code outside the disabled path.
+  The continuation must find and prove that route (caller row 81,588/30,
+  three draws, same-source control) before re-running the whole matrix.
 
-**Next, in order** (the branch queue): brief 720 continuation 1 (revise
-and re-measure mechanism A; keep mechanisms B/C, the inventory and the
-drafts), then my implementation brief and its gate, then continuation 8
+**Next, in order** (the branch queue): brief 720 continuation 2 (find
+an instruction-identical publication route; no attribute or outlining
+retries), then my implementation brief and its gate, then continuation 8
 of 623 (re-settle the three Lost rows; then the 270 LocalTail rows, the
 45 reopened rows, the 22 strict Drop/caller rows and the five new 719
 edges) — CM, `CHANGELOG.md`, and S10 onward. The two root-context reds
