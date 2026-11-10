@@ -27,10 +27,18 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   stage-32 validation, the byte-delta witnesses (brief 716) and the
   disabled source-timing seam's repair (brief 718, accepted 2026-11-10:
   3 Ir/call on both campaign labels, helper at zero calls, workspace
-  4,212/0/61).
+  4,212/0/61);
+- G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
+  three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
+  real/disabled parity, caller frame back to base, native-stack 8/0 at 8
+  and 1 threads, disabled rows 192,000 at 400 calls with 34 edges
+  unchanged, workspace 4,215/0/61 over 63 binaries). C2 stays Open at 394
+  residuals + 1 Lost.
 
-**Next, in order** (the branch queue): G15-C2's remaining 353 rows on the
-final source, CM, `CHANGELOG.md`, and S10 onward. LP08's counter promotion
+**Next, in order** (the branch queue): G15-C2's continuation 5 on the
+final source — P0248's re-settle with its full matrix and the
+direct-default-affected residual rows, then the rest of the continuation-5
+order — CM, `CHANGELOG.md`, and S10 onward. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by
 brief 717; `RumProfileSnapshot` keeps its protected `Null` behaviour in
 every mode. Brief 709
@@ -178,7 +186,10 @@ execution or by mechanical rule:
 | `Lost` | 16 |
 
 That leaves **353 residuals**. The 16 `Lost` rows are profiler counters, and
-they opened a new line.
+they opened a new line. (2026-11-10 update: continuation 3's rebase and
+continuation 4's re-settle stand at 394 residuals + 1 Lost on the final
+source — 618 carries, 20 fresh Equal, one fresh Lost; brief 719 repaired
+P0248, and continuation 5 resumes on that source.)
 
 **User ruling 2026-10-20: the profiler counts logical calls across
 suspension.** A call that pauses records one final outcome, as on the queued

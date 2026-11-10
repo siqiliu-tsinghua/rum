@@ -105,15 +105,16 @@ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	745	9	c
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	757	9	conditional public input signature logical_profile_test_reasons_for
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	772	9	conditional public input signature logical_profile_test_pauses_for
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	790	9	conditional public input signature logical_profile_test_input_required_for
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1448	1	module evaluator has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1452	1	module retained_pause has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1456	1	module definitions has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1460	1	module assignments has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1464	1	module lease_release has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1468	1	module control_tests has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1542	1	module brief712_probe has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1546	1	module brief713_cleanup has 0 source candidates
-UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1553	1	module budget_witness has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1463	1	module evaluator has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1467	1	module retained_pause has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1471	1	module definitions has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1475	1	module assignments has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1479	1	module lease_release has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1483	1	module control_tests has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1560	1	module brief712_probe has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1564	1	module brief713_cleanup has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1571	1	module budget_witness has 0 source candidates
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/mod.rs	1575	1	module default_fallback has 0 source candidates
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/segments.rs	13	12	rum_runtime::runtime::profiling::logical::segments::Active.start/std::option::Option[Own]/arg0: foreign representation std::time::Instant: Instant
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/logical/totals.rs	31	17	rum_runtime::runtime::profiling::logical::totals::ActiveId.thread: foreign representation std::thread::ThreadId: std :: thread :: ThreadId
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/mod.rs	484	12	rum_runtime::runtime::profiling::BuiltinTimingToken.start: foreign representation std::time::Instant: Instant
@@ -129,6 +130,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_reset.r
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/brief713_timing_cleanup.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/budget_witness.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/control.rs	1	1	source file is not reachable from a production or test module declaration
+UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/default_fallback.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/definitions.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/evaluator.rs	1	1	source file is not reachable from a production or test module declaration
 UnknownConstruct	crates/rum-runtime/src/runtime/profiling/tests/lease_release.rs	1	1	source file is not reachable from a production or test module declaration

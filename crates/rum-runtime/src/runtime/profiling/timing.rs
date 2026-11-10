@@ -693,9 +693,21 @@ fn record_profile_runtime_path_timing_adopted_slow<
     let outcome = T::timing_outcome(result);
     if let Some(phase) = token.as_ref().map(|token| token.key.phase) {
         if let Some(key) = crate::runtime::profiling::logical::PhaseKey::from_name(phase) {
-            crate::runtime::profiling::logical::complete_phase(session, key, outcome, |call| {
-                T::finish_logical(call, result)
-            });
+            // The direct Default lookup's consumer may enter a fallback scan.
+            // Keep this invocation until that consumer has an insertion handle;
+            // its incoming Option must be observed before the fallback runs.
+            match (key, outcome) {
+                (
+                    crate::runtime::profiling::logical::PhaseKey::DownValuesDirectDefaultLookup,
+                    RuntimeProfileOutcome::InputRequired,
+                ) => {}
+                _ => crate::runtime::profiling::logical::complete_phase(
+                    session,
+                    key,
+                    outcome,
+                    |call| T::finish_logical(call, result),
+                ),
+            }
         }
     }
     record_profile_runtime_path_timing(token, outcome);

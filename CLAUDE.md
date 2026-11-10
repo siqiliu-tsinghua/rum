@@ -161,12 +161,13 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **Permission lists.** They get under-enumerated, so write a disclosure duty
   instead. An inventory rule must cover what new call edges make reachable.
 
-## Current state (2026-11-09)
+## Current state (2026-11-10)
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
-- **Branch queue:** LP08's schema-v2 publication; G15-C2's 353 rows; then
-  CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
+- **Branch queue:** G15-C2's remaining rows (brief 719 accepted: the P0248
+  Default-fallback completion is repaired; C2 Open at 394 residuals + 1
+  Lost); then CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 with Q3, then Q1/Q2/Q4/Q5, the
   binary snapshot format, audit items and threat-model critiques; `v0.3.0`.
 - **Latest done:** LP08's counter promotion at `b9b39763` (install 705,
@@ -186,7 +187,17 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   parity, both builds' source and stack rows, all 23 labels disposed with
   `changed_code_growth=0`, the ten mutants red at 8/1 and restored to
   `b0e38205…`, runtime `1413/0/5` at 8 and 1, workspace `4,212/0/61` over
-  63 binaries. LP08 is closed; next is G15-C2's 353 rows.**
+  63 binaries. LP08 is closed. **Brief 719 accepted: P0248's Default
+  fallback logical completion is repaired on the final source — caller
+  and suspend signature back to base, the enabled record body leaves the
+  direct InputRequired phase open, the cold pause selects the profiled
+  consumer from the enabled phase stack, and the resumed RHS pause
+  publishes its deferred definition boundary; base red on the three
+  witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
+  real/disabled parity, caller frame `0x2b8`/`0x7d8` equal to base,
+  native-stack 8/0 at 8/1, disabled rows 192,000/400 with 34 edges
+  unchanged, workspace `4,215/0/61` over 63 binaries. C2 stays Open at
+  394 residuals + 1 Lost; next is brief 623's continuation 5.**
   `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 

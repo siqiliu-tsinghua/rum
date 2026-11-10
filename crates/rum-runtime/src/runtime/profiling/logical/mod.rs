@@ -1228,6 +1228,21 @@ fn take_phase(key: PhaseKey) -> Option<PhaseEntry> {
     })
 }
 
+// The adopted record body leaves this invocation open only for a direct
+// Default pause. Select its consumer from that existing admission, without
+// carrying the physical timing token through the recursive caller's frame.
+#[cold]
+#[inline(never)]
+pub(in crate::runtime) fn direct_default_fallback_profiled() -> bool {
+    PHASE_LIFO.with_borrow(|stack| match stack.last() {
+        Some(PhaseEntry {
+            key: PhaseKey::DownValuesDirectDefaultLookup,
+            ..
+        }) => true,
+        _ => false,
+    })
+}
+
 #[cold]
 #[inline(never)]
 pub(in crate::runtime) fn complete_phase(
@@ -1510,8 +1525,11 @@ pub(in crate::runtime) fn pause_call_stage_at_finish(
 #[inline(never)]
 fn pause_call_stage_at_finish_slow(session: &mut crate::runtime::Session, phase: &'static str) {
     if let Some(key) = PhaseKey::from_name(phase) {
-        if key == PhaseKey::CallStageDownValues {
-            // Director-approved exception for this diagnostic marker only.
+        if matches!(
+            key,
+            PhaseKey::CallStageDownValues | PhaseKey::DownValuesDirectDefaultLookup
+        ) {
+            // These two producers return the witnessed Option consumed next.
             // The witnessed dispatch consumer has just been pushed; bind this
             // invocation before another push can replace its insertion handle.
             let Some(entry) = take_phase(key) else {
@@ -1553,3 +1571,7 @@ pub(in crate::runtime) use budget::BudgetProbe;
 #[cfg(test)]
 #[path = "../tests/budget_witness.rs"]
 pub(in crate::runtime) mod budget_witness;
+
+#[cfg(test)]
+#[path = "../tests/default_fallback.rs"]
+mod default_fallback;

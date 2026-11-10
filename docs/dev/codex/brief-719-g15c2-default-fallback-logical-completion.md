@@ -406,3 +406,100 @@ or stack measurement stop the round.
 
 **State.** C2 Open at 394 residuals + 1 Lost; no manifest, no CHANGELOG, no
 S10; brief 719's repair line open.
+
+## Director gate — 2026-11-10: ACCEPTED — the Default fallback completion is repaired on the final source
+
+**Verdict.** Continuation 2 is accepted in full. P0248's repair is in the
+live tree; the campaign's own re-settle of P0248 and its affected
+residual rows stays with continuation 5. C2 remains Open at 394 residuals
++ 1 Lost; no manifest, no CHANGELOG, no S10; no ledger promotion is made
+by this brief.
+
+**Scope, my own audit.** The diff is 9 files: `default_fallback.rs`,
+`profiling/timing.rs` and `profiling/logical/mod.rs`, the new
+`profiling/tests/default_fallback.rs`, and five canonical inventory
+replays. `down_values.rs` and `profiling/mod.rs` are back at the base
+bytes (the temporary `Clone`/`Copy` derive is reverted, so the one
+authorized scope extension is unused). A full sha256 walk of the entry
+manifest (2,290 files) against the live tree finds exactly the 13
+recorded changes, 0 missing and 0 extra; nothing under `.temp/g15-c2`
+was written today.
+
+**The copied stack gate, my own runs on the sha-bound binaries
+(`2eca8842…` base, `a040ddcdf…` stack, `46c06eea…`/`e4d7250dd…` CLIs,
+`60afc075…`/`366e3b8b…` debug).**
+
+- Base red on `C4.loss.decline`, `C4.loss.both` and `C4.loss.decline_trace`;
+  the stack route makes all eight recipes SAME with identical language
+  observations. The five adjacent controls stay SAME.
+- The 36 frozen P0248 bindings are 36/36 SAME on both the real and the
+  disabled arm, and the two arms are byte-identical case by case
+  (`real_disabled_exact=36/36`).
+- Disabled instruction rows, my six fresh Callgrind captures (three per
+  arm, the fourteen `RUM_PROFILE_*` at 0): 192,000 at 400 calls,
+  57,200 at 400 and 216,400 at 800 in both arms, deterministic. Parsing
+  the raw callgrind files myself gives 34 caller-to-callee edges per arm,
+  identical entry by entry. Program totals stay noise-limited and are
+  recorded, not gated.
+- `try_apply_down_values`'s frame is `0x2b8` in both release CLI arms and
+  `0x7d8` in both debug acceptance arms; the live acceptance binary also
+  reads `0x7d8`. Saved-register bytes and feature/profile/rustflags match.
+- `native_stack_thread_scope` is 8/0 at 8 and 1 threads on both copied
+  arms and on the live acceptance binary; the solo `dive[24]` control
+  prints `past-first-poll` before `StackLimit` again.
+
+**The live acceptance, my own reruns.** fmt clean; `check --workspace
+--all-targets` rc=0 with only the three standing lib-test warnings; the
+runtime lib exactly `1416 passed; 0 failed; 5 ignored; 2 filtered out`
+at 8 and at 1 threads (the two `--skip` names are the standing
+root-context reds: without the skip they are exactly the only two
+failures); the three new tests 3/3 at 8 and at 1, and 0/3 on the base
+tree over byte-identical test source (`c7b19e08…` both copies); stdlib
+lib `1111/0/53`; the six host targets 13/0 at 8 and 13/0 at 1 under
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`; the workspace `4,215 passed / 0
+failed / 61 ignored` over 63 binaries at 8 threads (peak 14.15 GB,
+rc=0; only the seven standing skips, and the nine native ZeroMQ names
+pass on this host). The standing replays: contract fingerprints 68 and
+the checked-in TSV byte-identical to a fresh canonical regeneration;
+both certificate cells GREEN (default and `--no-default-features`);
+ownership exact 61/79/8,825 with the pinned inventory test green;
+rejection census 1,220 (14/1,168/38) green through its pinned test; LP01
+five modes 88,795 records (my count from the raw child logs: 84,420
+observations + 875 receipts x 5, zero semantic differences); typed slots
+10/0/1; frame-root 15/0 with no new named type; the four-build warning
+matrix 0/0/3/3 with exactly the three standing `test_builtins` names.
+The ledger controls stand as continuation 4 recorded them: the six
+negative controls RED, the current ledger and the P0259 and P0248
+positives GREEN, C2 Open, no promotion written. `report.py check 719`
+verifies 6,076 citations.
+
+**The mechanism accepted.** The enabled record body leaves the direct
+`InputRequired` logical phase open; the cold `suspend` asks the enabled
+phase stack whether that same invocation is still admitted and selects
+the const-generic profiled consumer from that answer; the existing
+before-consumer insertion takes exactly that phase and binds it to the
+witnessed consumer, so the phase closes with the direct lookup's own
+`None`, never with the fallback's `Some`; and the profiled resumed frame
+publishes the owner-matched deferred definition boundaries onto the new
+pending RHS suspension, where they close at actual completion. The
+caller's source, call site and frames are the base's; the query opens,
+takes, completes and admits nothing new, and reads only the existing top
+entry.
+
+**Measured notes, for the record.** The cold `suspend` helper's own frame
+is `0x88 → 0x68` in release and `0x138 → 0x1d8` in debug. That helper is
+not the recursive frame and is not claimed frame-identical; the
+continuation's bar is the caller's frame, which is equal on both arms,
+and the lifecycle suite is its observer. One source-level note for the
+class duty: when the enabled admission refuses the phase start, the base
+`complete_phase` would fault the current top entry and the new record
+returns without that fault; no profile exists for that invocation and no
+harness observes it. Recorded, not a product signal.
+
+**Next.** Resume brief 623's continuation-5 order on this source: P0248's
+re-settle with its full matrix and the direct-default-affected residual
+rows; then the explicit-closure/typed-phase rows; the 47 reopened/new
+rows' rechecks; the rebuilt closed-Drop and named-caller inventories
+with the strict groups and P1880/P2226/P2227; the LocalTail mechanism
+proposals; P0487 and `C3.evaluate_call.unstable_head` as separate
+identities; port tables; then stop for my gate.
