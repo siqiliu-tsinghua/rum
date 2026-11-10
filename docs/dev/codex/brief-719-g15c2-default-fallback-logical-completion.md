@@ -244,3 +244,94 @@ witness row, no newly closed tuple, no new source fact or no new cost
 measurement, STOP and report. Source-only reviews do not start the clock.
 A lifecycle, error, Return, repeat-suspension, cancel or abandonment case
 that regresses is a STOP with its raw rows, never a test weakening.
+
+## Director continuation 1 (2026-11-10) — the disabled-path STOP is well taken; the repair continues with the caller's fast path unchanged
+
+**My verification of the STOP (reproduced on this tree).**
+
+- Live tree: all 2,289 entry hashes equal, 0 missing, 0 new under
+  `crates/`, `docs/` or `scripts/`; `git status --porcelain` empty; the
+  report checks (291 citations) and records 0 changes.
+- Binaries bind to their build receipts by sha256 (`bin/base` `2eca8842…`,
+  `bin/repair-v2` `92e8511b…`, `bin/optional-real` `f98fb37e…`,
+  `bin/optional-disabled` `6ec408d9…`, `bin/cli-base` `46c06eea…`,
+  `bin/cli-repair-v2` `fd732407…`); the copied repair tree differs from the
+  copied base in exactly the three patched files.
+- Base reds, my own runs: `C4.loss.decline`, `C4.loss.both` and
+  `C4.loss.decline_trace` differ exactly as recorded (the direct phase
+  resumed `[1,1,0,1,0,0,0,0,0,0]` vs queued `[1,1,0,0,1,0,0,0,0,0,0]`;
+  the RHS `Default` index 2 resumed `[0,0,0,0,0,0,0,0,0,1]` vs queued
+  `[1,1,0,1,0,0,0,0,0,0]`), `semantic_same` true in all eight, and the
+  adjacent controls SAME. Repair-v2: 8/8 SAME; the 36 frozen P0248
+  bindings 36/36 SAME on both arms with exact real/disabled parity, in my
+  own runs. The enabled-side mechanism is accepted as evidence: the
+  const-generic frame, the before-consumer handle and the flush at the
+  resumed fallback RHS pause are the target's enabled side.
+- The cost row, from my own six fresh Callgrind captures (three per arm,
+  same env, the fourteen `RUM_PROFILE_*` at 0, CPU-pinned, one build path,
+  one codegen unit) and the two raw captures re-read with valgrind's own
+  annotator: `try_apply_down_values` 192,000 instructions on the base and
+  193,600 on repair-v2, at 400 calls in both arms, deterministic across
+  every run. The program totals move with the process and are not the bar.
+
+**Ruling.** The STOP is well taken: the prototype adds four instructions
+per invocation of an evaluator function on the profiling-off path, and the
+hard line admits no default-path cost for diagnostics. No live edit is
+accepted; P0248 stays open; C2 stays Open at 394 residuals plus 1 Lost.
+The measured source of the delta is the caller's second discrimination of
+`direct_default` (`if let Err(EvalError::InputRequired …)`) before the
+synchronous record: the base caller already discriminates once in its
+existing `match`, and the prototype's early check runs on every
+direct-default invocation whether it pauses or not.
+
+**What the continuation must deliver.**
+
+- The goal and invariants as written: the resumed path records the same
+  ten fields as the queued path, the direct phase classifies its own
+  actual result, every definition record opened inside the resumed
+  fallback closes at its actual completion, and language, suspension,
+  cancellation and abandonment are unchanged.
+- The caller's disabled fast path stays instruction-identical. On the
+  captured workload every touched function's disabled-path row is
+  unchanged at identical call counts, `try_apply_down_values` included:
+  no new outcome discrimination on the non-pausing path, one record call
+  site, and the token reaching the existing pause arm by a route of your
+  choosing (for example the record helper handing it back, or the
+  completion driven entirely from the enabled machinery). The disable
+  decision stays behind the existing `lexical_profile_enabled()` boundary;
+  the const-generic frame keeps the disabled instantiation free of state
+  and of the flush edge; no new call edge on the non-pausing path. What a
+  pause or resumed frame may add with profiling off is only that boundary
+  test.
+- Order: the copied experiment now carries the cost gate. On a copied
+  tree, show the base red (the three witnesses) and the route green on all
+  eight recipes and all 36 frozen bindings with exact real/disabled parity,
+  **and** show the captured disabled rows unchanged at identical call
+  counts; only a route green on both goes live. A route that cannot hold
+  both bars is a STOP with the measured rows, never a weakened bar.
+- Class duty as written: the 72-entry inventory stands as a source review,
+  and once the route is proven every entry gets a disposition. An entry
+  whose mechanism is a pause that defers a record whose completion depends
+  on post-pause computation is either repaired by this route or becomes a
+  named C2 residual row with its falsifier case; a one-line "already
+  correct" is not a disposition for a row in that mechanism class. Other
+  mechanisms are named and reported, not silently marked correct.
+- Everything else in this brief stands unchanged: the verification order
+  and bars, the ledger controls, the standing replays, the disabled-path
+  Callgrind gate, the language A/B at 8 and 1 threads, the report shape and
+  the hard rules.
+
+**Scope extension (one, disclosed).** If and only if the chosen route
+requires it, `crates/rum-runtime/src/runtime/profiling/mod.rs` is
+authorized for the `RuntimePathTimingToken` type's `Clone`/`Copy` derive
+only (its key and `Symbol` are already `Copy`); no other change in that
+file. Anything else outside the MAY list remains a STOP with the file and
+the reason.
+
+**Stop-loss** unchanged: two consecutive executed bounded attempts with no
+new witness row, no newly closed tuple, no new source fact and no new cost
+measurement stop the round. Source-only reviews do not start the clock.
+
+**State.** C2 Open at 394 residuals + 1 Lost; no manifest, no CHANGELOG, no
+S10; brief 719's repair line open. Resume after a route proves both bars,
+or on a STOP.
