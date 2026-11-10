@@ -583,3 +583,105 @@ Next: format, re-run the copied sanity gates and the re-anchored
 receipts, then stage B exactly as written. The three foreign-probe
 calibration failures, the two copied-probe compiler launch failures and
 the setup launch failure remain recorded, not gated.
+
+## Director gate (2026-11-11) — continuation run 4: the LP01 nested-admission abort is a real defect in the accepted selector's admission use; the repair is the two admitted call sites, and I authorize the fourth file
+
+Run 4 (log `.temp/logs/cdx_brief_723.log`, 9,737 lines, sha256
+`b2c56d33…`, memory-scope peak 4.19 GB, rc=0) executed the
+formatter-only repair exactly as ruled: the copied `cargo fmt --check`
+and `cargo check --all-targets` exit 0; the accepted-candidate →
+formatted diff is four files of reflow and two sort orders with
+normalized tokens equal and the test body byte-identical; the four
+corrected probes, the permanent-regression calibration at 8 and 1
+(candidate `2/2` green, P1470 `0/2`, P1471 `1/1`) and the six native
+panels (579 records) were re-anchored on the formatted source; the
+forced rebuild is SHA-equal at `4681875f…`; the formatted five-file
+shape is installed (`1bbc9198…` collector, `dd855b77…` logical/mod,
+`f1f93cd0…` profile_queue, `045577c0…` tests/mod, `51617544…`
+fixedpoint_pass.rs); and the standing replays pass for fingerprints,
+both feature certificate cells, ownership (`61/79/8834`), the
+unchanged 1,220 census, and the LP01 producers and loss positions.
+Then it STOPed before acceptance: the LP01 lexical observation aborts.
+
+**The red is real and reproduced.** I ran the same debug binary
+(`.temp/brief-723/targets/live-acceptance/debug/deps/suspension_oracle-ad9873bc53ac1c0b`)
+myself: the parent `logical_counter_port` exits 101 on its lexical
+child, and the direct child (`RUM_LP01_CHILD=lexical`,
+`--test-threads=1`) exits 250 with `assertion left == right failed:
+nested profiling admission, left: 1, right: 0` at `lease.rs:89:33`.
+The stack is `admit ← Epoch::path (epoch.rs:701) ←
+ProfileBoundary::has_runtime_key (completion.rs:5) ←
+take_evaluation_pass_boundary::{{closure}} (collector.rs:898) ←
+take_evaluation_pass_boundary (collector.rs:900) ←
+publish_evaluation_pass_after_return (profile_queue.rs:385) ←
+ProfileQueue::push (profile_queue.rs:361) ← push_evaluation_return ←
+resolution.rs:560/391`. Unwinding poisons the stash mutex; a later
+`stash().lock().unwrap()` (collector.rs:438) raises the `PoisonError`,
+and a destructor panic during cleanup aborts.
+
+**Mechanism, and the second site.** `take_evaluation_pass_boundary`
+holds `lease::admit()` (depth 1) across the whole filter.
+`belongs_to_admitted` is an admitted leaf, but `has_runtime_key` is a
+strict wrapper whose `Epoch::path` admits again. In the same body, the
+duplicate branch calls `epoch.fault()`, which is also a strict wrapper
+(`epoch.rs:845-865`) — `drop(queued)` drops only the stash guard, and
+`access` lives to the end of the function, so **the duplicate path
+nests too**. Both nesting calls are erased in production (`admit()` is
+cfg-gated out and both strict wrappers compile to the admitted calls),
+which is why the release-built stage-A probes never saw this: the
+debug/test-cfg assert is the only observer. The violated contract is
+brief 713's admitted class: a body holding an `Admitted` calls only
+`_admitted` leaves, and no admitting wrapper runs under a held permit.
+
+**Ruling.**
+
+1. The STOP is well taken. The brief's shape clause forbids changing
+   the accepted implementation to fix cost, and the worker correctly
+   refused to exceed its authorization. This is not a cost fix: it is
+   the class repair of a real defect in the accepted selector's
+   admission use, and I authorize it now.
+2. **Site 1.** Give `ProfileBoundary` an admitted companion to
+   `has_runtime_key`, beside it in `completion.rs`, reading
+   `path_admitted` under the held permit; the selector calls it with the
+   existing cfg-argument pattern. The existing `has_runtime_key` and its
+   seven call sites (`completion.rs:66/89/127/173`,
+   `mod.rs:1414/1421/1429`) stay byte-identical.
+3. **Site 2.** The duplicate branch calls `epoch.fault_admitted(...)`
+   with the held permit instead of the strict `fault()`. The fault
+   semantics, the retire path, the one-shot visibility and the
+   transfer-nothing behaviour are unchanged.
+4. **Scope.** `completion.rs` becomes the fourth production file, for
+   the bridge only; the three-file organization stands for the
+   mechanism and no other line of `completion.rs` moves. Putting the key
+   predicate inline in the selector instead is rejected: a duplicated
+   body is a shape red.
+5. **Production is unchanged.** Both strict wrappers erase to the
+   admitted calls in production, so the release bytes' semantics are
+   identical and the disabled path is untouched.
+6. **Calibration, in this order.** (a) The LP01 lexical child is red on
+   the installed tree — quote my reproduction. (b) With site 1 fixed
+   and site 2 not, a debug (test-cfg) build of the duplicate probe must
+   still abort at `lease.rs:89` from `fault()`; if it does not, STOP
+   and report, never claim the second site. (c) With both fixed, the
+   same debug duplicate probe passes with one fault and no nesting, and
+   the LP01 parent passes all five modes at 8 and 1 threads.
+7. **Class table.** List every callee of `take_evaluation_pass_boundary`
+   and `publish_evaluation_pass_after_return` with its admission
+   disposition; any other admitting wrapper under a held permit is
+   converted to its existing `_admitted` leaf, and a bridge needing new
+   semantics is a STOP.
+8. **Receipts re-anchor on the repaired source.** The four corrected
+   probes, the permanent-regression calibration, the install hashes,
+   the six native panels at 579 records, and every standing replay
+   (now including the LP01 observation) plus typed slots and the frame
+   closed lists; then stage B items 3-7 exactly as written: acceptance,
+   the copied native matrix on a copy of the final live tree, the
+   18-capture disabled cost gate with its exact rows and the forced
+   SHA, the timing lane, and the definition neighbour.
+9. Nothing else changes: no assertion, witness, inventory, exclusion or
+   bar is weakened, the formatter state stays, and the three protected
+   scenes stay untouched.
+
+Next: repair, calibrate in that order, re-anchor, then finish stage B.
+The two compiler launch failures, the three preparation-helper failures
+and the setup failure of this round remain recorded, not gated.

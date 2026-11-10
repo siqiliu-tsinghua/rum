@@ -250,12 +250,38 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   three hashes supersede the brief-722 candidate hashes on formatting
   only. Then stage B exactly as written.
 
-**Next, in order** (the branch queue): **brief 723 continuation 4**, the
-implementation of the fixed-point pass publication (the formatter-only
-repair of the candidate's added code, the copied `fmt`/`check` gates and
-the re-anchored candidate receipts, then stage B's live insertion with
-the standing replays, the disabled cost gate and the acceptance suites);
-then continuation 9 of brief 623 re-settles
+  **Brief 723 stage B run 4 STOPs at the LP01 lexical observation; the
+  red is a real nested-admission defect in the accepted selector, and
+  the repair is two admitted call sites.** Run 4 (9,737 lines, sha256
+  `b2c56d33…`, peak 4.19 GB) executed the formatter-only repair (copied
+  fmt/check green; the diff is reflow and two sort orders with
+  normalized tokens equal), re-anchored every candidate receipt on the
+  formatted source (four probes, regression `2/2`/`0/2`/`1/1` at 8/1,
+  six panels at 579 records, forced rebuild `4681875f…`), installed the
+  five formatted files, replayed fingerprints, both certificates,
+  ownership `61/79/8834`, census 1,220, LP01 producers and loss
+  positions, then the LP01 lexical child aborted. **My reproduction:**
+  the debug parent exits 101 on its lexical child; the direct child
+  exits 250 with `nested profiling admission` at `lease.rs:89`, stack
+  `admit ← Epoch::path ← has_runtime_key ← the selector closure`; the
+  poisoned stash mutex then aborts. **Mechanism:** the selector holds
+  `admit()` (depth 1) across the filter; `has_runtime_key` is a strict
+  wrapper, and the duplicate branch's `epoch.fault()` is another; both
+  erase in production, so only the debug/test-cfg LP01 sees it. The
+  second site is static: `drop(queued)` does not drop `access`.
+  **Ruled:** STOP well taken; the repair adds `has_runtime_key`'s
+  admitted companion in `completion.rs` (the fourth production file)
+  and calls `fault_admitted` with the held permit, the seven existing
+  `has_runtime_key` callers untouched; calibrate in order (LP01 red →
+  site 1 fixed / site 2 red in a debug duplicate probe → both fixed
+  green and five modes at 8/1), then re-anchor and finish stage B items
+  3-7. Production semantics identical; nothing weakened.
+
+**Next, in order** (the branch queue): **brief 723 continuation 5**, the
+nested-admission repair (the admitted companion and the `fault_admitted`
+call sites), its calibrated falsifiers and the re-anchored receipts,
+then stage B's acceptance, final native matrix, disabled cost gate,
+timing lane and definition neighbour; then continuation 9 of brief 623 re-settles
 P1470/P1471 and takes up the `call.stage.prepare_arguments` finding, then
 the remaining groups (270 LocalTail, 45 reopened, 22 strict, the five 719
 edges) — CM, `CHANGELOG.md`, and S10 onward.

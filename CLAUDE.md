@@ -167,11 +167,11 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   retention line (paused at E0) and the active suspension branch.
 - **Branch queue:** G15-C2's rows (721 installed the definition-resume
   repair; continuation 8 found P1470/P1471 Lost; brief 722 accepted the
-  fixed-point publication design; brief 723 stage A reproduced it; its
-  three STOPs are ruled and continuation 4 formats only the added code,
-  finishes stage A, then stage B's live install; C2 at 334 residuals +
-  2 Lost + 35 `NoObservableTail`; prepare-arguments → continuation 9);
-  then CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
+  fixed-point publication design; brief 723 reproduced it; its four
+  STOPs are ruled and continuation 5 repairs two nested-admission call
+  sites, then finishes stage B; C2 at 334 residuals + 2 Lost + 35
+  `NoObservableTail`; prepare-arguments → continuation 9); then CM,
+  `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Briefs 719-721:** P0248's
   fallback repaired (8/8 recipes, 36/36 bindings SAME); publication
@@ -183,10 +183,9 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   differences with 84 controls exact and both omissions caught (20/14).
   **Brief 723 stage A:** 90/12/470 reproduced (74/74), lifecycle and
   foreign probes pass, the duplicate fault reads one visible fault,
-  zero transfer and guest 73 (my parenthetical bar withdrawn), run 3
-  passes the corrected probes and the 579-record native re-read, and
-  its copied `cargo fmt --check` red is real, confined to added lines —
-  continuation 4 formats only those and re-anchors the receipts.
+  zero transfer and guest 73; run 4 re-anchored the formatted receipts,
+  installed the five files, replayed the standings, and STOPed on a
+  real nested admission at LP01 — continuation 5 repairs both sites.
   `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
