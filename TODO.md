@@ -32,13 +32,18 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
   and 1 threads, disabled rows 192,000 at 400 calls with 34 edges
-  unchanged, workspace 4,215/0/61 over 63 binaries). C2 stays Open at 394
-  residuals + 1 Lost.
+  unchanged, workspace 4,215/0/61 over 63 binaries), and continuation 5
+  (accepted 2026-11-10: P0248 and twelve more rows re-settled Equal on
+  the repaired source with 800/800 required cells SAME and their own
+  caught omissions, five mechanism groups over eleven rows accepted as
+  `NoObservableTail`, the 618 carries replayed, 1,038-row lower-bound
+  census with 76,030 keys). C2 stays Open at 376 residuals + 0 Lost.
 
-**Next, in order** (the branch queue): G15-C2's continuation 5 on the
-final source — P0248's re-settle with its full matrix and the
-direct-default-affected residual rows, then the rest of the continuation-5
-order — CM, `CHANGELOG.md`, and S10 onward. LP08's counter promotion
+**Next, in order** (the branch queue): G15-C2's continuation 6 on the
+final source — the seven caught-but-incomplete typed rows, then the 304
+LocalTail rows by mechanism group, the 22 strict Drop/caller rows, the
+five new 719 edges and the 45 reopened rows — CM, `CHANGELOG.md`, and S10
+onward. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by
 brief 717; `RumProfileSnapshot` keeps its protected `Null` behaviour in
 every mode. Brief 709
@@ -186,10 +191,12 @@ execution or by mechanical rule:
 | `Lost` | 16 |
 
 That leaves **353 residuals**. The 16 `Lost` rows are profiler counters, and
-they opened a new line. (2026-11-10 update: continuation 3's rebase and
-continuation 4's re-settle stand at 394 residuals + 1 Lost on the final
-source — 618 carries, 20 fresh Equal, one fresh Lost; brief 719 repaired
-P0248, and continuation 5 resumes on that source.)
+they opened a new line. (2026-11-10 update: continuation 3's rebase,
+continuation 4's re-settle and continuation 5's repaired-source campaign
+stand at 376 residuals + 0 Lost — 1,038-row lower bound, 618 carries, 42
+Equal, 5 Identity, 7 Boundary, 3 Unreachable, 11 accepted
+`NoObservableTail` and 594 Transferred; brief 719 repaired P0248, and
+continuation 6 resumes on that source.)
 
 **User ruling 2026-10-20: the profiler counts logical calls across
 suspension.** A call that pauses records one final outcome, as on the queued

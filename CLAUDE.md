@@ -166,39 +166,25 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
 - **Branch queue:** G15-C2's remaining rows (brief 719 accepted: the P0248
-  Default-fallback completion is repaired; C2 Open at 394 residuals + 1
-  Lost); then CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
+  Default-fallback completion is repaired; continuation 5 accepted: 13 rows
+  re-settled Equal and eleven accepted `NoObservableTail`; C2 Open at 376
+  residuals + 0 Lost); then CM, `CHANGELOG.md` (before S10), G13 S10–S54,
+  F1–F23, R; E2.
 - **After the branch:** retention from E0 with Q3, then Q1/Q2/Q4/Q5, the
   binary snapshot format, audit items and threat-model critiques; `v0.3.0`.
-- **Latest done:** LP08's counter promotion at `b9b39763` (install 705,
-  repair 707, campaign 708; workspace 4,156/0/61), schema-v2 stage A at
-  `e9ba6dd7` (side index; disabled path cheaper per call on all six seams)
-  and stage B at `a0c70615` (`rum-profile schema-v2` line; five modes
-  88,795 records). Stage B's gate exposed a pre-existing test-isolation
-  class in the profiling lease; brief 712 (design) proved it and **brief
-  713 (implementation, briefs C24-C28) closed it**: generation-aware
-  admission carries a session's lease through contexts, the session span
-  and both teardown entries, with the paused-drop falsifier 8/1 and 1,420
-  names. My gate: fmt clean, workspace 4,212/0/61 (63 binaries), six host
-  targets at 8/1, Q30 certificate on the release artifact. **Brief 716
-  accepted; 714 stage 32 green 37/37; brief 718 accepted at 3 Ir/call
-  (ledger -5,611,507). Brief 717 is accepted in full (Stages A-F): the
-  schema-v2 publication is certified on the frozen source — five-mode
-  parity, both builds' source and stack rows, all 23 labels disposed with
-  `changed_code_growth=0`, the ten mutants red at 8/1 and restored to
-  `b0e38205…`, runtime `1413/0/5` at 8 and 1, workspace `4,212/0/61` over
-  63 binaries. LP08 is closed. **Brief 719 accepted: P0248's Default
-  fallback logical completion is repaired on the final source — caller
-  and suspend signature back to base, the enabled record body leaves the
-  direct InputRequired phase open, the cold pause selects the profiled
-  consumer from the enabled phase stack, and the resumed RHS pause
-  publishes its deferred definition boundary; base red on the three
-  witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
-  real/disabled parity, caller frame `0x2b8`/`0x7d8` equal to base,
-  native-stack 8/0 at 8/1, disabled rows 192,000/400 with 34 edges
-  unchanged, workspace `4,215/0/61` over 63 binaries. C2 stays Open at
-  394 residuals + 1 Lost; next is brief 623's continuation 5.**
-  `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+- **Latest done:** LP08 is closed (counter promotion `b9b39763`, schema-v2
+  stages A/B `e9ba6dd7`/`a0c70615`, the profiling-lease isolation class
+  closed by 712-713, source-timing seam 718 at 3 Ir/call, the schema-v2
+  publication certified by 717 with `changed_code_growth=0`). **Brief 719
+  accepted:** P0248's Default-fallback completion is repaired on the final
+  source — caller frame back to base (`0x2b8`/`0x7d8`), base red, 8/8
+  recipes and 36/36 frozen bindings SAME, disabled path unchanged,
+  workspace `4,215/0/61`. **Continuation 5 accepted:** P0248 and twelve
+  more rows Equal on the repaired source (800/800 required cells SAME,
+  each with its own caught omission), five mechanism groups over eleven
+  rows accepted as `NoObservableTail`, 1,038-row lower bound with 76,030
+  keys, 618 carries, zero valid DIFF, 376 residuals + 0 Lost; next is
+  continuation 6. `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers
