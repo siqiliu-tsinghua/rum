@@ -9019,3 +9019,120 @@ Preserve the C7 scene (`.temp/g15-c2/c7/`, 25,251 entries) and the
 623 scene (`.temp/brief-623/`) byte-for-byte; work only in `.temp/`.
 No git, no network, no production source change. Stop for my gate with
 the raw evidence and the updated ledger.
+
+## Director continuation 9 (2026-11-11) — continuation 8 accepted: the definition-resume rows settle Equal, five mechanism groups are accepted, and two fixed-point losses open the next repair line
+
+### What I verified myself
+
+**Scope and integrity.** The live tree is 2,711 files and equals the
+entry snapshot byte-for-byte (tree digest `66adde93…`); no production
+or docs file changed during the run. The 17-path entry delta against C7
+is exactly the accepted between-continuation commits (the brief-721
+implementation and its docs). The protected scene replays 25,402 files
+(C7 25,251 + brief-623 151), 0 changed, 0 missing, 0 added. The 14
+build receipts hash-match their binaries and copied source trees
+(offline/locked, rustc 1.85.0); the 14 copied trees keep the 137 lock
+records and add only the `c2-probe` package, with 0 new `unsafe`
+tokens. The port carries 1,038 source entries, 77,940 required keys and
+1,168 materialized fixtures with their source/setup/input hashes;
+`retained-29-equal.tsv` is three-way byte-equal. All 36,447 sealed
+evidence files hash-match, and `report.py check` verifies 1,715
+citations. The four C4 semantic controls re-hash and read red, the
+three historical panels (30/24/24) re-hash with their witnesses
+passing, and the census parser binary hashes `db9fbcab…`.
+
+**The ledger.** 1,038 rows, exactly 11 verdict changes against C7, 0
+added, 0 removed: four rows settle Equal — the three repaired rows
+P0267/P0312/P0323 and P2604 — five rows move to `NoObservableTail`
+(P0247, P0270, P0271, P0534, P0535), and P1470/P1471 become Lost.
+Outcomes Boundary 7 / Equal 58 / Identity 5 / Lost 2 /
+`NoObservableTail` 35 / Residual 334 / Transferred 594 / Unreachable 3.
+Keys 77,940 = 77,930 + 10, the ten added all `phase_observation.trace`
+on P1470/P1471; 0 deleted, 0 duplicates; encodings stay 18,740 all
+G13-owned with 0 new encoding executions. The 618 accepted carries keep
+their dispositions. Six negative ledger controls each reject a genuine
+bad claim; the positive gate is GREEN.
+
+**The four Equal rows.** All 390 required nonencoding cells — 60 each
+for P0267/P0312/P0323 and 210 for P2604 — are real five-part SAME
+records (valid, semantic-SAME, native-SAME, resumed == queued) with a
+real == disabled twin, re-read by me from the raw logs; every cell's
+producer reached the disabled arm's resumed pause stack. Each row has
+its own caught row-wide omission, and the three repaired rows' catches
+are native-only with the actual-`InputRequired` join marker. **The
+definition-resume panel is whole-record repaired:** all 470 records of
+the repaired build equal its disabled twin and the brief-721 accepted
+panel exactly, and the 147 old bound differences (the C7 Lost set) are
+now valid, semantic-SAME, native-SAME records with resumed == queued.
+The 21/470 line that opened this repair line is closed on the live
+source.
+
+**The five proposal rows.** 300 required cells over three mechanism
+groups — `DefaultAndRewriteFrames` (180), `AcceptedOwnValueFrame` (60),
+`DynamicOwnValueFallbackFrame` (60) — each a real SAME cell with its
+own armed/hit surviving omission at that exact probe; the source
+packets hash-match the live files byte-for-byte. I read the three
+arguments: each resume owner's tail is `TypedAction::complete_work` /
+`complete` of the actual producer `Result` with plain data fields under
+`PureFrameAbandon`, with no profile completion, no evaluation and no
+consumer after the producer; the omission retains the required carrier
+conversion, the same accepted class as C5-C7.
+
+**The two Lost rows.** P1470/P1471 carry ten bound native differences
+(five each) in the single phase `evaluate.once_unstable`: the resumed
+record reads `[5,1,4,…]` where queued reads `[5,2,3,…]`, and the
+three-pause witness reads `[7,2,5,…]` against `[7,4,3,…]`, with the
+language result and messages identical. All ten witnesses equal their
+disabled twin and the whole record; the twelve reduced cases read
+8 DIFF / 4 SAME, all valid and semantic-SAME, real == mutant. The
+source packets hash-match. This is a genuine diagnostic accuracy loss,
+not language loss; the retained draft
+`DRAFT-fixedpoint-phase-repair.md` is the design basis and authorizes
+nothing.
+
+**The stop.** `active-resource-result-validation` (30 real SAME, 30
+armed/hit surviving) and `traversal-change-attributes-before-pattern`
+(8 real SAME, 8 armed/hit surviving) each gained no requirement,
+coverage cell, armed row, caught row or outcome: the stop clock reads 2,
+`concrete_execution=true`, `source_only=false`, no failed launches. The
+complete run log has 534 entries; the 10 runs after the stop checkpoint
+are analysis and finalization, none a guest binary. (The worker's own
+"no `/bin/` after the stop" assertion was vacuous at its run time — the
+later entries did not exist yet; I re-derived the claim over the whole
+log. The fact holds; the instrument shape is recorded.)
+
+### Accepted
+
+- The four Equal rows, the five `NoObservableTail` rows over three
+  mechanism groups, and the two Lost rows as genuine diagnostic defects.
+- The stop as a valid two-family stop-loss; the run is accepted in full.
+- The fixed-point draft as the design basis for the next line (it
+  authorizes no production change and is not a dispatched brief).
+
+### Recorded, not gated
+
+- The four failed attempts are tooling failures, retained: the mutant
+  copy's cargo 101 (fixed by the `ResumeStop` accessor), its dependent
+  execute, and the reducer's prior-status assertion; each was superseded
+  by a green attempt 2, and no final evidence uses a failed output.
+- The proposal omissions are the required-carrier-conversion form; as in
+  C5-C7 their settlement rests on the complete SAME matrices, the
+  per-cell surviving omissions and the source arguments, not on an
+  observable mutant difference.
+- The two invalid recipes in the repaired panel stay invalid and are not
+  reclassified; P0247's two original invalid recipes remain immutable;
+  the sixty invalid Block recipes behind P0535 stay invalid evidence.
+- The worker's deviation notes over-disclose: this order already
+  required the run to stay in `.temp/` and to leave the brief untouched,
+  so the report location in `.temp/g15-c2/c8/` is exactly as ordered.
+
+### State and the next order
+
+C2 stays Open at 1,038 rows: 334 residuals + 2 Lost + 35
+`NoObservableTail`, 77,940 keys. The two Lost rows open a repair line,
+and it is design-first, as the definition-resume line was: brief 722 is
+the design-only round over the retained draft; after its gate I write
+the implementation brief; after the repair's gate, continuation 9 of
+623 re-settles P1470/P1471 and continues with the remaining groups (the
+270 LocalTail rows, the 45 reopened rows, the 22 strict Drop/caller rows
+and the five 719 edges). Stop for my gate; no question is open.

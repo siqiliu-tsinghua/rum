@@ -165,28 +165,29 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
-- **Branch queue:** G15-C2's remaining rows (719 repaired P0248; 720's cost
-  STOP resolved at 81,588/30; brief 721 installed the repair; next is
-  continuation 8 at 342 residuals + 3 Lost); then CM, `CHANGELOG.md`
-  (before S10), G13 S10–S54, F1–F23, R; E2.
+- **Branch queue:** G15-C2's remaining rows (719 P0248; 720's cost STOP
+  at 81,588/30; 721 installed the repair; continuation 8 settled the
+  Lost rows and P2604 Equal but found two new Lost rows; brief 722
+  designs that repair; C2 at 334 residuals + 2 Lost); then CM,
+  `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
-- **Latest done:** LP08 closed (`b9b39763`, schema-v2 stages A/B, seam
-  718, 717 certified `changed_code_growth=0`). **Brief 719:** P0248's
-  fallback completion repaired (caller frame at base, 8/8 recipes and
-  36/36 bindings SAME, workspace `4,215/0/61`). **Continuations 5-7:**
-  25 rows Equal, ten `NoObservableTail` groups over 27 rows, 1,485 cells
-  re-read SAME, 77,930 keys, three **Lost** rows (147 bound differences).
+- **Latest done:** LP08 closed (`b9b39763`). **Brief 719:** P0248's
+  fallback repaired (8/8 recipes, 36/36 bindings SAME). **Continuations
+  5-7:** 25 rows Equal, ten `NoObservableTail` groups, 1,485 cells SAME,
+  77,930 keys, three **Lost** rows (147 differences).
   **Brief 720 run 1:** the copy reproduced 21/21 minimized and 470/470
-  records and closed the 147, but its shared `Mode::pause` hook cost the
-  disabled caller +957. **Continuation 1 refutes the driver shape:** its
-  cold/noinline "revision" is codegen-identical, and my own outline probe
-  is 82,563/30, so the +957 is shared-caller layout.
+  records and closed the 147, but its shared `Mode::pause` hook cost +957.
+  **Continuation 1 refutes the driver:** its cold/noinline "revision" is
+  codegen-identical, and my outline probe is 82,563/30.
   **Continuation 2 accepted:** publication rides the enabled-only
   profiled queue join; the caller is 81,588/30 on every arm (indexed
-  86,950/32), 147 → 0, three Return witnesses fixed, four mutants caught
-  at 147/125/1/1. **Brief 721 accepted and installed** (records 8→2→0
-  and 147→0; workspace 4,217/0/61 on the host — the STOP was the
-  sandbox's nine loopback binds). `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  86,950/32), 147 → 0, four mutants caught at 147/125/1/1.
+  **Brief 721 installed** (records 8→2→0 and 147→0;
+  workspace 4,217/0/61 on the host). **Continuation 8 accepted:** the
+  repaired rows and P2604 settle Equal, 470/470 equal the 721 panel, five
+  `NoObservableTail` rows accepted, and P1470/P1471 are new Lost rows at
+  the fixed-point phase record (334 residuals + 2 Lost; brief 722 designs
+  the repair). `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers

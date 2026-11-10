@@ -112,10 +112,33 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   max 13.04%) and the 703-style instruction probes on the five flagged
   labels settle every residual with no separated distribution.
 
-**Next, in order** (the branch queue): continuation 8 of brief 623 on the
-repaired source (re-settle the three Lost rows P0267/P0312/P0323; then
-the 270 LocalTail rows, the 45 reopened rows, the 22 strict Drop/caller
-rows and the five new 719 edges) — CM, `CHANGELOG.md`, and S10 onward.
+  **Brief 623 continuation 8 (2026-11-11) is accepted:** the
+  definition-resume rows settle on the repaired source. P0267/P0312/P0323
+  and P2604 are Equal (390 required nonencoding cells SAME, four own
+  caught omissions; the three repaired catches are native-only with the
+  actual-`InputRequired` join marker), and the 470-record repaired panel
+  equals the brief-721 accepted panel whole-record with the 147 old bound
+  differences repaired. Three `NoObservableTail` mechanism groups over
+  five rows are accepted (P0247/P0270/P0271, P0534, P0535; 300 cells,
+  each with its own armed/hit surviving omission and source packets
+  byte-equal). Two new Lost rows, P1470/P1471, carry ten bound native
+  differences in `evaluate.once_unstable` with the language unchanged and
+  a twelve-case reduction (8 DIFF / 4 SAME); the retained draft opens the
+  fixed-point repair line. The run stopped under the two-family
+  stop-loss after two zero-progress families, and the worker's
+  post-stop assertion was vacuous at its own run time — I re-derived it
+  over the complete 534-run log (ten finalization runs, none a guest
+  binary). C2 stays Open at 1,038 rows: 334 residuals + 2 Lost + 35
+  `NoObservableTail`, 77,940 keys, 618 accepted carries; live tree 2,711
+  files unchanged, C7 25,251 + brief-623 151 protected, 14 build
+  receipts, 1,168 fixtures, 36,447 sealed files, 1,715 citations.
+
+**Next, in order** (the branch queue): brief 722, the design-only round
+for the fixed-point phase record's producer-before-consumer sampling
+(P1470/P1471, over the retained C8 draft); then the implementation
+brief; then continuation 9 of brief 623 re-settles P1470/P1471 and
+carries the remaining groups (270 LocalTail, 45 reopened, 22 strict, the
+five 719 edges) — CM, `CHANGELOG.md`, and S10 onward.
 The two root-context reds
 (`lp655`/`lp656`) remain a separate standing obligation. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by
