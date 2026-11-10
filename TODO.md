@@ -304,12 +304,32 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   settle by instruction probes at four overlapping draws, so the
   instruction lane reads identical and the timing is layout noise.
 
-**Next, in order** (the branch queue): **brief 623 continuation 9**, which
-re-settles P1470/P1471 on the repaired source, takes up the
-`call.stage.prepare_arguments` finding, and continues with the remaining
-groups (270 LocalTail, 45 reopened, 22 strict, the five 719
-edges), then
-CM, `CHANGELOG.md`, and S10 onward.
+  **Brief 623 continuation 9 accepted: four rows settle Equal, two
+  mechanism groups are accepted as `NoObservableTail`, and the
+  prepared-argument loss opens a design-first repair line.** The
+  continuation (49,472 lines, sha256 `48547b10…`, peak 3.07 GB) re-settled
+  P1470/P1471 on the repaired source (45/45 required cells each, the ten
+  bound differences, twelve minimized, 84 controls, the 470 definition
+  records, own caught omissions 20/14) and P1566/P1568 (30/30 each, own
+  message-checkpoint omissions caught); accepted P0503/P0504 and P0353 as
+  `NoObservableTail` (110 + 120 cells, 230 armed-hit survivors, both
+  frames ending in the required typed conversion with no Drop guard);
+  measured `call.stage.prepare_arguments` as P0492, a real resumed-only
+  diagnostic accuracy loss (9 valid DIFF / 7 SAME, one phase, language
+  SAME) with its own caught omission; stopped under the two-family
+  zero-progress rule. My gate: live tree 2,714 files 0 changed
+  (`1b476ab8…`), protected 61,862 files 0 diff, 996 pairs and 618 carries
+  exact, all six repaired panels whole-record equal to brief 723's run-5
+  receipts, the final audit green with its six negative controls red,
+  report 1,203 citations. C2 is Open at 328 residuals (256 LocalTail, 45
+  reopened, 22 strict, 5 719 edges) + 1 Lost (P0492).
+
+**Next, in order** (the branch queue): **brief 724, the design-only
+prepared-stage sampling repair** for P0492 (the resumed preparation samples
+the consumer's later Return/Throw as the earlier preparation outcome), then
+its implementation brief, then brief 623 continuation 10 over the remaining
+tail (256 LocalTail, 45 reopened, 22 strict, the five 719 edges); then CM,
+`CHANGELOG.md`, and S10 onward.
 The two root-context reds
 (`lp655`/`lp656`) remain a separate standing obligation. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by

@@ -9168,3 +9168,98 @@ Continuation 9's order:
 4. Stop for my gate with the report; no git, no commit, no tag, and the
    protected scenes untouched.
 
+## Director gate (2026-11-11) — continuation 9 accepted: four rows settle Equal, two mechanism groups are accepted as `NoObservableTail`, and the prepared-argument loss opens a design-first repair line
+
+Run (session log `.temp/logs/cdx_brief_623.log`, 49,472 lines, sha256
+`48547b10…`, memory-scope peak 3.07 GB, oom 0, rc=0) reproduced the
+fixed-point repair on the installed source, settled P1470/P1471/P1566/
+P1568 Equal, measured the `call.stage.prepare_arguments` difference as
+its own row (P0492, Lost), proposed two `NoObservableTail` groups over
+P0503/P0504 and P0353, and stopped under the two-concrete-family
+zero-progress rule. **Accepted in full.**
+
+**My own reproductions.** The live tree is 2,714 files with 0 changed
+against the entry manifest (tree `1b476ab8…`), git clean at `851cf60d`;
+the protected scenes replay 61,862/61,862 with 0 diff; the four
+installed repair files hash to the accepted 723 source; all 996 paired
+producer AST sites and 618 accepted carries recompute exact, with the
+42 unpaired identities retained. The six repaired panels are
+whole-record equal to brief 723's accepted run-5 receipts
+(90/12/470/2/1/4 = 579 records; 468 definition-valid and the same two
+invalid); the disabled twin equals the 104-record green set; the two
+omission panels change 20 and 14 records, all `valid` with semantic
+equality and only `native_same` false; the own selected probes equal
+the panel records and carry their arm/hit markers; the 84 controls are
+exact; the ten repaired witnesses are green and the twelve minimized
+cases SAME. The native family reads 60/60 SAME with real == disabled;
+reach recomputes from the raw pause logs for every required cell
+(110/110 optional, 120/120 definition-LHS, 60/60 native, 90/90
+fixed-point), all 230 proposal mutants are armed, hit and survive their
+single-record runs, and the 27 cross-process Debug differences are
+process-local interner ids only, never the comparator. The
+`prepare_arguments` family reads 9 valid DIFF / 7 SAME, each DIFF
+confined to `call.stage.prepare_arguments` with language SAME; the
+frontier log shows the actual `PreparedCallArguments` followed by the
+consumer's `Err(Return)`; the own omission changes the queued phase
+record and is caught. The two extension DIFF records are exactly the
+surrounding-Return witnesses and differ in that one phase. The 38
+stop-clock records are SAME with 38 armed-hit survivors and zero
+progress on every counter. The final audit re-runs green in an isolated
+copy with its six negative controls red; the key ledger is
+78,020 = 77,940 + 80 (0 deleted, 0 duplicates, 18,760 encoding keys,
+0 new encoding executions); `report.py check` verifies 1,203
+citations; all 18 post-stop commands are Python controllers only, with
+no guest build, no cargo and no git.
+
+**Rulings.**
+
+1. **P1470/P1471 settle Equal.** The repaired source reproduces all ten
+   bound differences, the twelve minimized cases, the 84 exact controls
+   and the 470-record definition panel; each row carries 45/45 required
+   cells SAME and its own caught pass-publication omission. The two
+   fixed-point Lost rows are repaired.
+2. **P1566/P1568 settle Equal.** The complete native request matrix is
+   SAME (30/30 each) with actual producer pauses and an exact disabled
+   twin; the own message-checkpoint omission changes the actual
+   checkpoint-present/dirty observation and is caught.
+3. **P0503/P0504 and P0353 are accepted as `NoObservableTail`.** The
+   optional-stage frames end in the required `TypedAction::complete`
+   after `resume_suspended_call_dispatch_frame`; the definition-LHS
+   frame ends in the required `complete_work` after
+   `resume_definition_lhs_preparation`; the continuation is exactly
+   `fn(&mut Session, PreparedDefinitionLhs, SharedArgs) ->
+   Result<Expr, EvalError>` plus `SharedArgs`; the stored state is
+   neutral shared data with `PureFrameAbandon`, and the only `Drop` in
+   the domain is `Session`'s, borrowed and never owned. This is the
+   accepted C5-C8 carrier-forwarding class: 110 and 120 required cells
+   SAME, 230 armed-hit survivors, no Equal claim.
+4. **P0492 is a real Lost row, not language loss.** The resumed
+   preparation samples the consumer's later Return/Throw as the earlier
+   preparation outcome; the queued path publishes the actual None. All
+   nine differences are that one phase, the seven controls are exact
+   and the language is identical. The repair is design-first: the
+   retained draft is the basis of brief 724, and C2/S10 cannot close
+   ahead of it.
+5. **The stop is accepted.** The last two concrete families
+   (traversal-revisit, resource-revisit) executed 38 real records and 38
+   armed-hit survivors with zero progress on every counter. The
+   remaining tail — 256 LocalTail, 45 reopened, 22 strict (11 Drop-gap,
+   6 caller-gap, 5 other-carrier) and the five 719 edges — remains
+   residual with its prior evidence. C2 is Open at 328 residuals + 1
+   Lost.
+6. **Bookkeeping correction (mine).** The continuation's order named
+   270 LocalTail rows; the inherited residual list carries 262, and six
+   of them moved here, leaving 256. The number was stale in my order;
+   the ledger arithmetic is authoritative.
+
+The failed attempts and instrument slips are recorded, not gated: the
+rebase race against the still-completing census, the optional reducer's
+duplicate keyword, the LHS self-check's interner-id comparison, the two
+artifact-audit path-heuristic failures, the entry delta's C7 baseline
+(corrected by `entry-delta-c8.json`), and the publication check's
+missing import. None changed a receipt or weakened a bar.
+
+Next: commit and push this gate; archive the log as
+`cdx_brief_623.continuation-9`; write and dispatch brief 724 (the
+prepared-stage sampling design). After its gate, an implementation
+brief, then continuation 10 over the remaining tail.

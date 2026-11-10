@@ -165,28 +165,28 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
-- **Branch queue:** G15-C2's rows (721 installed the definition-resume
-  repair; 722 accepted the fixed-point design; 723 installed it — the
-  pass publishes before the next pass resumes, both nested-admission
-  sites repaired, LP01 five modes green at 8/1; C2 at 334 residuals + 2
-  Lost + 35 `NoObservableTail`; continuation 9 re-settles P1470/P1471
-  and takes prepare-arguments); then CM, `CHANGELOG.md` (before S10),
-  G13 S10–S54, F1–F23, R; E2.
+- **Branch queue:** G15-C2's rows (721 definition-resume repair; 722
+  fixed-point design; 723 the pass publication installed, both nested
+  admissions repaired; continuation 9 settles P1470/P1471/P1566/P1568
+  Equal, accepts P0503/P0504 and P0353 as `NoObservableTail`, and
+  measures P0492 — the resumed `call.stage.prepare_arguments` samples
+  the consumer's later Return/Throw; C2 at 328 residuals + 1 Lost; brief
+  724 designs its repair); then CM, `CHANGELOG.md` (before S10), G13
+  S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Briefs 719-721:** P0248's
   fallback repaired (8/8 recipes, 36/36 bindings SAME); publication
   rides the enabled-only profiled queue join (caller 81,588/30 every
   arm; 147 → 0). **Continuations 5-8:** 25 rows Equal, ten
-  `NoObservableTail` groups, three Lost rows; the repaired rows and
-  P2604 settle Equal (470/470), and P1470/P1471 are new Lost rows.
-  **Brief 722 accepted (design):** the copy repairs all 18 fixed-point
-  differences with 84 controls exact and both omissions caught (20/14).
-  **Brief 723 accepted (run 5):** the fixed-point pass publication is
-  installed — run 4's LP01 nested admission is repaired at both sites —
-  and LP01 five modes are green at 8/1; native 579 records and the 20/14
-  omissions re-anchor; the interner cost rows are the hash-seed class
-  and the workspace red the switch-gated class; `4,219/0/61`.
-  `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
+  `NoObservableTail` groups, three Lost rows. **Brief 723 accepted
+  (run 5):** the fixed-point pass publication is installed, run 4's
+  LP01 nested admission repaired at both sites, five modes green at 8/1;
+  native 579 records and the 20/14 omissions re-anchor; `4,219/0/61`.
+  **Continuation 9 accepted:** P1470/P1471 (45/45 required cells each)
+  and P1566/P1568 (30/30) settle Equal; P0503/P0504 and P0353 are
+  accepted as `NoObservableTail`; P0492 is a new Lost row (resumed
+  `call.stage.prepare_arguments` samples the consumer's outcome, 9 DIFF
+  / 7 SAME, language SAME). `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers
