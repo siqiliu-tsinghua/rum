@@ -51,16 +51,29 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   repeated-RHS Return misclassifications, language observations SAME),
   with a complete repair draft. C2 stays Open at 342 residuals + 3 Lost;
   the definition-resume repair line opens before continuation 8.
+  Brief 720 run 1 (design-only, 2026-11-10) is accepted in substance:
+  the copied base reproduces all 21 minimized and 470 frozen records
+  exactly (8 DIFF / 13 SAME, 147 bound differences, 2 pre-existing
+  invalid), publication closes the 144 terminal-open records and the
+  three Return witnesses, sampling closes the two declining-stage
+  records, the four independent mutants are armed and caught, nine
+  fresh witnesses are base-red/candidate-green, 18 lifecycle cells pass
+  and the standing inventories replay. **One STOP:** the shared
+  `Mode::pause` publication route costs the disabled path —
+  `resume_eval_request_from_checkpoint` executes 82,545/30 against
+  81,588/30, deterministic, with a same-source rebuild (81,588) and a
+  signature-only variant (81,588) as controls; the 48-row cost table
+  omitted that caller. The continuation must re-measure the row and
+  move publication to a `const PROFILED` frontier route (the 719
+  pattern) or another instruction-identical route.
 
-**Next, in order** (the branch queue): G15-C2's definition-resume repair
-— brief 720 (design-only: deferred definition RHS record publication at
-the three resumed down/sub/up-value frontiers, sub-/up-value
-producer-before-consumer None sampling, and the Return recovery
-ordering; all eight minimized falsifiers, thirteen controls and 147
-bound witnesses retained), then my implementation brief and its gate,
-then continuation 8 of 623 (re-settle the three Lost rows; then the 270
-LocalTail rows, the 45 reopened rows, the 22 strict Drop/caller rows and
-the five new 719 edges) — CM, `CHANGELOG.md`, and S10 onward. LP08's counter promotion
+**Next, in order** (the branch queue): brief 720 continuation 1 (revise
+and re-measure mechanism A; keep mechanisms B/C, the inventory and the
+drafts), then my implementation brief and its gate, then continuation 8
+of 623 (re-settle the three Lost rows; then the 270 LocalTail rows, the
+45 reopened rows, the 22 strict Drop/caller rows and the five new 719
+edges) — CM, `CHANGELOG.md`, and S10 onward. The two root-context reds
+(`lp655`/`lp656`) remain a separate standing obligation. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by
 brief 717; `RumProfileSnapshot` keeps its protected `Null` behaviour in
 every mode. Brief 709

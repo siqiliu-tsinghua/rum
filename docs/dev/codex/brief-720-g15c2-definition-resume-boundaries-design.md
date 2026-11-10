@@ -183,3 +183,115 @@ leave every raw log, fixture and copied-experiment diff under
 
 Stop and report; the director reviews the plan, settles the open
 questions and writes the implementation brief.
+
+## Director review (2026-11-10) — the design is accepted in substance, and mechanism A's shared hook stops on its own disabled-cost bar
+
+Run 1 (log `.temp/logs/cdx_brief_720.log`, 25,828 lines; memory-scope peak
+5.50 GB, rc=0) reproduced the C7 scene on a byte copy, repaired all eight
+minimized differences and 147 bound native differences in the copy,
+retained every control, armed four independent omission/placement
+mutants, and replayed the standing inventories. **Accepted in
+substance; one STOP.**
+
+**My own reproductions.** The live tree against the continuation-7 entry
+manifest (`cfdd9ec3…`) has 0 missing and exactly my own two ruling
+commits differing; no file outside `.temp/brief-720/` and `.temp/logs/`
+was written during the run. The accepted C7 scene replays 25,257/25,257
+hashes, 0 changed, 0 missing, and its supplement binds the base manifest
+hash. The copied base reproduces the 21 minimized records and the 470
+frozen records with whole-record equality (21/21, 470/470): 8 DIFF / 13
+SAME minimized, 147 valid native differences, two pre-existing invalid
+records. Candidate publication leaves exactly the two declining-stage
+records (`P0312/P0323.false_guard`) and closes all 147; publication plus
+sampling leaves 0 DIFF over all 21 and all 470, with every valid record
+five-part SAME and the two invalid records retained. The four mutants
+reproduce independently: publication omission restores exactly 147;
+sub-only omission restores exactly `P0312.false_guard`; up-only omission
+exactly `P0323.false_guard`; before-recovery placement produces 125
+native differences and reddens all three Twice/Return witnesses. The
+nine valid fresh witnesses are 8 DIFF on base and 0 on the candidate;
+the indexed supplement is base-red/candidate-green; 18 lifecycle cells
+pass with exact vectors. Inventory replays read the standing values I
+hold (fingerprints 68; ownership 61/79/8,825; both certificates GREEN;
+census 1,220 = 14/1,168/38; LP01 five modes; typed slots 10/0/1;
+frame-root 15/0). The focused runtime-profiling suite is 219/2/2 on the
+untouched byte base and 220/2/2 on the candidate with the identical two
+failures (`lp655_root_context_falsifier`, `lp656_public_root_context_falsifier`);
+I confirmed `lp655` fails on the live tree too, so these are the known
+standing root reds, not a copy artifact. The wrong-terminal-open-field
+negative control is rejected.
+
+**The STOP — mechanism A's publication hook costs the disabled path.**
+The report's cost lane selects 48 physical rows and finds them equal; I
+re-parsed all 18 raw captures and confirm every selected row is constant.
+But the selection omits the one rum function that contains the changed
+call site: `session_requests::<impl Session>::resume_eval_request_from_checkpoint`.
+My own captures of the shipped `bin/base` and `bin/publish` at the
+campaign's disabled configuration (all fourteen flags zero; the C2
+records are empty, so the profiled mode is not selected) read
+
+```text
+base     resume_eval_request_from_checkpoint 81,588 instructions / 30 calls
+publish  resume_eval_request_from_checkpoint 82,545 instructions / 30 calls  (+957)
+```
+
+and the difference is deterministic across every draw of both arms and
+across both cohorts; `sample` reads 82,545 as well, so the sampling edit
+adds none of it. Two controls attribute it to the publication edit and
+not to build noise: (1) a forced rebuild of the untouched `source-base`
+produces a different binary sha256 (`0b7cad54…` against `b15fca87…` —
+this test target is not byte-reproducible) yet executes exactly
+81,588/30 again; (2) a signature-only variant that applies only
+`M::pause(self, &profile_context)` and the trait signature, with no
+flush, compiles to `0b7cad54…` and executes 81,588/30. Only when
+`Profiled::pause` carries `session.flush_definition_boundaries()` does
+the disabled caller execute 957 more. In the disabled captures neither
+`flush_definition_boundaries` nor `Profiled::pause` executes at all, so
+the increase is the enabled-only body shifting the shared inlined
+function's register allocation, not new work — but it is executed work
+on the disabled path at identical calls, and the plan's own bar says
+that is a STOP. In the enabled control the same two arms read 105 flush
+calls / 15,633 instructions and 117 / 17,349 — the new flush work
+itself, which is the intended enabled cost and not at issue. The 48-row
+selection could not have seen this: it selects by helper-name substrings
+and the driver's generic hook has no standalone symbol.
+
+**Settled questions.**
+- **Q1 — not approved as measured.** The shared `Mode::pause` route is
+  refused on the disabled-cost bar, not on shape. Use the published
+  `const PROFILED: bool` frame pattern that the brief-719 repair already
+  proved (its ordinary instantiation drops the flush call entirely), or
+  any other route the continuation measures instruction-identical. The
+  revised cost table must include
+  `resume_eval_request_from_checkpoint` explicitly, the three typed
+  frontiers, the phase helpers, and a same-source rebuild control (this
+  target's builds are not byte-reproducible, so equality of executed
+  instructions across two builds of one source is the control).
+- **Q2 — approved.** The private rename and the two extra phase keys are
+  the intended sampling repair; the sampling edit measures zero
+  additional disabled cost in my scan.
+- **Q3 — approved.** Lifecycle tests stay beside the runtime profiling
+  tests; keyed-native witnesses stay in the installed stdlib oracle; the
+  C7 projection harness is not transplanted into stock fixtures.
+- **Q4 — a standing obligation, not a prerequisite.** `lp655`/`lp656`
+  are the known root-context reds, red on the live tree before this
+  line. Keep both assertions unchanged, name them as the only failures
+  of the focused suite, and keep their repair separate from this
+  definition-resume repair.
+- The five deviations are recorded, not gated: the unbounded first
+  `cat`, the relocated scratch adapters, the three invalid first fresh
+  recipes, the C7-projection fingerprint ordering artifact fixed by
+  restoring the stock harness, and the two failed launches.
+
+**Continuation 1 order.** Re-measure the STOP row first and confirm my
+numbers. Then revise mechanism A to a route whose disabled caller is
+instruction-identical at identical calls, with the `const PROFILED`
+frontier pattern as the proven reference; re-run the whole publication
+and Return falsifier matrix on the revised route (147 → 0, the three
+`[1,0,1,0,0,1,0,0,0,0]` witnesses to `[1,1,0,1,0,0,0,0,0,0]`, the 13
+controls, the two remaining decline records still red until mechanism
+B, the four independent mutants); keep mechanisms B and C, the closed
+inventory, the drafts and every replay unchanged. Cost lanes carry the
+caller row and the same-source rebuild control; eight rows of the
+repaired shape are not a design if the caller still moves. Stop for my
+gate; no question is open.

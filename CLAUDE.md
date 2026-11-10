@@ -165,29 +165,29 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
-- **Branch queue:** G15-C2's remaining rows (brief 719 repaired P0248;
-  continuations 5-7 settled 25 rows Equal and ten `NoObservableTail`
-  groups; continuation 7 found **three Lost rows in the definition-resume
-  records** — next is brief 720 design, its implementation, then
-  continuation 8 at 342 residuals + 3 Lost); then CM, `CHANGELOG.md`
-  (before S10), G13 S10–S54, F1–F23, R; E2.
+- **Branch queue:** G15-C2's remaining rows (719 repaired P0248; 720 run 1
+  accepted in substance with one cost STOP on the shared publication hook;
+  next is its continuation 1 — revise mechanism A and re-measure — then
+  its implementation, then continuation 8 at 342 residuals + 3 Lost);
+  then CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
-- **Latest done:** LP08 is closed (counter promotion `b9b39763`, schema-v2
-  stages A/B `e9ba6dd7`/`a0c70615`, seam 718, publication certified by
-  717 with `changed_code_growth=0`). **Brief 719 accepted:** P0248's
-  Default-fallback completion is repaired (caller frame back to base,
-  base red, 8/8 recipes and 36/36 frozen bindings SAME, workspace
-  `4,215/0/61`). **Continuation 5:** 13 rows Equal, five groups over
-  eleven rows `NoObservableTail`, 618 carries, 376 residuals.
-  **Continuation 6:** eight rows Equal (475/475 cells SAME), two groups
-  over six rows, 77,755 keys, 362 residuals + 0 Lost. **Continuation 7
-  accepted:** four rows Equal (the typed option routes with 23/23 own
-  route catches and the Set frame with 55/55 native-only catches; 1,485
-  cells re-read SAME), three groups over thirteen rows
-  `NoObservableTail` (770 own-armed cells), 77,930 keys, and three
-  **Lost** rows — 147 bound native differences in the resumed definition
-  RHS records (144 terminal-open, 3 Return), language SAME. `BRIEF_WORKER=mst`
-  (GLM-5.3) is the fallback.
+- **Latest done:** LP08 closed (counter promotion `b9b39763`; schema-v2
+  stages A/B `e9ba6dd7`/`a0c70615`; seam 718; 717 certified
+  `changed_code_growth=0`). **Brief 719:** P0248's fallback completion
+  repaired (caller frame at base, 8/8 recipes and 36/36 bindings SAME,
+  workspace `4,215/0/61`). **Continuations 5-7:** 25 rows Equal, ten
+  `NoObservableTail` groups over 27 rows, 1,485 cells re-read SAME,
+  77,930 keys, and three **Lost** rows (147 bound native differences =
+  144 terminal-open definition records + 3 Return; language SAME).
+  **Brief 720 run 1 (design) accepted in substance:** the copy
+  reproduces 21/21 minimized and 470/470 frozen records, publication
+  closes the 147, sampling the two declining-stage records, four
+  independent mutants are caught, 18 lifecycle cells pass — but the
+  shared `Mode::pause` route costs the disabled caller +957
+  instructions at 30 identical calls (same-source rebuild and
+  signature-only controls pin the cause); continuation 1 moves
+  publication to the 719 `const PROFILED` frontier pattern and
+  re-measures. `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
 - **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
 
 ## Pointers
