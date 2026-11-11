@@ -52695,3 +52695,38 @@ stays Open at 188 Residual + 1 Lost, S10 stays unopened.
 **Next:** continuation 19 of brief 623 on this unchanged installed source,
 measurement-only, then C2's settlement round, CM, `CHANGELOG.md` before
 S10, G13 S10–S54/F1–F23/R, E2.
+
+## Continuation 19 order (2026-11-12) — continue the settlement campaign on the unchanged installed source
+
+Continue brief 623. This round is measurement-only and adds no source
+change. **No source rebase:** every file under `crates/` must equal the
+C18 entry manifest (`.temp/g15-c2/c18/entry-hashes.json`), production
+digest `8313fbc1…`; any production difference is a STOP. The entry
+re-derives 1,042 rows / 78,330 canonical keys / 18,840 encoding rows with
+0 moves and 1,018 paired / 24 unresolved.
+
+The 21 C18 settlements (ten Equal `P0260`/`P0304`/`P0305`/`P0311`/
+`P0320`/`P0459`/`P0767`/`P0773`/`P0812`/`P1480`; eleven
+`NoObservableTail` `P0251`/`P0252`/`P0255`/`P0257`/`P0258`/`P0262`/
+`P0307`/`P0329`/`P0440`/`P0441`/`P0474`) and the 27 C17, 13 C16, 30 C15,
+28 C14 and seven C13 rows are not re-settled. `P1566` stays Lost,
+`P0496` stays Residual reserved for the settlement round, and `P0528`/
+`P0340` stay held by the pair-column order.
+
+Work the remaining **188-row tail by mechanism**: 151 LocalTail + 17
+ReopenedOrNew + 11 StrictDropGap + 6 StrictCallerGap + 1
+StrictOtherCarrier + 1 New719Edge + 1 New725Edge. Each batch must carry
+its own armed-hit omission — a row may settle Equal only with its own
+caught omission and its complete real matrix, and a mechanism group may
+propose `NoObservableTail` (never Equal) only with `equal_claim: false`
+and an own armed-hit-surviving omission for every one of its cells. The
+nine stopped families are not repeated without a genuinely new
+mechanism, and the twelve C18 families are not simply re-run: new
+concrete producer/consumer mechanisms are required. The 909 transitive
+duties, the 24 unresolved sites, the 13 pair columns and the five named
+owners stay explicit; port tables and the ledger move only by canonical
+replay, never by hand.
+
+The two-family zero-progress stop-loss stands. Stop for the director
+gate at the stop or at the round's end. C2 stays Open at 188 Residual +
+1 Lost; S10 stays unopened.
