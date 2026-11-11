@@ -287,3 +287,25 @@ impl FrameStorage {
         (size_of::<Entry>(), size_of::<EntryRef<'_>>())
     }
 }
+
+impl FrameStorage {
+    #[cold]
+    #[inline(never)]
+    pub(in crate::runtime) fn bind_prepared_boundary(&mut self, boundary: &Arc<ProfileBoundary>) {
+        if let Self::Profiled(profile) = self {
+            if !profile.bind_prepared_boundary(boundary) {
+                self.deprofile();
+            }
+        }
+    }
+    #[cold]
+    #[inline(never)]
+    pub(in crate::runtime) fn complete_prepared_boundary(
+        &self,
+        control: &Arc<crate::runtime::RequestInterruptState>,
+    ) {
+        if let Self::Profiled(profile) = self {
+            profile.complete_prepared_boundary(control);
+        }
+    }
+}

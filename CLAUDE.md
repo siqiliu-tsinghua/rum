@@ -169,11 +169,11 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   fixed-point design; 723 the pass publication installed, both nested
   admissions repaired; continuation 9 settles P1470/P1471/P1566/P1568
   Equal, accepts P0503/P0504 and P0353 as `NoObservableTail`, and
-  measures P0492 — the resumed `call.stage.prepare_arguments` samples
-  the consumer's later Return/Throw; C2 at 328 residuals + 1 Lost; brief
-  724 accepted; 725 installed it and stopped at the one typed-frame
-  receipt, which its continuation integrates; then CM, `CHANGELOG.md`
-  (before S10), G13 S10–S54, F1–F23, R; E2.
+  measures P0492; C2 at 328 residuals + 1 Lost; 724 accepted; **725
+  accepted and committed**: the prepared-stage completion is installed,
+  the G15-C2 typed receipt integrated, stage B green on the host
+  (4,223/0/61); next brief 623 continuation 10 over the remaining tail,
+  then the C2 settlement; then CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Briefs 719-721:** P0248's
   fallback repaired (8/8 recipes, 36/36 bindings SAME); publication

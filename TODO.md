@@ -324,30 +324,28 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   report 1,203 citations. C2 is Open at 328 residuals (256 LocalTail, 45
   reopened, 22 strict, 5 719 edges) + 1 Lost (P0492).
 
-**Next, in order** (the branch queue): **brief 725, the implementation of the
-accepted prepared-stage family2 shape** for P0492. The design (brief 724,
-run 1 + continuation 1) is accepted: the enabled-only
-`ProfiledPreparedDispatchFrame` delegates to one shared const-generic resume;
-the exact owned boundary is bound to the witnessed consumer cell and
-completed as `None` after installation/normalization and before later
-dispatch; the two extension records that duplicate the witnesses are
-permitted to repair; the core interner rows are the recorded hash-seed class
-(no exclusion); family1 was refused on the disabled neighbor. **Brief 725
-run 1 installed the shape into the working tree**: stage A reproduced the
-accepted record sets exactly, the four permanent tests calibrate
-base-red / candidate-green / omission-red at 8 and 1, six inventory families
-replayed green, and stage B stopped at the typed-slot family — discovery
-reads 611 implementations / 100 typed against the 610/99 pin, and the only
-delta is the new `ProfiledPreparedDispatchFrame`. Continuation 1 integrates
-that one receipt (a G15-C2 stage row, its transition check, the exact count
-guards and the two forced-red markers; no existing row, status or pin
-changes), replays all seven families canonically, then runs the suites, the
-disabled instruction gate and the microbench lane. The install stays
-uncommitted until stage B is green. Then brief 623 continuation 10 over the remaining tail (256
-LocalTail, 45 reopened, 22 strict, the five 719 edges); then CM,
-`CHANGELOG.md`, and S10 onward. P0496's ledger disposition (expected
-unreachable/source-closed) belongs to the C2 settlement round.
-The two root-context reds
+**Next, in order** (the branch queue): **brief 623 continuation 10, the
+remaining C2 settlement tail** — 256 LocalTail rows, 45 reopened rows, 22
+strict rows and the five 719 edges — then C2's settlement round (including
+P0496's ledger disposition, expected unreachable/source-closed), then CM,
+`CHANGELOG.md` before S10, G13 S10–S54/F1–F23/R, E2. **Brief 725 is accepted
+and committed**: the accepted family2 prepared-stage completion is installed
+(enabled-only `ProfiledPreparedDispatchFrame` delegating to one shared
+const-generic resume; the exact owned `call.stage.prepare_arguments` boundary
+bound to the witnessed consumer cell and completed as `None` after
+installation/normalization and before later dispatch), its four permanent
+tests are green on the live source at 8 and 1, the authorized G15-C2 typed
+receipt is integrated exactly (one F row anchored `F0275P`, one stage row,
+the named guards and the freshly exposed S4 exclusion only; existing=626
+preserved, missing=0, new=1), all seven inventory families replay
+canonically, and stage B is green on the host: workspace 4,223/0/61 over 63
+binaries with the seven standing skips, the five switch-gated host tests,
+the disabled instruction gate on the three panels (required rows exact, no
+new helper symbol, interner class recorded with every draw and no
+exclusion), and the timing lane settled by exact-body probes (the one libc
+`memcpy` frame is layout-sensitive and candidate-cheaper). The no-default
+Hash conflict is recorded here as a separate standing obligation. The two
+root-context reds
 (`lp655`/`lp656`) remain a separate standing obligation. LP08's counter promotion
 has landed (`b9b39763`) and its schema-v2 publication is certified by
 brief 717; `RumProfileSnapshot` keeps its protected `Null` behaviour in

@@ -7,6 +7,7 @@ use crate::runtime::profiling::logical::{
 use std::sync::Mutex;
 
 mod arena;
+mod prepared;
 #[cfg(test)]
 mod tests;
 use arena::Arena;
@@ -37,6 +38,7 @@ struct Cell {
 }
 enum Kind {
     Guest,
+    PreparedGuest(Arc<ProfileBoundary>),
     EvaluationReturn,
     Boundary(Arc<ProfileBoundary>),
     DownValuesBoundary(Box<DownValuesView>),
@@ -89,7 +91,7 @@ impl DownValuesView {
                 && data.belongs(root, self.consumer)
                 && data
                     .cell(self.consumer)
-                    .is_some_and(|cell| matches!(cell.kind, Kind::Guest))
+                    .is_some_and(|cell| matches!(cell.kind, Kind::Guest | Kind::PreparedGuest(_)))
         });
         if !ordered {
             boundary.epoch.fault();
@@ -280,9 +282,9 @@ impl ProfileQueue {
         if after.is_some_and(|id| !data.belongs(*root, id))
             || before.is_some_and(|id| {
                 !data.belongs(*root, id)
-                    || !data
-                        .cell(id)
-                        .is_some_and(|cell| matches!(cell.kind, Kind::Guest))
+                    || !data.cell(id).is_some_and(|cell| {
+                        matches!(cell.kind, Kind::Guest | Kind::PreparedGuest(_))
+                    })
             })
         {
             drop(data);
@@ -290,7 +292,7 @@ impl ProfileQueue {
             self.epoch.as_ref().unwrap().fault();
             return false;
         }
-        let consumer = matches!(cell.kind, Kind::Guest);
+        let consumer = matches!(cell.kind, Kind::Guest | Kind::PreparedGuest(_));
         let id = match data.allocate(cell) {
             Ok(id) => id,
             Err(cell) => {
@@ -549,7 +551,7 @@ impl ProfileQueue {
         }
         if !matches!(
             self.take_cell().map(|c| c.kind),
-            Some(Kind::Guest | Kind::EvaluationReturn)
+            Some(Kind::Guest | Kind::PreparedGuest(_) | Kind::EvaluationReturn)
         ) {
             self.epoch.as_ref().unwrap().fault();
         }

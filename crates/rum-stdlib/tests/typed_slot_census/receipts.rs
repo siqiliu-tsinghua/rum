@@ -113,9 +113,9 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         counts[0].2 + counts[1].2,
         counts[0].3 + counts[1].3
     );
-    if counts[0] != (461, 50, 610, 535, 336, 199) || counts[1] != (11, 5, 16, 11, 3, 8) {
+    if counts[0] != (461, 50, 611, 535, 336, 199) || counts[1] != (11, 5, 16, 11, 3, 8) {
         return Err(
-            "G15-C1 baseline requires production 610/535 and test-only 16/11; combined 626/546"
+            "G15-C1 baseline requires production 611/535 and test-only 16/11; combined 627/546"
                 .into(),
         );
     }
@@ -151,6 +151,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
     super::s9::transitions(facts, report)?;
     super::g15a::transitions(facts, report)?;
     super::g15c1::transitions(facts, report)?;
+    super::g15c2::transitions(report)?;
     let witnessed: BTreeSet<_> = rows(RECEIPTS)
         .into_iter()
         .filter(|r| {
@@ -182,7 +183,7 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
     )?;
     let receipts = rows(RECEIPTS);
     for (kind, count) in [
-        ("F", 629), // F0273 merged; F0275P splits the prepared consumer; F0248 has a retained removal receipt.
+        ("F", 630), // F0273 merged; F0275P splits the prepared consumer; F0248 has a retained removal receipt; G15-C2 adds the profiled consumer.
         ("M", 614), // Seven LP03 macro receipts move to witnessed cold-helper calls; old rows stay removed.
         // M0282S/M0283S complete the two looping stage consumers.
         ("Chain", 62),

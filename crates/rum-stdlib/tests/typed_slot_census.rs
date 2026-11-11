@@ -73,6 +73,8 @@ mod discovery;
 mod g15a;
 #[path = "typed_slot_census/g15c1.rs"]
 mod g15c1;
+#[path = "typed_slot_census/g15c2.rs"]
+mod g15c2;
 #[path = "typed_slot_census/receipts.rs"]
 mod receipts;
 #[path = "typed_slot_census/reporting.rs"]
@@ -214,9 +216,9 @@ fn forced_red(remove_guard: bool) {
     fs::create_dir_all(log_path.parent().unwrap()).unwrap();
     fs::write(&log_path, &log).unwrap();
     let marker = if remove_guard {
-        "production frames=472 finalizers=55 implementations=626"
+        "production frames=472 finalizers=55 implementations=627"
     } else {
-        "G15-C1 PARTITION implementations=625"
+        "G15-C1 PARTITION implementations=626"
     };
     assert!(
         !output.status.success()

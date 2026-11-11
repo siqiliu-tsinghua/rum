@@ -33,7 +33,18 @@ fn suspend_prepared_stage_with_boundary(
     witness: SlotWitness<PreparedCallArguments>,
     request: crate::runtime::RuntimeInputRequest,
 ) -> Result<Expr, EvalError> {
-    record_profile_runtime_path_timing(token, RuntimeProfileOutcome::InputRequired);
+    if let Some(token) = token {
+        return suspend_profiled_prepared_stage(
+            session,
+            evaluated_head,
+            plan,
+            state,
+            stage_index,
+            token,
+            witness,
+            request,
+        );
+    }
     witness.suspend(
         session,
         request,
@@ -53,7 +64,18 @@ fn suspend_resumed_prepared_stage_with_boundary(
     witness: SlotWitness<PreparedCallArguments>,
     request: crate::runtime::RuntimeInputRequest,
 ) -> Result<Expr, EvalError> {
-    record_profile_runtime_path_timing(token, RuntimeProfileOutcome::InputRequired);
+    if let Some(token) = token {
+        return suspend_profiled_prepared_stage(
+            session,
+            evaluated_head,
+            plan,
+            state,
+            stage_index,
+            token,
+            witness,
+            request,
+        );
+    }
     witness.suspend(
         session,
         request,
@@ -108,6 +130,26 @@ fn suspend_resumed_call_stage_with_boundary(
             stage_index,
             unevaluated_restore,
         )),
+    )
+}
+
+#[cold]
+#[inline(never)]
+fn suspend_profiled_prepared_stage(
+    session: &mut Session,
+    evaluated_head: SharedExpr,
+    plan: SuspendedCallDispatchPlan,
+    state: CallDispatchState,
+    stage_index: usize,
+    token: crate::runtime::profiling::RuntimePathTimingToken,
+    witness: SlotWitness<PreparedCallArguments>,
+    request: crate::runtime::RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    record_profile_runtime_path_timing(Some(token), RuntimeProfileOutcome::InputRequired);
+    witness.suspend(
+        session,
+        request,
+        ProfiledPreparedDispatchFrame::new(evaluated_head, plan, state, stage_index),
     )
 }
 
@@ -459,7 +501,7 @@ impl Session {
         prepared.unevaluated_restore
     }
 
-    fn resume_prepared_call_dispatch_frame(
+    fn resume_prepared_call_dispatch_frame<const PROFILED: bool>(
         &mut self,
         evaluated_head: SharedExpr,
         plan: SuspendedCallDispatchPlan,
@@ -476,6 +518,9 @@ impl Session {
                 prepared,
             )
             .map(|restore| SuspendedUnevaluatedRestorePlan::freeze(*restore));
+        if PROFILED {
+            self.logical_complete_prepared_arguments();
+        }
         self.resume_suspended_call_with_dispatch_plan(
             evaluated_head,
             plan,
@@ -719,11 +764,49 @@ impl TypedFrame for PreparedDispatchFrame {
         outcome: Result<PreparedCallArguments, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
-        TypedAction::complete(session.resume_prepared_call_dispatch_frame(
+        TypedAction::complete(session.resume_prepared_call_dispatch_frame::<false>(
             self.evaluated_head.clone(),
             self.plan.clone(),
             self.state.clone(),
             self.stage_index,
+            outcome,
+        ))
+    }
+}
+
+// Enabled-only static frame thunk; the evaluator body remains shared.
+#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
+struct ProfiledPreparedDispatchFrame {
+    prepared: PreparedDispatchFrame,
+}
+impl ProfiledPreparedDispatchFrame {
+    #[cold]
+    #[inline(never)]
+    fn new(
+        evaluated_head: SharedExpr,
+        plan: SuspendedCallDispatchPlan,
+        state: CallDispatchState,
+        stage_index: usize,
+    ) -> Self {
+        Self {
+            prepared: PreparedDispatchFrame::new(evaluated_head, plan, state, stage_index),
+        }
+    }
+}
+impl TypedFrame for ProfiledPreparedDispatchFrame {
+    type Input = PreparedCallArguments;
+    type Output = Expr;
+    fn resume<'resume>(
+        self: Arc<Self>,
+        session: &mut Session,
+        outcome: Result<PreparedCallArguments, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        TypedAction::complete(session.resume_prepared_call_dispatch_frame::<true>(
+            self.prepared.evaluated_head.clone(),
+            self.prepared.plan.clone(),
+            self.prepared.state.clone(),
+            self.prepared.stage_index,
             outcome,
         ))
     }

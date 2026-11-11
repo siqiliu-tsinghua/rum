@@ -8,6 +8,7 @@ mod index;
 mod logical_totals;
 mod module;
 mod owner_filter;
+mod prepared_stage;
 mod publication;
 mod queue_boundaries;
 mod record_engine;

@@ -74,6 +74,9 @@ impl Session {
         }
         drop(control);
         owner.frames.enable_profile(Arc::clone(&boundary.epoch));
+        if boundary.has_runtime_key("call.stage.prepare_arguments") {
+            owner.frames.bind_prepared_boundary(&boundary);
+        }
         let after = frontier
             .map(|f| f.after)
             .unwrap_or_else(|| owner.frames.frontier());
@@ -97,5 +100,18 @@ impl Session {
                 .consumer_frontier()?,
         );
         Some(frontier)
+    }
+}
+
+impl Session {
+    #[cold]
+    #[inline(never)]
+    pub(in crate::runtime) fn logical_complete_prepared_arguments(&self) {
+        let Some(owner) = self.resuming_suspension.as_ref() else {
+            return;
+        };
+        owner
+            .frames
+            .complete_prepared_boundary(&self.request_interrupt_control.borrow());
     }
 }

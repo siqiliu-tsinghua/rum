@@ -322,3 +322,113 @@ Next: brief 725 continuation 1, forked from session
 `01a1c7dd-9c67-77d1-bc06-560621b37145`, completes the typed integration,
 replays the seven families, and runs the remainder of stage B; then my
 gate. The install stays uncommitted until stage B is green.
+
+## Director gate (2026-11-11) — continuation 1: the typed integration is exact, stage B is green on the host, and the install is accepted
+
+Continuation 1 (log `.temp/logs/cdx_brief_725.log`, 37,745 lines,
+memory-scope peak 16 GiB, oom 0, oom_kill 0, rc=0; report
+`.temp/brief-725/report-C1.json`, 849 citations verified, 13 PASS and 4
+FLAGGED checks) integrated the authorized G15C2-TYPED receipt, replayed all
+seven inventory families canonically, and ran the remainder of stage B.
+
+**Scope, from my own walk.** The entry tree holds 2,718 files; the final
+tree 2,719, and my walk equals `final-live-hashes.json` on all 2,719. The
+entry-to-final delta is exactly ten files: nine modified and one added. The
+entry comparison also names my own ruling commit's three docs and the two
+`tools/claude-mod` type files the harness rewrote at 08:43, all disclosed
+and outside the worker's change. `prepared.rs` changes only its header
+comment; its body is byte-identical to the installed candidate. No
+production implementation body changed, no `unsafe`, no `Cargo.lock`, no
+driver, trait or publication body.
+
+**The typed integration is exact.** On my own run the census emits 648
+frame rows, of which 627 non-test-support identities equal the 627 receipt
+identities exactly. Against the entry receipt table, discovery reads
+existing=626 preserved=626 missing=0 new=1; the new type is
+`ProfiledPreparedDispatchFrame`, kind `TypedFrame`,
+`PreparedCallArguments -> Expr`, population production. The receipt table
+moves 2,368 -> 2,370 rows with exactly two additions and nothing removed or
+changed (`F FG15C2Prepared` anchored `F0275P`, `Stage G15-C2` implemented,
+production). The baseline test is green (census production frames=461
+finalizers=50 implementations=611 typed=100; partition 627/546) and prints
+`G15-C2 FRAME FG15C2Prepared ... anchor=F0275P` and `G15-C2 TYPING frames=1
+insertions=0`. Every guard edit is the one I named: `receipts.rs` 610->611,
+its message and F count 629->630, and the new transition registration;
+`g15a.rs`/`g15c1.rs` typed 99->100 and printed totals 610->611; the two
+forced-red markers 626->627 and 625->626; and the newly exposed S4 guard,
+which adds G15-C2 only to the later-stage exclusion set, preserving S4's
+owned set with no assertion weakened.
+
+**The seven replays are green on my runs.** The fingerprint generator
+re-emits the live `local-contracts.tsv` byte-for-byte (68 rows, each
+changed only in its derived fingerprint column); ownership
+`production_inventory_is_exact` passes; both certificate builds pass; the
+rejection census stays 1,220; the LP01 parent passes (required=1115
+bound=875 executed=875, counter-losses=22772); frame roots pass 15/15 with
+named frames 568; the typed suite passes. After all replays the tree still
+equals the worker's final hashes on all 2,719 files.
+
+**Suites.** My host workspace runs once at 8 threads with the seven
+standing skips: **63 binaries, 4,223 passed / 0 failed / 61 ignored**, peak
+14 GiB in the scope with oom 0. That is exactly the worker's composed total
+(the pre-install base 4,219 plus the four new permanent tests); the nine
+sandbox native-loopback `EPERM` failures do not exist on the host, and the
+two standing root reds (`lp655`/`lp656`) are reproduced by me at one thread.
+The five switch-gated host tests pass under `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`
+(3+1+1, including the lp658 pair). `cargo fmt --check` is clean. The
+no-default library red (1104/1/53) is the pre-existing Hash-feature
+conflict: the failure's left and right values hash identically on the broad
+candidate run, the focused candidate t1 run and the exact pre-install base
+t1 run, in a test file this brief does not touch.
+
+**Disabled instruction gate.** Eighteen fresh Callgrind captures (two draws
+x base, candidate, forced rebuild x three panels), with the forced rebuild
+byte-equal to the candidate (`122c5222...`). All 15 required rows are exact
+at unchanged call counts; I confirmed `PreparedDispatchFrame::resume` is
+2,642 instructions / 21 calls in all three arms with `callgrind_annotate`.
+None of the five new symbols (`logical_complete_prepared_arguments`,
+`bind_prepared_boundary`, `complete_prepared_boundary`,
+`ProfiledPreparedDispatchFrame`, `PreparedGuest`) appears in any capture;
+the frozen definition panel keeps the recorded baseline absence of the
+prepared resume. No row is excluded. All nine interner rows report every
+draw; each row's candidate/force envelope overlaps its base range (gap 0).
+The only deterministic rum-code movements are decreases: the enabled-only
+insertion is absent and the skipped no-op timing call is visible as
+`suspend_prepared_stage_with_boundary` 903 -> 651 and
+`lexical_profile_enabled` 1,050,168 at 21,432 calls -> 1,049,139 at 21,411
+calls. The remaining differences are the standing external classes:
+mirrored address-relocation pairs, libc `__strtoul_internal` +64 (via
+`pthread_getattr_np`'s procfs parse), `std::str::from_utf8` +25 (argv
+length), and the recorded draw-varying builtin lookup row.
+
+**Timing lane.** 120 labels, four interleaved passes, tier median quotients
+1.0039 / 0.9989 / 1.0026 / 0.9986 (layout 1.0024 / 0.9960 / 1.0035 /
+1.0001). The three separating labels that required exact-body diagnosis
+have overlapping total-instruction ranges and identical rum call slopes.
+The single per-function flag is a libc `memcpy` ifunc frame at
+`0x1b57e0`: 119 calls in every draw, candidate constant at 3,239, base
+3,293/3,275 and layout 3,275/3,239 -- the candidate is cheaper, the row is
+copy-size/alignment sensitive, and it is not guest work. Timing acceptance
+is not claimed; the instruction lane decides and reads flat.
+
+**Final audit.** Ten changed files, all authorized; 213,605 protected files
+byte-identical across the six scenes; `git_operations=0`; my own mtime
+check finds no protected file newer than the run start.
+
+**Adjudications of the two questions.** `NO-DEFAULT-HASH`: pre-existing
+feature-conflict red with identical failure bytes on the pre-install
+source; it is recorded as a separate standing obligation in `TODO.md`, not
+disposed in this brief, and no assertion or skip was changed. `CONSTANT-LIBC`:
+the row is the layout-sensitive libc `memcpy` frame described above,
+candidate cheaper at constant calls; it stays recorded with its original
+STOP, no exclusion, and authorizes no production edit.
+
+**Accepted in full.** The prepared-stage completion install, the G15-C2
+typed integration and stage B are committed with this ruling. C2 stays Open
+at 328 residuals + 1 Lost; P0496's ledger disposition remains with the C2
+settlement round; S10 stays unopened; the two root-context reds and the
+no-default Hash conflict remain separate obligations.
+
+Next: brief 623 continuation 10 over the remaining C2 tail (256 LocalTail,
+45 reopened, 22 strict, the five 719 edges); then C2's settlement round;
+then CM, `CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2.

@@ -284,7 +284,12 @@ impl Arena {
         self.ordered_and_balanced(root)
             .into_iter()
             .rev()
-            .find(|id| matches!(self.node(*id).map(|n| &n.cell.kind), Some(Kind::Guest)))
+            .find(|id| {
+                matches!(
+                    self.node(*id).map(|n| &n.cell.kind),
+                    Some(Kind::Guest | Kind::PreparedGuest(_))
+                )
+            })
     }
     pub(super) fn first_deferred(&self, root: Option<CellId>) -> Option<CellId> {
         let mut id = root?;
@@ -420,5 +425,14 @@ impl Arena {
         } else {
             Some(joined)
         }
+    }
+}
+
+impl Arena {
+    pub(super) fn bind_prepared(&mut self, id: CellId, boundary: Arc<ProfileBoundary>) {
+        self.node_mut(id)
+            .expect("validated live consumer cell")
+            .cell
+            .kind = Kind::PreparedGuest(boundary);
     }
 }
