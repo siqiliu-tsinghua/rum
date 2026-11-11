@@ -511,10 +511,42 @@ a copied-driver budget artifact with no assertion weakened, and `P0528`'s
 provisional promotion is rejected by the pair-column order. Six bad-ledger
 controls RED, 25 build receipts exact, forced spot `c340c865…`, 5,151
 fixtures, 93,100 sealed files unchanged, `report.py check` 6,165
-citations. **Next: continuation 16** of brief 623 on this unchanged
-installed source (the remaining 249-row tail by mechanism, the 970
+citations. **Continuation 16 is accepted as a STOP: eight rows settle
+Equal and five settle `NoObservableTail`, and the two-family stop is well
+taken on the unchanged source.** Its own delta is the report append only
+(production changes 0; 2,726 live files; all 1,622 files under `crates/`
+byte-identical to the C15 entry manifest and to live; entry digest
+`1356bc59…`, production digest `8313fbc1…`); my own 734,703-file protected
+walk is 0/0/0 and my own sealed replay is 82,581 files 0/0/0; the only
+repository diff is the authorized 5,833-line append (924,353 B, prefix
+`b8d23918…`, `REPORT.md` sha `2d6fa87b…`). The ledger reads 1,042 rows
+with exactly 13 verdict changes (8 Equal `P1193`/`P2132`–`P2135`/`P2299`/
+`P2544`/`P2547`; 5 `NoObservableTail` `P0345`/`P0347`/`P0693`–`P0695`)
+and 0 rows added or removed; 78,330 canonical keys and 18,840 encoding
+rows; residual composition 192 LocalTail + 24 ReopenedOrNew + 11
+StrictDropGap + 6 StrictCallerGap + 1 StrictOtherCarrier + 1 New719Edge +
+1 New725Edge = 236; `P1566` Lost, `P0496` and `P0528` Residual and
+byte-identical; the 30 C15 rows, the 28 C14 rows and the seven C13 rows
+are byte-identical; `P0340`'s candidate proof is held by the pair-column
+order. The 900 proof cells are all five-part SAME with real == disabled
+and producer reach, with 8/8 own caught omissions and 345/345 (290
+accepted) own armed-hit-surviving omissions whose source branches I
+re-read as identity completions; 1,161 own receipts; 6,336 fixtures
+(5,151 inherited exact + 1,185 new); 18 source-packet and 20 schema
+source-hash checks exact. Transitive: 85 full proofs (72 + 13), 89
+matrices, 5,297 SAME keys, 957 named open, 24 unresolved, 13 pair
+columns, five owners open. The STOP: `resumed-fixed-point-tail` and
+`argument-repeated-request-context` are two consecutive executed
+zero-progress families by my own re-derivation, clock 2, no guest/Cargo
+after; the six invalid P0327 recipes and 30 invalid P1476 attempts are
+retained, and the rewrite preflight/delimiter corrections are instrument
+fixes with no assertion weakened. Six bad-ledger controls RED (my own
+re-run reproduces every reason), 17 build receipts exact (real arms
+`c340c865…`, forced spot fresh), 0 new `unsafe`, `report.py check` 4,052
+citations. **Next: continuation 17** of brief 623 on this unchanged
+installed source (the remaining 236-row tail by mechanism, the 957
 duties, the 24 unresolved rows, the 13 pair columns and the five named
-owners; the seven stopped families not repeated without a genuinely new
+owners; the nine stopped families not repeated without a genuinely new
 mechanism), then C2's settlement round (including P0496's ledger
 disposition, expected unreachable/source-closed, and P1566's
 re-settlement on the installed source), then CM, `CHANGELOG.md` before
