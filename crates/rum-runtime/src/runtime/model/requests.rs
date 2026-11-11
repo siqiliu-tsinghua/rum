@@ -164,6 +164,8 @@ pub enum SessionRequestError {
         expected: &'static str,
         got: &'static str,
     },
+    /// Source text could not be parsed or lowered. Malformed `Input` answers
+    /// carry the original answer's diagnostic on both queued and resumed paths.
     Syntax(StructuredSourceDiagnostic),
     InvalidInteger {
         literal: String,

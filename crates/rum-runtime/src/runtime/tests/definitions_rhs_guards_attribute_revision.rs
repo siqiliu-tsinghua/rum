@@ -117,7 +117,7 @@ fn eval_file_rollback_preserves_every_guarded_lane() {
     let error = session
         .eval_file(file)
         .expect_err("the invalid file must restore its loader snapshot");
-    assert!(matches!(error, EvalError::Syntax(_)));
+    assert!(matches!(error, EvalError::Syntax { .. }));
     assert_every_guarded_revision_lane(&mut session);
 }
 

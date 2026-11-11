@@ -82,10 +82,13 @@ fn comparison_lowering_bounds_direct_chain_nodes() {
         .expect_err("a direct comparison chain above the parser limit should be rejected");
     assert!(matches!(
         error,
-        EvalError::Syntax(SyntaxError::LeftAssociativeChainTooLong {
-            max: MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS,
-            ..
-        })
+        EvalError::Syntax {
+            error: SyntaxError::LeftAssociativeChainTooLong {
+                max: MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS,
+                ..
+            },
+            input_source: None
+        }
     ));
     drop(rejected);
 }

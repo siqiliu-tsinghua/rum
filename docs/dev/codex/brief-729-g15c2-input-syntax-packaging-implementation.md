@@ -552,3 +552,80 @@ The parser-stack question is answered by the recorded obligation:
    run at 8; any new red reproduced at `--test-threads=1` before it is
    called a defect.
 7. Report and stop. Any further inventory movement is a STOP.
+
+## Director gate (2026-11-11, continuation 2)
+
+Run facts: log `.temp/logs/cdx_brief_729.log`, 23,923 lines, 1,928,455 B,
+sha256 `02d15a79…`, memory-scope peak 14,439,993,344 B, oom 0, oom_kill
+0, rc=0; report `.temp/brief-729/report.json`, 153 runs, 17 PASS /
+2 FLAGGED / 1 FAIL, `report.py check` 1,195 citations; no executed
+git/network command.
+
+**Scope and install.** My own manifest walk: 2,320 files at entry and at
+exit, with the entry→final delta exactly four paths —
+`root_set.rs` (T2, one identifier), `typed-slot-stages.tsv` (T1's
+one-line `#call3`→`#call2` rebind plus T3's four `X` rows),
+`local-contracts.tsv` (68 fingerprint cells) and `promoted.tsv` (2
+rows) — 0 added, 0 removed; production changes 0 and the permanent test
+bodies unchanged. The live tree equals `final-hashes.json` on all
+2,320 files, and the acceptance copy `source-continuation2` equals it
+except three `__pycache__` build artifacts. My continuation-1 probe
+(the continuation-1 tree with my calibrated T1–T3) differs from the
+live tree only in the two derived tables and the two ruling docs, so
+the installed T1–T3 text is byte-identical to the calibrated ruling. I
+recomputed all four T3 ids as `X` + FNV-1a-64 of the identity: all four
+match, and the same rule reproduces the eight pre-existing hash ids.
+`SessionRequestError` keeps `"Syntax.0"` and the six edge assertions
+are intact; only the `EvalError` field string changed.
+
+**The derived refresh, ruled.** The contract fingerprint's rot guard
+hashes every `.rs`/`.py`/`.toml` under `crates/` by design
+(`contracts.rs:88-120`), so any source edit under `crates/` — T2
+included — expires all 68 contract cells and the promoted certificate
+values that embed them. I checked the two files column by column: only
+column 18 differs in the 68 `local-contracts` rows, and only columns 4/5
+in the 2 `promoted` rows; no row was added, removed or reordered and
+every id is unchanged. My own run of
+`regenerate_local_contract_fingerprints` on the live tree emits a file
+byte-identical to the installed `local-contracts.tsv` (`cmp` clean),
+and `local_production_acceptance` is green on both the default and
+`--no-default-features` arms with both files byte-unchanged before and
+after. Ruling: this is the canonical replay consequence of T2, not
+inventory movement; no identity, status, disposition, exclusion, count
+or reason changed, and the "no other file changes" line is amended for
+exactly these two derived tables.
+
+**My reproductions.** `cargo fmt --check` clean; `check --all-targets`
+rc=0 with zero warnings; ownership `production_inventory_is_exact` green
+at `61/79/8,852` with the worker's discovery reading zero actions;
+`typed_slot_census` **10/0/1** at 8 threads (67.82 s) and at 1
+(243.81 s); `frame_root_trace` **15/0** at 8 and 1 with 568 named
+suspension frames and 59 named pure finalizers; the LP01 five-mode
+parents green at 8 (164.85 s) and 1 (164.97 s) — `required=1115
+bound=875 executed=875 encoding-owned=240`, counter-losses 22,772 in
+`all`, every mode line `ok`; the two fixed permanent tests 1/0 at 8 and
+at 1 (runtime malformed-input and `-p rum-host --test
+input_syntax_contract`); the five switch-gated host tests 5/0 at 8 and
+at 1 under `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`; the two accepted
+root-context reds exactly 0/2 at 8 and 1; the untouched-base no-default
+wide-symbol failure reproduced at `ordering_sets.rs:271` (0/1, exit
+101) with that test file unchanged by the round. The installed copied
+proof reads byte-equal to the Stage-A candidate records on the tree I
+verified byte-identical to the live tree.
+
+**The STOP.** The worker's workspace run (4,225 passed / 9 failed / 61
+ignored at 8 threads) fails only the nine native ZeroMQ loopback tests,
+each EPERM at the bind before evaluation; the helper is unchanged from
+entry, the failures reproduce at 1 thread, and no flag, skip, assertion
+or repin was added. That is the standing worker-sandbox boundary, not a
+product signal. I ran the prescribed workspace myself on the host:
+**4,234 passed / 0 failed / 61 ignored** over 65 summaries, rc=0, with
+the seven standing skips — on the tree where the nine loopback tests
+pass.
+
+**Rulings.** Q1 the STOP is accepted as the environment boundary;
+Q2 the derived-cell refresh is authorized as T2's canonical replay
+consequence; Q3 the round is complete and the install is accepted. C2
+stays Open at 314 Residual + 1 Lost; no ledger, settlement, port table,
+`CHANGELOG` or S10 item is touched. Next: continuation 13 of brief 623
+on this installed source.

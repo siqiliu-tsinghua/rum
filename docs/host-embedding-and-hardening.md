@@ -120,6 +120,12 @@ through `resume_with_input`. Script/file evaluation supports pre-queued input;
 if a multi-form script suspends with an empty queue, that script-shaped request
 is not currently resumable.
 
+A malformed `Input` answer is a `Syntax` failure on both the pre-queued and
+resumed paths (`SessionRequestError::Syntax` and `HostFailureCode::Syntax`).
+Its structured diagnostic and rendered text describe the original answer,
+including its spans, lines, and columns. The failed request releases pending
+input so a fresh request can succeed.
+
 ## Deliberate Limits And Deferred Work
 
 - Source-created trees are protected by parser, evaluator, matcher, and native-

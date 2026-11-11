@@ -388,3 +388,54 @@ fn nested_input_suspension_precedes_the_old_suffix_without_reordering_effects() 
         "List[List[\"B-value\", \"C-value\"], List[\"A\", \"B\", \"C\"]]"
     );
 }
+
+#[test]
+fn queued_and_resumed_malformed_input_report_the_same_syntax_diagnostic() {
+    // The depth-limit case needs 3 MiB in debug builds; allow more than twice that.
+    std::thread::Builder::new()
+        .stack_size(8 * 1024 * 1024)
+        .spawn(|| {
+            let deep = format!("{}1{}", "(".repeat(129), ")".repeat(129));
+            for answer in ["(", "1 ! 2", "", "\"é\" + )", "f[", deep.as_str()] {
+                let expected = rum_syntax::SourceDiagnostic::new(
+                    rum_syntax::SourceText::new(answer),
+                    rum_syntax::parse_expr(answer).unwrap_err(),
+                )
+                .structured();
+                let mut queued = session_with_test_control_builtins();
+                queued.queue_input_response(answer);
+                let queued_failure = queued
+                    .eval_request("Input[\"answer\"]")
+                    .expect_err("malformed queued input should fail");
+
+                let mut resumed = session_with_test_control_builtins();
+                let pause = resumed
+                    .eval_request("Input[\"answer\"]")
+                    .expect_err("Input should suspend without a queued answer");
+                assert!(matches!(
+                    pause.error,
+                    SessionRequestError::InputRequired { .. }
+                ));
+                let resumed_failure = resumed
+                    .resume_eval_request_with_input(answer)
+                    .expect_err("malformed resumed input should fail");
+
+                for failure in [&queued_failure, &resumed_failure] {
+                    let SessionRequestError::Syntax(diagnostic) = &failure.error else {
+                        panic!(
+                            "expected original Input syntax diagnostic for {answer:?}: {failure:?}"
+                        );
+                    };
+                    assert_eq!(diagnostic, &expected, "answer: {answer:?}");
+                }
+                assert_eq!(queued_failure, resumed_failure, "answer: {answer:?}");
+                for session in [&mut queued, &mut resumed] {
+                    assert!(session.pending_input_request().is_none());
+                    assert_eq!(session.eval_request("83").unwrap().value.to_string(), "83");
+                }
+            }
+        })
+        .expect("spawn Input syntax contract test")
+        .join()
+        .expect("Input syntax contract test panicked");
+}

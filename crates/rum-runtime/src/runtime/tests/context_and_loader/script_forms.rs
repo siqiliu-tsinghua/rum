@@ -285,7 +285,7 @@ fn eval_script_pins_the_second_form_syntax_error_message() {
         .eval_script("x = 1\nw = 2 !")
         .expect_err("the second form has a trailing-input syntax error");
 
-    assert!(matches!(error, EvalError::Syntax(_)));
+    assert!(matches!(error, EvalError::Syntax { .. }));
     assert_eq!(error.to_string(), "trailing input at bytes 12..13");
     // The first form still ran before the error surfaced.
     assert_eq!(session.eval_text("x").unwrap().value.to_string(), "1");
@@ -314,7 +314,7 @@ fn eval_script_preserves_messages_emitted_before_a_later_error() {
         .eval_script("FindFile[\"Missing`\"]\n1 ! 2")
         .expect_err("expected a later evaluation error");
 
-    assert!(matches!(error, EvalError::Syntax(_)));
+    assert!(matches!(error, EvalError::Syntax { .. }));
     assert!(
         session
             .take_messages()

@@ -124,7 +124,7 @@ fn down_values_finish_retains_identity_before_the_actual_consumer() {
     // parser subsequently fails. Moving it after that consumer records Error.
     assert!(matches!(
         session.resume_suspended_evaluation("("),
-        Err(EvalError::Syntax(_))
+        Err(EvalError::Syntax { .. })
     ));
     let c = row(&epoch, path.key);
     assert_eq!((c.calls, c.some, c.err, c.open), (1, 1, 0, 0));

@@ -79,7 +79,7 @@ fn syntax_root_discovers_added_recursive_type_and_restores_source() {
         ),
         (
             "rum_runtime::runtime::session::session_state::EvalError".into(),
-            "Syntax.0",
+            "Syntax.error",
             "rum_syntax::error::SyntaxError",
         ),
         (

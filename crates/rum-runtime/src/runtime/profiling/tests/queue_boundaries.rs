@@ -202,7 +202,7 @@ fn logical_after_consumer_sees_the_input_parser_error() {
     session.logical_insert_boundary(token.pause().unwrap(), Some(frontier), false);
     assert!(matches!(
         session.resume_suspended_evaluation("("),
-        Err(EvalError::Syntax(_))
+        Err(EvalError::Syntax { .. })
     ));
     let c = test_support::epoch().rows()[0].1;
     assert_eq!((c.calls, c.err, c.ok, c.open), (1, 1, 0, 0));

@@ -39,7 +39,12 @@ pub(super) fn session_request_error_from_eval_error_with_source(
                 got: fault.got(),
             }
         }
-        EvalError::Syntax(error) => source
+        EvalError::Syntax {
+            error,
+            input_source,
+        } => input_source
+            .as_deref()
+            .or(source)
             .map(|source| {
                 SessionRequestError::Syntax(
                     rum_syntax::SourceDiagnostic::new(

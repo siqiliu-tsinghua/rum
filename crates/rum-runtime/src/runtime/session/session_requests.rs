@@ -373,7 +373,7 @@ impl Session {
                     reported,
                 }),
             )),
-            Err(err @ EvalError::Syntax(_)) => {
+            Err(err @ EvalError::Syntax { .. }) => {
                 Err(self.finish_completed_request_failure(checkpoint, reported, Some(&input), err))
             }
             Err(err) => Err(self.finish_request_failure(checkpoint, reported, err)),
@@ -442,7 +442,7 @@ impl Session {
             )),
             Err(err) => {
                 let source = match &err {
-                    EvalError::Syntax(_) => self
+                    EvalError::Syntax { .. } => self
                         .file_io()
                         .and_then(|file_io| file_io.read_to_string(path).ok()),
                     _ => None,

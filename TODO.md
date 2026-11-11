@@ -403,12 +403,34 @@ removed identity reappearing; (T2) the `root_set.rs` edge receipt's
 six assertions intact; (T3) four new exact test-support `X` receipts
 for the new round-trip test's four legacy-wire calls, with their
 FNV-1a-64 ids. Calibrated in a byte copy: 10/0/1 at 8 threads with the
-three deltas, 1/9/1 at 1 thread without them. **Next: continuation 2**
-(install T1–T3, then the remaining replays, the installed copied proof,
-the fixed tests at 8/1, and Stage C), then continuation 13 (the
-remaining tail, the 1,035 duties, the 24 unresolved rows, and the named
-open source owners `ToExpression`, `Session::lower_text`,
-outer-request lowering, loader and file-reread provenance). Then C2's
+three deltas, 1/9/1 at 1 thread without them. **Continuation 2 is accepted: brief 729 is complete and its install
+stands.** Its own delta is exactly T1–T3 plus the two derived tables the
+T2 source edit expires by design (the contract rot guard hashes every
+`.rs`/`.py`/`.toml` under `crates/`): the entry→final manifest delta is
+four files, production changes 0, and the installed T1–T3 text is
+byte-identical to my calibrated copy. I recomputed all four T3 ids from
+their FNV-1a-64 identities (the same rule reproduces the eight existing
+ids), and checked column by column that only fingerprint cells moved in
+the two refreshed tables; my own generator run emits the installed
+`local-contracts.tsv` byte for byte, and both `local_production_acceptance`
+arms are green with the files untouched. My reproductions: fmt clean;
+`check --all-targets` rc=0 with zero warnings; ownership `61/79/8,852`
+with zero discovery actions; typed slots **10/0/1** at 8 and 1;
+frame-root **15/0** at 568 frames and 59 pure finalizers at 8 and 1;
+LP01 five-mode parents green at 8 (164.85 s) and 1 (164.97 s) with
+`1115/875/875/240`; both fixed tests 1/0 at 8 and 1; the five
+switch-gated host tests 5/0 under the switch; the two accepted root-context
+reds 0/2; the no-default wide-symbol red reproduced at `ordering_sets.rs:271`
+with the test file untouched. The worker's workspace STOP is the standing
+sandbox boundary (nine native ZeroMQ loopback EPERM before evaluation,
+reproduced at 1 thread, no skip added); on the host the same workspace is
+**4,234 passed / 0 failed / 61 ignored** over 65 summaries. C2 stays Open
+at 314 Residual + 1 Lost; no ledger, settlement, port table, `CHANGELOG`
+or S10 item moved. **Next: continuation 13** of brief 623 on this
+installed source (the remaining tail, the 1,035 duties, the 24 unresolved
+rows, and the named open source owners `ToExpression`,
+`Session::lower_text`, outer-request lowering, loader and file-reread
+provenance). Then C2's
 settlement round (including P0496's ledger disposition, expected
 unreachable/source-closed, and P1566's re-settlement on the installed
 source), then CM, `CHANGELOG.md` before S10 (including the public

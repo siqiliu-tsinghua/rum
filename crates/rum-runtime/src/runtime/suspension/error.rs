@@ -273,10 +273,16 @@ impl ContinuationValue for EvalError {
                     "a structural slot fault cannot enter the legacy error wire; this wire and guard are removed at R"
                 )
             }
-            EvalError::Syntax(error) => tagged(
-                "InternalContinuationEvalErrorSyntax",
-                vec![syntax_error_into_expr(error)],
-            ),
+            EvalError::Syntax {
+                error,
+                input_source,
+            } => {
+                let mut args = vec![syntax_error_into_expr(error)];
+                if let Some(source) = input_source {
+                    args.push(string_expr(source));
+                }
+                tagged("InternalContinuationEvalErrorSyntax", args)
+            }
             EvalError::InvalidInteger { literal } => tagged(
                 "InternalContinuationEvalErrorInvalidInteger",
                 vec![string_expr(literal)],
@@ -403,10 +409,15 @@ impl ContinuationValue for EvalError {
         };
         let mut args = args.into_iter();
         let error = if is_system_symbol_name(&head, "InternalContinuationEvalErrorSyntax") {
-            Self::Syntax(syntax_error_from_expr(
-                args.next()
-                    .expect("syntax evaluation error stores its error"),
-            ))
+            Self::Syntax {
+                error: syntax_error_from_expr(
+                    args.next()
+                        .expect("syntax evaluation error stores its error"),
+                ),
+                input_source: args
+                    .next()
+                    .map(|source| string_from_expr(source, "Input source")),
+            }
         } else if is_system_symbol_name(&head, "InternalContinuationEvalErrorInvalidInteger") {
             Self::InvalidInteger {
                 literal: string_from_expr(
@@ -647,4 +658,47 @@ pub(in crate::runtime) fn result_from_continuation_expr(expr: Expr) -> Result<Ex
     };
     debug_assert!(args.next().is_none());
     outcome
+}
+
+#[cfg(test)]
+#[test]
+fn input_syntax_legacy_wire_preserves_optional_source_and_bare_payload() {
+    for source in ["(", "", "\"é\" +\n )"] {
+        let syntax = rum_syntax::parse_expr(source).unwrap_err();
+        let display = syntax.to_string();
+        let error = EvalError::from(syntax.clone())
+            .with_input_source(source.to_owned())
+            .with_input_source("a later answer".to_owned());
+        assert_eq!(error.to_string(), display);
+        assert!(std::error::Error::source(&error).is_none());
+        let encoded = error.into_continuation_expr();
+        let Expr::Call { args, .. } = &encoded else {
+            panic!("the legacy error wire must be a call");
+        };
+        assert_eq!(args.len(), 2);
+        assert_eq!(args[1], Expr::string(source));
+        let decoded = EvalError::from_continuation_expr(encoded);
+        assert_eq!(decoded.to_string(), display);
+        assert!(std::error::Error::source(&decoded).is_none());
+        assert!(
+            matches!(decoded, EvalError::Syntax { error, input_source: Some(original) }
+            if error == syntax && original == source)
+        );
+    }
+
+    let bare = EvalError::from(SyntaxError::EmptyInput);
+    assert!(std::error::Error::source(&bare).is_none());
+    assert_eq!(bare.to_string(), SyntaxError::EmptyInput.to_string());
+    let encoded = bare.into_continuation_expr();
+    assert_eq!(
+        encoded.to_string().as_bytes(),
+        b"InternalContinuationEvalErrorSyntax[InternalContinuationSyntaxEmptyInput[]]"
+    );
+    assert!(matches!(
+        EvalError::from_continuation_expr(encoded),
+        EvalError::Syntax {
+            error: SyntaxError::EmptyInput,
+            input_source: None
+        }
+    ));
 }

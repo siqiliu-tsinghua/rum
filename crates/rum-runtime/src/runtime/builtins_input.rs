@@ -306,8 +306,14 @@ impl Session {
             return Ok(text);
         };
 
-        let syntax = parse_expr(&source)?;
-        let expr = self.lower_syntax_expr(&syntax)?;
+        let syntax = match parse_expr(&source) {
+            Ok(syntax) => syntax,
+            Err(error) => return Err(EvalError::from(error).with_input_source(source)),
+        };
+        let expr = match self.lower_syntax_expr(&syntax) {
+            Ok(expr) => expr,
+            Err(error) => return Err(error.with_input_source(source)),
+        };
         let evaluated = self.evaluate(expr);
         crate::resume_or_suspend!(
             self,

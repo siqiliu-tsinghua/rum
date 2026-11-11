@@ -606,7 +606,7 @@ impl Session {
             EvalError::Io { path, source } => {
                 self.push_message(symbol, "io", format!("could not read `{path}`: {source}"));
             }
-            EvalError::Syntax(err) => {
+            EvalError::Syntax { error: err, .. } => {
                 let detail = source
                     .and_then(|source| syntax_error_message_for_source(source, err))
                     .unwrap_or_else(|| err.to_string());

@@ -498,8 +498,11 @@ pub enum ThreadArgSpec {
 pub enum EvalError {
     #[error("continuation slot mismatch: expected {}, got {}", .0.expected(), .0.got())]
     ContinuationSlotMismatch(SlotMismatch),
-    #[error(transparent)]
-    Syntax(#[from] SyntaxError),
+    #[error("{error}")]
+    Syntax {
+        error: SyntaxError,
+        input_source: Option<String>,
+    },
     #[error("invalid integer literal `{literal}`")]
     InvalidInteger { literal: String },
     #[error("could not read `{path}`: {source}")]
@@ -572,6 +575,30 @@ pub enum EvalError {
     InputRequired { request: RuntimeInputRequest },
     #[error("uncaught exception: {exception}")]
     ExceptionThrown { exception: Expr },
+}
+
+impl From<SyntaxError> for EvalError {
+    fn from(error: SyntaxError) -> Self {
+        Self::Syntax {
+            error,
+            input_source: None,
+        }
+    }
+}
+
+impl EvalError {
+    pub(in crate::runtime) fn with_input_source(self, source: String) -> Self {
+        match self {
+            Self::Syntax {
+                error,
+                input_source: None,
+            } => Self::Syntax {
+                error,
+                input_source: Some(source),
+            },
+            error => error,
+        }
+    }
 }
 
 impl Session {

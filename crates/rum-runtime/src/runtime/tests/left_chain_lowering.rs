@@ -306,10 +306,10 @@ fn left_chain_lowering_rejects_a_20_000_link_hand_built_ast_gracefully() {
     let rejected_index = LINK_COUNT - MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS - 1;
     assert!(matches!(
         error,
-        EvalError::Syntax(SyntaxError::LeftAssociativeChainTooLong {
+        EvalError::Syntax { error: SyntaxError::LeftAssociativeChainTooLong {
             max: MAX_LEFT_ASSOCIATIVE_CHAIN_LINKS,
             span,
-        }) if span == Span::new(rejected_index, rejected_index + 1)
+        }, input_source: None } if span == Span::new(rejected_index, rejected_index + 1)
     ));
 
     drop_left_binary_chain(syntax);
