@@ -14282,3 +14282,62 @@ C2 stays Open at 307 residuals + 1 Lost; S10 stays unopened.
 unresolved sites and the five named owners), then the settlement round, CM,
 `CHANGELOG.md` before S10, G13 S10–S54/F1–F23/R, E2.
 
+## Continuation 14 order (2026-11-12) — continue the settlement campaign on the unchanged installed source
+
+The production source is unchanged since continuation 13: the installed
+Input-packaging branch at `035d9606`, and the only commits since
+`e35c349e` are director docs (the continuation-13 gate and this order).
+The C13 gate accepted the seven count-like rows as `NoObservableTail`;
+they are not re-settled. Continuation 14 resumes the campaign
+measurement-only: no production change, no source rebase (every file under
+`crates/` must equal its hash in the C13 entry manifest; any production
+difference is a STOP), no git, no network, and no writes to the frozen
+scenes (`.temp/g15-c2/c7`–`c13`, `brief-623/`, `brief-726/`–`brief-729/`).
+
+Duties, in this order:
+
+1. **Entry.** Record the entry source digest and copy the C13 ledger,
+   requirements, port and transitive tables; re-derive them with the
+   standing generators. The entry must read 1,042 rows, 78,330 keys, 18,840
+   encoding rows and the C13 outcomes (Boundary 9 / Equal 65 / Identity 5 /
+   Lost 1 / NoObservableTail 58 / Residual 307 / Transferred 594 /
+   Unreachable 3), with 0 rows or keys added/removed/duplicated and 0 moved
+   verdicts. `P1566` stays Lost, `P0496` stays Residual, and the seven
+   accepted `P1585`–`P1591` `NoObservableTail` rows are not re-settled. A
+   moved fingerprint or verdict is a STOP.
+2. **The remaining 307-row tail by mechanism.** 247 LocalTail, 38
+   ReopenedOrNew, 20 strict (6 caller + 11 drop + 3 other carrier), and the
+   two edges `C5.default.enabled.unadmitted` (719) and
+   `C10.prepared.resumed_profiled_suspend` (725). Batch by mechanism, never
+   one row at a time; each batch carries its own armed/hit surviving
+   omission and its raw records. The two families that took the C13 stop
+   (`special-stage-resume-revisit`, `default-lexical-only-revisit`) are not
+   repeated again without a genuinely new mechanism, and a new attempt at
+   those edges must name what is new. The two-family stop-loss stands: two
+   consecutive executed families with zero progress stop the round, and
+   after a stop no guest or Cargo runs.
+3. **The transitive duties.** The C13 re-base stands: 14 complete current
+   proofs, 15 complete matrices, 1,093 current SAME keys, 1,028 named open
+   duties. Each duty is closed only from authenticated current coverage; no
+   cell is settled from an unresolved site and no duty is dropped.
+4. **The 24 unresolved sites and the 13 reconciled pair columns** stay
+   explicit Residual obligations with no coverage claimed; the three
+   Unreachable dispositions remain among them; a pairing is never
+   relabelled as coverage.
+5. **The named open source owners.** `ToExpression`, `Session::lower_text`,
+   outer-request lowering, loader and file-reread provenance stay named and
+   open with reasons; no source work and no relabelling without a
+   design-first round.
+6. **Port tables and ledger integrity.** Update the port tables and the
+   ledger only by canonical replay; report every verdict cell that moves,
+   with 0 rows added/removed except where the settlement rules authorize
+   one, and no keys added, deleted or duplicated without the encoding duty.
+   Quote the counts.
+
+Standing rules: every required cell five-part SAME with real == disabled
+parsed identically; an invalid epoch never certifies parity; never weaken
+an assertion, delete an attempt, relabel an invalid recipe or re-pin an
+inventory; protected scenes byte-identical; the report checked by
+`scripts/report.py`. C2 stays Open until the settlement round; S10 stays
+unopened. Report and stop for my gate.
+
