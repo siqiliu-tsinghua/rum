@@ -332,11 +332,18 @@ the exact owned boundary is bound to the witnessed consumer cell and
 completed as `None` after installation/normalization and before later
 dispatch; the two extension records that duplicate the witnesses are
 permitted to repair; the core interner rows are the recorded hash-seed class
-(no exclusion); family1 was refused on the disabled neighbor. Stage A
-reproduces the copied matrix and calibrates the permanent test base-red /
-candidate-green / omission-red; stage B installs, replays all seven standing
-inventories, runs the suites, the disabled instruction gate and the
-microbench lane. Then brief 623 continuation 10 over the remaining tail (256
+(no exclusion); family1 was refused on the disabled neighbor. **Brief 725
+run 1 installed the shape into the working tree**: stage A reproduced the
+accepted record sets exactly, the four permanent tests calibrate
+base-red / candidate-green / omission-red at 8 and 1, six inventory families
+replayed green, and stage B stopped at the typed-slot family — discovery
+reads 611 implementations / 100 typed against the 610/99 pin, and the only
+delta is the new `ProfiledPreparedDispatchFrame`. Continuation 1 integrates
+that one receipt (a G15-C2 stage row, its transition check, the exact count
+guards and the two forced-red markers; no existing row, status or pin
+changes), replays all seven families canonically, then runs the suites, the
+disabled instruction gate and the microbench lane. The install stays
+uncommitted until stage B is green. Then brief 623 continuation 10 over the remaining tail (256
 LocalTail, 45 reopened, 22 strict, the five 719 edges); then CM,
 `CHANGELOG.md`, and S10 onward. P0496's ledger disposition (expected
 unreachable/source-closed) belongs to the C2 settlement round.

@@ -218,3 +218,107 @@ scope diff in full, complete ripple, the whole-record matrix and language,
 falsifier calibration lines, inventory replay verdicts and changed rows, the
 disabled and timing receipts, test counts and deltas, every invalid/failed
 attempt, and the exact residual obligations.
+
+## Director ruling (2026-11-11) — run 1: the installed shape stands, the typed-slot STOP is well taken, and continuation 1 integrates the one new receipt
+
+Run 1 (log `.temp/logs/cdx_brief_725.log`, 37,829 lines, sha256
+`8e59d545…`, memory-scope peak 4.90 GB, oom 0, rc=0) installed the accepted
+family2 shape and its four permanent tests into the live tree, reproduced
+stage A on byte copies, replayed six of the seven standing inventory
+families green, and stopped at the typed-slot family before any acceptance
+suite, disabled capture or timing run. No git ran; every artifact is
+retained.
+
+**My gate, from raw evidence.** Live tree: the entry manifest holds 2,716
+files with 0 missing and exactly 16 modified plus 2 added — the six-file
+repair, the two frame-root files and eight canonical inventory outputs; my
+own walk equals `final-live-hashes.json` on all 2,718 files. Every installed
+file equals its `formatting.after` hash, the six production files in the
+install copy equal the accepted `.temp/brief-724-c1/source-candidate2`
+copies byte-for-byte, the difference is formatter-only, and `cargo fmt
+--check` is clean. The four permanent tests are green on the live source at
+8 and 1 threads (my runs); base is red 0/4 at both with the exact
+resumed/queued row difference (`[3,2,1,0,2,0,1,0,0,0]` against
+`[3,3,0,0,3,0,0,0,0,0]`), and the omission arm is red 0/4 at both. All seven
+C2 family record sets (arguments 16, all 90, min 12, control 470 with 468
+valid, fresh 2, nested 1, extensions 4 with the two B722 duplicates) and the
+fixed-point (104/104/104), native (60), required (1) and P0248 (36) record
+sets are byte-identical to the accepted continuation-1 records after
+symbol-id normalization; the arguments family has all 16 resumed == queued,
+exactly the nine witnesses change against run 1, and the omission mutant
+restores run 1's 16 records whole-record. The five falsifiers' raw order:
+installed < publication < dispatch in the instrumented arm; the before
+mutant prints INSTALLED after publication and the after mutant after
+dispatch (terminal records equal, caught by the order); omit 9/16; pause
+16/16 with two real pauses, one retained record and one completion; the
+wrong owner closes `RecordId(200)` and leaves the expected `RecordId(230)`
+open under the same epoch, control and generation. Inventories: one new
+type in both frame-root lists with count 568; 68 retention fingerprint
+cells only; exactly the two promoted certificate cells; rejection census
+1,220 = 14/1,168/38 with zero added or removed; ownership 74 MOVE + 8 NEW,
+no removal, status or disposition change, every new row in touched code;
+LP01 three producer position moves and three loss positions, identities and
+dispositions unchanged. Protected scenes: 213,605 files, none newer than
+the run start, and the full hash replay reports zero changed. Source: no
+`unsafe`, no `Cargo.lock`, no docs; the ordinary and unreachable dispatch
+bodies, both publication bodies, the driver and the public trait are
+outside the diff. The stage-A binaries and records carry their build
+receipts; no consumed reference stage was rerun.
+
+**The STOP is well taken and reproducible.** On the live tree at 8 and at 1
+thread the census prints `production frames=461 finalizers=50
+implementations=611 typed=100`, test-only unchanged, `PARTITION
+implementations=627 macros=546`, and fails the unchanged pin `production
+610/535 and test-only 16/11; combined 626/546` inside `receipts.rs`
+(`typed_slot_census.rs:113`). The discovered delta is exactly one identity,
+the approved `ProfiledPreparedDispatchFrame` (production, TypedFrame,
+`PreparedCallArguments -> Expr`); all 626 existing identities are preserved
+and the rejection census is unchanged. The typed-slot table is an
+earned-receipt inventory, not a derived output, so this brief's "canonical
+regeneration, never hand-edited" clause cannot cover a new staged receipt;
+the worker did not edit it, did not weaken an assertion, and did not mark
+the new type covered.
+
+**G15C2-TYPED is authorized as a narrow integration.** Add exactly one F
+receipt for the new frame under its own stage identity (`G15-C2`), status
+`typed`, population `production`, anchored to `F0275P`; add the stage row
+and a stage transition check in the same shape as `g15a.rs` and
+`g15c1.rs` — exactly one owned F receipt for the stage, status typed,
+production population, kind `TypedFrame`, `PreparedCallArguments -> Expr`,
+and no insertion claim, because the frame is constructed by the cold
+helper and has no typed macro site — and register that check in the
+baseline transition sequence. Update every exact guard that pins the
+affected totals, and let a fresh discovery find any I have not named:
+`receipts.rs` (production cohort 610 -> 611, the F row count 629 -> 630
+and its message), `g15a.rs` and `g15c1.rs` (typed 99 -> 100 and their
+printed totals) and `typed_slot_census.rs` (the two forced-red markers
+626 -> 627 and 625 -> 626). No existing receipt row, stage, status,
+identity, anchor, pin or assertion may change; the discovery must read
+existing=626 preserved=626 missing=0 new=1, and no type may be left
+silently uncovered. The installed `profile_queue/prepared.rs` header still
+says "Copy-only candidate" and must state the live duty.
+
+**Then finish stage B as briefed**, on the live tree: after the last edit,
+replay all seven inventory families canonically again; `cargo fmt --check`;
+the focused, runtime, stdlib and workspace suites at the briefed thread
+counts with exact counts and deltas; the disabled Callgrind gate on the
+three panels (two draws per arm plus one forced same-source rebuild, the
+required rows and call counts exact, no new helper symbol in any disabled
+capture, no exclusion; the three `rum-core` interner rows reported with
+every draw, the same-binary spread and the arm ranges, a separation beyond
+the same-binary spread a STOP); and the rum-vs-rum microbench A/B. Stop for
+my gate with the full receipts.
+
+Recorded, not gated: the root-replay reducer's first attempt read a
+libtest-prefixed count line and was replaced by the saved-line reducer
+(count 568, verify 15/0); the extra queued-counter self-check is red on
+base and candidate alike; the three retained invalid recipes and the
+discovery/emission ordering reds are the established artifacts. The
+acceptance, disabled and timing gates are unrun; C2 stays Open at 328
+residuals + 1 Lost, S10 stays unopened, and the two root-context reds stay
+separate obligations.
+
+Next: brief 725 continuation 1, forked from session
+`01a1c7dd-9c67-77d1-bc06-560621b37145`, completes the typed integration,
+replays the seven families, and runs the remainder of stage B; then my
+gate. The install stays uncommitted until stage B is green.

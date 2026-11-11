@@ -171,9 +171,9 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   Equal, accepts P0503/P0504 and P0353 as `NoObservableTail`, and
   measures P0492 — the resumed `call.stage.prepare_arguments` samples
   the consumer's later Return/Throw; C2 at 328 residuals + 1 Lost; brief
-  724 accepted — family2 shape, the two extension duplicates may repair,
-  the interner rows are the recorded hash-seed class; brief 725 installs
-  it); then CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
+  724 accepted; 725 installed it and stopped at the one typed-frame
+  receipt, which its continuation integrates; then CM, `CHANGELOG.md`
+  (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Briefs 719-721:** P0248's
   fallback repaired (8/8 recipes, 36/36 bindings SAME); publication
