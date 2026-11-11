@@ -482,13 +482,44 @@ zero, clock 2; no guest/Cargo after the stop; the three zero-gain families
 are not repeated without a genuinely new mechanism. Six bad-ledger
 controls RED, 21 build receipts exact, forced spot `c340c865…`, 3,191
 fixtures, 70,473 sealed files unchanged, `report.py check` 6,665
-citations. **Next: continuation 15** of brief 623 on this unchanged
-installed source (the remaining 279-row tail by mechanism, the 1,000
+citations. **Continuation 15 is accepted as a STOP: twenty rows settle
+Equal and ten settle `NoObservableTail`, and the two-family stop is well
+taken on the unchanged source.** Its own delta is the report append only
+(production changes 0; 2,726 live files; all 1,622 files under `crates/`
+byte-identical to the C14 entry manifest and to live); my own
+641,559-file protected walk is 0/0/0; the only repository diff is the
+authorized 6,318-line append (489,807 B, prefix equal to HEAD
+`ca5bf892`). The ledger reads 1,042 rows with exactly 30 verdict changes
+(20 Equal `P0145`/`P0214`/`P0216`/`P1331`/`P1615`/`P1637`/`P1640`/
+`P1804`–`P1806`/`P2348`/`P2354`/`P2379`/`P2381`/`P2385`/`P2387`/`P2409`/
+`P2411`/`P2416`/`P2418`; 10 `NoObservableTail`) and 0 rows added or
+removed; 78,330 canonical keys and 18,840 encoding rows; the 28 C14 rows,
+the seven `P1585`–`P1591` rows, `P1566`/`P0496` and the held `P0528` are
+byte-identical; residual composition 203 LocalTail + 26 ReopenedOrNew +
+11 StrictDropGap + 6 StrictCallerGap + 1 StrictOtherCarrier + 1 New719Edge
++ 1 New725Edge = 249. The 975 Equal cells are five-part SAME with real ==
+disabled and 20/20 own caught omissions; the four proposal groups'
+550/550 cells are five-part SAME with real == disabled, each cell with its
+own armed-hit-surviving omission, and 25 source packets hash-equal to
+live. Own receipts: 1,823. Transitive: 72 full proofs, 74 complete
+matrices, 4,298 current SAME keys, 970 named open, 24 unresolved with no
+coverage, 13 pair columns reconciled, five owners open. The STOP:
+`ownvalue-fallback-completion` and `option-activation-redispatch` are two
+consecutive executed zero-progress families, clock 2; no guest/Cargo after
+the stop; the rejected `choice-collection-depth` preflight is retained as
+a copied-driver budget artifact with no assertion weakened, and `P0528`'s
+provisional promotion is rejected by the pair-column order. Six bad-ledger
+controls RED, 25 build receipts exact, forced spot `c340c865…`, 5,151
+fixtures, 93,100 sealed files unchanged, `report.py check` 6,165
+citations. **Next: continuation 16** of brief 623 on this unchanged
+installed source (the remaining 249-row tail by mechanism, the 970
 duties, the 24 unresolved rows, the 13 pair columns and the five named
-owners), then C2's settlement round (including P0496's ledger disposition,
-expected unreachable/source-closed, and P1566's re-settlement on the
-installed source), then CM, `CHANGELOG.md` before S10 (including the
-public `EvalError::Syntax` break), G13 S10–S54/F1–F23/R, E2.
+owners; the seven stopped families not repeated without a genuinely new
+mechanism), then C2's settlement round (including P0496's ledger
+disposition, expected unreachable/source-closed, and P1566's
+re-settlement on the installed source), then CM, `CHANGELOG.md` before
+S10 (including the public `EvalError::Syntax` break), G13 S10–S54/
+F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named
