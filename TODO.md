@@ -543,8 +543,37 @@ retained, and the rewrite preflight/delimiter corrections are instrument
 fixes with no assertion weakened. Six bad-ledger controls RED (my own
 re-run reproduces every reason), 17 build receipts exact (real arms
 `c340c865…`, forced spot fresh), 0 new `unsafe`, `report.py check` 4,052
-citations. **Next: continuation 17** of brief 623 on this unchanged
-installed source (the remaining 236-row tail by mechanism, the 957
+citations. Continuation 17 is accepted at its round's end: log 36,438 lines /
+3,340,318 B / sha `e10ac34a…`, rc=0, 2,091 runs with three retained
+instrument corrections and no git/network; 2,726 live files at digest
+`955cd462…`, the only diff the authorized 6,299-line append (prefix
+`d33494be…`, append `64d47fe1…`); production 1,622 files at `8313fbc1…`
+byte-identical, no rebase; my own 817,323-file protected walk 0/0/0 in
+150.1 s and 128,980-file sealed replay 0/0/0. The ledger moves exactly 27
+verdicts (13 Equal `P0289`/`P0294`/`P0394`/`P0396`/`P0403`/`P0435`/
+`P0442`/`P0765`/`P0769`/`P1037`/`P1038`/`P1132`/`P1818`; 14
+`NoObservableTail` `P0011`/`P0012`/`P0016`/`P0381`/`P0405`/`P0436`/
+`P0464`/`P0466`/`P0502`/`P0549`/`P0555`/`P1159`/`P1160`/`P2146`) on six
+settlement columns only, outcomes 9/116/5/1/105/209/594/3, residual 165
+LocalTail + 24 ReopenedOrNew + 11 StrictDropGap + 6 StrictCallerGap + 1
++ 1 + 1 = 209, 78,330 keys and 18,840 encoding rows unchanged, 1,550
+tuple rows updated evidence-only (30 rows: the 27 plus `P0255`/`P0257`/
+`P0258`, which stay Residual), `P1566`/`P0496`/`P0528`/`P0340` and the
+13 pair columns byte-identical. Evidence: 1,385 cells / 1,539 records all
+five-part SAME with real == disabled and producer/route reach, 13/13 own
+caught omissions, 849 own armed-hit survivors, four proposal groups (750
+cells, never Equal), 32 source packets exact, 27/27 producer provenance,
+1,934 own receipts, 8,736 fixtures (6,336 inherited exact + 2,400 new).
+Transitive 112 proofs / 115 matrices / 6,792 SAME keys / 930 named open /
+24 unresolved / five owners. The stop-loss did not fire: the four
+zero-progress families are never consecutive (clock max 1, my own
+re-derivation) and no guest/Cargo ran after the round-end gate; the
+entry-port and provenance type-spacing corrections are retained
+instrument fixes with no assertion weakened. Six bad-ledger controls RED
+and the positive GREEN by my own re-run; 25 build receipts exact (real
+arms `c340c865…`, forced spot fresh), 0 new `unsafe`, `report.py check`
+6,628 citations. **Next: continuation 18** of brief 623 on this unchanged
+installed source (the remaining 209-row tail by mechanism, the 930
 duties, the 24 unresolved rows, the 13 pair columns and the five named
 owners; the nine stopped families not repeated without a genuinely new
 mechanism), then C2's settlement round (including P0496's ledger
