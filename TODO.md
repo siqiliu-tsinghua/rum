@@ -454,14 +454,41 @@ real SAME records and six selected unarmed omissions each, all progress
 counters zero), with 12 post-stop controller runs and 0 guest/Cargo. Six
 bad-ledger controls RED, four fresh builds plus the forced spot
 `c340c865…`, 1,200 fixtures hash-exact, `report.py check` 3,111 citations.
-C2 stays Open at 307 Residual + 1 Lost. **Next: continuation 14** of brief
-623 on this unchanged installed source (the remaining 307-row tail by
-mechanism, the 1,028 duties, the 24 unresolved rows and the five named
-owners), then C2's
-settlement round (including P0496's ledger disposition, expected
-unreachable/source-closed, and P1566's re-settlement on the installed
-source), then CM, `CHANGELOG.md` before S10 (including the public
-`EvalError::Syntax` break), G13 S10–S54/F1–F23/R, E2.
+C2 stays Open at 307 Residual + 1 Lost. **Continuation 14 is accepted as a
+STOP: ten rows settle Equal, eighteen settle `NoObservableTail`, and the
+two-family stop is well taken on the unchanged source.** Its own delta is
+the report append only (production changes 0; 2,726 live files, entry
+`a92f2a46…`; all 1,622 files under `crates/` are byte-identical to the C13
+entry manifest and to live); my own 571,048-file protected walk is 0/0/0;
+the only repository diff is the authorized 4,155-line append (429,950 B,
+prefix equal to HEAD). The ledger reads 1,042 rows with exactly 28 verdict
+changes (10 Equal `P0554`/`P0558`/`P1238`/`P1240`/`P1310`/`P1333`/`P1335`/
+`P1595`/`P1597`/`P1599`; 18 `NoObservableTail`) and 0 rows added or
+removed; 78,330 unique keys and 18,840 encoding rows; the seven accepted
+`P1585`–`P1591` rows and `P1566`/`P0496` are byte-identical; residual
+composition 231 LocalTail + 26 ReopenedOrNew + 20 strict + 1 New719Edge +
+1 New725Edge = 279. The 540 Equal cells are five-part SAME with real ==
+disabled and per-row caught omissions; the four proposal groups'
+1,110/1,110 cells are five-part SAME with real == disabled, each cell with
+its own armed-hit-surviving omission, 70 real cycle observations, and
+source packets hash-equal to live. Own receipts: 1,991 = 1,685 valid (257
+caught + 1,428 survived) + 306 retained unarmed attempts. Transitive: 42
+full proofs, 43 complete matrices, 2,743 current SAME keys, 1,000 named
+open, 24 unresolved with no coverage, 13 pair columns reconciled, five
+owners open. The STOP: `rhs-optional-error-finish` (12 SAME records) and
+`status-optional-error-bridge` (14) are two consecutive executed
+zero-progress families with unarmed selected omissions and every counter
+zero, clock 2; no guest/Cargo after the stop; the three zero-gain families
+are not repeated without a genuinely new mechanism. Six bad-ledger
+controls RED, 21 build receipts exact, forced spot `c340c865…`, 3,191
+fixtures, 70,473 sealed files unchanged, `report.py check` 6,665
+citations. **Next: continuation 15** of brief 623 on this unchanged
+installed source (the remaining 279-row tail by mechanism, the 1,000
+duties, the 24 unresolved rows, the 13 pair columns and the five named
+owners), then C2's settlement round (including P0496's ledger disposition,
+expected unreachable/source-closed, and P1566's re-settlement on the
+installed source), then CM, `CHANGELOG.md` before S10 (including the
+public `EvalError::Syntax` break), G13 S10–S54/F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named
