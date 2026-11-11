@@ -424,13 +424,40 @@ reds 0/2; the no-default wide-symbol red reproduced at `ordering_sets.rs:271`
 with the test file untouched. The worker's workspace STOP is the standing
 sandbox boundary (nine native ZeroMQ loopback EPERM before evaluation,
 reproduced at 1 thread, no skip added); on the host the same workspace is
-**4,234 passed / 0 failed / 61 ignored** over 65 summaries. C2 stays Open
-at 314 Residual + 1 Lost; no ledger, settlement, port table, `CHANGELOG`
-or S10 item moved. **Next: continuation 13** of brief 623 on this
-installed source (the remaining tail, the 1,035 duties, the 24 unresolved
-rows, and the named open source owners `ToExpression`,
-`Session::lower_text`, outer-request lowering, loader and file-reread
-provenance). Then C2's
+**4,234 passed / 0 failed / 61 ignored** over 65 summaries. **Continuation
+13 is accepted as a STOP: seven count-like rows settle as
+`NoObservableTail`, and the two-family stop is well taken on the installed
+source.** Its own delta is the report append only (production changes 0;
+2,726 live files, entry `c02cd804…` / final `098a88d4…`); my own
+544,343-file protected walk is 0/0/0 in 182.8 s; the only repository diff
+is the authorized 1,844-line append. The ledger reads 1,042 rows with
+exactly seven verdict changes (`P1585`–`P1591` Residual→NoObservableTail)
+and 0 rows added or removed; 78,330 keys with 0 added/removed/duplicated;
+18,840 encoding rows byte-identical; the 29 older Equal rows outside the
+population byte-identical; residual composition 247 LocalTail + 38
+ReopenedOrNew + 20 strict + 1 New719Edge + 1 New725Edge = 307. The seven
+proposals rest on 420/420 cells five-part SAME with real == disabled and
+420 own armed-hit-surviving omissions whose raw records I re-read myself;
+the omitted bridge `complete_work(resumed.map_err(ResumeStop::failure))` is
+the identity on `complete(resumed)` for both carriers; the 35
+trace-enabled cycle cells are real `TerminatedEvaluation[IterationLimit]`
+observations with no Throw substitute. The consumer Equal row and the
+seven C12 local proofs are recertified on this source; P1568's 30-key
+native matrix is complete with a caught omission and stays a candidate on
+the reserved P1566 settlement; the eight-case Input syntax panel is
+additional evidence only (P1566 unmoved). Transitive duties: 14 complete
+proofs, 15 complete matrices, 1,093 current SAME keys, 1,028 named open,
+24 unresolved with no coverage claimed, the 13 pair columns reconciled, the
+five named owners open. The STOP is the accepted C12 pattern
+(`special-stage-resume-revisit` and `default-lexical-only-revisit`: six
+real SAME records and six selected unarmed omissions each, all progress
+counters zero), with 12 post-stop controller runs and 0 guest/Cargo. Six
+bad-ledger controls RED, four fresh builds plus the forced spot
+`c340c865…`, 1,200 fixtures hash-exact, `report.py check` 3,111 citations.
+C2 stays Open at 307 Residual + 1 Lost. **Next: continuation 14** of brief
+623 on this unchanged installed source (the remaining 307-row tail by
+mechanism, the 1,028 duties, the 24 unresolved rows and the five named
+owners), then C2's
 settlement round (including P0496's ledger disposition, expected
 unreachable/source-closed, and P1566's re-settlement on the installed
 source), then CM, `CHANGELOG.md` before S10 (including the public
