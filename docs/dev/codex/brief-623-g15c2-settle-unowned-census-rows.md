@@ -9452,3 +9452,152 @@ apply.
    lists, and the port/ledger delta.
 
 C2 stays Open until the settlement round; S10 stays unopened.
+
+## Director gate (2026-11-11) — continuation 11: the crosswalk closes at 60 paired and 24 explicit, the first targets close at 734, four NoObservableTail proposals stand, and the prepared-consumer lifecycle loss opens the repair line
+
+Brief 623 continuation 11 is **accepted as a STOP** (not completion). Run
+(log `.temp/logs/cdx_brief_623.log`, 43,369 lines, sha256
+`75128feb…`, memory-scope peak 3.81 GB, oom 0, oom_kill 0, rc=0; report
+`.temp/g15-c2/c11/report.json`, `report.py check` 1,363 citations
+verified by me) resolved the 84-site crosswalk, closed the first
+targets, proposed four `NoObservableTail` rows, found one new
+diagnostic lifecycle loss, and stopped under the two-family
+zero-progress rule.
+
+**My own reproductions.** Live tree 2,719 files against
+`entry-hashes.json` — 0 missing, 0 extra, 0 changed, digest
+`e9d2cc2b…` equal at entry and at the final state; `git status` clean at
+`63335ee0`. The entry delta against the accepted C10 manifest is
+exactly my three gate files (`CLAUDE.md`, `TODO.md`, this brief) — no
+fourth path. **Crosswalk:** 84 rows, 60 newly paired (42 by the
+byte-identical file plus the exact frozen AST span, 18 by a unique
+stable file/owner/function/named callee), 24 explicitly unresolved with
+their candidates and `new_coverage_claimed=false`; 1,018 pairs total,
+0 rows deleted, no second rebase (the inherited `rebase.tsv` is
+byte-identical to C10's; the final table adds only the four 725
+prepared rows with a finer identity). My own re-derivation of the
+selector reproduces 60/24 and every uniqueness rule; the two rows whose
+ledger `target` carries the short spelling (P1150/P1152) are anchored
+by the unchanged file and all eight exact frozen-packet fields, not by
+the short name. None of the 24 unresolved rows is in the pair set, and
+no coverage derives from them.
+
+**First targets.** The C10 denominators are 674 unique per-row missing
+cells and 485 unique recipe/native-driver gap keys; their overlap is
+425, so the union is 734. All 734 appear in `first-target-closure.json`
+and are closed, each backed by a C11 coverage row with `SAME`,
+`producer_reached` and `disabled_exact` (306 missing + 268 native + 130
+cleanup + 30 last-gaps = 734); `audit_coverage` re-reads the raw logs
+for the five-part predicate, real == disabled parity and the recorded
+pause reach, so no attribution-only cell stands in for an own
+omission.
+
+**The transitive enumeration.** 1,042 duties: 27 complete disposition
+proofs (the eight accepted C10 packets plus 19 fresh), 1,015 named open
+obligations (each with a reason; 924 name their missing required keys),
+116 complete matrices; the five former fingerprint candidates are
+conservatively retained and no source exclusion is claimed. The whole
+graph is **OPEN** and this is the round's first FLAGGED state, not a
+failure.
+
+**The ledger.** Exactly the five expected verdict changes
+(P0437/P0438 and C1.P0956/C1.P0957 -> `NoObservableTail`;
+C10.prepared.profiled_consumer -> `Lost`), 0 rows added, 0 removed;
+outcomes Equal 64 / NoObservableTail 46 / Boundary 9 / Identity 5 /
+Unreachable 3 / Transferred 594 / Residual 320 / Lost 1 = 1,042;
+residual composition 254 LocalTail + 38 ReopenedOrNew + 11
+StrictDropGap + 6 StrictCallerGap + 3 StrictOtherCarrier + 5
+New719Edge + 3 New725Edge = 320; the moved rows' prior classes (two
+StrictOtherCarrier, two LocalTail, one New725Edge) reconcile the
+composition. Requirements stay 78,330 with 0 added/deleted/duplicate
+keys; my exact comparison shows the 7,910 observation rows change only
+in receipts/probes/cross-build/validity (the 484 probe additions are
+binding receipts) and all 18,840 encoding rows are byte-identical with
+0 new encoding runs. P0496 is unchanged (Residual / OwnedObligation);
+the 29 older Equal rows replay byte-identically (`28619de4…`), and the
+nine accepted C10 evidence files hash-match.
+
+**The four proposals.** Two groups, four rows, 230 required
+nonencoding cells: 120 for the fieldless replace-application
+completion and 110 for the definition-guard typed-action forwarding.
+My extraction reads 120/120 and 110/110 cells (the strict-guard family
+is 98 v1 plus 12 v2 valid replacements covering the same twelve
+outer-reevaluation keys; the originals stay retained-invalid), every
+cell five-part SAME with parsed-identical real/disabled records and
+producer reach; 230 unique own armed-hit survivors, each armed, hit and
+surviving with raw `C2_ARM`/`C2_MUTANT_HIT` markers and exactly one
+SAME record; the source packets hash-match the live files; the frames
+are fieldless or hold only non-Drop carriers and the tail forwards the
+opaque `TypedAction`. Accepted as `NoObservableTail`, never Equal.
+
+**The new loss.** C10.prepared.profiled_consumer is `Lost` on a
+diagnostic lifecycle failure: the prepared boundary completes its
+segment (`prepared.rs:79`, `logical/mod.rs:130-157`), the profiled
+dispatch resumes and returns another `InputRequired`, the driver
+pauses the captured context unconditionally (`driver.rs:155`),
+`Segment::pause_admitted` faults because the stored top is no longer
+the active segment (`segments.rs:521-542`), and the epoch retires live
+RHS/evaluator records as abandoned. My re-read of `loss-proof.json`:
+10 cases, 3 DIFF / 7 SAME, semantic SAME in all ten, real == disabled
+byte-identical, the profile explicitly invalid in the three DIFF cases
+and the three `C11_PAUSE_MISMATCH` markers naming the completed
+segment. The guest language is unchanged; this is diagnostic accuracy
+loss only, and the draft repair is design-only.
+
+**The stop.** Batches: message-scope attachment (12 real SAME, 2
+selected unarmed) and definition-default admission (30 real SAME, 5
+selected unarmed); every progress counter zero, clock 2. The selected
+mutants' raw logs contain no arm or hit marker and one SAME record.
+After the stop, ten controller runs — 0 guest executions and 0 Cargo
+builds; the two previously stopped families were not repeated.
+
+**Integrity.** Protected scenes C7 25,251 + C8 36,460 + C9 33,294 +
+C10 58,222 + brief-623 151 = 153,378 files, 0 changed / 0 missing /
+0 extra; the 20 build receipts match their 20 binaries; 1,139 fixture
+source/setup hashes and their `.inputs.json` files are exact; the
+forced spot check ran under the scene environment
+(`cache_hit=false`, `spot_check=pass`, `bf9d9e07…` == cached); the six
+negative ledger controls are RED and the positive GREEN on my own
+re-run; 55,947 reported changes all live inside `.temp/g15-c2/c11/`
+and 55,940 files are sealed; no `.git-attempts` file exists.
+
+**Rulings.** The STOP is well taken. **Q1:** both proposal groups are
+accepted as `NoObservableTail`, never Equal. **Q2:** a design-first
+repair line is authorized for the prepared-consumer lifecycle loss;
+the repair order below governs it, and continuation 12 resumes the
+campaign only after that inserted branch completes (user ruling: an
+inserted branch runs to completion before the interrupted line
+resumes). The two stopped families are not repeated without a new
+mechanism: authentic attribution of the actual returned `InputRequired`
+and its own witness/request ownership — an upstream child pause alone
+is not evidence. The 24 unresolved sites stay explicit Residual
+obligations and no cell may be settled from them. **Recorded, not
+gated:** 13 of the 1,018 paired rows still carry the inherited ledger
+string `UnresolvedSiteNeedsRecheck` (their pairing is proven in
+`paired-calls.json` and the crosswalk; no coverage uses the string —
+continuation 12 reconciles the column); the retained failed generator
+repair, the never-executed partial build, the twelve invalid guard
+recipes replaced by one-shot valid ones, the two invalid and ten
+no-hit schema attempts, and the first fault-location instrument that
+named the wrong function; the difference between `runs.jsonl` (380)
+and the envelope's 376 at its write time (the four later entries are
+the report/publication chain).
+
+C2 stays Open at 320 residuals + 1 Lost; S10 stays unopened.
+
+## Repair order (2026-11-11) — brief 726 designs the prepared-consumer context retirement before the campaign resumes
+
+The new loss inserts a repair branch into the C2 line; it runs to
+completion first. Brief 726 is design-only (`Scope: NONE`): it must
+freeze the ten-case panel and the 120 original differences, inventory
+every path where an explicit boundary completion can end a segment
+still held by a `ContextGuard`, choose exactly one ownership rule with
+its exact API and terminal states, prove it in a byte copy under
+`.temp/brief-726/` against the three base failures and the seven
+controls, and draft the implementation brief. No live source change,
+no git, no scene edit, no blanket missing-top suppression, no
+suppression of epoch invalidity or of the existing pairing/generation
+checks. I write the implementation brief after the design gate; the
+campaign resumes after the implementation gate. The 1,015 named open
+duties, the 24 unresolved sites and the 320-row tail stay exactly as
+this gate records them.

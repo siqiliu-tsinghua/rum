@@ -324,14 +324,42 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   report 1,203 citations. C2 is Open at 328 residuals (256 LocalTail, 45
   reopened, 22 strict, 5 719 edges) + 1 Lost (P0492).
 
-**Next, in order** (the branch queue): **brief 623 continuation 11** —
-close the 84-site source crosswalk, complete the transitive recheck
-(1,029 open full-proof duties, 674 missing per-row cells, 485
-recipe/native-driver gaps), then the remaining C2 tail (256 LocalTail,
-38 reopened, 22 strict, the five 719 edges, the four 725 edges) — then
-C2's settlement round (including
-P0496's ledger disposition, expected unreachable/source-closed), then CM,
-`CHANGELOG.md` before S10, G13 S10–S54/F1–F23/R, E2.
+**Next, in order** (the branch queue): **brief 726** — design the
+prepared-consumer context retirement (the new
+`C10.prepared.profiled_consumer` diagnostic lifecycle loss) on a byte
+copy; then my implementation brief; then **brief 623 continuation
+12** — the remaining 1,015 named open transitive duties, the 24
+explicitly unresolved sites, and the 320-row tail (254 LocalTail, 38
+reopened, 20 strict, the five 719 edges, the three 725 edges); then
+C2's settlement round (including P0496's ledger disposition, expected
+unreachable/source-closed), then CM, `CHANGELOG.md` before S10, G13
+S10–S54/F1–F23/R, E2.
+
+**Continuation 11 is accepted as a STOP**: the 84-site crosswalk
+closes at 60 paired (42 exact unchanged-file, 18 unique named
+producer) and 24 explicitly unresolved with no coverage claimed;
+1,018 pairs, no second rebase; the 674 missing per-row cells and 485
+recipe gaps close as 734 unique keys with authenticated current
+coverage (306 missing + 268 native + 130 cleanup + 30 last-gaps);
+four rows settle `NoObservableTail` (P0437/P0438, C1.P0956/C1.P0957)
+on 230/230 own armed-hit survivors, never Equal; the transitive
+enumeration reads 27 complete proofs and 1,015 named open duties
+(whole graph OPEN, 116 complete matrices, 5 fingerprint candidates
+conservatively retained); the ledger moves exactly five verdicts and
+stands at 64 Equal, 46 NoObservableTail, 9 Boundary, 5 Identity, 594
+Transferred, 3 Unreachable, 320 Residual + 1 Lost over 1,042 rows /
+78,330 keys, with 0 added/deleted/duplicate keys and all 18,840
+encoding rows byte-identical; P0496 is unchanged. **The new Lost row
+`C10.prepared.profiled_consumer`**: the profiled prepared consumer
+pauses a segment its boundary completion already ended, faults the
+epoch, and retires live RHS/evaluator records as abandoned — 3 DIFF /
+7 SAME, semantics SAME in all ten, real == disabled byte-identical,
+minimized and repair-drafted; the repair branch runs to completion
+before continuation 12 resumes. The two stopped families
+(message-scope attachment, definition-default admission) are not
+repeated without a new mechanism; the 13 paired rows carrying the
+stale `UnresolvedSiteNeedsRecheck` string are recorded for
+continuation 12 to reconcile.
 
 **Continuation 10 is accepted as a STOP**: P0492 re-settles Equal on the
 repaired source (16/16 records resumed == queued, real == disabled, the
