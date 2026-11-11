@@ -572,8 +572,30 @@ entry-port and provenance type-spacing corrections are retained
 instrument fixes with no assertion weakened. Six bad-ledger controls RED
 and the positive GREEN by my own re-run; 25 build receipts exact (real
 arms `c340c865…`, forced spot fresh), 0 new `unsafe`, `report.py check`
-6,628 citations. **Next: continuation 18** of brief 623 on this unchanged
-installed source (the remaining 209-row tail by mechanism, the 930
+**Continuation 18 is accepted at its round's end**: ten rows settle Equal
+(`P0260`/`P0304`/`P0305`/`P0311`/`P0320`/`P0459`/`P0767`/`P0773`/`P0812`/
+`P1480`) and eleven settle `NoObservableTail` (`P0251`/`P0252`/`P0255`/
+`P0257`/`P0258`/`P0262`/`P0307`/`P0329`/`P0440`/`P0441`/`P0474`) on six
+settlement columns only, outcomes 9/126/5/1/116/188/594/3, residual 151
+LocalTail + 17 ReopenedOrNew + 11 StrictDropGap + 6 StrictCallerGap + 1
++ 1 + 1 = 188, 78,330 keys and 18,840 encoding rows unchanged (key
+multiset and encoding bytes identical), 1,110 probe renames confined to
+the 21 rows, `P1566`/`P0496`/`P0528`/`P0340` and the 13 pair columns
+byte-identical. Evidence: 1,110 cells / 1,275 records all five-part SAME
+with real == disabled and producer/route reach, 10/10 own caught
+omissions, 615 own armed-hit survivors (one per proposal cell), four
+proposal groups (615 cells, never Equal), 21/21 producer provenance,
+706 own receipts, 9,920 fixtures (8,736 inherited exact + 1,184 new).
+Transitive 133 proofs / 136 matrices / 7,737 SAME keys / 909 named open
+(21 closed) / 24 unresolved / five owners. The stop-loss did not fire:
+clock 0 at the round's end after twelve families (my own re-derivation),
+no guest/Cargo after the stop, and the single failed run is the retained
+inapplicable controller preflight. Six bad-ledger controls RED and the
+positive GREEN; my canonical replay on the entry-state tree reproduced
+the five derived files byte-identically; 19 build receipts exact (real
+arms `c340c865…`, forced spot fresh), 0 new `unsafe`, `report.py check`
+2,815 citations. **Next: continuation 19** of brief 623 on this unchanged
+installed source (the remaining 188-row tail by mechanism, the 909
 duties, the 24 unresolved rows, the 13 pair columns and the five named
 owners; the nine stopped families not repeated without a genuinely new
 mechanism), then C2's settlement round (including P0496's ledger
