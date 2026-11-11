@@ -12253,3 +12253,69 @@ descriptor binding above.
 
 C2 stays Open at 314 residuals + 1 Lost; S10 stays unopened.
 
+
+## Continuation 13 order (2026-11-11) — resume the settlement campaign on the installed Input-packaging source
+
+The inserted repair branch has completed: brief 728's design and brief
+729's implementation are accepted and installed at `035d9606`. The
+public shape is `EvalError::Syntax { error: SyntaxError, input_source:
+Option<String> }` (no `#[source]`; `Display` unchanged), filled at
+exactly the two parse/lower error exits of `resume_input_after_text`,
+read by the one existing request mapper with
+`input_source.as_deref().or(source)`; the legacy wire keeps its
+optional source; the two permanent tests (runtime and host) read the
+same structured diagnostic on the queued and resumed paths at 8 and 1
+threads. The production change lands in `suspension/error.rs`,
+`builtins_input.rs` and the session request path, so rows whose
+functions are touched must be re-checked in full.
+
+Continuation 13 resumes the campaign on this source, measurement-only:
+no production change, no git, no network, no writes to the frozen
+scenes (`.temp/g15-c2/c7`-`c12`, `brief-623/`, `brief-726/`,
+`brief-727/`, `brief-728/`).
+
+Duties, in this order:
+
+1. **Rebase once on the installed source.** Record the entry source
+   digest and the `9d7f76fc..035d9606` production delta. Rows whose
+   functions this branch changed are re-checked in full; the rest are
+   rechecked by fingerprint. The 1,042-row ledger, 78,330 keys and
+   18,840 encoding rows re-derive with the standing generators; quote
+   every moved verdict cell. A second rebase is not authorized.
+   P1566 stays the accepted `Lost` row for now — its re-settlement
+   belongs to the settlement round on this same source and is not
+   relabelled mid-campaign.
+2. **The 314-row residual tail by mechanism.** 254 LocalTail, 38
+   ReopenedOrNew, 20 strict, the 719 edge `C5.default.enabled.unadmitted`
+   and the 725 edge `C10.prepared.resumed_profiled_suspend`. Batch by
+   mechanism, never one row at a time; each batch carries its own
+   armed/hit surviving omission and its raw records. The two-family
+   stop-loss is unchanged: two consecutive executed families with zero
+   progress stop the round, and after a stop no guest or Cargo runs.
+3. **The transitive duties.** Each duty is closed only from
+   authenticated current coverage; the previous round's 7 complete
+   current proofs and 1,035 named open duties are re-based on this
+   source, every reason stays explicit, and no cell is settled from an
+   unresolved site.
+4. **The 24 explicitly unresolved sites stay explicit Residual
+   obligations** with no coverage claimed; reconcile the 13
+   `UnresolvedSiteNeedsRecheck` rows against `paired-calls.json` and
+   the crosswalk without relabelling a pairing as coverage.
+5. **The named open source owners.** `ToExpression`,
+   `Session::lower_text`, outer-request lowering, loader and
+   file-reread provenance stay named; classify each under the
+   settlement rules or leave it open with an explicit reason. No
+   source work and no relabelling without a design-first round.
+6. **Port tables and ledger integrity.** Update the port tables and
+   the ledger only by canonical replay; report every verdict cell that
+   moves, with 0 rows added/removed except where the settlement rules
+   authorize one, and no keys added, deleted or duplicated without the
+   encoding duty. Quote the counts.
+
+Standing rules: one rebase on this source only; every required cell
+five-part SAME with real == disabled parsed identically; an invalid
+epoch never certifies parity; never weaken an assertion, delete an
+attempt, relabel an invalid recipe or re-pin an inventory; protected
+scenes byte-identical; the report checked by `scripts/report.py`.
+C2 stays Open until the settlement round; S10 stays unopened. Report
+and stop for my gate.
