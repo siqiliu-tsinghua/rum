@@ -433,7 +433,9 @@ weakened, no `RUST_MIN_STACK` dependence.
    a receipt and quote both fixed tests green at 8 and at 1 threads.
 2. Install the ruled ownership delta through the canonical replay;
    re-run discovery to zero actions; quote the full action table and
-   every verdict line.
+   every verdict line. The prepared `replays.py ownership` mode's
+   blanket `REMOVED` refusal is superseded for exactly the two ruled
+   rows; any other `REMOVED` or `MOVE-FILE` remains a STOP.
 3. Run the remaining Stage-B replays: certificates (default and
    `--no-default-features`), census (both arms plus the compiler
    oracle, identities exact), LP01 (`logical_counter_port` at 8 and 1
