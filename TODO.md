@@ -594,15 +594,40 @@ inapplicable controller preflight. Six bad-ledger controls RED and the
 positive GREEN; my canonical replay on the entry-state tree reproduced
 the five derived files byte-identically; 19 build receipts exact (real
 arms `c340c865…`, forced spot fresh), 0 new `unsafe`, `report.py check`
-2,815 citations. **Next: continuation 19** of brief 623 on this unchanged
-installed source (the remaining 188-row tail by mechanism, the 909
-duties, the 24 unresolved rows, the 13 pair columns and the five named
-owners; the nine stopped families not repeated without a genuinely new
-mechanism), then C2's settlement round (including P0496's ledger
-disposition, expected unreachable/source-closed, and P1566's
-re-settlement on the installed source), then CM, `CHANGELOG.md` before
-S10 (including the public `EvalError::Syntax` break), G13 S10–S54/
-F1–F23/R, E2.
+2,815 citations. **Continuation 19 is accepted at the round's end**:
+five rows settle Equal (`P0450`/`P0455`/`P0823`/`P0827`/`P1613`) and
+three settle `NoObservableTail` (`P0263`/`P0308`/`P0458`). Run (log
+`.temp/logs/cdx_brief_623.log`, 21,718 lines, 2,052,642 B, sha256
+`7198b632…`, memory-scope peak 2.90 GB, oom 0, rc=0; report 13 checks
+9 PASS / 3 FLAGGED / 1 NA, `report.py check` 2,263 citations by my own
+run; 675 run records, 90 exit 101 and 4 exit 1 retained as invalid
+attempts; no git or network). Gate: 2,726 live files at `ac319173…` with
+only the authorized append (592,517 B, `10eccfaa…` over prefix
+`e0bf032d…`), production 1,622 files `8313fbc1…` unchanged,
+`source_rebases=0`; my own 1,052,849-file protected walk 0/0/0 and
+90,452-file sealed walk 0/0/0. Ledger 1,042 rows with exactly eight
+verdict changes on six settlement columns, outcomes
+9/131/5/1/119/180/594/3, residual 145 + 15 + 11 + 6 + 1 + 1 + 1 = 180,
+78,330 keys and 18,840 encoding rows byte-identical, 425 tuple records
+changed on exactly the eight rows, `P1566` Lost / `P0496` reserved /
+`P0528`/`P0340` held / 13 pair columns and the 128 protected rows
+byte-identical. Evidence: 490 cells / 798 records five-part SAME with
+real == disabled and producer reach, 5/5 own caught, 165/165 proposal-cell
+survivors, `P0824` held and `P0832` Residual (60 SAME programs without
+producer reach are not coverage), the 12 invalid real recipes, 90
+ownership failures and 49 armed-no-hit diagnostics all uncited, 602
+receipts, 10,790 fixtures, 8/8 producer provenance, six controls RED /
+positive GREEN, canonical replay and port replay byte-identical, 11 build
+receipts (real arms `c340c865…`, forced spot fresh), 0 new `unsafe`,
+`report.py check` 2,263 citations. **Next: continuation 20** of brief 623
+on this unchanged installed source (the remaining 180-row tail by
+mechanism, the 901 duties, the 24 unresolved rows, the 13 pair columns
+and the five named owners; the nine stopped families and the five C19
+families not repeated without a genuinely new mechanism), then C2's
+settlement round (including P0496's ledger disposition, expected
+unreachable/source-closed, and P1566's re-settlement on the installed
+source), then CM, `CHANGELOG.md` before S10 (including the public
+`EvalError::Syntax` break), G13 S10–S54/F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named
