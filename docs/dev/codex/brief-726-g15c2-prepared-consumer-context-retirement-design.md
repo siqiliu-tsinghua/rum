@@ -185,3 +185,101 @@ rule, copied proof, omission falsifier, disabled cost, drafted brief),
 `runs`, `measurements`, `checks` (PASS/FLAGGED/FAIL with evidence
 lines), `questions`, `stop` if the stop-loss fires. Every cited line
 must appear verbatim in its log.
+
+## Director gate (2026-11-11) — brief 726 accepted: rule (b) is the ownership repair, and brief 727 implements it
+
+Run: log `.temp/logs/cdx_brief_726.log`, 52,678 lines, sha256
+`0aef79f62f4f73852feff053c3300492c9199d56b7e216753c0a78c14fab3db2`,
+memory-scope peak 2,601,328,640 B, oom 0, oom_kill 0, rc=0; report
+`.temp/brief-726/report.json`, 118 runs, 14 PASS / 3 FLAGGED / 1 NA,
+438 citations (my own `report.py check`: OK). The live tree was not
+touched: git clean at `b0e62cf4`, no file outside `.temp/`, `target/`
+and `.git` newer than the run start, the C7–C11 and brief-623 scenes
+show no file newer than the run start, and every one of the 41,102
+`changes` entries is under `.temp/brief-726/` (the sanctioned
+`.temp/g15-c2/probe/` cache is the sole disclosure). The dispatch log
+contains no git or network command; only the worker prompt's own
+prohibitions mention git.
+
+**My reproductions.** The frozen red panel is exact against
+`.temp/g15-c2/c11/loss-proof.json`: for all ten cases the resumed and
+queued rows and `native_same` compare equal to the C11 records; the
+three DIFF are exactly `direct.two`, `replace.two`, `unheld.two`;
+semantic SAME is 10/10; the three `C11_PAUSE_MISMATCH` lines are
+byte-identical to C11 (`RecordId(238)/SegmentId(333)`,
+`4474/4583`, `7923/8032`), and the red-state log carries
+`epoch=216 valid=false reason=InstrumentationFault`. The red arms'
+record files `red-real-records.json`, `red-disabled-records.json` and
+`red-state-records.json` are one sha256 (`fecd02bd…`), so real ==
+disabled is file equality, not a claim. `candidate2-records.json` and
+`candidate-disabled2-records.json` are one sha256 (`4b587f62…`).
+Candidate2 changes exactly the three failing resumed arms (each now
+equals its queued arm) and leaves the seven controls and all ten
+queued arms byte-identical; semantic SAME is 10/10. The omission arm
+`omission2-records.json` is sha-identical to the frozen red records,
+with the raw `B726_ARM`/`B726_HIT` lines, and the restore is green.
+The forced spot check rebuilt the red-real source to `bf9d9e07…`,
+exactly continuation 11's forced spot-check sha, so the base arm is
+the accepted live source. The 120 original differences are all
+present in `original-120-review.json` as "unbound discovery evidence;
+not a C1 loss", and the C11 source artifact hashes to its frozen
+value `f2f3b297…`. The candidate2 tree differs from the base copy in
+exactly `segments.rs`, `segments/stack.rs`, the new test module and a
+test-only `B726_EPOCH` print in `mod.rs`; no diagnostic marker is in
+a production file. The class table has 18 rows (14 `closed`, 4 `out
+of class`, 0 open) and its ten direct finish/pause sites match my own
+grep of the live source (`completion.rs:189`, `mod.rs:140/189`,
+`segments.rs:685/692/704`, `context.rs:393`, `driver.rs:156`,
+`profile_mode.rs:52`, `mod.rs:891`). The disabled-cost table has the
+twelve functions at unchanged calls and Ir, the honest
+inlined-`Epoch::rows` attribution (40 calls, 5,680 Ir both arms and
+both draws), and the `Vec<ActiveSlot>` destructor at 1 call / 24 Ir in
+both draws; no exclusion is declared. `report.py check` verifies all
+438 citations.
+
+**The one red I do not take as calibrated.** The permanent unit
+falsifier is red on the pre-fix source, but it fails at the helper's
+`open().unwrap()` (`brief726.rs:10:114`) after the first pause faulted
+`epoch=1` with `InstrumentationFault`, not at a named validity or
+fault-count assertion. The mechanism is the intended one; the
+observation is a consequence. Brief 727 asserts `is_valid()` and
+`faults == 0` immediately after the repeated pause, before any reuse
+open, and requires the red log to quote that assertion failing at 8
+and 1.
+
+**Rulings.** (Q1) Rule (b) and candidate2 are accepted as the
+ownership repair: one `Rc<SegmentCompletion>` shared by `Active` and
+`Segment`, each replacing its existing epoch pointer;
+`SegmentState { Live, Ended, ExplicitlyFinished }`; promotion only on
+the exact active receipt after an ordered explicit finish while the
+epoch is valid; pause inert only for `ExplicitlyFinished`; displaced
+live, ended-without-explicit-finish, missing-slot, foreign-owner,
+stale-epoch, reuse, cancel and cap checks unchanged; one charged
+receipt per install, released on last Drop; no guest or public
+carrier. (Q2) Candidate1 is superseded, not waived: its extra Active
+pointer moved the generated empty `Vec<ActiveSlot>` destructor from 24
+to 23 Ir at one call; candidate2 restores 24/1 exactly. (Q3) The
+enabled-path charged allocation is accepted and disclosed; the
+disabled path keeps zero calls and Ir, and the inlined reader's
+whole-containing-function attribution is the honest form; no
+whole-program claim. (Q4) The malformed-answer probe
+`B726.class.error` (resumed Syntax vs queued Other, both arms,
+candidate native SAME) is a pre-existing semantic observation
+mismatch, outside this ownership class; it stays flagged and
+unrelabelled, is not a parity certificate and is not part of brief
+727's tests; continuation 12/settlement must classify it as an
+existing ledger row or a new Lost/residual row. (Q5) The retained
+harness and cost failures are recorded, not gated; no assertion was
+weakened. (Q6) The design round's standing-replay NA is correct;
+brief 727 names and runs all seven families before acceptance. (Q7)
+Brief 727 installs the accepted shape, then re-runs the panel,
+omission, five modes, prepared16/56, the permanent falsifiers, the
+seven replays and the acceptance; continuation 12 resumes only after
+727's gate.
+
+**Recorded, not gated:** the test-only `B726_EPOCH` observer print and
+the `B726_*` PASS lines stay out of the installed production shape;
+the failed harness versions, first cost reducers, failed candidate2
+compile tree, retained invalid recipes and all 15 build receipts stay
+in `.temp/brief-726/`; the candidate2 test module is renamed and its
+validity assertion moved ahead of the reuse open in 727.
