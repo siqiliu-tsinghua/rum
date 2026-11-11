@@ -31080,3 +31080,50 @@ the 24 unresolved rows, the 13 pair columns and the five named owners; the
 nine stopped families not repeated without a genuinely new mechanism;
 `P1566` Lost, `P0496` Residual and `P0528` held; the two-family stop-loss
 and every standing rule in force.
+
+## Continuation 17 order (2026-11-12) — continue the settlement campaign on the unchanged installed source
+
+Measurement-only. Continue brief 623 on the source continuation 16
+measured. Do not rebase: every file under `crates/` must equal the C16
+entry manifest and the live tree, production digest `8313fbc1…`; any
+production difference is a STOP, and the entry must re-derive 1,042 rows,
+78,330 canonical keys and 18,840 encoding rows with 0 moves. The 13 C16
+settlements, the 30 C15 settlements, the 28 C14 settlements and the seven
+accepted C13 count-like rows are not re-settled; their rows and tuples stay
+byte-identical. `P1566` stays Lost, `P0496` stays Residual for the
+settlement round, `P0528` stays held Residual, and `P0340`'s candidate
+proof stays held by the pair-column order (candidate measurements only, no
+disposition closure).
+
+Continue the remaining 236-row tail by mechanism — 192 LocalTail, 24
+ReopenedOrNew, 11 StrictDropGap, 6 StrictCallerGap, 1 StrictOtherCarrier,
+1 New719Edge, 1 New725Edge — with every batch's own armed-hit-caught or
+armed-hit-surviving omission as the row requires, five-part SAME on every
+frozen nonencoding cell, real == disabled, and actual producer and route
+reach. Each family freezes its plans, keys, variants and cap before any
+guest execution; every program runs with phase tracing enabled.
+
+The nine stopped families are not repeated without a genuinely new
+mechanism: `ownvalue-fallback-completion`, `option-activation-redispatch`,
+`rhs-optional-error-finish`, `status-optional-error-bridge`,
+`special-stage-resume-revisit`, `default-lexical-only-revisit` and the
+earlier zero-gain family from continuation 14, plus `resumed-fixed-point-
+tail` (needs a pause inside the actual resumed fixed-point producer) and
+`argument-repeated-request-context` (needs control of the earlier repeated
+`level` request) from this round. A new mechanism means new reachability or
+attribution evidence or a call-site proof, not a re-run under another name.
+
+Keep explicit: the 957 transitive duties (970 minus the 13 closed), the 24
+unresolved sites with no coverage claim, the 13 pair columns with 0 verdict
+changes, and the five named source owners. Port tables and the ledger move
+only by canonical replay; no hand edit, no weakened assertion, no relabel,
+no deleted attempt, no re-pinned inventory. Invalid recipes, unarmed
+attempts and failed preflights are retained and never certify coverage.
+
+The two-family stop-loss stands: two consecutive executed families that
+gain nothing on every progress counter (armed rows, caught rows, coverage
+cells, outcomes, requirements) stop the round; no guest or Cargo run after
+the stop. Stop for the director gate at the stop or at the round's end.
+C2 stays Open at 236 Residual + 1 Lost; S10 stays unopened. No source
+repair, no rebase, no manifest, no CHANGELOG before S10, and no git or
+network operation by the worker.
