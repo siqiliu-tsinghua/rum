@@ -9658,3 +9658,2598 @@ epoch never certifies parity; never weaken an assertion, delete an
 attempt, relabel an invalid recipe or re-pin an inventory; protected
 scenes byte-identical; the report checked by `scripts/report.py`.
 C2 stays Open until the settlement round; S10 stays unopened.
+
+
+## Continuation 12 — execution report (2026-11-11)
+
+**STOP under the required two-family rule. C2 remains Open: 314 residuals and one pre-existing error-packaging Lost row.**
+
+### 1. Rebase and calibration
+
+Continuation 12 is STOP, not C2 completion. Only diagnostic copies and evidence were written; the sole live-file edit is this report append. The frozen source is the accepted completed-generation installation. No git command or network operation ran. The once-parsed rebase retains every row, pairs 1,018 exact sites, leaves 24 explicit unresolved obligations and reconciles 13 stale pairing strings without claiming coverage. The new completion receipt/Cell/Rc bookkeeping adds no guest producer edge; the changed-call inventory and exact source packets are retained. All 1,018 paired enclosing functions have unchanged fingerprints; their transitive observation duties are conservatively rechecked rather than excluded.
+
+```text
+C2 C12 REBASE PASS population=1042 paired=1018 unresolved_retained=24 reconciled_pair_columns=13 rows_added=0 rows_removed=0 rebase_runs=1 source_function_unchanged=1018
+C2 C12 REQUIREMENTS FROZEN keys=78330 added=0 removed=0 duplicates=0 encoding_keys=18840 new_encoding_runs=0 before_factory=true
+C2 C12 POLICY {"encoding": 260, "nonencoding": 705, "policy": "CaptureOutput", "required": 965, "rows": 13}
+C2 C12 POLICY {"encoding": 800, "nonencoding": 2600, "policy": "ConditionalBranch", "required": 3400, "rows": 40}
+C2 C12 POLICY {"encoding": 260, "nonencoding": 765, "policy": "DefinitionLhsPreparation", "required": 1025, "rows": 12}
+C2 C12 POLICY {"encoding": 1040, "nonencoding": 2720, "policy": "DefinitionStore", "required": 3760, "rows": 52}
+C2 C12 POLICY {"encoding": 720, "nonencoding": 2430, "policy": "ErrorTransform", "required": 3150, "rows": 43}
+C2 C12 POLICY {"encoding": 6760, "nonencoding": 21935, "policy": "ForwardResult", "required": 28695, "rows": 338}
+C2 C12 POLICY {"encoding": 200, "nonencoding": 605, "policy": "FunctionResult", "required": 805, "rows": 10}
+C2 C12 POLICY {"encoding": 60, "nonencoding": 195, "policy": "GuestLoading", "required": 255, "rows": 3}
+C2 C12 POLICY {"encoding": 0, "nonencoding": 0, "policy": "HostBatchBoundary", "required": 0, "rows": 0}
+C2 C12 POLICY {"encoding": 500, "nonencoding": 3825, "policy": "HostRequestDriver", "required": 4325, "rows": 95}
+C2 C12 POLICY {"encoding": 3520, "nonencoding": 10070, "policy": "MatchDecision", "required": 13590, "rows": 174}
+C2 C12 POLICY {"encoding": 0, "nonencoding": 0, "policy": "MatchingSymbolCycleRecovery", "required": 0, "rows": 0}
+C2 C12 POLICY {"encoding": 640, "nonencoding": 1920, "policy": "NativeCallbackBridge", "required": 2560, "rows": 32}
+C2 C12 POLICY {"encoding": 0, "nonencoding": 0, "policy": "NonSuspending", "required": 0, "rows": 0}
+C2 C12 POLICY {"encoding": 1380, "nonencoding": 3710, "policy": "OptionReader", "required": 5090, "rows": 45}
+C2 C12 POLICY {"encoding": 5740, "nonencoding": 16350, "policy": "OptionalStage", "required": 22090, "rows": 264}
+C2 C12 POLICY {"encoding": 780, "nonencoding": 3170, "policy": "PhaseOwnership", "required": 3950, "rows": 66}
+C2 C12 POLICY {"encoding": 1100, "nonencoding": 3370, "policy": "PrefixLoop", "required": 4470, "rows": 55}
+C2 C12 POLICY {"encoding": 760, "nonencoding": 2050, "policy": "PrepareArgumentsRestore", "required": 2810, "rows": 38}
+C2 C12 POLICY {"encoding": 5500, "nonencoding": 16050, "policy": "RebuildTraversal", "required": 21550, "rows": 273}
+C2 C12 POLICY {"encoding": 0, "nonencoding": 0, "policy": "RetiredBoundary", "required": 0, "rows": 0}
+C2 C12 POLICY {"encoding": 620, "nonencoding": 2365, "policy": "ReturnBoundary", "required": 2985, "rows": 46}
+C2 C12 POLICY {"encoding": 620, "nonencoding": 1700, "policy": "ScalarFinish", "required": 2320, "rows": 31}
+C2 C12 POLICY {"encoding": 340, "nonencoding": 2340, "policy": "ScopeCleanup", "required": 2680, "rows": 38}
+C2 C12 POLICY {"encoding": 2920, "nonencoding": 9000, "policy": "ShapeDecode", "required": 11920, "rows": 145}
+C2 C12 RUN rebase attempt=1 exit=0
+```
+Historical calibration panels and the four named red semantic controls were authenticated against their accepted raw hashes; they were not regenerated. The installed repair is independently re-measured below, including the row-bound omission and permanent controls.
+
+```text
+C2 C12 CALIBRATION CARRY PASS control=Some raw_hashes=PASS named_observer=RED final_value_comparison_disabled=true
+C2 C12 CALIBRATION CARRY PASS control=G15A raw_hashes=PASS named_observer=RED final_value_comparison_disabled=true
+C2 C12 CALIBRATION CARRY PASS control=G15B raw_hashes=PASS named_observer=RED final_value_comparison_disabled=true
+C2 C12 CALIBRATION CARRY PASS control=C1 raw_hashes=PASS named_observer=RED final_value_comparison_disabled=true
+C2 C12 CALIBRATION PANEL CARRY PASS arm=pre-g15 raw_hash=PASS witnesses=PASS total=30
+C2 C12 CALIBRATION PANEL CARRY PASS arm=pre-c1 raw_hash=PASS witnesses=PASS total=24
+C2 C12 CALIBRATION PANEL CARRY PASS arm=current-c1 raw_hash=PASS witnesses=PASS total=24
+C2 C12 CENSUS BINARY HASH PASS source_parser=retained_syn_AST tool_sha256=db9fbcabf87717e00d822799303c8144491137ada4fc79a83accca574a8f9dbf
+C2 C12 RUN calibration-carry attempt=1 exit=0
+```
+```text
+C2 C12 REPAIRED PANEL {"DIFF": 0, "SAME": 10, "accepted727_records_exact": true, "epochs_valid": true, "faults": 0, "invalid": 0, "logs": {"mutant": ".temp/g15-c2/c12/logs/panel-fault-mutant-1.log", "real": ".temp/g15-c2/c12/logs/panel-fault-real-1.log"}, "panel": "fault", "real_disabled_exact": true, "total": 10}
+C2 C12 REPAIRED PANEL {"DIFF": 0, "SAME": 16, "accepted727_records_exact": true, "epochs_valid": true, "faults": 0, "invalid": 0, "logs": {"mutant": ".temp/g15-c2/c12/logs/panel-prepared16-mutant-1.log", "real": ".temp/g15-c2/c12/logs/panel-prepared16-real-1.log"}, "panel": "prepared16", "real_disabled_exact": true, "total": 16}
+C2 C12 REPAIRED PANEL {"DIFF": 0, "SAME": 56, "accepted727_records_exact": true, "epochs_valid": true, "faults": 0, "invalid": 0, "logs": {"mutant": ".temp/g15-c2/c12/logs/panel-prepared56-mutant-1.log", "real": ".temp/g15-c2/c12/logs/panel-prepared56-real-1.log"}, "panel": "prepared56", "real_disabled_exact": true, "total": 56}
+C2 C12 REPAIRED PANEL {"DIFF": 1, "SAME": 4, "accepted727_records_exact": true, "epochs_valid": true, "faults": 0, "invalid": 0, "logs": {"mutant": ".temp/g15-c2/c12/logs/panel-class-mutant-1.log", "real": ".temp/g15-c2/c12/logs/panel-class-real-1.log"}, "panel": "class", "real_disabled_exact": true, "total": 5}
+```
+```text
+C2 C12 TRACE PASS case=C11.fault.direct.two capture_prepared_None_ordered_finish_later_pause=same_exact_generation epoch_valid=true faults=0
+C2 C12 TRACE PASS case=C11.fault.replace.two capture_prepared_None_ordered_finish_later_pause=same_exact_generation epoch_valid=true faults=0
+C2 C12 TRACE PASS case=C11.fault.unheld.two capture_prepared_None_ordered_finish_later_pause=same_exact_generation epoch_valid=true faults=0
+```
+```text
+C2 C12 MODE PASS mode=disabled SAME=10 real_disabled_exact=true accepted727_exact=true
+C2 C12 MODE PASS mode=lexical SAME=10 real_disabled_exact=true accepted727_exact=true
+C2 C12 MODE PASS mode=timing SAME=10 real_disabled_exact=true accepted727_exact=true
+C2 C12 MODE PASS mode=cache SAME=10 real_disabled_exact=true accepted727_exact=true
+C2 C12 MODE PASS mode=all SAME=10 real_disabled_exact=true accepted727_exact=true
+```
+```text
+C2 C12 SETTLED row=C10.prepared.profiled_consumer Lost->Equal required_cells=55 five_part_SAME=55 producer_reached=55 real_disabled_exact=55 own_required_omission=CAUGHT profile_valid=true faults=0
+```
+```text
+C2 C12 PERMANENT CONTROL PASS kind=runtime test_threads=8 exact_installed_body=true raw=.temp/g15-c2/c12/logs/permanent-runtime-threads8-1.log
+C2 C12 PERMANENT CONTROL PASS kind=class test_threads=8 exact_installed_body=true raw=.temp/g15-c2/c12/logs/permanent-class-threads8-1.log
+C2 C12 PERMANENT CONTROL PASS kind=runtime test_threads=1 exact_installed_body=true raw=.temp/g15-c2/c12/logs/permanent-runtime-threads1-1.log
+C2 C12 PERMANENT CONTROL PASS kind=class test_threads=1 exact_installed_body=true raw=.temp/g15-c2/c12/logs/permanent-class-threads1-1.log
+```
+The real and disabled records are parsed-identical. The three identity chains match the same epoch, record, slot index and segment generation from guard capture through prepared None, ordered explicit finish and later inert pause. Ten-field rows are resumed == queued, every real epoch is valid, faults are zero. The selected omission removes only the inert pause branch after this actual consumer creates InputRequired, and restores the fault on a required trace key. Prepared16 and prepared56 equal the accepted 727 records; five modes supply 50 SAME records. The four semantic mutation shapes remain accepted hash-authenticated controls, not fresh C12 executions.
+
+### 2. Frozen requirements and executed families
+
+The inherited 78,330 keys are preserved exactly: zero added, removed or duplicated; all 18,840 encoding rows remain byte-identical, with zero new encoding runs. The 25 policy totals above are the frozen counts, not disjoint population totals. Every factory freezes its subset before execution. The Count/MemberQ/FreeQ bridge family retains 35 explicit cycle-error cells as open: 385 ordinary-context armed-hit survivors do not cover those missing cells, and are not NoObservableTail proposals.
+
+```text
+C2 C12 BATCH {"DIFF": 0, "SAME": 55, "armed": 1, "caught": 1, "concrete_execution": true, "consecutive_nonprogress": 0, "family": "prepared-consumer-completed-generation", "invalid": 0, "mutants": 1, "progress": {"armed_rows": 1, "caught_rows": 1, "coverage_cells": 55, "outcomes": 1, "requirements": 0}, "real": 55, "source_only": false, "survived": 0}
+C2 C12 BATCH {"DIFF": 0, "SAME": 385, "armed": 385, "caught": 0, "cells": 385, "concrete_execution": true, "consecutive_nonprogress": 0, "coverage_cells": 385, "encoding_executions": 0, "family": "countlike", "invalid": 0, "mutant_invalid": 0, "mutants": 385, "new_coverage_cells": 385, "progress": {"armed_rows": 7, "caught_rows": 0, "coverage_cells": 385, "outcomes": 0, "requirements": 0}, "real": 385, "source_only": false, "source_reached_cells": 385, "survived": 385}
+C2 C12 BATCH {"DIFF": 0, "SAME": 165, "armed": 110, "caught": 0, "cells": 165, "concrete_execution": true, "consecutive_nonprogress": 0, "coverage_cells": 110, "encoding_executions": 0, "family": "prepared-returned", "invalid": 0, "mutant_invalid": 55, "mutants": 165, "new_coverage_cells": 110, "outcomes_gained": 2, "progress": {"armed_rows": 2, "caught_rows": 0, "coverage_cells": 110, "outcomes": 2, "requirements": 0}, "real": 165, "source_only": false, "source_reached_cells": 110, "survived": 110}
+C2 C12 BATCH {"DIFF": 0, "SAME": 240, "armed": 180, "caught": 60, "cells": 240, "concrete_execution": true, "consecutive_nonprogress": 0, "coverage_cells": 180, "encoding_executions": 0, "family": "default-returned", "invalid": 0, "mutant_invalid": 60, "mutants": 240, "new_coverage_cells": 180, "outcomes_gained": 3, "progress": {"armed_rows": 3, "caught_rows": 1, "coverage_cells": 180, "outcomes": 3, "requirements": 0}, "real": 240, "source_only": false, "source_reached_cells": 180, "survived": 120}
+C2 C12 BATCH {"DIFF": 0, "SAME": 60, "armed": 60, "caught": 0, "cells": 60, "concrete_execution": true, "consecutive_nonprogress": 0, "coverage_cells": 60, "encoding_executions": 0, "family": "default-returned-off", "invalid": 0, "mutant_invalid": 0, "mutants": 60, "new_coverage_cells": 60, "outcomes_gained": 1, "progress": {"armed_rows": 1, "caught_rows": 0, "coverage_cells": 60, "outcomes": 1, "requirements": 0}, "real": 60, "source_only": false, "source_reached_cells": 60, "survived": 60}
+C2 C12 BATCH {"DIFF": 1, "SAME": 2, "accounting_note": "Inserted by canonical replay at the already executed classification checkpoint; no probe, verdict or stop-clock evidence was regenerated.", "armed": 0, "caught": 0, "concrete_execution": true, "consecutive_nonprogress": 0, "family": "malformed-answer-classification", "invalid": 0, "mutants": 0, "progress": {"armed_rows": 0, "caught_rows": 0, "coverage_cells": 0, "outcomes": 1, "requirements": 0}, "raw": "malformed-minimization.json", "real": 3, "source_only": false, "survived": 0}
+C2 C12 BATCH {"DIFF": 0, "P1566": "Current checkpoint matrix retained, but malformed-answer loss prevents closure", "SAME": 240, "armed": 3, "binding_cells": 268, "caught": 3, "concrete_execution": true, "consecutive_nonprogress": 0, "family": "native-request-lifecycle-recheck", "full_disposition_proofs": 1, "invalid": 0, "mutants": 3, "parity_differences": 0, "progress": {"armed_rows": 3, "caught_rows": 3, "coverage_cells": 268, "outcomes": 0, "requirements": 0}, "real": 240, "source_only": false, "source_reached_cells": 268, "survived": 0}
+C2 C12 BATCH {"DIFF": 0, "SAME": 6, "armed": 0, "caught": 0, "cells": 6, "concrete_execution": true, "consecutive_nonprogress": 1, "coverage_cells": 0, "encoding_executions": 0, "family": "resumed-prepared-revisit", "invalid": 0, "mutant_invalid": 6, "mutants": 6, "new_coverage_cells": 0, "progress": {"armed_rows": 0, "caught_rows": 0, "coverage_cells": 0, "outcomes": 0, "requirements": 0}, "real": 6, "source_only": false, "source_reached_cells": 0, "survived": 0}
+C2 C12 BATCH {"DIFF": 0, "SAME": 6, "armed": 0, "caught": 0, "cells": 6, "concrete_execution": true, "consecutive_nonprogress": 2, "coverage_cells": 0, "encoding_executions": 0, "family": "unadmitted-default-revisit", "invalid": 0, "mutant_invalid": 6, "mutants": 6, "new_coverage_cells": 0, "progress": {"armed_rows": 0, "caught_rows": 0, "coverage_cells": 0, "outcomes": 0, "requirements": 0}, "real": 6, "source_only": false, "source_reached_cells": 0, "survived": 0}
+```
+
+The malformed-answer classification family was added to the accounting table by canonical replay from its already-executed receipts, at its chronological checkpoint. The original batch table remains retained, and this did not execute a guest or change the final stop clock.
+
+```text
+C2 C12 BATCH ACCOUNTING PASS executed_families=9 classification_receipt_added_chronologically=true source_measurement_reruns=0 final_stop_clock=2
+```
+
+### 3. Outcomes, full proposal groups and loss
+
+Final totals (source-population counts overlap, as in the governing census):
+
+```json
+{
+  "by_class": {
+    "caught mutant; incomplete real tuples": {
+      "Boundary": 1,
+      "Equal": 12,
+      "Residual": 7
+    },
+    "compiled but no valid binding reached": {
+      "Boundary": 2,
+      "Equal": 2,
+      "NoObservableTail": 1,
+      "Residual": 50,
+      "Transferred": 135
+    },
+    "new 719 producer edge": {
+      "Equal": 1,
+      "NoObservableTail": 3,
+      "Residual": 1
+    },
+    "new 725 producer edge": {
+      "Equal": 1,
+      "NoObservableTail": 2,
+      "Residual": 1
+    },
+    "new C1 producer edge": {
+      "NoObservableTail": 2,
+      "Residual": 6
+    },
+    "new continuation3 producer edge": {
+      "Equal": 1
+    },
+    "survived or no mutation hit": {
+      "Boundary": 1,
+      "Equal": 25,
+      "Identity": 5,
+      "NoObservableTail": 7,
+      "Residual": 15,
+      "Transferred": 397
+    },
+    "unsupported schema": {
+      "Boundary": 5,
+      "Equal": 23,
+      "Lost": 1,
+      "NoObservableTail": 36,
+      "Residual": 234,
+      "Transferred": 62,
+      "Unreachable": 3
+    }
+  },
+  "by_source_population_overlapping": {
+    "frame_carries": {
+      "Equal": 30,
+      "Identity": 3,
+      "Lost": 1,
+      "NoObservableTail": 1,
+      "Residual": 137,
+      "Transferred": 10
+    },
+    "new-C1-edge": {
+      "NoObservableTail": 2,
+      "Residual": 6
+    },
+    "new_719_producer_edge": {
+      "Equal": 1,
+      "NoObservableTail": 3,
+      "Residual": 1
+    },
+    "new_725_producer_edge": {
+      "Equal": 1,
+      "NoObservableTail": 2,
+      "Residual": 1
+    },
+    "new_continuation3_producer_edge": {
+      "Equal": 1
+    },
+    "review_tail_correct": {
+      "Boundary": 3,
+      "Equal": 24,
+      "NoObservableTail": 17,
+      "Residual": 47,
+      "Transferred": 170
+    },
+    "screen_effect-questions": {
+      "NoObservableTail": 10,
+      "Residual": 6
+    },
+    "screen_frameless-direct-evaluate": {
+      "Equal": 4,
+      "Lost": 1,
+      "Residual": 10,
+      "Transferred": 27
+    },
+    "screen_frameless-transforms": {
+      "Boundary": 1,
+      "Equal": 11,
+      "NoObservableTail": 10,
+      "Residual": 33,
+      "Transferred": 103
+    },
+    "screen_optional-source-helpers": {
+      "Equal": 5,
+      "NoObservableTail": 3,
+      "Residual": 21,
+      "Transferred": 29,
+      "Unreachable": 3
+    },
+    "strict_tail_without_indexed_caller": {
+      "Boundary": 2,
+      "NoObservableTail": 5,
+      "Residual": 7,
+      "Transferred": 235
+    },
+    "tool_unsettled": {
+      "Boundary": 7,
+      "Equal": 50,
+      "Identity": 2,
+      "Lost": 1,
+      "NoObservableTail": 38,
+      "Residual": 222,
+      "Transferred": 284
+    }
+  },
+  "outcomes": {
+    "Boundary": 9,
+    "Equal": 65,
+    "Identity": 5,
+    "Lost": 1,
+    "NoObservableTail": 51,
+    "Residual": 314,
+    "Transferred": 594,
+    "Unreachable": 3
+  },
+  "population": 1042,
+  "residual_composition": {
+    "LocalTail": 254,
+    "New719Edge": 1,
+    "New725Edge": 1,
+    "ReopenedOrNew": 38,
+    "StrictCallerGap": 6,
+    "StrictDropGap": 11,
+    "StrictOtherCarrier": 3
+  }
+}
+```
+The eight verdict changes are exactly:
+
+```json
+[
+  {
+    "evidence": "c12/malformed-loss-proof.json; c12/DRAFT-input-syntax-packaging.md",
+    "new": "Lost",
+    "old": "Equal",
+    "row": "P1566"
+  },
+  {
+    "evidence": "c12/default-returned-full-proofs.json; c12/proposals.json",
+    "new": "NoObservableTail",
+    "old": "Residual",
+    "row": "C5.default.suspend.enabled"
+  },
+  {
+    "evidence": "c12/default-returned-off-full-proofs.json; c12/proposals.json",
+    "new": "NoObservableTail",
+    "old": "Residual",
+    "row": "C5.default.suspend.unprofiled"
+  },
+  {
+    "evidence": "c12/default-returned-full-proofs.json; c12/proposals.json",
+    "new": "NoObservableTail",
+    "old": "Residual",
+    "row": "C5.default.enabled.profiled"
+  },
+  {
+    "evidence": "c12/default-returned-full-proofs.json; c12/proposals.json",
+    "new": "Equal",
+    "old": "Residual",
+    "row": "C5.default.profiled.finish"
+  },
+  {
+    "evidence": "c12/consumer-full-proofs.json; c12/repaired-panels.json; c12/trace-proof.json",
+    "new": "Equal",
+    "old": "Lost",
+    "row": "C10.prepared.profiled_consumer"
+  },
+  {
+    "evidence": "c12/prepared-returned-full-proofs.json; c12/proposals.json",
+    "new": "NoObservableTail",
+    "old": "Residual",
+    "row": "C10.prepared.initial_profiled_suspend"
+  },
+  {
+    "evidence": "c12/prepared-returned-full-proofs.json; c12/proposals.json",
+    "new": "NoObservableTail",
+    "old": "Residual",
+    "row": "C10.prepared.profiled_witness_suspend"
+  }
+]
+```
+C5.default.profiled.finish is Equal on 60 required SAME cells and 60 caught own omissions of its post-producer pause_call_stage_at_finish. C10.prepared.profiled_consumer is Equal on 55 required cells and its caught completed-generation omission. The five forwarding rows are proposals, never Equal. Their 290 required cells each have an own armed-hit survivor, real/disabled parity, producer reach and phase observation. The instrument verifies the actual returned request against the consumed request, pre/post pending generation and pending request; an upstream child pause alone cannot arm it.
+
+#### NoObservableTail proposal: ActualReturnedSuspensionWholeResult_prepared-returned
+
+Rows: C10.prepared.initial_profiled_suspend, C10.prepared.profiled_witness_suspend. Required cells: 110.
+
+These exact producer call sites return the whole Result after consuming the real SlotWitness and request. Their enclosing branch or helper performs no work after the result except returning it. The request and witness, plus head/plan/state and the profiled timing token where present, have already moved into the actual producer; the timing publication in suspend_profiled_prepared_stage precedes the witness producer and is retained by the omission. Remaining parameters are borrowed Session/lookup/symbol references or Copy flags/indices; the branch has no live scope/lease/profiling guard with a stateful Drop. SlotWitness::suspend inserts the actual typed frame and returns the same RuntimeInputRequest, not a fabricated default. The copied instrument checks exact request equality, an existing identical pre/post suspension generation, and the Session pending request before arming. Each required tuple has its own armed/hit survivor, including trace, and real/disabled records are parsed-identical with valid epochs. This is a local NoObservableTail proposal for forwarding already-produced suspension results, not a transitive caller or global completion claim. The separate resumed-prepared helper and any unadmitted/default profiling tail are excluded unless their own packets satisfy the bar.
+
+All inherited encoding keys remain unchanged and G13-owned/blocked; no new encoding runs or tuple keys.
+
+Source/Drop packets:
+
+- `crates/rum-runtime/src/runtime/eval_core/call.rs` — sha256 `fe5174b61538af725a769ebd03876661fa7d36773cd44e8ebc200ff8db370418`
+- `crates/rum-runtime/src/runtime/suspension/typed/witness.rs` — sha256 `d61bfc6cde7bd5ff287a9f153ca839f63346d8e71e746056725678f0300a7c34`
+
+#### NoObservableTail proposal: ActualReturnedSuspensionWholeResult_default-returned
+
+Rows: C5.default.suspend.enabled, C5.default.enabled.profiled. Required cells: 120.
+
+These exact producer call sites return the whole Result after consuming the real SlotWitness and request. Their enclosing branch or helper performs no work after the result except returning it. The request and witness, plus head/plan/state and the profiled timing token where present, have already moved into the actual producer; the timing publication in suspend_profiled_prepared_stage precedes the witness producer and is retained by the omission. Remaining parameters are borrowed Session/lookup/symbol references or Copy flags/indices; the branch has no live scope/lease/profiling guard with a stateful Drop. SlotWitness::suspend inserts the actual typed frame and returns the same RuntimeInputRequest, not a fabricated default. The copied instrument checks exact request equality, an existing identical pre/post suspension generation, and the Session pending request before arming. Each required tuple has its own armed/hit survivor, including trace, and real/disabled records are parsed-identical with valid epochs. This is a local NoObservableTail proposal for forwarding already-produced suspension results, not a transitive caller or global completion claim. The separate resumed-prepared helper and any unadmitted/default profiling tail are excluded unless their own packets satisfy the bar.
+
+All inherited encoding keys remain unchanged and G13-owned/blocked; no new encoding runs or tuple keys.
+
+Source/Drop packets:
+
+- `crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs` — sha256 `5c39dae3e19cee8ead028b0ea7819dc7476439d2d3e1486709e7ac15a9f6c489`
+- `crates/rum-runtime/src/runtime/suspension/typed/witness.rs` — sha256 `d61bfc6cde7bd5ff287a9f153ca839f63346d8e71e746056725678f0300a7c34`
+
+#### NoObservableTail proposal: ActualReturnedSuspensionWholeResult_default-returned-off
+
+Rows: C5.default.suspend.unprofiled. Required cells: 60.
+
+These exact producer call sites return the whole Result after consuming the real SlotWitness and request. Their enclosing branch or helper performs no work after the result except returning it. The request and witness, plus head/plan/state and the profiled timing token where present, have already moved into the actual producer; the timing publication in suspend_profiled_prepared_stage precedes the witness producer and is retained by the omission. Remaining parameters are borrowed Session/lookup/symbol references or Copy flags/indices; the branch has no live scope/lease/profiling guard with a stateful Drop. SlotWitness::suspend inserts the actual typed frame and returns the same RuntimeInputRequest, not a fabricated default. The copied instrument checks exact request equality, an existing identical pre/post suspension generation, and the Session pending request before arming. Each required tuple has its own armed/hit survivor, including trace, and real/disabled records are parsed-identical with valid epochs. This is a local NoObservableTail proposal for forwarding already-produced suspension results, not a transitive caller or global completion claim. The separate resumed-prepared helper and any unadmitted/default profiling tail are excluded unless their own packets satisfy the bar.
+
+All inherited encoding keys remain unchanged and G13-owned/blocked; no new encoding runs or tuple keys.
+
+Source/Drop packets:
+
+- `crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs` — sha256 `5c39dae3e19cee8ead028b0ea7819dc7476439d2d3e1486709e7ac15a9f6c489`
+- `crates/rum-runtime/src/runtime/suspension/typed/witness.rs` — sha256 `d61bfc6cde7bd5ff287a9f153ca839f63346d8e71e746056725678f0300a7c34`
+
+#### Existing malformed-answer loss, in full
+
+The ordinary evaluate producer P1566 propagates EvalError::Syntax from Input answer parsing. Its ordinary request tail calls finish_request_failure, which calls session_request_error_from_eval_error; that wrapper supplies source=None to session_request_error_from_eval_error_with_source. The error formatter with source=None produces SessionRequestError::Other. The resumed peer P1568 explicitly matches EvalError::Syntax and passes Some(&input), producing structured SessionRequestError::Syntax. The same malformed answer therefore has different public error variants despite equal native profile rows and valid epochs. This is pre-existing source-aware error packaging loss on the queued/ordinary P1566 tail, not the repaired completed-segment ownership defect. P1568 is the comparison peer, not a second independent loss row. The original C9 request-checkpoint receipts remain retained; they did not exercise this malformed-answer observation.
+
+Source tail: `crates/rum-runtime/src/runtime/session/session_requests.rs:280 ordinary Err(err) -> finish_request_failure; lines 536-552 select the no-source formatter wrapper; request_errors.rs:42-54 selects Other without source`. The existing row P1566 changes Equal -> Lost; P1568 is the comparison peer and remains an open transitive dependency despite its current checkpoint matrix. No row or key is added. The minimized bare Input witness is **additional row evidence**, not a relabelled AbortProtect descriptor cell. The original narrower checkpoint receipt remains intact. This is pre-existing and is not attributed to brief 727.
+
+Minimal fixture and complete raw observation:
+
+```json
+{
+  "context": "value.base",
+  "descriptor": "-",
+  "duration_paths": [],
+  "id": "C12.malformed.input-malformed",
+  "pauses": [
+    [
+      "Input",
+      "answer",
+      "("
+    ]
+  ],
+  "setup": "log={};",
+  "source": "Input[\"answer\"]",
+  "trace": false,
+  "variant": "Error"
+}
+```
+```json
+{
+  "id": "C12.malformed.input-malformed",
+  "native_same": true,
+  "queued": [
+    [
+      "Runtime { phase: \"call.stage.ordinary_builtin\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"call.stage.prepare_arguments\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.once_unstable\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.total\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.total\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.dispatch\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.head_eval\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.resume_after_head\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.total\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.call\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.total\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.total\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: None, arity: 1 }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  ],
+  "resumed": [
+    [
+      "Runtime { phase: \"call.stage.ordinary_builtin\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"call.stage.prepare_arguments\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.once_unstable\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.total\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.total\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.dispatch\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.head_eval\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.resume_after_head\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.total\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.call\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.total\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.total\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: None, arity: 1 }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  ],
+  "row": "-",
+  "semantic_queued": "Observation { value: None, error: Some(Other { message: \"incomplete input: expected expression at bytes 1..1\" }), termination: None, messages: [], prints: [], trace: [] }",
+  "semantic_resumed": "Observation { value: None, error: Some(Syntax(StructuredSourceDiagnostic { message: \"incomplete input: expected expression at bytes 1..1\", rendered: \"error: incomplete input: expected expression at bytes 1..1\\n --> 1:2\\n  |\\n1 | (\\n  |  ^\", is_incomplete: true, spans: [SourceDiagnosticSpan { span: Span { start: 1, end: 1 }, start: SourceLocation { line: 1, column: 2 }, end: SourceLocation { line: 1, column: 2 }, label: None, text: \"\" }] })), termination: None, messages: [], prints: [], trace: [] }",
+  "semantic_same": false,
+  "valid": true
+}
+```
+Original B726.class.error whole record (same on the current real and disabled arms):
+
+```json
+{
+  "id": "B726.class.error",
+  "native_same": true,
+  "queued": [
+    [
+      "Runtime { phase: \"call.stage.down_values\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"call.stage.ordinary_builtin\", source: None }",
+      [
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"call.stage.ordinary_builtin\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"call.stage.prepare_arguments\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"call.stage.prepare_arguments\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"definition.rhs.evaluate\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"definition.rhs.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.once_unstable\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.once_unstable\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.total\", source: None }",
+      [
+        3,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.call\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.total\", source: None }",
+      [
+        4,
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.dispatch\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.dispatch\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.head_eval\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.head_eval\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.resume_after_head\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.resume_after_head\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.total\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.call\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.call\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.total\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.total\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: None, arity: 1 }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }), arity: 1 }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Definition { kind: \"down_value_rhs_eval\", symbol: Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }, index: 0 }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  ],
+  "resumed": [
+    [
+      "Runtime { phase: \"call.stage.down_values\", source: None }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"call.stage.ordinary_builtin\", source: None }",
+      [
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"call.stage.ordinary_builtin\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"call.stage.prepare_arguments\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"call.stage.prepare_arguments\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"definition.rhs.evaluate\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"definition.rhs.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.once_unstable\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.once_unstable\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.total\", source: None }",
+      [
+        3,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.call\", source: None }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.total\", source: None }",
+      [
+        4,
+        4,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_atom_fast_path.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.dispatch\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.dispatch\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.head_eval\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.head_eval\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.resume_after_head\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.resume_after_head\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.total\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_call.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.call\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.call\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.total\", source: None }",
+      [
+        2,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"evaluate_inner_unstable.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.total\", source: None }",
+      [
+        2,
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Runtime { phase: \"prepare_arguments.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: None, arity: 1 }",
+      [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }), arity: 1 }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      "Definition { kind: \"down_value_rhs_eval\", symbol: Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }, index: 0 }",
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  ],
+  "row": "-",
+  "semantic_queued": "Observation { value: None, error: Some(Other { message: \"incomplete input: expected expression at bytes 1..1\" }), termination: None, messages: [], prints: [], trace: [] }",
+  "semantic_resumed": "Observation { value: None, error: Some(Syntax(StructuredSourceDiagnostic { message: \"incomplete input: expected expression at bytes 1..1\", rendered: \"error: incomplete input: expected expression at bytes 1..1\\n --> 1:2\\n  |\\n1 | (\\n  |  ^\", is_incomplete: true, spans: [SourceDiagnosticSpan { span: Span { start: 1, end: 1 }, start: SourceLocation { line: 1, column: 2 }, end: SourceLocation { line: 1, column: 2 }, label: None, text: \"\" }] })), termination: None, messages: [], prints: [], trace: [] }",
+  "semantic_same": false,
+  "valid": true
+}
+```
+```text
+C2 C12 MALFORMED CLASSIFIED row=P1566 Equal->Lost group=PreexistingInputSyntaxPackaging original=B726.class.error minimized_DIFF=1 controls_SAME=2 native_rows=SAME valid_epoch=true current_source_reached=true new_rows=0 new_keys=0 repair=draft_only S10=unopened
+```
+No new Unreachable or Boundary disposition is claimed. The three accepted Unreachable rows and nine Boundary rows retain their prior evidence and explicit current recheck duties. The 24 unresolved source sites are never used for coverage.
+
+### 4. Repair design and sequencing
+
+The separate draft is `.temp/g15-c2/c12/DRAFT-input-syntax-packaging.md`. It is design-only. It calls for preserving actual Input error provenance into ordinary host packaging without weakening structured Syntax into Other, changing comparisons or suppressing invalid epochs. No implementation was made. The source-aware formatting question must be resolved before C2 closes; S10 cannot precede C2.
+
+# Draft — preserve Input syntax-error source in ordinary request packaging
+
+Scope: NONE — design first; no implementation authorized by this draft.
+
+## Goal
+
+Design a single source-aware error path for malformed Input answers so the
+ordinary queued and resumed host request expose the same structured Syntax
+error, with unchanged language evaluation, prints/messages/trace, request
+retirement and logical-profile validity. Do not erase structured Syntax into
+Other merely to make the comparator green.
+
+## Context pointers
+
+- AGENTS.md and docs/dev/codex/TEMPLATE.md.
+- .temp/g15-c2/c12/malformed-loss-proof.json: exact current/source packets,
+  B726.class.error and the single-Input reduction, both real/disabled arms.
+- builtins_input.rs:302-315 parses the actual Input text.
+- session/session_requests.rs:244-280 ordinary evaluation and 315-381
+  resumed packaging; 536-583 failure construction.
+- session/request_errors.rs:28-55 source-aware Syntax/Other selection.
+- The accepted brief727 ownership rule and profile validity remain intact.
+
+## Scope
+
+Design and copied-tree proof only. No production change. Draft a director
+implementation brief after selecting the representation/API. The eventual
+implementation scope is the Input error provenance and host packaging path;
+public error shapes and ordinary success-path costs are preserved unless a
+separate explicit contract decision requires otherwise.
+
+## Deliverable
+
+Inventory all EvalError::Syntax producers and every source-losing conversion.
+Choose one way to carry the original Input source through queued evaluation
+to the ordinary request tail, without substituting the outer program text.
+State exact API/types, ownership, cleanup/retirement and compatibility impact.
+Draft staged implementation and inventory replay/acceptance commands.
+
+## Verification
+
+Freeze the current single Input["answer"] with answer "(" as red: resumed
+Syntax versus queued Other, native ten-field rows SAME, epoch valid and no
+faults. Retain Input["answer"] with 83 and InputString["answer"] with "("
+as green controls, and the original two-pause B726.class.error. The copied
+candidate must preserve the original structured diagnostic and produce
+whole-observation equality, real==disabled, with an own source-provenance
+omission red on the same assertion. Extend to nested Input, multiple inputs,
+non-ASCII answer locations, parse depth errors, cancellation and a fresh
+request without changing frozen observations. Reproduce any suite red at
+one test thread. Replay standing inventories before production acceptance
+if the later implementation changes covered source. Runtime and workspace
+gates, plus rum-vs-rum A/B if a normal hot path changes, remain mandatory.
+
+## Hard rules and stop-loss
+
+No git, network, unsafe or frozen-scene edits. No classifier masking,
+comparator weakening, invalid-epoch parity certificate or Syntax-to-Other
+normalization. Keep every attempt. Stop after two measured attempts with
+no progress or an unexplained calibration failure. C2 cannot close and S10
+cannot open until this loss has a reviewed disposition or repair.
+
+## Report format
+
+Return rum-report/1 with the selected API, full source/caller inventory,
+raw red/green/own-omission receipts, exact repair brief and open decisions.
+
+### 5. Exact residual list and required stop
+
+Exactly 314 rows remain Residual. The full original gap, every attempted family, counts and current reason are in `residual-list.tsv` and its port copy. Current authoritative list:
+
+| Row | Current site | Class | Current SAME / required | What remains |
+| --- | --- | --- | ---: | --- |
+| P0001 | crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:93 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0002 | crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:110 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0004 | crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:245 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0011 | crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:26 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Certified OptionReentry consumer routes remain open despite prior caught adoption omission. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0012 | crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:31 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Certified OptionReentry consumer routes remain open despite prior caught adoption omission. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0014 | crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:59 | StrictDropGap | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0016 | crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:119 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0019 | crates/rum-runtime/src/runtime/accounting_mode/options.rs:230 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0020 | crates/rum-runtime/src/runtime/accounting_mode/retained.rs:88 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0021 | crates/rum-runtime/src/runtime/accounting_mode/retained.rs:120 | StrictCallerGap | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0022 | crates/rum-runtime/src/runtime/accounting_mode/retained.rs:134 | StrictCallerGap | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0028 | crates/rum-runtime/src/runtime/accounting_mode/rule.rs:111 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0030 | crates/rum-runtime/src/runtime/accounting_mode/rule.rs:113 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0034 | crates/rum-runtime/src/runtime/accounting_mode/rule.rs:149 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0036 | crates/rum-runtime/src/runtime/accounting_mode/rule.rs:153 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0043 | crates/rum-runtime/src/runtime/accounting_mode/rule.rs:202 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0044 | crates/rum-runtime/src/runtime/accounting_mode/rule.rs:204 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0145 | crates/rum-runtime/src/runtime/debug_tools/reap/sow.rs:55 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0214 | crates/rum-runtime/src/runtime/debug_tools/trace/filter/leaf.rs:141 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0216 | crates/rum-runtime/src/runtime/debug_tools/trace/filter.rs:76 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0239 | crates/rum-runtime/src/runtime/definitions/application/default_values.rs:144 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 10/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0243 | crates/rum-runtime/src/runtime/definitions/application/default_values.rs:218 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0244 | crates/rum-runtime/src/runtime/definitions/application/default_values.rs:238 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0245 | crates/rum-runtime/src/runtime/definitions/application/default_values.rs:243 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0246 | crates/rum-runtime/src/runtime/definitions/application/default_values.rs:256 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0251 | crates/rum-runtime/src/runtime/definitions/application/down_values.rs:87 | ReopenedOrNew | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0252 | crates/rum-runtime/src/runtime/definitions/application/down_values.rs:100 | ReopenedOrNew | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. No authentic own caught omission in this continuation; survivors/unhit cases alone do not settle the row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0255 | crates/rum-runtime/src/runtime/definitions/application/down_values.rs:204 | ReopenedOrNew | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 24/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0257 | crates/rum-runtime/src/runtime/definitions/application/down_values.rs:262 | ReopenedOrNew | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0258 | crates/rum-runtime/src/runtime/definitions/application/down_values.rs:295 | ReopenedOrNew | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0260 | crates/rum-runtime/src/runtime/definitions/application/down_values.rs:368 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0262 | crates/rum-runtime/src/runtime/definitions/application/down_values.rs:388 | ReopenedOrNew | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 8/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0263 | crates/rum-runtime/src/runtime/definitions/application/down_values.rs:391 | ReopenedOrNew | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0265 | crates/rum-runtime/src/runtime/definitions/application/down_values.rs:434 | ReopenedOrNew | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0275 | crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:90 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0276 | crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:105 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0278 | crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:147 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0281 | crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:188 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0284 | crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:391 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0289 | crates/rum-runtime/src/runtime/definitions/application/rhs.rs:26 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0290 | crates/rum-runtime/src/runtime/definitions/application/rhs.rs:35 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0294 | crates/rum-runtime/src/runtime/definitions/application/rhs.rs:66 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0296 | crates/rum-runtime/src/runtime/definitions/application/rhs.rs:76 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0301 | crates/rum-runtime/src/runtime/definitions/application/rhs.rs:138 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0302 | crates/rum-runtime/src/runtime/definitions/application/rhs.rs:157 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0304 | crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:181 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0305 | crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:211 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0307 | crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:231 | ReopenedOrNew | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0308 | crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:238 | ReopenedOrNew | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0310 | crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:283 | ReopenedOrNew | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0311 | crates/rum-runtime/src/runtime/definitions/application/sub_values.rs:327 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0316 | crates/rum-runtime/src/runtime/definitions/application/up_values.rs:209 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0317 | crates/rum-runtime/src/runtime/definitions/application/up_values.rs:225 | ReopenedOrNew | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0320 | crates/rum-runtime/src/runtime/definitions/application/up_values.rs:320 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0321 | crates/rum-runtime/src/runtime/definitions/application/up_values.rs:394 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0322 | crates/rum-runtime/src/runtime/definitions/application/up_values.rs:413 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0325 | crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:152 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0326 | crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:152 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0327 | crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:152 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0328 | crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:162 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0329 | crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:205 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0336 | crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:150 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0338 | crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:185 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0339 | crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:201 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0340 | crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:401 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0341 | crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:217 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0342 | crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:401 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0344 | crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:237 | LocalTail | 0/55 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0345 | crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:401 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0346 | crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:423 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0347 | crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:448 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0348 | crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:312 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0349 | crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:335 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0350 | crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:357 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0351 | crates/rum-runtime/src/runtime/definitions/definition_catalog/traversal.rs:380 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0354 | crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:165 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0366 | crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:461 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0380 | crates/rum-runtime/src/runtime/definitions/definition_updates/resume_frames.rs:26 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0381 | crates/rum-runtime/src/runtime/definitions/definition_updates/resume_frames.rs:77 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0394 | crates/rum-runtime/src/runtime/definitions/definition_updates.rs:234 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0396 | crates/rum-runtime/src/runtime/definitions/definition_updates.rs:253 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0403 | crates/rum-runtime/src/runtime/definitions/definitions/destructuring.rs:106 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0405 | crates/rum-runtime/src/runtime/definitions/definitions/destructuring.rs:146 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0417 | crates/rum-runtime/src/runtime/definitions/definitions.rs:95 | LocalTail | 0/50 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0419 | crates/rum-runtime/src/runtime/definitions/definitions.rs:112 | LocalTail | 0/50 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0425 | crates/rum-runtime/src/runtime/definitions/definitions.rs:291 | ReopenedOrNew | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0435 | crates/rum-runtime/src/runtime/definitions/part_assignment.rs:41 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0436 | crates/rum-runtime/src/runtime/definitions/part_assignment.rs:46 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0439 | crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:79 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0440 | crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:98 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0441 | crates/rum-runtime/src/runtime/definitions/rhs_guards/resume_frames.rs:108 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0442 | crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:109 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0450 | crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:218 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0455 | crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:305 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0458 | crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:328 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0459 | crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:354 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0463 | crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:462 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0464 | crates/rum-runtime/src/runtime/definitions/rule_lhs/continuation.rs:21 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0466 | crates/rum-runtime/src/runtime/definitions/rule_lhs/continuation.rs:62 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0470 | crates/rum-runtime/src/runtime/definitions/rule_lhs.rs:76 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0474 | crates/rum-runtime/src/runtime/eval_call_prepare/resume_frames.rs:55 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0475 | crates/rum-runtime/src/runtime/eval_call_prepare.rs:434 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0479 | crates/rum-runtime/src/runtime/eval_call_prepare.rs:434 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0481 | crates/rum-runtime/src/runtime/eval_call_prepare.rs:448 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0496 | crates/rum-runtime/src/runtime/eval_core/call.rs:401 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C9: Same stage code in resumed dispatcher; none of the 16 native recipes pauses in this producer. No Unreachable or Equal claim. Needs a real earlier-stage continuation that declines before preparing arguments.; P0496 remains reserved for the settlement round; no relabelling in continuation12. |
+| P0502 | crates/rum-runtime/src/runtime/eval_core/call.rs:594 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0505 | crates/rum-runtime/src/runtime/eval_core/call.rs:767 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C9: PreparedDispatchFrame consumer is observed directly, but its separate inherited matrix and tail omission have not been completed. The diagnostic loss is assigned to owning phase producer P0492; consumer identity remains residual. |
+| P0508 | crates/rum-runtime/src/runtime/eval_core/mod.rs:75 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Thirty nested-budget recipes return a larger 1024-element list after cleanup, covering the existing phase, Return/error, repeat, nested and log cells. All are real SAME and own armed/hit survivors. Finite under-limit survivors do not show the result-limit validation unobservable at rejection/resource boundaries. |
+| P0527 | crates/rum-runtime/src/runtime/eval_core/symbol.rs:118 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0528 | crates/rum-runtime/src/runtime/eval_core/symbol.rs:330 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0529 | crates/rum-runtime/src/runtime/eval_core/symbol.rs:332 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0537 | crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:124 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0543 | crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:187 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0544 | crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:197 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0548 | crates/rum-runtime/src/runtime/kernel_data/association_data/resume_frames.rs:56 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0549 | crates/rum-runtime/src/runtime/kernel_data/association_data/resume_frames.rs:80 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0554 | crates/rum-runtime/src/runtime/kernel_data/association_data.rs:748 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0555 | crates/rum-runtime/src/runtime/kernel_data/association_data.rs:753 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0558 | crates/rum-runtime/src/runtime/kernel_data/association_data.rs:874 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0566 | crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:24 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0567 | crates/rum-runtime/src/runtime/kernel_data/control_data/abort_cleanup/resume_frames.rs:60 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0693 | crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:93 | ReopenedOrNew | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0694 | crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:107 | ReopenedOrNew | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0695 | crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:170 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0696 | crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:237 | ReopenedOrNew | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0697 | crates/rum-runtime/src/runtime/kernel_data/control_data/check_quiet.rs:257 | ReopenedOrNew | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0711 | crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:167 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0712 | crates/rum-runtime/src/runtime/kernel_data/control_data/cleanup.rs:199 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0765 | crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:286 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0767 | crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:299 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0769 | crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:374 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0772 | crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:421 | LocalTail | 0/35 | 35 of 35 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 35/35 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0773 | crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:427 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0775 | crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:467 | LocalTail | 0/35 | 35 of 35 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 35/35 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0812 | crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:102 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0813 | crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:104 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0823 | crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:201 | LocalTail | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0824 | crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:458 | LocalTail | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0827 | crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:302 | LocalTail | 0/35 | 35 of 35 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 35/35 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0832 | crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:507 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. 60 valid real SAME programs executed, but none paused inside this exact bypassing-Catch producer. The computed-pattern fixture pauses earlier during pattern resolution; it does not prove an unreachable call or a covered row. Park after the bounded attempt. Missing 60/60 unique required cells after combining accepted C5/C6 and current C7 evidence. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0847 | crates/rum-runtime/src/runtime/kernel_data/evaluated_part_selectors.rs:86 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P0934 | crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/pattern_resolution.rs:30 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Eight concrete singleton/triply-nested/permuted OneIdentity/Flat/Orderless attribute-transition recipes are SAME and their own successful-result-before-normalization omissions arm, hit and survive. Four already-covered keys gain no cell. Full normalization redundancy over every downstream matching path remains unproved. |
+| P0936 | crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/pattern_resolution.rs:64 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1037 | crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs:143 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1038 | crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/repeated.rs:159 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1070 | crates/rum-runtime/src/runtime/kernel_data/structure_data/replace/guarded.rs:262 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1132 | crates/rum-runtime/src/runtime/options/builtins.rs:265 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1158 | crates/rum-runtime/src/runtime/options/resume_frames.rs:21 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1159 | crates/rum-runtime/src/runtime/options/resume_frames.rs:47 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1160 | crates/rum-runtime/src/runtime/options/resume_frames.rs:49 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1193 | crates/rum-runtime/src/runtime/pattern_matching/core.rs:116 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1238 | crates/rum-runtime/src/runtime/pattern_matching/sequence/optional_sequence/choices.rs:137 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1240 | crates/rum-runtime/src/runtime/pattern_matching/sequence/optional_sequence/choices.rs:173 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1310 | crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/collect.rs:149 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1312 | crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/collect.rs:172 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1331 | crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs:163 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1333 | crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs:177 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1335 | crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/match_choices.rs:198 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1476 | crates/rum-runtime/src/runtime/resolution.rs:466 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1480 | crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:34 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1482 | crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:42 | ReopenedOrNew | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1483 | crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:47 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1486 | crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:87 | LocalTail | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1487 | crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:107 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1544 | crates/rum-runtime/src/runtime/session/guest_loading/script.rs:69 | ReopenedOrNew | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 19/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No authentic own caught omission in this continuation; survivors/unhit cases alone do not settle the row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1551 | crates/rum-runtime/src/runtime/session/session_eval.rs:183 | StrictCallerGap | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1552 | crates/rum-runtime/src/runtime/session/session_eval.rs:190 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1553 | crates/rum-runtime/src/runtime/session/session_eval.rs:200 | StrictCallerGap | 0/65 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Exact current AST call identity remains unresolved. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1555 | crates/rum-runtime/src/runtime/session/session_eval.rs:257 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1557 | crates/rum-runtime/src/runtime/session/session_eval.rs:304 | ReopenedOrNew | 0/30 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1559 | crates/rum-runtime/src/runtime/session/session_eval.rs:340 | ReopenedOrNew | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1560 | crates/rum-runtime/src/runtime/session/session_eval.rs:414 | ReopenedOrNew | 0/30 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1562 | crates/rum-runtime/src/runtime/session/session_requests.rs:200 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1563 | crates/rum-runtime/src/runtime/session/session_requests.rs:224 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1564 | crates/rum-runtime/src/runtime/session/session_requests.rs:235 | StrictCallerGap | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1565 | crates/rum-runtime/src/runtime/session/session_requests.rs:245 | StrictCallerGap | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1567 | crates/rum-runtime/src/runtime/session/session_requests.rs:311 | ReopenedOrNew | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1569 | crates/rum-runtime/src/runtime/session/session_requests.rs:389 | ReopenedOrNew | 0/30 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1571 | crates/rum-runtime/src/runtime/session/session_requests.rs:423 | ReopenedOrNew | 0/30 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1573 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:22 | StrictOtherCarrier | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1574 | crates/rum-runtime/src/runtime/suspension/core/abandon.rs:108 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1575 | crates/rum-runtime/src/runtime/suspension/core/fault.rs:126 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1576 | crates/rum-runtime/src/runtime/suspension/core.rs:631 | ReopenedOrNew | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 1/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1577 | crates/rum-runtime/src/runtime/suspension/core.rs:682 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1578 | crates/rum-runtime/src/runtime/suspension/core.rs:753 | LocalTail | 0/60 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1579 | crates/rum-runtime/src/runtime/suspension/core.rs:776 | LocalTail | 0/60 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1580 | crates/rum-runtime/src/runtime/suspension/core.rs:788 | LocalTail | 0/30 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1581 | crates/rum-runtime/src/runtime/suspension/core.rs:825 | LocalTail | 0/30 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1582 | crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:49 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1583 | crates/rum-runtime/src/runtime/test_builtins.rs:510 | StrictDropGap | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1585 | crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:21 | LocalTail | 55/60 | 5 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.; 55 current cells and own armed-hit survivors are retained; five explicit cycle-error cells lack a valid cycle-producing recipe. No NoObservableTail proposal without those cells and phase evidence. |
+| P1586 | crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:45 | LocalTail | 55/60 | 5 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.; 55 current cells and own armed-hit survivors are retained; five explicit cycle-error cells lack a valid cycle-producing recipe. No NoObservableTail proposal without those cells and phase evidence. |
+| P1587 | crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:69 | LocalTail | 55/60 | 5 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.; 55 current cells and own armed-hit survivors are retained; five explicit cycle-error cells lack a valid cycle-producing recipe. No NoObservableTail proposal without those cells and phase evidence. |
+| P1588 | crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:95 | LocalTail | 55/60 | 5 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.; 55 current cells and own armed-hit survivors are retained; five explicit cycle-error cells lack a valid cycle-producing recipe. No NoObservableTail proposal without those cells and phase evidence. |
+| P1589 | crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:121 | LocalTail | 55/60 | 5 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.; 55 current cells and own armed-hit survivors are retained; five explicit cycle-error cells lack a valid cycle-producing recipe. No NoObservableTail proposal without those cells and phase evidence. |
+| P1590 | crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:147 | LocalTail | 55/60 | 5 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.; 55 current cells and own armed-hit survivors are retained; five explicit cycle-error cells lack a valid cycle-producing recipe. No NoObservableTail proposal without those cells and phase evidence. |
+| P1591 | crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:179 | LocalTail | 55/60 | 5 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.; 55 current cells and own armed-hit survivors are retained; five explicit cycle-error cells lack a valid cycle-producing recipe. No NoObservableTail proposal without those cells and phase evidence. |
+| P1592 | crates/rum-runtime/src/runtime/tree_walkers/count_like/resume_frames.rs:234 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1595 | crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:48 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1597 | crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:74 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1599 | crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:97 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1610 | crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:238 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1613 | crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:283 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1615 | crates/rum-runtime/src/runtime/tree_walkers/count_like.rs:325 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1621 | crates/rum-runtime/src/runtime/tree_walkers/position/options.rs:42 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1625 | crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:21 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1626 | crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:47 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1627 | crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:76 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1628 | crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:122 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1630 | crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:166 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1636 | crates/rum-runtime/src/runtime/tree_walkers/position.rs:178 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1637 | crates/rum-runtime/src/runtime/tree_walkers/position.rs:207 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1640 | crates/rum-runtime/src/runtime/tree_walkers/position.rs:275 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1802 | crates/rum-stdlib/src/associations/missing/target.rs:145 | StrictOtherCarrier | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1803 | crates/rum-stdlib/src/associations/missing/target.rs:148 | StrictOtherCarrier | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1804 | crates/rum-stdlib/src/associations/missing/target.rs:210 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1805 | crates/rum-stdlib/src/associations/missing/target.rs:261 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1806 | crates/rum-stdlib/src/associations/missing/target.rs:331 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1810 | crates/rum-stdlib/src/associations/missing.rs:76 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P1818 | crates/rum-stdlib/src/associations/mutation.rs:530 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2132 | crates/rum-stdlib/src/lazy/machine.rs:27 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2133 | crates/rum-stdlib/src/lazy/machine.rs:68 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2134 | crates/rum-stdlib/src/lazy/machine.rs:79 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2135 | crates/rum-stdlib/src/lazy/machine.rs:107 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2146 | crates/rum-stdlib/src/lazy.rs:446 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2299 | crates/rum-stdlib/src/schema.rs:130 | LocalTail | 0/165 | 165 of 165 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 165/165 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2348 | crates/rum-stdlib/src/strings/patterns/search/guarded/replace.rs:109 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2354 | crates/rum-stdlib/src/strings/patterns/search/guarded/replace.rs:231 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2379 | crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:138 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2381 | crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:191 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2385 | crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:265 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2387 | crates/rum-stdlib/src/strings/patterns/search/rules/cases.rs:326 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2409 | crates/rum-stdlib/src/strings/patterns/search/rules.rs:131 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2411 | crates/rum-stdlib/src/strings/patterns/search/rules.rs:187 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2416 | crates/rum-stdlib/src/strings/patterns/search/rules.rs:296 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2418 | crates/rum-stdlib/src/strings/patterns/search/rules.rs:332 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2544 | crates/rum-stdlib/src/structure_ops/list_plumbing.rs:30 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2547 | crates/rum-stdlib/src/structure_ops/list_plumbing.rs:151 | LocalTail | 0/50 | 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2595 | crates/rum-host/src/session.rs:352 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2596 | crates/rum-host/src/session.rs:373 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2599 | crates/rum-host/src/session.rs:436 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2600 | crates/rum-host/src/session.rs:482 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2601 | crates/rum-host/src/session.rs:557 | LocalTail | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2602 | crates/rum-host/src/session.rs:561 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2603 | crates/rum-host/src/session.rs:592 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2605 | crates/rum-jupyter/src/adapter/execute.rs:20 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2606 | crates/rum-jupyter/src/adapter/execute.rs:245 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2607 | crates/rum-jupyter/src/adapter/execute.rs:248 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2608 | crates/rum-jupyter/src/adapter/input_retirement.rs:15 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2609 | crates/rum-jupyter/src/adapter/worker.rs:185 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2610 | crates/rum-jupyter/src/adapter/worker.rs:339 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2611 | crates/rum-jupyter/src/adapter/worker.rs:358 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2612 | crates/rum-jupyter/src/adapter/worker.rs:369 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2613 | crates/rum-jupyter/src/adapter/worker.rs:374 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2614 | crates/rum-jupyter/src/adapter/worker.rs:387 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2615 | crates/rum-cli/src/eval_tests.rs:38 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2616 | crates/rum-cli/src/eval_tests.rs:58 | StrictDropGap | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2617 | crates/rum-cli/src/eval_tests.rs:59 | ReopenedOrNew | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2618 | crates/rum-cli/src/eval_tests.rs:60 | ReopenedOrNew | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2619 | crates/rum-cli/src/eval_tests.rs:61 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2620 | crates/rum-cli/src/eval_tests.rs:62 | StrictDropGap | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2621 | crates/rum-cli/src/eval_tests.rs:62 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2622 | crates/rum-cli/src/eval_tests.rs:79 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2623 | crates/rum-cli/src/input_retirement.rs:15 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2624 | crates/rum-cli/src/main.rs:43 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2625 | crates/rum-cli/src/main.rs:67 | LocalTail | 0/35 | 35 of 35 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 35/35 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2626 | crates/rum-cli/src/main.rs:92 | StrictDropGap | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2627 | crates/rum-cli/src/main.rs:107 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2629 | crates/rum-cli/src/main.rs:113 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2630 | crates/rum-cli/src/main.rs:115 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2631 | crates/rum-cli/src/main.rs:116 | StrictDropGap | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2632 | crates/rum-cli/src/main.rs:120 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2633 | crates/rum-cli/src/main.rs:122 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2635 | crates/rum-cli/src/main.rs:224 | StrictDropGap | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2636 | crates/rum-cli/src/main.rs:231 | StrictDropGap | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2637 | crates/rum-cli/src/main.rs:231 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2638 | crates/rum-cli/src/main.rs:238 | ReopenedOrNew | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2639 | crates/rum-cli/src/main.rs:239 | ReopenedOrNew | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2640 | crates/rum-cli/src/main.rs:247 | ReopenedOrNew | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2641 | crates/rum-cli/src/main.rs:248 | ReopenedOrNew | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2642 | crates/rum-cli/src/main.rs:260 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2643 | crates/rum-cli/src/main.rs:297 | StrictDropGap | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2644 | crates/rum-cli/src/main.rs:315 | StrictDropGap | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2645 | crates/rum-cli/src/main.rs:323 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2646 | crates/rum-repl/src/lib.rs:138 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2647 | crates/rum-repl/src/lib.rs:152 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2648 | crates/rum-repl/src/lib.rs:181 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2649 | crates/rum-repl/src/lib.rs:195 | StrictDropGap | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2650 | crates/rum-repl/src/lib.rs:287 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2651 | crates/rum-repl/src/request.rs:134 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2652 | crates/rum-repl/src/request.rs:181 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2653 | crates/rum-repl/src/request.rs:184 | LocalTail | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2654 | crates/rum-repl/src/request.rs:195 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2655 | crates/rum-repl/src/request.rs:206 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2656 | crates/rum-repl/src/request.rs:219 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| P2657 | crates/rum-repl/src/request.rs:252 | LocalTail | 0/30 | 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| 618.frameless-transforms.033 | crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:71 | LocalTail | 0/45 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 45 of 45 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| 618.frameless-transforms.076 | crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:74 | LocalTail | 0/30 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 30 of 30 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| 618.optional-source-helpers.007 | crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs:117 | LocalTail | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| 618.optional-source-helpers.019 | crates/rum-runtime/src/runtime/definitions/incremental_append.rs:8 | LocalTail | 0/50 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 50 of 50 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| 618.optional-source-helpers.023 | crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:223 | LocalTail | 0/55 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| 618.optional-source-helpers.025 | crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/table_fast_path.rs:11 | LocalTail | 0/55 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| 618.optional-source-helpers.027 | crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:71 | LocalTail | 0/45 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 45 of 45 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| 618.optional-source-helpers.042 | crates/rum-runtime/src/runtime/scoping/lexical/block/continuation.rs:573 | LocalTail | 0/60 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| 618.effect-questions.004 | crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:98 | LocalTail | 0/45 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 45 of 45 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| 618.effect-questions.005 | crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:103 | LocalTail | 0/45 | Source identity remains explicitly unresolved; prior candidates are in unresolved-source-sites.json; no current coverage claimed.; 45 of 45 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| C1.P0942 | crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:65 | ReopenedOrNew | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| C1.P0943 | crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:67 | ReopenedOrNew | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| C1.P0949 | crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:148 | ReopenedOrNew | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| C1.P0950 | crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:150 | ReopenedOrNew | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| C1.P0952 | crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:180 | ReopenedOrNew | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| C1.P0953 | crates/rum-runtime/src/runtime/kernel_data/rewrite_data/replace/all.rs:190 | ReopenedOrNew | 0/65 | 65 of 65 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| C5.default.enabled.unadmitted | crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs:97 | New719Edge | 0/60 | 60 of 60 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. New 719 forwarding edge retains independent ownership and 80 frozen tuples; no own complete armed carrier matrix or named transfer proof. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. |
+| C10.prepared.resumed_profiled_suspend | crates/rum-runtime/src/runtime/eval_core/call.rs:68 | New725Edge | 0/55 | 55 of 55 required nonencoding keys lack authenticated current five-part SAME, actual producer reach and real/disabled equality.; Concrete carrier/caller/Drop and own omission proof remains open. New brief-725 suspension propagation edge. Actual SlotWitness/RuntimeInputRequest and typed consumer are forwarded; raw producer/owner attribution and the local-tail or transfer proof remain open. No default carrier or caught omission is claimed. |
+
+The two final executed families are the resumed-prepared helper with a nested subvalue context, and the unadmitted Default helper with an outer suspended continuation. Each executes six real/disabled SAME records and six own-selected omissions, but none reaches/arms its selected helper. Every progress counter is zero, so the clock reaches two. These are missing coverage, not surviving identity proofs or Unreachable claims. The stopped normalization/resource families were not repeated. The Default revisit uses the new actual-returned-request/witness-owner authenticator required by the director.
+
+```text
+C2 C12 STOP-LOSS two_consecutive_executed_zero_progress_families=true guest_and_Cargo_runs_now_prohibited=true
+```
+
+### 6. Port tables, transitive duties and integrity
+
+The canonical replay produces 1,042 source entries, exact frozen keys, fixture programs, mutant recipes and raw receipts under `.temp/g15-c2/c12/port/`. All 29 earlier Equal rows outside the working population remain byte-identical. P0496 remains unchanged for the settlement round.
+
+```text
+C2 C12 TRANSITIVE REPLAY {"current_SAME_keys": 1058, "current_complete_matrices": 8, "current_full_proofs": 7, "current_named_open": 1035, "inherited_open_closed": 7, "population": 1042, "prior_C11_complete": 27, "prior_C11_open": 1015, "prior_complete_recertified": 0, "source_exclusions": 0, "unresolved": 24, "whole_graph_complete": false}
+```
+```text
+C2 C12 PRIOR FIRST TARGETS accepted_C11_closed=734 current_727_source_SAME=268 current_remaining=466 historical_closure_not_relabelled=true
+```
+Seven of the inherited 1,015 open duties now have fresh full disposition proofs; 1,008 of that set remain named open. All 27 previously complete C11 duties are conservatively reopened after the installed source change; P1568 has a current 30-key checkpoint candidate and caught omission, but its malformed-answer dependency prevents whole-duty closure. Thus 1,035 current duties remain open, with exact missing keys and reasons, and seven are closed. No unaffected-source exclusion is asserted. Historical C11 closure of 734 first-target keys stays historical; it is not relabelled as current-source coverage.
+
+```text
+C2 C12 LEDGER NEGATIVE C2-done-with-residuals: RED (C2 Done with residual/loss/proposal)
+C2 C12 LEDGER NEGATIVE delete-a-row: RED (frozen row identities differ)
+C2 C12 LEDGER NEGATIVE duplicate-a-row: RED (duplicate row)
+C2 C12 LEDGER NEGATIVE wrong-row-mutant: RED (no own caught omission: C10.prepared.profiled_consumer; wrong-row mutant)
+C2 C12 LEDGER NEGATIVE surviving-identity-promoted: RED (no own caught omission: C10.prepared.initial_profiled_suspend)
+C2 C12 LEDGER NEGATIVE incomplete-matrix-promoted: RED (incomplete matrix: C10.prepared.profiled_consumer)
+C2 C12 LEDGER POSITIVE GREEN rows=1042 negative_controls_RED=6 unexpected_green=0 C2=Open
+```
+```text
+C2 C12 CANONICAL LEDGER REPLAY PASS rows=1042 keys=78330 rows_added=0 rows_removed=0 keys_added=0 keys_removed=0 duplicates=0 encoding_byte_exact=18840 encoding_executions=0 verdict_changes=8 paired_columns_reconciled=13 unresolved_retained=24 P0496=unchanged
+```
+```text
+C2 C12 PORT READY source_entries=1042 required_keys=78330 exact_fixtures=1247 fresh_bindings=1185 own_receipts=866 retained_29_byte_exact=true rows_removed=0 C2=Open S10=unopened
+```
+```text
+C2 C12 SOURCE INTEGRITY PASS live_files=2723 live_digest=0962edb3cad68bd5f163046d478497694faff48144db28909ad0e88783c91f64 changed=0 missing=0 extra=0 protected_files=302550 protected_changed=0 protected_missing=0 protected_extra=0
+```
+```text
+C2 C12 BUILD INTEGRITY PASS receipts=10 binaries_exact=10 assembled_trees_exact=10 offline_locked=true forced_spot_sha256=0aaa8af9bce1340d8e3f86f6528639f6c14dfd4cae4b923a25d1dc390a2f66ee spot_check=pass scene_environment=true
+```
+```text
+C2 C12 PORT INTEGRITY PASS exact_fixtures=1247 rum_files=2494 input_files=1247 retained29_byte_exact=true
+```
+```text
+C2 C12 POST-STOP AUDIT PASS controller_runs=13 guest_runs=0 Cargo_runs=0 final_two_families_SAME=12 selected_own_attempts=12 armed=0 hits=0 all_progress_counters=0
+```
+
+Standing inventories: no covered live source changed. No production acceptance suite ran. The permanent copied-tree controls are diagnostic executions. No stale fingerprint, certificate or position red occurred, and no inventory was hand-edited or weakened. Verbatim verdict:
+
+```text
+C2 C12 STANDING INVENTORY REPLAY NA covered_live_source_changes=0 production_acceptance_suites=0 diagnostic_copied_controls_only=true inventory_hand_edits=0 stale_fingerprint_certificate_position_reds=0
+```
+
+The report is checked by scripts/report.py using its explicit scratch path, without any git scope option. Publication verifies the live brief is exactly the saved entry prefix plus this REPORT.md; all other live hashes remain equal. The final publication receipt supplies that append check.
+
+### 7. Retained attempts, open questions and recommendations
+
+Three integrity-controller attempts failed and are retained: importing the entry sealer triggered its no-regeneration assertion before any write, then an overbroad `/bin/` string check mistook `/usr/bin/python3` for a guest executable; the third mistook its previously generated build-verification list for a build receipt. The corrected audit distinguishes actual scratch guest binaries, and replays every protected hash. None is a production regression or inventory-ordering artifact. A self-audit rejected binding the minimized bare Input witness to the inherited AbortProtect.body descriptor; the canonical replay restores that exact native cell and preserves the new loss as additional row evidence. The rejected cell, original batch accounting, all controller attempts and the precise source-chain refinement are retained. No guest or Cargo run followed the stop.
+
+Not run: a full production runtime/workspace acceptance suite, formatting or microbench A/B (live source is unchanged); fresh historical G15 calibration executions; new internal-encoding probes; missing explicit cycle-error recipes; a complete transitive reproof or C2 closure; repair implementation, git or network. The 385 count-like survivors are partial coverage only, not settlements. The unadmitted Default and resumed-prepared routes remain explicit residuals.
+
+Q1: Accept the five NoObservableTail proposals? Recommendation: review their 290 exact required own armed-hit survivors and whole-Result/Drop packets; do not promote them to Equal.
+
+Q2: Accept P1566 as the existing owner of the pre-existing malformed-answer loss and open its design-first repair line? Recommendation: use the draft and preserve the original structured Syntax diagnostic; keep P1568’s dependency open.
+
+Q3: Resume the remaining campaign after the director’s sequencing decision? Recommendation: prioritize the 35 explicit cycle-error cells, the authenticated returned-request routes that remain unarmed, and the 1,035 named current-source duties. Keep all 24 unresolved sites and S10 unopened.
+
+## Director gate (2026-11-11) — continuation 12 accepted as a STOP: eight settlements, and the malformed-answer loss opens the Input packaging repair line
+
+Run log `.temp/logs/cdx_brief_623.log` (41,018 lines, sha256
+`09f41be39ce8d97c7caf299a7f873cff53f6d4a8bf77a426b3075cbdd0a16edc`,
+memory-scope peak 2,906,443,776 B of the 16 GiB scope, oom 0, oom_kill 0,
+rc=0; report `.temp/g15-c2/c12/report.json`, 967 runs, 12 checks — 8 PASS,
+1 FAIL, 2 FLAGGED, 1 NA; `report.py check` 3,116 citations). The live tree
+was not changed: `production_source_changes=0`.
+
+**Scope.** My own walk reproduces 2,723 live files, 0 missing, 0 extra,
+0 changed before the append, digest `0962edb3…`, and the only repository
+diff is the authorized append: exactly `brief-entry.md` 1,431,031 B +
+`REPORT.md` 350,964 B = 1,781,995 B (2,460 inserted lines, 0 deleted);
+`git status` is otherwise clean at `2488efe5`. All 26,859 reported changes
+live under `.temp/g15-c2/c12/` except that brief. My own protected walk
+re-hashes 302,550 files across the C7-C11 scenes, `brief-623`,
+`brief-726`, `brief-727` — 0 missing, 0 extra, 0 changed. No production
+source, inventory or test file changed; no standing inventory needed a
+replay.
+
+**The ledger.** Re-derived from `settled.tsv`: 1,042 rows; outcomes
+Boundary 9 / Equal 65 / Identity 5 / Lost 1 / NoObservableTail 51 /
+Residual 314 / Transferred 594 / Unreachable 3 = 1,042; the residual list
+is exactly the 314 ids, composed 254 LocalTail + 1 New719Edge +
+1 New725Edge + 38 ReopenedOrNew + 6 StrictCallerGap + 11 StrictDropGap +
+3 StrictOtherCarrier. Exactly eight verdict changes from the accepted C11
+state: `C10.prepared.profiled_consumer` Lost→Equal; `C5.default.profiled.finish`
+Residual→Equal; `C5.default.suspend.enabled`, `C5.default.suspend.unprofiled`,
+`C5.default.enabled.profiled`, `C10.prepared.initial_profiled_suspend`,
+`C10.prepared.profiled_witness_suspend` Residual→NoObservableTail; `P1566`
+Equal→Lost. 0 rows added or removed; requirements 78,330 with identical
+key multisets to the inherited set (0 added, 0 removed, 0 duplicates);
+18,840 encoding rows with identical `(row, status)` signatures and 0 new
+internal encoding executions; the 29 older Equal rows outside the
+population are byte-identical (`28619de4…`). Pairing: 1,018 rows paired,
+24 unresolved (21 Residual + the 3 long-standing Unreachable). The 13
+inherited `UnresolvedSiteNeedsRecheck` pair labels are reconciled exactly —
+the 13 named rows, 0 verdict changes, no coverage claimed; the other 16
+rows still carrying the inherited string are all inside the 24 unresolved,
+and the 8 remaining unresolved rows carry no such string. P0496 unchanged.
+
+**The repaired row.** `C10.prepared.profiled_consumer` now covers exactly
+its 55 required non-encoding keys — 55/55 SAME, 55/55 producer-reached,
+55/55 real==disabled (the two family arms are whole-dictionary identical),
+and its own omission is armed, hit and caught on the raw log. The repaired
+panels are record-identical to brief 727's accepted records: fault 10/10,
+prepared16 16/16, prepared56 56/56, class 5/5. The identity chains for
+direct/replace/unheld share one identity across capture, explicit finish
+and later pause attempt with `Live → ExplicitlyFinished →
+ExplicitlyFinished`, prepared outcome `None` — the completed generation is
+inert, exactly as installed.
+
+**The five proposals.** `C5.default.suspend.enabled`,
+`C5.default.suspend.unprofiled`, `C5.default.enabled.profiled`,
+`C10.prepared.initial_profiled_suspend`,
+`C10.prepared.profiled_witness_suspend`: 60+60+60+55+55 = 290 required
+non-encoding cells, all SAME, all reached, all disabled-exact, each with
+its own armed-hit-surviving omission. I re-derived all 866 mutant receipts
+from the raw logs myself: 739 armed, 739 hit, 61 caught, 675 survived,
+130 unarmed — every receipt's recorded armed/hit/caught/survived fields
+match its raw markers and record. I read the five cited tails in the live
+tree — `default_fallback.rs:58/67/88` and `call.rs:37/149` — each forwards
+the whole `Result` of the real `witness.suspend`/producer with no
+post-work at the site; the profiled publication lives on the separate
+`C5.default.profiled.finish` row (line 140), which is the Equal row with
+60/60 cells SAME and 60/60 own caught omissions. The proposal source
+packets are byte-equal to the live files.
+
+**The malformed loss.** `P1566` Equal→Lost is accepted: the minimized
+single `Input` answer `(` reads queued
+`Other { message: "incomplete input: expected expression at bytes 1..1" }`
+against resumed `Syntax(StructuredSourceDiagnostic { … same message … })`,
+with the valid-answer and `InputString` controls SAME, native ten-field
+rows SAME, epochs valid and no faults. The mechanism is source-read:
+`session_requests.rs:280`'s ordinary tail reaches the no-source formatter
+(`:536-552`) and `request_errors.rs:42-54` yields `Other`, while the
+resumed peer passes `Some(&input)` and yields `Syntax`. It is pre-existing
+(`caused_by_727=false`; `B726.class.error` carried the same Syntax-vs-Other
+observation and brief 727 kept it flagged), and the row's frozen matrix
+cells are unchanged. The worker first tried to bind the bare Input to the
+inherited `AbortProtect.body` descriptor; the canonical replay rejected
+that binding and the loss is retained as extra row evidence instead — the
+right call, since the frozen cell is not relabelled and no known loss is
+dropped.
+
+**Transitive duties.** 1,042 row records: 7 rows carry complete current
+disposition proofs (the five proposals, the finish row, the repaired
+consumer), 8 have complete matrices, 1,035 stay named open with exact
+missing keys and reasons, and 0 source or fingerprint exclusions are
+claimed. All 27 previously complete C11 duties are conservatively reopened
+after the installed 727 source change (`prior_complete_recertified=0`),
+while 7 inherited open duties closed; the 734 historical first-target keys
+stay historical (268 current SAME) and are not relabelled as current
+coverage. This is a conservative re-basing, recorded as such, not a
+regression.
+
+**The STOP.** Well taken. The last two executed families
+(`resumed-prepared-revisit`, `unadmitted-default-revisit`) each ran 6 real
+SAME records and 6 own-selected, unarmed mutations with every progress
+counter zero; the pre-accounting `batches.jsonl` retained from execution
+already reads clock 1 then 2 after a progress batch, and the malformed
+accounting row inserted later by the canonical replay is disclosed and
+does not move the clock. No guest or Cargo run followed the stop (23
+post-stop controller runs, 0 guest, 0 Cargo).
+
+**Integrity.** All 10 build receipts verify on my own runs (binary sha and
+assembled-tree hash), and the forced `--force` spot check is a fresh
+compile (`cache_hit=false`) reproducing `0aaa8af9…`. 1,247 fixture
+programs (3,741 files) are hash- and content-exact; `retained-29-equal.tsv`
+is byte-identical to C11; six constructed bad-ledger controls are RED and
+the positive GREEN on my own re-read. Three failed integrity-controller
+attempts are retained instrument failures — the entry sealer's
+no-regeneration assertion, an overbroad `/bin/` check that mistook
+`/usr/bin/python3` for a guest executable, and a replay that mistook its
+own list-shaped verification file for a build receipt — each corrected,
+none a product signal.
+
+**Rulings.** Q1: the five `NoObservableTail` proposals are accepted, never
+Equal. Q2: P1566 is accepted as the owner of the pre-existing
+malformed-answer loss, and the design-first Input syntax-packaging repair
+line is opened (brief 728). The repair direction is to carry the original
+Input source through the ordinary queued path so both peers expose the
+same structured Syntax diagnostic; erasing Syntax into Other to make the
+comparator green is forbidden, and any documented public `Other` contract
+needs an explicit decision in the design. Q3: the campaign resumes only
+after this inserted branch completes (user ruling: an inserted branch runs
+to completion before the interrupted line resumes). **Recorded, not
+gated:** the count-like 385 survivors are partial coverage only, not
+settlements; P1568's 30-key checkpoint candidate stays open on its
+malformed dependency; the REPORT.md's Q3 is not present in the report's
+question list; the retained controller attempts and the rejected
+descriptor binding above.
+
+C2 stays Open at 314 residuals + 1 Lost; S10 stays unopened.
+

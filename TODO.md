@@ -324,24 +324,34 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   report 1,203 citations. C2 is Open at 328 residuals (256 LocalTail, 45
   reopened, 22 strict, 5 719 edges) + 1 Lost (P0492).
 
-**Next, in order** (the branch queue): **brief 727 is accepted and
-installed** — the completed-generation pause receipt is on
-`segments.rs`/`stack.rs`: one `Rc<SegmentCompletion>` shared by the
-exact `Active` and `Segment`, promoted to `ExplicitlyFinished` only by
-an ordered explicit finish of that generation while its epoch is valid;
-a later pause is inert, every other state keeps its check. The three
-frozen two-pause programs are whole-record SAME, the omission restores
-the frozen red records file-identically, the named validity assertion
-is calibrated red on pre-fix at 8 and 1 and green on the install, the
-seven inventories replay, and my host workspace is 4,231/0/61 with the
-disabled rows unchanged (my gate has the numbers). Then **brief 623
-continuation 12** — the remaining 1,015 named open transitive duties,
-the 24 explicitly unresolved sites, and the 320-row tail (254
-LocalTail, 38 reopened, 20 strict, the five 719 edges, the three 725
-edges), the `UnresolvedSiteNeedsRecheck` column reconciliation, plus
-the classification of the retained malformed-answer resumed/queued
-observation; then C2's settlement round (including P0496's ledger
-disposition, expected unreachable/source-closed), then CM,
+**Next, in order** (the branch queue): **brief 623 continuation 12 is
+accepted as a STOP; the two Equal rows, the five proposals and the new
+Lost row are accepted.** Continuation 12 re-derived 1,042 rows / 78,330
+keys with 0 added/removed/duplicate keys and exactly eight verdict
+changes: `C10.prepared.profiled_consumer` Lost→Equal (55/55 repaired
+cells, panels record-identical to 727), `C5.default.profiled.finish`
+Residual→Equal (60/60 with 60/60 caught omissions), five
+`NoObservableTail` proposals on 290 own armed-hit survivors
+(`C5.default.suspend.enabled`, `C5.default.suspend.unprofiled`,
+`C5.default.enabled.profiled`, `C10.prepared.initial_profiled_suspend`,
+`C10.prepared.profiled_witness_suspend`), and `P1566` Equal→Lost on the
+pre-existing malformed-answer Syntax/Other difference (one-shot minimal
+witness, two green controls, native rows SAME, valid epochs, frozen
+cells unchanged). C2 stands Open at 314 Residual + 1 Lost; 1,018 rows
+paired, 24 unresolved (21 Residual + 3 Unreachable), the 13 pair labels
+reconciled with 0 verdict changes; the transitive duties re-base
+conservatively to 7 complete current proofs and 1,035 named open (all
+27 prior completes reopened, 0 exclusions); the remaining 320-row tail
+is 254 LocalTail + 38 ReopenedOrNew + 20 strict + 1 New719Edge
+(`C5.default.enabled.unadmitted`) + 1 New725Edge
+(`C10.prepared.resumed_profiled_suspend`); no guest or Cargo ran after
+the stop. **Next: brief 728, design-only, for the Input
+syntax-packaging repair** (carry the original Input source through the
+ordinary queued tail so both peers expose the same structured Syntax
+diagnostic; never erase Syntax into Other), then its implementation
+brief, then continuation 13 (the remaining tail, the 1,035 duties, the
+24 unresolved rows). Then C2's settlement round (including P0496's
+ledger disposition, expected unreachable/source-closed), then CM,
 `CHANGELOG.md` before S10, G13 S10–S54/F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
