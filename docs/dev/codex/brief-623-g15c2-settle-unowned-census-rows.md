@@ -9263,3 +9263,48 @@ Next: commit and push this gate; archive the log as
 `cdx_brief_623.continuation-9`; write and dispatch brief 724 (the
 prepared-stage sampling design). After its gate, an implementation
 brief, then continuation 10 over the remaining tail.
+
+## Director gate (2026-11-11) — brief 725 accepted; continuation 10 resumes the campaign on the repaired source
+
+Brief 725 is accepted and committed (`b420b9e0`): the prepared-stage
+family2 completion is installed with its four permanent tests, the G15-C2
+typed receipt is integrated exactly, all seven inventory families replay
+canonically, and stage B is green on the host (workspace 4,223/0/61 over
+63 binaries with the seven standing skips; the disabled gate clean with
+the interner class recorded and no exclusion; the timing lane settled by
+exact-body probes). The source is frozen at `b420b9e0` for this round.
+
+Continuation 10 works on that source, measurement-only: no production or
+test edit, the standing scene protection, the rebase-once ruling and the
+two-family zero-progress stop-loss apply.
+
+1. **Rebase once on the final source.** Freeze `entry-hashes.json` from
+   `b420b9e0`; every ledger row whose observation function or call graph
+   changed under briefs 723 and 725 is re-checked in full (the modified
+   files and everything reachable from them); the rest by fingerprint.
+   Disclose unmatched and re-paired rows exactly as the prior
+   continuations do.
+2. **Re-settle P0492.** The repaired resumed path must equal the queued
+   path whole-record on the 16 C9 records (the nine witnesses and the
+   seven controls) with identical language, five-part SAME cells and
+   coverage; arm its own caught omission (remove the enabled completion
+   call) and see exactly the nine witnesses return to the run-1
+   difference; the two B722 extension records stay phase-confined. P0492
+   moves Lost -> Equal on that evidence; a surviving difference is a
+   STOP, never a re-labelled defect.
+3. **The remaining tail by mechanism.** The 45 reopened rows; the 256
+   LocalTail rows grouped by mechanism; the 22 strict rows (11 Drop-gap,
+   6 caller-gap, 5 other-carrier); the five 719 edges. Settle each under
+   the standing rules: required cells, resumed == queued, real ==
+   disabled, language, and each row's own caught omission. A reading
+   that rests on argument alone stays Residual.
+4. **Port tables and the settlement ledger.** Update the port tables and
+   the ledger with the same identity discipline; no row disappears
+   silently. P0496's disposition is prepared for the settlement round
+   (expected unreachable/source-closed on brief 724's standing source
+   proof) and is not relabelled here.
+5. **Stop for the director gate** with the full receipts: the rebase
+   delta, the P0492 matrix, every settled row's cells, the stop-clock
+   progress, and the exact residual lists.
+
+C2 stays Open until the settlement round; S10 stays unopened.
