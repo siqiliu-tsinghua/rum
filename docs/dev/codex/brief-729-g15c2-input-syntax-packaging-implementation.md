@@ -341,3 +341,118 @@ with both draws, the replay verdict lines, the acceptance counts, every
 changed inventory row with file/line, the disclosures, and the open
 questions. Run `python3 -I scripts/report.py check .temp/brief-729/report.json`
 and quote its verdict. No source change is authorized outside Scope.
+
+## Director gate (2026-11-11) — Stage A accepted, the ownership stop ruled, and continuation 1 completes the round
+
+Run: log `.temp/logs/cdx_brief_729.log`, 27,953 lines, sha256
+`3cbd68dc7ac54193d527bd67c37d7071cfaad2cb823454bff1f5dfad995f6f3e`,
+memory-scope peak 3,074,510,848 B, oom 0, oom_kill 0, rc=0; report
+`.temp/brief-729/report.json`, 59 runs, `report.py check` 289 citations
+(my own run: OK).
+
+**My gate, reproduced myself.** The live delta is exactly the 17
+authorized files (16 modified + 1 added) and nothing else; the 16
+source/test/doc files are byte-identical to `source-candidate`, and the
+17th, `local-contracts.tsv`, is byte-identical to what the canonical
+generator emits on the installed tree (my own
+`regenerate_local_contract_fingerprints --ignored` run).
+`proposed-shape.patch` applied to `source-base` reproduces
+`source-candidate` 16/16; `source-base` is `source-entry` plus exactly
+the six brief-727 harness files, and `source-entry` equals HEAD. No
+file under the frozen brief-726/727/728 and `g15-c2` scenes (other than
+the mandated `cargo-home`) is newer than the dispatch, and the log
+contains no git or network command.
+
+From the raw records: base == frozen on all four; omission == base;
+disabled == candidate; on both red instances the candidate's queued
+observation is byte-equal to its resumed one **and to the base resumed
+diagnostic**, with the delta against frozen exactly
+`{semantic_queued, semantic_same}`; both controls byte-exact; all nine
+extended class cases are base-DIFF, candidate-SAME, disabled ==
+candidate, with phase and native rows equal to base; my parse of every
+log finds 118 epoch summaries, all `valid=true faults=0
+context_leases=0`; the 55/55 and 60/60 frozen matrix cells re-derive
+with `raw_real == raw_disabled`.
+
+**Cost, re-parsed by me from the eight raw Callgrind captures.**
+`resume_input_after_text` reads 160.0/2 calls on base and 158.0/2 on
+candidate in both draws and both N — 80.0 -> 79.0 Ir/call at identical
+calls; `eval_expr_request_from_checkpoint` 103.0,
+`resume_eval_request_from_checkpoint` 1449.0 and the `EvalError` drop
+29.0 are exact on every arm and draw; `with_input_source` has zero
+entries in all eight captures; my sweep over every captured rum row
+finds only the standing `intern_symbol_text` / `Symbol::system` /
+`intern_text` rows, whose within-arm draw spreads exceed the arm
+difference and whose signs alternate. The forced rebuild is a fresh
+compile (`cache_hit=false`) sha-equal to base `72e1bb87…`.
+
+**Host:** `cargo check --workspace --all-targets --offline --locked
+-j8` rc=0 with only the three standing `test_builtins` warnings;
+`cargo fmt --check` rc=0; every touched pre-existing test module and
+the pre-existing resumed-`Syntax` test are green on my run.
+
+**F1 — the STOP, ruled.** The canonical ownership discovery reports
+exactly 2 REMOVED, 2 NEW and 83 MOVEs (`new_UnknownHostPayload=0`). The
+removed rows are the `error (transparent)` and `from` attributes on
+`EvalError::Syntax` (`session_state.rs:501:5`, `:502:12`); the new rows
+are `error ("{error}")` on the same variant and the `|source|` capture
+in the legacy-wire branch (`suspension/error.rs:419`), both inside
+touched files. My own multiset comparison of all seven inventory files
+against the generated set finds no other identity change after position
+normalization. These four rows are the approved R3 shape's own text —
+the attributes R3 deletes and the payload R3 adds — so the vanished row
+*is* the repair, not collateral. **Ruled:** the canonical replay may
+install exactly this delta; a second discovery must read zero actions;
+any other identity, status, disposition or exclusion change remains a
+STOP.
+
+**F2 — a red found by the first execution.** Neither permanent test had
+been run. On first run both abort with SIGABRT `stack overflow` at 8
+**and** at 1 threads. Reproduced by me; gdb locates the recursion in
+`rum_syntax::parser::front` (`parse_primary -> parse_function_expr ->
+parse_binary_expr -> ... -> parse_postfix_expr -> parse_primary`,
+`front.rs:560`) on the 129-parenthesis answer at the 128-delimiter
+guard, inside libtest's 2 MiB test thread — the test's own independent
+`parse_expr` construction overflows too. `RUST_MIN_STACK=3M` passes;
+2M aborts; both binaries. The parser is untouched and release is
+unaffected (the release extended panel records the whole observation),
+so this is a test-shape defect, not a product regression. It also
+exposes a pre-existing gap:
+`MAX_DELIMITER_NESTING_DEPTH`'s rationale claims the cap stays below a
+2 MiB debug thread's stack, and the parenthesised path at 129 does not.
+That gap is outside this line (`rum-syntax` is MUST NOT touch) and
+becomes a recorded open obligation. **Ruled:** both tests keep all six
+answers and every assertion, and run their bodies on a spawned thread
+with an explicit measured stack (the repo's own convention, at least 2x
+the measured 3 MiB requirement); no answer dropped, no assertion
+weakened, no `RUST_MIN_STACK` dependence.
+
+**Continuation 1 (this brief, re-dispatched) completes the round.**
+
+1. Fix the two permanent tests' stack shape; retain the pre-fix abort as
+   a receipt and quote both fixed tests green at 8 and at 1 threads.
+2. Install the ruled ownership delta through the canonical replay;
+   re-run discovery to zero actions; quote the full action table and
+   every verdict line.
+3. Run the remaining Stage-B replays: certificates (default and
+   `--no-default-features`), census (both arms plus the compiler
+   oracle, identities exact), LP01 (`logical_counter_port` at 8 and 1
+   threads plus the five-mode parents), typed-slot and frame-root.
+4. Re-run the copied proof on the installed tree and confirm the
+   records equal the Stage-A candidate receipts.
+5. Stage C acceptance: `fmt --check`; `check --all-targets`; the
+   focused tests (the exact new runtime test names — the `input_syntax`
+   filter alone does not match the queued/resumed parity test — and
+   `-p rum-host --test input_syntax_contract`); the migrated modules;
+   `-p rum-runtime --lib`; `-p rum-stdlib` default and no-default;
+   `-p rum-host`; the seven standing skips exactly as listed (the first
+   five with `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`, the last two the
+   accepted pre-existing root reds); one `cargo test --workspace` at 8
+   threads with `--no-fail-fast`; any new red reproduced at
+   `--test-threads=1` before it is called a defect.
+6. Report and stop.
+
+The production shape, the Stage-A receipts and the cost gate stand and
+are not re-run. No production edit is authorized by this continuation;
+the only source change is the two tests' thread shape. Any further
+inventory movement is a STOP.

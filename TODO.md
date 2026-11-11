@@ -359,15 +359,36 @@ and `semantic_same` (R1). The disabled bar is corrected to **no
 increase** (R2): 80 → 79 and 80 → 77 Ir/call pass with every other
 measured row exact; the microbench is NA because no label evaluates
 `Input`. The public shape drops `#[source]` so `Error::source()` stays
-`None` (R3); no `Other` contract exists (R4). **Next: brief 729
-(implementation)**, then continuation 13 (the remaining tail, the
-1,035 duties, the 24 unresolved rows, and the named open source owners
-`ToExpression`, `Session::lower_text`, outer-request lowering, loader
-and file-reread provenance). Then C2's settlement round (including
-P0496's ledger disposition, expected unreachable/source-closed, and
-P1566's re-settlement on the installed source), then CM,
-`CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
-break), G13 S10–S54/F1–F23/R, E2.
+`None` (R3); no `Other` contract exists (R4). **Brief 729 run 1 is
+accepted through Stage A and stopped at the ownership replay; its
+continuation 1 completes the round.** Stage A on the final shape gives
+the same copied proof (candidate queued == candidate resumed == base
+resumed on the two red records and nine class cases, real == disabled,
+omission == base, R1 delta exactly `semantic_queued`/`semantic_same`),
+118 valid epochs, and 80.0 → 79.0 Ir/call with every other measured row
+exact and `with_input_source` at zero disabled entries; the installed
+16 source/test/doc files equal the proven candidate and the fingerprint
+table equals the canonical generator's emit. The stop is ruled: the
+canonical ownership delta is exactly 2 removed attribute rows
+(`error (transparent)`, `from` on `EvalError::Syntax`), 2 new rows
+(`error ("{error}")` on the same variant and the `|source|` capture in
+`suspension/error.rs`), and 83 position moves — the approved R3 shape's
+own text, authorized for install, a second discovery must read zero
+actions. The first execution of the new permanent tests also exposed a
+test-shape red: both abort with a stack overflow on libtest's 2 MiB
+thread at the 129-parenthesis case inside the debug parser
+(`front.rs:560`); 3 MiB passes, so the tests keep all six answers and
+run on a measured explicit stack. That red records a pre-existing
+parser obligation: `MAX_DELIMITER_NESTING_DEPTH`'s 2 MiB rationale does
+not hold for the parenthesised path in debug. **Next: continuation 1**,
+then continuation 13 (the remaining tail, the 1,035 duties, the 24
+unresolved rows, and the named open source owners `ToExpression`,
+`Session::lower_text`, outer-request lowering, loader and file-reread
+provenance). Then C2's settlement round (including P0496's ledger
+disposition, expected unreachable/source-closed, and P1566's
+re-settlement on the installed source), then CM, `CHANGELOG.md` before
+S10 (including the public `EvalError::Syntax` break), G13
+S10–S54/F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named
@@ -5023,6 +5044,14 @@ Settled after brief-414's design pass and the director review of it.
   brief-497 bounds AST-to-`Expr` lowering, so that shape now fails closed; the
   *drop* limitation above is unchanged and still applies to trees built through
   the Rust API.
+- **Opened 2026-11-11 by brief 729's permanent tests.** The
+  `MAX_DELIMITER_NESTING_DEPTH` rationale says the 128 cap stays below a
+  2 MiB thread's native stack, but that was measured on the call-bracket
+  path. A parenthesised answer at 129 delimiters aborts a 2 MiB **debug**
+  build inside `Parser::parse_primary` (`front.rs:560`); 3 MiB passes, and
+  release is unaffected at 2 MiB. The C2 line does not touch the parser; a
+  future parser-depth brief owns a per-path stack budget (or a corrected,
+  measured rationale and a paren-path regression at the cap).
 - Session snapshots are UTF-8 source images. A direct binary snapshot format is
   deferred until substantially larger session images justify the extra format
   and compatibility surface.
