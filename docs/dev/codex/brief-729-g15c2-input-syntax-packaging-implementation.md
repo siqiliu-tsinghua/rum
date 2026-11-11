@@ -458,3 +458,97 @@ The production shape, the Stage-A receipts and the cost gate stand and
 are not re-run. No production edit is authorized by this continuation;
 the only source change is the two tests' thread shape. Any further
 inventory movement is a STOP.
+
+## Director gate (2026-11-11, continuation 1)
+
+**Run facts.** Log `.temp/logs/cdx_brief_729.log`, 16,111 lines,
+1,504,286 B, sha256 `c6031649…`; memory-scope peak 4,908,994,560 B, oom
+0, oom_kill 0, rc=0; report `.temp/brief-729/report.json`, 96 runs,
+`report.py check` 538 citations; no executed git or network command.
+
+**My gate.** The continuation's own delta is exactly 7 files: the two
+test bodies (`crates/rum-host/tests/input_syntax_contract.rs`,
+`crates/rum-runtime/src/runtime/tests/session_requests/input_resume.rs`)
+and five canonical inventories; production changes 0; the Stage-A 16
+source/test/doc files are byte-identical to the proven candidate. Both
+test bodies run on an explicit 8 MiB `std::thread::Builder` stack with
+all six answers and every assertion intact; the pre-fix aborts are
+retained at 8 and 1 threads; my own runs of both fixed tests are 1/0 at
+8 and at 1. Ownership: the action table is exactly 83 MOVE / 2 REMOVED
+/ 2 NEW; my own multiset check of the three TSVs against HEAD confirms
+only position moves and the two ruled identity changes, 0 new host
+payload, second discovery 0 actions, verify `61/79/8,852`.
+Fingerprints: 68 rows, fingerprint cell only, keys equal. Promoted:
+exactly 2 rows. Census: 1,220 rows in both arms and the two frontier
+dumps byte-identical; compiler oracle green. LP01: producer identity
+`b41ac6a5dbf0e9a4`, required 1,115 / bindings 875 / G13 240; the
+five-mode child observations are byte-identical at 8 and 1 (only the
+libtest elapsed-time line differs); loss positions PASS. Frame-root, my
+own run on the live tree: 15/0, 568 named frames. `fmt --check` clean;
+`report.py check` OK (538).
+
+**The STOP is well taken, and it is three deltas, not two.** I
+reproduced the typed-slot red myself at 1 thread: 1 passed / 9 failed /
+1 ignored with the same names. Mechanism, read from the census: the
+`#callN` anchor counts AST call expressions per caller; the approved R3
+shape replaced the tuple-variant constructor `Self::Syntax(..)` (an
+`ExprCall`, ordinal 2) with a struct-variant literal (not a call), and
+the new `input_source` closure adds one `string_from_expr` call
+(ordinal 3). `syntax_error_from_expr` therefore moves 3 → 2, and every
+recorded ordinal from 4 onward realigns on the existing rows. My own
+check over all 755 active `Whole`/`Nested`/`Transform`/`M` anchors finds
+exactly one vanished live anchor (`Nested0387`) and no removed identity
+reappearing. The worker stopped at the emitter's first panic, so it did
+not reach the next failure: the exact test-support `X` set is 48 active,
+and the new permanent round-trip test's four legacy-wire calls make it
+52.
+
+**Ruled — three exact deltas, nothing else.**
+
+- **T1.** In
+  `crates/rum-stdlib/tests/suspension_oracle/inventory/typed-slot-stages.tsv`
+  row `Nested0387` changes only its identity cell:
+  `…from_continuation_expr#call3:syntax_error_from_expr:` becomes the
+  same text with `#call2`. Same function, same decoder (`D119`), same
+  statement (`suspension/error.rs:413:24-46`), same population: this is
+  a position-only MOVE of an earned receipt, not a new receipt.
+- **T2.** In `crates/rum-stdlib/src/tests/ownership_graph/root_set.rs`
+  the `EvalError` row changes only its field string, `"Syntax.0"` →
+  `"Syntax.error"` (target `rum_syntax::error::SyntaxError` unchanged).
+  The `SessionRequestError` `"Syntax.0"` row and all six edge assertions
+  stay byte-identical. This file is added to scope for this one
+  identifier only.
+- **T3.** Four new rows join the `X` block of `typed-slot-stages.tsv`,
+  in the existing hash-id row shape, with `X` + FNV-1a-64 of the
+  identity as the id (verified against all eight existing hash ids):
+  `Xa0a2bf2cebe978d6` — `…input_syntax_legacy_wire_preserves_optional_source_and_bare_payload#call5:from_continuation_expr:`;
+  `X191e8771f0ce8c6a` — `…#call9:from_continuation_expr:`;
+  `Xd0fd530e2fae9485` — `…#method10:into_continuation_expr:error`;
+  `X6c4d31b0c973b5f4` — `…#method17:into_continuation_expr:bare`;
+  file `crates/rum-runtime/src/runtime/suspension/error.rs`, name the
+  decoder, population `test-support`, code `R`, status `legacy-test`,
+  obligation `-`. The new test is the approved round-trip proof; the
+  receipts are its canonical consequence, not a weakening.
+
+**Calibration (mine).** In a byte copy
+`.temp/director/probe-729-rebind/live` carrying exactly T1–T3, the
+typed-slot family reads 10 passed / 0 failed / 1 ignored at 8 threads;
+the live tree without them reads 1/9/1 at 1 thread.
+
+The parser-stack question is answered by the recorded obligation:
+`rum-syntax` stays untouched, the tests' explicit stack is the fix, and
+`TODO.md` owns a future parser-depth brief.
+
+**Continuation 2 completes the round.**
+
+1. Install exactly T1–T3; no other file changes.
+2. `typed_slot_census` at 8 and 1 threads: quote 10/0/1 both.
+3. Frame-root and LP01 parents at 8 and 1; quote every verdict line.
+4. Re-run the installed copied proof; confirm the records equal the
+   Stage-A candidate receipts.
+5. The two fixed permanent tests at 8 and 1 (both binaries): quote 1/0.
+6. Stage C acceptance exactly as written above, including the
+   untouched-base no-default wide-symbol reproduction and one workspace
+   run at 8; any new red reproduced at `--test-threads=1` before it is
+   called a defect.
+7. Report and stop. Any further inventory movement is a STOP.

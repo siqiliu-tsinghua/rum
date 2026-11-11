@@ -380,15 +380,39 @@ thread at the 129-parenthesis case inside the debug parser
 (`front.rs:560`); 3 MiB passes, so the tests keep all six answers and
 run on a measured explicit stack. That red records a pre-existing
 parser obligation: `MAX_DELIMITER_NESTING_DEPTH`'s 2 MiB rationale does
-not hold for the parenthesised path in debug. **Next: continuation 1**,
-then continuation 13 (the remaining tail, the 1,035 duties, the 24
-unresolved rows, and the named open source owners `ToExpression`,
-`Session::lower_text`, outer-request lowering, loader and file-reread
-provenance). Then C2's settlement round (including P0496's ledger
-disposition, expected unreachable/source-closed, and P1566's
-re-settlement on the installed source), then CM, `CHANGELOG.md` before
-S10 (including the public `EvalError::Syntax` break), G13
-S10–S54/F1–F23/R, E2.
+not hold for the parenthesised path in debug. **Continuation 1 is
+accepted to its STOP: the stack-shape fix and five standing replays are
+green, and the typed-slot replay exposes three exact maintenance
+deltas, ruled and calibrated.** Its own delta is exactly 7 files (two
+test bodies on an explicit 8 MiB stack with every answer and assertion,
+five canonical inventories; production changes 0); my runs of both
+fixed tests are 1/0 at 8 and at 1. Ownership installed exactly as
+ruled (83 MOVE / 2 REMOVED / 2 NEW, second discovery 0 actions, verify
+`61/79/8,852`); fingerprints 68 cells; promoted 2 rows; census 1,220
+with byte-identical frontiers; LP01 `b41ac6a5dbf0e9a4` with 8/1-identical
+child observations; frame-root 15/0 at 568 on my own run. The STOP is
+reproduced by me (1 passed / 9 failed / 1 ignored at 1 thread) and is
+three deltas, not two: (T1) `Nested0387`'s `#call3` → `#call2` is a
+position-only move — the census counts AST call nodes, the R3 shape
+replaced the tuple constructor `Self::Syntax(..)` with a struct literal
+and added one `string_from_expr` call, so only ordinal 3 is displaced
+and every recorded ordinal from 4 onward realigns; my own check over
+all 755 active anchors finds exactly one vanished live anchor and no
+removed identity reappearing; (T2) the `root_set.rs` edge receipt's
+`"Syntax.0"` → `"Syntax.error"`, the shape's own field name, with all
+six assertions intact; (T3) four new exact test-support `X` receipts
+for the new round-trip test's four legacy-wire calls, with their
+FNV-1a-64 ids. Calibrated in a byte copy: 10/0/1 at 8 threads with the
+three deltas, 1/9/1 at 1 thread without them. **Next: continuation 2**
+(install T1–T3, then the remaining replays, the installed copied proof,
+the fixed tests at 8/1, and Stage C), then continuation 13 (the
+remaining tail, the 1,035 duties, the 24 unresolved rows, and the named
+open source owners `ToExpression`, `Session::lower_text`,
+outer-request lowering, loader and file-reread provenance). Then C2's
+settlement round (including P0496's ledger disposition, expected
+unreachable/source-closed, and P1566's re-settlement on the installed
+source), then CM, `CHANGELOG.md` before S10 (including the public
+`EvalError::Syntax` break), G13 S10–S54/F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named
