@@ -166,14 +166,14 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
 - **Nesting.** The security-hardening mainline (since 2026-09-02) holds the
   retention line (paused at E0) and the active suspension branch.
 - **Branch queue:** G15-C2's rows (721 definition-resume repair; 722
-  fixed-point design; 723 pass publication; 725 accepted: prepared-stage
-  completion and typed receipt, stage B green; continuation 11 accepted
-  as a STOP: crosswalk 60 paired / 24 explicit, first targets 734 closed,
-  four NoObservableTail proposals accepted, C2 at 320 residuals + 1 Lost;
-  brief 726 accepted (rule (b): the completed-generation pause receipt);
-  brief 727 installs it, then continuation 12 (1,015 open duties, 24
-  unresolved sites, 320-row tail), then C2 settlement; then CM,
-  `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
+  fixed-point design; 723 pass publication; 725 prepared-stage completion
+  and typed receipt, stage B green; continuation 11 accepted as a STOP:
+  crosswalk 60 paired / 24 explicit, first targets 734 closed, four
+  NoObservableTail proposals accepted, C2 at 320 residuals + 1 Lost;
+  brief 726 accepted rule (b); brief 727 accepted: the completed-generation
+  pause receipt, three two-pause programs SAME, workspace 4,231/0/61;
+  then continuation 12 (1,015 duties, 24 sites, 320-row tail), C2
+  settlement; then CM, `CHANGELOG.md` before S10, G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Briefs 719-721:** P0248's
   fallback repaired (8/8 recipes, 36/36 bindings SAME); publication

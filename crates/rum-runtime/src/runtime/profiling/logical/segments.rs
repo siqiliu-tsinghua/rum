@@ -7,7 +7,7 @@ use std::rc::Rc;
 use std::time::Instant;
 
 struct Active {
-    epoch: Arc<Epoch>,
+    completion: Rc<SegmentCompletion>,
     path: Arc<RecordPath>,
     segment: SegmentId,
     start: Option<Instant>,
@@ -55,8 +55,19 @@ thread_local! {
         storage: None, header: None,
     }) };
 }
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum SegmentState {
+    Live,
+    Ended,
+    ExplicitlyFinished,
+}
+struct SegmentCompletion {
+    epoch: Arc<Epoch>,
+    state: Cell<SegmentState>,
+    _storage: Storage,
+}
 pub(in crate::runtime) struct Segment {
-    pub(in crate::runtime) epoch: Arc<Epoch>,
+    completion: Rc<SegmentCompletion>,
     pub(in crate::runtime) record: RecordId,
     segment: SegmentId,
     index: usize,
@@ -112,7 +123,7 @@ pub(in crate::runtime) fn ancestry_admitted(
     }
     ACTIVE.with_borrow(|stack| {
         let active = stack.frame(stack.top?)?;
-        (active.epoch.id == epoch.id).then(|| Arc::clone(&active.path))
+        (active.completion.epoch.id == epoch.id).then(|| Arc::clone(&active.path))
     })
 }
 pub(in crate::runtime) fn owner(
@@ -153,8 +164,16 @@ pub(in crate::runtime) fn owner_admitted(
     ACTIVE.with_borrow(|stack| {
         let active = stack.frame(stack.top?)?;
         let owner = &active.path.owner;
-        (active.epoch.is_valid() && active.path.is_open() && Arc::ptr_eq(control, &owner.control))
-            .then(|| (Arc::clone(&active.epoch), owner.clone(), active.path.record))
+        (active.completion.epoch.is_valid()
+            && active.path.is_open()
+            && Arc::ptr_eq(control, &owner.control))
+        .then(|| {
+            (
+                Arc::clone(&active.completion.epoch),
+                owner.clone(),
+                active.path.record,
+            )
+        })
     })
 }
 pub(in crate::runtime) fn has_active() -> bool {
@@ -196,7 +215,7 @@ pub(in crate::runtime) fn executing_epoch_admitted(
     if active_len() == 0 {
         return None;
     }
-    ACTIVE.with_borrow(|stack| Some(Arc::clone(&stack.frame(stack.top?)?.epoch)))
+    ACTIVE.with_borrow(|stack| Some(Arc::clone(&stack.frame(stack.top?)?.completion.epoch)))
 }
 pub(in crate::runtime) fn enter(epoch: &Arc<Epoch>, record: RecordId) -> Option<Segment> {
     #[cfg(any(
@@ -246,7 +265,7 @@ pub(in crate::runtime) fn enter_admitted(
             |stack| match (stack.top.and_then(|i| stack.frame(i)), parent) {
                 (None, None) => true,
                 (Some(active), Some(parent)) => {
-                    active.epoch.id == epoch.id && active.path.record == parent
+                    active.completion.epoch.id == epoch.id && active.path.record == parent
                 }
                 (_, None) => true,
                 _ => false,
@@ -462,6 +481,19 @@ fn install(
     } else {
         None
     };
+    let completion = Rc::new(SegmentCompletion {
+        epoch: Arc::clone(epoch),
+        state: Cell::new(SegmentState::Live),
+        _storage: epoch.storage_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            _access,
+            size_of::<SegmentCompletion>() + 2 * size_of::<usize>(),
+        )?,
+    });
     let record = path.record;
     let appended = ACTIVE.with_borrow_mut(|stack| {
         if let Some(header) = header {
@@ -478,6 +510,7 @@ fn install(
             epoch,
             path,
             restored,
+            Rc::clone(&completion),
         )
     });
     let Some((index, segment)) = appended else {
@@ -493,7 +526,7 @@ fn install(
         return None;
     };
     Some(Segment {
-        epoch: Arc::clone(epoch),
+        completion,
         record,
         segment,
         index,
@@ -527,9 +560,12 @@ impl Segment {
         ))]
         _access: Option<&crate::runtime::profiling::lease::Admitted>,
     ) {
+        if self.completion.state.get() == SegmentState::ExplicitlyFinished {
+            return;
+        }
         ACTIVE.with_borrow_mut(|stack| {
             if stack.top != Some(self.index) {
-                self.epoch.fault_admitted(
+                self.completion.epoch.fault_admitted(
                     #[cfg(any(
                         test,
                         feature = "test-builtin-memory-growth",
@@ -555,7 +591,7 @@ impl Segment {
                         feature = "test-continuation-slots"
                     ))]
                     _access,
-                    &self.epoch,
+                    &self.completion.epoch,
                     &active.path,
                 )
             } else {
@@ -563,7 +599,7 @@ impl Segment {
             };
             if let Some(path) = observed {
                 PAUSE_PARENT.with(|cursor| {
-                    if cursor.get() != Some((self.epoch.id, path.record)) {
+                    if cursor.get() != Some((self.completion.epoch.id, path.record)) {
                         path.pause();
                     }
                     let mut parent = path.parent.as_deref();
@@ -574,7 +610,7 @@ impl Segment {
                         if locally_closed(&path.key) {
                             parent = path.parent.as_deref();
                         } else {
-                            break Some((self.epoch.id, path.record));
+                            break Some((self.completion.epoch.id, path.record));
                         }
                     };
                     cursor.set(next);
@@ -593,7 +629,7 @@ impl Segment {
                 let stack = cell.borrow();
                 stack.frame(self.index).is_some_and(|active| {
                     active.segment == self.segment
-                        && active.epoch.id == self.epoch.id
+                        && active.completion.epoch.id == self.completion.epoch.id
                         && active.path.record == self.record
                 })
             })
@@ -636,14 +672,14 @@ impl Segment {
                 return;
             };
             if active.segment != self.segment
-                || active.epoch.id != self.epoch.id
+                || active.completion.epoch.id != self.completion.epoch.id
                 || active.path.record != self.record
             {
                 return;
             }
             let ordered = stack.top == Some(self.index);
             if !ordered {
-                self.epoch.fault_admitted(
+                self.completion.epoch.fault_admitted(
                     #[cfg(any(
                         test,
                         feature = "test-builtin-memory-growth",
@@ -653,7 +689,7 @@ impl Segment {
                 );
             }
             let Some(mut active) = stack.take(self.index) else {
-                self.epoch.fault_admitted(
+                self.completion.epoch.fault_admitted(
                     #[cfg(any(
                         test,
                         feature = "test-builtin-memory-growth",
@@ -669,8 +705,9 @@ impl Segment {
             let now = Instant::now();
             active.park(now);
             active.path.interval(active.elapsed, active.restored);
+            self.completion.state.set(SegmentState::Ended);
             if let Some(parent) = stack.top.and_then(|i| stack.frame_mut(i)) {
-                if !parent.paused && parent.epoch.is_valid() {
+                if !parent.paused && parent.completion.epoch.is_valid() {
                     parent.start = Some(now);
                 }
             }
@@ -739,8 +776,18 @@ pub(in crate::runtime) fn finish_active_admitted(
         );
         return;
     }
+    let completion = ACTIVE.with_borrow(|stack| {
+        let active = stack.frame(id.index)?;
+        (active.completion.epoch.id == epoch.id
+            && active.path.record == record
+            && active.segment == id.segment)
+            .then(|| Rc::clone(&active.completion))
+    });
+    let Some(completion) = completion else {
+        return;
+    };
     let token = Segment {
-        epoch: Arc::clone(epoch),
+        completion,
         record,
         segment: id.segment,
         index: id.index,
@@ -754,6 +801,9 @@ pub(in crate::runtime) fn finish_active_admitted(
         ))]
         _access,
     );
+    if epoch.is_valid() && token.completion.state.get() == SegmentState::Ended {
+        token.completion.state.set(SegmentState::ExplicitlyFinished);
+    }
 }
 #[cfg(test)]
 pub(in crate::runtime) fn active_count() -> usize {
@@ -801,7 +851,7 @@ pub(super) fn running_admitted(
                 let ActiveSlot::Live(active) = slot else {
                     return None;
                 };
-                if active.epoch.id != epoch.id || !active.path.is_open() {
+                if active.completion.epoch.id != epoch.id || !active.path.is_open() {
                     return None;
                 }
                 let running = active.start.map_or(0, |start| {
@@ -814,3 +864,6 @@ pub(super) fn running_admitted(
             .collect()
     })
 }
+
+#[cfg(test)]
+mod completion_tests;

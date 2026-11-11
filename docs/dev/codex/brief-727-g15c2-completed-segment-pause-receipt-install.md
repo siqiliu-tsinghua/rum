@@ -379,3 +379,129 @@ must appear verbatim in its log. Run
 `python3 -I scripts/report.py check .temp/brief-727/report.json`
 before finishing; the final message is the output of
 `python3 scripts/report.py summary 727`.
+
+## Director gate (2026-11-11) — brief 727 accepted: the completed-segment pause receipt is installed
+
+Run: log `.temp/logs/cdx_brief_727.log`, 53,481 lines, sha256
+`0c42066eb389a149248df41108c17277d00f8628488489a84405f5e44d82f312`,
+memory-scope peak 17,179,869,184 B (16 GiB scope; oom 0, oom_kill 0),
+rc=0; report `.temp/brief-727/report.json`, 107 runs, 17 PASS /
+6 FLAGGED / 0 FAIL, 907 citations (my own `report.py check`: OK). The
+live delta is exactly the eleven permitted files: `segments.rs`,
+`segments/stack.rs`, `segments/completion_tests.rs`,
+`suspension_oracle.rs`, `suspension_oracle/completed_segments.rs`,
+`docs/dev/profiling.md`, and the five canonically regenerated
+inventory files. I reconstructed HEAD plus the recorded `final.patch`
+in a scratch tree and it equals the live tree on all 11 (sha256);
+`git status` shows nothing else. No `B726_`/`B727_` marker exists in
+any production file, `profiling/logical/mod.rs` is untouched (the
+installed shape carries no observer print), and no `unsafe` was
+added. The dispatch log contains no executed git or network command.
+The only write into the frozen scene area is cargo's sanctioned
+`CARGO_HOME` stamp `.temp/g15-c2/cargo-home/.global-cache`; every C7-C11
+and brief-623 evidence file is untouched.
+
+**The installed shape is the accepted one.** Patching
+`.temp/brief-726/segments.rs.candidate2.patch` and
+`stack.rs.candidate2.patch` onto HEAD and diffing against the live
+files leaves only rustfmt's reflow of `owner_admitted` and the
+`install` cfg attribute, and the test module's rename to
+`completion_tests`. The representation replaces the two existing
+epoch pointers (`Active.completion: Rc<SegmentCompletion>`,
+`Segment.completion`), adds no pointer-sized field, and the receipt
+holds exactly `Arc<Epoch>`, `Cell<SegmentState>` and `Storage`.
+
+**My reproductions.** The frozen red panel is exact against the C11
+loss proof for all ten cases: 3 DIFF, exactly `direct.two`,
+`replace.two`, `unheld.two`; semantic SAME 10/10; the three
+`C11_PAUSE_MISMATCH` lines byte-identical (`RecordId(238)/SegmentId(333)`,
+`4474/4583`, `7923/8032`); `epoch=216 valid=false
+reason=InstrumentationFault`. Red-real, red-disabled, red-state and
+the omission arm are one sha (`fecd02bd…`), so real == disabled and
+the omission's restored red are file equality, not claims; the
+omission source differs from the instrumented candidate by exactly
+the one `ExplicitlyFinished` assignment (plus the red-style fixture's
+quiescence call, which the red arms also do not carry), and the raw
+`B727_ARM`/`B727_HIT`/`B727_EPOCH` markers name the record and
+generation. Candidate, instrumented and restored records are one sha
+(`4b587f62…`), identical to brief 726's accepted candidate2 records,
+which also proves the markers do not perturb the rows. Prepared16 and
+prepared56 are record-identical to the design's final files; the five
+modes are 50 SAME; the malformed-answer probe is retained (resumed
+`Syntax`, queued `Other`, native rows SAME), flagged and unrelabelled.
+
+**The named red I withheld in 726 is now calibrated.** On the pre-fix
+copy at 8 and 1 threads the permanent runtime falsifier fails at
+`completion_tests.rs:56:9 completed_context_repeated_pause_keeps_epoch_valid`,
+i.e. on `is_valid()` immediately after the repeated pause and before
+any reuse open; the class-wide stdlib regression fails on the pre-fix
+copy at 8 and 1 at `completed_segments.rs:110` with the complete
+`direct.two` ten-field row difference and the faulted epoch. On the
+installed source both are green at 8 and 1 in my own runs (runtime lib
+1430/0/5 plus 22 doc-tests at each thread count; the 500-test
+suspension_oracle binary green at both, with the four case PASS lines).
+
+**The seven replays are green on my host runs.** Fingerprints: 68 cells
+re-emitted and the emitted file byte-identical to the tree. Ownership:
+61 self-reaching, 79 `UnknownHostPayload`, 8,852 `UnknownConstruct`,
+with 0 distinct constructs removed, 82 MOVE and 4 NEW from the
+canonical `own_replay`, every NEW row in touched code. Certificates:
+both builds GREEN, the fresh emissions byte-identical to the merged
+inputs, and canonical `merge_promoted` idempotent (0 cells). Census:
+1,220 rows, my `RUM_CENSUS_DUMP` frontier byte-identical to the
+worker's, compiler oracle green. LP01, typed slots (10/1 plus the two
+designated forced-red controls) and frame roots (15/0, 568 named
+frames, 0 added) green. Layout is equal on both arms
+(32/32/120/120/8; `Active`/`ActiveSlot` 120). Disabled gate, my own
+parse of the four captures: the eleven touched functions are
+zero-entry, `running_admitted` is quoted through `Epoch::rows`
+(40 calls / 5,680 Ir in both arms and both draws, 40 entry hits; its
+new early-return state is never entered because `pause_admitted` does
+not execute), `Vec<ActiveSlot>` Drop is 1 call / 24 Ir in every draw,
+and candidate1's 23-Ir row does not reappear. Microbench NA is correct
+on the brief's own condition.
+
+**Acceptance.** `cargo fmt --check` green; `cargo check --all-targets`
+rc=0 with only the three standing lib-test warnings; host workspace
+`cargo test --workspace --no-fail-fast` at 8 threads with the seven
+standing skips is **4,231 passed / 0 failed / 61 ignored** over 64
+summaries (peak 13,462,536,192 B, rc=0), exactly the accepted 4,223
+plus the six runtime tests and the parent+child stdlib regression; the
+nine native ZeroMQ loopback tests the sandbox denies pass here. The
+switch-gated host suites are 5/5 at 8 and 1 under
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`. The two standing root reds
+`lp655_root_context_falsifier` and `lp656_public_root_context_falsifier`
+fail identically on the pre-fix base binary and stay excluded from
+the standing commands. The no-default stdlib suite retains only its
+pre-existing Hash-feature failure: the assertion's left and right
+values hash identically on the untouched base at 1 thread and on both
+candidate runs at 8 and 1, and the test source is unchanged.
+
+**Rulings.** (Q1) Brief 727 is accepted in full; the install stands.
+(Q2) The named-assertion red closes the one item brief 726's gate
+withheld; no uncalibrated red remains in this branch. (Q3) The two
+stale-cache build incidents are instrument failures, not product
+signals: the stale stdlib binary carries zero `SegmentCompletion`
+symbols against five in the fresh runtime unit binary, the source was
+unchanged, both failed attempts and the stale binary are retained, and
+the repairs change only the adapter's invalidation rule. (Q4) The
+class-wide regression and the five-mode/whole-record panels are the
+only authority for this repair; the malformed-answer Syntax/Other
+observation stays flagged, is not a parity certificate, and is
+referred to continuation 12 for classification as an existing ledger
+row or a new one. (Q5) C2 stays Open at 320 residuals + 1 Lost; S10
+stays unopened. Recorded, not gated: the omission arm's red-style
+fixture (no quiescence call, exactly like red-real/red-state); the
+`B727` PASS lines live only in the two permanent test modules; the
+Cargo global-cache stamp; the twelve-eleven split of zero-entry rows
+and the honest containing-function attribution for
+`running_admitted`.
+
+**Next.** Brief 623 continuation 12 resumes the settlement campaign on
+this source: the 1,015 named open transitive duties, the 24 explicitly
+unresolved sites, the 320-row tail (254 LocalTail, 38 ReopenedOrNew,
+20 strict, the five 719 edges, the three 725 edges), the
+`UnresolvedSiteNeedsRecheck` column reconciliation, and the
+classification of the malformed-answer observation. Then C2's
+settlement round (P0496's ledger disposition), CM, `CHANGELOG.md`
+before S10, G13 S10-S54/F1-F23/R, E2.

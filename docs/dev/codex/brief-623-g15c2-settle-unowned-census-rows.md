@@ -9601,3 +9601,60 @@ checks. I write the implementation brief after the design gate; the
 campaign resumes after the implementation gate. The 1,015 named open
 duties, the 24 unresolved sites and the 320-row tail stay exactly as
 this gate records them.
+
+## Continuation 12 order (2026-11-11) — resume the settlement campaign on the accepted completed-segment source
+
+The repair branch has completed: brief 727 is accepted and installed
+(one `Rc<SegmentCompletion>` shared by the exact `Active` and
+`Segment`, promoted to `ExplicitlyFinished` only by an ordered
+explicit finish of that generation while its epoch is valid; a later
+pause is inert; every other check unchanged). Continuation 12 resumes
+the campaign on this source, measurement-only: no production change,
+no git, no network, no writes to the frozen scenes.
+
+Duties, in this order:
+
+1. **Re-settle the repaired loss on the installed source.** The C11
+   ten-case panel now reads 0 DIFF / 10 SAME whole-record with the
+   permanent runtime falsifier and the class-wide rum-vs-rum
+   regression green at 8 and 1. Re-measure the `Lost` row
+   `C10.prepared.profiled_consumer` itself: the exact record identity
+   chain (guard capture, prepared `None`, ordered explicit finish,
+   later pause), validity and zero faults, the ten-field whole-row
+   equality resumed vs queued, real vs disabled, prepared16/56 and
+   the five modes, each with its own caught omission where the ledger
+   rules require one. Settle it under the standing rules; a row
+   settled only by argument stays an open obligation.
+2. **The 320-row tail by mechanism.** 254 LocalTail, 38
+   ReopenedOrNew, 20 strict, the five 719 edges and the three 725
+   edges. Batch by mechanism, never one row at a time; each batch
+   carries its own armed/hit surviving omission and its raw records.
+   The two-family stop-loss is unchanged: two consecutive executed
+   families with zero progress stop the round, and after a stop no
+   guest or Cargo runs.
+3. **The 1,015 named open transitive duties.** Each duty is closed
+   only from authenticated current coverage; enumerated reasons stay
+   explicit, and no cell is settled from an unresolved site.
+4. **The 24 explicitly unresolved sites stay explicit Residual
+   obligations** with no coverage claimed; reconcile the
+   `UnresolvedSiteNeedsRecheck` column (13 paired rows) against
+   `paired-calls.json` and the crosswalk, without relabelling a
+   pairing as coverage.
+5. **The malformed-answer observation.** `B726.class.error` (resumed
+   `Syntax` vs queued `Other`, native rows SAME, both arms) is a
+   pre-existing semantic observation mismatch outside the ownership
+   class. Classify it as an existing ledger row or a new
+   Lost/residual row under the settlement rules; it was never a
+   parity certificate and it is not relabelled as one.
+6. **Port tables and ledger integrity.** Update the port tables and
+   the ledger only by canonical replay; report every verdict cell
+   that moves, with 0 rows added/removed except where the settlement
+   rules authorize one, and no keys added, deleted or duplicated
+   without the encoding duty. Quote the counts.
+
+Standing rules: one rebase on this source only; every required cell
+five-part SAME with real == disabled parsed identically; an invalid
+epoch never certifies parity; never weaken an assertion, delete an
+attempt, relabel an invalid recipe or re-pin an inventory; protected
+scenes byte-identical; the report checked by `scripts/report.py`.
+C2 stays Open until the settlement round; S10 stays unopened.

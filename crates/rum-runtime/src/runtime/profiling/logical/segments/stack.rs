@@ -78,6 +78,7 @@ impl Stack {
         epoch: &Arc<Epoch>,
         path: Arc<RecordPath>,
         restored: bool,
+        completion: Rc<SegmentCompletion>,
     ) -> Option<(usize, SegmentId)> {
         self.reserve(
             #[cfg(any(
@@ -107,7 +108,7 @@ impl Stack {
             parent.next = Some(index);
         }
         let active = Active {
-            epoch: Arc::clone(epoch),
+            completion,
             path,
             segment,
             start: Some(now),

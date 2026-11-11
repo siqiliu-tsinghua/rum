@@ -92,6 +92,15 @@ queue markers retain their epoch identity and cannot publish into the new
 one. Reset's own entered scopes belong to the old epoch. Snapshot neither
 finishes nor restarts an open record.
 
+Each installed enabled segment owns a charged completion receipt shared with
+its exact active generation. An ordered explicit finish promotes that receipt
+only while its epoch remains valid; later pauses of the same receipt are inert.
+Ordinary end or Drop, an empty TLS slot, or another generation at a reused slot
+never certifies explicit completion. Live displaced segments still fault, and
+owner, epoch, order, cancellation and cap checks retain their existing meaning.
+The receipt holds its epoch and storage claim without a context or record-path
+backreference and releases them when its last segment or active handle drops.
+
 Enabled diagnostic storage is separately bounded. Registry and marker storage
 does not count against the guest memory ceiling. Exhausting the diagnostic cap
 invalidates the epoch visibly and retires its leases without changing the guest

@@ -324,22 +324,25 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   report 1,203 citations. C2 is Open at 328 residuals (256 LocalTail, 45
   reopened, 22 strict, 5 719 edges) + 1 Lost (P0492).
 
-**Next, in order** (the branch queue): **brief 726 is accepted**
-(rule (b): one `Rc<SegmentCompletion>` shared by the exact `Active`
-and `Segment`, promoted to `ExplicitlyFinished` only by an ordered
-explicit finish of that generation while its epoch is valid; a later
-pause is inert, every other state keeps its check). **Brief 727**
-installs it on `segments.rs`/`stack.rs`, adds the permanent runtime
-falsifier and the class-wide rum-vs-rum regression, replays the seven
-standing inventories and runs the acceptance plus the disabled
-instruction gate. Then **brief 623 continuation 12** — the remaining
-1,015 named open transitive duties, the 24 explicitly unresolved
-sites, and the 320-row tail (254 LocalTail, 38 reopened, 20 strict,
-the five 719 edges, the three 725 edges), plus the classification of
-the retained malformed-answer resumed/queued observation; then C2's
-settlement round (including P0496's ledger disposition, expected
-unreachable/source-closed), then CM, `CHANGELOG.md` before S10, G13
-S10–S54/F1–F23/R, E2.
+**Next, in order** (the branch queue): **brief 727 is accepted and
+installed** — the completed-generation pause receipt is on
+`segments.rs`/`stack.rs`: one `Rc<SegmentCompletion>` shared by the
+exact `Active` and `Segment`, promoted to `ExplicitlyFinished` only by
+an ordered explicit finish of that generation while its epoch is valid;
+a later pause is inert, every other state keeps its check. The three
+frozen two-pause programs are whole-record SAME, the omission restores
+the frozen red records file-identically, the named validity assertion
+is calibrated red on pre-fix at 8 and 1 and green on the install, the
+seven inventories replay, and my host workspace is 4,231/0/61 with the
+disabled rows unchanged (my gate has the numbers). Then **brief 623
+continuation 12** — the remaining 1,015 named open transitive duties,
+the 24 explicitly unresolved sites, and the 320-row tail (254
+LocalTail, 38 reopened, 20 strict, the five 719 edges, the three 725
+edges), the `UnresolvedSiteNeedsRecheck` column reconciliation, plus
+the classification of the retained malformed-answer resumed/queued
+observation; then C2's settlement round (including P0496's ledger
+disposition, expected unreachable/source-closed), then CM,
+`CHANGELOG.md` before S10, G13 S10–S54/F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named

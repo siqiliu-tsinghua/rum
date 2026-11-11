@@ -38,3 +38,6 @@ fn runner_scan_middle_and_twice() {
         accept(&f, Checks::ALL).unwrap();
     }
 }
+
+#[path = "suspension_oracle/completed_segments.rs"]
+mod completed_segments;
