@@ -18596,3 +18596,41 @@ C2's settlement round (P0496's ledger disposition and P1566's
 re-settlement on this source), CM, `CHANGELOG.md` before S10, G13
 S10–S54/F1–F23/R, E2.
 
+## Continuation 15 order (2026-11-12) — continue the settlement campaign on the unchanged installed source
+
+This round is measurement-only on the source installed at `035d9606`.
+**No source rebase:** every file under `crates/` must equal the C14 entry
+manifest (`a92f2a46…`, production digest `8313fbc1…`); any production
+difference is a STOP. The entry replay must re-derive 1,042 rows, 78,330
+keys and 18,840 encoding rows with 0 rows or keys added or removed, 1,018
+paired / 24 unresolved and 0 verdicts moved. The 28 rows settled by
+continuation 14 (10 Equal, 18 `NoObservableTail`) and the seven
+continuation-13 rows `P1585`–`P1591` are not re-settled; `P1566` stays
+Lost and `P0496` stays Residual.
+
+Continue the remaining 279-row tail by mechanism: 231 LocalTail, 26
+ReopenedOrNew, 20 strict (6 StrictCallerGap, 11 StrictDropGap, 3
+StrictOtherCarrier), 1 New719Edge and 1 New725Edge. Every batch carries
+its own armed/hit omission — caught for an Equal row, surviving for a
+`NoObservableTail` proposal — and every proposal carries its own source
+argument, source-packet hashes and five-part SAME with real == disabled.
+The three C14 zero-gain families (`rhs-optional-error-finish`,
+`status-optional-error-bridge`, `rhs-finish-forwarding`) and the two C13
+stop families (`special-stage-resume-revisit`,
+`default-lexical-only-revisit`) are not repeated without a genuinely new
+reachability/attribution mechanism or a call-site proof. The two-family
+stop-loss stands: two consecutive executed families that gain nothing on
+every progress counter (armed rows, caught rows, coverage cells,
+outcomes, requirements) stop the round; no guest or Cargo run after the
+stop; every retained invalid/unarmed attempt and its raw record stays
+unchanged and no assertion is weakened.
+
+The 1,000 transitive duties, the 24 explicitly unresolved sites (no
+coverage claimed), the 13 pair-column rows (0 verdict changes) and the
+five named source owners (`ToExpression`, `Session::lower_text`,
+outer-request lowering, loader and file-reread provenance) stay explicit.
+Port tables and the ledger move only by canonical replay; no hand edit,
+no relabelling, no re-pinning. Report in `rum-report/1` JSON checked by
+`scripts/report.py check`, then stop for my gate. All standing hard rules
+apply. C2 stays Open; S10 stays unopened.
+
