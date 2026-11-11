@@ -345,14 +345,29 @@ conservatively to 7 complete current proofs and 1,035 named open (all
 is 254 LocalTail + 38 ReopenedOrNew + 20 strict + 1 New719Edge
 (`C5.default.enabled.unadmitted`) + 1 New725Edge
 (`C10.prepared.resumed_profiled_suspend`); no guest or Cargo ran after
-the stop. **Next: brief 728, design-only, for the Input
-syntax-packaging repair** (carry the original Input source through the
-ordinary queued tail so both peers expose the same structured Syntax
-diagnostic; never erase Syntax into Other), then its implementation
-brief, then continuation 13 (the remaining tail, the 1,035 duties, the
-24 unresolved rows). Then C2's settlement round (including P0496's
-ledger disposition, expected unreachable/source-closed), then CM,
-`CHANGELOG.md` before S10, G13 S10–S54/F1–F23/R, E2.
+the stop. **Brief 728 (design) is accepted; the STOP was a bar
+correction, and brief 729 implements the repair.** The accepted design
+is one error-owned representation, `EvalError::Syntax { error:
+SyntaxError, input_source: Option<String> }`, filled at exactly the two
+parse/lower error exits in `resume_input_after_text` and read by the one
+existing request mapper with `input_source.as_deref().or(source)`. The
+copied proof shows the candidate queued observation byte-equal to the
+base resumed diagnostic on the minimal case and nine class cases,
+real == disabled, and an own source omission that restores the exact
+red; the original two-pause record changes exactly `semantic_queued`
+and `semantic_same` (R1). The disabled bar is corrected to **no
+increase** (R2): 80 → 79 and 80 → 77 Ir/call pass with every other
+measured row exact; the microbench is NA because no label evaluates
+`Input`. The public shape drops `#[source]` so `Error::source()` stays
+`None` (R3); no `Other` contract exists (R4). **Next: brief 729
+(implementation)**, then continuation 13 (the remaining tail, the
+1,035 duties, the 24 unresolved rows, and the named open source owners
+`ToExpression`, `Session::lower_text`, outer-request lowering, loader
+and file-reread provenance). Then C2's settlement round (including
+P0496's ledger disposition, expected unreachable/source-closed, and
+P1566's re-settlement on the installed source), then CM,
+`CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
+break), G13 S10–S54/F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named

@@ -162,3 +162,103 @@ producer/conversion inventory, the exact copied-tree red/green/own-omission
 receipts, the contract decision list, the drafted implementation brief
 path, and every open question. No source change is authorized by this
 brief.
+
+## Director gate (2026-11-11) — the design is accepted, the STOP is a bar correction, and brief 729 implements the repair
+
+Run: log `.temp/logs/cdx_brief_728.log`, 38,051 lines, sha256
+`bfb4e679ba63c0dff2bdb509689a6b809478f2bc3042e93bed5a474b17130626`,
+memory-scope peak 2,477,576,192 B, oom 0, oom_kill 0, rc=0; report
+`.temp/brief-728/report.json`, 62 runs, 10 PASS / 4 FLAGGED / 3 FAIL /
+2 NA, `report.py check` 604 citations (my own run: OK).
+
+**My gate, reproduced myself.** The live tree is 2,318 files with 0
+missing / 0 changed / 0 added against the entry manifest (my own walk of
+`crates/`, `scripts/`, `docs/` and the top-level files); the 302,550
+protected C7-C11/brief-623/726/727 files are unchanged; the seven
+immediate proof inputs are exact. `proposed-shape.patch` applies to
+`source-base/` and reproduces `source-candidate/` byte-for-byte on the
+twelve files in `candidate-files.json`, and `source-base/` equals the
+live tree on every file except the six brief-727 harness files. From the
+raw records: base == frozen on all four records; candidate == disabled;
+the own omission == base exactly; the nine extended class cases are
+base-DIFF and candidate-SAME, with each candidate queued observation
+byte-equal to the base *resumed* observation (message, rendered text,
+span, line and column); the original two-pause record changes exactly
+`semantic_queued` and `semantic_same`; both green controls are
+byte-identical; the 60 P1566/P1568 cells are SAME/identical/valid with 0
+new keys and 0 encoding runs; the 55/55 and 60/60 matrix cells re-derive
+from the c12 raw logs; 118 active epoch summaries read `valid=true
+faults=0 context_leases=0`.
+
+**The cost, re-parsed by me from all twelve raw Callgrind captures.**
+`resume_input_after_text` reads 160.0 Ir / 2 calls per iteration on base
+in both draws (80.0 per call), 158.0 (79.0) on candidate1 and 154.0
+(77.0) on candidate2, identical within each arm and draw;
+`eval_expr_request_from_checkpoint` 412/4, `resume_eval_request_from_checkpoint`
+1449/1 and the `EvalError` drop 29/1 exact on every arm;
+`with_input_source` has zero entries in every disabled capture;
+`EvalError` / `Result<Expr, EvalError>` / `Option<EvalError>` are 136 B
+and `Session` 2,080 B in all twelve captures. My own sweep of all 874
+captured functions finds no deterministic equal-call increase; the only
+other named movements are the standing interner/hash-seed rows whose
+within-arm draw spread exceeds the arm difference. The forced rebuild is
+a fresh compile (`cache_hit=false`) equal to the base binary
+`06a14f13…`.
+
+**Rulings.**
+
+- **R1 — the original two-pause record.** Duty 3's sentence "the
+  original two-pause case must stay exactly as frozen" is withdrawn as my
+  contradiction: `B726.class.error` is an instance of the class, not a
+  control, so repairing it must move its queued arm. The frozen record
+  stays byte-identical as historical evidence; the expected post-repair
+  record changes exactly `semantic_queued` and `semantic_same`, and that
+  delta is the repair's acceptance signature. No special case, no
+  comparator change, no frozen rewrite.
+- **R2 — the disabled-cost bar is no-increase.** The brief's "identical"
+  is corrected to: no changed call-site row may execute more instructions
+  per call than base; every other measured named row stays exact; the
+  changed function's call count stays identical; and the capture helper
+  executes zero times on the disabled success path. A deterministic
+  equal-call increase on any named rum row is a STOP. A decrease is
+  recorded, never padded to equality. The 80 → 79 and 80 → 77
+  measurements pass under this bar. The microbench is NA for this shape:
+  no `core-language-microbench.sh` label evaluates `Input`, so the lane
+  cannot see the change; if the final shape touches any function
+  reachable from a benchmark label, the lane runs.
+- **R3 — the public API.** Accept `EvalError::Syntax { error:
+  SyntaxError, input_source: Option<String> }` with an explicit
+  `From<SyntaxError>` producing `None` and a runtime-private
+  `with_input_source(self, String) -> Self` that only fills `None`.
+  **Drop `#[source]`.** `#[error(transparent)]` forwards `Error::source()`
+  to `SyntaxError::source()`, which is `None` because `SyntaxError`
+  carries no source fields; a plain field with `#[error("{error}")]`
+  preserves `Error::source()` exactly and keeps `Display` identical.
+  Derived `Debug` gains the payload — inherent to carrying it, not a
+  contract. The variant-shape change is a public Rust API break; the line
+  permits it (user ruling 2026-09-19) and the director records it in
+  `CHANGELOG.md` before S10.
+- **R4 — no `Other` contract.** No documented host contract or permanent
+  assertion requires `Other` for a malformed Input answer; the only
+  `Other` assertions cover uncaught throws and completion outcomes. The
+  resumed `Syntax` assertions stay unchanged. Queued `Syntax` is
+  documented with the repair.
+- **R5 — the disclosures.** The mandated shared `CARGO_HOME` cache
+  metadata stamp is an explicit exception to the scene fence (Cargo owns
+  it; no frozen evidence moved); the canonical probe-build's `--force`
+  overwrote the first internal base build log at the same key, so the
+  implementation brief requires a unique per-invocation `LOGS` root; the
+  matrix re-read ran after candidate assembly but re-derives c12 raw
+  evidence and re-pinned nothing.
+- **R6 — the class duty.** This repair covers the Input-answer producer.
+  `ToExpression` operands, `Session::lower_text`, the outer request
+  `lower_syntax_expr`, loader-consumed errors and file-reread provenance
+  are named open source owners, not silently dropped; they are carried as
+  obligations into continuation 13 and the C2 settlement. `P1566` stays
+  Lost until that campaign re-settles it on the installed source.
+- **R7 — the STOP is accepted.** Both cost attempts are retained as
+  measured; nothing was deleted, weakened or re-pinned by the worker.
+- **R8 — brief 729 implements** the design in the corrected shape (no
+  `#[source]`): the copied proof on the final source before any live
+  edit, the permanent tests, the standing replays, the no-increase cost
+  gate and the full acceptance.

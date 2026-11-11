@@ -171,8 +171,8 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   receipt; continuation 12 STOP: eight settlements — repaired consumer
   and one Default tail Equal, five proposals, P1566 Lost on the
   pre-existing malformed answer — C2 at 314 residuals + 1 Lost; then
-  brief 728 Input syntax packaging (design), its implementation,
-  continuation 13 (tail, 1,035 duties, 24 sites), C2 settlement; then CM,
+  728 design (accepted: no-increase bar, no `#[source]`) and 729 its
+  implementation; continuation 13, C2 settlement; then CM,
   `CHANGELOG.md` before S10, G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Briefs 719-721:** P0248's
