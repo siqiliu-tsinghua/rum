@@ -167,13 +167,13 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   retention line (paused at E0) and the active suspension branch.
 - **Branch queue:** G15-C2's rows (721 definition-resume repair; 722
   fixed-point design; 723 the pass publication installed, both nested
-  admissions repaired; continuation 9 settles P1470/P1471/P1566/P1568
-  Equal, accepts P0503/P0504 and P0353 as `NoObservableTail`, and
-  measures P0492; C2 at 328 residuals + 1 Lost; 724 accepted; **725
-  accepted and committed**: the prepared-stage completion is installed,
-  the G15-C2 typed receipt integrated, stage B green on the host
-  (4,223/0/61); next brief 623 continuation 10 over the remaining tail,
-  then the C2 settlement; then CM, `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
+  admissions repaired; 725 accepted and committed: prepared-stage
+  completion and typed receipt installed, stage B green (4,223/0/61);
+  continuation 10 accepted as a STOP: P0492/P0410 Equal, P1556/P1558
+  Boundary, four NoObservableTail proposals accepted, C2 at 325
+  residuals + 0 Lost; next brief 623 continuation 11 (crosswalk,
+  transitive recheck, remaining tail), then the C2 settlement; then CM,
+  `CHANGELOG.md` (before S10), G13 S10–S54, F1–F23, R; E2.
 - **After the branch:** retention from E0 + Q3, then Q1/Q2/Q4/Q5, the binary snapshot format, audit items; `v0.3.0`.
 - **Latest done:** LP08 closed (`b9b39763`). **Briefs 719-721:** P0248's
   fallback repaired (8/8 recipes, 36/36 bindings SAME); publication

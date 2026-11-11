@@ -324,11 +324,30 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   report 1,203 citations. C2 is Open at 328 residuals (256 LocalTail, 45
   reopened, 22 strict, 5 719 edges) + 1 Lost (P0492).
 
-**Next, in order** (the branch queue): **brief 623 continuation 10, the
-remaining C2 settlement tail** — 256 LocalTail rows, 45 reopened rows, 22
-strict rows and the five 719 edges — then C2's settlement round (including
+**Next, in order** (the branch queue): **brief 623 continuation 11** —
+close the 84-site source crosswalk, complete the transitive recheck
+(1,029 open full-proof duties, 674 missing per-row cells, 485
+recipe/native-driver gaps), then the remaining C2 tail (256 LocalTail,
+38 reopened, 22 strict, the five 719 edges, the four 725 edges) — then
+C2's settlement round (including
 P0496's ledger disposition, expected unreachable/source-closed), then CM,
-`CHANGELOG.md` before S10, G13 S10–S54/F1–F23/R, E2. **Brief 725 is accepted
+`CHANGELOG.md` before S10, G13 S10–S54/F1–F23/R, E2.
+
+**Continuation 10 is accepted as a STOP**: P0492 re-settles Equal on the
+repaired source (16/16 records resumed == queued, real == disabled, the
+armed omission restoring exactly the nine witnesses and the seven
+controls), P0410 settles Equal (55/55 cells with its own caught
+omission), P1556/P1558 settle Boundary on the documented host contract
+and seven actual host traces, the two NoObservableTail groups (P0478;
+P0126/P0127/S002) are accepted on 235/235 own armed-hit survivors, and
+the two-family zero-progress stop is well taken. C2 stands Open at 64
+Equal, 42 NoObservableTail, 9 Boundary, 325 residuals + 0 Lost over
+1,042 rows / 78,330 keys. The ledger moved exactly the eight expected
+verdicts; the rebase ran once (84 unresolved sites disclosed) and the
+transitive recheck left 1,029 full-proof duties open for continuation
+11. The probe-build cache key's missing `CARGO_HOME`/`TMPDIR` input is
+recorded: the forced spot check (`ca9c3986…`) passes only under the
+scene environment. **Brief 725 is accepted
 and committed**: the accepted family2 prepared-stage completion is installed
 (enabled-only `ProfiledPreparedDispatchFrame` delegating to one shared
 const-generic resume; the exact owned `call.stage.prepare_arguments` boundary

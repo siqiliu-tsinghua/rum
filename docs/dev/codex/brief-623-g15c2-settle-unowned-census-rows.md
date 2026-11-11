@@ -9308,3 +9308,147 @@ two-family zero-progress stop-loss apply.
    progress, and the exact residual lists.
 
 C2 stays Open until the settlement round; S10 stays unopened.
+
+## Director gate (2026-11-11) — continuation 10: P0492 re-settles Equal on the repaired source, two Boundary rows and four NoObservableTail proposals are accepted, and the two-family stop is well taken
+
+Brief 623 continuation 10 is **accepted as a STOP** (not completion). Run
+(log `.temp/logs/cdx_brief_623.log`, 44,604 lines, memory-scope peak
+3.48 GB, oom 0, oom_kill 0, rc=0; report `.temp/g15-c2/c10/report.json`,
+`report.py check` 1,243 citations verified by me) rebased once on the
+accepted 725 source, re-settled P0492, settled P0410, P1556 and P1558,
+proposed four NoObservableTail rows, ran the transitive recheck, ported
+the tables and stopped under the two-family zero-progress rule.
+
+**My own reproductions.** Live tree 2,719 files against
+`entry-hashes.json` — 0 missing, 0 extra, 0 changed, digest
+`31f1dab6…` equal at entry and at the final state; `git status` clean at
+`037db211`. The entry delta is exactly the 30 tracked files changed by
+`851cf60d..HEAD` plus two git-ignored harness-generated
+`.claude-plugin/types/*.d.ts` files — no fourth path. Rebase once:
+1,042 rows = 1,038 inherited + 4 new 725 edges; 958 paired = 954
+inherited matches + 4 new; 84 unresolved = 42 inherited + 42 new
+duplicate-expression ambiguities with every coordinate and candidate
+retained; 15 moved; P0505 explicitly re-paired; 0 retired; no second
+rebase. Ledger: exactly the 8 expected verdict changes (P0492 Lost ->
+Equal, P0410 -> Equal, P1556/P1558 -> Boundary,
+P0478/P0126/P0127/S002 -> NoObservableTail), 4 rows added (the four 725
+edges), 0 removed; outcomes Equal 64 / NoObservableTail 42 / Boundary 9
+/ Identity 5 / Unreachable 3 / Transferred 594 / Residual 325 / Lost 0 =
+1,042; residual composition 256 LocalTail + 38 ReopenedOrNew + 11
+StrictDropGap + 6 StrictCallerGap + 5 StrictOtherCarrier + 5 New719Edge
++ 4 New725Edge = 325. Requirements 78,330 = 78,020 + 310 (4 x 75 for the
+725 edges plus P0410 and S002 five each), every inherited key retained,
+0 duplicates, 80 new blocked-encoding keys, 18,840 encoding keys
+unchanged, 0 new encoding runs.
+
+**P0492.** All 16 C9 records are resumed == queued whole-record and
+real == disabled byte-identical; the armed omission of the enabled
+completion returns exactly 9 DIFF (each confined to
+`call.stage.prepare_arguments`) and 7 SAME, and restores the C9 records
+whole-record exactly (my own 16/16 comparison against the accepted C9
+file); 56 bindings over 55 required keys are five-part SAME with
+producer reach and disabled exactness; the B724 Accumulate omission is
+armed, hit twice and caught on a required key; the four-record extension
+panel is whole-record equal to accepted 725 (3 SAME and the unchanged
+invalid nested-fixedpoint). **P0410.** 55/55 records resumed == queued,
+real == disabled, semantic and native SAME; all 55 required cells read
+SAME in the root required table with the coverage receipt (the
+per-family extract's five `PendingCurrentExecution` entries are the
+prepare-time placeholders for the five new phase keys; the root table
+and the coverage carry the executed result); its own omission is caught
+on a required cell. **P1556/P1558.** Boundary on the documented
+non-resumable host contract plus seven actual host traces (one producer
+pause each, unsupported resume returns Other, the pending batch
+remains, overlapping eval is rejected, cancellation retires the batch,
+fresh eval returns 2); no Equal claim. **The four NoObservableTail
+proposals** carry complete source/Drop arguments and 235/235 required
+cells with their own armed-hit survivors (P0478 50; P0126 65, P0127 65,
+S002 55 over the monitor-tail-v2 and monitor-phase families), each
+real == disabled; no Equal claim. **The stop.** The two families
+(normalization 8, resource 30) each executed real records and own
+mutants with zero on every progress counter; the clock reached 2; after
+the stop 12 controller runs produced zero guest executions and the
+checkpoint asserts source integrity at every step.
+
+**The transitive recheck (partial, disclosed).** 6,207 recipes =
+6,147 on-panel + 60 off-panel, all SAME with resumed == queued and
+byte-identical real/disabled records; 7,160 binding cells; 6,911 fresh
+reached SAME against 7,585 per-row required; 674 missing; 93 complete
+matrices in the panel (94 across all families); 1,037 rows flagged,
+5 fingerprint eligible and 1,029 full-proof duties open; 485
+recipe/native-driver gaps retained. Carries 618 = 617 byte-identical
+plus P0500 re-proved. **Integrity.** 95,156 protected files re-hashed by
+me — 0 missing, 0 changed; 14 offline/locked build receipts; 6,452
+fixture programs (12,904 `.rum` files); 58,210 sealed files (12/12
+sampled exact); six constructed bad-ledger controls all RED; publication
+check PASS; 58,217 reported changes all inside `.temp/g15-c2/c10/`
+(the 5 unlisted files are the post-manifest controller outputs).
+
+**The build spot check.** The worker did not run the round's mandatory
+`--force` sha256 spot check. I ran it on the round's reused key under
+the scene's environment (`CARGO_HOME=.temp/g15-c2/cargo-home`, scene
+`TMPDIR`, `RUSTUP_TOOLCHAIN=1.85.0`): the rebuilt sha equals the cached
+`ca9c3986…` and the check passes. Two earlier attempts outside that
+environment rebuilt deterministically to `7a591eef…`; the binary's
+`.rodata` differs only by the embedded Cargo registry path
+(`/home/remi/.cargo` against `.temp/g15-c2/cargo-home`, 1,288 B), so the
+difference is environment, not source. **Recorded: probe-build's cache
+key omits `CARGO_HOME`/`TMPDIR`, both of which reach the binary; every
+round's spot check must run under the scene environment (or the key must
+include them).**
+
+**Rulings.** The STOP is well taken and the round's eight settlements
+are accepted. **Q1:** both NoObservableTail groups (P0478;
+P0126/P0127/S002) are accepted as `NoObservableTail`, never Equal — the
+source/Drop argument and every required cell's own armed-hit survivor
+are present. **Q2:** a continuation is authorized, with the source
+crosswalk and the transitive recheck as first-class work alongside the
+remaining tail. **Recorded, not gated:** the missed worker spot check
+(closed by my run); the probe-build environment-key gap; the per-family
+`set-rhs-required.tsv` placeholders; the report's mixed 6,911/7,160
+denominators (the operative disclosure is 674 missing per-row cells,
+485 recipe gaps and 1,029 open duties); the two failed reducer attempts,
+the 180 invalid monitor v1 recipes, the unexecuted initial driver and
+the 84 unresolved sites all retained and disclosed.
+
+C2 stays Open at 325 residuals + 0 Lost; S10 stays unopened.
+
+## Continuation 11 order (2026-11-11) — close the crosswalk and the transitive duties, then the remaining tail by mechanism
+
+Continuation 11 works on the source frozen by the accepted 725 install
+(`b420b9e0`; no source change since). No second rebase: the continuation
+10 rebase disclosure stands. Measurement and diagnostic-copy work only;
+the standing scene protection and the two-family zero-progress stop-loss
+apply.
+
+1. **Close the source crosswalk.** Every one of the 84 unresolved sites
+   gets exactly one disposition: paired under a unique finer identity
+   with its source proof, or explicitly retained as unresolved with its
+   candidates and the reason. No guessed identity, no coverage claimed
+   from an unresolved site, no row removed.
+2. **Complete the transitive recheck.** Every flagged changed-observation
+   or call-graph obligation gets an executed full proof or a named open
+   obligation with its reason; the 674 missing per-row cells and the 485
+   recipe/native-driver gaps are the first targets; a fingerprint
+   excludes a row only when the source proof shows it unaffected; an
+   attribution-only cell never stands in for an own omission.
+3. **Continue the remaining tail by mechanism.** The 256 LocalTail, the
+   38 reopened, the 22 strict (11 Drop-gap, 6 caller-gap, 5
+   other-carrier), the five 719 edges and the four 725 edges, under the
+   standing bars: Equal needs full required cells five-part SAME with
+   resumed == queued, real == disabled, producer reach and its own
+   caught omission on a required key; Boundary needs the documented
+   contract plus an actual native lifecycle; NoObservableTail needs the
+   complete source/Drop argument and every required cell's own
+   armed-hit survivor. The two stopped families (normalization
+   redundancy, finite under-limit resource) are not repeated without a
+   new mechanism, and a new mechanism must arm its own falsifier.
+4. **Port tables and the settlement ledger** with the same identity
+   discipline; no row disappears silently. P0496 is not relabelled here
+   (reserved for the settlement round).
+5. **Stop for the director gate** with the entry manifest, the crosswalk
+   dispositions, the recheck closure tables, every settled row's cells
+   and own omissions, the stop-clock progress, the exact residual
+   lists, and the port/ledger delta.
+
+C2 stays Open until the settlement round; S10 stays unopened.
