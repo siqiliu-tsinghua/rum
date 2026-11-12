@@ -1424,6 +1424,77 @@ pair-column reconciliation), then CM, `CHANGELOG.md` before S10
 (including the public `EvalError::Syntax` break), G13
 S10–S54/F1–F23/R, E2.
 
+**Continuation 37 is accepted at the round's end on `cdx`**: `P1555` is a
+newly Lost row on its own 30-cell matrix, its own 16 armed-hit-caught
+checkpoint-restoration omissions, six minimized witnesses and an
+independent public-API reproduction, and the two-family stop-loss
+correctly does not fire. The round ran on `cdx` (gpt-6-astra, max;
+session `01a1cfb5-…`; 40,281-line / 2,972,168 B log; 336,298 tokens;
+memory-scope peak 4.70 GB, oom 0, rc 0; 76 run records, the round-end at
+index 49 and three retained non-zero exits; report 14 checks 8 PASS / 5
+FLAGGED / 1 NA, `report.py check` 508 citations by my own run; no
+executed git or network; the live brief was not appended). `P1555` is
+`Session::eval_input_with_terminated_handling`
+(`session_eval.rs:233`): the queued completion runs
+`self.evaluate(expr)` at `:257`, `finalize_top_level_eval_value` at
+`:264` (whose `finalize_top_level_control_flow` at `:25` consumes
+`Return`) and the terminal/error tail at `:274-293` including
+`emit_top_level_control_flow_messages` at `:286`; on suspension the
+inner function returns `Err(InputRequired)` after restoring its
+message-list checkpoint (`:271-272`), and none of those tails is
+re-entered when the captured frames later complete under the outer
+request's boundary — the inner `Return` escapes to the outer finalizer
+(queued 2 vs resumed 1) and the inner uncaught-throw emission is lost
+(two messages vs one). The round built a scratch-only native caller of
+the public `Session::eval_text` (`C37NativeText`) plus a direct
+state-read observer at the restoration seam and an independent
+public-API reproduction; the 30-cell matrix is 16 SAME (14 qualified +
+two uncredited `RestoreSealedReferences.body` cells) and 14 DIFF, real
+records == disabled on all 30, producer reached on all 30, 16 mutants =
+16 armed + 16 hit + 16 caught + 0 survived + 0 invalid with real ==
+mutant record files byte-identical, the six minimized witnesses
+sha-exact (three DIFF / three SAME), the independent driver reproducing
+the same six cases against byte-exact production libraries, 13,059
+fixtures (36 new), four exact build receipts (forced spot
+`da74b4be…`, `spot_check=pass`, `scene_environment=true`), 0 new
+`unsafe` over 191 copied pairs and 208 changed pairs with no live Rust
+file changed. My gate: live 2,726 files at `c4e2a3fd…` equal to the
+scene entry; production 1,622 files at `8313fbc1…` byte-identical to
+the C37/C36/C35 entries with `source_rebases=0`; the entry delta
+exactly `TODO.md` and the brief; my own 2,578,303-file protected walk
+0/0/0 in 123.1 s and 86,737-file sealed walk 0/0/0 at hand-back (after
+my replay two sealed derived files are refreshed —
+`integrity-receipt.json` and the `attempt-audit.json` `run_snapshot`
+66→76 — plus the mutable `state.json`/`PROGRESS.md`, 0 added or
+removed, all disclosed). Ledger: exactly one verdict change,
+outcomes 9/164/5/2/124/141/594/3, residual
+110 + 13 + 11 + 4 + 1 + 1 + 1 = 141, 78,330 keys and 18,840 encoding
+rows unchanged, 28 tuple records on exactly the row, 13 pair columns
+byte-identical, `P1566` Lost, `P0496` Residual, held rows and
+`P1585`–`P1591` unchanged. Transitive: entry re-derives from c13–c36 at
+10,213 SAME keys / 179 proofs / 186 matrices / 863 open; current
+10,227 / 179 / 186 / 863 with 0 inherited duties closed, 179 retained,
+0 exclusions, 24 unresolved, 13 pair columns and five owners. My
+canonical replay (15 controllers plus the controller-syntax check) all
+exit 0; the two retained RED self-checks reproduce their exact
+assertions; six bad-ledger controls RED and the positive GREEN; a
+whole-scene 86,756-file comparison changes only the two mutable and two
+refreshed sealed derived files, 0 added or removed. **Next:** brief 730
+(design-only) for the nested top-level completion boundary — the queued
+path is the reference, and the design must either reify the boundary as
+one typed continuation owner surviving suspension or enforce a
+documented non-resumable boundary with a typed refusal and tests, never
+a silent semantic difference; then its implementation brief, then
+continuation 38 of brief 623 on the installed source (the remaining
+141-row tail by mechanism; held rows excluded; the C19–C37 families are
+not repeated without a genuinely new mechanism or instrument; the
+wrapper-tail identity stays bounded), then C2's settlement round
+(including `P0496`'s ledger disposition, expected
+unreachable/source-closed, `P1566`'s re-settlement on the installed
+source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
+`CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
+break), G13 S10–S54/F1–F23/R, E2.
+
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
 other account — no automatic fallback. `mst` (Mistral Vibe / GLM-5.3) is

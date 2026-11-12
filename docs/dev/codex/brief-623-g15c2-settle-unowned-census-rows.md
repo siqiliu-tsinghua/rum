@@ -107375,3 +107375,173 @@ unarmed and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 142 Residual + 1 Lost; S10 stays
 unopened.
+
+## Continuation 37 gate (2026-11-12) — ACCEPTED at the round's end on cdx: `P1555` is a newly Lost row on its own 30-cell matrix, its own 16 armed-hit-caught checkpoint-restoration omissions, six minimized witnesses and an independent public-API reproduction, and the two-family stop-loss correctly does not fire
+
+**Run.** The round ran on `cdx` (Codex `gpt-6-astra`, reasoning max;
+session `01a1cfb5-b754-7123-a8ab-87a5fcf46436`), log
+`.temp/logs/cdx_brief_623.log` (40,281 lines, 2,972,168 B, sha
+`1502ffcf…`), memory-scope peak 4,698,202,112 B, oom 0, oom_kill 0, rc 0;
+336,298 tokens; report 14 checks 8 PASS / 5 FLAGGED / 1 NA with
+`report.py check` 508 citations by my own run; 76 run records, the
+round-end at record index 49, three retained non-zero exits (the two
+extra self-checks and the corrected attempt-audit import), 24 guest
+processes and four build controllers; no executed git or network
+command; the worker did not append the live brief.
+
+**My gate.** 2,726 live files at `c4e2a3fd…`, equal to the scene entry
+manifest path for path (0 differing); production 1,622 files at
+`8313fbc1…` byte-identical to the C37, C36 and C35 entry manifests
+(0 added, 0 removed), `source_rebases=0`; the entry delta against C36
+is exactly `TODO.md` and the brief from my own post-gate commits, and
+the entry brief is byte-identical to the live brief at `9b7db6fc…`. My
+own 2,578,303-file protected walk is 0/0/0 in 123.1 s; my own
+86,737-file sealed walk is 0 missing / 0 changed at hand-back, and
+after my replay two sealed derived files are refreshed:
+`integrity-receipt.json` (post-stop controller snapshot) and
+`attempt-audit.json` (`run_snapshot` 66 -> 76, its own run record now
+counted; all of its assertions passed in my run), plus the mutable,
+seal-excluded `state.json` and `PROGRESS.md`; 0 files added or removed.
+
+**Ledger.** 1,042 rows, exactly one verdict change on the six settlement
+columns — `P1555`, Residual -> Lost — the other 1,041 rows
+byte-identical. Outcomes 9/164/5/2/124/141/594/3; residual 110 LocalTail
++ 13 ReopenedOrNew + 11 StrictDropGap + 4 StrictCallerGap + 1
+StrictOtherCarrier + 1 New719Edge + 1 New725Edge = 141. The 78,330
+canonical keys are unchanged (0 added/removed/duplicated), the 18,840
+encoding rows are byte-identical, and 28 tuple records changed on
+exactly the row. The 13 pair columns are byte-identical with 0 verdict
+changes; `P1566` is Lost, `P0496` is Residual, the held rows keep their
+inherited bytes, and `P1585`-`P1591` keep `NoObservableTail`. Every
+inherited artifact is byte-identical to the C36 final state.
+
+**Evidence.** One Loss packet over 30 real cells and 30 records. Under
+the five-part predicate, 16 records are SAME (14 qualified coverage
+cells plus the two `RestoreSealedReferences.body` cells that stay
+uncredited by the independent binding qualification) and 14 are DIFF
+(all `valid`, with unequal `semantic_queued`/`semantic_resumed`
+vectors); real records == disabled records byte-identically on all 30
+(`disabled_exact` true throughout), and the producer is reached on all
+30 cells. Each SAME cell carries its own armed-hit-caught omission:
+the two `current_message_list_checkpoint`/`current_message_list_dirty`
+restoration assignments only, with an honest direct state read at the
+seam — every own log carries two `C37_MESSAGE_RESTORE` lines, one
+matching and one with `checkpoint_mismatch=1` (the real and disabled
+logs carry 60 reads each with 0 mismatches). Receipts: 16 mutants =
+16 armed, 16 hit, 16 caught, 0 survived, 0 invalid, and real-record
+files == mutant-record files byte-identical. Minimization: six
+witnesses (three DIFF, three SAME) with raw hashes exact. Independent
+reproduction: a public-API-only native driver built against byte-exact
+production libraries reproduces three DIFF and three SAME cases
+exactly — `return-value` queued 2 vs resumed 1; `throw-messages`
+queued two `Throw::nocatch` messages vs resumed one; `return-phase`
+queued one trace event vs resumed none; the direct-request and normal
+value controls agree. 13,059 fixtures (13,023 inherited byte-exact +
+36 new). Four build receipts exact — real and forced spot both
+`da74b4be…` on the same tree, mutant `16676ff0…`, independent
+`850789a3…`, all offline and locked, `spot_check=pass`,
+`scene_environment=true`. 0 new `unsafe` over 191 copied Rust pairs
+(proof assurance) and 4,736 compared files / 208 changed pairs (copy
+safety); no live Rust file changed at all this round.
+
+**The loss, read from source.** `P1555` is
+`Session::eval_input_with_terminated_handling`
+(`session_eval.rs:233`). The queued completion calls
+`self.evaluate(expr)` at `:257`, then runs
+`finalize_top_level_eval_value` at `:264` — whose
+`finalize_top_level_control_flow` (`:25`) consumes `Return` — and the
+terminal/error tail at `:274-293`, including
+`emit_top_level_control_flow_messages` at `:286`. On suspension the
+inner function returns `Err(InputRequired)` after restoring its own
+message-list checkpoint (`:271-272`), and none of those tails is
+re-entered when the captured expression frames later complete under the
+outer request's boundary: the inner `Return` escapes to the outer
+finalizer (the compound's `;2` is never reached, queued 2 vs resumed 1)
+and the inner uncaught-throw emission is lost (two messages vs one).
+The round built a scratch-only native caller of the public
+`Session::eval_text` (`C37NativeText`, `ordinary_with_hold`, `HoldAll`,
+`MemoryGrowthContract::Incremental`) plus a direct state-read observer
+at the restoration seam, and a separate public-API reproduction driver.
+The queued path is the reference behavior; the measured resumed
+difference is a genuine loss, and no documented Boundary ruling exists
+for this nested route (the documented non-resumable script/file
+boundary is distinct and is not extended to it by argument). The
+retained draft `.temp/g15-c2/c37/DRAFT-top-level-native-finalization.md`
+proposes the design work; **no production repair was executed**.
+
+**The two retained RED self-checks.** The whole-file real/mutant
+equality assertion is RED because the mutant tree carries five inherited
+C14 attribution guards; the baseline-aware boundary audit restores each
+arm exactly from its authenticated C14 source and proves that only the
+two restoration assignments are omitted. The inherited all-SAME
+aggregate assertion is RED exactly because a Lost family contains 14
+authenticated real DIFFs; no assertion was weakened, no Equal promotion
+was made, and the loss-specific aggregate audit substitutes nothing
+softer — it accounts for every DIFF and keeps the family out of any
+complete-SAME matrix claim.
+
+**Entry and transitive.** From the c13-c36 evidence alone I re-derive
+179 complete proofs, 186 matrices, 10,213 SAME keys and 863 named open
+with 0 errors, equal to the C36 final status. The current graph adds
+exactly the 14 qualified SAME keys of this family: 179 proofs, 186
+matrices, 10,227 SAME keys, 863 named open, 0 inherited duties closed,
+179 retained, 0 exclusions, 24 unresolved sites, 13 pair columns, five
+owners, `whole_graph_complete=false`.
+
+**Stop and integrity.** One completed family with 30 coverage cells
+(14 new), 16 own caught rows and 1 Lost outcome; clock 0,
+`Continuation37RoundEnd`, `stop_loss_fired=false`; 0 guest and 0 Cargo
+after the stop (26 records after the round-end, all controllers; the
+scene's integrity audit counts 27 controller runs, 0 guest, 0 Cargo);
+24 guest processes and 97 audited records, 0 invalid. The family's
+progress is nonzero, so the two-family stop-loss does not fire.
+
+**Replay.** My canonical replay reproduced the scene:
+`final_replay`, `canonical_delta_audit`, `loss_aggregate_audit`,
+`all_executions_audit`, `epoch_audit`, `execution_kind_audit`,
+`proof_assurance`, `copy_safety_audit`, `provenance_audit`, `port`,
+`held_bytes_audit`, `calibration_audit`, `loss_boundary_contract_audit`,
+`attempt_audit` and `integrity` all exit 0, and `controller_syntax`
+verifies 54 controllers with 0 imports executed; the two retained RED
+checks reproduce their exact original assertions; six bad-ledger
+controls are RED and the positive GREEN on my own run;
+`report.py check` verifies 508 citations; and a whole-scene 86,756-file
+hash comparison changes only the two mutable, seal-excluded files and
+the two refreshed sealed derived files named above; 0 files added or
+removed.
+
+**Rulings.** Q1: `P1555` is accepted as Lost — never Equal or
+`NoObservableTail` — on its own 30-cell real matrix, its 16
+armed-hit-caught omissions, its six minimized witnesses and the
+independent public-API reproduction; the two uncredited descriptor
+cells keep their original required keys and no complete matrix is
+claimed. The nested public `Session::eval_text` boundary decision is
+opened as a design-first line: the queued path is the reference, and
+the design must either reify the nested top-level completion boundary
+as one typed continuation owner that survives suspension (resumed ==
+queued on the frozen 30-cell matrix and the minimized witnesses), or
+enforce a documented non-resumable boundary with a concrete, typed
+refusal and its own tests — never a silent semantic difference, and
+never a doc-only ruling that leaves the silent path in place. `P1555`
+stays Lost until that repair or an evidence-backed Boundary ruling is
+installed and gated; the existing documented script/file boundary stays
+distinct; C2 cannot close and S10 cannot open before that resolution.
+Q2: after the `P1555` line closes, continuation 38 owns the remaining
+141-row tail on the then-installed source; C2 stays Open at 141
+Residual + 2 Lost; S10 stays unopened.
+
+**Recorded, not gated.** The per-family summary's `outcomes_gained: 0`
+against the batch record's 1 is the established per-family field. The
+FLAGGED loss, bindings, transitive, attempts and source-owners checks,
+the 863 named open duties, the five open source owners and the 24
+unresolved sites are as expected. My replay of the scene's run-once
+`derive_boundary_audit.py` stops at its own creation guard
+(`assert not target.exists()`), which is the generator working; the
+generated boundary audit itself is green. The attempt-audit refresh
+above is derived bookkeeping only: it changes no assertion, no raw
+record and no evidence.
+
+**Next.** Brief 730, design-only, for the nested top-level completion
+boundary (`P1555`); then its implementation brief, then continuation
+38 of brief 623 on the installed source; then C2's settlement round,
+CM, `CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2.
