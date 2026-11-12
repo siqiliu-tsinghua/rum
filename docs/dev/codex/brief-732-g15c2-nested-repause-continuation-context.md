@@ -152,3 +152,136 @@ file or a C4 release record is a STOP.
 
 `rum-report/1` JSON at `.temp/brief-732/report.json`; every claim carries a
 log path and a copied verdict line.
+
+## Design gate (2026-11-13) — brief 732's design is accepted: the defect is a post-publication foreign capture, not the merge, and candidate C (capture-time bound by the pending owner's remaining prefix, depth unchanged) is the repair; brief 733 implements it in a copied arm
+
+**Run.** `cdx` (Codex `gpt-6-astra`, reasoning max; session
+`01a1d11e-ea46-7b13-a770-1b0de2b23281`, fork of
+`01a1d103-6d6e-71c3-8736-610803d677e5`); log
+`.temp/logs/cdx_brief_732.log` (18,494 lines, 1,211,326 B); memory-scope
+peak 8,563,159,040 B with oom 0, oom_kill 0, rc 0; 58 run records (45
+exit 0; 6 exit 101 — the four red reproductions and the two instrumented
+entry/control diagnostics; 5 exit 1 and 2 exit 2 retained instrument and
+script-preparation failures, all disclosed in the report); `report.py
+check 732` OK with 943 citations by my own run; 2 of the 12 canonical
+design builds used, fresh and forced with the same SHA `ed2b630a…` at one
+absolute path and one codegen unit; no executed git or network; the
+21,955 reported additions are all under `.temp/brief-732/`; no live
+source change.
+
+**My scope gate.** My own hash walk of the live tree against
+`.temp/brief-732/live-entry-hashes.json` reads 2,730 manifest paths and
+2,730 live files: 0 missing, 0 extra, 0 differing. HEAD is still
+`db841b34`; the seven brief-731 refusal files, the permanent witness,
+`Cargo.lock` and the dependency manifests are untouched. My own recursive
+diffs of the copied arms: the candidate arm differs from the entry copy in
+exactly the three named production files; the release arm adds exactly the
+four C4 harness test files; the probes arm differs from the candidate arm
+by the regression addition only; the control arm differs from the entry
+copy by the four harness files and my confirmed removal of the single
+`refuse_nested_top_level_input` call in `session_eval.rs`. The debug
+assertion in the candidate arm is byte-identical to live
+(`evaluation_context.rs:32-40`).
+
+**The design corrects my continuation-5 mechanism sentence, and I accept
+the correction.** My gate said the fresh `active_stack` captured at the
+second pause does not cover the suffix cells' contexts. The measurement
+says otherwise: at the merge (`driver.rs:171`, `nested.append(&mut
+suffix)`) the queue is 14 valid cells on a one-entry saved stack
+(`InputString["owner-second"]`, non-increasing from `(1,3)` to `(0,0)`).
+The two invalid cells are created *after* the driver republished the
+owner: `finish_input_required_request` stores the report
+(`session_requests.rs:506` → `store_pending_request:70`), the displaced
+native caller stack/depth are restored (`core.rs:688-689`), and the
+native evaluator's `InputRequired` unwind appends four frames through the
+typed/legacy pending-push captures (`core.rs:583/548`). The first two
+carry absolute contexts `(1,1)` measured against the caller's
+`ResumeExisting[]` stack, not against the owner's remaining prefix, which
+after its first 14 cells is length 0. Zero-based cells 14 and 15 of the
+18-cell queue are therefore the offenders. The entry, control and
+candidate instrumented copies show the merged 14 cells identical in all
+arms, the offending captures with the report present, and the candidate's
+tail changed from `[(1,1),(1,1),(0,0),(0,0)]` to
+`[(0,1),(0,1),(0,0),(0,0)]` with every earlier cell, payload, epoch and
+depth equal (`mechanism-proof.json`, `logs/observe-*-t1-1.log`). This is
+an erratum to my continuation-5 gate: a merge-only rebasing cannot repair
+cells that do not exist at the merge, and the recorded sentence is
+withdrawn. The design's correction is measured, not argued.
+
+**My own reproductions.** In the byte copies: the entry arm runs the
+unchanged permanent file at one thread as 14 passed / 1 failed with
+`continuation contexts unwind a saved prefix` at
+`suspension/core/evaluation_context.rs:33:9`; the control arm — my own
+diff removes only the one refusal call — reaches the same assertion at
+the same line through C4's unchanged real-owner route at one thread; the
+candidate arm runs 15 passed / 0 failed at eight and at one thread; the
+candidate release binary (sha `ed2b630a…`, matching its receipt) yields
+`B731 C*` records byte-identical to the frozen C4 originals in all ten
+comparisons (five cases × eight and one threads, 0 normalized tokens). I
+enumerated the six production `resume_context()` callers
+(`core.rs:548`, `core.rs:583`, `evaluation_context.rs:59`,
+`driver.rs:89`, `driver.rs:136`, `queue_api.rs:59`) and spot-checked the
+site table's anchors (`core.rs:505` capture, `core.rs:269` slot install,
+`driver.rs:36` restore, `abandon.rs:82` strict observer,
+`model/session.rs:114-115` the two fields, `SuspensionSlot::as_ref` at
+`core.rs:248`). I did not rerun the 180/38/436 surface suites, the
+profiled/accounting arms, or the design's observer scripts; I read their
+retained logs, and their acceptance-grade reruns belong to continuation 6
+on the installed source.
+
+**The accepted shape.** When the request driver has published a pending
+request and the slot holds its suspension, `Session::resume_context`
+bounds the captured length by the pending owner's remaining prefix — its
+last semantic cell, or the saved active-stack length for an empty queue —
+while capturing the current logical depth unchanged. `FrameStorage` and
+`FrameQueue` gain private read-only tail accessors; the Guest and
+Profiled forms both read the semantic guest queue; no flag, frame, root,
+allocation, epoch or public signature is added. The corrected value is
+exactly the length release actually uses: `truncate_accounted_evaluation_
+stack` never grows the vector, so a recorded length above the remaining
+prefix was always a no-op in release; the capture now records the
+effective value instead of an ineffective request. That is why this is
+the repair and not a test accommodation. Depth stays independent
+(`evaluation_depth`), the prefix assertion stays byte-identical, and the
+release records confirm behavior is unchanged.
+
+**Ruling.** Q1: accepted — candidate C is the repair. Q2: accepted — the
+implementation scope is the three production files plus the
+actual-request armed/unarmed × resume/cancel accounting regression
+appended to `runtime/tests/resume_evaluation_context.rs`; the combined
+standing replay, acceptance and cost stay in brief 731 continuation 6.
+Brief 733 (implementation, staged) is written: a fresh byte copy of this
+live tree proves the entry red, the one-call control red, the four-file
+candidate green at eight and one (ordinary and profiled), the ten frozen
+C4 release comparisons and the named surfaces, and STOPs; its canonical
+budget is 4 fresh builds, and brief 731's 8 remaining builds stay
+separate — no transfer, no borrowing, and a step that cannot fit is a
+STOP. The rule-5 witness, the seven refusal files and the assertion are
+never edited. After 733's gate, brief 731 continuation 6 applies the
+ruled formatting and re-pins, installs the accepted repair, re-runs
+`fmt`/`check` and the witness green, then runs stage 3 exactly as ruled
+(standing replay first, acceptance once, the cost lane on the combined
+ten-file delta, two draws, equal calls, one codegen unit, every positive
+row retained, one forced SHA; the entry row's 599/4 bar and the
+no-increase scan unchanged). Until then the stage-2 install stays
+uncommitted and stage 2 does not close.
+
+**Recorded, not gated.** The design corrects my continued-5 sentence,
+which is why the gate records it as an erratum rather than a STOP. The
+worker's ptrace denial is the sandbox boundary, and its isolated source
+observers are calibrated against my gdb tuple (1/1 on 0/0 after a 0/0
+restore). The retained exit-1 and exit-2 attempts are instrument and
+script-preparation failures with no candidate source edit; the first
+release parser's empty extraction and the first calibration audit's
+missing `should panic` names are disclosed and corrected without rerunning
+accepted reference stages. The candidate's double blank line before the
+regression must be canonicalised by the implementation's formatter, and
+the three ruled brief-731 formatter arms stay red on `cargo fmt --check`
+until continuation 6 applies them. No live commit.
+
+**Next.** Write and dispatch brief 733 (implementation, staged, copied
+proof); gate it; then dispatch brief 731 continuation 6 (formatting and
+re-pin, repair install, `fmt`/`check` and witness green, stage 3); then
+continuation 38 of brief 623 on the installed source; then C2's
+settlement round, CM, `CHANGELOG.md` before S10 (including this enum break
+and the earlier `EvalError::Syntax` break), G13 S10-S54/F1-F23/R, E2.
