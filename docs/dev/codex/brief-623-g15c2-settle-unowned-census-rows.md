@@ -103256,3 +103256,88 @@ count refresh in the sealed integrity receipt; the worker's one deviation
 **Next.** Continuation 34 of brief 623 on this unchanged installed
 source, then C2's settlement round, CM, `CHANGELOG.md` before S10, G13
 S10-S54/F1-F23/R, E2.
+
+## Continuation 34 order (2026-11-12) — continue the settlement campaign on the unchanged installed source
+
+Brief 623 continuation 34 continues the C2 settlement campaign on the
+installed source, measurement-only, with no rebase.
+
+**Source and entry.** Every file under `crates/` must equal the C33
+entry manifest (`production_sha256` `8313fbc1…`, 1,622 files); any
+production difference, moved fingerprint or source rebase is a STOP.
+The entry re-derives 1,042 rows / 78,330 canonical keys / 18,840
+encoding rows with 0 moves, 1,018 paired sources and the 24 explicitly
+unresolved sites.
+
+**Settlement order.** The 21 C18 rows, the 27 C17 rows, the 13 C16 rows,
+the 30 C15 rows, the 28 C14 rows, the seven C13 rows, the continuation
+20 settlements, the continuation 21 settlements (`P0348`–`P0351`,
+`P0470`), the continuation 22 settlements (`P0316`, `P0321`), the
+continuation 23 settlements (`P0339`, `P1610`, `P1621`), the
+continuation 24 settlements (`P1070`, `P1636`), the continuation 25
+settlements (`P0338`, `P0527`), the continuation 26 settlements
+(`P0239`, `P0245`), the continuation 27 settlement (`P0544`), the
+continuation 28 settlements (`P0508`, `P0543`), the continuation 29
+settlements (`P1562`, `P1563`, `P1577`), the continuation 30 proposals
+(`P1567`, `P1576`), the continuation 31 settlement (`P1476`), the
+continuation 32 settlement (`P0002`) and the continuation 33 settlement
+(`P0020`) are not re-settled. `P1566` stays Lost, `P0496` stays reserved
+for the settlement round, and the 13 pair-column rows (including
+`P0528`, `P0340`, `P0475` and `P0824`) stay held by the pair-column
+order; the `P0325`/`P0326` candidate measurements are retained for that
+settlement round and are not promoted. **Do not execute the held
+pair-column rows in this round**, do not repeat the continuation-26
+`resumed-call-argument-append` family, and do not repeat the
+continuation-27, continuation-28, continuation-29, continuation-30,
+continuation-31, continuation-32 or continuation-33 families without a
+genuinely new mechanism or instrument: `P0544`, `P0543`, `P0508`,
+`P1562`, `P1563`, `P1577`, `P1567`, `P1576`, `P1476`, `P0002` and
+`P0020` are settled and their instruments are used, including the
+`ActualResumedResultBeforeInertHandoff` wrapper-tail shape and its two
+known-tail calibration carries, the
+`OmitResumedEqualityPhaseWithSynchronousEventObserver` equality-accounting
+instrument with its direct synchronous-event read, the
+`OmitActualOwnedCallbackPrefixRestoration` nonempty retained-prefix
+native-caller instrument, and the
+`OmitActualScopedOutgoingLeaseDropWithPublicLedgerObserver`
+outgoing-lease-release instrument with its public `retention_snapshot`
+read. The read-only synchronous-event observer may be carried to other
+applicable profiling-tail mechanisms, and the scratch-only native caller
+of a public retention API may likewise be carried to rows that need a
+concrete nonempty-prefix, callback or release carrier — public API only,
+never fabricating a value or an outcome, calibrated RED on its target,
+live source untouched, and never reopening an accepted disposition. A
+row that needs a configuration the installed workspace cannot compile
+may use the feature-isolated driver construction of continuation 28
+(manifest feature lists only, disclosed, live source untouched); a row
+that needs a direct state read may add a scratch-only accessor or use an
+existing public accessor in the same shape, and neither is a relabel by
+argument. Work the remaining 146-row tail by mechanism — 113 LocalTail +
+13 ReopenedOrNew + 11 StrictDropGap + 6 StrictCallerGap + 1
+StrictOtherCarrier + 1 New719Edge + 1 New725Edge — and keep each batch's
+own armed-hit caught-or-surviving omission: an Equal row needs its own
+caught omission and its complete real matrix, a proposal is
+`equal_claim: false` with a survivor for every required cell, and a row
+settled only by argument stays open. The C20–C33 dispositions are
+unchanged.
+
+**Families and duties.** The nine stopped families, the five C19
+families, the five C20 families, the three C21 families, the two C22
+families, the two C23 families, the two C24 families, the two C25
+families, the C26 family, the C27 family, the two C28 families, the two
+C29 families, the C30 family, the two C31 families, the C32 family and
+the C33 family are not repeated without a new mechanism. The 867 named
+open transitive duties, the 24 unresolved sites, the 13 pair columns and
+the five named owners stay explicit; no source design work. Port tables
+and the ledger only by canonical replay.
+
+**Rules.** The two-family stop-loss and every standing rule stand: no
+repository mutation outside `.temp/`, no git, no network, no assertion
+weakening, no re-pinned inventory, no deleted attempt, no relabelled
+invalid recipe. All scratch under `.temp/g15-c2/c34`, the shared probe
+cache and the existing Cargo cache; disclose every path. Invalid,
+unarmed and failed observations never certify a settlement.
+
+**Stop.** Stop for the director gate at the round's end or at the
+two-family stop-loss. C2 stays Open at 146 Residual + 1 Lost; S10 stays
+unopened.
