@@ -747,17 +747,53 @@ Position gains `{1}`) and the `NormalizeRules` rule-expression `List`
 emission (`Rule[c23lhs,91]` against `{c23lhs->91}`). Entry re-derives
 from the c13–c22 evidence alone at 9,033 SAME keys / 155 proofs / 161
 matrices / 887 open; the current graph reads 9,188 / 158 / 164 / 884
-with 24 unresolved, 13 pair columns and five owners. **Next:
-continuation 24** of brief 623 on this unchanged installed source (the
-remaining 163-row tail by mechanism, the 884 duties, the 24 unresolved
-rows, the 13 pair columns and the five named owners; the nine stopped
-families and the five C19, five C20, three C21, two C22 and two C23
-families not repeated without a genuinely new mechanism), then C2's
-settlement round (including P0496's ledger disposition, expected
-unreachable/source-closed, P1566's re-settlement on the installed
-source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
-`CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
-break), G13 S10–S54/F1–F23/R, E2.
+with 24 unresolved, 13 pair columns and five owners. **Continuation 24 is accepted at the round's end**: two rows settle
+Equal (`P1070`, `P1636`). Run (log `.temp/logs/cdx_brief_623.log`,
+19,044 lines, 1,715,843 B, sha256 `4ace60cc…`, memory-scope peak
+3,158,802,432 B, oom 0, oom_kill 0, rc=0; report 13 checks 10 PASS / 2
+FLAGGED / 1 NA, `report.py check` 358 citations by my own run; 46 run
+records all exit 0, the round-end at record index 26 with 20 records
+from the stop point and 19 after; no executed git or network). Gate:
+2,726 live files at `3d760615…` equal to the entry manifest path for
+path (0 differing); production 1,622 files at `8313fbc1…`
+byte-identical to the C23 manifest file for file (0 added, 0 removed),
+`source_rebases=0`; the entry delta is exactly my two post-gate files;
+my own 1,480,950-file protected walk 0/0/0 in 105.6 s and 83,440-file
+sealed walk 0/0/0 in 1.3 s (one sealed derived file,
+`integrity-receipt.json`, refreshed by my own final-audit re-run
+afterwards, disclosed). Ledger 1,042 rows with exactly two verdict
+changes on six settlement columns, outcomes 9/149/5/1/120/161/594/3,
+residual 126 + 15 + 11 + 6 + 1 + 1 + 1 = 161, 78,330 keys and 18,840
+encoding rows byte-identical, 100 tuple records changed on exactly the
+two rows, `P1566` Lost / `P0496` reserved / the 13 pair columns held
+and byte-identical / every earlier settlement unchanged, and every
+inherited artifact byte-identical to the C23 final state. Evidence:
+100 cells / 100 records five-part SAME with real == disabled and
+producer reach (`P1070` 50, `P1636` 50), 2/2 own caught, 2 receipts
+(2 caught, 0 survived/invalid/unarmed), 12,095 fixtures (11,995
+inherited byte-exact + 100 new), 2/2 producer provenance, five owners,
+six controls RED / positive GREEN, my canonical replay byte-identical
+(whole-scene 83,460 files: only the mutable `state.json`/`PROGRESS.md`
+and the refreshed receipt), 5 build receipts (real arm `c340c865…`
+with tree `b9a5db66…`, forced spot fresh), 0 new `unsafe`,
+`report.py check` 358 citations. The two mechanisms are new: the
+ReplacePart guarded-target acceptance consumer (`{11,17,19}` against
+`{11,91,19}`; distinct from the C19/C20 guard suffix and registration
+mechanisms) and the typed `PositionCollectionOutcome` output emission
+(`{2}` against `{{2}}`; distinct from C23's settings level filters).
+Entry re-derives from the c13–c23 evidence alone at 9,188 SAME keys /
+158 proofs / 164 matrices / 884 open; the current graph reads 9,288 /
+160 / 166 / 882 with 24 unresolved, 13 pair columns and five owners.
+**Next: continuation 25** of brief 623 on this unchanged installed
+source (the remaining 161-row tail by mechanism, the 882 duties, the 24
+unresolved rows, the 13 pair columns and the five named owners; the
+nine stopped families and the five C19, five C20, three C21, two C22,
+two C23 and two C24 families not repeated without a genuinely new
+mechanism), then C2's settlement round (including P0496's ledger
+disposition, expected unreachable/source-closed, P1566's re-settlement
+on the installed source, and the `P0325`/`P0326` pair-column
+reconciliation), then CM, `CHANGELOG.md` before S10 (including the
+public `EvalError::Syntax` break), G13 S10–S54/F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named
