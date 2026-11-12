@@ -292,3 +292,95 @@ Run `python3 scripts/report.py check 731` before finishing.
 - Keep the tree compiling at each checkpoint; write
   `.temp/brief-731/PROGRESS.md` after each milestone with the done/verified
   state, the exact next action and any director decision needed.
+
+## Stage-1 cost gate (2026-11-13) — the STOP is well taken, the deterministic decrease is ruled not-a-cost, layout2 is selected, and continuation 1 completes the remaining copied proofs
+
+**Run.** `cdx` (Codex `gpt-6-astra`, reasoning max; session
+`01a1d067-5238-7dd1-9d20-b364012ed5f1`), log
+`.temp/logs/cdx_brief_731.log` (13,671 lines, 795,144 B); memory-scope
+peak 2,920,763,392 B with oom 0 and rc 0; 192,863 tokens; 93 run
+records (90 exit 0, three retained identity-red audits) and 28 executed
+probe tests; `report.py check 731` 400 citations by my own run; five
+canonical builds with one forced SHA spot check `435f3812…` pass; no
+git, network or live edit; all 88 changes under `.temp/brief-731/`.
+
+**My scope gate.** Working tree clean at `4ca183a4`; the live tree
+compared with `source-base` differs only by the added cost-panel test;
+each candidate carries exactly the seven production files as its
+production delta; the 92 copied inventory files are byte-identical with
+0 installed cells and 0 moved rows; the retained earlier-shape matrix
+trees and the C37 scene were read, not edited.
+
+**Evidence, reproduced by me.** I parsed all 16 Callgrind captures
+independently: base / pinned refusal / layout1 / layout2 read
+`prepare_arguments_for_call_with_unevaluated_restore` 1649/1655/1649/1649,
+`evaluate_inner_unstable` 865/870/865/865,
+`evaluate_inner_unstable'2` 173/174/173/173,
+`finalize_cycle_termination_value` 29/28/28/28 and
+`drop_in_place<EvalError>` 23/23/24/23 Ir per workload iteration, with
+equal call counts and both draws identical. My own equal-call scan of
+all `rum_runtime` rows finds no increase on layout2 in either draw; the
+only positive rows outside that scope are std/test/hashbrown rows that
+move in one draw only and never at a rum call count (the standing
+`default_builtin_dispatch_spec_for_symbol` draw-varying row included).
+The disassembly join attributes the finalizer difference to
+`je +1 / jmp -1 / jne -1` — a branch inversion on the same path, not
+removed work. Sizes stay 136/80/136 B.
+
+**Ruling.** The STOP is well taken in form: the two permitted layout
+alternatives are consumed and no unruled increase is shipped. Q1 is
+answered yes: a deterministic decrease at equal call counts is not a
+default-path cost. The bar's intent is no increase; the finalizer's
+`29 -> 28` is accepted and recorded as a decrease, never normalized and
+never used to offset an increase. The three hot rows are exact on
+layout2, so the original blocker is closed. Layout2 is selected as the
+final candidate: it removes every positive `rum_runtime` row, keeps the
+sizes and the `EvalError` drop row, and consolidates the new variant
+into the existing typed-only legacy guard with the original "this wire
+and guard are removed at R" text, which is what item 4 of this brief
+requires. The pinned seed's separate guard text is superseded by the
+brief's own item 4 and stays recorded, never installed.
+
+**Continuation 1 order (stage 1 only, no live edit).** Complete the
+remaining stage-1 obligations on the layout2 source and STOP for my
+gate:
+
+1. 1.1 the final-shape matrix. Rebuild the matrix tree from the retained
+   C37 real tree
+   (`.temp/g15-c2/c37/source-top-level-message-checkpoint-restoration-real`),
+   which carries the C37 instrumentation and the `mod c2_native;`
+   declaration that the `source-refusal-final` copy lacks; apply the
+   final shape's helper and its two `InputRequired` arms to that tree
+   without disturbing the C37 probe code and with
+   `finalize_top_level_control_flow` otherwise byte-exact. Use the
+   original C37 plans and `Checks::ALL`. Every cell produces the typed
+   refusal and a retired owner; the queued arm matches the frozen record
+   under the calibrated predicate — native 30/30 byte-identical,
+   semantic 30/30 after a per-record proof of the single
+   `Global`c37answer` 692↔681 bijection, every other token byte-equal.
+   If the retained tree cannot produce the matrix without fabricating
+   instrumentation or plans, STOP.
+2. 1.3 the reentrant pre-existing-owner probe at 8 and 1. If the route
+   is unreachable, prove it from source and pin the invariant; if it is
+   reachable and the helper abandons, overwrites or steals the
+   pre-existing owner, STOP with the exact tuple. Never weaken.
+3. 1.4 the legacy contract: the typed channel forwards the new error
+   unchanged and no supported path reaches the consolidated guard.
+4. 1.5 the falsifier on the exact layout2 source: remove only the two
+   helper call arms, keep the enum, helper and mappings; the four public
+   parity differences and both class differences return byte-identically
+   to base, the ten public queued cells and the runtime host records stay
+   byte-identical, and the typed-refusal tests turn red.
+
+The ruled cost rows are not re-measured unless the shape changes; any
+shape change is a STOP. Stage 2 remains blocked on my stage-1 gate.
+
+**Recorded, not gated.** The `positive_runtime_rows` field of
+`analyze_cost.py` counts differing rows, not positive ones (the
+worker's own `layout2-positive-rows.json` is empty and my scan agrees);
+the script exits 1 on any difference, including a decrease — the raw
+rows are the evidence. The three identity reds are the literal bar
+evaluations. The `default_builtin_dispatch_spec_for_symbol` row is the
+known draw-varying instrument class and certifies nothing. The
+`b730_nested.rs` cost panel and the retained matrix test are distinct
+files and must not be interchanged in the continuation.
