@@ -72428,3 +72428,28 @@ unarmed and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 161 Residual + 1 Lost; S10 stays
 unopened.
+
+## Continuation 25 amendment (2026-11-12) — resumed on the standing Codex-outage fallback after a cdx quota death
+
+The first dispatch of continuation 25 ran on `cdx` and died at the quota
+wall after six minutes of real work (`You've hit your usage limit …
+try again at Nov 14th, 2026 9:36 AM`); its log is archived as
+`.temp/logs/archive/cdx_brief_623.continuation-25.quota-1`. The round is
+resumed on `mst` (Mistral Vibe, GLM-5.3), the Codex-outage fallback the
+user ruled on 2026-11-07. Nothing else changes: the continuation-25
+order above stands exactly — the unchanged source (`8313fbc1…`, 1,622
+files under `crates/`, no rebase), the settlement order, the family
+restrictions, the worked-tail rules, the two-family stop-loss and the
+stop for the director gate.
+
+The interrupted run left a scene checkpoint at `.temp/g15-c2/c25`:
+`state.json` at `entry-authenticated` (1,042 rows, 78,330 frozen
+requirements, 18,840 encoding rows, inherited outcomes
+9/149/5/1/120/161/594/3, `production_sha256` `8313fbc1…`, 2,726 source
+files, 0 rebases, 0 production changes), five runs all exit 0 (`entry`,
+`protected-entry`, `entry-replay`, `calibration`, `controller-syntax`),
+and the first family was being built when the quota died. Re-derive the
+entry in this run and verify anything you inherit from that checkpoint
+before it certifies a settlement; every artifact this round certifies
+must be produced or verified by this run. The interrupted run changed
+nothing outside `.temp/` (the repository tree is clean).
