@@ -1191,3 +1191,158 @@ no live edit, no git, no network, one bounded Cargo at a time in the
 4-build canonical cap unchanged, the frozen witnesses, assertions, C4
 records and protected files untouched, and no unrun gate credited. If
 the `mst` backend itself refuses, stop and report; I rule the next step.
+
+## Continuation-4 gate (mst, 2026-11-13) — the re-entrant row is a real counterexample; the round is accepted as a well-taken STOP
+
+**Run.** `mst` (GLM-5.3, session `3adf560a-9640-b570-7845-429ce39acc8d`;
+log `.temp/logs/mst_brief_734.log`, 20,371 B; $7.11, 22,833,122 in /
+107,333 out; memory-scope peak 2,430,087,168 B, oom 0, oom_kill 0, rc 0;
+103 run records; 0 git attempts, no network; every write under
+`.temp/brief-734/continuation-4`; `report.py check 734` OK with 694
+citations by my own run; 0 of this continuation's 4 canonical design
+builds, 0 of 8 overall). One disclosure: `/tmp/c4-inventory.txt`, a
+transient scene-path listing written outside the fence during report
+assembly and removed immediately; I verified it is gone. The never-`/tmp`
+rule stands and the deviation is recorded, not a product signal.
+
+**My walk of the scene.** Live 2,732 files = `live-entry-hashes.json`
+except this brief's appended checkpoint (5,809 B; 0 missing / 0 extra / 0
+differing elsewhere). `source-retire-c4` and `source-minimal-c4` equal
+their after-replay receipts (2,734 files each, 0/0/0); the change-4 delta
+against `source-c3-control-c4` is exactly `suspension/core/abandon.rs`,
+the three appended panel cases and the canonical 68-cell
+fingerprint-only replay; the minimal arm is entry plus
+`suspension/core.rs`, `session/session_requests.rs`,
+`suspension/core/abandon.rs`, both pairing regressions and the replay.
+The panel is the unchanged 13,101-byte nine-case prefix plus the three
+appended cases (`31909d29…` full, `97ad286a…` prefix). `git status` is
+still exactly the authorized eleven-file stage-2 install plus the one
+untracked witness; no live file is newer than the dispatch.
+
+**My reproduction — 12 runs of the six receipted probe binaries.** All
+six at eight and one threads reproduce the report's table exactly:
+- drain ladder: `c3-control-c4` 1/1 at both (`inside=
+  (ticket_free_after_recursive_discard=false,retirement_cancel_observed=
+  true,pending=None)`, outer `Ok(("outer-answer",None,[],
+  ["WithCleanup::skipped"])),observations=5,ticket_free=false,
+  observer=true`); `retire-c4` and `minimal-c4` 0/1 at both
+  (`inside=(true,false,None)`, outer `Ok(("outer-answer",None,
+  ["outer-cleanup"],[])),observations=3,ticket_free=true,observer=false`).
+- consume ladder: `entry-c4` 1/1 at both (the green tuple);
+  `c2-control-c4` and `minimal-c4` 0/1 at both (the red tuple).
+The probes are calibrated: `flags & 1` proves the real nested sequence
+executed, `flags & 2` fails exactly on the ticket window, `flags & 4` on
+the cancel observation; no assertion was weakened and both failures are
+reproduced at one thread.
+
+**The mechanism, read from source (minimal arm).**
+`abandon_pending_suspension` takes the outer report at `abandon.rs:10`,
+pushes the owner and drains at `:25`; the drain runs guest cleanups
+inside the window, and the outer finish sits at `:27` after it, so the
+outer ticket is installed through the drain by design. In that window
+`begin_input_suspension` (`core.rs:513-519`) installs unconditionally; a
+nested plain driver entry (`eval_request`) has no ticket of its own
+(only the four `eval_accepted_*` entries install one), and
+`finish_input_required_request` (`session_requests.rs:512-528`) stores
+the nested report in the single slot while the outer ticket is active.
+Both finish authorities — the change-2 consume helper
+(`core.rs:487-492`) and the change-4 abandon finish (`abandon.rs:16`,
+`:27`) — call `finish_active_accepted_request()`
+(`session_helpers.rs:93-96`), which closes whichever ticket is active;
+nothing binds the report to a ticket. The C2-gate premise "a stored
+report implies the active ticket is its own" is false in this
+composition. The counterexample is introduced at change 2 (entry green,
+`c2-control-c4` red) and inherited by change 4; change 3 is not the
+introducer (the drain ladder's `c3-control-c4` is green), and the
+pairing (change 1) is not falsified: every report is stored beside its
+own suspension and every retirement consumes the pair together.
+
+**Ruling (Q5).** The STOP is well taken. The change-2 and change-4
+finish authorities as ruled cannot be installed; there is no rephrased
+retry and no scope cut. The single-owner principle is saved by making
+the report's ticket identity explicit and enforced: the report carries
+the identity of the accepted-request ticket it belongs to, minted by
+the entry that installs the ticket; a report stored by a plain entry is
+ticketless; each finish authority takes the identity and finishes only
+a matching active ticket; a ticketless report's retirement leaves the
+active ticket untouched, so the outer ticket survives to the drain's own
+after-drain finish. The change-2 ruling's "no new field/type/signature"
+constraint is reopened for this identity only: prefer an existing
+identity (the interrupt generation/phase word already carried by
+`RequestInterruptState`), justify and cost-measure any new state, and
+treat any new public surface as a STOP. The drain-active public refusal
+is not selected as the primary: it adds a typed refusal to the
+documented host flow and guards only one window, while the identity
+repairs the authority at every window. Leaving the measured red for
+settlement is rejected: it would ship a known cancel/deadline loss
+inside the 735 shape. **Q6:** yes — both probes become the permanent
+re-entrant class witnesses once the repair is ruled and calibrated;
+they use only public APIs and enter the install fleet with the
+implementation.
+
+**The other owed rows.** Dispositions accepted as reported: the
+overlapping raw-entry install assert stays registered out of class with
+its exact public-panic composition for the C2 settlement round; the
+resume expect is unchanged outside the C1 route contracts; the Batch
+report put-back/refusal is unchanged and green on every arm; the
+rollback `(Some,None)` panic stays registered, its reachability covered
+by the same re-entrant class and to be disposed in the design round.
+
+**Held.** Steps 6-7 and the conditional 735 draft stay held and take no
+credit; brief 733's 4 builds and brief 731's remaining 8 stay
+untouched. The round's 103 runs are recorded; no gate beyond the STOP
+evidence is credited.
+
+## Continuation 5 — design-only, same scene, on `mst`
+
+The line is the one Codex's safety filter refused; per the user's
+2026-11-13 ruling this task is unsuitable for Codex and the `mst` switch
+is necessary, not optional. A second `mst` refusal is a STOP for my
+ruling. **Scope: NONE** — no live edit; work in a byte copy under
+`.temp/brief-734/continuation-5/`; no git, no network; one bounded Cargo
+at a time in the 16 GiB scope; all scratch under that root; at most 4 of
+the remaining 8 canonical design builds; frozen witnesses, assertions,
+C4 records and protected files untouched; no unrun gate credited.
+
+1. Reproduce both ladders on the receipted binaries before any design;
+   the counterexample must reproduce first.
+2. Inventory every report store/take/finish/clear, every ticket
+   install/finish/activation, and every window that runs guest code
+   (the abandonment drain, the fault unwind, the cleanup-pause clear,
+   the rollback, the capture), with one disposition each; prove which
+   entries can store a report while a foreign ticket is active, and
+   prove the nested plain entry is the only ticketless publisher — any
+   other is a STOP.
+3. Design the ownership identity with exact signatures and site
+   changes: the token (prefer the existing interrupt generation/phase
+   word over a new type), the field on the pending report, the minting
+   entry, the threading through the four accepted entries and the
+   plain entries, the finish predicate, the ticketless-retirement
+   behavior, and the effect on the batch put-back, the rollback
+   `(Some,None)`, the fault unwind, the cleanup-pause clear, and both
+   guards' proof premises. Evaluate at least two alternatives (this
+   identity, the drain-active refusal, an entry-instanced finish) and
+   recommend one strictly by evidence. The compiler must enforce the
+   finish precondition.
+4. Calibrate in the copy: both re-entrant ladders green at eight and
+   one on the repaired shape; the same probes red on the change-2 and
+   change-4 arms; the 12-case ticket panel, the frozen at-entry test,
+   both pairing regressions and the C4 controls unchanged; the minimal
+   735 base green through the same gate set; the changed-function cost
+   rows at eight and one (the pause store and both finish sites), with
+   any default-path increase a STOP; the four-change topology intact.
+5. Draft the TEMPLATE implementation brief for the combined 735
+   install: the identity repair plus the four changes, both
+   regressions, the two probes as permanent tests (public APIs only;
+   exact names, placement, calibrated red on the pre-repair arms and
+   green on the repaired arm), the host doc and `CHANGELOG.md` naming
+   the lifecycle contract; the three capture files stay 733's/731 c6's.
+6. Write the round's `rum-report/1` record (preserving this round's
+   under `continuation-5/previous/`), make `report.py check 734` pass,
+   and STOP for my gate with every verdict line quoted.
+
+**Hard rules.** Identical to this brief; no live, protected or frozen
+edit; no git; no network; the probe binaries link only public APIs; no
+assertion, witness, inventory or C4 record changes; a counterexample,
+an unproven row or a public-surface change is a STOP, never an
+exclusion.
