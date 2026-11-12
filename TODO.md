@@ -963,6 +963,57 @@ source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
 `CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
 break), G13 S10–S54/F1–F23/R, E2.
 
+**Continuation 29 is accepted at the round's end on cdx**: three rows
+settle Equal (`P1562`, `P1563`, `P1577`), each on its own caught omission
+and complete 30-cell matrix. The round ran on `cdx` (gpt-6-astra, max;
+session `01a1ce5a-…`; 21,695-line / 1,885,750 B log; 202,855 tokens;
+memory-scope peak 3.38 GB, oom 0, rc 0; 66 run records, 64 exit 0 and two
+retained exit-1 instrument attempts; report 14 checks 10 PASS / 3
+FLAGGED / 1 NA, `report.py check` 463 citations by my own run; no
+executed git or network; the live brief was not appended).
+`P1562`/`P1563` are the accepted-request terminal retirement: the real
+arm drives the public accepted-request text and expression entrypoints
+and reads the actual active-ticket and interrupt-control state after
+every terminal request (`C29TerminalAcceptedRequestState` = [0,0] on both
+arms), while omitting `finish_accepted_value_request` leaves [1,1] on the
+queued arm only; semantics equal, native_same false, 30/30 each. `P1577`
+is the outer resume driver's saved-state restoration: after a second
+`Input` pause inside `drive_resuming_frames` the real resume restores
+`saved_stack`/`saved_depth` (`C29ResumingDriverEvaluationStateMax` =
+[0,0] after every request return), while the omission leaves depth 1 on
+the resumed arm only; semantics equal, 30/30. Neither repeats C28's
+`P0508`/`P0543` mechanisms. Evidence: 90 cells / 90 records five-part
+SAME with real == disabled and producer/route reach (0 errors), 3/3 own
+caught omissions, 3 mutants = 3 caught / 0 invalid / 0 unarmed, 12,572
+fixtures (12,482 inherited byte-exact + 90 new; 37,716 files exact), 3/3
+producer provenance, 3 observer witnesses (512 direct state samples),
+five owners, six controls RED / positive GREEN, five build receipts
+(forced spot fresh `11e9fbba…`), 0 new `unsafe` over 382 copied Rust
+pairs; both family names and mechanisms are absent from every prior
+scene. Gate: 2,726 live files at `1f523922…` equal to the entry
+manifest; production 1,622 files at `8313fbc1…` byte-identical to C28 (0
+added, 0 removed, 0 rebases); the entry delta is exactly `TODO.md` and
+the brief; my own 1,909,987-file protected walk 0/0/0 in 110.4 s and
+86,371-file sealed walk 0/0/0 in 1.3 s (after my replay only
+`integrity-receipt.json` is refreshed, post-stop controllers 15→26,
+disclosed). Ledger: exactly three verdict changes, outcomes
+9/159/5/1/120/151/594/3, residual 116 + 15 + 11 + 6 + 1 + 1 + 1 = 151,
+78,330 keys and 18,840 encoding rows unchanged, 90 tuple records on
+exactly the three rows, 13 pair columns byte-identical, `P1566` Lost,
+`P0496` Reserved, held rows and `P1585`–`P1591` unchanged. Transitive:
+entry re-derives from c13–c28 at 9,673 SAME keys / 167 proofs / 174
+matrices / 875 open; current 9,763 / 170 / 177 / 872 with 3 inherited
+duties closed, 167 retained, 24 unresolved, 13 pair columns and five
+owners. **Next:** continuation 30 of brief 623 on this unchanged
+installed source (the remaining 151-row tail by mechanism; the held rows
+are excluded and the C19–C29 families are not repeated without a
+genuinely new mechanism or instrument), then C2's settlement round
+(including P0496's ledger disposition, expected unreachable/source-closed,
+P1566's re-settlement on the installed source, and the `P0325`/`P0326`
+pair-column reconciliation), then CM, `CHANGELOG.md` before S10
+(including the public `EvalError::Syntax` break), G13 S10–S54/F1–F23/R,
+E2.
+
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
 other account — no automatic fallback. `mst` (Mistral Vibe / GLM-5.3) is
