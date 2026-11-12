@@ -206,3 +206,150 @@ receipts (pre-change red, candidate green or refusal, own omission
 red), the contract decision list, the drafted implementation brief
 path, and every open question. No source change is authorized by this
 brief.
+
+## Design gate (2026-11-12) — the STOP is well taken: the completion-only repair is proven on the frozen matrix but is not class-complete, the refusal candidate is unproved, and neither cost shape settles the bar; design continuation 1 completes both candidates' evidence
+
+**Run.** `cdx` (Codex `gpt-6-astra`, reasoning max; session
+`01a1cfef-3761-7502-a049-25c43760dccb`), log
+`.temp/logs/cdx_brief_730.log` (38,726 lines, 1,893,399 B), memory-scope
+peak 3,036,712,960 B with oom 0 and rc 0; 209,392 tokens; 103 run records,
+17 retained non-zero exits (the freeze instrument correction, three compile
+failures, the expected base/omission REDs, the six class-probe REDs, the
+map REDs, and the final-audit parser correction); report 13 checks 7 PASS /
+3 FLAGGED / 1 FAIL / 2 NA with two FAIL measurements, and `report.py check`
+1,053 citations by my own run; no git or network attempt (no
+`.git-attempts`); all 40 reported changes under `.temp/brief-730/`.
+
+**My scope gate.** I walked the live tree with the C37 entry manifest:
+2,727 files; the delta against entry-37 is exactly three of my own
+post-gate files — `TODO.md`, brief 623 (my continuation-37 acceptance
+append) and brief 730 (my dispatch commit). Production is 1,622 files at
+`8313fbc1583eec539460dfd2ba1ce655452dd86df6134f3e7808b377d07a025c`,
+byte-identical to the entry manifest, 0 added/removed;
+`source_rebases=0`. My own seal walk of the C37 scene is 86,737 files,
+86,737 read, 0 missing, 0 errors, and exactly the two sealed derived files
+my continuation-37 replay refreshed (`attempt-audit.json`,
+`integrity-receipt.json`) differ; the scene's newest mtime is 21:17:54,
+before the 21:25 dispatch. The worker's own final audit re-read the 1,622
+production files and the 22 frozen raw artifacts with 0 changes. Builds ran
+through the canonical `scripts/probe-build.py` wrapper with
+`CARGO_HOME=.temp/g15-c2/cargo-home`, the brief's own `TMPDIR`,
+`RUSTUP_TOOLCHAIN=1.85.0`, offline + locked, `-j 8`, one Cargo at a time, a
+fresh `LOGS` root per invocation, one forced rebuild (`cache_hit=false`,
+`spot_check=pass`, identical `key`/`tree`/`sha256`
+`56aa5622e38e64a3fc1589907b6f37ff1628625939ee211a49e623f241e468cc`).
+
+**Evidence, reproduced by me.** `freeze.py` re-read the C37 raw artifacts
+independently (22 files sha-pinned in two places) and re-derived the matrix,
+the two DIFF classes (9 duplicate-`nocatch` message records, 5
+inner-return-finalization trace records), the 16 own-omission logs (2 seam
+reads each, exactly one mismatch), the six minimized cases and the six
+independent public cases; the frozen matrix equals the C37 real arm equals
+the disabled arm. The base arm then reproduces the frozen 30-cell matrix
+byte-for-byte — full raw JSON records, no normalization · real == disabled
+== fresh base == omission, 30/30 · and `raw_byte_audit.py` proves the
+candidate arms' `queued`/`semantic_queued` fields byte-identical to the
+originals. The repair arm is 30/30 five-part SAME; exactly the 14 former
+DIFF records change, and only `semantic_resumed`, `resumed`, `semantic_same`
+and `native_same` change, field-for-field per the acceptance signature; the
+other 16 records are byte-identical; `queued_changes=0`. The omission arm
+is 14/14 DIFF over exactly the original cell set with all 30 records
+byte-identical to base. The six minimized cases are 6/6 SAME. The public
+parity driver runs `resumed == queued` through the public request/resume
+API: base is RED at the named assertion (`b730_nested.rs:64`,
+`['return-value','throw-messages','return-phase','twice-return']`) at 8 and
+1 threads; the repair is GREEN at 8 and 1; the three controls stay SAME on
+both arms; the repeated-suspension case (`twice-return`, two real pauses) is
+SAME on the repair. The two new class probes are RED identically on base,
+repair and the inline shape at 8 and 1 — the inner `Print[99]` prefix is
+published on the resumed arm (`prints ["99"]` vs `[]`) and the inner
+`$MessageList` reads the outer message on the resumed arm (`1` vs `0`); the
+native-map probe shows the queued `List[1]` return transformation lost on
+both arms. The cost tables match my own re-parse of the raw perf logs: the
+first shape has 7/8 positive whole-process slopes, the inline shape 3/8 with
+sign changes across draws, and the unchanged `eval_request` control moves
+±0.17/call — neither shape establishes the no-increase bar, and the
+changed-function identity was not measured. All 22 frozen artifacts hash
+match the live scene and the scene copies.
+
+**The STOP.** Accepted, and well taken under the brief's own hard rule:
+the evidence settles a narrower fact (a typed completion owner repairs
+`P1555`'s frozen 30 cells and all six public witnesses with the queued
+reference byte-identical), but the same public `eval_text` boundary still
+loses the inner output ownership and the active message environment on the
+resumed arm, the refused alternative has no candidate or falsifier, and
+neither cost shape meets the disabled-path bar. Choosing now would be
+preference in place of evidence. No public contract change is selected, no
+live source or inventory was touched, and the implementation draft is
+marked NOT-READY. The three FLAGGED checks (class inventory, native-caller
+tail, draft) and the two cost FAILs are the honest gaps, not overclaims.
+
+**Rulings for design continuation 1.** The line stays open and the design
+must be completed, not converted into an implementation brief:
+
+1. **Class completeness of the repair.** The two class probes are in the
+   nested top-level boundary class, not outside it: on a resumed nested
+   evaluation the inner computation must run under the inner message
+   environment (checkpoint/dirty installed before the captured frames run,
+   not after the finalization tail) and with the inner output owned and
+   removed as the queued path's `take_batch_output` does. Design one typed
+   owner or owner-scope that carries both across the suspension (naming the
+   exact outer-resume surface it must enter and leave), prove it in the byte
+   copy: both probes SAME at 8/1, the repeated-suspension case still SAME,
+   every queued arm still byte-identical, and every documented host path
+   unchanged. If a source-grounded proof shows a piece cannot be covered,
+   name the exact blocker and record it as a named loss — do not leave it
+   open by argument.
+2. **Disabled-path cost, on the standing instrument.** Whole-process perf
+   slopes cannot establish changed-function identity. Measure the changed
+   functions' ordinary-success-path instruction counts at unchanged call
+   counts with the Callgrind identity lane used by the earlier disabled
+   gates (base and candidate at one path, one codegen unit), plus the
+   rum-vs-rum hot-label/microbench lane if any hot change is claimed. The
+   bar is exact no-increase on the disabled path, no padding, and every
+   changed signature and caller listed.
+3. **The enforced-refusal candidate, built and calibrated.** In the byte
+   copy only: the exact refusal point is an actual empty-queue
+   `InputRequired` inside a same-Session nested top-level entry under an
+   active evaluation; the entry retires its actual captured continuation
+   through the ordered abandonment protocol and returns a distinct typed
+   non-resumable-boundary failure (no fabricated value, no fabricated
+   `InputRequired`). Show at 8/1 that the nested suspension fails with the
+   typed error, that the queued arm stays byte-identical to the frozen
+   reference, that the top-level host source/request/resume paths, the
+   script/file batch boundary and the snapshot-restore terminal path are
+   unchanged, and that the falsifier (refusal removed) restores the silent
+   difference — the four public parity DIFFs and the two class-probe
+   differences return. Name every public surface the typed error would
+   change (`EvalError`, `SessionRequestError`, `HostFailureCode`, exhaustive
+   matches, host mapping) for my ruling; do not install it live.
+4. **The native-caller duty.** A native callback that transforms the value
+   after `eval_text` cannot re-run its Rust frame; state the exact public
+   contract for that case and pin it with a test, or fold it into the
+   refusal surface. Do not claim the transformation survives without
+   re-entering native code, and do not fabricate a guest carrier.
+5. **Decision rule.** The repair is selectable only if items 1-2 hold and
+   the frozen matrix, the six witnesses, the controls and the repeated
+   suspension all stay SAME with the queued bytes unchanged; the refusal is
+   selectable only if item 3 holds with its falsifier and the public
+   surfaces named. The continuation recommends one strictly by evidence; I
+   rule and then write the implementation brief. All prior scene evidence
+   is immutable; new arms get new names under `.temp/brief-730/`; no live
+   edit, no frozen-scene edit, no git, no network, no `unsafe`, no
+   inventory edit.
+
+**Recorded, not gated.** The retained instrument corrections: freeze attempt
+1 asserted the wrong invariant and was corrected to the C37 fact (25
+records native-equal, 5 trace-different), all raw logs kept; three harness
+compile failures and the final-audit parser failure are retained with their
+transcripts; the two class probes and the map probe are diagnostics, RED on
+every arm, not regressions or evidence for unrelated production work; the
+implementation draft stays NOT-READY and must not be dispatched; the
+per-family `native-value-control` and controls are unchanged. No assertion
+was weakened, no record relabelled, no inventory edited.
+
+**Next.** Design continuation 1 of brief 730 as ordered above; then my
+ruling between the two proven candidates; then the implementation brief,
+its gate, and continuation 38 of brief 623 on the installed source; then
+C2's settlement round, CM, `CHANGELOG.md` before S10, G13 S10–S54/F1–F23/R,
+E2.
