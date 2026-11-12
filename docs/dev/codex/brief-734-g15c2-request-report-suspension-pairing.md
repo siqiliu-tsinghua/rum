@@ -864,3 +864,237 @@ report-less owner may ever promote it.
 continuation 38 of brief 623; then C2's settlement round, CM,
 `CHANGELOG.md` before S10 (including this lifecycle contract), G13
 S10-S54/F1-F23/R, E2.
+
+## Continuation-3 gate (2026-11-13)
+
+**Run.** `cdx` (gpt-6-astra, max; session forked from
+`01a1d1a6-d16e-75a1-bfc5-ce949aa0eb4e`; log `.temp/logs/cdx_brief_734.log`,
+14,047 lines, 999,955 B, sha256 `1c1266f7…`; 50 run records — 32 exit 0
+and the 15 designed exit-101 reds (entry/C2 panels at 8 and 1, the four
+ninth-case baselines, the six queued-input probes, the initial profiled
+host run), plus three retained exit-1 wrapper/preparation refusals;
+memory-scope peak 4,370,878,464 B with oom 0, oom_kill 0, rc 0;
+`report.py check 734` OK with 810 citations by my own run; 0 of 4
+continuation canonical builds, 0 of 8 overall; no executed git or
+network; every write under `.temp/brief-734/continuation-3`; live source,
+protected files and earlier scenes unchanged).
+
+**My scope gate** (`gate-734c3/verify.py`): my own full-tree walk reads
+2,732 live files equal to the scene's `live-entry-hashes.json` (0 missing,
+0 extra, 0 differing); the entry copy equals live exactly; the C2 control
+equals the C2 arm on every path except the appended brief, and equals
+entry plus exactly the C2 candidate's eight paths; the change-3 delta
+against the C2 control is exactly `session/session_requests.rs`
+(`bf0a90…` → `c1257a…`) and the panel (`592f67…` → `97ad28…`); the replay
+delta is exactly the canonical `local-contracts.tsv` with 68
+fingerprint-field-only rows; the panel is the C2 panel's 10,016 bytes plus
+the ninth case verbatim; the eleven pins, the three capture files, the C1
+pairing regression, the frozen at-entry file and the ten C4 reference
+logs hash-match; the live tree is still exactly the authorized eleven-file
+stage-2 install plus the one untracked witness at `29f17698`.
+
+**My reproductions.** Entry 4 passed / 5 failed, C2 control 8 / 1 and the
+ninth case 0/1 on both at eight and one; the new candidate's panel 9/9 at
+eight and one on the cargo-built binary; the frozen at-entry test 1/1 at
+eight and one; the host cancel suites `suspension_abandonment_contract`
+12, `suspended_timeout_contract` 13 and `retirement_interrupt` 9 ordinary
+and profiled at eight and one, and `lifecycle_contract`'s six cancel cases
+at eight and one; the queued-input STOP 0/1 on entry, C2 and the new
+candidate at eight and one with the exact tuple (after the discard
+`ticket_free=false`, observer false, no prompt; the request resume returns
+the existing `Other`; the old handle's cancel yields
+`TerminatedEvaluation["Cancelled"]` with `General::cancel`,
+`prints=["new-cleanup"]` and `raw_intact=false`).
+
+**The profiled-t8 red, attributed.** I reproduced the worker's initial
+red — `expired_deadline_before_retirement_skips_every_cleanup` failing on
+the profiled `profile_queue.rs:888` policy assertion — on the untouched
+entry arm 6 of 20 runs, on the C2 arm 1 of 10 and on my change-4 probe 1
+of 20, and 0 of 5 at one thread on both the entry arm and the probe. It
+is a pre-existing, t8-only observation under the switch on the retirement
+deadline path, not a candidate regression and not a defect under the
+standing rule; it is recorded for settlement and does not block.
+
+**The STOP, confirmed.** The queued-input discard is a genuine,
+pre-existing ownership counterexample: `drive_input_request`'s
+queued-response branch (`builtins_input.rs:231-244`) calls
+`abandon_pending_suspension(SupersededOrQueuedInputDiscard)`; the
+abandonment authority takes the owner and clears `pending_request` without
+touching `active_accepted_request`; the raw entry returns with a live
+ticket and no report; the next raw pause installs a report-less owner the
+old ticket never owned; the handoff's unchanged `cancelled ticket && any
+pending generation` condition then lets that ticket retire it. The five
+activation sites are not the cause and cannot close it: the ticket was
+installed by the earlier request entry and was never finished. The
+counterexample is red on the entry arm, so it is pre-existing relative to
+all three ticket changes. Change 3 is accepted as measured.
+
+**Ruling — change 4: the abandonment authority ends the request whose
+report it retires.** One production file, one function; no new field,
+type, signature, variant, frame or counter. In
+`Session::abandon_pending_suspension` (`suspension/core/abandon.rs`),
+replace the plain report clear with a take that records whether a stored
+report was retired, keep the unconditional `PendingRequest` refresh, and
+finish the active accepted request on both exits — immediately on the
+no-suspension early return, and after `drain_abandonment_worklist` returns:
+
+```rust
+let pending = self.take_accounted_pending_suspension_for_abandon();
+let retired_report = self.pending_request.take().is_some();
+self.refresh_memory_owner(
+    crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
+);
+let Some(pending) = pending else {
+    if retired_report {
+        self.finish_active_accepted_request();
+    }
+    return reason;
+};
+
+self.abandonment_worklist.push(pending);
+self.refresh_memory_owner(
+    crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist,
+);
+let reason = self.drain_abandonment_worklist(reason);
+if retired_report {
+    self.finish_active_accepted_request();
+}
+reason
+```
+
+The order is load-bearing: the retirement ticket stays installed through
+the drain, so a later cancel of the same generation and the request's
+absolute deadline still stop the remaining cleanups exactly as today
+(`begin_ordered_abandonment`'s consumed-cancel window and
+`drain_host_interrupt_pending`); only the finish moves after the drain.
+The driver's own cancellation takes its report first, so the authority
+skips the finish there and the driver's terminal handling is unchanged.
+The queued-input discard is the measured instance; every other
+`abandon_pending_suspension` caller that can retire a stored report — the
+accounting-mode `HelperBestEffortDiscard` sites, the trace/monitor sites,
+the checkpoint-rollback discard and the snapshot-restore failure — is
+covered by the same authority change when it does, and the report-less
+abandonments (the frozen at-entry test) are untouched because
+`pending_request` is `None` there. Rejected alternatives: finishing at
+the take (ends the retirement ticket before the drain and loses the
+escalation/deadline window); finishing at the queued-input call site
+(closes the instance, not the class, and re-derives the report predicate
+at each caller); requiring a stored report in the handoff's cancellation
+qualification (breaks the frozen
+`cancelled_request_retires_a_non_request_suspension`, whose whole point is
+that a cancelled ticket retires a report-less owner).
+
+The contract: the stored report is the ownership certificate of the
+active accepted request. It is stored only by a request driver whose
+ticket is active, and every route that retires it ends that request —
+the driver's own take (the driver finishes), the raw resume take (the
+consume finish), and the abandonment authority (change 4, after the
+drain). After the queued-input discard: the handle is inert, the observer
+is clear, the request protocol returns the existing `Other` with empty
+output, a later raw owner stays installed and raw-resumable, and a fresh
+request runs with a free ticket.
+
+**My calibration** (`gate-734c4/patch_c4.py`, two copied trees). The
+change-3 candidate plus change 4 (`.temp/director/probe-734c4/tree`)
+passes the nine-case panel 9/9 at eight and one; my three-composition
+driver (`probe-734c4/queued_positive.rs`, whose central case is the
+worker's probe's assertion sequence) 3/3 at eight and one; the C1 pairing
+regression 1/1 at eight and one; the full runtime lib suite 1432 passed /
+2 failed / 5 ignored at eight, exactly the two standing root reds and the
+same totals as the pre-change arm; the named filters (frozen at-entry
+1/1, `session_requests` 119/119, `suspension_abandonment` 26/26) at eight
+and one; the four host targets 50/50 ordinary and profiled at eight and
+one with `lifecycle_contract`'s six cancel cases. The **minimal 735
+base** (`.temp/director/probe-734c4/min`: live plus `suspension/core.rs`,
+`session/session_requests.rs` and `suspension/core/abandon.rs`, the three
+capture files reverted to live bytes) passes the ticket panel 9/9 and the
+pairing regression 1/1 at eight and one and my driver 3/3, so the
+pairing/ticket design does not depend on brief 733's capture repair and
+735's install base is the minimal one.
+
+**Scope correction to the continuation-3 draft.** Brief 735 installs
+three production files, not two: `suspension/core.rs`,
+`session/session_requests.rs` and `suspension/core/abandon.rs`, plus both
+permanent regressions, the host doc and `CHANGELOG.md`, on the working
+tree that carries the stage-2 install. The three capture files are brief
+733's shape and stay out of 735; the copied-arm install stage must use
+the minimal live-tree base, not the C1/C2 arms that carry them.
+
+**Continuation 4 order.** Design only (`Scope: NONE`), same scene; every
+earlier arm, red, binary and receipt is preserved and new arms get new
+names.
+
+1. Implement change 4 exactly as ruled in a new copied candidate on top
+   of the admission-c3 arm, and prove the delta against that arm is
+   exactly `suspension/core/abandon.rs` plus the appended panel cases and
+   the canonical fingerprint replay; no other production, capture, test,
+   frozen-file or inventory identity/status/disposition/exclusion change.
+2. Promote the queued-input route to the permanent panel as its tenth
+   case with the ordered assertions: after the discard the ticket is free
+   and the observer clear; the old handle is inert (a later cancel changes
+   nothing and the handoff returns `None`); the later raw owner pauses,
+   stays installed and completes through the public raw API; a fresh
+   request returns 42 with a free ticket. Keep the report-less raw-discard
+   control as an eleventh case and the request-owned cancellation handoff
+   control (cleanup runs, `TerminatedEvaluation["Cancelled"]`,
+   `General::cancel`) in the same panel if its helpers allow, otherwise in
+   a small companion permanent test. The admission panel's existing bytes
+   stay untouched (a prefix assertion proves it).
+3. Measure the four-arm ladder at eight and one: entry (the original
+   4 passed / 5 failed plus the tenth case red), C2 control (8/1 plus the
+   tenth case red), change-3 candidate (9/0 plus the tenth case red), new
+   candidate (every case green); the ninth and tenth baselines are 0/1 on
+   the arms that lack their repairs. Frozen at-entry 1/1 at eight and
+   one. Both C4 route controls.
+4. Build the **minimal-base arm** (the exact 735 install shape: live plus
+   the three production files and both regressions, the capture files at
+   live bytes, the canonical inventory regenerated on that base) and run
+   the full panel, the pairing regression, the frozen at-entry test, the
+   named runtime filters, the runtime lib suite with exactly the two
+   standing root reds, and the host cancel suites ordinary/profiled at
+   eight and one. This is the arm 735 installs from; a red here is a STOP.
+5. Complete the report/suspension/ticket induction from source with
+   change 4: every report store/take/clear, every abandonment caller with
+   its certificate disposition, every ticket store/take/finish/
+   activation, the two activation kinds and five sites, the three
+   retirement authorities, every transient window, the owed class rows
+   (overlapping raw-entry install assert, re-entrant callbacks, rollback
+   `(Some, None)`, the resume `expect`, the `Batch` report) and both
+   capture/deferral guards. Every counterexample or unproven row is a
+   STOP, never an exclusion.
+6. Then the still-held continuation-1 gates, unchanged: both pairing
+   routes and both permanent regressions at eight and one,
+   `nested_public_evaluation` 15/15 ordinary and profiled, the named
+   runtime/host/stdlib suites, armed report accounting, `cargo check
+   --all-targets` and `cargo fmt --check` on copies with only the three
+   ruled brief-731 arms red, the five C4 comparisons with one forced SHA,
+   the cost rows (entry at most 599/4 both draws, no equal-call
+   `rum_runtime` increase, the paired resume panel) and the rum-vs-rum
+   microbench A/B.
+7. Rewrite the TEMPLATE-shaped implementation brief for 735 with the
+   settled four-change topology and the minimal-base scope correction
+   above; the host doc and `CHANGELOG.md` name the report/ticket contract,
+   including the queued-input retirement, the deferred-reservation
+   admission and the raw takeover. Then brief 733's continuation on that
+   repaired tree, then brief 731 continuation 6.
+
+**Hard rules for continuation 4.** Same as this brief. At most **4** of
+the remaining **8** canonical design builds; brief 733's held 4 and brief
+731's remaining 8 stay separate, and a step that cannot fit is a STOP.
+**Stop-loss.** Any ownership counterexample, any change to the frozen
+test, a documented host flow, a C4 record or a protected file, any route
+outcome differing from the contract above, or any need to weaken an
+assertion is a STOP for my ruling. Two consecutive compiling candidates
+that move neither a panel nor a named measured counter are a STOP.
+
+**Q4, answered.** The queued-input abandonment leak is repaired at the
+single abandonment authority — a stored report retires its active
+accepted ticket after the cleanup drain, never before it — with the
+escalation, deadline and frozen at-entry behaviour unchanged; the scope
+is `suspension/core/abandon.rs` only.
+
+**Next.** Continuation 4 of this brief; then my design gate and brief
+735; then brief 733's continuation; then brief 731 continuation 6; then
+continuation 38 of brief 623; then C2's settlement round, CM,
+`CHANGELOG.md` before S10 (including this lifecycle contract), G13
+S10-S54/F1-F23/R, E2.
