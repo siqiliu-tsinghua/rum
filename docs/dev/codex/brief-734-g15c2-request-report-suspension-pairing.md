@@ -666,3 +666,201 @@ then brief 733's continuation; then brief 731 continuation 6; then
 continuation 38 of brief 623; then C2's settlement round, CM,
 `CHANGELOG.md` before S10 (including this lifecycle contract), G13
 S10-S54/F1-F23/R, E2.
+
+## Continuation-2 gate (2026-11-13)
+
+**Run.** `cdx` (gpt-6-astra, max; session
+`01a1d1a6-d16e-75a1-bfc5-ce949aa0eb4e`, fork of
+`01a1d18e-8d82-74f1-ae2b-4774a0dccf8f`; log `.temp/logs/cdx_brief_734.log`,
+10,959 lines, 741,005 B, sha256 `5c94a12f…`; 27 continuation-2 run
+records — 20 exit 0, the six designed exit-101 reds (both ticket-panel
+pre runs; both idle-activation runs on both arms), one designed wrapper
+exit 1; memory-scope peak 5,139,734,528 B with oom 0, oom_kill 0, rc 0;
+`report.py check 734` OK with 449 citations by my own run; 0 of 4
+continuation canonical builds, 0 of 8 overall; no executed git or
+network, no `.git-attempts`; every write under
+`.temp/brief-734/continuation-2`; live source, the seven refusal files,
+the permanent witness, the five C4 records and every earlier scene
+unchanged).
+
+**My scope gate.** My own full-tree walk reads 2,732 live files = the
+scene's `live-entry-hashes.json` exactly (0/0/0), and the entry copy =
+live exactly; the pre arm = entry + five changed files + the C1 pairing
+regression; the candidate = entry + six changed + two added; candidate
+minus pre = exactly `session/session_requests.rs`,
+`suspension/core.rs`, the canonical inventory and the added
+`crates/rum-stdlib/tests/request_ticket_pairing.rs`. The C1 pairing
+regression and the three capture files are byte-equal to the C1
+candidate; the inventory changes 68 of 69 rows, every one
+final-fingerprint-field only, no row added/removed/reordered, and the
+installed file is the generator's own output (sha256 `415059c2…`); the
+nine immutable pins match live; the frozen
+`cancelled_request_retires_a_non_request_suspension` file is
+byte-identical on live and on all three arms; the ticket regression
+equals the scene copy (280 lines); every change is under `.temp`, no live
+path changed. Gate script: `.temp/director/gate-734c2/verify.py`.
+
+**My reproductions.** The pre-repair arm is 4/4 failed at eight and one
+(the four calibrated reds: completed-ticket/later-raw,
+completed-ticket/vacant, unhonoured cancel before raw takeover, deferred
+reservation after a raw owner); the candidate is 8/8 at eight and one;
+the frozen test is 1/1 on both arms at both counts; and the
+idle-activation route is 0/1 on both arms at both counts with the exact
+tuple — the idle hand-off returns `Ok(None)` after promoting the
+reservation, the later raw `eval_text` pauses at `later-raw-owner`, the
+reserved handle's cancel is observed, and the second hand-off returns
+`TerminatedEvaluation["Cancelled"]`, `prints=["later-raw-cleanup"]`, the
+`General::cancel` message, `pending=None`, `raw_intact=false`.
+
+**The STOP is well taken.** The continuation-2 gate admitted activation
+when the session had no *report-less* pending owner; that is vacuously
+true at an idle call, so the hand-off still promoted a reservation with
+no request entry, and the promoted ticket later owned and abandoned raw
+work. Reading the source: `session_requests.rs:81` is the only activation
+outside `install_accepted_request`'s four explicit install sites, and
+every public caller of the hand-off reaches it (`eval_request`,
+`eval_expr_request`, `eval_script_request` and `eval_file_request` call
+it first; the host's `call_unprotected` calls it directly). The unproved
+implication the worker named is exact: an active ticket at a hand-off
+either owns the current slot or was installed by the request entry
+admitting it. The defect is pre-existing relative to both ticket changes
+(both arms red).
+
+**Ruling — change 3: the deferred reservation is an entry-owned
+admission.** Two edits in one production file; no new field, type,
+signature, variant, frame or counter:
+
+1. In `finish_cancelled_pending_evaluation_request`
+   (`session_requests.rs:78-98`), replace the continuation-2 two-branch
+   gate with the single report-gated activation:
+
+   ```rust
+   if self.pending_request.is_some() {
+       self.activate_pending_accepted_request()?;
+   }
+   ```
+
+   The stored report is the ownership certificate: only a request-owned
+   owner may be retired by a reservation. This is the documented host
+   flow — `cancel_handle` targets an input-suspended request, and the
+   script contract's "cancel the batch's request handle and re-enter to
+   report cancellation and abandon it" — and an idle or report-less call
+   never promotes. The cancelled check, the abandonment and the finish
+   after it are byte-unchanged.
+
+2. In each of the four admitting entries, immediately after
+   `self.reject_overlapping_evaluation_request()?;`
+   (`eval_request:187`, `eval_expr_request:216`, `eval_script_request:390`,
+   `eval_file_request:428`), insert
+   `self.activate_pending_accepted_request()?;`.
+
+   The order is load-bearing: the overlap rejection has already refused
+   every suspended session, so a promoted ticket can only own the request
+   this entry is about to run. A cancelled reservation is then reported
+   by the existing `finish_cancelled_active_request`
+   (text/expression) or finished by the same completion the entry's own
+   ticket gets (script/file); an uncancelled one is that request's
+   ticket and is finished by the existing terminal paths. Activation must
+   not move to the top of an entry or into the hand-off's idle path —
+   either ordering recreates this counterexample.
+
+Do not change the frozen test's bytes, the eight existing panel cases,
+the hand-off's cancelled/abandon path, or the entry order (hand-off,
+overlap, activation). **Contract:** a deferred reservation can never
+touch a report-less owner; it is consumed by the next admitted request
+(`cancel_handle`'s "reserves the next evaluation request") or by a
+cancelled hand-off on a request-owned suspension; after that request
+completes, calls on the handle are inert. Name it in the host doc and
+`CHANGELOG.md` together with the earlier two changes.
+
+**My calibration (measured, not gated).** A byte copy of the C2 candidate
+with exactly this shape (`.temp/director/probe-734c3/`; one scope, 8/1):
+the 8-case panel 8/8 at eight and one; the idle route 1/1 at eight and
+one; four added compositions green at eight and one (an idle reservation
+cancels the next request and then goes inert; an uncancelled idle
+reservation runs the next request; a refused entry leaves the reservation
+inert with the raw owner intact and the next admitted request cancelled;
+a deferred reservation blocks a second accepted identity); the frozen
+at-entry test 1/1 at eight and one; the whole `rum-host` suite green at
+eight, with the three switch-gated targets green again under
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1` at eight and one — including
+`suspension_abandonment_contract` 12/12, `suspended_timeout_contract`
+13/13, `retirement_interrupt` 9/9 and `lifecycle_contract`'s six cancel
+tests. This is evidence for the ruling, not a receipt for the
+continuation.
+
+**Continuation 3 order** (design only, same scene, at most 4 of the
+remaining 8 design builds):
+
+1. In a new copied candidate (new arm name; the C1 and C2 arms, reds,
+   binaries and receipts preserved), implement change 3 exactly as ruled
+   on top of the C2 candidate. No other production edit; the three
+   capture files, the C1 pairing regression and the frozen test stay
+   byte-identical.
+2. Promote the idle-activation diagnostic into the permanent panel as its
+   ninth case, using the panel's own helpers, asserting in order: the
+   first hand-off is `Ok(None)` and leaves the reservation unpromoted
+   (control non-idle, no pending input, observer false); the later raw
+   `WithCleanup[InputString["later-raw-owner"],Print["later-raw-cleanup"]]`
+   pauses with that prompt; cancelling the reserved handle sets the
+   observer; the second hand-off is `Ok(None)` with the cancel message
+   absent, the raw owner intact and raw-resumable; the next admitted
+   `eval_request` returns `Cancelled` (the reservation is honoured, not
+   lost); a fresh request returns 42 with a free ticket and a clear
+   observer. The case must be red on the entry arm and on the C2 arm
+   (0/1 at eight and one) and green on the new candidate; the eight
+   existing cases stay green on the new candidate.
+3. Re-run the frozen at-entry test on the new candidate at eight and one
+   (byte-identical, 1/1), the named host cancel-contract suites, and the
+   three-arm ladder at eight and one: entry arm 5 failed of 9, C2 arm 1
+   failed of 9, new arm 0 failed of 9.
+4. Complete the ticket induction from source with activation as a
+   two-kind, five-site duty: the report-gated hand-off and the four
+   post-reject entries. Prove each activation installs the ticket into a
+   session that immediately consumes it (the hand-off only with a
+   request-owned owner; the entry only into an empty session), and that
+   no active ticket can coexist with a report-less owner outside the
+   frozen at-entry installation and the pre-existing out-of-class
+   overlapping raw-entry assert; give every store/take/finish/restore/
+   reset site one disposition; state every transient window; no
+   counterexample. Then complete the report/suspension induction and
+   dispose the owed class rows (overlapping raw-entry install assert,
+   re-entrant callbacks, rollback `(Some, None)`, the resume `expect`,
+   the `Batch` report). An unproven row is a STOP, never an assertion.
+5. Then the still-held continuation-1 gates, unchanged: the two routes at
+   eight and one with their settled tuples, both regressions, permanent
+   `nested_public_evaluation` 15/15 ordinary and profiled, the named
+   runtime filters, the seven host and nine stdlib suites, armed report
+   accounting, `cargo check --all-targets` and `cargo fmt --check` with
+   only the three ruled brief-731 arms red, the five C4 release
+   comparisons with one forced SHA, and the cost rows (entry at most
+   599/4 both draws, no equal-call `rum_runtime` increase, the paired
+   resume panel). No credit from unrun gates.
+6. Rewrite the TEMPLATE-shaped implementation brief for 735 with the
+   settled three-change topology — the report retirement and the ticket
+   finish at the consume authority (`suspension/core.rs`), the
+   reservation activation ownership (`session/session_requests.rs`),
+   both permanent regressions, the host doc and `CHANGELOG.md`, on the
+   working tree that carries the stage-2 install — then brief 733's
+   continuation on that repaired tree, then brief 731 continuation 6.
+   State the class duty and the stop-loss.
+
+**Hard rules for continuation 3.** Same as this brief. At most **4** of
+the remaining **8** canonical design builds; brief 733's held 4 and brief
+731's remaining 8 stay separate, and a step that cannot fit is a STOP.
+**Stop-loss.** Any ownership counterexample, any change to the frozen
+test, a documented host flow, a C4 record or a protected file, any route
+outcome differing from the contract above, or any need to weaken an
+assertion is a STOP for my ruling. Two consecutive compiling candidates
+that move neither the panel nor a named measured counter are a STOP.
+
+**Q3, answered.** A deferred reservation may be promoted only by the
+report-gated cancellation hand-off (a request-owned owner) or by an
+admitting request entry after its overlap rejection; no idle call and no
+report-less owner may ever promote it.
+
+**Next.** Continuation 3 of this brief; then my design gate and brief
+735; then brief 733's continuation; then brief 731 continuation 6; then
+continuation 38 of brief 623; then C2's settlement round, CM,
+`CHANGELOG.md` before S10 (including this lifecycle contract), G13
+S10-S54/F1-F23/R, E2.
