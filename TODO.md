@@ -1063,6 +1063,62 @@ pair-column reconciliation), then CM, `CHANGELOG.md` before S10
 (including the public `EvalError::Syntax` break), G13 S10–S54/F1–F23/R,
 E2.
 
+**Continuation 31 is accepted at the round's end on cdx**: one row
+settles Equal (`P1476`) on its own caught omission and its complete real
+matrix under a genuinely new synchronous-event observer, and the
+two-family stop-loss correctly does not fire. The round ran on `cdx`
+(gpt-6-astra, max; session `01a1ceaf-…`; 26,916-line / 2,173,162 B log;
+240,426 tokens; memory-scope peak 3.32 GB, oom 0, rc 0; 55 run records,
+the round-end at index 30 and one retained exit-3 calibration attempt;
+report 14 checks 10 PASS / 3 FLAGGED / 1 NA, `report.py check` 418
+citations by my own run; no executed git or network; the live brief was
+not appended). `P1476` is the resumed fixed-point equality accounting in
+`Session::resume_fixed_point_from` (`resolution.rs:418`, producer pause
+at `:466`): `evaluate.fixed_point_equal` is not a `PhaseKey`, so its
+timing records through `logical::synchronous::add` into `Epoch::events`,
+which the standing `logical_profile_test_rows` observer never reads; the
+round first parked that blind-observer calibration (the same omission
+armed, hit twice, survived, nothing published) and then added a
+scratch-only read of the actual event vectors (non-duration counts plus
+`input_required`) to both arms, so the real arms read `[6,6,…]` on both
+sides and the armed omission reads `[4,4,…]`. Evidence: 30 cells / 30
+records five-part SAME with real == disabled and producer/route reach (0
+errors), each cell-key set equal to the row's 30 required nonencoding
+keys, its own armed-hit caught omission on the required
+`Middle`/`phase_observation.trace` key with exactly one differing key and
+equal semantic values, 1 caught mutant / 0 invalid (the first family's
+survivor retained and referenced by nothing), 12,663 fixtures (12,632
+inherited byte-exact + 31 new; 37,989 files exact), four C4 control
+receipts and three calibration panels re-hashed exact on my own run, five
+build receipts (forced spot fresh `805d2e47…`), 0 new `unsafe` over 6,316
+compared Rust files and 414 changed pairs; both family and both strategy
+names are absent from every prior scene, and no C16 mutant record ever
+armed `P1476`. Gate: 2,726 live files at `faae58e3…` equal to the entry
+manifest; production 1,622 files at `8313fbc1…` byte-identical to C30 (0
+added, 0 removed, 0 rebases); the entry delta is exactly `TODO.md` and
+the brief; my own 2,077,795-file protected walk 0/0/0 in 111.0 s and
+87,090-file sealed walk 0/0/0 in 1.6 s (after my replay only
+`integrity-receipt.json` is refreshed, post-stop controllers 20→25,
+disclosed). Ledger: exactly one verdict change, outcomes
+9/160/5/1/122/148/594/3, residual 115 + 13 + 11 + 6 + 1 + 1 + 1 = 148,
+78,330 keys and 18,840 encoding rows unchanged, 30 tuple records on
+exactly `P1476` (its tuples now all SAME), 13 pair columns
+byte-identical, `P1566` Lost, `P0496` Reserved, held rows and
+`P1585`–`P1591` unchanged. Transitive: entry re-derives from c13–c30 at
+9,823 SAME keys / 172 proofs / 179 matrices / 870 open; current 9,853 /
+173 / 180 / 869 with 1 inherited duty closed, 172 retained, 24
+unresolved, 13 pair columns and five owners. **Next:** continuation 32
+of brief 623 on this unchanged installed source (the remaining 148-row
+tail by mechanism; the held rows are excluded and the C19–C31 families
+are not repeated without a genuinely new mechanism or instrument; the
+read-only synchronous-event observer may be carried to applicable
+profiling-tail mechanisms, never reopening an accepted disposition), then
+C2's settlement round (including P0496's ledger disposition, expected
+unreachable/source-closed, P1566's re-settlement on the installed source,
+and the `P0325`/`P0326` pair-column reconciliation), then CM,
+`CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
+break), G13 S10–S54/F1–F23/R, E2.
+
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
 other account — no automatic fallback. `mst` (Mistral Vibe / GLM-5.3) is
