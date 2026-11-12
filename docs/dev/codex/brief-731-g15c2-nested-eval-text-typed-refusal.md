@@ -678,3 +678,163 @@ are the continuation-3 duty. My wire-arm build is a director
 calibration, not a canonical build, and does not consume the brief's
 24. The install-time permanent matrix remains the install gate, not
 this copied matrix.
+
+## Continuation-3 gate (2026-11-13) — the stage-1 STOP is cost: the entry conversion adds 122 Ir per workload iteration on the ordinary entry path, and the shape must ride the result inspection the entry already performs
+
+**Run.** `cdx` (Codex `gpt-6-astra`, reasoning max; session
+`01a1d0c0-fc35-70e0-a891-ae1d7da8273e`, fork of
+`01a1d09e-87bb-7143-9216-8aef349b0363`); log
+`.temp/logs/cdx_brief_731.log` (6,940 lines, 528,997 B); memory-scope
+peak 3,287,826,432 B with oom 0, oom_kill 0, rc 0; 1,076,316 tokens;
+126 run records (95 exit 0; 28 exit 101 — the designed reds: the
+falsifier's base and falsifier arms, the two legacy red arms and the
+two owner calibrated reds; 3 exit 1 — two retained legacy-audit
+instrument mistakes and the cost audit's STOP exit); `report.py check
+731` 1,189 citations by my own run; 18 of the 24 canonical builds
+consumed (six here), six remain; one newly requested forced-SHA check,
+equal; no executed git or network; 249 changes, all under
+`.temp/brief-731/`.
+
+**My scope gate.** Working tree clean at `521754c8`; no live edit. The
+scene's scope audit reproduces under my run: the 2,728-file live tree
+unchanged, the 2,728-file C37 real tree unchanged, the 22 frozen
+references unchanged, all nine prior copied sources unchanged, and the
+incoming continuation-2 report byte-identical. Its shape section reads
+seven production files, the three shared finalizers byte-exact, one
+entry conversion site, one helper caller, no new frames, derives or
+`unsafe`; 115 copied inventories byte-identical with 0 installed cells
+and 0 moved rows. The one assertion that fails in my shell is the
+worker-scope resource check (`memory.max == 17179869184`), exactly as
+in continuation 2: my shell is not inside the worker's 16 GiB scope,
+and that is an environment assertion, not a scene difference. The
+candidate source differs from the continuation-2 copy in exactly four
+files: `suspension/error.rs` (the authorized zero-argument forward and
+inverse wire arms, the guard narrowed back to
+`ContinuationSlotMismatch(_)` alone), `b730_nested.rs` (the cost-panel
+test and the new probe modules), `b731_legacy_probe.rs` (the two
+corrected guest expectations) and the retained `b731_legacy_probe_old.rs`.
+The base tree's production files equal live; the cost panel's function
+body is byte-identical between the two cost arms. All eight binaries
+match their receipts (base `435f3812…`, public-wire `e7e14dec…`, the
+forced public build equal, matrix `55e68ac9…`, runtime `524cba5e…`,
+falsifier `79f9bbc6…`, and the two calibrated-red binaries
+`public-layout2` and `public-revised3`).
+
+**Evidence, reproduced by me.** I re-ran every audit against the
+retained logs and the derived files come back byte-identical
+(`matrix-bijection-proof.json`, `owner-proof.json`,
+`falsifier-proof.json`, `class-table.json`, `wire-class-table.json`,
+`structural-slot-source-proof.json`, `bound-provenance.json`, all five
+cost files, `scope-resources.json`, `production-hashes.json`). I then
+re-ran the probes themselves at 8 and 1 on the receipted binaries, into
+my own scratch: the 30-cell matrix's `REFUSAL_CELL` records are
+byte-identical to the scene's at both thread counts; the owner witness,
+its four controls and the continuation-1 calibrated red are
+byte-identical; the typed channel and the wire round trip are identical;
+the 14 legacy cases are 12 byte-identical, the two TestReport records
+differing only in their Timing values, with the guest `$Failed` lines
+and the resumed outer pause identical; the falsifier's records are
+identical with its expected red/green pattern. The class table: 29
+`EvalError` variants, 28 serialized in both directions, the new variant
+at the zero-arity tag `InternalContinuationEvalErrorNestedEvaluationInputBoundary`
+(forward `error.rs:276`, inverse `:628`), `ContinuationSlotMismatch` the
+sole `unreachable!` with its driver-fault producer proof; six finalizer
+sites, the loader and cancellation dispositions unchanged.
+
+**The defect, measured.** The cost lane reads
+`eval_input_with_terminated_handling` 599 → 721 self Ir per workload
+iteration at calls = 4 in both draws, and I reproduced those numbers
+from the raw captures with my own parser. That is +122 per iteration —
++30.5 per call — on the ordinary success path of every text, script and
+file entry. My own dynamic per-instruction capture attributes it: the
+added second match over the finalizer's 136-byte `Result` makes the
+compiled code materialize the whole result in a fresh stack slot and
+re-load its payload on every call (24 executed instructions per call
+where base executes 5), and the extra live range spills other values
+across the function; `EvalError` is still 136 B, so this is the
+expression shape, not the enum layout. I calibrated a cheaper
+closure-level expression in a director scratch (the conversion as
+`.map_err(...)` on the finalize match's tail; one fresh compile at the
+scene's stable builder path, build `c3dir-cheap-1`, binary
+`f47f78b2…`, disclosed and not counted against the brief's cap): it
+reads 673 per iteration at N = 10/20 — 48 better, still +74. A
+closure-local re-expression is therefore not enough.
+
+**Ruling.** The STOP is well taken. The contract is proved on this
+shape — matrix, owner, legacy, wire round trip, falsifier and class all
+green on my reruns — but a proved feature with a default-path
+regression does not install. layout2's enum placement, the public
+surfaces, the seven production files and the wire-carrier ruling stand;
+the entry conversion's expression must change:
+
+1. The conversion must ride the result inspection the entry already
+   performs: the existing outer `Result` match after the closure, whose
+   success arm already branches. The ordinary success path must execute
+   at most base's instructions; the conversion runs only on the error
+   arm. The worker chooses the exact expression; no new production file
+   and no public surface.
+2. The contract is unchanged: entry-scoped, ownership-preserving
+   conversion of a finalizer-produced `InputRequired` before it escapes;
+   the wire carries the typed error; `Session::pending_request` remains
+   the ownership test. If moving the conversion after the message-list
+   checkpoint restore changes any observed behavior, the panels decide,
+   and a red panel is a STOP, never a waiver.
+3. The bar: the entry row reads at most 599 at calls = 4 in both draws
+   (a decrease is recorded, never normalized); the whole equal-call scan
+   shows no `rum_runtime` row increase in either draw; the sizes stay
+   136/80/136; the four hot rows and the `EvalError` drop stay at their
+   scored values; the `RuntimeMessage` drop row is recorded, never
+   offset; two draws at N = 10/20, one codegen unit, serial and pinned;
+   the base arm reuses the receipted `bin/base` (sha `435f3812…`, its
+   production files equal to live) and does not consume a build.
+4. Build budget: the canonical-build cap is extended from 24 to 30 (12
+   fresh compiles remain from now), because the cost STOP forces a shape
+   iteration. Every fresh compile is recorded; a cache hit on a
+   byte-identical assembled tree and a reused receipted binary do not
+   count; a director calibration does not count.
+5. On the repaired shape, re-run the full stage-1 set on the exact final
+   binaries: the 30-cell matrix at 8/1; the owner witness with its four
+   controls and the continuation-1 calibrated red; the typed channel;
+   the 14-case legacy probe; the wire round trip; the falsifier; the
+   class table; the cost lane. Then report stage 1 and STOP for my gate.
+   Stage 2 remains blocked.
+
+**Erratum (mine).** The continuation-2 gate section and continuation-3
+order item 3 said "the twelve in-language routes return the typed
+error". The raw evidence reads otherwise: ten uncaptured routes return
+the typed error; the two TestReport routes return `Ok(1)` as failed-test
+captures under the existing expectation; the two guest `Get` routes
+return `$Failed` plus the exact refusal message. My continuation-3
+order's "the twelve in-language cases return the typed error" is
+withdrawn and corrected to ten typed + two captures + two `$Failed`.
+The worker's correction is exactly this: it preserved the TestReport
+capture expectation, corrected only the two guest expectations,
+retained the old probe source, binary and failure, and quoted the
+resumed variant's outer pause. No assertion was weakened.
+
+**Recorded, not gated.** The three exit-1 runs are retained instrument
+mistakes, not product signals: the first legacy audit demanded byte
+identity of the TestReport Timing fields; the second demanded the
+captured Display inside the TestReport traces; the cost audit exits 1
+on its STOP verdict by design. The read-only context-inspection
+deviation is recorded; the stage-2/3 deferral is correct; my calibration
+build and the scene's stable builder path are disclosed. The TestReport
+timing variance is an instrument fact: the probe compares those records
+structurally, never byte-for-byte, and their raw Timing values stay
+unmodified in the retained evidence.
+
+**Continuation 4 order (stage 1 only, no live edit).**
+
+1. Re-express the entry conversion under ruling items 1-2, keeping the
+   seven production files and every public surface.
+2. Calibrate each candidate expression in scratch with the cost lane
+   (the entry row plus the whole equal-call scan, two draws) before
+   selecting; record every attempt and its measurement; no shape is
+   selected without meeting item 3.
+3. Reassemble the four copies from the same origins with the repair;
+   rebuild through the canonical builder with fresh `LOGS` roots and one
+   `--force` sha256 check; record every receipt and the extended budget.
+4. Re-run the full stage-1 set of ruling item 5 on the exact final
+   binaries at 8 and 1.
+5. No live edit; report stage 1 and STOP for my gate. Stage 2 remains
+   blocked.
