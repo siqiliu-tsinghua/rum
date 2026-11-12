@@ -619,15 +619,44 @@ ownership failures and 49 armed-no-hit diagnostics all uncited, 602
 receipts, 10,790 fixtures, 8/8 producer provenance, six controls RED /
 positive GREEN, canonical replay and port replay byte-identical, 11 build
 receipts (real arms `c340c865…`, forced spot fresh), 0 new `unsafe`,
-`report.py check` 2,263 citations. **Next: continuation 20** of brief 623
-on this unchanged installed source (the remaining 180-row tail by
-mechanism, the 901 duties, the 24 unresolved rows, the 13 pair columns
-and the five named owners; the nine stopped families and the five C19
-families not repeated without a genuinely new mechanism), then C2's
-settlement round (including P0496's ledger disposition, expected
-unreachable/source-closed, and P1566's re-settlement on the installed
-source), then CM, `CHANGELOG.md` before S10 (including the public
-`EvalError::Syntax` break), G13 S10–S54/F1–F23/R, E2.
+`report.py check` 2,263 citations. **Continuation 20 is accepted at the
+round's end**: six rows settle Equal (`P0278`/`P0281`/`P0284`/`P0327`/
+`P0479`/`P0936`) and one settles `NoObservableTail` (`P0832`). Run (log
+`.temp/logs/cdx_brief_623.log`, 27,113 lines, 2,361,007 B, sha256
+`72228b21…`, memory-scope peak 3.18 GB, oom 0, rc=0; report 13 checks
+9 PASS / 3 FLAGGED / 1 NA, `report.py check` 654 citations by my own
+run; 140 run records, four retained scaffold failures; no git or
+network). Gate: 2,726 live files at `ef39ef0d…` equal to the entry
+manifest path for path (0 differing), production 1,622 files at
+`8313fbc1…` byte-identical, `source_rebases=0`; my own 1,143,333-file
+protected walk 0/0/0 and 93,627-file sealed walk 0/0/0 (one sealed
+derived file refreshed by my own final-audit re-run afterwards,
+disclosed). Ledger 1,042 rows with exactly seven verdict changes on six
+settlement columns, outcomes 9/137/5/1/120/173/594/3, residual
+138 + 15 + 11 + 6 + 1 + 1 + 1 = 173, 78,330 keys and 18,840 encoding
+rows byte-identical, 385 tuple records changed on exactly the seven
+rows, `P1566` Lost / `P0496` reserved / `P0528`/`P0340`/`P0824` held /
+13 pair columns and the earlier settlements byte-identical. Evidence:
+385 cells / 473 records five-part SAME with real == disabled and
+producer reach, 6/6 own caught, 60/60 `P0832` proposal cells with own
+armed-hit survivors and phase tracing, 66 receipts (0 invalid, 0
+unarmed), 11,175 fixtures (10,790 inherited byte-exact + 385 new), 7/7
+producer provenance, five owners, six controls RED / positive GREEN,
+my canonical replay and port replay byte-identical, 11 build receipts
+(real arms `c340c865…`, forced spot fresh), 0 new `unsafe`,
+`report.py check` 654 citations. Entry re-derives from the c13–c19
+evidence alone at 8,227 SAME keys / 141 proofs / 145 matrices / 901
+open; the current graph reads 8,568 / 148 / 152 / 894 with 24
+unresolved, 13 pair columns and five owners. **Next: continuation 21**
+of brief 623 on this unchanged installed source (the remaining 173-row
+tail by mechanism, the 894 duties, the 24 unresolved rows, the 13 pair
+columns and the five named owners; the nine stopped families, the five
+C19 families and the five C20 families not repeated without a genuinely
+new mechanism), then C2's settlement round (including P0496's ledger
+disposition, expected unreachable/source-closed, and P1566's
+re-settlement on the installed source), then CM, `CHANGELOG.md` before
+S10 (including the public `EvalError::Syntax` break), G13 S10–S54/
+F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named
