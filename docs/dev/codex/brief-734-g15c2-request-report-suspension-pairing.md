@@ -1098,3 +1098,96 @@ is `suspension/core/abandon.rs` only.
 continuation 38 of brief 623; then C2's settlement round, CM,
 `CHANGELOG.md` before S10 (including this lifecycle contract), G13
 S10-S54/F1-F23/R, E2.
+
+## Continuation-4 checkpoint (2026-11-13)
+
+**The round stopped on Codex's own safety filter, not on a product
+signal.** Run: `cdx` (gpt-6-astra, max; session
+`01a1d1ef-84e7-7350-83e5-e1242c4097e7`, fork of
+`01a1d1c5-97af-7b50-894a-d5a0cf47491e`; log archived as
+`.temp/logs/archive/cdx_brief_734.continuation-4.cdx-filter`, 6,584
+lines, 461,145 B, sha256 `d8527a58…`; 68 run records — 48 exit 0, 18
+exit 101 (the designed panel/baseline reds at eight and one on the
+entry, C2 and C3 arms, and the minimal base's two standing runtime-lib
+reds), two retained exit-1 harness refusals (`minimal_gates.py`'s
+aggregate-versus-primary wrapper and `minimal_resume.py`'s filename
+selector, both resolved in PROGRESS and neither counted as a gate);
+memory-scope peak 4,396,109,824 B with oom 0, oom_kill 0, rc 1; 0 of 4
+continuation canonical builds, 0 of 8 overall; no executed git, no
+`.git-attempts`, no network; every write under
+`.temp/brief-734/continuation-4`). After the step-4 minimal-base gates
+passed, the worker was constructing the step-5 re-entrant class probe
+when its next turn was refused: "This content was flagged for possible
+cybersecurity risk. … apply for Daybreak access". The drafted probe
+(`reentrant_drain_probe.rs`, `reentrant_drain_probe.py`) is preserved
+and was never executed; no counterexample or class row was settled or
+excluded.
+
+**Steps 1-4, preserved and not yet gated.** My own walk of the scene at
+the stop: the live tree equals the round's `live-entry-hashes.json`
+exactly (2,732 files, 0 missing / 0 extra / 0 differing) and `git
+status` is still the authorized eleven-file stage-2 install plus the one
+untracked witness; both changed arms equal their after-replay receipts
+byte-for-byte (2,734 files each, 0 / 0 / 0); the change-4 delta against
+the admission-c3 control is exactly `suspension/core/abandon.rs`
+(`09ac19ec…`→`0900f344…`) plus the panel
+(`97ad286a…`→`31909d29…`), and the panel is the unchanged nine-case
+13,101-byte prefix plus the three appended cases (`a0a3d2af…`, one blank
+separator line); the recorded ladder at eight and one is entry 6/6 (the
+old 4/5 plus the tenth case red plus both controls), C2 10/2, C3 11/1
+and the new candidate 12/0, with the ninth baseline 0/1 on entry/C2, the
+tenth 0/1 on entry/C2/C3, the frozen at-entry test 1/1 and both C4 route
+controls 1/1; the minimal-base arm — live plus `suspension/core.rs`,
+`session/session_requests.rs` and `suspension/core/abandon.rs`, both
+regressions, the capture files at live bytes and the canonical inventory
+regenerated on that base — passes the 12-case panel plus the pairing
+regression, the frozen test 1/1, the six named runtime filters, the
+primary runtime lib 1432 passed / 2 failed / 5 ignored at eight and one
+with exactly the two standing root reds (1434/2/5 counting the two
+nested child receipts, no unexpected failure), four host targets 50/50
+ordinary and profiled at eight and one and `lifecycle_contract` cancel
+6/6. These are the record; acceptance waits for the report and my gate.
+
+**Ruling.** The STOP is the provider's safety boundary, not a defect and
+not a worker failure. Per the user's 2026-11-12 routing — a Codex quota
+death asks about the second Codex account, `mst` only when Codex itself
+refuses on its safety guardrail — continuation 4 resumes on `mst`
+(GLM-5.3). A second refusal is a STOP for my ruling; there is no third
+worker, no rephrased retry on `cdx` and no scope reduction. Completed
+steps are not rerun and their evidence is not re-credited: the resume
+re-verifies the preserved scene against the receipts above and continues
+from step 5.
+
+**Resume order.** (1) Verify the preserved scene: the live tree against
+`live-entry-hashes.json`, both changed arms against their after-replay
+receipts, the panel prefix against `panel-provenance.json`, the change-4
+delta against `change4-source-delta.json`; a mismatch is a STOP. Do not
+rerun the completed ladder, the minimal gates or any earlier build. (2)
+Step 5 exactly as written, including the re-entrant callback row the
+draft probe was built for: every report store/take/clear, every
+abandonment caller with its certificate disposition, every ticket
+store/take/finish/activation, the two activation kinds and five sites,
+the three retirement authorities, every transient window, the owed class
+rows and both capture/deferral guards. Every counterexample or unproven
+row is a STOP, never an exclusion. (3) Step 6, the held continuation-1
+gates, unchanged: both pairing routes and both permanent regressions at
+eight and one, `nested_public_evaluation` 15/15 ordinary and profiled,
+the named runtime/host/stdlib suites, armed report accounting, `cargo
+check --all-targets` and `cargo fmt --check` on copies with only the
+three ruled brief-731 arms red, the five C4 comparisons with one forced
+SHA, the cost rows (entry at most 599/4 in both draws, no equal-call
+`rum_runtime` increase, the paired resume panel) and the rum-vs-rum
+microbench A/B. (4) Step 7, the rewritten TEMPLATE implementation brief
+for 735 on the minimal base, with the four-change topology, both
+regressions, the host doc and `CHANGELOG.md`. (5) Write the round's
+`rum-report/1` record at `.temp/brief-734/report.json` (replacing the
+continuation-3 record preserved in `continuation-4/previous/`), make
+`report.py check 734` pass, and STOP for my gate with every verdict line
+quoted.
+
+**Hard rules for the resume.** Identical to this brief; additionally:
+no live edit, no git, no network, one bounded Cargo at a time in the
+16 GiB scope, all scratch under `.temp/brief-734/continuation-4`, the
+4-build canonical cap unchanged, the frozen witnesses, assertions, C4
+records and protected files untouched, and no unrun gate credited. If
+the `mst` backend itself refuses, stop and report; I rule the next step.
