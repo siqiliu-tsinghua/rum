@@ -858,6 +858,59 @@ unreachable/source-closed, P1566's re-settlement on the installed
 source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
 `CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
 break), G13 S10–S54/F1–F23/R, E2.
+**Continuation 27 is accepted at the round's end on cdx**: one row
+settles Equal (`P0544`), and two failed calibrations are parked with
+source explanations. The round ran on `cdx` (gpt-6-astra, max; session
+`01a1ce18-…`; 30,210-line / 2,902,798 B log; 228,994 tokens;
+memory-scope peak 3.58 GB, oom 0, rc 0; 68 run records, 63 exit 0, four
+retained exit-3 calibration preflights and their two blocked family
+wrappers, one retained prefinal scratch-syntax exit 1 rerun green;
+report 14 checks 9 PASS / 4 FLAGGED / 1 NA, `report.py check` 432
+citations by my own run; no executed git or network; the live brief was
+not appended). `P0544` settles Equal on 55 cells / 55 records five-part
+SAME with real == disabled and producer/route reach, with its own
+caught omission (the checked builtin pause-accounting boundary omitted:
+one completed `Input` call becomes one abandoned call, queued
+`[1,1,0,0,0,0,0,0,0,0]` against resumed `[1,0,0,0,0,0,0,0,1,0]`,
+semantic outcomes byte-exact), 3 mutants = 1 caught + 1
+armed-hit-survived + 1 unarmed (0 invalid), 12,397 fixtures (12,340
+inherited byte-exact + 57 new), 1/1 producer provenance, 1 observer
+witness, five owners, six controls RED / positive GREEN, seven build
+receipts (real arm `c340c865…` with tree `b9a5db66…`, forced spot
+fresh), 0 new `unsafe` over 573 changed Rust pairs; the family is a new
+mechanism and its name and shape are absent from every prior scene.
+**Parked, not settled:** `P0543` stays Residual (55 frozen probes, 1
+executed; every workspace crate enables `test-builtin-memory-growth`,
+so `builtin_memory_growth_test_enabled()` is true at its cfg branch and
+the checked `P0544` route is the only reachable one — a different
+driver/build feature set is required, and the disposal must never be by
+argument), and `P0508` stays Residual (30 frozen probes, 1 executed;
+its producer armed and hit twice but the trace control survived because
+the captured evaluation stack restored the logical depth independently;
+no full matrix and no `NoObservableTail` claim); both failed
+calibrations are retained byte-for-byte. Gate: 2,726 live files at
+`0d176025…` equal to the entry manifest (0 differing); production 1,622
+files at `8313fbc1…` byte-identical to C26 (0 added, 0 removed, 0
+rebases); the entry delta is exactly `TODO.md` and the brief; my own
+1,733,202-file protected walk 0/0/0 in 115.3 s and 90,899-file sealed
+walk 0/0/0 in 1.4 s (after my replay only `integrity-receipt.json` is
+refreshed, post-stop controllers 11→21, disclosed). Ledger: exactly one
+verdict change, outcomes 9/154/5/1/120/156/594/3, residual 121 + 15 +
+11 + 6 + 1 + 1 + 1 = 156, 78,330 keys and 18,840 encoding rows
+unchanged, 55 tuple records on exactly the settled row, 13 pair columns
+byte-identical, `P1566` Lost, `P0496` Reserved, held rows and
+`P1585`–`P1591` unchanged. Transitive: entry re-derives from c13–c26 at
+9,533 SAME keys / 164 proofs / 171 matrices / 878 open; current 9,588 /
+165 / 172 / 877 with 1 inherited duty closed, 164 retained, 24
+unresolved, 13 pair columns and five owners. **Next:** continuation 28
+of brief 623 on this unchanged installed source (the remaining 156-row
+tail by mechanism; the held rows are excluded and the C19–C27 families
+are not repeated without a genuinely new mechanism or instrument), then
+C2's settlement round (including P0496's ledger disposition, expected
+unreachable/source-closed, P1566's re-settlement on the installed
+source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
+`CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
+break), G13 S10–S54/F1–F23/R, E2.
 
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
