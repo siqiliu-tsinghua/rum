@@ -980,3 +980,152 @@ remains the standing noncertifying instrument.
    codegen unit, serial: every positive row retained; one forced SHA.
 5. Report stage 2 and stage 3, then STOP for my final gate. Never
    commit, branch or push.
+
+## Continuation-5 gate (2026-11-13) — the stage-2 install is accepted in shape and the three formatter expansions are ruled canonical, but the permanent owner witness is red in the debug acceptance build: the nested re-pause violates the suspension accounting invariant, so stage 3 is held and brief 732 designs the repair
+
+**Run.** `cdx` (Codex `gpt-6-astra`, reasoning max; session
+`01a1d103-6d6e-71c3-8736-610803d677e5`, fork of
+`01a1d0e7-7669-7330-af07-30400e5788df`); log
+`.temp/logs/cdx_brief_731.log` (8,826 lines, 608,587 B); memory-scope peak
+2,697,072,640 B with oom 0, oom_kill 0, rc 0; 1,619,496 tokens; 15 run
+records (8 exit 0; 7 exit 1 — the retained formatter-check runs and the
+test-format instrument attempts); `report.py check 731` OK with 170
+citations by my own run; no canonical artifact compiles this round (22 of 30
+consumed, eight remain); no executed git or network; 50 reported changes
+(37 `.temp` additions; the 11 live files modified, one added; one deleted
+line in `lifecycle_buildout.rs`).
+
+**My scope gate.** My own walk reads 2,729 live files against the 2,728-file
+entry manifest; the difference is exactly the twelve authorized paths, every
+other file is byte-identical to the entry, and the live tree equals the
+worker's `installed-tree-hashes.json` file for file. The seven production
+hashes equal `production-hashes.json`, which is byte-identical to the
+continuation-4 manifest, and they equal the C4 scene's final source in both
+`source-candidate-a` and `source-public`. Only `.temp/brief-731/continuation-5`,
+`.temp/logs` and the two report files were written after 02:30; no frozen
+scene, prior copy or other brief's evidence was touched.
+
+**The install, read from source.** The production diff is exactly the
+selected shape: one `#[cold] #[inline(never)]` helper
+(`session_eval.rs:36-50`, body byte-identical to C4) and one call in the
+shared entry's existing outer `Err(err)` arm after the message-list
+checkpoint restore (`:298`); the `EvalError` unit variant
+(`session_state.rs:576-577`); `SessionRequestError`'s variant and Display arm
+(`model/requests.rs:56,223`); the `EvalError` mapping (`request_errors.rs:136`);
+`HostFailureCode`'s variant and mapping (`outcome.rs:149-150,699`); the
+Jupyter name (`render.rs:199`); and the zero-arity legacy-wire tag plus its
+inverse (`suspension/error.rs:276-279,624-628`). No success-arm or shared
+finalizer change; no new frame, derive or `unsafe`. The host side is the
+`HostSession` rustdoc (contract and native-caller duty) and
+`docs/host-embedding-and-hardening.md`'s new section (the two docs), plus the
+adapter and terminal-restore pins. The new
+`crates/rum-stdlib/tests/nested_public_evaluation.rs` carries the 15 named
+contracts; `batch_boundary_ownership.rs` is byte-unchanged, its existing
+cleanup tests unchanged. `cargo check --all-targets` is green on my own run
+(6.28 s, the three standing `test_builtins` warnings).
+
+**The formatter conflict, and my ruling.** The pinned selected bytes fail
+`cargo fmt --check` on exactly three added one-line arms: `outcome.rs:696`,
+`model/requests.rs:53`, `request_errors.rs:133` (a fourth diff entry is the
+same `outcome.rs` file through the `suspension_oracle` path alias). rustfmt's
+canonical output is the exact `required-rustfmt.patch`: each arm expands to a
+braced three-line arm; no token, string, operator or logic change; no other
+file; reproduced at eight and one threads. The worker preserved the pinned
+bytes and stopped, which is correct. **The three canonical expansions are the
+installable form of the selected shape.** Formatting is not a shape change
+(the brief-723 stage-A run-3 precedent): the formatted bytes supersede the C4
+pinned hashes for `outcome.rs`, `model/requests.rs` and `request_errors.rs`;
+the other four production hashes stand; the C4 `production-hashes.json` stays
+as the historical receipt and is never edited, and the formatted hashes are
+recorded in a new receipt. The worker must prove `diff(formatted, pinned)` is
+exactly `required-rustfmt.patch`, apply nothing else, and reach `cargo fmt
+--check` and `cargo check --all-targets` green before any suite. No other
+reformatting of any file is authorized.
+
+**My test reruns, and the red.** The host pins are green at eight threads:
+`adapter_contract` 8/8 (including the new typed-refusal test) and
+`lifecycle_buildout` 7/7 (including the extended terminal-restore test). The
+new file runs 15 tests: at eight threads 14 pass and
+`nested_reentrant_resume_preserves_the_real_preexisting_owner` fails; at one
+thread the same result, so the red is not a thread race. The panic is
+`continuation contexts unwind a saved prefix` at
+`suspension/core/evaluation_context.rs:33`. My gdb trace of
+`restore_resume_context` on the test binary reads the failing restore as
+`context.stack_len=1, depth=1` against an installed evaluation stack of
+length 0 and current depth 0; the preceding cells restore 0/0 on the same
+empty stack. The backtrace is the test's top-level
+`resume_eval_request_with_input` (line 370) →
+`resume_eval_request_from_checkpoint:329` → `resume_suspended_evaluation` →
+`resume_suspended_slot:682` → `drive_resuming_frames:17` → `drive_frames:36`
+→ `restore_resume_context:33`.
+
+**The finding, read from source.** This is a pre-existing suspension
+accounting defect, not a property of the refusal shape. When a pre-existing
+resumable owner is resumed from a nested raw entry and pauses again, the
+driver merges the fresh nested suspension with the resuming suffix
+(`drive_frames`'s `InputRequired` branch, `driver.rs:160-185`,
+`nested.append(&mut suffix)`). The fresh suspension's `active_stack` was
+captured at the second pause (`begin_input_suspension`, `core.rs:500-511`);
+the suffix cells carry the absolute `ResumeContext`s of the first suspension,
+whose prefix the merged `active_stack` no longer covers. A later top-level
+resume installs that merged stack and the first suffix cell's context is not
+a prefix of it. Release builds compile the debug assertion out, which is why
+the continuation-2/3/4 owner probes — all release binaries — recorded the
+owner completing with its correct prints; the invariant violation was
+invisible to them. The panic stack contains no new code: the helper call runs
+only after the nested resume returns, and the stored suspension is built
+inside the resume before the helper runs. **Erratum to my continuation-4
+gate: the owner panel was accepted on release probe binaries; those records
+stand as behavior evidence but not as invariant evidence, and the debug
+acceptance build is the observer that settles it.**
+
+**Ruling.** The STOP is well taken; the stage-2 install is accepted in shape
+(seven production files, the tests, the two docs), and the formatting
+question is answered as above. But the rule-5 witness — the owner-preservation
+contract this brief exists to enforce — cannot be green in the debug
+acceptance build while the nested re-pause violates the accounting
+invariant, and the witness is never weakened, skipped or shape-dodged. The
+invariant is repaired before stage 2 closes, as its own design-first line:
+
+1. Brief 732 (design-only, `Scope: NONE`) designs the nested re-pause
+   continuation context: reproduce the exact red on a debug copy of this
+   live tree, prove the pre-existence with a base control that returns the
+   raw `InputRequired` (no typed conversion), inventory every
+   `ResumeContext` capture/store/merge/restore/abandon site, name the
+   mechanism with the measured values, and recommend one repair with exact
+   signatures and its accounting, release-behavior and risk analysis.
+2. The design must keep the seven refusal files and the witness byte-identical,
+   keep the release owner records byte-identical to C4's, and calibrate the
+   candidate green at eight and one threads. Any need to change an assertion,
+   a public surface, the seven files or the release records is a STOP for my
+   ruling.
+3. After the design gate I write the implementation brief; after its gate,
+   continuation 6 of this brief applies the ruled formatting and re-pins,
+   installs the accepted repair, re-runs `fmt`/`check` and the witness green,
+   then runs stage 3 exactly as written on the combined final source: the
+   standing replay first, acceptance once, the cost lane on every changed and
+   affected hot function (the seven-file refusal delta and the repair's
+   delta), two draws, equal calls, one codegen unit, every positive row
+   retained, one forced SHA; the entry row's 599/4 bar and the no-increase
+   scan are unchanged. Eight canonical builds remain; a required step that
+   cannot fit is a STOP, not a self-authorized cap. No live commit; report
+   and STOP for my final gate.
+
+**Recorded, not gated.** The seven exit-1 runs are retained instrument or
+formatter-check attempts (the first three still carried unfinished test
+formatting; the last two carry only the same three pinned arms; the test-only
+rustfmt replay had two parser-context errors, both logs retained). One
+functions.exec dispatch for the test/doc edit was rejected by the JavaScript
+parser before any nested tool or shell ran; the safe retry succeeded
+(`tool-dispatch-note.txt`). A read-only attempt to open brief-723's
+`live-run5-check` log found it pruned; no check was credited to the missing
+log. The three unused `test_builtins` helpers remain the standing lib-test
+warnings. The C4-style release owner evidence is now known to be
+invariant-blind; the fix is the debug witness, not a new release run.
+
+**Next.** Write and dispatch brief 732 (design-only), gate its design, write
+and dispatch the implementation brief, then dispatch brief 731 continuation 6
+(formatting, repair install, stage 3). Then continuation 38 of brief 623 on
+the installed source; then C2's settlement round, CM, `CHANGELOG.md` before
+S10 (including this enum break and the earlier `EvalError::Syntax` break),
+G13 S10-S54/F1-F23/R, E2.
