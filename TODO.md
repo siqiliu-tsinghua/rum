@@ -1228,6 +1228,64 @@ a genuinely new mechanism or instrument), then C2's settlement round
 before S10 (including the public `EvalError::Syntax` break), G13
 S10–S54/F1–F23/R, E2.
 
+**Continuation 34 is accepted at the round's end on `cdx`**: one row
+settles Equal (`P0001`) on its own caught incoming callback-value
+receipt-charge omission and its complete real matrix, and the two-family
+stop-loss correctly does not fire. The round ran on `cdx`
+(gpt-6-astra, max; session `01a1cf48-…`; 24,241-line / 2,106,609 B log;
+187,279 tokens; memory-scope peak 3.43 GB, oom 0, rc 0; 49 run records,
+the round-end at index 21 and two retained non-zero exits; report 14
+checks 10 PASS / 3 FLAGGED / 1 NA, `report.py check` 420 citations by my
+own run; no executed git or network; the live brief was not appended).
+`P0001` is the empty-prefix branch of `RetentionContext::evaluate`
+(`bridge.rs:85`, the required site `:93`), previously Residual/LocalTail
+with the open obligation naming a concrete carrier: an empty
+zero-capacity owner evaluates directly and returns through
+`adopt_outcome`, and on a successful value the real code acquires the
+mode receipt and charges
+`M::resize(&mut receipt, || Some(expr_bytes(&value)))` before any
+builder grows. The round built a scratch-only native caller of the
+public armed retention API (`C34CallbackCharge`) that evaluates
+`Input["finish"]` inside `MemoryConstrained`, observes the actual
+`CallbackValue` receipt through a scratch read-only accessor, suspends
+through a root-traced `CallbackFinish`, resumes with
+`resume_values`/`push` and publishes `List[89]`; the armed omission
+replaces only the post-producer receipt resize, and the actual receipts
+read 32 bytes on both real arms against 0 on the mutant's queued arm
+(real tree 1 `enter` guard, mutant tree 956 guard lines). 60 real cells /
+60 records five-part SAME with real == disabled and producer/route reach
+(0 errors), each cell-key set equal to the row's 60 required nonencoding
+keys, 1 armed = 1 caught mutant with real == mutant records
+byte-identical, 12,843 fixtures (12,783 inherited byte-exact + 60 new),
+three exact build receipts (forced spot `d59f3fc7…`, `spot_check=pass`),
+0 new `unsafe` over 3,160 compared Rust files and no live Rust file
+changed. My gate: live 2,726 files at `99c3b19b…` equal to the scene
+entry; production 1,622 files at `8313fbc1…` byte-identical with
+`source_rebases=0`; the entry delta exactly `TODO.md` and the brief; my
+own 2,329,087-file protected walk 0/0/0 in 118.6 s and 82,589-file
+sealed walk 0/0/0 in 1.2 s (after my replay only `integrity-receipt.json`
+is refreshed, post-stop controllers 16→28, disclosed). Ledger: exactly
+one verdict change, outcomes 9/163/5/1/122/145/594/3, residual
+112 + 13 + 11 + 6 + 1 + 1 + 1 = 145, 78,330 keys and 18,840 encoding
+rows unchanged, 60 tuple records on exactly `P0001`, 13 pair columns
+byte-identical, `P1566` Lost, `P0496` Reserved, held rows and
+`P1585`–`P1591` unchanged. Transitive: entry re-derives from c13–c33 at
+9,973 SAME keys / 175 proofs / 182 matrices / 867 open; current
+10,033 / 176 / 183 / 866 with 1 inherited duty closed, 175 retained, 24
+unresolved, 13 pair columns and five owners. My canonical replay (15
+controllers plus the calibration carry) all exit 0; six bad-ledger
+controls RED and the positive GREEN; a whole-scene 82,607-file
+comparison changes only `state.json`, `PROGRESS.md` and the refreshed
+`integrity-receipt.json`, 0 added or removed. **Next:** continuation 35
+of brief 623 on this unchanged installed source (the remaining 145-row
+tail by mechanism; the held rows are excluded and the C19–C34 families
+are not repeated without a genuinely new mechanism or instrument), then
+C2's settlement round (including `P0496`'s ledger disposition, expected
+unreachable/source-closed, `P1566`'s re-settlement on the installed
+source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
+`CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
+break), G13 S10–S54/F1–F23/R, E2.
+
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
 other account — no automatic fallback. `mst` (Mistral Vibe / GLM-5.3) is

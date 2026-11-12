@@ -103341,3 +103341,3453 @@ unarmed and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 146 Residual + 1 Lost; S10 stays
 unopened.
+## Continuation 34 — execution report
+
+Continuation 34: P0001 settles Equal on 60 real SAME cells and its own caught incoming callback receipt charge omission. 145 Residual + 1 retained Lost; C2 Open, S10 unopened.
+
+### Measured family: empty-prefix-callback-value-charge
+
+```text
+C2 C34 BATCH {"DIFF": 0, "SAME": 60, "armed": 1, "caught": 1, "cells": 60, "concrete_execution": true, "consecutive_nonprogress": 0, "coverage_cells": 60, "encoding_executions": 0, "family": "empty-prefix-callback-value-charge", "full_proofs": 1, "invalid": 0, "mutant_invalid": 0, "mutants": 1, "new_coverage_cells": 60, "outcomes_gained": 1, "progress": {"armed_rows": 1, "caught_rows": 1, "coverage_cells": 60, "outcomes": 1, "requirements": 0}, "real": 60, "source_only": false, "source_reached_cells": 60, "survived": 0}
+```
+
+### 1. Entry and calibration
+
+Continuation 34 uses the unchanged installed source, with no rebase. All 1,622 production files equal the C33 entry manifest. The entry nonproduction delta is confined to TODO.md and the brief. The 1,042 rows, 78,330 canonical keys, 18,840 encoding rows, 1,018 paired sources and 24 unresolved sites re-derive without moves. C13-C33 dispositions, held rows and reserved rows remain unchanged. The entry replay checks the inherited raw coverage, own omissions and proof packets.
+
+```text
+C2 C34 ENTRY SOURCE PASS live_files=2726 live_digest=99c3b19b7894d23f19e181558769acc3de875c4bfd73409ed9fc2f9c07304b65 production_files=1622 production_digest=8313fbc1583eec539460dfd2ba1ce655452dd86df6134f3e7808b377d07a025c changed=0 missing=0 extra=0 source_rebases=0
+C2 C34 ENTRY LEDGER PASS rows=1042 keys=78330 encoding_rows=18840 rows_added=0 rows_removed=0 keys_added=0 keys_removed=0 duplicates=0 moved_verdicts=0 outcomes={"Boundary": 9, "Equal": 162, "Identity": 5, "Lost": 1, "NoObservableTail": 122, "Residual": 146, "Transferred": 594, "Unreachable": 3}
+C2 C34 ENTRY FINGERPRINT PASS paired=1018 unresolved=24 moved_fingerprints=0 P1566=Lost P0496=Residual accepted_P1585_P1591=NoObservableTail
+C2 C34 ENTRY NONPRODUCTION DELTA [{"current": "8b2b1f92f5d29fcc7415c629f7a40a879d9d3a8728cef9ac38a13091f7ea981a", "old": "a8fdbd57f4a565ee29094fe7404b9bdbcb06e893a7a29b31aba67a128c4ffd99", "path": "TODO.md"}, {"current": "d2205e2f7e234a082e7e47f5195c72cddd2590b2e8313d70da5863a703f2c5c6", "old": "c63e065677d2df7a1438277dd541e6f4bcec7be06f97448e2bd49179c15865b8", "path": "docs/dev/codex/brief-623-g15c2-settle-unowned-census-rows.md"}]
+C2 C34 RUN entry attempt=1 exit=0
+```
+```text
+C2 C34 ENTRY CANONICAL REPLAY PASS rows=1042 keys=78330 encoding_byte_exact=18840 moved_verdicts=0 moved_fingerprints=0 source_rebases=0 paired=1018 unresolved=24 reconciled_pair_columns=13
+C2 C34 TRANSITIVE ENTRY REPLAY PASS current_proofs=175 complete_matrices=182 current_SAME_keys=9973 named_open=867 lost_reserved=P1566 residual_reserved=P0496 accepted_countlike_not_resettled=true
+C2 C34 PORT ENTRY REPLAY PASS source_entries=1042 retained_29_byte_exact=true copied_port_byte_exact=true raw_mutant_receipts=9279 source_owners_named_open=5
+C2 C34 FROZEN POLICY {"encoding": 260, "nonencoding": 705, "policy": "CaptureOutput", "required": 965, "rows": 13}
+C2 C34 FROZEN POLICY {"encoding": 800, "nonencoding": 2600, "policy": "ConditionalBranch", "required": 3400, "rows": 40}
+C2 C34 FROZEN POLICY {"encoding": 260, "nonencoding": 765, "policy": "DefinitionLhsPreparation", "required": 1025, "rows": 12}
+C2 C34 FROZEN POLICY {"encoding": 1040, "nonencoding": 2720, "policy": "DefinitionStore", "required": 3760, "rows": 52}
+C2 C34 FROZEN POLICY {"encoding": 720, "nonencoding": 2430, "policy": "ErrorTransform", "required": 3150, "rows": 43}
+C2 C34 FROZEN POLICY {"encoding": 6760, "nonencoding": 21935, "policy": "ForwardResult", "required": 28695, "rows": 338}
+C2 C34 FROZEN POLICY {"encoding": 200, "nonencoding": 605, "policy": "FunctionResult", "required": 805, "rows": 10}
+C2 C34 FROZEN POLICY {"encoding": 60, "nonencoding": 195, "policy": "GuestLoading", "required": 255, "rows": 3}
+C2 C34 FROZEN POLICY {"encoding": 0, "nonencoding": 0, "policy": "HostBatchBoundary", "required": 0, "rows": 0}
+C2 C34 FROZEN POLICY {"encoding": 500, "nonencoding": 3825, "policy": "HostRequestDriver", "required": 4325, "rows": 95}
+C2 C34 FROZEN POLICY {"encoding": 3520, "nonencoding": 10070, "policy": "MatchDecision", "required": 13590, "rows": 174}
+C2 C34 FROZEN POLICY {"encoding": 0, "nonencoding": 0, "policy": "MatchingSymbolCycleRecovery", "required": 0, "rows": 0}
+C2 C34 FROZEN POLICY {"encoding": 640, "nonencoding": 1920, "policy": "NativeCallbackBridge", "required": 2560, "rows": 32}
+C2 C34 FROZEN POLICY {"encoding": 0, "nonencoding": 0, "policy": "NonSuspending", "required": 0, "rows": 0}
+C2 C34 FROZEN POLICY {"encoding": 1380, "nonencoding": 3710, "policy": "OptionReader", "required": 5090, "rows": 45}
+C2 C34 FROZEN POLICY {"encoding": 5740, "nonencoding": 16350, "policy": "OptionalStage", "required": 22090, "rows": 264}
+C2 C34 FROZEN POLICY {"encoding": 780, "nonencoding": 3170, "policy": "PhaseOwnership", "required": 3950, "rows": 66}
+C2 C34 FROZEN POLICY {"encoding": 1100, "nonencoding": 3370, "policy": "PrefixLoop", "required": 4470, "rows": 55}
+C2 C34 FROZEN POLICY {"encoding": 760, "nonencoding": 2050, "policy": "PrepareArgumentsRestore", "required": 2810, "rows": 38}
+C2 C34 FROZEN POLICY {"encoding": 5500, "nonencoding": 16050, "policy": "RebuildTraversal", "required": 21550, "rows": 273}
+C2 C34 FROZEN POLICY {"encoding": 0, "nonencoding": 0, "policy": "RetiredBoundary", "required": 0, "rows": 0}
+C2 C34 FROZEN POLICY {"encoding": 620, "nonencoding": 2365, "policy": "ReturnBoundary", "required": 2985, "rows": 46}
+C2 C34 FROZEN POLICY {"encoding": 620, "nonencoding": 1700, "policy": "ScalarFinish", "required": 2320, "rows": 31}
+C2 C34 FROZEN POLICY {"encoding": 340, "nonencoding": 2340, "policy": "ScopeCleanup", "required": 2680, "rows": 38}
+C2 C34 FROZEN POLICY {"encoding": 2920, "nonencoding": 9000, "policy": "ShapeDecode", "required": 11920, "rows": 145}
+C2 C34 RUN entry-replay attempt=1 exit=0
+```
+Historical controls and pre-G15/pre-C1/current-C1 witness panels are authenticated raw-hash carries, not fresh executions:
+
+```text
+C2 C34 CALIBRATION CARRY PASS control=Some raw_hashes=PASS named_observer=RED final_value_comparison_disabled=true
+C2 C34 CALIBRATION CARRY PASS control=G15A raw_hashes=PASS named_observer=RED final_value_comparison_disabled=true
+C2 C34 CALIBRATION CARRY PASS control=G15B raw_hashes=PASS named_observer=RED final_value_comparison_disabled=true
+C2 C34 CALIBRATION CARRY PASS control=C1 raw_hashes=PASS named_observer=RED final_value_comparison_disabled=true
+C2 C34 CALIBRATION PANEL CARRY PASS arm=pre-g15 raw_hash=PASS witnesses=PASS total=30
+C2 C34 CALIBRATION PANEL CARRY PASS arm=pre-c1 raw_hash=PASS witnesses=PASS total=24
+C2 C34 CALIBRATION PANEL CARRY PASS arm=current-c1 raw_hash=PASS witnesses=PASS total=24
+C2 C34 CENSUS BINARY HASH PASS source_parser=retained_syn_AST tool_sha256=db9fbcabf87717e00d822799303c8144491137ada4fc79a83accca574a8f9dbf
+C2 C34 RUN calibration-carry attempt=1 exit=0
+```
+The new incoming callback charge omission calibrates RED on its own P0001 trace key before the full matrix. The real and disabled arms are identical and SAME. Both scratch binaries precede every guest process. The forced real rebuild is byte-identical.
+
+```text
+C2 C34 NOVELTY PREFLIGHT PASS family=empty-prefix-callback-value-charge rows=1 held_rows=0 reserved_rows=0 settled_rows=0 repeated_shapes=0 repeated_families=0 prior_row_mechanisms_recorded=true before_guest_execution=true
+C2 C34 RUN preflight-empty-prefix-callback-value-charge attempt=1 exit=0
+```
+```text
+C2 C34 COMMAND name=calibrate-empty-prefix-callback-value-charge-real attempt=1 exit=0 seconds=0.043 log=.temp/g15-c2/c34/logs/calibrate-empty-prefix-callback-value-charge-real-1.log
+C2 C34 COMMAND name=calibrate-empty-prefix-callback-value-charge-disabled attempt=1 exit=0 seconds=0.062 log=.temp/g15-c2/c34/logs/calibrate-empty-prefix-callback-value-charge-disabled-1.log
+C2 C34 COMMAND name=calibrate-empty-prefix-callback-value-charge-own attempt=1 exit=0 seconds=0.044 log=.temp/g15-c2/c34/logs/calibrate-empty-prefix-callback-value-charge-own-1.log
+C2 C34 NEW SHAPE CONTROL {"armed": true, "caught": true, "hits": 1, "logs": {"disabled": ".temp/g15-c2/c34/logs/calibrate-empty-prefix-callback-value-charge-disabled-1.log", "own": ".temp/g15-c2/c34/logs/calibrate-empty-prefix-callback-value-charge-own-1.log", "real": ".temp/g15-c2/c34/logs/calibrate-empty-prefix-callback-value-charge-real-1.log"}, "probe": "C34.empty-prefix-callback-value-charge.P0001.Middle.phase_observation.trace", "raw_hashes": {"disabled": "e9eade19827d69a530028216f94128d71db9e6581af74675b0fe6f0eeccce3ed", "own": "b7fa372433d0c1602d510662ed56ac899718222eb7fe58c81e0f668be83f8ac9", "real": "fd732ef1d43b36143083a2d014fa8da6ee7197d27c09fe2598188f661a9d0a2e"}, "real_disabled_same": true, "row": "P0001", "shape": "OmitEmptyPrefixCallbackReceiptResizeWithActualReceiptObserver", "survived": false, "valid": true}
+C2 C34 NEW SHAPE CALIBRATION PASS family=empty-prefix-callback-value-charge own_controls_RED=1 real_disabled_GREEN=1 before_full_matrix=true
+C2 C34 RUN calibrate-empty-prefix-callback-value-charge attempt=1 exit=0
+```
+```text
+C2 C34 SHAPE CALIBRATION PASS row=P0001 own_control_RED=true real_disabled_GREEN=true exact_empty_prefix_producer=true actual_carrier=true invented_values=0
+C2 C34 CONSUMER ROUTE AUDIT PASS keys=60 Equal_rows=1 actual_empty_prefix_producer_pause_all=true phase_trace_all=true held_executions=0 exact_incoming_receipt_resize_only_omitted=true actual_receipt_direct_read=true
+C2 C34 RUN route-and-shape-audit attempt=1 exit=0
+```
+```text
+PROBE_BUILD verdict=PASS cache_hit=false spot_check=pass sha256=d59f3fc74a4e041c143be3edbd39b4c08cf01f44fd450cfa645e9ba12d115b34 out=.temp/g15-c2/c34/bin/empty-prefix-callback-value-charge-real-spot
+```
+
+### 2. Frozen requirements and measured batch
+
+No policy, variant, context, consumer route or canonical key changes. P0001 has 60 required nonencoding keys and 20 inherited encoding keys. The nonencoding keys were frozen before program construction: five variants cross twelve contexts on the original evaluate@93 route. Every program enables phase trace. All encoding records retain their bytes and owners, with no new internal-encoding execution.
+
+```text
+policy	rows	required	nonencoding	encoding
+CaptureOutput	13	965	705	260
+ConditionalBranch	40	3400	2600	800
+DefinitionLhsPreparation	12	1025	765	260
+DefinitionStore	52	3760	2720	1040
+ErrorTransform	43	3150	2430	720
+ForwardResult	338	28695	21935	6760
+FunctionResult	10	805	605	200
+GuestLoading	3	255	195	60
+HostBatchBoundary	0	0	0	0
+HostRequestDriver	95	4325	3825	500
+MatchDecision	174	13590	10070	3520
+MatchingSymbolCycleRecovery	0	0	0	0
+NativeCallbackBridge	32	2560	1920	640
+NonSuspending	0	0	0	0
+OptionReader	45	5090	3710	1380
+OptionalStage	264	22090	16350	5740
+PhaseOwnership	66	3950	3170	780
+PrefixLoop	55	4470	3370	1100
+PrepareArgumentsRestore	38	2810	2050	760
+RebuildTraversal	273	21550	16050	5500
+RetiredBoundary	0	0	0	0
+ReturnBoundary	46	2985	2365	620
+ScalarFinish	31	2320	1700	620
+ScopeCleanup	38	2680	2340	340
+ShapeDecode	145	11920	9000	2920
+```
+```json
+{
+  "before_factory": true,
+  "cap": 180,
+  "encoding_executions": 0,
+  "keys": [
+    [
+      "P0001",
+      "Middle",
+      "consumer_routes.route-original",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "consumer_routes.route-original",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "consumer_routes.route-original",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "consumer_routes.route-original",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "consumer_routes.route-original",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "error_before_tail.last-pause-throw",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "error_before_tail.last-pause-throw",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "error_before_tail.last-pause-throw",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "error_before_tail.last-pause-throw",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "error_before_tail.last-pause-throw",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "held_and_splice.held-evaluate",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "held_and_splice.held-evaluate",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "held_and_splice.held-evaluate",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "held_and_splice.held-evaluate",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "held_and_splice.held-evaluate",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "held_and_splice.tail-hold",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "held_and_splice.tail-hold",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "held_and_splice.tail-hold",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "held_and_splice.tail-hold",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "held_and_splice.tail-hold",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "held_and_splice.tail-sequence",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "held_and_splice.tail-sequence",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "held_and_splice.tail-sequence",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "held_and_splice.tail-sequence",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "held_and_splice.tail-sequence",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "held_and_splice.tail-nothing",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "held_and_splice.tail-nothing",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "held_and_splice.tail-nothing",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "held_and_splice.tail-nothing",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "held_and_splice.tail-nothing",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "held_and_splice.unevaluated",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "held_and_splice.unevaluated",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "held_and_splice.unevaluated",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "held_and_splice.unevaluated",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "held_and_splice.unevaluated",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "phase_observation.trace",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "phase_observation.trace",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "phase_observation.trace",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "phase_observation.trace",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "phase_observation.trace",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "prefix_and_tail.log",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "prefix_and_tail.log",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "prefix_and_tail.log",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "prefix_and_tail.log",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "prefix_and_tail.log",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "return_boundary.last-pause-return",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "return_boundary.last-pause-return",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "return_boundary.last-pause-return",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "return_boundary.last-pause-return",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "return_boundary.last-pause-return",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "return_boundary.loop-store-reset",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "return_boundary.loop-store-reset",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "return_boundary.loop-store-reset",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "return_boundary.loop-store-reset",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "return_boundary.loop-store-reset",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Middle",
+      "value.base",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Twice",
+      "value.base",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Error",
+      "value.base",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "AlreadyResumed",
+      "value.base",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ],
+    [
+      "P0001",
+      "Nested",
+      "value.base",
+      "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate@93",
+      ""
+    ]
+  ],
+  "mechanism": "A native caller uses the public armed retention API with its actual empty prefix. After the actual P0001 evaluate producer, its adopt_outcome tail acquires and charges the callback value receipt. The omission skips only that receipt resize, under an exact producer-scoped boolean, preserving the actual value, error, receipt allocation, admission and result carrier. Read-only scratch accessors expose Mode::bytes on the actual CallbackValue receipt before adoption and on the one-value RetainedValues receipt after resumption. The native continuation imports the real frozen prefix and actual resumed outcome through public APIs. No ledger total, frame complement, expected value, synthetic result or duration is substituted. This incoming callback charge is distinct from prefix restoration and outgoing receipt release. Both arms preserve every frozen required key.",
+  "new_keys": 0,
+  "rows": [
+    "P0001"
+  ]
+}
+```
+```json
+{
+  "calibration_cap": 0,
+  "calibration_records": 3,
+  "explanation": "All calibration, matrix and own-omission records are counted within the original 180-record freeze; no extra post-execution allowance.",
+  "inside_original_frozen_family_cap": true,
+  "original_family_cap": 180,
+  "retrospective_budget_increase": 0
+}
+```
+```text
+C2 C34 COMMAND name=empty-prefix-callback-value-charge-real attempt=1 exit=0 seconds=0.547 log=.temp/g15-c2/c34/logs/empty-prefix-callback-value-charge-real-1.log
+C2 C34 REAL family=empty-prefix-callback-value-charge arm=real total=60 SAME=60 DIFF=0 invalid=0
+C2 C34 COMMAND name=empty-prefix-callback-value-charge-disabled attempt=1 exit=0 seconds=0.949 log=.temp/g15-c2/c34/logs/empty-prefix-callback-value-charge-disabled-1.log
+C2 C34 REAL family=empty-prefix-callback-value-charge arm=mutant total=60 SAME=60 DIFF=0 invalid=0
+C2 C34 COMMAND name=empty-prefix-callback-value-charge-own-P0001 attempt=1 exit=0 seconds=0.059 log=.temp/g15-c2/c34/logs/empty-prefix-callback-value-charge-own-P0001-1.log
+C2 C34 MUTANT GROUP {"armed": 1, "caught": 1, "executed": 1, "family": "empty-prefix-callback-value-charge", "required_cells": 60, "route": "", "row": "P0001", "survived": 0}
+C2 C34 EXECUTED FAMILY {"DIFF": 0, "SAME": 60, "armed": 1, "caught": 1, "cells": 60, "coverage_cells": 60, "encoding_executions": 0, "family": "empty-prefix-callback-value-charge", "invalid": 0, "mutant_invalid": 0, "mutants": 1, "new_coverage_cells": 60, "outcomes_gained": 0, "real": 60, "source_reached_cells": 60, "survived": 0}
+C2 C34 RUN execute-empty-prefix-callback-value-charge attempt=1 exit=0
+```
+```json
+[
+  {
+    "DIFF": 0,
+    "SAME": 60,
+    "armed": 1,
+    "caught": 1,
+    "cells": 60,
+    "concrete_execution": true,
+    "consecutive_nonprogress": 0,
+    "coverage_cells": 60,
+    "encoding_executions": 0,
+    "family": "empty-prefix-callback-value-charge",
+    "full_proofs": 1,
+    "invalid": 0,
+    "mutant_invalid": 0,
+    "mutants": 1,
+    "new_coverage_cells": 60,
+    "outcomes_gained": 1,
+    "progress": {
+      "armed_rows": 1,
+      "caught_rows": 1,
+      "coverage_cells": 60,
+      "outcomes": 1,
+      "requirements": 0
+    },
+    "real": 60,
+    "source_only": false,
+    "source_reached_cells": 60,
+    "survived": 0
+  }
+]
+```
+```text
+C2 C34 AUTHENTICATED BATCH {"DIFF": 0, "SAME": 60, "armed": 1, "armed_without_valid_classification": 0, "authenticated_coverage": 60, "caught": 1, "clock": 0, "family": "empty-prefix-callback-value-charge", "frozen_cap": 180, "invalid_real": 0, "mutants": 1, "progress": {"armed_rows": 1, "caught_rows": 1, "coverage_cells": 60, "outcomes": 1, "requirements": 0}, "real": 60, "real_disabled_own_executions": 121, "survived": 0, "unarmed": 0}
+C2 C34 AGGREGATE AUDIT PASS {"DIFF": 0, "SAME": 60, "armed": 1, "armed_without_valid_classification": 0, "caught": 1, "current_SAME_keys": 10033, "encoding_executions": 0, "families": 1, "frozen_total_family_caps": 180, "invalid_real": 0, "mutants": 1, "new_current_SAME_keys": 60, "phase_trace_every_program": true, "real": 60, "real_disabled_own_executions": 121, "stop_clock": 0, "stop_reason": "Continuation34RoundEnd", "survived": 0, "unarmed": 0}
+C2 C34 RUN aggregate-audit attempt=1 exit=0
+```
+```text
+C2 C34 ALL EXECUTIONS FAMILY {"counts": {"DIFF": 2, "SAME": 122}, "family": "empty-prefix-callback-value-charge", "frozen_cap": 180, "includes_calibrations": true, "records": 124}
+C2 C34 ALL EXECUTIONS AUDIT PASS {"DIFF": 2, "SAME": 122, "armed": 2, "caught": 2, "encoding_executions": 0, "guest_processes": 6, "held_executions": 0, "includes_calibrations": true, "invalid": 0, "own_runs": 2, "records": 124, "survived": 0, "unarmed": 0}
+C2 C34 RUN all-executions-audit attempt=1 exit=0
+```
+```text
+C2 C34 EPOCH VALIDITY PASS guest_runs=6 epochs=248 valid_epochs=248 invalid_epochs=0 faults=0 raw_hashes_exact=true includes_calibrations=true
+C2 C34 RUN epoch-validity-audit attempt=1 exit=0
+```
+```text
+C2 C34 EXECUTION KIND AUDIT PASS {"actual_guest_processes": 6, "build_controllers": 3, "build_logs": [".temp/g15-c2/c34/logs/build-empty-prefix-callback-value-charge-real-1.log", ".temp/g15-c2/c34/logs/build-empty-prefix-callback-value-charge-mutant-1.log", ".temp/g15-c2/c34/logs/forced-build-spot-1.log"], "build_paths_miscounted": 0, "counts": {"DIFF": 2, "SAME": 122}, "guest_logs": [".temp/g15-c2/c34/logs/calibrate-empty-prefix-callback-value-charge-real-1.log", ".temp/g15-c2/c34/logs/calibrate-empty-prefix-callback-value-charge-disabled-1.log", ".temp/g15-c2/c34/logs/calibrate-empty-prefix-callback-value-charge-own-1.log", ".temp/g15-c2/c34/logs/empty-prefix-callback-value-charge-real-1.log", ".temp/g15-c2/c34/logs/empty-prefix-callback-value-charge-disabled-1.log", ".temp/g15-c2/c34/logs/empty-prefix-callback-value-charge-own-P0001-1.log"], "post_stop_guest_and_Cargo_runs": 0, "records": 124}
+C2 C34 RUN execution-kind-audit attempt=1 exit=0
+```
+The original 180-record family cap covers all 124 executed pair records, including three calibration records. No budget was expanded after execution. The per-family execution summary precedes settlement and therefore records outcomes_gained=0; canonical replay records the one Equal outcome. Calibration and matrix each have their own distinct executed caught control, both counted.
+
+### 3. Outcomes and concrete observer
+
+```text
+C2 C34 FINAL OUTCOMES {"by_class": {"caught mutant; incomplete real tuples": {"Boundary": 1, "Equal": 19}, "compiled but no valid binding reached": {"Boundary": 2, "Equal": 16, "NoObservableTail": 13, "Residual": 24, "Transferred": 135}, "new 719 producer edge": {"Equal": 1, "NoObservableTail": 3, "Residual": 1}, "new 725 producer edge": {"Equal": 1, "NoObservableTail": 2, "Residual": 1}, "new C1 producer edge": {"NoObservableTail": 8}, "new continuation3 producer edge": {"Equal": 1}, "survived or no mutation hit": {"Boundary": 1, "Equal": 32, "Identity": 5, "NoObservableTail": 12, "Residual": 3, "Transferred": 397}, "unsupported schema": {"Boundary": 5, "Equal": 93, "Lost": 1, "NoObservableTail": 84, "Residual": 116, "Transferred": 62, "Unreachable": 3}}, "by_source_population_overlapping": {"frame_carries": {"Equal": 115, "Identity": 3, "Lost": 1, "NoObservableTail": 6, "Residual": 47, "Transferred": 10}, "new-C1-edge": {"NoObservableTail": 8}, "new_719_producer_edge": {"Equal": 1, "NoObservableTail": 3, "Residual": 1}, "new_725_producer_edge": {"Equal": 1, "NoObservableTail": 2, "Residual": 1}, "new_continuation3_producer_edge": {"Equal": 1}, "review_tail_correct": {"Boundary": 3, "Equal": 33, "NoObservableTail": 29, "Residual": 26, "Transferred": 170}, "screen_effect-questions": {"Equal": 3, "NoObservableTail": 10, "Residual": 3}, "screen_frameless-direct-evaluate": {"Equal": 10, "Lost": 1, "NoObservableTail": 2, "Residual": 2, "Transferred": 27}, "screen_frameless-transforms": {"Boundary": 1, "Equal": 27, "NoObservableTail": 16, "Residual": 11, "Transferred": 103}, "screen_optional-source-helpers": {"Equal": 12, "NoObservableTail": 9, "Residual": 8, "Transferred": 29, "Unreachable": 3}, "strict_tail_without_indexed_caller": {"Boundary": 2, "NoObservableTail": 5, "Residual": 7, "Transferred": 235}, "tool_unsettled": {"Boundary": 7, "Equal": 97, "Identity": 2, "Lost": 1, "NoObservableTail": 103, "Residual": 110, "Transferred": 284}}, "duplicates": 0, "encoding_keys": 18840, "fixtures": 12843, "fresh_binding_rows": 60, "inherited_fixtures": 12783, "keys_added": 0, "keys_removed": 0, "new_Equal": 1, "new_Equal_cells": 60, "new_Lost": 0, "new_NoObservableTail_proposals": 0, "new_fixtures": 60, "new_internal_encoding_executions": 0, "new_proposal_cells": 0, "outcomes": {"Boundary": 9, "Equal": 163, "Identity": 5, "Lost": 1, "NoObservableTail": 122, "Residual": 145, "Transferred": 594, "Unreachable": 3}, "own_mutant_receipts": 1, "paired": 1018, "population": 1042, "production_source_changes": 0, "repaired_Lost": 0, "requirements": 78330, "residual_composition": {"LocalTail": 112, "New719Edge": 1, "New725Edge": 1, "ReopenedOrNew": 13, "StrictCallerGap": 6, "StrictDropGap": 11, "StrictOtherCarrier": 1}, "residuals": 145, "retained_Equal_outside_population": 29, "rows_added": 0, "rows_removed": 0, "stop_clock": 0, "stop_reason": "Continuation34RoundEnd", "transitive": {"current_SAME_keys": 10033, "current_complete_matrices": 183, "current_full_proofs": 176, "current_named_open": 866, "inherited_open_closed": 1, "population": 1042, "prior_C33_complete": 175, "prior_C33_open": 867, "prior_complete_retained": 175, "source_exclusions": 0, "source_fingerprint_unchanged": 1018, "source_rebases": 0, "unresolved": 24, "whole_graph_complete": false}, "unresolved": 24, "verdict_changes": 1}
+```
+```json
+{
+  "after_C34": {
+    "by_class": {
+      "caught mutant; incomplete real tuples": {
+        "Boundary": 1,
+        "Equal": 19
+      },
+      "compiled but no valid binding reached": {
+        "Boundary": 2,
+        "Equal": 16,
+        "NoObservableTail": 13,
+        "Residual": 24,
+        "Transferred": 135
+      },
+      "new 719 producer edge": {
+        "Equal": 1,
+        "NoObservableTail": 3,
+        "Residual": 1
+      },
+      "new 725 producer edge": {
+        "Equal": 1,
+        "NoObservableTail": 2,
+        "Residual": 1
+      },
+      "new C1 producer edge": {
+        "NoObservableTail": 8
+      },
+      "new continuation3 producer edge": {
+        "Equal": 1
+      },
+      "survived or no mutation hit": {
+        "Boundary": 1,
+        "Equal": 32,
+        "Identity": 5,
+        "NoObservableTail": 12,
+        "Residual": 3,
+        "Transferred": 397
+      },
+      "unsupported schema": {
+        "Boundary": 5,
+        "Equal": 93,
+        "Lost": 1,
+        "NoObservableTail": 84,
+        "Residual": 116,
+        "Transferred": 62,
+        "Unreachable": 3
+      }
+    },
+    "by_source_population_overlapping": {
+      "frame_carries": {
+        "Equal": 115,
+        "Identity": 3,
+        "Lost": 1,
+        "NoObservableTail": 6,
+        "Residual": 47,
+        "Transferred": 10
+      },
+      "new-C1-edge": {
+        "NoObservableTail": 8
+      },
+      "new_719_producer_edge": {
+        "Equal": 1,
+        "NoObservableTail": 3,
+        "Residual": 1
+      },
+      "new_725_producer_edge": {
+        "Equal": 1,
+        "NoObservableTail": 2,
+        "Residual": 1
+      },
+      "new_continuation3_producer_edge": {
+        "Equal": 1
+      },
+      "review_tail_correct": {
+        "Boundary": 3,
+        "Equal": 33,
+        "NoObservableTail": 29,
+        "Residual": 26,
+        "Transferred": 170
+      },
+      "screen_effect-questions": {
+        "Equal": 3,
+        "NoObservableTail": 10,
+        "Residual": 3
+      },
+      "screen_frameless-direct-evaluate": {
+        "Equal": 10,
+        "Lost": 1,
+        "NoObservableTail": 2,
+        "Residual": 2,
+        "Transferred": 27
+      },
+      "screen_frameless-transforms": {
+        "Boundary": 1,
+        "Equal": 27,
+        "NoObservableTail": 16,
+        "Residual": 11,
+        "Transferred": 103
+      },
+      "screen_optional-source-helpers": {
+        "Equal": 12,
+        "NoObservableTail": 9,
+        "Residual": 8,
+        "Transferred": 29,
+        "Unreachable": 3
+      },
+      "strict_tail_without_indexed_caller": {
+        "Boundary": 2,
+        "NoObservableTail": 5,
+        "Residual": 7,
+        "Transferred": 235
+      },
+      "tool_unsettled": {
+        "Boundary": 7,
+        "Equal": 97,
+        "Identity": 2,
+        "Lost": 1,
+        "NoObservableTail": 103,
+        "Residual": 110,
+        "Transferred": 284
+      }
+    },
+    "outcomes": {
+      "Boundary": 9,
+      "Equal": 163,
+      "Identity": 5,
+      "Lost": 1,
+      "NoObservableTail": 122,
+      "Residual": 145,
+      "Transferred": 594,
+      "Unreachable": 3
+    },
+    "residual_composition": {
+      "LocalTail": 112,
+      "New719Edge": 1,
+      "New725Edge": 1,
+      "ReopenedOrNew": 13,
+      "StrictCallerGap": 6,
+      "StrictDropGap": 11,
+      "StrictOtherCarrier": 1
+    }
+  },
+  "before_C33": {
+    "by_class": {
+      "caught mutant; incomplete real tuples": {
+        "Boundary": 1,
+        "Equal": 19
+      },
+      "compiled but no valid binding reached": {
+        "Boundary": 2,
+        "Equal": 16,
+        "NoObservableTail": 13,
+        "Residual": 24,
+        "Transferred": 135
+      },
+      "new 719 producer edge": {
+        "Equal": 1,
+        "NoObservableTail": 3,
+        "Residual": 1
+      },
+      "new 725 producer edge": {
+        "Equal": 1,
+        "NoObservableTail": 2,
+        "Residual": 1
+      },
+      "new C1 producer edge": {
+        "NoObservableTail": 8
+      },
+      "new continuation3 producer edge": {
+        "Equal": 1
+      },
+      "survived or no mutation hit": {
+        "Boundary": 1,
+        "Equal": 32,
+        "Identity": 5,
+        "NoObservableTail": 12,
+        "Residual": 3,
+        "Transferred": 397
+      },
+      "unsupported schema": {
+        "Boundary": 5,
+        "Equal": 92,
+        "Lost": 1,
+        "NoObservableTail": 84,
+        "Residual": 117,
+        "Transferred": 62,
+        "Unreachable": 3
+      }
+    },
+    "by_source_population_overlapping": {
+      "frame_carries": {
+        "Equal": 114,
+        "Identity": 3,
+        "Lost": 1,
+        "NoObservableTail": 6,
+        "Residual": 48,
+        "Transferred": 10
+      },
+      "new-C1-edge": {
+        "NoObservableTail": 8
+      },
+      "new_719_producer_edge": {
+        "Equal": 1,
+        "NoObservableTail": 3,
+        "Residual": 1
+      },
+      "new_725_producer_edge": {
+        "Equal": 1,
+        "NoObservableTail": 2,
+        "Residual": 1
+      },
+      "new_continuation3_producer_edge": {
+        "Equal": 1
+      },
+      "review_tail_correct": {
+        "Boundary": 3,
+        "Equal": 33,
+        "NoObservableTail": 29,
+        "Residual": 26,
+        "Transferred": 170
+      },
+      "screen_effect-questions": {
+        "Equal": 3,
+        "NoObservableTail": 10,
+        "Residual": 3
+      },
+      "screen_frameless-direct-evaluate": {
+        "Equal": 9,
+        "Lost": 1,
+        "NoObservableTail": 2,
+        "Residual": 3,
+        "Transferred": 27
+      },
+      "screen_frameless-transforms": {
+        "Boundary": 1,
+        "Equal": 27,
+        "NoObservableTail": 16,
+        "Residual": 11,
+        "Transferred": 103
+      },
+      "screen_optional-source-helpers": {
+        "Equal": 12,
+        "NoObservableTail": 9,
+        "Residual": 8,
+        "Transferred": 29,
+        "Unreachable": 3
+      },
+      "strict_tail_without_indexed_caller": {
+        "Boundary": 2,
+        "NoObservableTail": 5,
+        "Residual": 7,
+        "Transferred": 235
+      },
+      "tool_unsettled": {
+        "Boundary": 7,
+        "Equal": 96,
+        "Identity": 2,
+        "Lost": 1,
+        "NoObservableTail": 103,
+        "Residual": 111,
+        "Transferred": 284
+      }
+    },
+    "outcomes": {
+      "Boundary": 9,
+      "Equal": 162,
+      "Identity": 5,
+      "Lost": 1,
+      "NoObservableTail": 122,
+      "Residual": 146,
+      "Transferred": 594,
+      "Unreachable": 3
+    },
+    "residual_composition": {
+      "LocalTail": 113,
+      "New719Edge": 1,
+      "New725Edge": 1,
+      "ReopenedOrNew": 13,
+      "StrictCallerGap": 6,
+      "StrictDropGap": 11,
+      "StrictOtherCarrier": 1
+    }
+  }
+}
+```
+```json
+[
+  {
+    "evidence": "c34/empty-prefix-callback-value-charge-full-proofs.json",
+    "new": "Equal",
+    "old": "Residual",
+    "row": "P0001"
+  }
+]
+```
+```json
+{
+  "complete": true,
+  "dependency_open": false,
+  "disposition": "Equal",
+  "own_omission": {
+    "armed": true,
+    "caught": true,
+    "exit": 0,
+    "hits": 1,
+    "probe": "C34.empty-prefix-callback-value-charge.P0001.Middle.phase_observation.trace",
+    "raw": ".temp/g15-c2/c34/logs/empty-prefix-callback-value-charge-own-P0001-1.log",
+    "route": "",
+    "row": "P0001",
+    "survived": false
+  },
+  "required": 60,
+  "row": "P0001",
+  "source_argument": "The own concrete post-producer omission is caught on a required key."
+}
+```
+```json
+[
+  {
+    "actual_carrier": true,
+    "native_driver": "crates/rum-runtime/src/runtime/accounting_mode/c34_native.rs",
+    "new_instrument": "Direct read of each actual callback occurrence receipt, before queued adoption and after public resumed push.",
+    "producer": {
+      "column": 26,
+      "end_column": 53,
+      "end_line": 93,
+      "expression": "self . session . evaluate (expr)",
+      "file": "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs",
+      "file_sha256": "a43ef17be1c07eca2b4302f1fffea60d0dd06d8bca00fa338563003f77b0ea93",
+      "function": "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85:RetentionContext < 'session , 'id , M >::evaluate",
+      "function_sha256": "2e9dd7e62131908a061efe6a14368f9819af6230fc6a0a110156eb94b5f057b2",
+      "kind": "call",
+      "line": 93,
+      "row": "P0001",
+      "target": "evaluate"
+    },
+    "row": "P0001",
+    "source_argument": "A native caller uses the public armed retention API with its actual empty prefix. After the actual P0001 evaluate producer, its adopt_outcome tail acquires and charges the callback value receipt. The omission skips only that receipt resize, under an exact producer-scoped boolean, preserving the actual value, error, receipt allocation, admission and result carrier. Read-only scratch accessors expose Mode::bytes on the actual CallbackValue receipt before adoption and on the one-value RetainedValues receipt after resumption. The native continuation imports the real frozen prefix and actual resumed outcome through public APIs. No ledger total, frame complement, expected value, synthetic result or duration is substituted. This incoming callback charge is distinct from prefix restoration and outgoing receipt release. Both arms preserve every frozen required key.",
+    "source_file_sha256": "a43ef17be1c07eca2b4302f1fffea60d0dd06d8bca00fa338563003f77b0ea93",
+    "strategy": "OmitEmptyPrefixCallbackReceiptResizeWithActualReceiptObserver",
+    "tail_file": "crates/rum-runtime/src/runtime/accounting_mode/bridge.rs",
+    "tail_owner": "RetentionContext::evaluate empty-prefix branch -> adopt_outcome"
+  }
+]
+```
+```text
+C2 C34 OBSERVER WITNESS PASS {"actual_queued_receipt_bytes": 0, "actual_resumed_receipt_bytes": 32, "disposition": "Equal", "epoch_faults": 0, "inputs": [["Input", "finish", "89"]], "native_queued": [["Runtime { phase: \"call.stage.ordinary_builtin\", source: None }", [3, 3, 0, 3, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"call.stage.prepare_arguments\", source: None }", [3, 3, 0, 0, 3, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate.once_unstable\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate.total\", source: None }", [5, 5, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_atom_fast_path.atom\", source: None }", [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_atom_fast_path.total\", source: None }", [4, 4, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_call.dispatch\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_call.head_eval\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_call.resume_after_head\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_call.total\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_inner_unstable.call\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_inner_unstable.total\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"prepare_arguments.evaluate_arg\", source: None }", [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"prepare_arguments.total\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Builtin { symbol: Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: \"System`\", name: \"C34CallbackCharge\" } }, source: None, arity: 1 }", [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]], ["Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: None, arity: 1 }", [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]], ["Builtin { symbol: Symbol { id: 125, identity: None, text: SymbolText { id: 125, context: \"System`\", name: \"MemoryConstrained\" } }, source: None, arity: 2 }", [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]], ["C34ActualCallbackReceiptBytes.0", [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]], "native_resumed": [["Runtime { phase: \"call.stage.ordinary_builtin\", source: None }", [3, 3, 0, 3, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"call.stage.prepare_arguments\", source: None }", [3, 3, 0, 0, 3, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate.once_unstable\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate.total\", source: None }", [5, 5, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_atom_fast_path.atom\", source: None }", [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_atom_fast_path.total\", source: None }", [4, 4, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_call.dispatch\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_call.head_eval\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_call.resume_after_head\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_call.total\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_inner_unstable.call\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"evaluate_inner_unstable.total\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"prepare_arguments.evaluate_arg\", source: None }", [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]], ["Runtime { phase: \"prepare_arguments.total\", source: None }", [3, 3, 0, 0, 0, 0, 0, 0, 0, 0]], ["Builtin { symbol: Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: \"System`\", name: \"C34CallbackCharge\" } }, source: None, arity: 1 }", [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]], ["Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: None, arity: 1 }", [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]], ["Builtin { symbol: Symbol { id: 125, identity: None, text: SymbolText { id: 125, context: \"System`\", name: \"MemoryConstrained\" } }, source: None, arity: 2 }", [1, 1, 0, 0, 0, 0, 0, 0, 0, 0]], ["C34ActualCallbackReceiptBytes.0", [32, 0, 0, 0, 0, 0, 0, 0, 0, 0]]], "original_logical_counts_equal": true, "own_armed": true, "own_caught": true, "own_hit": true, "probe": "C34.empty-prefix-callback-value-charge.P0001.Middle.phase_observation.trace", "raw": ".temp/g15-c2/c34/logs/empty-prefix-callback-value-charge-own-P0001-1.log", "raw_sha256": "92f45eb29efd96056801b42c56342a2c23bdeef15df2b214c7a02db78127f045", "required_nonencoding": 60, "row": "P0001", "semantic_observations_equal": true, "semantic_queued": "Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: \"System`\", name: \"List\" } }))), args: SharedArgs([Atom(Integer(Small(89)))]) }), error: None, termination: None, messages: [], prints: [], trace: [EvaluationPass { before: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }))), args: SharedArgs([Atom(String(\"finish\"))]) }, after: Atom(Integer(Small(89))) }, EvaluationPass { before: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: \"System`\", name: \"C34CallbackCharge\" } }))), args: SharedArgs([Call { head: SharedExpr(Atom(Symbol(Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }))), args: SharedArgs([Atom(String(\"finish\"))]) }]) }, after: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: \"System`\", name: \"List\" } }))), args: SharedArgs([Atom(Integer(Small(89)))]) } }, EvaluationPass { before: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 125, identity: None, text: SymbolText { id: 125, context: \"System`\", name: \"MemoryConstrained\" } }))), args: SharedArgs([Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: \"System`\", name: \"C34CallbackCharge\" } }))), args: SharedArgs([Call { head: SharedExpr(Atom(Symbol(Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }))), args: SharedArgs([Atom(String(\"finish\"))]) }]) }, Atom(Integer(Small(100000000)))]) }, after: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: \"System`\", name: \"List\" } }))), args: SharedArgs([Atom(Integer(Small(89)))]) } }] }", "semantic_resumed": "Observation { value: Some(Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: \"System`\", name: \"List\" } }))), args: SharedArgs([Atom(Integer(Small(89)))]) }), error: None, termination: None, messages: [], prints: [], trace: [EvaluationPass { before: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }))), args: SharedArgs([Atom(String(\"finish\"))]) }, after: Atom(Integer(Small(89))) }, EvaluationPass { before: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: \"System`\", name: \"C34CallbackCharge\" } }))), args: SharedArgs([Call { head: SharedExpr(Atom(Symbol(Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }))), args: SharedArgs([Atom(String(\"finish\"))]) }]) }, after: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: \"System`\", name: \"List\" } }))), args: SharedArgs([Atom(Integer(Small(89)))]) } }, EvaluationPass { before: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 125, identity: None, text: SymbolText { id: 125, context: \"System`\", name: \"MemoryConstrained\" } }))), args: SharedArgs([Call { head: SharedExpr(Atom(Symbol(Symbol { id: 665, identity: None, text: SymbolText { id: 665, context: \"System`\", name: \"C34CallbackCharge\" } }))), args: SharedArgs([Call { head: SharedExpr(Atom(Symbol(Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }))), args: SharedArgs([Atom(String(\"finish\"))]) }]) }, Atom(Integer(Small(100000000)))]) }, after: Call { head: SharedExpr(Atom(Symbol(Symbol { id: 1, identity: None, text: SymbolText { id: 1, context: \"System`\", name: \"List\" } }))), args: SharedArgs([Atom(Integer(Small(89)))]) } }] }", "setup": "log={};scope=17;", "source": "MemoryConstrained[C34CallbackCharge[Input[\"finish\"]],100000000]", "source_argument": "A native caller uses the public armed retention API with its actual empty prefix. After the actual P0001 evaluate producer, its adopt_outcome tail acquires and charges the callback value receipt. The omission skips only that receipt resize, under an exact producer-scoped boolean, preserving the actual value, error, receipt allocation, admission and result carrier. Read-only scratch accessors expose Mode::bytes on the actual CallbackValue receipt before adoption and on the one-value RetainedValues receipt after resumption. The native continuation imports the real frozen prefix and actual resumed outcome through public APIs. No ledger total, frame complement, expected value, synthetic result or duration is substituted. This incoming callback charge is distinct from prefix restoration and outgoing receipt release. Both arms preserve every frozen required key.", "valid_epochs": 2}
+C2 C34 REQUIRED OBSERVER AUDIT PASS witnesses=1 real_cells=60 own_caught=1 resumed_receipt_bytes=32 queued_receipt_bytes=0 all_real_observer_fields_match_raw_reads=true original_logical_counts_equal=true semantic_equal=true valid_epochs=2 epoch_faults=0 fabricated_counts=0
+C2 C34 RUN observer-required-witness-audit attempt=1 exit=0
+```
+P0001 is the actual self.session.evaluate(expr) producer at accounting_mode/bridge.rs:93, inside the zero-capacity prefix branch of RetentionContext::evaluate. Its tail calls adopt_outcome at :94. That method propagates an actual error unchanged or obtains a fresh Mode receipt, resizes it to expr_bytes(value) at :159, enforces the active admission limit, and returns CallbackValue containing the same value, prefix and receipt.
+
+The copied method has a small helper seam: only the exact empty-prefix branch passes the selected ordinary-path omission flag. All other adopt_outcome callers pass false. The mutant skips only M::resize on that actual newly allocated callback receipt; allocation, error propagation, admission, value and carrier construction remain intact. Its switch is armed by a pause inside P0001, and it hits once on the queued arm. No accepted row is re-settled.
+
+The scratch native builtin uses the public armed retention API with the genuine empty prefix. On ordinary callback completion a read-only accessor reads Mode::bytes of CallbackValue.receipt before adoption. On resume the root-traced continuation imports the real frozen prefix and actual outcome through resume_values and push; a second read-only accessor reads Mode::bytes of that actual one-value RetainedValues receipt. The measured single-value prefix has no spare capacity after reserve_exact(1); both observations charge the same owned value occurrence. These are direct receipt fields, not ledger totals, expected-value calculations, synthesized counts or elapsed durations. The native caller never fabricates an Expr, a receipt or an outcome.
+
+The own omission leaves that incoming receipt at zero bytes while the resumed occurrence carries 32 bytes. The extra receipt row alone differs: the actual outcome, prints, messages, trace, state and all original logical rows agree. Both epochs remain valid with zero faults. Every one of the 60 real cells is five-part SAME, parsed identically to its disabled record and reaches the exact producer. This is a new incoming-charge mechanism, separate from C32 prefix restoration and C33 outgoing-lease release.
+
+New Lost: none. New Unreachable: none. New NoObservableTail groups: none. Retained Unreachable and Lost entries, unchanged:
+```json
+[
+  {
+    "accepted_evidence_carried": "False",
+    "attempts": "",
+    "contexts": "required:error_before_tail;phase_observation;prefix_and_tail;return_boundary;value",
+    "current_function_sha256": "a87e5c65082123d68e1645f73941ab16945b82b6fa8825cbef4661bdfbc314bb",
+    "current_rebase_status": "PairedUniqueC13_SourceOnly",
+    "current_row": "P1574",
+    "disposition": "Lost",
+    "evidence": "no partition frame or site link; owner table continuation3/owned-obligations.tsv; no generic compiled mutation: input/output or error-transform carriers differ, are ambiguous, or have no generic pass-through; prior bounded attempts remain in continuation2/parked.tsv.; final-row-evidence.tsv; residuals.tsv",
+    "file": "crates/rum-runtime/src/runtime/session/session_requests.rs",
+    "function": "crates/rum-runtime/src/runtime/session/session_requests.rs:248:Session::eval_expr_request_from_checkpoint",
+    "id": "P1566",
+    "initial_class": "unsupported schema",
+    "ledger_kind": "KnownLoss",
+    "line": "259",
+    "mutant_probe": "C9.native.P1566.Middle.phase_observation.trace",
+    "mutant_result": "NotRequiredForRealLoss",
+    "mutant_schema": "Unsupported",
+    "owner": "G15-C2",
+    "policy": "HostRequestDriver",
+    "prior_verdict": "Equal",
+    "probe_ids": "E1.0000.value.base;E1.0001.value.base;E1.0003.value.base;E1.0004.value.base;E1.0005.value.base;E1.0006.value.base;E1.0007.value.base;E1.0008.value.base;E1.0009.value.base;E1.0010.value.base;E1.0011.value.base;E1.0012.value.base;E1.0013.value.base;E1.0014.value.base;E1.0015.value.base;E1.0016.value.base;E1L.0935.error_before_tail.last-pause-throw;E1L.0936.error_before_tail.last-pause-throw;E1L.0937.error_before_tail.last-pause-throw;E1L.0938.error_before_tail.last-pause-throw;E1L.0939.error_before_tail.last-pause-throw;E1.0935.phase_observation.trace;E1.0936.phase_observation.trace;E1.0937.phase_observation.trace;E1.0938.phase_observation.trace;E1.0939.phase_observation.trace;E1.0935.prefix_and_tail.log;E1.0936.prefix_and_tail.log;E1.0937.prefix_and_tail.log;E1.0938.prefix_and_tail.log;E1.0939.prefix_and_tail.log;E1L.0935.return_boundary.last-pause-return;E1L.0936.return_boundary.last-pause-return;E1L.0937.return_boundary.last-pause-return;E1L.0938.return_boundary.last-pause-return;E1L.0939.return_boundary.last-pause-return;E1.0935.return_boundary.loop-store-reset;E1.0936.return_boundary.loop-store-reset;C3.loop-error.E1.0937.return_boundary.loop-store-reset;E1.0938.return_boundary.loop-store-reset;E1.0939.return_boundary.loop-store-reset;E1.0935.value.base;E1.0936.value.base;E1.0937.value.base;E1.0938.value.base;E1.0939.value.base",
+    "required_tuple_count": "30",
+    "settlement_evidence": "c12/malformed-loss-proof.json; c12/DRAFT-input-syntax-packaging.md",
+    "sources": "tool_unsettled;frame_carries;screen_frameless-direct-evaluate",
+    "tail_observed": "The ordinary evaluate producer P1566 propagates EvalError::Syntax from Input answer parsing. Its ordinary request tail calls finish_request_failure, which calls session_request_error_from_eval_error; that wrapper supplies source=None to session_request_error_from_eval_error_with_source. The error formatter with source=None produces SessionRequestError::Other. The resumed peer P1568 explicitly matches EvalError::Syntax and passes Some(&input), producing structured SessionRequestError::Syntax. The same malformed answer therefore has different public error variants despite equal native profile rows and valid epochs. This is pre-existing source-aware error packaging loss on the queued/ordinary P1566 tail, not the repaired completed-segment ownership defect. P1568 is the comparison peer, not a second independent loss row. The original C9 request-checkpoint receipts remain retained; they did not exercise this malformed-answer observation.",
+    "target": "evaluate",
+    "verdict": "Lost"
+  },
+  {
+    "accepted_evidence_carried": "True",
+    "attempts": "",
+    "contexts": "required:consumer_routes;guest_heads;held_and_splice;prefix_and_tail;return_boundary;value",
+    "current_function_sha256": "af4049c8a3a4fb182a2403fd15017540a4619ec441c8dce5e66230afe337440e",
+    "current_rebase_status": "FingerprintUnchanged",
+    "current_row": "618.optional-source-helpers.038",
+    "disposition": "Settled",
+    "evidence": "unreachable-proofs.tsv; pure-receipts.tsv; pure/real.jsonl; pure/disabled.jsonl; pure/disabled.log",
+    "file": "crates/rum-runtime/src/runtime/lowering.rs",
+    "function": "crates/rum-runtime/src/runtime/lowering.rs:168:::lower_decimal_atom",
+    "id": "618.optional-source-helpers.038",
+    "initial_class": "unsupported schema",
+    "ledger_kind": "Settled",
+    "line": "168",
+    "mutant_probe": "",
+    "mutant_result": "NotApplicableAcceptedProof",
+    "mutant_schema": "Unsupported",
+    "owner": "G15-C2",
+    "policy": "OptionalStage",
+    "prior_verdict": "Unreachable",
+    "probe_ids": "623.pure.decimal",
+    "required_tuple_count": "70",
+    "settlement_evidence": "Director continuation 3 fingerprint carry; port/rebase.tsv; Screen identity lower_decimal_atom is crates/rum-runtime/src/runtime/lowering.rs:168-205. It takes only &str, splits a decimal/exponent, validates ASCII digits, parses BigInt values, scales integer numerator/denominator, and constructs Rational/Expr data. Its only fallible helper split_decimal_exponent (:207-220) maps parse failure to EvalError::InvalidInteger; multiply_by_power_of_ten (:222-226) only multiplies a BigInt. Neither helper receives a Session, callback, provider, continuation, or guest expression evaluator. Every explicit error constructor in this closed helper chain is InvalidInteger; no callee constructs or forwards InputRequired. Guest code in a parsed string is evaluated only by a later ToExpression consumer after this lowering helper has returned. The probe supplies a numeric string through InputString while also lowering a decimal literal; its 1 pause is outside this helper. The copied helper entry guard was entered 4 times and was absent at every pause.",
+    "sources": "screen_optional-source-helpers",
+    "tail_observed": "Concrete closed callee chain cannot evaluate guest code or produce InputRequired; zero counters supplement the source proof.",
+    "target": "",
+    "verdict": "Unreachable"
+  },
+  {
+    "accepted_evidence_carried": "True",
+    "attempts": "",
+    "contexts": "required:consumer_routes;error_before_tail;guest_heads;held_and_splice;prefix_and_tail;return_boundary;value",
+    "current_function_sha256": "5101c7c56562171a4f796c9f25cd407e6f5cfb67c31d5d487bd14d50e268613d",
+    "current_rebase_status": "FingerprintUnchanged",
+    "current_row": "618.optional-source-helpers.054",
+    "disposition": "Settled",
+    "evidence": "unreachable-proofs.tsv; pure-receipts.tsv; pure/real.jsonl; pure/disabled.jsonl; pure/disabled.log",
+    "file": "crates/rum-stdlib/src/predicates/collections.rs",
+    "function": "crates/rum-stdlib/src/predicates/collections.rs:462:::effective_same_test",
+    "id": "618.optional-source-helpers.054",
+    "initial_class": "unsupported schema",
+    "ledger_kind": "Settled",
+    "line": "462",
+    "mutant_probe": "",
+    "mutant_result": "NotApplicableAcceptedProof",
+    "mutant_schema": "Unsupported",
+    "owner": "G15-C2",
+    "policy": "MatchDecision;OptionalStage",
+    "prior_verdict": "Unreachable",
+    "probe_ids": "623.pure.same-predicate",
+    "required_tuple_count": "75",
+    "settlement_evidence": "Director continuation 3 fingerprint carry; port/rebase.tsv; Screen identity effective_same_test is crates/rum-stdlib/src/predicates/collections.rs:462-474. For each borrowed RetainedOptions item it calls same_test_option_rule_value (:439-449), whose entire chain is an Expr::Call head/arity test and same_test_option_name (:452-460), a string/symbol-name read. It clones the selected RHS as data and filters the literal Automatic symbol. RetainedOptions IntoIterator is the concrete slice iterator in runtime/accounting_mode/options.rs:51-57; its Deref is a slice borrow (:44-48), with no guest dispatch. The helper has no Session or callback parameter and every return is Ok(None/Some(data)); there is no Err constructor. A SameTest Function, including an InputString inside it, remains inert here and is invoked only in the later resume_duplicate_free_same_test consumer. The strongest probe installs a SameTest function that actually pauses in that later comparison. It records 1 external pause, 1 helper entry, and 0 helper pauses.",
+    "sources": "screen_optional-source-helpers",
+    "tail_observed": "Concrete closed callee chain cannot evaluate guest code or produce InputRequired; zero counters supplement the source proof.",
+    "target": "",
+    "verdict": "Unreachable"
+  },
+  {
+    "accepted_evidence_carried": "True",
+    "attempts": "",
+    "contexts": "required:consumer_routes;guest_heads;held_and_splice;prefix_and_tail;return_boundary;value",
+    "current_function_sha256": "5101c7c56562171a4f796c9f25cd407e6f5cfb67c31d5d487bd14d50e268613d",
+    "current_rebase_status": "FingerprintUnchanged",
+    "current_row": "618.optional-source-helpers.055",
+    "disposition": "Settled",
+    "evidence": "unreachable-proofs.tsv; pure-receipts.tsv; pure/real.jsonl; pure/disabled.jsonl; pure/disabled.log",
+    "file": "crates/rum-stdlib/src/structure_ops/ordering_sets.rs",
+    "function": "crates/rum-stdlib/src/structure_ops/ordering_sets.rs:584:::effective_same_test",
+    "id": "618.optional-source-helpers.055",
+    "initial_class": "unsupported schema",
+    "ledger_kind": "Settled",
+    "line": "584",
+    "mutant_probe": "",
+    "mutant_result": "NotApplicableAcceptedProof",
+    "mutant_schema": "Unsupported",
+    "owner": "G15-C2",
+    "policy": "OptionalStage;RebuildTraversal",
+    "prior_verdict": "Unreachable",
+    "probe_ids": "623.pure.same-set",
+    "required_tuple_count": "70",
+    "settlement_evidence": "Director continuation 3 fingerprint carry; port/rebase.tsv; Screen identity effective_same_test is crates/rum-stdlib/src/structure_ops/ordering_sets.rs:584-596. It iterates the same concrete borrowed RetainedOptions slice, tests Rule/RuleDelayed head and arity with same_test_option_rule_value (:561-571), reads a string/symbol name with same_test_option_name (:574-582), clones the selected RHS, and filters Automatic. All returns are Ok; there is no Session, callback invocation, provider, error constructor or continuation decode. RetainedOptions iteration and Expr cloning only borrow/share data. Guest SameTest evaluation happens later in resume_set_same_test (:598 onward), after this helper has returned. The strongest Union probe actually invokes a pausing SameTest function there, recording 1 external pause, 1 helper entry, and 0 helper pauses.",
+    "sources": "screen_optional-source-helpers",
+    "tail_observed": "Concrete closed callee chain cannot evaluate guest code or produce InputRequired; zero counters supplement the source proof.",
+    "target": "",
+    "verdict": "Unreachable"
+  }
+]
+```
+Reserved P1566 loss evidence, retained in full:
+```text
+{
+  "caused_by_727": false,
+  "comparison_peer": {
+    "column": 22,
+    "end_column": 69,
+    "end_line": 329,
+    "expression": "self . resume_suspended_evaluation (input . clone ())",
+    "file": "crates/rum-runtime/src/runtime/session/session_requests.rs",
+    "file_sha256": "2c7a0af6e5b97d3b86ed604e022ca12e7673069353357c2eb6e811c45f957536",
+    "function": "crates/rum-runtime/src/runtime/session/session_requests.rs:315:Session::resume_eval_request_from_checkpoint",
+    "function_sha256": "02c328488f852272b8e55f06cfeca0ce64ed2480a370d6f18e938e7297371f32",
+    "kind": "call",
+    "line": 329,
+    "row": "P1568",
+    "target": "resume_suspended_evaluation"
+  },
+  "group": "PreexistingInputSyntaxPackaging",
+  "mechanism": "The ordinary evaluate producer P1566 propagates EvalError::Syntax from Input answer parsing. Its ordinary request tail calls finish_request_failure, which calls session_request_error_from_eval_error; that wrapper supplies source=None to session_request_error_from_eval_error_with_source. The error formatter with source=None produces SessionRequestError::Other. The resumed peer P1568 explicitly matches EvalError::Syntax and passes Some(&input), producing structured SessionRequestError::Syntax. The same malformed answer therefore has different public error variants despite equal native profile rows and valid epochs. This is pre-existing source-aware error packaging loss on the queued/ordinary P1566 tail, not the repaired completed-segment ownership defect. P1568 is the comparison peer, not a second independent loss row. The original C9 request-checkpoint receipts remain retained; they did not exercise this malformed-answer observation.",
+  "minimal": {
+    "DIFF": 1,
+    "SAME": 2,
+    "classification_pending": true,
+    "faults": 0,
+    "invalid": 0,
+    "minimal": "C12.malformed.input-malformed",
+    "observation": {
+      "id": "C12.malformed.input-malformed",
+      "native_same": true,
+      "queued": [
+        [
+          "Runtime { phase: \"call.stage.ordinary_builtin\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"call.stage.prepare_arguments\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate.once_unstable\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate.total\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_atom_fast_path.total\", source: None }",
+          [
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_call.dispatch\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_call.head_eval\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_call.resume_after_head\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_call.total\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_inner_unstable.call\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_inner_unstable.total\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"prepare_arguments.total\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: None, arity: 1 }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "resumed": [
+        [
+          "Runtime { phase: \"call.stage.ordinary_builtin\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"call.stage.prepare_arguments\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate.once_unstable\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate.total\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_atom_fast_path.total\", source: None }",
+          [
+            2,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_call.dispatch\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_call.head_eval\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_call.resume_after_head\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_call.total\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_inner_unstable.call\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"evaluate_inner_unstable.total\", source: None }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Runtime { phase: \"prepare_arguments.total\", source: None }",
+          [
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        [
+          "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: None, arity: 1 }",
+          [
+            1,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      ],
+      "row": "-",
+      "semantic_queued": "Observation { value: None, error: Some(Other { message: \"incomplete input: expected expression at bytes 1..1\" }), termination: None, messages: [], prints: [], trace: [] }",
+      "semantic_resumed": "Observation { value: None, error: Some(Syntax(StructuredSourceDiagnostic { message: \"incomplete input: expected expression at bytes 1..1\", rendered: \"error: incomplete input: expected expression at bytes 1..1\\n --> 1:2\\n  |\\n1 | (\\n  |  ^\", is_incomplete: true, spans: [SourceDiagnosticSpan { span: Span { start: 1, end: 1 }, start: SourceLocation { line: 1, column: 2 }, end: SourceLocation { line: 1, column: 2 }, label: None, text: \"\" }] })), termination: None, messages: [], prints: [], trace: [] }",
+      "semantic_same": false,
+      "valid": true
+    },
+    "original": "B726.class.error",
+    "profile_valid": true,
+    "raw": {
+      "mutant": ".temp/g15-c2/c12/logs/malformed-mutant-1.log",
+      "real": ".temp/g15-c2/c12/logs/malformed-real-1.log"
+    },
+    "real_disabled_exact": true
+  },
+  "missing_tail": "crates/rum-runtime/src/runtime/session/session_requests.rs:280 ordinary Err(err) -> finish_request_failure; lines 536-552 select the no-source formatter wrapper; request_errors.rs:42-54 selects Other without source",
+  "new_keys": 0,
+  "new_rows": 0,
+  "original_whole_record": {
+    "id": "B726.class.error",
+    "native_same": true,
+    "queued": [
+      [
+        "Runtime { phase: \"call.stage.down_values\", source: None }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"call.stage.ordinary_builtin\", source: None }",
+        [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"call.stage.ordinary_builtin\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"call.stage.prepare_arguments\", source: None }",
+        [
+          2,
+          2,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"call.stage.prepare_arguments\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"definition.rhs.evaluate\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"definition.rhs.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate.once_unstable\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate.once_unstable\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate.total\", source: None }",
+        [
+          3,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: None }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.call\", source: None }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: None }",
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.total\", source: None }",
+        [
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.dispatch\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.dispatch\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.head_eval\", source: None }",
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.head_eval\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.resume_after_head\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.resume_after_head\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.total\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_inner_unstable.call\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_inner_unstable.call\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_inner_unstable.total\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_inner_unstable.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: None }",
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"prepare_arguments.total\", source: None }",
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"prepare_arguments.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: None, arity: 1 }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }), arity: 1 }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Definition { kind: \"down_value_rhs_eval\", symbol: Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }, index: 0 }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    ],
+    "resumed": [
+      [
+        "Runtime { phase: \"call.stage.down_values\", source: None }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"call.stage.ordinary_builtin\", source: None }",
+        [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"call.stage.ordinary_builtin\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"call.stage.prepare_arguments\", source: None }",
+        [
+          2,
+          2,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"call.stage.prepare_arguments\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"definition.rhs.evaluate\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"definition.rhs.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate.once_unstable\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate.once_unstable\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate.total\", source: None }",
+        [
+          3,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: None }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.atom\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.call\", source: None }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: None }",
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.stable_symbol\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.total\", source: None }",
+        [
+          4,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_atom_fast_path.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.dispatch\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.dispatch\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.head_eval\", source: None }",
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.head_eval\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.resume_after_head\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.resume_after_head\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.total\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_call.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_inner_unstable.call\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_inner_unstable.call\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_inner_unstable.total\", source: None }",
+        [
+          2,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"evaluate_inner_unstable.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: None }",
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"prepare_arguments.evaluate_arg\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"prepare_arguments.total\", source: None }",
+        [
+          2,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Runtime { phase: \"prepare_arguments.total\", source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }) }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: None, arity: 1 }",
+        [
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Builtin { symbol: Symbol { id: 151, identity: None, text: SymbolText { id: 151, context: \"System`\", name: \"Input\" } }, source: Some(Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }), arity: 1 }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "Definition { kind: \"down_value_rhs_eval\", symbol: Symbol { id: 667, identity: None, text: SymbolText { id: 667, context: \"Global`\", name: \"c11f\" } }, index: 0 }",
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ]
+    ],
+    "row": "-",
+    "semantic_queued": "Observation { value: None, error: Some(Other { message: \"incomplete input: expected expression at bytes 1..1\" }), termination: None, messages: [], prints: [], trace: [] }",
+    "semantic_resumed": "Observation { value: None, error: Some(Syntax(StructuredSourceDiagnostic { message: \"incomplete input: expected expression at bytes 1..1\", rendered: \"error: incomplete input: expected expression at bytes 1..1\\n --> 1:2\\n  |\\n1 | (\\n  |  ^\", is_incomplete: true, spans: [SourceDiagnosticSpan { span: Span { start: 1, end: 1 }, start: SourceLocation { line: 1, column: 2 }, end: SourceLocation { line: 1, column: 2 }, label: None, text: \"\" }] })), termination: None, messages: [], prints: [], trace: [] }",
+    "semantic_same": false,
+    "valid": true
+  },
+  "preexisting": true,
+  "repair_implemented": false,
+  "row": "P1566",
+  "source_owner": {
+    "column": 22,
+    "end_column": 41,
+    "end_line": 259,
+    "expression": "self . evaluate (expr)",
+    "file": "crates/rum-runtime/src/runtime/session/session_requests.rs",
+    "file_sha256": "2c7a0af6e5b97d3b86ed604e022ca12e7673069353357c2eb6e811c45f957536",
+    "function": "crates/rum-runtime/src/runtime/session/session_requests.rs:248:Session::eval_expr_request_from_checkpoint",
+    "function_sha256": "a87e5c65082123d68e1645f73941ab16945b82b6fa8825cbef4661bdfbc314bb",
+    "kind": "call",
+    "line": 259,
+    "row": "P1566",
+    "target": "evaluate"
+  },
+  "source_packets": {
+    "crates/rum-runtime/src/runtime/builtins_input.rs": {
+      "sha256": "2dff55be335cf585639332623ac08309eefe3fa8b869f9763d1ca9dfee9aac1c",
+      "source": "use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};\nuse std::thread;\nuse std::time::Duration;\n\nuse super::*;\n\n#[derive(Clone, Debug, PartialEq, Eq)]\nstruct DialogConfig {\n    body: Option<Expr>,\n    prolog: Expr,\n    symbols: Vec<(Symbol, Option<Expr>)>,\n}\n\n#[derive(Clone, Copy, Debug, PartialEq, Eq)]\nenum DialogNormalizationError {\n    InvalidOptions,\n    InvalidSymbols,\n}\n\n#[derive(Clone, Debug, PartialEq, Eq)]\nenum InputOptionsError {\n    NonOption(Expr),\n    InvalidOptionName(Expr),\n    UnknownOption(Symbol),\n}\n\nimpl DialogNormalizationError {\n    fn message(self) -> &'static str {\n        match self {\n            Self::InvalidOptions => {\n                \"expected only DialogProlog and DialogSymbols option rules in the current first-pass subset\"\n            }\n            Self::InvalidSymbols => {\n                \"expected DialogSymbols to be a list of symbols or symbol initializers in the current first-pass subset\"\n            }\n        }\n    }\n}\n\nimpl Session {\n    pub(super) fn eval_dialog(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {\n        let config = match self.compile_dialog_call(args) {\n            Ok(config) => config,\n            Err(error) => {\n                return Ok(self.invalid_call_with_arg_form(\"Dialog\", args, error.message()));\n            }\n        };\n\n        let body = self.dialog_body_expr(config.body);\n        let body = if is_system_symbol_name(&config.prolog, \"Null\") {\n            body\n        } else {\n            Expr::call(system_expr(\"CompoundExpression\"), vec![config.prolog, body])\n        };\n        let body = if config.symbols.is_empty() {\n            body\n        } else {\n            Expr::call(\n                system_expr(\"Block\"),\n                vec![render_dialog_symbols_bindings(&config.symbols), body],\n            )\n        };\n\n        let body_result = self.evaluate(body);\n        let outcome = crate::resume_or_suspend!(\n            self,\n            body_result,\n            ok(value) => Ok(value),\n            suspend => EvalDialogSuspensionFrame,\n        );\n\n        match outcome {\n            Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),\n            outcome => self.finish_dialog_body(outcome),\n        }\n    }\n\n    pub(super) fn eval_input_string(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {\n        let request = match self.compile_input_request(\"InputString\", args, String::new()) {\n            Ok(request) => request,\n            Err(error) => return Ok(self.invalid_input_options_call(\"InputString\", args, error)),\n        };\n\n        self.drive_input_request(request)\n    }\n\n    pub(super) fn eval_input(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {\n        let request = match self.compile_input_request(\"Input\", args, \"?\".to_string()) {\n            Ok(request) => request,\n            Err(error) => return Ok(self.invalid_input_options_call(\"Input\", args, error)),\n        };\n\n        let text_result = self.drive_input_request(request);\n        let text = crate::resume_or_suspend!(\n            self,\n            text_result,\n            ok(value) => Ok(value),\n            suspend => EvalInputSuspensionFrame,\n        )?;\n\n        self.resume_input_after_text(text)\n    }\n\n    pub(super) fn eval_print(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {\n        let rendered = args\n            .iter()\n            .map(render_print_fragment)\n            .collect::<Vec<_>>()\n            .join(\"\");\n        self.push_print(rendered);\n        Ok(system_expr(\"Null\"))\n    }\n\n    pub(super) fn eval_pause(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {\n        let [seconds] = args else {\n            return Ok(self.invalid_call_with_exact_arg_count(\"Pause\", args, 1));\n        };\n\n        let Some(duration) = expr_as_nonnegative_duration(seconds) else {\n            let held_call = Expr::call(system_expr(\"Pause\"), args.to_vec());\n            return Ok(self.invalid_call_with_message(\n                \"Pause\",\n                args,\n                \"numnm\",\n                format!(\"Non-negative machine-sized number expected at position 1 in {held_call}.\"),\n            ));\n        };\n\n        if !duration.is_zero() {\n            thread::sleep(duration);\n        }\n\n        Ok(system_expr(\"Null\"))\n    }\n\n    fn compile_dialog_call(\n        &mut self,\n        args: &[Expr],\n    ) -> Result<DialogConfig, DialogNormalizationError> {\n        let (body, option_exprs) = split_dialog_body_and_options(args);\n        let explicit_options = if option_exprs.is_empty() {\n            None\n        } else {\n            let options = self\n                .compile_assigned_options_from_resolved(&Expr::call(\n                    system_expr(\"List\"),\n                    option_exprs.to_vec(),\n                ))\n                .map_err(|_| DialogNormalizationError::InvalidOptions)?;\n            Some(options)\n        };\n\n        if let Some(options) = explicit_options.as_ref() {\n            for (name, _, _) in options.iter() {\n                if !matches!(name.name(), \"DialogProlog\" | \"DialogSymbols\") {\n                    return Err(DialogNormalizationError::InvalidOptions);\n                }\n            }\n        }\n\n        let prolog = self.dialog_option_raw_expr(explicit_options.as_ref(), \"DialogProlog\")?;\n        let symbols_expr =\n            self.dialog_option_raw_expr(explicit_options.as_ref(), \"DialogSymbols\")?;\n        let symbols = match symbols_expr {\n            Some((expr, _delayed)) => {\n                parse_module_binding_list(&expr).ok_or(DialogNormalizationError::InvalidSymbols)?\n            }\n            None => Vec::new(),\n        };\n\n        Ok(DialogConfig {\n            body: body.cloned(),\n            prolog: prolog\n                .map(|(expr, _delayed)| expr)\n                .unwrap_or_else(|| system_expr(\"Null\")),\n            symbols,\n        })\n    }\n\n    fn compile_input_request(\n        &self,\n        symbol_name: &str,\n        args: &[Expr],\n        default_prompt: String,\n    ) -> Result<RuntimeInputRequest, InputOptionsError> {\n        let (prompt, option_exprs) = split_input_prompt_and_options(args);\n        let prompt = prompt.map_or(default_prompt, render_print_fragment);\n        let explicit_options = self.parse_input_options(option_exprs)?;\n\n        let mut request = match symbol_name {\n            \"Input\" => RuntimeInputRequest::new(prompt).input(),\n            _ => RuntimeInputRequest::new(prompt).input_string(),\n        };\n        let field_masked = self\n            .raw_option_value_for_symbol(\n                explicit_options.as_ref(),\n                &Symbol::system(symbol_name),\n                \"FieldMasked\",\n            )\n            .is_some_and(|(value, _)| is_system_symbol_name(&value, \"True\"));\n        if field_masked {\n            request = request.password();\n        }\n\n        Ok(request)\n    }\n\n    fn parse_input_options(\n        &self,\n        option_exprs: &[Expr],\n    ) -> Result<Option<SymbolOptions>, InputOptionsError> {\n        if option_exprs.is_empty() {\n            return Ok(None);\n        }\n\n        let mut options = Vec::new();\n        for option_expr in option_exprs {\n            collect_input_option_expr(option_expr, &mut options)?;\n        }\n\n        self.compile_assigned_options_from_resolved(&Expr::call(system_expr(\"List\"), options))\n            .map(Some)\n            .map_err(|_| {\n                InputOptionsError::InvalidOptionName(Expr::call(\n                    system_expr(\"List\"),\n                    option_exprs.to_vec(),\n                ))\n            })\n    }\n\n    fn drive_input_request(&mut self, request: RuntimeInputRequest) -> Result<Expr, EvalError> {\n        if !self.queued_input_responses.is_empty() {\n            if self.pending_suspension_generation().is_some() {\n                self.abandon_pending_suspension(AbandonReason::SupersededOrQueuedInputDiscard);\n            }\n            let value = self\n                .queued_input_responses\n                .pop_front()\n                .expect(\"a checked queued input response should remain available\");\n            self.refresh_memory_owner(\n                crate::runtime::debug_tools::resources::MemoryOwner::QueuedInputResponses,\n            );\n            return Ok(Expr::string(value));\n        }\n\n        self.begin_input_suspension(request.clone());\n\n        Err(EvalError::InputRequired { request })\n    }\n\n    fn invalid_input_options_call(\n        &mut self,\n        symbol_name: &str,\n        args: &[Expr],\n        error: InputOptionsError,\n    ) -> Expr {\n        let held_call = Expr::call(system_expr(symbol_name), args.to_vec());\n        match error {\n            InputOptionsError::NonOption(offender) => self.invalid_call_with_message(\n                symbol_name,\n                args,\n                \"nonopt\",\n                format!(\n                    \"Options expected (instead of {offender}) beyond position 1 in {held_call}. An option must be a rule or a list of rules.\"\n                ),\n            ),\n            InputOptionsError::InvalidOptionName(offender) => self.invalid_call_with_message(\n                symbol_name,\n                args,\n                \"optrs\",\n                format!(\n                    \"Option specification {offender} in {held_call} is not a rule for a symbol or string.\"\n                ),\n            ),\n            InputOptionsError::UnknownOption(option_name) => self.invalid_call_with_message(\n                symbol_name,\n                args,\n                \"optx\",\n                format!(\"Unknown option {option_name} in {held_call}.\"),\n            ),\n        }\n    }\n\n    fn dialog_body_expr(&self, body: Option<Expr>) -> Expr {\n        body.unwrap_or_else(|| Expr::call(system_expr(\"Input\"), vec![Expr::string(\"\")]))\n    }\n\n    fn dialog_option_raw_expr(\n        &mut self,\n        explicit: Option<&SymbolOptions>,\n        option_name: &str,\n    ) -> Result<Option<(Expr, bool)>, DialogNormalizationError> {\n        Ok(self.raw_option_value_for_symbol(explicit, &Symbol::system(\"Dialog\"), option_name))\n    }\n\n    fn finish_dialog_body(&mut self, outcome: Result<Expr, EvalError>) -> Result<Expr, EvalError> {\n        match outcome {\n            Ok(value) => Ok(value),\n            Err(EvalError::Return { value }) => Ok(value),\n            Err(error) => Err(error),\n        }\n    }\n\n    fn resume_input_after_text(&mut self, text: Expr) -> Result<Expr, EvalError> {\n        let Expr::Atom(Atom::String(source)) = text else {\n            return Ok(text);\n        };\n\n        let syntax = parse_expr(&source)?;\n        let expr = self.lower_syntax_expr(&syntax)?;\n        let evaluated = self.evaluate(expr);\n        crate::resume_or_suspend!(\n            self,\n            evaluated,\n            ok(value) => Ok(value),\n            suspend => ResumeInputAfterTextSuspensionFrame,\n        )\n    }\n}\n\nfn split_input_prompt_and_options(args: &[Expr]) -> (Option<&Expr>, &[Expr]) {\n    match args {\n        [] => (None, &[]),\n        [first, ..] if is_input_option_start_expr(first) => (None, args),\n        [first, rest @ ..] => (Some(first), rest),\n    }\n}\n\nfn is_input_option_start_expr(expr: &Expr) -> bool {\n    match expr {\n        Expr::Call { head, args }\n            if (is_system_symbol_name(head, \"Rule\")\n                || is_system_symbol_name(head, \"RuleDelayed\"))\n                && args.len() == 2 =>\n        {\n            matches!(&args[0], Expr::Atom(Atom::Symbol(_)))\n                || matches!(&args[0], Expr::Atom(Atom::String(_)))\n        }\n        Expr::Call { head, args } if is_system_symbol_name(head, \"List\") => {\n            !args.is_empty() && args.iter().all(is_input_option_start_expr)\n        }\n        _ => false,\n    }\n}\n\nfn collect_input_option_expr(\n    option_expr: &Expr,\n    options: &mut Vec<Expr>,\n) -> Result<(), InputOptionsError> {\n    match option_expr {\n        Expr::Call { head, args }\n            if (is_system_symbol_name(head, \"Rule\")\n                || is_system_symbol_name(head, \"RuleDelayed\"))\n                && args.len() == 2 =>\n        {\n            let option_name = input_option_name(&args[0])\n                .ok_or_else(|| InputOptionsError::InvalidOptionName(option_expr.clone()))?;\n            if option_name.name() != \"FieldMasked\" {\n                return Err(InputOptionsError::UnknownOption(option_name));\n            }\n            options.push(option_expr.clone());\n            Ok(())\n        }\n        Expr::Call { head, args } if is_system_symbol_name(head, \"List\") => {\n            for item in args {\n                if let Err(error) = collect_input_option_expr(item, options) {\n                    return Err(match error {\n                        InputOptionsError::NonOption(_) => {\n                            InputOptionsError::NonOption(option_expr.clone())\n                        }\n                        other => other,\n                    });\n                }\n            }\n            Ok(())\n        }\n        _ => Err(InputOptionsError::NonOption(option_expr.clone())),\n    }\n}\n\nfn input_option_name(expr: &Expr) -> Option<Symbol> {\n    match expr {\n        Expr::Atom(Atom::Symbol(symbol)) => Some(symbol.clone()),\n        Expr::Atom(Atom::String(name)) => resolve_unqualified_symbol(name),\n        _ => None,\n    }\n}\n\nfn split_dialog_body_and_options(args: &[Expr]) -> (Option<&Expr>, &[Expr]) {\n    match args {\n        [] => (None, &[]),\n        [first, ..] if is_dialog_option_expr(first) => (None, args),\n        [first, rest @ ..] => (Some(first), rest),\n    }\n}\n\nfn is_dialog_option_expr(expr: &Expr) -> bool {\n    let Expr::Call { head, args } = expr else {\n        return false;\n    };\n\n    if !(is_system_symbol_name(head, \"Rule\") || is_system_symbol_name(head, \"RuleDelayed\"))\n        || args.len() != 2\n    {\n        return false;\n    }\n\n    matches!(\n        &args[0],\n        Expr::Atom(Atom::Symbol(name)) if matches!(name.name(), \"DialogProlog\" | \"DialogSymbols\")\n    ) || matches!(\n        &args[0],\n        Expr::Atom(Atom::String(name)) if matches!(name.as_str(), \"DialogProlog\" | \"DialogSymbols\")\n    )\n}\n\nfn render_dialog_symbols_bindings(items: &[(Symbol, Option<Expr>)]) -> Expr {\n    Expr::call(\n        system_expr(\"List\"),\n        items\n            .iter()\n            .map(|(symbol, init)| match init {\n                Some(init) => Expr::call(\n                    system_expr(\"Rule\"),\n                    vec![Expr::Atom(Atom::Symbol(symbol.clone())), init.clone()],\n                ),\n                None => Expr::Atom(Atom::Symbol(symbol.clone())),\n            })\n            .collect(),\n    )\n}\n\nfn render_print_fragment(expr: &Expr) -> String {\n    match expr {\n        Expr::Atom(Atom::String(value)) => value.clone(),\n        other => render_input_like_expr(other),\n    }\n}\n\nfn expr_as_nonnegative_duration(expr: &Expr) -> Option<Duration> {\n    let seconds = match expr {\n        Expr::Atom(Atom::Integer(value)) => value.to_string().parse::<f64>().ok()?,\n        Expr::Atom(Atom::Rational(value)) => {\n            let numerator = value.numerator().to_string().parse::<f64>().ok()?;\n            let denominator = value.denominator().to_string().parse::<f64>().ok()?;\n            numerator / denominator\n        }\n        _ => return None,\n    };\n\n    Duration::try_from_secs_f64(seconds).ok()\n}\n\n#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]\nstruct EvalDialogSuspensionFrame;\n\nimpl crate::runtime::suspension::SuspensionFrame for EvalDialogSuspensionFrame {\n    fn resume(\n        self: std::sync::Arc<Self>,\n        session: &mut Session,\n        outcome: Result<Expr, EvalError>,\n    ) -> crate::runtime::suspension::FrameAction {\n        let resumed = (|| session.finish_dialog_body(outcome))();\n        crate::runtime::suspension::FrameAction::complete(resumed)\n    }\n}\n\n#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]\nstruct EvalInputSuspensionFrame;\n\nimpl crate::runtime::suspension::SuspensionFrame for EvalInputSuspensionFrame {\n    fn resume(\n        self: std::sync::Arc<Self>,\n        session: &mut Session,\n        outcome: Result<Expr, EvalError>,\n    ) -> crate::runtime::suspension::FrameAction {\n        let resumed = match outcome {\n            Ok(text) => (|| session.resume_input_after_text(text))(),\n            Err(error) => Err(error),\n        };\n        crate::runtime::suspension::FrameAction::complete(resumed)\n    }\n}\n\n#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]\nstruct ResumeInputAfterTextSuspensionFrame;\n\nimpl crate::runtime::suspension::SuspensionFrame for ResumeInputAfterTextSuspensionFrame {\n    fn resume(\n        self: std::sync::Arc<Self>,\n        _session: &mut Session,\n        outcome: Result<Expr, EvalError>,\n    ) -> crate::runtime::suspension::FrameAction {\n        let resumed = match outcome {\n            Ok(value) => Ok(value),\n            Err(error) => Err(error),\n        };\n        crate::runtime::suspension::FrameAction::complete(resumed)\n    }\n}\n"
+    },
+    "crates/rum-runtime/src/runtime/session/request_errors.rs": {
+      "sha256": "44f00a5a033b636f744fa9c8c412e51f53033ae9af4760ffdef614053f2bd672",
+      "source": "//! The public failure surface of host requests: how an `EvalError` maps to a\n//! `SessionRequestError`.\nuse super::super::*;\n\npub(super) fn no_suspended_evaluation_failure() -> SessionRequestFailure {\n    SessionRequestFailure {\n        error: SessionRequestError::Other {\n            message: \"no suspended evaluation is waiting for host input\".to_string(),\n        },\n        messages: Vec::new(),\n        prints: Vec::new(),\n        trace: Vec::new(),\n    }\n}\n\npub(super) fn request_syntax_failure(\n    diagnostic: rum_syntax::SourceDiagnostic,\n) -> SessionRequestFailure {\n    SessionRequestFailure {\n        error: SessionRequestError::Syntax(diagnostic.structured()),\n        messages: Vec::new(),\n        prints: Vec::new(),\n        trace: Vec::new(),\n    }\n}\n\npub(super) fn session_request_error_from_eval_error(err: &EvalError) -> SessionRequestError {\n    session_request_error_from_eval_error_with_source(err, None)\n}\n\npub(super) fn session_request_error_from_eval_error_with_source(\n    err: &EvalError,\n    source: Option<&str>,\n) -> SessionRequestError {\n    match err {\n        EvalError::ContinuationSlotMismatch(fault) => {\n            SessionRequestError::ContinuationSlotMismatch {\n                expected: fault.expected(),\n                got: fault.got(),\n            }\n        }\n        EvalError::Syntax(error) => source\n            .map(|source| {\n                SessionRequestError::Syntax(\n                    rum_syntax::SourceDiagnostic::new(\n                        rum_syntax::SourceText::new(source),\n                        error.clone(),\n                    )\n                    .structured(),\n                )\n            })\n            .unwrap_or_else(|| SessionRequestError::Other {\n                message: error.to_string(),\n            }),\n        EvalError::InvalidInteger { literal } => SessionRequestError::InvalidInteger {\n            literal: literal.clone(),\n        },\n        EvalError::Io { path, source } => SessionRequestError::Io {\n            path: path.clone(),\n            message: source.to_string(),\n        },\n        EvalError::LoadPathNotFound { target, searched } => SessionRequestError::LoadPathNotFound {\n            target: target.clone(),\n            searched: searched.clone(),\n        },\n        EvalError::NoFileIoProvider => SessionRequestError::Other {\n            message: \"no file provider installed\".to_string(),\n        },\n        EvalError::EvaluationCycleDetected { expr } => {\n            SessionRequestError::EvaluationCycleDetected { expr: expr.clone() }\n        }\n        EvalError::RecursionLimitExceeded { limit } => {\n            SessionRequestError::RecursionLimitExceeded { limit: *limit }\n        }\n        EvalError::StackLimitExceeded { limit } => {\n            SessionRequestError::StackLimitExceeded { limit: *limit }\n        }\n        EvalError::MatchRecursionLimitExceeded { limit } => {\n            SessionRequestError::MatchRecursionLimitExceeded { limit: *limit }\n        }\n        EvalError::Cancelled => SessionRequestError::Cancelled,\n        EvalError::TimeConstraintExceeded => SessionRequestError::TimeConstraintExceeded,\n        EvalError::MemoryConstraintExceeded { limit } => {\n            SessionRequestError::MemoryConstraintExceeded { limit: *limit }\n        }\n        EvalError::GeneratedElementLimitExceeded { limit } => {\n            SessionRequestError::GeneratedElementLimitExceeded { limit: *limit }\n        }\n        EvalError::IntegerWorkLimitExceeded { limit } => {\n            SessionRequestError::IntegerWorkLimitExceeded { limit: *limit }\n        }\n        EvalError::IterationWorkLimitExceeded { limit } => {\n            SessionRequestError::IterationWorkLimitExceeded { limit: *limit }\n        }\n        EvalError::IterationLimitExceeded { limit } => {\n            SessionRequestError::IterationLimitExceeded { limit: *limit }\n        }\n        EvalError::EvaluationPassLimitExceeded { limit } => {\n            SessionRequestError::EvaluationPassLimitExceeded { limit: *limit }\n        }\n        EvalError::Exit { code } => SessionRequestError::Exit { code: *code },\n        EvalError::Return { value } => SessionRequestError::Other {\n            message: format!(\"uncaught top-level Return resolved to {value}\"),\n        },\n        EvalError::Thrown { value, tag, .. } => SessionRequestError::Other {\n            message: format!(\"uncaught throw: {value} with tag {tag}\"),\n        },\n        EvalError::ThrownBypassingCatch {\n            value,\n            tag,\n            cleanup_value,\n            cleanup_tag,\n            ..\n        } => SessionRequestError::Other {\n            message: format!(\n                \"uncaught throw: {cleanup_value} with tag {cleanup_tag}; uncaught throw: {value} with tag {tag}\"\n            ),\n        },\n        EvalError::Abort | EvalError::ProtectedAbort => SessionRequestError::Other {\n            message: \"uncaught Abort[]\".to_string(),\n        },\n        EvalError::Break => SessionRequestError::Other {\n            message: \"uncaught Break[]\".to_string(),\n        },\n        EvalError::Continue => SessionRequestError::Other {\n            message: \"uncaught Continue[]\".to_string(),\n        },\n        EvalError::InputRequired { request } => SessionRequestError::InputRequired {\n            request: request.clone(),\n        },\n        EvalError::ExceptionThrown { exception } => SessionRequestError::Other {\n            message: format!(\"uncaught exception: {exception}\"),\n        },\n    }\n}\n\n#[cfg(test)]\nmod tests {\n    use super::*;\n\n    #[test]\n    fn eval_error_mapper_preserves_non_request_surface_limit_codes() {\n        let memory = session_request_error_from_eval_error_with_source(\n            &EvalError::MemoryConstraintExceeded { limit: 20 },\n            Some(\"MemoryConstrained[Table[x, 100], 20]\"),\n        );\n        assert!(matches!(\n            memory,\n            SessionRequestError::MemoryConstraintExceeded { limit: 20 }\n        ));\n\n        let pass = session_request_error_from_eval_error_with_source(\n            &EvalError::EvaluationPassLimitExceeded { limit: 2 },\n            Some(\"loopA\"),\n        );\n        assert!(matches!(\n            pass,\n            SessionRequestError::EvaluationPassLimitExceeded { limit: 2 }\n        ));\n    }\n}\n"
+    },
+    "crates/rum-runtime/src/runtime/session/session_requests.rs": {
+      "sha256": "2c7a0af6e5b97d3b86ed604e022ca12e7673069353357c2eb6e811c45f957536",
+      "source": "use super::super::*;\nuse super::request_errors::{\n    no_suspended_evaluation_failure, request_syntax_failure, session_request_error_from_eval_error,\n    session_request_error_from_eval_error_with_source,\n};\nuse crate::runtime::model::OutputMark;\n\n/// One clock stamps every session output list, so one mark names the cut on\n/// all four channels.\n#[derive(Clone, Copy, Debug)]\nstruct RequestCheckpoint {\n    mark: OutputMark,\n}\n\nimpl RequestCheckpoint {\n    fn new(session: &Session) -> Self {\n        Self {\n            mark: session.output_mark(),\n        }\n    }\n}\n\nimpl Session {\n    fn publish_reported_now(&self, reported: &mut ReportedOutput) {\n        let through = self.output_mark();\n        reported.publish(\n            &self.messages,\n            &self.prints,\n            &self.trace_events,\n            through,\n            through,\n            through,\n        );\n    }\n\n    fn publish_reported_boundary(&self, reported: &mut ReportedOutput, boundary: OutputBoundary) {\n        let now = self.output_mark();\n        reported.publish(\n            &self.messages,\n            &self.prints,\n            &self.trace_events,\n            boundary.messages.unwrap_or(now),\n            boundary.prints.unwrap_or(now),\n            boundary.trace.unwrap_or(now),\n        );\n    }\n\n    /// Removes the waiting report, whichever variant stored it. Every request\n    /// route stores one when it returns `InputRequired`. A suspension that the\n    /// non-request `eval_text`, `eval_script` or `eval_file` left has none: no\n    /// response reported anything for it, so its retirement admits fresh at\n    /// this clock (`cancelled_request_retires_a_non_request_suspension`).\n    fn take_pending_report(&mut self) -> (RequestCheckpoint, ReportedOutput) {\n        let taken = match self.pending_request.take() {\n            Some(pending) => {\n                let report = pending.into_report();\n                (RequestCheckpoint { mark: report.mark }, report.reported)\n            }\n            None => {\n                let checkpoint = RequestCheckpoint::new(self);\n                (checkpoint, ReportedOutput::at(checkpoint.mark))\n            }\n        };\n        self.refresh_memory_owner(\n            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,\n        );\n        taken\n    }\n\n    fn store_pending_request(&mut self, request: PendingRequest) {\n        self.pending_request = Some(request);\n        self.refresh_memory_owner(\n            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,\n        );\n    }\n\n    #[doc(hidden)]\n    pub fn finish_cancelled_pending_evaluation_request(\n        &mut self,\n    ) -> Result<Option<SessionEvalResponse>, SessionRequestFailure> {\n        self.activate_pending_accepted_request()?;\n        if !self.active_accepted_request_is_cancelled()\n            || self.pending_suspension_generation().is_none()\n        {\n            return Ok(None);\n        }\n\n        let (checkpoint, reported) = self.take_pending_report();\n        self.abandon_pending_suspension(AbandonReason::CancelledRequest);\n        let accepted = self\n            .take_active_accepted_request()\n            .expect(\"a qualified cancellation retains its accepted ticket\");\n        let cancellation_won = accepted.finish();\n        debug_assert!(cancellation_won);\n\n        let response = self.finish_cancelled_eval_response(checkpoint, reported);\n        self.package_eval_request_outcome(Ok(response)).map(Some)\n    }\n\n    #[doc(hidden)]\n    pub fn reject_overlapping_evaluation_request(&self) -> Result<(), SessionRequestFailure> {\n        if self.pending_suspension_generation().is_none() {\n            return Ok(());\n        }\n\n        Err(SessionRequestFailure {\n            error: SessionRequestError::Other {\n                message: \"cannot start a new evaluation while the session is waiting for host input; call resume_with_input or reset first\"\n                    .to_string(),\n            },\n            messages: Vec::new(),\n            prints: Vec::new(),\n            trace: Vec::new(),\n        })\n    }\n\n    pub fn complete_request(&self, prefix: &str) -> SessionCompletionResponse {\n        let prefix = prefix.trim().to_string();\n        let matches = self.complete_symbol_prefix(&prefix);\n\n        SessionCompletionResponse { prefix, matches }\n    }\n\n    pub fn is_complete_request(&self, input: &str) -> SessionIsCompleteResponse {\n        if input.trim().is_empty() {\n            return SessionIsCompleteResponse {\n                status: SessionCompletenessStatus::Complete,\n                indent: None,\n                diagnostic: None,\n            };\n        }\n\n        match parse_with_diagnostics(input) {\n            Ok(_) => SessionIsCompleteResponse {\n                status: SessionCompletenessStatus::Complete,\n                indent: None,\n                diagnostic: None,\n            },\n            Err(diagnostic) => {\n                let diagnostic = diagnostic.structured();\n\n                if diagnostic.is_incomplete {\n                    SessionIsCompleteResponse {\n                        status: SessionCompletenessStatus::Incomplete,\n                        indent: Some(suggest_continuation_indent(input)),\n                        diagnostic: Some(diagnostic),\n                    }\n                } else {\n                    SessionIsCompleteResponse {\n                        status: SessionCompletenessStatus::Invalid,\n                        indent: None,\n                        diagnostic: Some(diagnostic),\n                    }\n                }\n            }\n        }\n    }\n\n    pub fn parse_request(\n        &self,\n        input: &str,\n    ) -> Result<SessionParseResponse, SessionRequestFailure> {\n        let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;\n        Ok(SessionParseResponse { parsed })\n    }\n\n    pub fn lower_request(\n        &mut self,\n        input: &str,\n    ) -> Result<SessionLowerResponse, SessionRequestFailure> {\n        let checkpoint = RequestCheckpoint::new(self);\n        let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;\n        let expr = self.lower_syntax_expr(parsed.syntax()).map_err(|err| {\n            self.finish_request_failure(checkpoint, ReportedOutput::at(checkpoint.mark), err)\n        })?;\n\n        Ok(SessionLowerResponse { expr })\n    }\n\n    pub fn eval_request(\n        &mut self,\n        input: &str,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {\n            return Ok(cancelled);\n        }\n        self.reject_overlapping_evaluation_request()?;\n        self.begin_top_level_interrupt_budget();\n        let checkpoint = RequestCheckpoint::new(self);\n        let reported = ReportedOutput::at(checkpoint.mark);\n        if self.active_accepted_request_is_cancelled() {\n            return self.finish_cancelled_active_request(checkpoint, reported);\n        }\n        let result = (|| {\n            let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;\n            let expr = self.lower_syntax_expr(parsed.syntax()).map_err(|err| {\n                self.finish_request_failure(checkpoint, ReportedOutput::at(checkpoint.mark), err)\n            })?;\n\n            self.eval_expr_request_from_checkpoint(expr, checkpoint, reported)\n        })();\n        self.finish_accepted_value_request(result)\n    }\n\n    /// Evaluates an already-built expression through the top-level request protocol.\n    ///\n    /// The expression is evaluated as-is: no lowering pass runs, so callers are\n    /// responsible for supplying resolved symbols.\n    pub fn eval_expr_request(\n        &mut self,\n        expr: Expr,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {\n            return Ok(cancelled);\n        }\n        self.reject_overlapping_evaluation_request()?;\n        self.begin_top_level_interrupt_budget();\n        let checkpoint = RequestCheckpoint::new(self);\n        let reported = ReportedOutput::at(checkpoint.mark);\n        if self.active_accepted_request_is_cancelled() {\n            return self.finish_cancelled_active_request(checkpoint, reported);\n        }\n\n        let result = self.eval_expr_request_from_checkpoint(expr, checkpoint, reported);\n        self.finish_accepted_value_request(result)\n    }\n\n    /// Evaluates source text under a previously accepted request identity.\n    pub fn eval_accepted_request(\n        &mut self,\n        accepted: AcceptedRequest,\n        input: &str,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        self.install_accepted_request(accepted)?;\n        self.eval_request(input)\n    }\n\n    /// Evaluates an expression under a previously accepted request identity.\n    pub fn eval_accepted_expr_request(\n        &mut self,\n        accepted: AcceptedRequest,\n        expr: Expr,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        self.install_accepted_request(accepted)?;\n        self.eval_expr_request(expr)\n    }\n\n    fn eval_expr_request_from_checkpoint(\n        &mut self,\n        expr: Expr,\n        checkpoint: RequestCheckpoint,\n        reported: ReportedOutput,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        let previous_message_list_checkpoint = self\n            .current_message_list_checkpoint\n            .replace(checkpoint.mark);\n        let previous_message_list_dirty =\n            std::mem::replace(&mut self.current_message_list_dirty, false);\n        let outcome = self.evaluate(expr);\n        let finalized = if self.has_continuation_fault() {\n            Err(self.continuation_fault_outcome(outcome))\n        } else {\n            self.finalize_top_level_eval_value(outcome, checkpoint.mark)\n        };\n        self.current_message_list_checkpoint = previous_message_list_checkpoint;\n        self.current_message_list_dirty = previous_message_list_dirty;\n        let (value, termination) = match finalized {\n            Ok(finalized) => finalized,\n            Err(EvalError::InputRequired { .. }) => {\n                return Err(\n                    self.finish_input_required_request(PendingRequest::Resumable(PendingReport {\n                        mark: checkpoint.mark,\n                        reported,\n                    })),\n                );\n            }\n            Err(err) => return Err(self.finish_request_failure(checkpoint, reported, err)),\n        };\n\n        Ok(self.finish_reported_success(checkpoint, reported, value, termination))\n    }\n\n    pub fn resume_eval_request_with_input(\n        &mut self,\n        input: impl Into<String>,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        if self.pending_suspension_generation().is_some() {\n            if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {\n                return Ok(cancelled);\n            }\n        }\n        // A batch stays installed. Only `Resumable` can be resumed.\n        let pending = match self.pending_request.take() {\n            Some(PendingRequest::Resumable(report)) => {\n                self.refresh_memory_owner(\n                    crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,\n                );\n                report\n            }\n            other => {\n                let restore = other.is_some();\n                self.pending_request = other;\n                if restore {\n                    self.refresh_memory_owner(\n                        crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,\n                    );\n                }\n                return Err(no_suspended_evaluation_failure());\n            }\n        };\n        let result = self.resume_eval_request_from_checkpoint(input.into(), pending);\n        self.package_eval_request_outcome(result)\n    }\n\n    fn resume_eval_request_from_checkpoint(\n        &mut self,\n        input: String,\n        pending: PendingReport,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        let checkpoint = RequestCheckpoint { mark: pending.mark };\n        let reported = pending.reported;\n        let previous_message_list_checkpoint = self\n            .current_message_list_checkpoint\n            .replace(checkpoint.mark);\n        let previous_message_list_dirty = std::mem::replace(\n            &mut self.current_message_list_dirty,\n            self.messages.has_after(checkpoint.mark),\n        );\n        let outcome = self.resume_suspended_evaluation(input.clone());\n        let outcome = match outcome {\n            Err(error @ EvalError::InputRequired { .. }) => {\n                if self.active_accepted_request_is_cancelled() {\n                    self.store_pending_request(PendingRequest::Resumable(PendingReport {\n                        mark: checkpoint.mark,\n                        reported,\n                    }));\n                    return self\n                        .finish_cancelled_pending_evaluation_request()?\n                        .ok_or_else(|| SessionRequestFailure {\n                            error: SessionRequestError::Other {\n                                message: \"cancelled suspension was not available for abandonment\"\n                                    .to_string(),\n                            },\n                            messages: Vec::new(),\n                            prints: Vec::new(),\n                            trace: Vec::new(),\n                        });\n                }\n                Err(error)\n            }\n            outcome => {\n                if self.finish_active_accepted_request() {\n                    Err(EvalError::Cancelled)\n                } else {\n                    outcome\n                }\n            }\n        };\n        let finalized = if self.has_continuation_fault() {\n            Err(self.continuation_fault_outcome(outcome))\n        } else {\n            self.finalize_top_level_eval_value(outcome, checkpoint.mark)\n        };\n        self.current_message_list_checkpoint = previous_message_list_checkpoint;\n        self.current_message_list_dirty = previous_message_list_dirty;\n        match finalized {\n            Ok((value, termination)) => {\n                Ok(self.finish_reported_success(checkpoint, reported, value, termination))\n            }\n            Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(\n                PendingRequest::Resumable(PendingReport {\n                    mark: checkpoint.mark,\n                    reported,\n                }),\n            )),\n            Err(err @ EvalError::Syntax(_)) => {\n                Err(self.finish_completed_request_failure(checkpoint, reported, Some(&input), err))\n            }\n            Err(err) => Err(self.finish_request_failure(checkpoint, reported, err)),\n        }\n    }\n\n    pub fn eval_script_request(\n        &mut self,\n        source: &str,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {\n            return Ok(cancelled);\n        }\n        self.reject_overlapping_evaluation_request()?;\n        let checkpoint = RequestCheckpoint::new(self);\n        let reported = ReportedOutput::at(checkpoint.mark);\n\n        let result = match self.eval_script_retaining_output(source) {\n            Ok((value, termination)) => {\n                Ok(self.finish_reported_success(checkpoint, reported, value, termination))\n            }\n            Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(\n                PendingRequest::Batch(PendingReport {\n                    mark: checkpoint.mark,\n                    reported,\n                }),\n            )),\n            Err(err) => {\n                Err(self.finish_completed_request_failure(checkpoint, reported, Some(source), err))\n            }\n        };\n        self.finish_accepted_value_request(result)\n    }\n\n    /// Evaluates a script under one previously accepted request identity.\n    pub fn eval_accepted_script_request(\n        &mut self,\n        accepted: AcceptedRequest,\n        source: &str,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        self.install_accepted_request(accepted)?;\n        self.eval_script_request(source)\n    }\n\n    pub fn eval_file_request(\n        &mut self,\n        path: impl AsRef<Path>,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {\n            return Ok(cancelled);\n        }\n        self.reject_overlapping_evaluation_request()?;\n        let checkpoint = RequestCheckpoint::new(self);\n        let reported = ReportedOutput::at(checkpoint.mark);\n        let path = path.as_ref();\n\n        let result = match self.eval_file_retaining_output(path) {\n            Ok((value, termination)) => {\n                Ok(self.finish_reported_success(checkpoint, reported, value, termination))\n            }\n            Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(\n                PendingRequest::Batch(PendingReport {\n                    mark: checkpoint.mark,\n                    reported,\n                }),\n            )),\n            Err(err) => {\n                let source = match &err {\n                    EvalError::Syntax(_) => self\n                        .file_io()\n                        .and_then(|file_io| file_io.read_to_string(path).ok()),\n                    _ => None,\n                };\n\n                Err(self.finish_completed_request_failure(\n                    checkpoint,\n                    reported,\n                    source.as_deref(),\n                    err,\n                ))\n            }\n        };\n        self.finish_accepted_file_request(result)\n    }\n\n    /// Evaluates a file under one previously accepted request identity.\n    pub fn eval_accepted_file_request(\n        &mut self,\n        accepted: AcceptedRequest,\n        path: impl AsRef<Path>,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        self.install_accepted_request(accepted)?;\n        self.eval_file_request(path)\n    }\n\n    pub fn inspect_request(&self, name: &str) -> Option<SessionInspectResponse> {\n        let info = self.inspect(name)?;\n        let definitions = self.inspect_definition_catalog(name).unwrap_or_default();\n        let message_catalog = self.inspect_message_catalog(Some(name)).unwrap_or_default();\n\n        Some(SessionInspectResponse {\n            info,\n            definitions,\n            message_catalog,\n        })\n    }\n\n    /// Publishes through the current mark, then splits the session lists once\n    /// at the admission mark. `$MessageList` keeps that session suffix.\n    fn finish_reported_success(\n        &mut self,\n        checkpoint: RequestCheckpoint,\n        mut reported: ReportedOutput,\n        value: Expr,\n        termination: Option<EvalTerminationReason>,\n    ) -> SessionEvalResponse {\n        self.publish_reported_now(&mut reported);\n        self.release_request_session_output(checkpoint.mark);\n        SessionEvalResponse {\n            value,\n            termination,\n            messages: reported.messages,\n            prints: reported.prints,\n            trace: reported.trace,\n        }\n    }\n\n    /// A pause publishes each channel through its own boundary and keeps the\n    /// reported prefix for a later completion or cancellation.\n    fn finish_input_required_request(\n        &mut self,\n        mut request: PendingRequest,\n    ) -> SessionRequestFailure {\n        // One walk of the pending frames serves the publication and `$MessageList`.\n        let boundary = self.pending_output_boundary();\n        let report = request.report_mut();\n        self.publish_reported_boundary(&mut report.reported, boundary);\n        let messages = report.reported.messages.clone();\n        let prints = report.reported.prints.clone();\n        let trace = report.reported.trace.clone();\n        let mark = report.mark;\n        self.last_message_list = self.messages_through(mark, boundary.messages);\n        self.refresh_memory_owner(\n            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,\n        );\n        self.store_pending_request(request);\n        SessionRequestFailure {\n            error: SessionRequestError::InputRequired {\n                request: self\n                    .pending_input_request()\n                    .cloned()\n                    .expect(\"input suspension should record the pending request\"),\n            },\n            messages,\n            prints,\n            trace,\n        }\n    }\n\n    fn finish_request_failure(\n        &mut self,\n        checkpoint: RequestCheckpoint,\n        mut reported: ReportedOutput,\n        err: EvalError,\n    ) -> SessionRequestFailure {\n        self.emit_non_loader_eval_message(checkpoint.mark, &err);\n        self.emit_top_level_control_flow_messages(&err);\n        self.publish_reported_now(&mut reported);\n        self.record_unsplit_request_view(checkpoint.mark);\n\n        SessionRequestFailure {\n            error: session_request_error_from_eval_error(&err),\n            messages: reported.messages,\n            prints: reported.prints,\n            trace: reported.trace,\n        }\n    }\n\n    fn finish_completed_request_failure(\n        &mut self,\n        checkpoint: RequestCheckpoint,\n        mut reported: ReportedOutput,\n        source: Option<&str>,\n        err: EvalError,\n    ) -> SessionRequestFailure {\n        self.publish_reported_now(&mut reported);\n        self.record_unsplit_request_view(checkpoint.mark);\n\n        SessionRequestFailure {\n            error: session_request_error_from_eval_error_with_source(&err, source),\n            messages: reported.messages,\n            prints: reported.prints,\n            trace: reported.trace,\n        }\n    }\n\n    fn record_unsplit_request_view(&mut self, mark: OutputMark) {\n        self.last_message_list = self.messages.after_vec(mark);\n        self.refresh_memory_owner(\n            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,\n        );\n        self.handled_non_loader_eval_errors.truncate_after(mark);\n        self.refresh_memory_owner(\n            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,\n        );\n    }\n\n    fn release_request_session_output(&mut self, mark: OutputMark) {\n        let session_messages = self.split_accounted_messages(mark);\n        self.last_message_list = session_messages;\n        self.refresh_memory_owner(\n            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,\n        );\n        let _prints = self.split_accounted_prints(mark);\n        self.handled_non_loader_eval_errors.truncate_after(mark);\n        self.refresh_memory_owner(\n            crate::runtime::debug_tools::resources::MemoryOwner::HandledNonLoaderEvalErrors,\n        );\n        self.pending_request = None;\n        self.refresh_memory_owner(\n            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,\n        );\n    }\n\n    fn finish_accepted_value_request(\n        &mut self,\n        result: Result<SessionEvalResponse, SessionRequestFailure>,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        if matches!(\n            &result,\n            Err(SessionRequestFailure {\n                error: SessionRequestError::InputRequired { .. },\n                ..\n            })\n        ) {\n            if !self.active_accepted_request_is_cancelled() {\n                return result;\n            }\n\n            // Abandonment clears the stored request before the drain. Take the\n            // published prefix first, or the input outcome's items are lost.\n            let (checkpoint, reported) = self.take_pending_report();\n            self.abandon_pending_suspension(AbandonReason::CancelledRequest);\n            let accepted = self\n                .take_active_accepted_request()\n                .expect(\"cancelled input suspension should retain its accepted ticket\");\n            let cancellation_won = accepted.finish();\n            debug_assert!(cancellation_won);\n            let response = self.finish_cancelled_eval_response(checkpoint, reported);\n            return self.package_eval_request_outcome(Ok(response));\n        }\n\n        let result = if self.finish_active_accepted_request() {\n            self.force_cancelled_eval_result(result)\n        } else {\n            result\n        };\n        self.package_eval_request_outcome(result)\n    }\n\n    fn finish_accepted_file_request(\n        &mut self,\n        result: Result<SessionEvalResponse, SessionRequestFailure>,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        if matches!(\n            &result,\n            Err(SessionRequestFailure {\n                error: SessionRequestError::InputRequired { .. },\n                ..\n            })\n        ) {\n            return self.finish_accepted_value_request(result);\n        }\n        let result = if self.finish_active_accepted_request() {\n            self.force_cancelled_file_result(result)\n        } else {\n            result\n        };\n        self.package_eval_request_outcome(result)\n    }\n\n    /// One terminal packaging boundary for evaluation, batch, restore and\n    /// cancellation outcomes. Admission rejections never reach this boundary:\n    /// they must leave the unrelated, already pending request installed.\n    #[inline]\n    pub(super) fn package_eval_request_outcome(\n        &self,\n        result: Result<SessionEvalResponse, SessionRequestFailure>,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        #[cfg(any(debug_assertions, test))]\n        assert!(\n            matches!(\n                &result,\n                Err(SessionRequestFailure {\n                    error: SessionRequestError::InputRequired { .. },\n                    ..\n                })\n            ) || (self.pending_suspension.is_none()\n                && self.resuming_suspension.is_none()\n                && self.abandonment_worklist.is_empty()\n                && !self.abandonment_active\n                && self.pending_input_request.is_none()\n                && self.pending_request.is_none()),\n            \"terminal request outcome retained a suspension owner\"\n        );\n        result\n    }\n\n    fn finish_cancelled_active_request(\n        &mut self,\n        checkpoint: RequestCheckpoint,\n        reported: ReportedOutput,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        let cancellation_won = self.finish_active_accepted_request();\n        debug_assert!(cancellation_won);\n        let response = self.finish_cancelled_eval_response(checkpoint, reported);\n        self.package_eval_request_outcome(Ok(response))\n    }\n\n    fn force_cancelled_eval_result(\n        &mut self,\n        result: Result<SessionEvalResponse, SessionRequestFailure>,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        let (mut messages, prints, trace) = match result {\n            Ok(response) => (response.messages, response.prints, response.trace),\n            Err(failure) => (failure.messages, failure.prints, failure.trace),\n        };\n        append_cancel_message(&mut messages);\n        self.last_message_list = messages.clone();\n        self.refresh_memory_owner(\n            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,\n        );\n\n        Ok(SessionEvalResponse {\n            value: Expr::call(\n                system_expr(\"TerminatedEvaluation\"),\n                vec![Expr::string(EvalTerminationReason::Cancelled.tag())],\n            ),\n            termination: Some(EvalTerminationReason::Cancelled),\n            messages,\n            prints,\n            trace,\n        })\n    }\n\n    fn force_cancelled_file_result(\n        &mut self,\n        result: Result<SessionEvalResponse, SessionRequestFailure>,\n    ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n        let (mut messages, prints, trace) = match result {\n            Ok(response) => (response.messages, response.prints, response.trace),\n            Err(failure) => (failure.messages, failure.prints, failure.trace),\n        };\n        append_cancel_message(&mut messages);\n        self.last_message_list = messages.clone();\n        self.refresh_memory_owner(\n            crate::runtime::debug_tools::resources::MemoryOwner::LastMessageList,\n        );\n\n        Err(SessionRequestFailure {\n            error: SessionRequestError::Cancelled,\n            messages,\n            prints,\n            trace,\n        })\n    }\n\n    fn finish_cancelled_eval_response(\n        &mut self,\n        checkpoint: RequestCheckpoint,\n        mut reported: ReportedOutput,\n    ) -> SessionEvalResponse {\n        let (value, termination) = self\n            .finalize_top_level_eval_value(Err(EvalError::Cancelled), checkpoint.mark)\n            .expect(\"host cancellation is a terminated-evaluation value\");\n        self.publish_reported_now(&mut reported);\n        self.release_request_session_output(checkpoint.mark);\n\n        SessionEvalResponse {\n            value,\n            termination,\n            messages: reported.messages,\n            prints: reported.prints,\n            trace: reported.trace,\n        }\n    }\n}\n\nfn append_cancel_message(messages: &mut Vec<RuntimeMessage>) {\n    if messages\n        .iter()\n        .any(|message| message.symbol == \"General\" && message.tag == \"cancel\")\n    {\n        return;\n    }\n\n    messages.push(\n        Session::runtime_message_for_non_loader_eval_error(&EvalError::Cancelled)\n            .expect(\"host cancellation has a runtime message\"),\n    );\n}\n\nfn suggest_continuation_indent(input: &str) -> String {\n    let base_indent = input\n        .lines()\n        .rev()\n        .find(|line| !line.trim().is_empty())\n        .map(|line| {\n            line.chars()\n                .take_while(|ch| ch.is_whitespace())\n                .collect::<String>()\n        })\n        .unwrap_or_default();\n\n    format!(\"{base_indent}  \")\n}\n"
+    },
+    "crates/rum-stdlib/tests/suspension_oracle/support/observe.rs": {
+      "sha256": "6ea66e27860cba6640390177c296e8b9b3f286fcc71f0b3610dc090d40b48526",
+      "source": "use rum_core::Expr;\nuse rum_runtime::{\n    EvalTerminationReason, RuntimeMessage, SessionEvalResponse, SessionRequestError,\n    SessionRequestFailure, TraceEvent,\n};\n\npub type Output = Result<SessionEvalResponse, SessionRequestFailure>;\n\n#[derive(Debug, Clone, PartialEq, Eq)]\npub struct Observation {\n    pub value: Option<Expr>,\n    pub error: Option<SessionRequestError>,\n    pub termination: Option<EvalTerminationReason>,\n    pub messages: Vec<RuntimeMessage>,\n    pub prints: Vec<String>,\n    pub trace: Vec<TraceEvent>,\n}\nimpl Observation {\n    pub fn from_output(out: &Output) -> Self {\n        match out {\n            Ok(r) => Self {\n                value: Some(r.value.clone()),\n                error: None,\n                termination: r.termination,\n                messages: r.messages.clone(),\n                prints: r.prints.clone(),\n                trace: r.trace.clone(),\n            },\n            Err(f) => Self {\n                value: None,\n                error: Some(f.error.clone()),\n                termination: None,\n                messages: f.messages.clone(),\n                prints: f.prints.clone(),\n                trace: f.trace.clone(),\n            },\n        }\n    }\n}\n\n#[derive(Debug, Clone, PartialEq, Eq)]\npub enum Rejection {\n    UnexpectedPause(usize),\n    PauseCount { expected: usize, actual: usize },\n    Prompt(usize),\n    Kind(usize),\n    PendingOwner,\n    OverlapAccepted,\n    OutputPrefix,\n    MessagePrefix,\n    TracePrefix,\n    PauseMessages(usize),\n    PausePrints(usize),\n    PauseTrace(usize),\n    QueueNotEmpty,\n    FreshRequest,\n    Value,\n    Error,\n    Termination,\n    Messages,\n    Prints,\n    Trace,\n    Log,\n    Projection(usize),\n    ExpectedValue,\n    ExpectedLog,\n}\n\npub fn compare(a: &Observation, b: &Observation) -> Result<(), Rejection> {\n    if a.value != b.value {\n        return Err(Rejection::Value);\n    }\n    if a.error != b.error {\n        return Err(Rejection::Error);\n    }\n    if a.termination != b.termination {\n        return Err(Rejection::Termination);\n    }\n    if a.messages != b.messages {\n        return Err(Rejection::Messages);\n    }\n    if a.prints != b.prints {\n        return Err(Rejection::Prints);\n    }\n    if a.trace != b.trace {\n        return Err(Rejection::Trace);\n    }\n    Ok(())\n}\n\n/// Every already public element must remain an ordered prefix at the next response.\npub fn prefix(previous: &Observation, next: &Observation) -> Result<(), Rejection> {\n    if !next.prints.starts_with(&previous.prints) {\n        return Err(Rejection::OutputPrefix);\n    }\n    if !next.messages.starts_with(&previous.messages) {\n        return Err(Rejection::MessagePrefix);\n    }\n    if !next.trace.starts_with(&previous.trace) {\n        return Err(Rejection::TracePrefix);\n    }\n    Ok(())\n}\n\n// The frozen timing fixtures declare only duration leaves. Preserve all other\n// trace data and ordering while normalizing their recorded timing results.\nuse rum_core::Atom;\nfn named(expr: &Expr, name: &str) -> bool {\n    matches!(expr, Expr::Atom(Atom::Symbol(s)) if s.context()==\"System`\" && s.name()==name)\n}\n\nfn rewrite(expr: &Expr, outputs: &[(Expr, Expr)], report: bool, count: &mut usize) -> Expr {\n    if let Some((_, masked)) = outputs.iter().find(|(actual, _)| actual == expr) {\n        *count += 1;\n        return masked.clone();\n    }\n    let Expr::Call { head, args } = expr else {\n        return expr.clone();\n    };\n    if report\n        && named(head, \"Rule\")\n        && args.len() == 2\n        && matches!(&args[0], Expr::Atom(Atom::String(s)) if s==\"Timing\")\n    {\n        *count += 1;\n        return Expr::call(\n            head.as_ref().clone(),\n            vec![args[0].clone(), super::normalize::duration(&args[1], &[])],\n        );\n    }\n    Expr::call(\n        rewrite(head, outputs, report, count),\n        args.iter()\n            .map(|a| rewrite(a, outputs, report, count))\n            .collect::<Vec<_>>(),\n    )\n}\n\npub fn normalize_profile_durations(out: &mut Observation, paths: &[Vec<usize>], report: bool) {\n    let mut outputs = Vec::new();\n    for event in &out.trace {\n        if let TraceEvent::EvaluationPass {\n            before: Expr::Call { head, .. },\n            after,\n        } = event\n        {\n            if [\"Timing\", \"AbsoluteTiming\", \"RepeatedTiming\"]\n                .iter()\n                .any(|n| named(head, n))\n                && !paths.is_empty()\n            {\n                let mut masked = after.clone();\n                for path in paths {\n                    masked = super::normalize::duration(&masked, path);\n                }\n                outputs.push((after.clone(), masked));\n            }\n        }\n    }\n    let mut count = 0;\n    for event in &mut out.trace {\n        match event {\n            TraceEvent::EvaluationPass { before, after } => {\n                *before = rewrite(before, &outputs, report, &mut count);\n                *after = rewrite(after, &outputs, report, &mut count);\n            }\n            TraceEvent::DefinitionStored { value, .. } => {\n                *value = rewrite(value, &outputs, report, &mut count)\n            }\n            TraceEvent::RuleApplied {\n                input,\n                rule,\n                result,\n                ..\n            } => {\n                *input = rewrite(input, &outputs, report, &mut count);\n                *rule = rewrite(rule, &outputs, report, &mut count);\n                *result = rewrite(result, &outputs, report, &mut count);\n            }\n        }\n    }\n    if count > 0 {\n        eprintln!(\n            \"623_DURATION_MASK\\tevents={}\\treplacements={count}\",\n            out.trace.len()\n        );\n    }\n}\n"
+    }
+  }
+}
+```
+
+### 4. Loss groups and sequencing
+
+No valid real-build DIFF occurred. The two observed DIFF records are the deliberately selected P0001 omission, once in calibration and once in its own matrix control. No new repair brief or production design was created. P1566 stays Lost; P0496 remains reserved. C2 is Open and S10 stays unopened. The settlement round, CM and CHANGELOG remain later work; the existing loss cannot be bypassed to close C2.
+
+### 5. Exact residual list and open duties
+
+Authorized continuation-34 round end after one completed mechanism family: 60 new coverage cells and one Equal. Stop clock 0; the two-family stop-loss did not fire. No guest or Cargo runs after the stop marker.
+
+```text
+C2 C34 ROUND-END GATE AUTHORIZED Stop for the director gate at the round's end or at the
+C2 C34 ROUND-END GATE STOP families=1 new_dispositions={"Equal": 1} stop_loss_fired=false actual_stop_clock=0 no_earlier_two_zero_families=true guest_and_Cargo_closed=true
+C2 C34 CHECKPOINT stage=round-end-director-gate population=1042 residuals=145 requirements=78330 source_integrity=PASS stop_clock=0
+C2 C34 RUN round-end attempt=1 exit=0
+```
+```text
+row	site	initial_class	classification	required_nonencoding	current_real_SAME	own_mutants	armed	caught	survived	current_source_paired	attempted_families	what_remains	inherited_gap
+P0004	crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:245	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0014	crates/rum-runtime/src/runtime/accounting_mode/options/driver.rs:59	compiled but no valid binding reached	StrictDropGap	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0019	crates/rum-runtime/src/runtime/accounting_mode/options.rs:230	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0021	crates/rum-runtime/src/runtime/accounting_mode/retained.rs:120	compiled but no valid binding reached	StrictCallerGap	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0022	crates/rum-runtime/src/runtime/accounting_mode/retained.rs:134	compiled but no valid binding reached	StrictCallerGap	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0028	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:111	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0030	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:113	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0034	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:149	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0036	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:153	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0043	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:202	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0044	crates/rum-runtime/src/runtime/accounting_mode/rule.rs:204	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0243	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:218	compiled but no valid binding reached	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0244	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:238	compiled but no valid binding reached	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0246	crates/rum-runtime/src/runtime/definitions/application/default_values.rs:256	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0275	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:90	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0276	crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:105	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0290	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:35	compiled but no valid binding reached	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0296	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:76	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0301	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:138	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0302	crates/rum-runtime/src/runtime/definitions/application/rhs.rs:157	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0322	crates/rum-runtime/src/runtime/definitions/application/up_values.rs:413	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0325	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:152	unsupported schema	LocalTail	50	50	0	0	0	0	True		Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0326	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:152	unsupported schema	LocalTail	50	50	0	0	0	0	True		Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0328	crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs:162	unsupported schema	LocalTail	50	0	0	0	0	0	True		50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0336	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:150	compiled but no valid binding reached	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0340	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:401	unsupported schema	LocalTail	55	55	0	0	0	0	True		Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0341	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:217	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0342	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:401	unsupported schema	LocalTail	55	0	0	0	0	0	True		Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; 55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; 55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0344	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:237	unsupported schema	LocalTail	55	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0346	crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:423	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0354	crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:165	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0366	crates/rum-runtime/src/runtime/definitions/definition_lhs_preparation.rs:461	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0417	crates/rum-runtime/src/runtime/definitions/definitions.rs:95	survived or no mutation hit	LocalTail	50	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0419	crates/rum-runtime/src/runtime/definitions/definitions.rs:112	compiled but no valid binding reached	LocalTail	50	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0425	crates/rum-runtime/src/runtime/definitions/definitions.rs:291	compiled but no valid binding reached	ReopenedOrNew	50	0	0	0	0	0	True		50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0463	crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:462	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0475	crates/rum-runtime/src/runtime/eval_call_prepare.rs:434	unsupported schema	LocalTail	50	50	0	0	0	0	True		Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0481	crates/rum-runtime/src/runtime/eval_call_prepare.rs:448	unsupported schema	LocalTail	50	0	0	0	0	0	True		50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0496	crates/rum-runtime/src/runtime/eval_core/call.rs:401	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C9: Same stage code in resumed dispatcher; none of the 16 native recipes pauses in this producer. No Unreachable or Equal claim. Needs a real earlier-stage continuation that declines before preparing arguments.; P0496 remains reserved for the settlement round.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C9: Same stage code in resumed dispatcher; none of the 16 native recipes pauses in this producer. No Unreachable or Equal claim. Needs a real earlier-stage continuation that declines before preparing arguments.; P0496 remains reserved for the settlement round.
+P0528	crates/rum-runtime/src/runtime/eval_core/symbol.rs:330	compiled but no valid binding reached	LocalTail	30	30	0	0	0	0	True		Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0529	crates/rum-runtime/src/runtime/eval_core/symbol.rs:332	compiled but no valid binding reached	LocalTail	30	0	0	0	0	0	True		Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0537	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:124	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0772	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:421	compiled but no valid binding reached	LocalTail	35	0	0	0	0	0	True		35 of 35 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 35/35 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	35 of 35 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 35/35 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0775	crates/rum-runtime/src/runtime/kernel_data/control_data/exceptions.rs:467	compiled but no valid binding reached	LocalTail	35	0	0	0	0	0	True		35 of 35 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 35/35 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	35 of 35 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 35/35 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0813	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:104	compiled but no valid binding reached	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0824	crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:458	compiled but no valid binding reached	LocalTail	65	65	0	0	0	0	True		Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0847	crates/rum-runtime/src/runtime/kernel_data/evaluated_part_selectors.rs:86	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P0934	crates/rum-runtime/src/runtime/kernel_data/rewrite_data/cases/pattern_resolution.rs:30	survived or no mutation hit	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Eight concrete singleton/triply-nested/permuted OneIdentity/Flat/Orderless attribute-transition recipes are SAME and their own successful-result-before-normalization omissions arm, hit and survive. Four already-covered keys gain no cell. Full normalization redundancy over every downstream matching path remains unproved.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Eight concrete singleton/triply-nested/permuted OneIdentity/Flat/Orderless attribute-transition recipes are SAME and their own successful-result-before-normalization omissions arm, hit and survive. Four already-covered keys gain no cell. Full normalization redundancy over every downstream matching path remains unproved.
+P1158	crates/rum-runtime/src/runtime/options/resume_frames.rs:21	unsupported schema	LocalTail	50	0	0	0	0	0	True		50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1312	crates/rum-runtime/src/runtime/pattern_matching/sequence/orderless/collect.rs:172	compiled but no valid binding reached	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1483	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:47	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1487	crates/rum-runtime/src/runtime/scoping/callable/status_application.rs:107	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1544	crates/rum-runtime/src/runtime/session/guest_loading/script.rs:69	survived or no mutation hit	ReopenedOrNew	65	0	0	0	0	0	True		65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 19/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No authentic own caught omission in this continuation; survivors/unhit cases alone do not settle the row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 19/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No authentic own caught omission in this continuation; survivors/unhit cases alone do not settle the row. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1551	crates/rum-runtime/src/runtime/session/session_eval.rs:183	compiled but no valid binding reached	StrictCallerGap	65	0	0	0	0	0	True		65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1552	crates/rum-runtime/src/runtime/session/session_eval.rs:190	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1553	crates/rum-runtime/src/runtime/session/session_eval.rs:200	compiled but no valid binding reached	StrictCallerGap	65	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Exact current AST call identity remains unresolved. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Exact current AST call identity remains unresolved. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1555	crates/rum-runtime/src/runtime/session/session_eval.rs:257	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1557	crates/rum-runtime/src/runtime/session/session_eval.rs:304	compiled but no valid binding reached	ReopenedOrNew	30	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1559	crates/rum-runtime/src/runtime/session/session_eval.rs:340	compiled but no valid binding reached	ReopenedOrNew	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1560	crates/rum-runtime/src/runtime/session/session_eval.rs:414	compiled but no valid binding reached	ReopenedOrNew	30	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1564	crates/rum-runtime/src/runtime/session/session_requests.rs:235	compiled but no valid binding reached	StrictCallerGap	65	0	0	0	0	0	True		65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1565	crates/rum-runtime/src/runtime/session/session_requests.rs:245	compiled but no valid binding reached	StrictCallerGap	65	0	0	0	0	0	True		65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1569	crates/rum-runtime/src/runtime/session/session_requests.rs:389	unsupported schema	ReopenedOrNew	30	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1571	crates/rum-runtime/src/runtime/session/session_requests.rs:423	unsupported schema	ReopenedOrNew	30	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1573	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:22	unsupported schema	StrictOtherCarrier	65	0	0	0	0	0	True		65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1574	crates/rum-runtime/src/runtime/suspension/core/abandon.rs:108	unsupported schema	LocalTail	30	0	0	0	0	0	True		Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Disposition held by continuation-15 pair-column order. Any fresh full matrix and own omissions are retained as candidate measurements only; no disposition closure is claimed.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1575	crates/rum-runtime/src/runtime/suspension/core/fault.rs:126	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1578	crates/rum-runtime/src/runtime/suspension/core.rs:753	unsupported schema	LocalTail	60	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1579	crates/rum-runtime/src/runtime/suspension/core.rs:776	unsupported schema	LocalTail	60	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1580	crates/rum-runtime/src/runtime/suspension/core.rs:788	unsupported schema	LocalTail	30	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1581	crates/rum-runtime/src/runtime/suspension/core.rs:825	unsupported schema	LocalTail	30	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1582	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:49	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1583	crates/rum-runtime/src/runtime/test_builtins.rs:510	compiled but no valid binding reached	StrictDropGap	65	0	0	0	0	0	True		65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1630	crates/rum-runtime/src/runtime/tree_walkers/position/resume_frames.rs:166	unsupported schema	LocalTail	50	0	0	0	0	0	True		50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P1810	crates/rum-stdlib/src/associations/missing.rs:76	unsupported schema	LocalTail	50	0	0	0	0	0	True		50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2595	crates/rum-host/src/session.rs:352	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2596	crates/rum-host/src/session.rs:373	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2599	crates/rum-host/src/session.rs:436	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2600	crates/rum-host/src/session.rs:482	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2601	crates/rum-host/src/session.rs:557	unsupported schema	LocalTail	65	0	0	0	0	0	True		65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	65 of 65 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 65/65 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2602	crates/rum-host/src/session.rs:561	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2603	crates/rum-host/src/session.rs:592	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2605	crates/rum-jupyter/src/adapter/execute.rs:20	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2606	crates/rum-jupyter/src/adapter/execute.rs:245	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2607	crates/rum-jupyter/src/adapter/execute.rs:248	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2608	crates/rum-jupyter/src/adapter/input_retirement.rs:15	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2609	crates/rum-jupyter/src/adapter/worker.rs:185	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2610	crates/rum-jupyter/src/adapter/worker.rs:339	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2611	crates/rum-jupyter/src/adapter/worker.rs:358	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2612	crates/rum-jupyter/src/adapter/worker.rs:369	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2613	crates/rum-jupyter/src/adapter/worker.rs:374	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2614	crates/rum-jupyter/src/adapter/worker.rs:387	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2615	crates/rum-cli/src/eval_tests.rs:38	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2616	crates/rum-cli/src/eval_tests.rs:58	unsupported schema	StrictDropGap	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2617	crates/rum-cli/src/eval_tests.rs:59	unsupported schema	ReopenedOrNew	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2618	crates/rum-cli/src/eval_tests.rs:60	unsupported schema	ReopenedOrNew	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2619	crates/rum-cli/src/eval_tests.rs:61	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2620	crates/rum-cli/src/eval_tests.rs:62	unsupported schema	StrictDropGap	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2621	crates/rum-cli/src/eval_tests.rs:62	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2622	crates/rum-cli/src/eval_tests.rs:79	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2623	crates/rum-cli/src/input_retirement.rs:15	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2624	crates/rum-cli/src/main.rs:43	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2625	crates/rum-cli/src/main.rs:67	unsupported schema	LocalTail	35	0	0	0	0	0	True		35 of 35 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 35/35 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	35 of 35 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 35/35 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2626	crates/rum-cli/src/main.rs:92	unsupported schema	StrictDropGap	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2627	crates/rum-cli/src/main.rs:107	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2629	crates/rum-cli/src/main.rs:113	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2630	crates/rum-cli/src/main.rs:115	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2631	crates/rum-cli/src/main.rs:116	unsupported schema	StrictDropGap	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2632	crates/rum-cli/src/main.rs:120	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2633	crates/rum-cli/src/main.rs:122	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2635	crates/rum-cli/src/main.rs:224	unsupported schema	StrictDropGap	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2636	crates/rum-cli/src/main.rs:231	unsupported schema	StrictDropGap	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2637	crates/rum-cli/src/main.rs:231	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2638	crates/rum-cli/src/main.rs:238	unsupported schema	ReopenedOrNew	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2639	crates/rum-cli/src/main.rs:239	unsupported schema	ReopenedOrNew	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2640	crates/rum-cli/src/main.rs:247	unsupported schema	ReopenedOrNew	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2641	crates/rum-cli/src/main.rs:248	unsupported schema	ReopenedOrNew	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Reopened identity retained: current source packet, actual carrier and full policy/route/Drop proof must all close; no retirement inferred. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2642	crates/rum-cli/src/main.rs:260	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2643	crates/rum-cli/src/main.rs:297	unsupported schema	StrictDropGap	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2644	crates/rum-cli/src/main.rs:315	unsupported schema	StrictDropGap	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2645	crates/rum-cli/src/main.rs:323	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2646	crates/rum-repl/src/lib.rs:138	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2647	crates/rum-repl/src/lib.rs:152	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2648	crates/rum-repl/src/lib.rs:181	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2649	crates/rum-repl/src/lib.rs:195	unsupported schema	StrictDropGap	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Current strict syntax is separate from live-Drop and named-caller closure; this row lacks a complete current proof/own full-matrix settlement. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2650	crates/rum-repl/src/lib.rs:287	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2651	crates/rum-repl/src/request.rs:134	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2652	crates/rum-repl/src/request.rs:181	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2653	crates/rum-repl/src/request.rs:184	unsupported schema	LocalTail	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2654	crates/rum-repl/src/request.rs:195	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2655	crates/rum-repl/src/request.rs:206	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2656	crates/rum-repl/src/request.rs:219	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+P2657	crates/rum-repl/src/request.rs:252	unsupported schema	LocalTail	30	0	0	0	0	0	True		30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+618.frameless-transforms.033	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:71	unsupported schema	LocalTail	45	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 45 of 45 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 45 of 45 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+618.frameless-transforms.076	crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:74	unsupported schema	LocalTail	30	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 30 of 30 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 30/30 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+618.optional-source-helpers.007	crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs:117	unsupported schema	LocalTail	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+618.optional-source-helpers.019	crates/rum-runtime/src/runtime/definitions/incremental_append.rs:8	unsupported schema	LocalTail	50	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 50 of 50 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 50/50 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+618.optional-source-helpers.023	crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:223	unsupported schema	LocalTail	55	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+618.optional-source-helpers.025	crates/rum-runtime/src/runtime/kernel_data/control_data/branching_loops/iteration/table_fast_path.rs:11	unsupported schema	LocalTail	55	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 55/55 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+618.optional-source-helpers.027	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:71	unsupported schema	LocalTail	45	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 45 of 45 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 45 of 45 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+618.optional-source-helpers.042	crates/rum-runtime/src/runtime/scoping/lexical/block/continuation.rs:573	unsupported schema	LocalTail	60	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+618.effect-questions.004	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:98	unsupported schema	LocalTail	45	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 45 of 45 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 45 of 45 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+618.effect-questions.005	crates/rum-runtime/src/runtime/kernel_data/control_data/status.rs:103	unsupported schema	LocalTail	45	0	0	0	0	0	False		Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 45 of 45 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	Source identity remains explicitly unresolved; no current coverage claimed. Candidate packets retained in unresolved-source-sites.json.; 45 of 45 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. Exact current AST call identity remains unresolved. Missing 45/45 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+C5.default.enabled.unadmitted	crates/rum-runtime/src/runtime/definitions/application/down_values/default_fallback.rs:97	new 719 producer edge	New719Edge	60	0	0	0	0	0	True		60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. New 719 forwarding edge retains independent ownership and 80 frozen tuples; no own complete armed carrier matrix or named transfer proof. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.	60 of 60 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. New 719 forwarding edge retains independent ownership and 80 frozen tuples; no own complete armed carrier matrix or named transfer proof. Missing 60/60 current C5 source-reached nonencoding SAME cells; retained C4 evidence remains separately linked. No selected own mutant executed in C5 for this row. No new concrete family for this row before the actual two-family stop-loss; prior bounded attempts retained. C6 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C7 retained this obligation without a new concrete attempt before the actual two-family stop-loss. C8 retained this obligation without a new concrete attempt before the actual two-family stop-loss.
+C10.prepared.resumed_profiled_suspend	crates/rum-runtime/src/runtime/eval_core/call.rs:68	new 725 producer edge	New725Edge	55	0	0	0	0	0	True		55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. New brief-725 suspension propagation edge. Actual SlotWitness/RuntimeInputRequest and typed consumer are forwarded; raw producer/owner attribution and the local-tail or transfer proof remain open. No default carrier or caught omission is claimed.	55 of 55 exact required nonencoding keys lack current five-part SAME, actual producer reach and parsed-identical real/disabled records.; Concrete carrier/caller/Drop, lifecycle or required own-omission proof remains open. New brief-725 suspension propagation edge. Actual SlotWitness/RuntimeInputRequest and typed consumer are forwarded; raw producer/owner attribution and the local-tail or transfer proof remain open. No default carrier or caught omission is claimed.
+```
+The 145 residuals retain their evidence and missing work: 112 LocalTail, 13 ReopenedOrNew, 11 StrictDropGap, 6 StrictCallerGap, 1 StrictOtherCarrier, 1 New719Edge and 1 New725Edge. The retained Lost row is separate. No held pair-column row was executed.
+```json
+[
+  "618.effect-questions.004",
+  "618.effect-questions.005",
+  "618.frameless-transforms.033",
+  "618.frameless-transforms.076",
+  "618.optional-source-helpers.019",
+  "618.optional-source-helpers.023",
+  "618.optional-source-helpers.025",
+  "618.optional-source-helpers.027",
+  "618.optional-source-helpers.038",
+  "618.optional-source-helpers.042",
+  "618.optional-source-helpers.054",
+  "618.optional-source-helpers.055",
+  "P0344",
+  "P0417",
+  "P0419",
+  "P1553",
+  "P1557",
+  "P1560",
+  "P1569",
+  "P1571",
+  "P1578",
+  "P1579",
+  "P1580",
+  "P1581"
+]
+```
+```json
+{
+  "count": 13,
+  "coverage_claimed": false,
+  "rows": [
+    "P0126",
+    "P0127",
+    "P0325",
+    "P0326",
+    "P0340",
+    "P0342",
+    "P0475",
+    "P0528",
+    "P0529",
+    "P0824",
+    "P1556",
+    "P1574",
+    "S002"
+  ],
+  "verdict_changes": 0
+}
+```
+```text
+C2 C34 HELD BYTE AUDIT PASS rows=13 ledger_and_tuple_bytes_exact=true P0824_candidate_proof_retained=true P0824_disposition=Residual publication_references_reconciled_by_canonical_replay=true source_changes=0 inventory_changes=0
+C2 C34 RUN held-column-byte-audit attempt=1 exit=0
+```
+```json
+[
+  {
+    "coverage_claimed": false,
+    "design_first_required": true,
+    "end_line": 493,
+    "file": "crates/rum-stdlib/src/strings/text/builtins.rs",
+    "line": 438,
+    "owner": "ToExpression",
+    "reason": "parse_expr(source)? and lower_syntax_expr(&syntax)? propagate Syntax through the general From conversion with input_source None. The successful evaluation may suspend and has separate frames. The Input-only attachment does not attach this source. The correct provenance owner and API contract require a design-first round; no Equal, Unreachable or Boundary claim.",
+    "sha256": "3d9a795649a1e0fd73d25fb2e18d614cff9ddeab69b419e3bbfc4c4f18c77b30",
+    "source": "438: pub(crate) fn eval_to_expression(\n439:     session: &mut Session,\n440:     head: &Expr,\n441:     args: &SharedArgs,\n442: ) -> Result<Expr, EvalError> {\n443:     let args = args.as_ref();\n444:     if !(1..=3).contains(&args.len()) {\n445:         return Ok(session.invalid_call_with_arg_range(\"ToExpression\", args, 1, 3));\n446:     }\n447: \n448:     let Some(source) = expr_as_string(&args[0]) else {\n449:         return Ok(Expr::call(head.clone(), args.to_vec()));\n450:     };\n451: \n452:     if let Some(format) = args.get(1) {\n453:         let supported = is_system_symbol_name(format, \"InputForm\")\n454:             || is_system_symbol_name(format, \"StandardForm\");\n455:         if !supported {\n456:             return Ok(Expr::call(head.clone(), args.to_vec()));\n457:         }\n458:     }\n459: \n460:     let syntax = parse_expr(source)?;\n461:     let lowered = session.lower_syntax_expr(&syntax)?;\n462:     let evaluated = session.evaluate(lowered);\n463:     let value = rum_runtime::resume_or_suspend!(\n464:         session,\n465:         evaluated,\n466:         ok(value) => Ok(value),\n467:         suspend => EvalToExpressionSuspensionFrame1 { result_head: args.get(2).cloned() },\n468:     )?;\n469: \n470:     finish_to_expression(session, value, args.get(2))\n471: }\n472: \n473: #[inline(always)]\n474: fn finish_to_expression(\n475:     session: &mut Session,\n476:     value: Expr,\n477:     result_head: Option<&Expr>,\n478: ) -> Result<Expr, EvalError> {\n479:     if let Some(wrapper) = result_head {\n480:         let wrapped = Expr::call(wrapper.clone(), vec![value]);\n481:         let wrapped_result = session.evaluate(wrapped);\n482:         return rum_runtime::resume_or_suspend!(\n483:             session,\n484:             wrapped_result,\n485:             ok(value) => Ok(value),\n486:             suspend => EvalToExpressionSuspensionFrame2,\n487:         );\n488:     }\n489: \n490:     Ok(value)\n491: }\n492: \n493: pub(crate) fn eval_syntax_q(",
+    "status": "NamedOpenSourceOwner",
+    "verdict_changes": 0
+  },
+  {
+    "coverage_claimed": false,
+    "design_first_required": true,
+    "end_line": 776,
+    "file": "crates/rum-runtime/src/runtime/session/session_api.rs",
+    "line": 773,
+    "owner": "Session::lower_text",
+    "reason": "This non-evaluating parser/lowerer uses parse_expr(input)? then lower_syntax_expr. Its public EvalError can carry Syntax with no attached input_source. Lack of guest evaluation alone does not settle this separate provenance obligation; the direct public API contract remains a named design-first owner.",
+    "sha256": "dbcaf45960fcc8e1f652d6709ce07c1524c9babd4f4f0f28672f38dac31f5c65",
+    "source": "773:     pub fn lower_text(&self, input: &str) -> Result<Expr, EvalError> {\n774:         let syntax = parse_expr(input)?;\n775:         self.lower_syntax_expr(&syntax)\n776:     }",
+    "status": "NamedOpenSourceOwner",
+    "verdict_changes": 0
+  },
+  {
+    "coverage_claimed": false,
+    "design_first_required": true,
+    "end_line": 203,
+    "file": "crates/rum-runtime/src/runtime/session/session_requests.rs",
+    "line": 167,
+    "owner": "outer-request lowering",
+    "reason": "parse_request uses the source-aware syntax diagnostic mapper; lower_request/eval_request lower errors pass through finish_request_failure. These are outer source owners, not the Input answer source attached by brief729. P1562 remains a distinct local-tail census duty; no descriptor is relabelled.",
+    "sha256": "d65857178f50c5ecabcaa6f446b7316a05d0224f1340227f3f62a281f9d9c827",
+    "source": "167:     pub fn lower_request(\n168:         &mut self,\n169:         input: &str,\n170:     ) -> Result<SessionLowerResponse, SessionRequestFailure> {\n171:         let checkpoint = RequestCheckpoint::new(self);\n172:         let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;\n173:         let expr = self.lower_syntax_expr(parsed.syntax()).map_err(|err| {\n174:             self.finish_request_failure(checkpoint, ReportedOutput::at(checkpoint.mark), err)\n175:         })?;\n176: \n177:         Ok(SessionLowerResponse { expr })\n178:     }\n179: \n180:     pub fn eval_request(\n181:         &mut self,\n182:         input: &str,\n183:     ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n184:         if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {\n185:             return Ok(cancelled);\n186:         }\n187:         self.reject_overlapping_evaluation_request()?;\n188:         self.begin_top_level_interrupt_budget();\n189:         let checkpoint = RequestCheckpoint::new(self);\n190:         let reported = ReportedOutput::at(checkpoint.mark);\n191:         if self.active_accepted_request_is_cancelled() {\n192:             return self.finish_cancelled_active_request(checkpoint, reported);\n193:         }\n194:         let result = (|| {\n195:             let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;\n196:             let expr = self.lower_syntax_expr(parsed.syntax()).map_err(|err| {\n197:                 self.finish_request_failure(checkpoint, ReportedOutput::at(checkpoint.mark), err)\n198:             })?;\n199: \n200:             self.eval_expr_request_from_checkpoint(expr, checkpoint, reported)\n201:         })();\n202:         self.finish_accepted_value_request(result)\n203:     }",
+    "status": "NamedOpenSourceOwner",
+    "verdict_changes": 0
+  },
+  {
+    "coverage_claimed": false,
+    "design_first_required": true,
+    "end_line": 411,
+    "file": "crates/rum-runtime/src/runtime/session/session_eval.rs",
+    "line": 375,
+    "owner": "loader",
+    "reason": "The loader reads source before evaluation, captures loader state and either defers or closes rollback. It can execute guest code and Input; it is not Unreachable. A file/script non-resumable boundary needs its exact documented lifecycle, and does not itself settle which source a diagnostic must carry. Existing unresolved loader sites retain their candidates.",
+    "sha256": "f0b8a4e08deba8b660bebfcc14c550debad7105be47fb7d66b4ab34f6bae971a",
+    "source": "375:     pub fn eval_file(&mut self, path: impl AsRef<Path>) -> Result<EvalOutcome, EvalError> {\n376:         let mark = self.output_mark();\n377:         let value = self.eval_file_retaining_output(path.as_ref())?;\n378:         Ok(self.take_batch_output(mark, value))\n379:     }\n380: \n381:     /// The file batch a request runs. Its output stays in the session lists,\n382:     /// as [`Self::eval_script_retaining_output`]'s does.\n383:     pub(super) fn eval_file_retaining_output(\n384:         &mut self,\n385:         path: &Path,\n386:     ) -> Result<(Expr, Option<EvalTerminationReason>), EvalError> {\n387:         let source = self\n388:             .file_io()\n389:             .ok_or(EvalError::NoFileIoProvider)?\n390:             .read_to_string(path)\n391:             .map_err(|source| EvalError::Io {\n392:                 path: path.display().to_string(),\n393:                 source,\n394:             })?;\n395:         let snapshot = self.capture_loader_snapshot();\n396:         let depth = self.load_stack.len();\n397: \n398:         self.load_stack.push(path.to_owned());\n399:         self.refresh_memory_owner(crate::runtime::debug_tools::resources::MemoryOwner::LoadStack);\n400:         let result = self.eval_script_with_terminated_handling(\n401:             &source,\n402:             TerminatedEvaluationHandling::ConvertCyclesToValue,\n403:         );\n404:         if matches!(result, Err(EvalError::InputRequired { .. })) {\n405:             self.defer_public_file_rollback(path, depth, snapshot);\n406:         } else {\n407:             self.close_public_file(path, depth, result.is_err().then_some(snapshot));\n408:         }\n409: \n410:         result\n411:     }",
+    "status": "NamedOpenSourceOwner",
+    "verdict_changes": 0
+  },
+  {
+    "coverage_claimed": false,
+    "design_first_required": true,
+    "end_line": 458,
+    "file": "crates/rum-runtime/src/runtime/session/session_requests.rs",
+    "line": 421,
+    "owner": "file-reread provenance",
+    "reason": "eval_file_request obtains source for Syntax by rereading FileIo at the failure boundary. The second read may differ from the originally evaluated contents. input_source.as_deref().or(source) gives an Input answer precedence when present, but does not settle non-Input file-source identity or reread failures. No source change or invented public behavior is authorized here.",
+    "sha256": "d65857178f50c5ecabcaa6f446b7316a05d0224f1340227f3f62a281f9d9c827",
+    "source": "421:     pub fn eval_file_request(\n422:         &mut self,\n423:         path: impl AsRef<Path>,\n424:     ) -> Result<SessionEvalResponse, SessionRequestFailure> {\n425:         if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {\n426:             return Ok(cancelled);\n427:         }\n428:         self.reject_overlapping_evaluation_request()?;\n429:         let checkpoint = RequestCheckpoint::new(self);\n430:         let reported = ReportedOutput::at(checkpoint.mark);\n431:         let path = path.as_ref();\n432: \n433:         let result = match self.eval_file_retaining_output(path) {\n434:             Ok((value, termination)) => {\n435:                 Ok(self.finish_reported_success(checkpoint, reported, value, termination))\n436:             }\n437:             Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(\n438:                 PendingRequest::Batch(PendingReport {\n439:                     mark: checkpoint.mark,\n440:                     reported,\n441:                 }),\n442:             )),\n443:             Err(err) => {\n444:                 let source = match &err {\n445:                     EvalError::Syntax { .. } => self\n446:                         .file_io()\n447:                         .and_then(|file_io| file_io.read_to_string(path).ok()),\n448:                     _ => None,\n449:                 };\n450: \n451:                 Err(self.finish_completed_request_failure(\n452:                     checkpoint,\n453:                     reported,\n454:                     source.as_deref(),\n455:                     err,\n456:                 ))\n457:             }\n458:         };",
+    "status": "NamedOpenSourceOwner",
+    "verdict_changes": 0
+  }
+]
+```
+P0001 closes one of the 867 inherited named open transitive duties. The remaining 866 duties, 24 unresolved sites, 13 pair columns and five source owners remain explicit. Unchanged fingerprints do not close an open duty.
+```json
+{
+  "current_SAME_keys": 10033,
+  "current_complete_matrices": 183,
+  "current_full_proofs": 176,
+  "current_named_open": 866,
+  "inherited_open_closed": 1,
+  "population": 1042,
+  "prior_C33_complete": 175,
+  "prior_C33_open": 867,
+  "prior_complete_retained": 175,
+  "source_exclusions": 0,
+  "source_fingerprint_unchanged": 1018,
+  "source_rebases": 0,
+  "unresolved": 24,
+  "whole_graph_complete": false
+}
+```
+
+### 6. Canonical port, controls, inventories and integrity
+
+```text
+C2 C34 PAIR COLUMN REPLAY PASS rows=13 reconciliation_byte_exact=true disposition_changes=0 candidate_measurements_retained=true
+C2 C34 PROTECTED RECORD BYTE REPLAY PASS ledger_rows=183 tuple_records=13035 held_pair_rows=13 byte_differences=0
+C2 C34 RESERVED ROW REPLAY PASS c33_settlements=1 c32_settlements=1 c31_settlements=1 c30_settlements=2 c29_settlements=3 c28_settlements=2 c27_settlements=1 c26_settlements=2 c25_settlements=2 c24_settlements=2 c23_settlements=3 c22_settlements=2 c21_settlements=5 c20_settlements=7 c19_settlements=8 c18_settlements=21 c17_settlements=27 c16_settlements=13 c15_settlements=30 c14_settlements=28 c13_countlike=7 P0496=Residual P1566=Lost row_and_key_records_byte_exact=true
+C2 C34 TRANSITIVE REPLAY {"current_SAME_keys": 10033, "current_complete_matrices": 183, "current_full_proofs": 176, "current_named_open": 866, "inherited_open_closed": 1, "population": 1042, "prior_C33_complete": 175, "prior_C33_open": 867, "prior_complete_retained": 175, "source_exclusions": 0, "source_fingerprint_unchanged": 1018, "source_rebases": 0, "unresolved": 24, "whole_graph_complete": false}
+C2 C34 VERDICT CELL {"evidence": "c34/empty-prefix-callback-value-charge-full-proofs.json", "new": "Equal", "old": "Residual", "row": "P0001"}
+C2 C34 LEDGER NEGATIVE C2-done-with-residuals: RED (C2 Done with residual/loss/proposal)
+C2 C34 LEDGER NEGATIVE delete-a-row: RED (frozen row identities differ)
+C2 C34 LEDGER NEGATIVE duplicate-a-row: RED (duplicate row)
+C2 C34 LEDGER NEGATIVE wrong-row-mutant: RED (no own caught omission: P1595; wrong-row mutant)
+C2 C34 LEDGER NEGATIVE surviving-identity-promoted: RED (no own caught omission: P1625)
+C2 C34 LEDGER NEGATIVE incomplete-matrix-promoted: RED (incomplete matrix: P1595)
+C2 C34 LEDGER POSITIVE GREEN rows=1042 negative_controls_RED=6 unexpected_green=0 C2=Open
+C2 C34 CANONICAL LEDGER REPLAY PASS rows=1042 keys=78330 rows_added=0 rows_removed=0 keys_added=0 keys_removed=0 duplicates=0 encoding_byte_exact=18840 encoding_executions=0 verdict_changes=1 inherited_pair_columns_verified=13 unresolved_retained=24 P0496=unchanged P1566=Lost accepted_countlike_unchanged=7
+C2 C34 CHECKPOINT stage=canonical-final-replay population=1042 residuals=145 requirements=78330 source_integrity=PASS stop_clock=0
+C2 C34 RUN final-replay attempt=1 exit=0
+```
+```text
+C2 C34 CANONICAL DELTA AUDIT PASS {"canonical_keys": 78330, "changed_ledger_columns": {"disposition": 1, "ledger_kind": 1, "mutant_result": 1, "settlement_evidence": 1, "tail_observed": 1, "verdict": 1}, "changed_rows": ["P0001"], "changed_tuple_records": 60, "changed_tuple_rows": ["P0001"], "keys_added": 0, "keys_removed": 0, "rows": 1042, "rows_added": 0, "rows_removed": 0, "seven_column_keys_unchanged": true, "source_rebases": 0, "unchanged_rows": 1041}
+C2 C34 RUN canonical-delta-audit attempt=1 exit=0
+```
+```text
+C2 C34 PROOF ASSURANCE PASS new_proofs=1 Equal=1 NoObservableTail=0 own_armed_hit_surviving_cells=0 phase_traced_cells=0 actual_cycle_cells=0 disabled_parsed_identical=true copied_Rust_pairs_checked=191 new_unsafe_tokens=0
+C2 C34 RUN proof-assurance attempt=1 exit=0
+```
+```text
+C2 C34 COPY SAFETY PASS {"Rust_files_compared": 3160, "changed_pairs": 210, "new_unsafe_tokens": 0, "trees": 2}
+C2 C34 RUN copy-safety attempt=2 exit=0
+```
+```text
+C2 C34 PRODUCER PROVENANCE PASS measured_rows=1 new_dispositions=1 held_candidate_rows=0 receipts=1 actual_paired_functions=true unique_producer_guards=true actual_producer_expressions=true inherited_selected_omissions=0 live_hashes_exact=true
+C2 C34 RUN producer-provenance attempt=1 exit=0
+```
+```text
+C2 C34 PORT READY source_entries=1042 required_keys=78330 exact_fixtures=12843 inherited_fixtures_byte_exact=12783 fresh_bindings=60 own_receipts=1 retained_29_byte_exact=true rows_removed=0 C2=Open S10=unopened
+```
+```text
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c7 files=25251
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c8 files=36460
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c9 files=33294
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c10 files=58222
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c11 files=55952
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c12 files=26864
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c13 files=26705
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c14 files=70511
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c15 files=93144
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c16 files=82620
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c17 files=129023
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c18 files=106503
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c19 files=90484
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c20 files=93652
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c21 files=79660
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c22 files=81609
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c23 files=82696
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c24 files=83460
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c25 files=84033
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c26 files=84759
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c27 files=90920
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c28 files=85865
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c29 files=86391
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c30 files=81417
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c31 files=87110
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c32 files=81915
+C2 C34 PROTECTED REPLAY scene=.temp/g15-c2/c33 files=82267
+C2 C34 PROTECTED REPLAY scene=.temp/brief-623 files=151
+C2 C34 PROTECTED REPLAY scene=.temp/brief-726 files=41103
+C2 C34 PROTECTED REPLAY scene=.temp/brief-727 files=52117
+C2 C34 PROTECTED REPLAY scene=.temp/brief-728 files=25096
+C2 C34 PROTECTED REPLAY scene=.temp/brief-729 files=189372
+C2 C34 PROTECTED REPLAY scene=.temp/brief-548 files=202
+C2 C34 PROTECTED REPLAY scene=.temp/brief-583 files=101
+C2 C34 PROTECTED REPLAY scene=.temp/brief-618 files=54
+C2 C34 PROTECTED REPLAY scene=.temp/brief-621 files=104
+C2 C34 SOURCE INTEGRITY PASS live_files=2726 live_digest=99c3b19b7894d23f19e181558769acc3de875c4bfd73409ed9fc2f9c07304b65 changed=0 missing=0 extra=0 production_files=1622 production_digest=8313fbc1583eec539460dfd2ba1ce655452dd86df6134f3e7808b377d07a025c protected_files=2329087 protected_changed=0 protected_missing=0 protected_extra=0
+C2 C34 BUILD INTEGRITY PASS receipts=3 binaries_exact=3 assembled_trees_exact=3 offline_locked=true forced_spot_sha256=d59f3fc74a4e041c143be3edbd39b4c08cf01f44fd450cfa645e9ba12d115b34 spot_check=pass scene_environment=true
+C2 C34 SOURCE OWNERS PASS owners=5 named_open=5 source_changes=0 verdict_changes=0 design_first_required=true
+C2 C34 PORT INTEGRITY PASS exact_fixtures=12843 rum_files=25686 input_files=12843 retained29_byte_exact=true inherited_port_byte_exact=true
+C2 C34 POST-STOP AUDIT PASS controller_runs=16 guest_runs=0 Cargo_runs=0 final_two_families=empty-prefix-callback-value-charge stop_reason=Continuation34RoundEnd stop_loss_fired=false stop_clock=0
+C2 C34 RUN integrity-audit attempt=1 exit=0
+```
+```text
+C2 C34 CHECKPOINT stage=ready-for-director-gate population=1042 residuals=145 requirements=78330 source_integrity=PASS stop_clock=0
+C2 C34 EVIDENCE SEALED files=82589 immutable_raw_and_source=true mutable_publication_indexes_excluded=true
+C2 C34 RUN seal-evidence attempt=1 exit=0
+```
+Ledger, residuals and port tables are generated only by canonical replay. Fixtures preserve exact .rum source/setup, inputs and raw origins. All inherited fixture payloads and the separate 29 Equal rows are byte-exact. Reproduction needs the native driver, the two read-only receipt accessors, the exact producer guard and charge omission, and the build receipts as well as the guest programs. All six bad-ledger controls are RED; the positive ledger is GREEN.
+
+Standing inventory verdict, verbatim:
+```text
+C2 C34 STANDING INVENTORY REPLAY NA covered_live_source_changes=0 production_acceptance_suites=0 diagnostic_copied_probes_only=true inventory_hand_edits=0 stale_fingerprint_certificate_position_reds=0
+```
+No covered live source changed and no production acceptance suite ran. Inventories were not hand-edited, weakened or re-pinned. No stale fingerprint, certificate or position red occurred.
+
+### 7. Attempts, scope and recommendation
+
+```json
+{
+  "both_build_receipts_before_guests": true,
+  "budget_expanded_after_execution": false,
+  "controller_correction": {
+    "failed_log": ".temp/g15-c2/c34/logs/copy-safety-1.log",
+    "failed_source": ".temp/g15-c2/c34/copy_safety_audit_attempt1.py",
+    "guest_or_build_rerun": false,
+    "inventory_edit": false,
+    "production_test_failure": false,
+    "reason": "Inherited copied-tree selector still named the C33 outgoing-lease-release family; replace the two exact identities with the actual C34 callback-charge trees. Preserve the exact set equality and all Rust/no-unsafe checks.",
+    "sha256": "07cb75d21ec516a050a420fde5c1d07bafb1180ca2ab8fd5ca4b5fc0af3f7b28"
+  },
+  "controller_overlap": false,
+  "deleted_attempt_records": 0,
+  "executed_pair_records_including_calibration": 124,
+  "failed_runs": [
+    {
+      "attempt": 1,
+      "cmd": "env  /usr/bin/python3 -I /home/remi/dev/rum/scripts/run-bounded.py --timeout 120 -- /usr/bin/python3 -B /home/remi/dev/rum/.temp/g15-c2/c34/copy_safety_audit.py",
+      "exit": 1,
+      "id": "copy-safety",
+      "log": ".temp/g15-c2/c34/logs/copy-safety-1.log",
+      "seconds": 0.095,
+      "tests": null,
+      "verdict_lines": [
+        "C2 C34 RUN copy-safety attempt=1 exit=1"
+      ]
+    },
+    {
+      "attempt": 1,
+      "cmd": "env  /usr/bin/python3 -I /home/remi/dev/rum/scripts/run-bounded.py --timeout 1000.0 -- python3 -B .temp/g15-c2/c34/finalize_evidence.py",
+      "exit": 1,
+      "id": "final-evidence",
+      "log": ".temp/g15-c2/c34/logs/final-evidence-1.log",
+      "seconds": 113.167,
+      "tests": null,
+      "verdict_lines": [
+        "C2 C34 COMMAND name=held-column-byte-audit attempt=1 exit=0 seconds=0.444 log=.temp/g15-c2/c34/logs/held-column-byte-audit-1.log",
+        "C2 C34 COMMAND name=final-replay attempt=1 exit=0 seconds=42.062 log=.temp/g15-c2/c34/logs/final-replay-1.log",
+        "C2 C34 COMMAND name=canonical-delta-audit attempt=1 exit=0 seconds=1.599 log=.temp/g15-c2/c34/logs/canonical-delta-audit-1.log",
+        "C2 C34 COMMAND name=aggregate-audit attempt=1 exit=0 seconds=34.033 log=.temp/g15-c2/c34/logs/aggregate-audit-1.log",
+        "C2 C34 COMMAND name=all-executions-audit attempt=1 exit=0 seconds=0.147 log=.temp/g15-c2/c34/logs/all-executions-audit-1.log",
+        "C2 C34 COMMAND name=epoch-validity-audit attempt=1 exit=0 seconds=0.093 log=.temp/g15-c2/c34/logs/epoch-validity-audit-1.log",
+        "C2 C34 COMMAND name=execution-kind-audit attempt=1 exit=0 seconds=0.093 log=.temp/g15-c2/c34/logs/execution-kind-audit-1.log",
+        "C2 C34 COMMAND name=route-and-shape-audit attempt=1 exit=0 seconds=0.494 log=.temp/g15-c2/c34/logs/route-and-shape-audit-1.log",
+        "C2 C34 COMMAND name=observer-required-witness-audit attempt=1 exit=0 seconds=0.242 log=.temp/g15-c2/c34/logs/observer-required-witness-audit-1.log",
+        "C2 C34 COMMAND name=proof-assurance attempt=1 exit=0 seconds=33.797 log=.temp/g15-c2/c34/logs/proof-assurance-1.log",
+        "C2 C34 COMMAND name=copy-safety attempt=1 exit=1 seconds=0.095 log=.temp/g15-c2/c34/logs/copy-safety-1.log",
+        "C2 C34 RUN final-evidence attempt=1 exit=1"
+      ]
+    }
+  ],
+  "first_compiler_transcripts": [
+    {
+      "arm": "real",
+      "copy": ".temp/g15-c2/c34/first-real-compiler.log",
+      "key": "47ca908aefadf211f5bd1a918d25806f42271619ccd24b03c247408a7f059b33",
+      "sha256": "3c4113de12d9865566c64efae45639f2a8dae0c3d84e8e680502d5c35933d6be",
+      "source": ".temp/g15-c2/probe/logs/47ca908aefadf211f5bd1a918d25806f42271619ccd24b03c247408a7f059b33.log"
+    },
+    {
+      "arm": "mutant",
+      "copy": ".temp/g15-c2/c34/first-mutant-compiler.log",
+      "key": "946bd8eb611dcb56e9c0553b7871ac4d6d5f4307a58dea4233abe6ddf8533a8d",
+      "sha256": "7137927bcdd1e5f70bfff32a167930b96cd0ea502ca82d3b658eec395bfde53a",
+      "source": ".temp/g15-c2/probe/logs/946bd8eb611dcb56e9c0553b7871ac4d6d5f4307a58dea4233abe6ddf8533a8d.log"
+    }
+  ],
+  "first_transcripts_preserved_before_force": true,
+  "forced_compiler_transcript": {
+    "path": ".temp/g15-c2/c34/forced-real-compiler.log",
+    "sha256": "a4254f366c18a5fb80d2da82a8baf60b704ca28e83b0eb1fbee0b030a4682e81"
+  },
+  "guest_processes": 6,
+  "inspection_notes": "Read-only initial c34 absence and a premature build-receipt existence check returned missing-path messages. Initial oversized brief reads were followed by targeted governing-section reads. No source or evidence was changed by these inspections.",
+  "inventory_edits": 0,
+  "nonzero_runs": 2,
+  "original_frozen_probe_cap": 180,
+  "own_target_calibration_before_matrix": true,
+  "production_contract_changes": 0,
+  "run_logs_retained": true,
+  "source_compile_errors": 0
+}
+```
+```text
+C2 C34 ATTEMPTS RETAINED PASS nonzero_runs=2 unique_controller_failures=1 scratch_compile_errors=0 guest_processes=6 run_logs_retained=true deleted_attempt_records=0
+C2 C34 CONTROLLER CORRECTION DISCLOSED failed_check=copy-safety old_family_selector=C33 corrected_exact_tree_selector=C34 assertions_weakened=0 prior_passed_stages_regenerated=0 guest_or_Cargo_reruns=0
+C2 C34 SERIAL BUILD GUEST AUDIT PASS both_build_receipts_before_guests=true own_target_calibration_before_matrix=true Cargo_serial=true guest_build_overlap=false elapsed_durations_compared=false
+C2 C34 COMPILER TRANSCRIPTS PASS first_real_retained=true first_mutant_retained=true copied_before_force=true forced_real_retained=true forced_binary_exact=true
+C2 C34 ORIGINAL PROBE BUDGET PASS frozen_cap=180 records_including_calibrations=124 retrospective_cap_increase=0
+C2 C34 RUN attempt-audit attempt=1 exit=0
+```
+All preparation, build, calibration and probe attempts passed. One post-stop copied audit failed because its exact-tree selector still named C33; its parent controller returned the same failure. The failed script and both logs are retained. Only the two expected tree names were corrected to C34, preserving exact set equality and every no-unsafe assertion. Replay passed; completed stages were not regenerated and no guest or Cargo run was repeated. This is a scratch controller adaptation error, not a production regression or a stale standing inventory. Every attempt record and full log remains. Both first compiler transcripts were copied before the canonical forced rebuild could reuse its key-named log; the forced transcript is retained separately. Entry, protected-scene hashing, inherited replay, builds and guest stages ran serially. No timing comparison was made. Read-only inspection encountered the initial absent c34 path and one premature build-receipt check; oversized reads were followed by targeted reads. These inspections did not modify source or evidence.
+
+The canonical controllers extend the accepted history through C33 and update exact entry counts. New small driver and audit modules isolate this mechanism. The copied adopt_outcome helper retains the original body and adds only the exact empty-prefix charge switch; no live module organization changes. Unused inherited generic report_builder.py and audit_held_columns.py are retained but were not executed. No historical family preparer was copied or executed. Standing assertions and historical scenes were not edited.
+
+All writes are confined to .temp/g15-c2/c34, the shared .temp/g15-c2/probe source/build/cache/log tree, and the existing .temp/g15-c2/cargo-home. The live brief stays byte-identical because the current order prohibits repository mutation outside .temp/. REPORT.md is ready for director publication. Seal exclusions and publication log prefixes are unchanged.
+
+Not run: production acceptance or formatting suites, timing A/B, new historical calibration builds, internal-encoding or held-row probes, adapter lifecycle families, production design/repair, rebase, CM, CHANGELOG, git, network, subagents or live brief append. The report checker is used without its director-only --against-git option.
+
+Q1 recommendation: accept P0001 Equal on its complete 60-key real matrix and its own armed-hit caught incoming-charge omission. Keep 145 residuals, P1566 Lost, held rows and all other named duties open. A direct receipt observer may be considered for another applicable charge tail only with that tail's own calibrated omission. C2 stays Open and S10 stays unopened.
+
+## Continuation 34 gate (2026-11-12) — ACCEPTED at the round's end on cdx: `P0001` settles Equal on its own caught incoming callback-value receipt-charge omission and its complete real matrix, and the two-family stop-loss correctly does not fire
+
+**Run.** The round ran on `cdx` (Codex `gpt-6-astra`, reasoning max;
+session `01a1cf48-c96e-7893-a08f-2f84a0c8bf47`), log
+`.temp/logs/cdx_brief_623.log` (24,241 lines, 2,106,609 B, sha
+`61f8e830…`), memory-scope peak 3,432,165,376 B, oom 0, oom_kill 0, rc 0;
+187,279 tokens; report 14 checks 10 PASS / 3 FLAGGED / 1 NA with
+`report.py check` 420 citations by my own run; 49 run records, the
+round-end at record index 21, two retained non-zero exits (the stale
+copied-audit selector and its parent wrapper), six guest processes and
+three build controllers; no executed git or network command; the worker
+did not append the live brief.
+
+**My gate.** 2,726 live files at `99c3b19b…`, equal to the scene entry
+manifest path for path (0 differing); production 1,622 files at
+`8313fbc1…` byte-identical to both the C34 and the C33 entry manifests
+(0 added, 0 removed), `source_rebases=0`; the entry delta against C33 is
+exactly `TODO.md` and the brief from my own post-gate commits, and the
+entry brief is byte-identical to the live brief at `d2205e2f…`. My own
+2,329,087-file protected walk is 0/0/0 in 118.6 s; my own 82,589-file
+sealed walk is 0 missing / 0 changed at hand-back, and after my replay
+exactly the one sealed derived file `integrity-receipt.json` is refreshed
+(post-stop controller snapshot 16 -> 28; disclosed, no assertion
+changed).
+
+**Ledger.** 1,042 rows, exactly one verdict change on the six settlement
+columns — `P0001`, Residual->Equal — the other 1,041 rows byte-identical.
+Outcomes 9/163/5/1/122/145/594/3; residual 112 LocalTail + 13
+ReopenedOrNew + 11 StrictDropGap + 6 StrictCallerGap + 1
+StrictOtherCarrier + 1 New719Edge + 1 New725Edge = 145. The 78,330
+canonical keys are unchanged (0 added/removed/duplicated), the 18,840
+encoding rows are byte-identical, and 60 tuple records changed on exactly
+`P0001`. The 13 pair columns are byte-identical with 0 verdict changes;
+`P1566` is Lost, `P0496` is Residual, the held rows keep their inherited
+bytes, and `P1585`-`P1591` keep `NoObservableTail`. Every inherited
+artifact is byte-identical to the C33 final state.
+
+**Evidence.** One Equal proof packet over 60 cells and 60 records: every
+record is five-part SAME with real == disabled and producer/route reach
+(0 errors), each cell-key set equals its row's 60 required nonencoding
+keys (five variants x twelve contexts, all on the `evaluate@93` route),
+and `P0001`'s own omission is armed, hit once and caught on the required
+`Middle`/`phase_observation.trace` key. The caught record differs only in
+its appended `C34ActualCallbackReceiptBytes.0` row — `[0, …]` on the
+queued arm against `[32, …]` on the resumed arm — while the semantic
+observations, the logical phase rows, the epochs and the validity stay
+equal. The mutant receipt is 1 armed = 1 caught, 0 invalid, 0 unarmed,
+and the real and mutant record files are byte-identical (`ea7ee930…`;
+the own log is `92f45eb2…`). 12,843 fixtures (12,783 inherited byte-exact + 60 new; 38,529
+files exact). Calibration carries: the four C4 semantic controls and the
+three pre-G15/pre-C1/current-C1 panels re-hash exact to their manifests,
+and the census parser binary hash `db9fbcab…` is exact, on my own run.
+Three build receipts exact — the forced spot `d59f3fc7…` is fresh and
+equal (`spot_check=pass`, `scene_environment=true`), all offline and
+locked. 0 new `unsafe` over 3,160 compared Rust files and 210 changed
+pairs (and no live Rust file changed at all this round).
+
+**The settlement, read from source.** `P0001` is the empty-prefix branch
+of `RetentionContext::evaluate`
+(`crates/rum-runtime/src/runtime/accounting_mode/bridge.rs:85`, the
+required site at `:93`), previously Residual/LocalTail with the open
+obligation naming a concrete carrier. An empty, zero-capacity owner
+evaluates directly and returns through `adopt_outcome`; on a successful
+value the real code acquires the mode receipt and executes
+`M::resize(&mut receipt, || Some(expr_bytes(&value)))` before any
+builder grows (`:169-170`), so the callback value's own charge exists
+before adoption. The round built a scratch-only native caller of the
+public armed retention API (`C34CallbackCharge`, `callback_charge_driver.rs`)
+that evaluates `Input["finish"]` inside `MemoryConstrained`, observes the
+actual `CallbackValue` receipt through a scratch read-only accessor
+(`M::bytes(&self.receipt)`), suspends through a root-traced
+`CallbackFinish`, resumes with `resume_values`/`push` and observes the
+one-value `RetainedValues` receipt, then publishes `List[89]`. The armed
+conditional replaces only the post-producer receipt resize with a probe
+hit; the real tree keeps the resize and carries exactly 1 `enter`
+producer guard, the mutant tree 956 guard lines (965 calls) across 186
+files. The real
+tree reads `bytes=32` on both arms; the omission leaves the queued arm
+at `bytes=0` against `32` on the resumed arm. This is a concrete incoming
+charge omission, distinct from C32's non-empty-prefix restoration
+(`P0002`) and C33's outgoing lease release (`P0020`); the family,
+strategy and instrument names are absent from every prior scene, so the
+anti-repetition bar is satisfied.
+
+**Entry and transitive.** From the c13-c33 evidence alone I re-derive 175
+complete proofs, 182 matrices, 9,973 SAME keys and 867 named open with 0
+errors, equal to the C33 final status. The current graph adds exactly the
+one proof: 176 proofs, 183 matrices, 10,033 SAME keys, 866 named open, 1
+inherited duty closed (`P0001`), 175 retained, 0 exclusions, 24
+unresolved sites, 13 pair columns, five owners,
+`whole_graph_complete=false`.
+
+**Stop and integrity.** One completed family with 60 coverage cells, 60
+new cells, 1 caught row and 1 outcome; clock 0, `Continuation34RoundEnd`,
+`stop_loss_fired=false`. The scene's stop is not a replacement for the
+two-family stop-loss: the clock never reached 2, and the round ended
+voluntarily exactly as the order allows. No guest and no Cargo run after
+the stop (0 of each at my replay), and 16 post-stop controller records at
+publication, 28 counted at my replay.
+
+**Replay.** My canonical replay reproduced the scene: `final_replay`,
+`canonical_delta_audit`, `aggregate_audit`, `all_executions_audit`,
+`epoch_audit`, `execution_kind_audit`, `callback_route_audit`,
+`callback_observer_audit`, `proof_assurance`, `copy_safety_audit`,
+`provenance_audit`, `port`, `held_bytes_audit`, `integrity` and the
+calibration carry all exit 0; the six bad-ledger controls are RED and the
+positive GREEN on my own run; `report.py check` verifies 420 citations;
+and a whole-scene 82,607-file hash comparison changes only the mutable,
+seal-excluded `state.json` and `PROGRESS.md` and the refreshed
+`integrity-receipt.json`; 0 files added or removed.
+
+**Rulings.** Q1: `P0001` is accepted as Equal — its complete 60-key real
+matrix is five-part SAME with real == disabled and producer/route reach,
+and its own armed-hit caught omission skips the actual incoming callback
+value receipt charge, leaving the queued arm's actual receipt at 0 bytes
+where the real tree reads 32; it is never a proposal. Q2: C2 stays Open
+at 145 Residual + 1 Lost; S10 stays unopened; continuation 35 owns the
+remaining tail on this unchanged source.
+
+**Recorded, not gated.** The stale copied controller in the scene's
+`copy_safety_audit.py` still named the C33 family and failed once
+(exit 1) together with its parent wrapper (`finalize_evidence.py`, whose
+ten preceding subcommands all exited 0); the correction changed exactly
+the two expected tree names, kept every assertion and the exact set
+equality, and the retained attempt (`copy_safety_audit_attempt1.py`, sha
+`07cb75d2…`) and both logs stay in place, with no guest or Cargo rerun.
+The per-family summary's `outcomes_gained: 0` against the batch record's
+1 is the established per-family field. The family's execution record's
+permissive `attempt_unreached: true` is the retained selection flag; my
+own pause-attribution check independently confirms producer reach on all
+60 cells, and `source_reached_cells` reads 60. The unused inherited
+`audit_held_columns.py` and `report_builder.py` were retained but not
+executed. The worker's inspection notes (read-only initial c34 absence
+and one premature build-receipt check) changed nothing. The FLAGGED
+transitive and source-owners checks and the post-stop controller count
+refresh in the sealed integrity receipt are as expected.
+
+**Next.** Continuation 35 of brief 623 on this unchanged installed
+source, then C2's settlement round, CM, `CHANGELOG.md` before S10, G13
+S10-S54/F1-F23/R, E2.
