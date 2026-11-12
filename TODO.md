@@ -1119,6 +1119,54 @@ and the `P0325`/`P0326` pair-column reconciliation), then CM,
 `CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
 break), G13 S10–S54/F1–F23/R, E2.
 
+**Continuation 32 is accepted at the round's end on cdx**: one row
+settles Equal (`P0002`) on its own caught post-producer state-restoration
+omission and its complete real matrix, and the two-family stop-loss
+correctly does not fire. The round ran on `cdx` (gpt-6-astra, max;
+session `01a1cee1-…`; 22,469-line / 2,071,840 B log; 275,682 tokens;
+memory-scope peak 4.10 GB, oom 0, rc 0; 53 run records, the round-end at
+index 29 and eight retained non-zero attempts; report 14 checks 10 PASS /
+3 FLAGGED / 1 NA, `report.py check` 398 citations by my own run; no
+executed git or network; the live brief was not appended). `P0002` is the
+nonempty-prefix branch of `RetentionContext::evaluate` (`bridge.rs:85`,
+the producer `catch_unwind` at `:110`), previously attribution-only: the
+round built a scratch-only native caller of the public unarmed retention
+API that pushes two real retained prefix values, evaluates `Input` inside
+the real bridge, suspends with the real frozen prefix through a
+root-traced `RetentionContinuation` and resumes to `List[101,103,89]`;
+the armed omission skips only the post-producer `prefix.values = values`
+restoration, leaving the queued suspension with the empty prefix and the
+list `[89]`. 60 real cells / 60 records five-part SAME with real ==
+disabled and producer/route reach (0 errors), each cell-key set equal to
+the row's 60 required nonencoding keys, 1 armed = 1 caught mutant,
+12,723 fixtures (12,663 inherited byte-exact + 60 new), three exact
+build receipts (forced spot `5a5f8664…`, `spot_check=pass`), 0 new
+`unsafe` over 3,160 compared Rust files and no live Rust file changed.
+My gate: live 2,726 files at `48a33034…` equal to the scene entry;
+production 1,622 files at `8313fbc1…` byte-identical with
+`source_rebases=0`; the entry delta exactly `TODO.md` and the brief; my
+own 2,164,905-file protected walk 0/0/0 in 114.7 s and 81,897-file
+sealed walk 0/0/0 in 1.1 s (after my replay only
+`integrity-receipt.json` is refreshed, post-stop controllers 13→24,
+disclosed). Ledger: exactly one verdict change, outcomes
+9/161/5/1/122/147/594/3, residual 114 + 13 + 11 + 6 + 1 + 1 + 1 = 147,
+78,330 keys and 18,840 encoding rows unchanged, 60 tuple records on
+exactly `P0002`, 13 pair columns byte-identical, `P1566` Lost, `P0496`
+Reserved, held rows and `P1585`–`P1591` unchanged. Transitive: entry
+re-derives from c13–c31 at 9,853 SAME keys / 173 proofs / 180 matrices /
+869 open; current 9,913 / 174 / 181 / 868 with 1 inherited duty closed,
+173 retained, 24 unresolved, 13 pair columns and five owners.
+**Paused by the user's instruction (2026-11-12, system update and
+reboot).** When resumed: continuation 33 of brief 623 on this unchanged
+installed source (the remaining 147-row tail by mechanism; the held rows
+are excluded and the C19–C32 families are not repeated without a
+genuinely new mechanism or instrument), then C2's settlement round
+(including `P0496`'s ledger disposition, expected unreachable/source-closed,
+`P1566`'s re-settlement on the installed source, and the
+`P0325`/`P0326` pair-column reconciliation), then CM, `CHANGELOG.md`
+before S10 (including the public `EvalError::Syntax` break), G13
+S10–S54/F1–F23/R, E2.
+
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
 other account — no automatic fallback. `mst` (Mistral Vibe / GLM-5.3) is
