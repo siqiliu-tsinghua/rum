@@ -838,3 +838,145 @@ unmodified in the retained evidence.
    binaries at 8 and 1.
 5. No live edit; report stage 1 and STOP for my gate. Stage 2 remains
    blocked.
+
+## Continuation-4 gate (2026-11-13) — stage 1 is complete: the conversion rides the entry's existing outer error arm, the entry row reads 599 Ir at four calls in both draws, every stage-1 panel is green on my own reruns, and stage 2 is authorized
+
+**Run.** `cdx` (Codex `gpt-6-astra`, reasoning max; session
+`01a1d0e7-7669-7330-af07-30400e5788df`, fork of
+`01a1d0c0-fc35-70e0-a891-ae1d7da8273e`); log
+`.temp/logs/cdx_brief_731.log` (2,883 lines, 260,334 B); memory-scope peak
+3,311,276,032 B with oom 0, oom_kill 0, rc 0; 1,271,074 tokens; 142 run
+records (112 exit 0; 28 exit 101 — the two owner calibrated reds, the two
+legacy calibrated reds, the two old-expectation reds and the 22 falsifier
+base/falsifier reds; 2 exit 1 — the retained behavior-parity Timing-count
+attempt and the retained report-metadata attempt); `report.py check 731`
+1,346 citations by my own run; 22 of the 30 canonical builds consumed
+(four fresh here), eight remain; one forced-SHA spot check this round,
+equal; no executed git or network; 290 changes, all under
+`.temp/brief-731/`.
+
+**My scope gate.** Working tree clean at `2b65eb7a`; no live edit. The
+scope audit reproduces under my run: the 2,728-file live tree unchanged,
+the 2,728-file C37 real tree unchanged, the 22 frozen references
+unchanged, the 14 prior copied trees unchanged, the incoming
+continuation-3 report byte-identical. The final source differs from
+continuation 3 in exactly one file, `session_eval.rs`, and the two hunks
+are exactly the ordered move: the finalize match becomes the closure
+tail, and `refuse_nested_top_level_input` is called in the existing outer
+`Err(err)` arm, after the message-list checkpoint restore and before the
+message emission. The seven production hashes reproduce from
+`production-hashes.json`; the six copy receipts show exact minimal
+deltas (candidate-a from the C3 public copy: one file; base from live:
+the test harness; public equal to candidate-a; matrix from the C37 origin:
+the seven production files plus the `c2_native` fixture; runtime from the
+C3 runtime copy: one file; falsifier from public: one file), and all 138
+inventory files are byte-unchanged in every copy. All seven binaries
+match their receipts (base reuse `435f3812…`; candidate, public and the
+forced build `c9281b37…` at one tree hash; matrix `0010237b…`; runtime
+`bc9582fe…`; falsifier `79f9bbc6…`, the same tree hash as its C3
+receipt).
+
+**The shape, read from source.** One helper (`#[cold]`,
+`#[inline(never)]`, body byte-identical to continuation 3) and one call
+site, inside the outer match's `Err(err)` arm of the shared entry
+`eval_input_with_terminated_handling` (`session_eval.rs:295-298`). The
+success arm is untouched, so the conversion runs only when the entry has
+already failed, and the captures show the helper executing zero times on
+the workload. The three shared finalizers are byte-exact; no new frame,
+derive or `unsafe`.
+
+**My reproductions.** I re-ran every audit and every derived file is
+byte-identical (matrix bijection, owner, legacy, falsifier source and
+byte proof, class, wire class, behavior parity, all eight cost files). I
+re-ran the probes at 8 and 1 on the receipted binaries into my own
+scratch: the 30-cell matrix's `REFUSAL_CELL` records are byte-identical
+to the scene's at both counts; the owner witness, its four controls and
+the continuation-1 calibrated red are byte-identical; the typed channel
+and the wire round trip are identical; the 14 legacy cases are 12
+byte-identical with the two TestReport records differing only in their
+Timing values; the falsifier records and all 62 expected exits match. The
+C4 records are also byte-identical to the continuation-3 records panel by
+panel (matrix 30/30, owner 5/5 plus the calibrated red, legacy
+timing-normalized): moving the conversion after the checkpoint restore
+changed nothing observable. Class table: 29 `EvalError` variants, 28
+serialized in both directions, the new zero-arity tag at
+`error.rs:276/628`, `ContinuationSlotMismatch` the sole `unreachable!`
+with its driver-fault source proof.
+
+**The cost lane, reproduced by my own parser.** On the final binaries the
+entry row reads 599 self Ir at 4 calls in all four cells (base and
+public-wire, both draws) — the bar. Every scored row is exact
+(`prepare_arguments` 1,649/6; `evaluate_inner_unstable` 865/5; the
+recursive row 173/1; the `EvalError` drop 23/1; script 404/2 and 40/1;
+file 105/1). My whole-table scan finds zero `rum_runtime` equal-call
+increases in either draw; the only equal-call increases anywhere are two
+draw-varying rows outside `rum_runtime` (`intern_symbol_text`
+1,531→1,494/1,634 at 16 calls; `try_process` 97.4→99.5/95.9 at one
+call), recorded and never normalized. The `RuntimeMessage` drop row
+decreases 323→209 at calls 17→11, recorded and never offset. Sizes
+136/80/136; one codegen unit; serial and pinned to CPU 2. The
+calibration lane (base vs candidate-a) also reads 599/599 at 4 calls in
+both draws.
+
+**Ruling.** The STOP is well taken and stage 1 is complete: the shape is
+the one the continuation-3 gate ordered, the contract is proved on it,
+and the ordinary entry path costs base's instructions. Stage 2 is
+authorized together with stage 3 in one continuation:
+
+1. Install exactly the seven production files as recorded
+   (`production-hashes.json`), byte-identical to the scene's final
+   source; no other production change. The installed shape has one
+   helper call, in the shared entry's existing outer error arm; the
+   stage-2 sentence "the two error-arm calls" is superseded by this
+   shape.
+2. Permanent tests: `nested_public_evaluation.rs` covers the brief's
+   list; the owner-preservation witness and the resumed-Block legacy
+   wire route are permanent, with the continuation-2 panic as the
+   calibrated red of the latter; the host tests pin the adapter
+   contract, the snapshot input terminal path and the batch ownership
+   cleanup; the two docs state the selected contract and the
+   native-caller duty.
+3. `cargo fmt --check` and `cargo check --all-targets` green before any
+   suite; then stage 3 exactly as written: standing replay first, then
+   acceptance once, then the cost lane on the final source (identity
+   lane on every changed and affected hot function, two draws, equal
+   calls, one codegen unit; the microbench A/B with all labels; one
+   forced SHA), every positive row retained, and a hot increase no
+   shape removes is a STOP.
+4. Budget: 22 of 30 canonical builds consumed; eight fresh compiles
+   remain. A required cost or replay step that cannot fit is a STOP,
+   not a self-authorized cap.
+5. No live commit; workers never commit. Report stage 2 and stage 3,
+   then STOP for my final gate. Any departure from the selected shape,
+   any panel red, any inventory identity/status/disposition/exclusion
+   change, a new `UnknownHostPayload`, a census count that moves without
+   my ruling, a new frame or derive — each is a STOP.
+
+**Recorded, not gated.** The two retained exit-1 instruments are
+instrument-only and were corrected without weakening an assertion: the
+behavior-parity attempt asserted two Timing nodes per TestReport record
+where the record carries one, and the report generator read the
+build-budget file as a receipt. The copied trees carry the brief as of an
+earlier gate (514 lines); docs are not compiled and the live brief is
+unchanged. The falsifier tree is byte-identical to its continuation-3
+receipt, so the falsifier arm is the same binary. The base arm reuses
+C3's `bin/base`, whose production equals live and whose test harness
+carries the cost panel. `default_builtin_dispatch_spec_for_symbol`
+remains the standing noncertifying instrument.
+
+**Continuation 5 order (stage 2 and stage 3, no commit).**
+
+1. Install the seven production files byte-identical to the scene's
+   final source; add the permanent tests and the two docs; fmt and
+   check green.
+2. Replay the standing inventories in the canonical order before the
+   first acceptance suite; a stale derived cell is refreshed by replay,
+   never by hand.
+3. Acceptance once: fmt; `-p rum-runtime`; `-p rum-host`;
+   `--workspace --no-fail-fast` at eight threads; the no-default
+   certificate gate; every red reproduced at one thread before it is
+   called a defect.
+4. The cost lane on the final source, two draws, equal calls, one
+   codegen unit, serial: every positive row retained; one forced SHA.
+5. Report stage 2 and stage 3, then STOP for my final gate. Never
+   commit, branch or push.
