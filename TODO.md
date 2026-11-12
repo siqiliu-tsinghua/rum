@@ -812,10 +812,48 @@ fresh), 0 new `unsafe`, `report.py check` 435 citations. Entry
 re-derives from the c13–c24 evidence alone at 9,288 SAME keys / 160
 proofs / 166 matrices / 882 open; the current graph reads 9,373 / 162 /
 168 / 880 with 24 unresolved, 13 pair columns and five owners.
-**Next: paused by user instruction (2026-11-12).** When the campaign
-resumes: continuation 26 of brief 623 on this unchanged installed source
-(the remaining 159-row tail by mechanism), then C2's settlement round
-(including P0496's ledger disposition, expected
+**Continuation 26 is accepted at the round's end on cdx**: two rows
+settle Equal (`P0239`, `P0245`). The round ran on `cdx` (gpt-6-astra,
+max; session `01a1cdf6-…`; 23,949-line / 2,084,211 B log; 219,813
+tokens; memory-scope peak 3.91 GB, oom 0, rc 0; 52 run records, 50 exit
+0 and two retained instrument failures — the route-and-shape novelty
+audit and the strict observer-witness audit, both corrected by proven
+reconciliations; report 14 checks 10 PASS / 3 FLAGGED / 1 NA,
+`report.py check` 386 citations by my own run; no executed git or
+network; the live brief was not appended). The two rows settle Equal on
+110 cells / 110 records five-part SAME with real == disabled and
+producer reach (`P0239` 55, `P0245` 55), each with its own caught
+omission (the exact Default RHS body evaluation omitted: `91` against
+`98`), 3 mutants = 3 caught / 0 survived / 0 invalid / 0 unarmed,
+12,340 fixtures (12,180 inherited byte-exact + 160 new), 3/3 producer
+provenance (two settlements + one held candidate), 3 observer
+witnesses, five owners, six controls RED / positive GREEN, five build
+receipts (real arm `c340c865…` with tree `b9a5db66…`, forced spot
+fresh), 0 new `unsafe`. **Scope deviation, no promotion:** a third
+family `resumed-call-argument-append` executed 50 cells against held
+`P0475` in error — its shape repeats the accepted C20 `P0479` shape, the
+novelty audit failed and is retained, the route reconciliation proves
+`P0475` stays Residual with byte-identical ledger and tuple records, and
+its 50-cell proof is a held candidate packet only. Gate: 2,726 live
+files at `988bb6db…` equal to the entry manifest (0 differing);
+production 1,622 files at `8313fbc1…` byte-identical to C25 (0 added, 0
+removed, 0 rebases); the entry delta is exactly my four post-gate docs;
+my own 1,648,443-file protected walk 0/0/0 in 107.5 s and 84,739-file
+sealed walk 0/0/0 in 1.6 s (after my replay only
+`integrity-receipt.json` is refreshed, post-stop controllers 12→22,
+disclosed). Ledger: exactly two verdict changes on the six settlement
+columns, outcomes 9/153/5/1/120/157/594/3, residual 122 + 15 + 11 + 6
++ 1 + 1 + 1 = 157, 78,330 keys and 18,840 encoding rows unchanged, 110
+tuple records on exactly the two rows, 13 pair columns byte-identical,
+`P1566` Lost, `P0496` Reserved, held rows and `P1585`–`P1591`
+unchanged, every inherited artifact byte-identical to the C25 final
+state. Transitive: entry re-derives from c13–c25 at 9,373 SAME keys /
+162 proofs / 168 matrices / 880 open; current 9,533 / 164 / 171 / 878
+with 2 inherited duties closed, 162 retained, 24 unresolved, 13 pair
+columns and five owners. **Next:** continuation 27 of brief 623 on this
+unchanged installed source (the remaining 157-row tail by mechanism; the
+held rows are excluded and must not be re-executed), then C2's
+settlement round (including P0496's ledger disposition, expected
 unreachable/source-closed, P1566's re-settlement on the installed
 source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
 `CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
