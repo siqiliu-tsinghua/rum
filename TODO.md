@@ -1351,6 +1351,79 @@ source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
 `CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
 break), G13 S10–S54/F1–F23/R, E2.
 
+**Continuation 36 is accepted at the round's end on `cdx`**: two rows
+settle `NoObservableTail` (`P0021`, `P0022`) on their own
+armed-hit-surviving wrapper-tail omissions and their complete real
+matrices, and the two-family stop-loss correctly does not fire. The
+round ran on `cdx` (gpt-6-astra, max; session `01a1cf8c-…`;
+22,997-line / 2,061,957 B log; 231,020 tokens; memory-scope peak
+4.27 GB, oom 0, rc 0; 172 run records, the round-end at index 144 and
+two retained non-zero exits; report 14 checks 9 PASS / 4 FLAGGED / 1
+NA, `report.py check` 790 citations by my own run; no executed git or
+network; the live brief was not appended). `P0021` is the
+`scoped::<Unarmed, F>` call at `retained.rs:120` inside
+`Session::with_unarmed_retention` (`:109`); `P0022` is the
+`scoped::<AccountingShadow, F>(self.session, body)` call at `:134`
+inside `AccountingContext::with_retention` (`:127`). In both wrappers
+the scoped call is the entire `Result<Expr, EvalError>` return value:
+`scoped` (`:75-107`) acquires the mode receipt, builds
+`RetainedValues`, runs the body, propagates its error with `?`,
+destructures `RetainedResult`, drops the outgoing receipt and returns
+the outcome; the unarmed-memory-limit assertion (`:116-119`) runs
+before the call and stays in both builds, and no local lease, scope
+guard, profiling record or cleanup owner remains at the wrapper
+return. The selected omission returns that identical actual Result
+before the same unconditional return. The round built two scratch-only
+public callers of the actual retention APIs (`C36UnarmedScope`,
+`C36ArmedScope`) that push a real nonempty prefix (`101, 103`),
+evaluate `Input["finish"]`, adopt the actual callback value, suspend
+through `PrefixFinish`/`ReleaseFinish` and resume through the same
+public wrapper to `List[101,103,89]`; the armed caller runs inside
+`MemoryConstrained` and the public outstanding lease reads empty on the
+60 armed cells. The shape is the C30 wrapper-tail identity carried onto
+the public retention entry wrappers on the new public-caller
+instrument; I bounded it at the gate: the wrapper-tail identity may not
+be carried to another wrapper row without an explicit director ruling.
+120 real cells / 120 records five-part SAME with real == disabled and
+producer/route reach (0 errors), each cell-key set equal to the row's
+60 required nonencoding keys (5 variants × 12 contexts on the
+`with_unarmed_retention@120` / `with_retention@134` routes), 120
+mutants = 120 armed + 120 survived + 0 caught + 0 invalid with real ==
+mutant records byte-identical, the C33 `P0020` known-tail RED carry
+raw-exact, 13,023 fixtures (12,903 inherited byte-exact + 120 new),
+three exact build receipts (forced spot `9dc1a930…`,
+`spot_check=pass`, `scene_environment=true`), 0 new `unsafe` over
+3,162 compared Rust files and 211 changed pairs with no live Rust file
+changed. My gate: live 2,726 files at `1a17f32d…` equal to the scene
+entry; production 1,622 files at `8313fbc1…` byte-identical with
+`source_rebases=0`; the entry delta exactly `TODO.md` and the brief; my
+own 2,494,668-file protected walk 0/0/0 in 117.5 s and 83,617-file
+sealed walk 0/0/0 in 1.6 s (after my replay only
+`integrity-receipt.json` is refreshed, `1d1261a5…`→`9356caf1…`,
+post-stop controllers 16→28, disclosed). Ledger: exactly two verdict
+changes, outcomes 9/164/5/1/124/142/594/3, residual
+111 + 13 + 11 + 4 + 1 + 1 + 1 = 142, 78,330 keys and 18,840 encoding
+rows unchanged, 120 tuple records on exactly the two rows, 13 pair
+columns byte-identical, `P1566` Lost, `P0496` Reserved, held rows and
+`P1585`–`P1591` unchanged. Transitive: entry re-derives from c13–c35 at
+10,093 SAME keys / 177 proofs / 184 matrices / 865 open; current
+10,213 / 179 / 186 / 863 with 2 inherited duties closed, 177 retained,
+0 exclusions, 24 unresolved, 13 pair columns and five owners. My
+canonical replay (15 controllers plus the controller-syntax check) all
+exit 0; six bad-ledger controls RED and the positive GREEN; a
+whole-scene 83,635-file comparison changes only `state.json`,
+`PROGRESS.md` and the refreshed `integrity-receipt.json`, 0 added or
+removed. **Next:** continuation 37 of brief 623 on this unchanged
+installed source (the remaining 142-row tail by mechanism; the held
+rows are excluded and the C19–C36 families are not repeated without a
+genuinely new mechanism or instrument; the wrapper-tail identity is
+bounded), then C2's settlement round (including `P0496`'s ledger
+disposition, expected unreachable/source-closed, `P1566`'s
+re-settlement on the installed source, and the `P0325`/`P0326`
+pair-column reconciliation), then CM, `CHANGELOG.md` before S10
+(including the public `EvalError::Syntax` break), G13
+S10–S54/F1–F23/R, E2.
+
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
 other account — no automatic fallback. `mst` (Mistral Vibe / GLM-5.3) is

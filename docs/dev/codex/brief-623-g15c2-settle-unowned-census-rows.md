@@ -107125,3 +107125,153 @@ unarmed and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 144 Residual + 1 Lost; S10 stays
 unopened.
+
+## Continuation 36 gate (2026-11-12) — ACCEPTED at the round's end on cdx: `P0021` and `P0022` settle `NoObservableTail` on their own armed-hit-surviving wrapper-tail omissions and their complete real matrices, and the two-family stop-loss correctly does not fire
+
+**Run.** The round ran on `cdx` (Codex `gpt-6-astra`, reasoning max;
+session `01a1cf8c-c052-7990-96a5-906dec43df4f`), log
+`.temp/logs/cdx_brief_623.log` (22,997 lines, 2,061,957 B, sha
+`434fa8e8…`), memory-scope peak 4,268,863,488 B, oom 0, oom_kill 0, rc 0;
+231,020 tokens; report 14 checks 9 PASS / 4 FLAGGED / 1 NA with
+`report.py check` 790 citations by my own run; 172 run records, the
+round-end at record index 144, two retained non-zero exits (the first
+`scope_return_audit.py` precheck and the first `controller_syntax.py`),
+128 guest processes and three build controllers; no executed git or
+network command; the worker did not append the live brief.
+
+**My gate.** 2,726 live files at `1a17f32d…`, equal to the scene entry
+manifest path for path (0 differing); production 1,622 files at
+`8313fbc1…` byte-identical to both the C36 and the C35 entry manifests
+(0 added, 0 removed), `source_rebases=0`; the entry delta against C35
+is exactly `TODO.md` and the brief from my own post-gate commits, and
+the entry brief is byte-identical to the live brief at `3cabce08…`. My
+own 2,494,668-file protected walk is 0/0/0 in 117.5 s; my own
+83,617-file sealed walk is 0 missing / 0 changed at hand-back, and
+after my replay exactly the one sealed derived file
+`integrity-receipt.json` is refreshed (`1d1261a5…` -> `9356caf1…`,
+post-stop controller snapshot 16 -> 28; disclosed, no assertion
+changed).
+
+**Ledger.** 1,042 rows, exactly two verdict changes on the six
+settlement columns — `P0021` and `P0022`, each Residual ->
+`NoObservableTail` — the other 1,040 rows byte-identical. Outcomes
+9/164/5/1/124/142/594/3; residual 111 LocalTail + 13 ReopenedOrNew + 11
+StrictDropGap + 4 StrictCallerGap + 1 StrictOtherCarrier + 1 New719Edge
++ 1 New725Edge = 142. The 78,330 canonical keys are unchanged (0 added/
+removed/duplicated), the 18,840 encoding rows are byte-identical, and
+120 tuple records changed on exactly the two rows (60 each; the 20
+encoding tuples of each row are unexecuted and byte-identical). The 13
+pair columns are byte-identical with 0 verdict changes; `P1566` is Lost,
+`P0496` is Residual, the held rows keep their inherited bytes, and
+`P1585`-`P1591` keep `NoObservableTail`. Every inherited artifact is
+byte-identical to the C35 final state.
+
+**Evidence.** Two proposal packets over 120 cells and 120 records: every
+record is five-part SAME with real == disabled and producer/route reach
+(0 errors), and each cell-key set equals its row's 60 required
+nonencoding keys (five variants × twelve contexts, all on the
+`with_unarmed_retention@120` and `with_retention@134` routes). Each row
+carries 60 own armed-hit-surviving omissions, one per cell, each with a
+single selected valid SAME record and both probe markers. Receipts:
+120 mutants = 120 armed, 120 survived, 0 caught, 0 invalid, 0 unarmed,
+real-record files == mutant-record files byte-identical. Calibration:
+the known-tail RED carry is C33 `P0020` with its raw hash exact to the
+C33 log, and both calibration owns are armed, hit once and survive.
+13,023 fixtures (12,903 inherited byte-exact + 120 new; 39,069 files
+exact). Three build receipts exact — the forced spot `9dc1a930…` is
+fresh and equal (`spot_check=pass`, `scene_environment=true`), all
+offline and locked. 0 new `unsafe` over 3,162 compared Rust files and
+211 changed pairs (and no live Rust file changed at all this round).
+
+**The two settlements, read from source.** `P0021` is the
+`scoped::<Unarmed, F>` call at
+`crates/rum-runtime/src/runtime/accounting_mode/retained.rs:120` inside
+`Session::with_unarmed_retention` (`:109`); `P0022` is the
+`scoped::<AccountingShadow, F>(self.session, body)` call at `:134`
+inside `AccountingContext::with_retention` (`:127`). In both wrappers
+the scoped call is the entire `Result<Expr, EvalError>` return value:
+`scoped` (`:75-107`) acquires the mode receipt, builds `RetainedValues`,
+runs the body, propagates its error with `?`, destructures
+`RetainedResult`, drops the outgoing receipt and returns the outcome;
+the unarmed-memory-limit assertion (`:116-119`) runs before the call and
+stays in both builds, and no local lease, scope guard, profiling record
+or cleanup owner remains at the wrapper return. The selected omission
+returns that identical actual Result before the same unconditional
+return. The round built two scratch-only public callers of the actual
+retention APIs (`C36UnarmedScope`, `C36ArmedScope`) that push a real
+nonempty prefix (`101, 103`), evaluate `Input["finish"]`, adopt the
+actual callback value, suspend through `PrefixFinish`/`ReleaseFinish`
+and resume through the same public wrapper to `List[101,103,89]`; the
+armed caller runs inside `MemoryConstrained` and the public outstanding
+lease reads empty on the 60 armed cells. The shape is the C30
+`ActualResumedResultBeforeInertHandoff` wrapper-tail identity applied
+to the public retention entry wrappers: a repeat of that mechanism,
+admissible here only because the round's concrete public callers are a
+genuinely new instrument for these rows and each row carries its own
+complete matrix and own survivors. **I bound it:** the wrapper-tail
+identity may not be carried to another wrapper row without an explicit
+director ruling; such a row must be proposed, not executed.
+
+**Entry and transitive.** From the c13-c35 evidence alone I re-derive
+177 complete proofs, 184 matrices, 10,093 SAME keys and 865 named open
+with 0 errors, equal to the C35 final status. The current graph adds
+exactly the two proposals: 179 proofs, 186 matrices, 10,213 SAME keys,
+863 named open, 2 inherited duties closed (`P0021`, `P0022`), 177
+retained, 0 exclusions, 24 unresolved sites, 13 pair columns, five
+owners, `whole_graph_complete=false`.
+
+**Stop and integrity.** One completed family with 120 coverage cells,
+120 new cells, 120 survivors and 2 outcomes; clock 0,
+`Continuation36RoundEnd`, `stop_loss_fired=false`; the family's progress
+is non-zero, and no earlier pair of consecutive zero-progress families
+exists. No guest and no Cargo run after the stop (0 of each at my
+replay); 16 post-stop controller records at the scene's integrity audit,
+23 at publication, 28 counted at my replay; 128 guest processes and 732
+epochs, all valid, 0 faults.
+
+**Replay.** My canonical replay reproduced the scene: `final_replay`,
+`canonical_delta_audit`, `aggregate_audit`, `all_executions_audit`,
+`epoch_audit`, `execution_kind_audit`, `scope_return_contract_audit`,
+`cross_process_ids`, `proof_assurance`, `copy_safety_audit`,
+`provenance_audit`, `port`, `held_bytes_audit`, `calibration_audit` and
+`integrity` all exit 0, and `controller_syntax` verifies 46 controllers
+with 0 imports executed; the six bad-ledger controls are RED and the
+positive GREEN on my own run; `report.py check` verifies 790 citations;
+and a whole-scene 83,635-file hash comparison changes only the mutable,
+seal-excluded `state.json` and `PROGRESS.md` and the refreshed
+`integrity-receipt.json`; 0 files added or removed.
+
+**Rulings.** Q1: `P0021` and `P0022` are accepted as
+`NoObservableTail`, never Equal — each `equal_claim:false`, each on its
+own complete 60-cell real matrix and its own 60 armed-hit-surviving
+omissions, with
+the wrapper-tail shape carried once under the public-caller instrument
+and bounded as recorded above; the separate callback, producer and
+caller duties named by each row stay open. Q2: C2 stays Open at 142
+Residual + 1 Lost; S10 stays unopened; continuation 37 owns the
+remaining tail on this unchanged source.
+
+**Recorded, not gated.** The extra cross-process raw-byte audit is
+retained RED: 16 of the 120 record pairs differ only in process-local
+global symbol-`ID` digits (0 unexplained; native vectors, real/disabled
+parity and all 120 own pairs are exact under the five-part predicate),
+and it certifies nothing. The first `scope_return_audit.py` precheck
+exited 1 on the raw `real == disabled == actual` dict equality and was
+replaced by `scope_return_contract_audit.py`, which keeps the five-part
+and resumed/queued-vector assertions without the cross-process dict
+equality; the failed source and log are retained. The first
+`controller_syntax.py` exited 1 on an unescaped newline in a prose
+string; the corrected escaping was re-run green, both records retained.
+The per-family summary's `outcomes_gained: 0` against the batch
+record's 2 is the established per-family field. The family's execution
+record's permissive `attempt_unreached: true` is the retained selection
+flag; my own pause-attribution check independently confirms producer
+reach on all 120 cells, and `source_reached_cells` reads 120. The
+standing-inventory replay is NA because no covered live source changed.
+The FLAGGED proposals, transitive, attempts and source-owners checks,
+the per-family `outcomes_gained` field and the post-stop controller
+count refresh in the sealed integrity receipt are as expected.
+
+**Next.** Continuation 37 of brief 623 on this unchanged installed
+source, then C2's settlement round, CM, `CHANGELOG.md` before S10, G13
+S10-S54/F1-F23/R, E2.
