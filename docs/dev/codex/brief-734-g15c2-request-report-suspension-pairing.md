@@ -482,3 +482,187 @@ install, staged live on the working tree); then brief 733's continuation
 on that repaired tree; then brief 731 continuation 6; then continuation
 38 of brief 623; then C2's settlement round, CM, `CHANGELOG.md` before
 S10 (including this lifecycle contract), G13 S10-S54/F1-F23/R, E2.
+
+## Continuation-1 gate (2026-11-13)
+
+**Run.** `cdx` (gpt-6-astra, max; session
+`01a1d18e-8d82-74f1-ae2b-4774a0dccf8f`, fork of
+`01a1d16a-eb72-7070-9813-8602a36a498d`; log
+`.temp/logs/cdx_brief_734.log`, 25,173 lines, 1,644,824 B, sha256
+`8e728cbd…`; 18 continuation run records — 13 exit 0, the two designed
+entry-regression reds and the two mandatory Q2 reds at eight and one
+(exit 101), one designed wrapper exit 1 (the Q2 panel's STOP); memory-scope
+peak 3,275,902,976 B with oom 0, oom_kill 0, rc 0; `report.py check 734`
+OK with 298 citations by my own run; 0 of 4 continuation canonical builds,
+0 of 8 overall; no executed git or network, no `.git-attempts`; 37,303
+scratch files all under `.temp/brief-734/continuation-1`; the round-1
+`report.json` and `PROGRESS.md` preserved byte-exact under
+`continuation-1/round1/`; no live source, protected file or earlier scene
+changed).
+
+**My scope gate.** My own full-tree SHA-256 walk reads 2,732 live files,
+2,732 entry-copy files and 2,733 candidate files: live equals the
+continuation's `live-entry-hashes.json` exactly (0 missing, 0 extra, 0
+differing), the entry copy equals live exactly, and the candidate differs
+from entry in exactly five changed paths plus one added file —
+`suspension/core.rs`, the three capture-repair files byte-equal to round
+1's candidate, the canonical inventory, and the new regression. The
+inventory delta is exactly 68 of 69 lines, every one differing only in its
+final fingerprint field, with no added, removed or reordered row, and the
+installed file is byte-equal to the canonical generator's output (sha256
+`c5ceb5eb…`); the entry inventory is byte-equal to live. The nine
+immutable pins match live; `git status` is still exactly the authorized
+eleven-file stage-2 install plus the one untracked witness; HEAD is
+`b7e13f27`; every candidate source file predates the receipted builds. The
+report's 5,518 added paths are the copies and the continuation's own
+records, and its two modified paths are the scene's `report.json` and
+`PROGRESS.md`, whose round-1 originals are preserved; no live path
+appears in the change set.
+
+**My reproductions.** I ran the receipted binaries myself. The entry
+regression is red 0/1 at eight and one with the same three violations and
+the panic at `suspension/core.rs:646:18`. The Q2 route is red 0/1 at both
+counts: report retired, late request resume returns the existing `Other`
+with empty output, the later raw `InputString["new-owner"]` is pending
+with the old ticket still reserved, and the old handle's cancellation
+returns `TerminatedEvaluation["Cancelled"]`, `termination=Cancelled`,
+`prints=["new-cleanup"]`, `General::cancel`, `pending=None`,
+`observer_cancelled=false`, then 42 and a free ticket. The candidate
+`request_report_pairing` is green 1/1 and the unchanged permanent
+`nested_public_evaluation` 15/15, at eight and one, on the receipted
+test binaries; the ordinary and profiled runs are the round's logs.
+
+**The STOP, confirmed.** The accepted ticket outlives its request on the
+raw consume path. The consume helper takes the report but never touches
+`active_accepted_request`; the ticket is retired only by the driver's
+terminal paths (`session_requests.rs:352`, `:629`, `:650`, `:690`, the
+cancellation hand-off, and `session_api.rs:103`).
+`finish_cancelled_pending_evaluation_request` (`session_requests.rs:78-98`)
+qualifies a cancellation on `active_accepted_request_is_cancelled()` plus
+any `pending_suspension_generation()` and never on an ownership
+association, so once the old owner is consumed and its report retired the
+old ticket can abandon any later raw owner, and
+`RequestCancelHandle::cancel`'s own documentation
+(`model/request_cancellation.rs:118-121`: calls after that request
+completes are inert) is false. The ticket machinery is byte-identical on
+the entry arm — the candidate's four production files are the consume
+helper and the three capture files, and `session_requests.rs`,
+`session_helpers.rs`, `session_api.rs` and `request_cancellation.rs`
+are unchanged — so the abandonment is pre-existing, not introduced by the
+retirement; the pairing only removes the stale prints it would have
+carried. The worker's refusal to attribute it is correct, and the round
+correctly stopped rather than editing a candidate past this bar.
+
+**Ruling.** The accepted-ticket lifetime is in the same class and at the
+same consume authority as the report. Two changes, both minimal and both
+required before brief 735 can be written:
+
+1. **Retire the ticket at the consume.** Inside the same
+   `if self.pending_request.take().is_some()` block in
+   `take_accounted_pending_suspension_for_resume`, before any callback,
+   call `self.finish_active_accepted_request();` beside the
+   `PendingRequest` refresh. No new field, type, signature, enum variant,
+   frame, counter or memory formula. The request driver has already taken
+   its report before the helper, so the driver path never executes the
+   call and its terminal ticket handling is unchanged; the take, the
+   refresh and the finish are the only statements added. The contract it
+   creates: an explicit raw resume of a request-owned suspension ends that
+   request — the handle becomes inert, the cancellation observer clears,
+   any unhonoured cancel is closed by the consume, the raw resume's
+   evaluation runs without request cancellation (the eval deadline still
+   applies), the request protocol no longer resumes it (the existing
+   `Other` with empty output), and a new cancellable request can be
+   accepted. A cancelled ticket whose own request is completed by a raw
+   resume therefore yields the raw result, not a `Cancelled` response,
+   with the observer cleared. This is the raw-API "host took over"
+   behaviour, to be named in the host doc and `CHANGELOG.md`.
+
+2. **A reservation acts only on request-owned work.** The deferred
+   reservation (`pending_accepted_request`) may be activated by the
+   cancellation hand-off only when the session has no report-less pending
+   owner: activation is permitted when a request-owned suspension is
+   pending (`pending_request.is_some()`, exact after the pairing) or when
+   nothing is pending, and refused while a report-less owner (a raw
+   `eval_text`/`eval_script`/`eval_file` suspension) is installed. The
+   frozen `cancelled_request_retires_a_non_request_suspension` semantics —
+   an installed accepted request whose entry is admitting it retires the
+   session's pending work, including a report-less owner — is unchanged,
+   and that test's bytes stay identical. The measured consequence to be
+   proven: a reservation can never abandon a raw owner.
+
+The single-owner principle is now exact: the report is the ownership
+certificate, the ticket is the request's identity, and both are consumed
+with the suspension they belong to. The remaining alternatives stay
+rejected for the reasons already ruled; a generation field on the ticket
+is not required because the consume authority and the report predicate
+already identify the association.
+
+**Continuation 2 order.** Design only (`Scope: NONE`), in the same scene;
+round-1 and continuation-1 arms, receipts and reds are preserved, and new
+arms get new names.
+
+1. Implement both changes in the copied candidate and rebuild. Prove from
+   source that the driver path executes no new instruction (the branch is
+   taken only by the raw consume) and that the reservation gate is not
+   reached by any request entry that has a report.
+2. Measure at eight and one, pre-repair and post-repair: the
+   completed-ticket route above (inert handle, cleared observer, later
+   raw owner intact and resumable through the raw API, fresh request 42,
+   new ticket accepted); the vacant route (`Ok(None)`, ticket free,
+   observer false); the cancelled-own-request raw-resume route (raw
+   result, observer cleared, the next plain request not spuriously
+   `Cancelled`); the deferred-reservation route (raw owner intact — the
+   pre-repair red is the abandonment); the deferred-reservation route
+   with a request-owned suspension (cancellation unchanged: `Cancelled`
+   with the published prefix); the frozen at-entry retirement, unchanged
+   and green; the normal request pause/resume and cancellation controls
+   unchanged. Pre-repair reds are the calibrated falsifiers; no assertion
+   is weakened and no existing test is edited.
+3. Prove the ticket induction from source: every store, take, finish and
+   activation site with one disposition; the two activation callers; the
+   active/deferred split; the report predicate exact at every hand-off;
+   every transient window covered with no guest code between take and
+   retirement; no counterexample. An unproven row is a STOP, never an
+   assertion.
+4. Complete the report/suspension induction including the ticket, with
+   both guards exact, and dispose of the class-table rows owed from
+   continuation 1: the overlapping raw-entry install assert, re-entrant
+   callbacks, the rollback `(Some, None)` panic, the resume `expect`, and
+   the `Batch` report.
+5. Then run the still-held calibration gates of continuation 1: the two
+   routes at eight and one with the settled tuples, the new regressions at
+   eight and one, `nested_public_evaluation` 15/15 ordinary and profiled,
+   the named runtime filters, the seven host and nine stdlib suites,
+   armed report accounting, `cargo check --all-targets` and `cargo fmt
+   --check` with only the three ruled brief-731 arms red, the five C4
+   release comparisons with one forced SHA, and the cost rows (entry at
+   most 599/4 both draws, no equal-call `rum_runtime` increase, the paired
+   resume panel). No credit from unrun gates.
+6. Rewrite the TEMPLATE-shaped implementation brief with the settled
+   topology — brief 735 installs the pairing and both ticket changes on
+   the working tree that carries the stage-2 install (production files
+   `suspension/core.rs` and, if the design requires it,
+   `session_requests.rs`; the permanent regressions; the host doc;
+   `CHANGELOG.md`), then brief 733's continuation on that repaired tree,
+   then brief 731 continuation 6. State the class duty and the stop-loss.
+
+**Hard rules for continuation 2.** Same as this brief. The Q1
+authorization covers only the canonical generator's own fingerprint cells
+in the copied candidate arm. At most **4** of the remaining **8**
+canonical design builds; brief 733's held 4 and brief 731's remaining 8
+stay separate, and a step that cannot fit is a STOP. No git, network,
+dependency or `unsafe`; the live tree stays exactly the authorized
+stage-2 install; the seven refusal files, the permanent witness, the five
+C4 records and every assertion stay byte-identical.
+
+**Stop-loss.** Any ownership counterexample, any change to a frozen test,
+a documented host flow, a C4 record or a protected file, any route outcome
+that differs from the contract above, and any need to weaken an
+assertion is a STOP for my ruling. Two consecutive compiling candidates
+that move neither the Q2 panel nor a named measured counter are a STOP.
+
+**Next.** Continuation 2 of this brief; then my design gate and brief 735;
+then brief 733's continuation; then brief 731 continuation 6; then
+continuation 38 of brief 623; then C2's settlement round, CM,
+`CHANGELOG.md` before S10 (including this lifecycle contract), G13
+S10-S54/F1-F23/R, E2.
