@@ -911,6 +911,57 @@ unreachable/source-closed, P1566's re-settlement on the installed
 source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
 `CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
 break), G13 S10–S54/F1–F23/R, E2.
+**Continuation 28 is accepted at the round's end on cdx**: the two rows
+C27 parked both settle Equal (`P0508`, `P0543`), each on exactly the
+instrument the C27 ruling demanded. The round ran on `cdx` (gpt-6-astra,
+max; session `01a1ce3e-…`; 18,612-line / 1,671,973 B log; 182,482
+tokens; memory-scope peak 3.55 GB, oom 0, rc 0; 60 run records, all exit
+0; report 14 checks 9 PASS / 3 FLAGGED / 1 NA, `report.py check` 423
+citations by my own run; no executed git or network; the live brief was
+not appended). `P0543` is reached by a feature-isolated driver: the
+scratch copy removes `test-builtin-memory-growth` from every dependent
+manifest, and the driver's own line reads
+`C28_BUILTIN_FEATURE_CONFIG cfg_test_or_growth=false
+actual_growth_enabled=false`, so `try_dispatch_builtin_call` compiles and
+takes the unchecked branch (`eval_dispatch/mod.rs:187`); omitting the
+adopted builtin pause-accounting boundary turns one completed `Input`
+call into one abandoned call (queued `[1,1,0,0,0,0,0,0,0,0]` against
+resumed `[1,0,0,0,0,0,0,0,1,0]`), semantics byte-exact, 55/55 cells SAME.
+`P0508` is reached by a direct between-request observer over real state
+(`evaluation_depth.get()` and `evaluation_stack.len()`): the real
+resumed and queued paths both read depth=0 / stack=0 on all 102 samples,
+while the omission leaves 2/2 on the resumed path only, semantics
+byte-exact, 30/30 cells SAME. Neither row was relabelled by argument.
+Evidence: 85 cells / 85 records five-part SAME with real == disabled and
+producer/route reach, 2/2 own caught omissions, 2 mutants = 2 caught /
+0 invalid, 12,482 fixtures (12,397 inherited byte-exact + 85 new; 37,446
+files exact), 2/2 producer provenance, 2 observer witnesses, five
+owners, six controls RED / positive GREEN, five build receipts (two real
+arms, two distinct mutants, forced spot fresh, the forced rebuild
+reproducing `7a90975d…`), 0 new `unsafe` over 382 copied Rust pairs;
+both family names and shapes are absent from every prior scene. Gate:
+2,726 live files at `66e2cc84…` equal to the entry manifest; production
+1,622 files at `8313fbc1…` byte-identical to C27 (0 added, 0 removed, 0
+rebases); the entry delta is exactly `TODO.md` and the brief; my own
+1,824,122-file protected walk 0/0/0 in 111.3 s and 85,845-file sealed
+walk 0/0/0 in 1.3 s (after my replay only `integrity-receipt.json` is
+refreshed, post-stop controllers 12→24, disclosed). Ledger: exactly two
+verdict changes, outcomes 9/156/5/1/120/154/594/3, residual 119 + 15 +
+11 + 6 + 1 + 1 + 1 = 154, 78,330 keys and 18,840 encoding rows
+unchanged, 85 tuple records on exactly the two rows, 13 pair columns
+byte-identical, `P1566` Lost, `P0496` Reserved, held rows and
+`P1585`–`P1591` unchanged. Transitive: entry re-derives from c13–c27 at
+9,588 SAME keys / 165 proofs / 172 matrices / 877 open; current 9,673 /
+167 / 174 / 875 with 2 inherited duties closed, 165 retained, 24
+unresolved, 13 pair columns and five owners. **Next:** continuation 29
+of brief 623 on this unchanged installed source (the remaining 154-row
+tail by mechanism; the held rows are excluded and the C19–C28 families
+are not repeated without a genuinely new mechanism or instrument), then
+C2's settlement round (including P0496's ledger disposition, expected
+unreachable/source-closed, P1566's re-settlement on the installed
+source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
+`CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
+break), G13 S10–S54/F1–F23/R, E2.
 
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
