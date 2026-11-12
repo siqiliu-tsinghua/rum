@@ -784,16 +784,42 @@ mechanisms) and the typed `PositionCollectionOutcome` output emission
 Entry re-derives from the c13–c23 evidence alone at 9,188 SAME keys /
 158 proofs / 164 matrices / 884 open; the current graph reads 9,288 /
 160 / 166 / 882 with 24 unresolved, 13 pair columns and five owners.
-**Next: continuation 25** of brief 623 on this unchanged installed
-source (the remaining 161-row tail by mechanism, the 882 duties, the 24
-unresolved rows, the 13 pair columns and the five named owners; the
-nine stopped families and the five C19, five C20, three C21, two C22,
-two C23 and two C24 families not repeated without a genuinely new
-mechanism), then C2's settlement round (including P0496's ledger
-disposition, expected unreachable/source-closed, P1566's re-settlement
-on the installed source, and the `P0325`/`P0326` pair-column
-reconciliation), then CM, `CHANGELOG.md` before S10 (including the
-public `EvalError::Syntax` break), G13 S10–S54/F1–F23/R, E2.
+**Continuation 25 is accepted at its round's end on the Codex-outage
+fallback**: the cdx dispatch died at the quota wall (reset Nov 14th
+9:36 AM) after authenticating the entry; the round resumed on `mst`
+(Mistral Vibe, GLM-5.3) per the 2026-11-07 ruling (9,202 B log, $6.76,
+58 run records with six retained controller-adaptation failures, 18
+controller records after the round-end, 0 guest/Cargo). `P0338`
+(rule-guard reconstruction: the omission skips
+`rebuild_definition_rhs_guards` reattachment, losing the actual
+`Condition[91, False]`) and `P0527` (accepted own-value body: the
+omission forwards the captured body `Expr` before evaluation, `91`
+against `98 = 7 + 91`) settle Equal. Outcomes 9/151/5/1/120/159/594/3;
+residual 124 LocalTail + 15 ReopenedOrNew + 11 StrictDropGap + 6
+StrictCallerGap + 1 + 1 + 1 = 159; 78,330 keys and 18,840 encoding rows
+unchanged; 85 tuple records on exactly the two rows; 13 pair columns
+byte-identical; `P1566` Lost, `P0496` Reserved, held rows and
+`P1585`–`P1591` unchanged; every inherited artifact byte-identical to
+the C24 final state. Evidence: 85 cells / 85 records five-part SAME
+with real == disabled and producer reach (`P0338` 55, `P0527` 30), 2/2
+own caught, 2 receipts (2 caught, 0 survived/invalid/unarmed), 12,180
+fixtures (12,095 inherited byte-exact + 85 new), 2/2 producer
+provenance, five owners, six controls RED / positive GREEN, my canonical
+replay byte-identical (whole-scene 84,033 files: only the mutable
+`state.json`/`PROGRESS.md` and the refreshed receipt, 8→19), 5 build
+receipts (real arm `c340c865…` with tree `b9a5db66…`, forced spot
+fresh), 0 new `unsafe`, `report.py check` 435 citations. Entry
+re-derives from the c13–c24 evidence alone at 9,288 SAME keys / 160
+proofs / 166 matrices / 882 open; the current graph reads 9,373 / 162 /
+168 / 880 with 24 unresolved, 13 pair columns and five owners.
+**Next: paused by user instruction (2026-11-12).** When the campaign
+resumes: continuation 26 of brief 623 on this unchanged installed source
+(the remaining 159-row tail by mechanism), then C2's settlement round
+(including P0496's ledger disposition, expected
+unreachable/source-closed, P1566's re-settlement on the installed
+source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
+`CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
+break), G13 S10–S54/F1–F23/R, E2.
 
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named
