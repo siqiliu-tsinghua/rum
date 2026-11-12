@@ -187,3 +187,114 @@ attempt, verbatim verdicts, test totals, scope hashes, the release comparison
 rows, and any open decision. Close with
 `python3 scripts/report.py summary 733` output and nothing else. Do not
 commit; STOP for the director.
+
+## Class-duty STOP gate (2026-11-13) — the STOP is well taken: a published request report and its suspension are not one owner, the raw inspection resume leaves the report behind, and the same state panics a public request resume; brief 733 is held and brief 734 designs the pairing
+
+**Run.** `cdx` (Codex `gpt-6-astra`, reasoning max; dispatched forked from
+the brief-732 thread `01a1d11e-ea46-7b13-a770-1b0de2b23281`, run thread
+`01a1d151-2841-73b1-930e-3276e1c10ae2`); log
+`.temp/logs/cdx_brief_733.log` (7,681 lines, 433,043 B, sha256
+`30f9449a…`); memory-scope peak 3,080,945,664 B with oom 0, oom_kill 0,
+rc 0; 16 run records (12 exit 0; the 4 exit-101 designed reds — entry
+14/15 at eight and one, control 0/1 at eight and one); `report.py
+check 733` OK with 162 citations by my own run; 0 of the 4 canonical
+builds used; no executed git or network; every write under
+`.temp/brief-733/`; no live source or inventory change.
+
+**My scope gate.** The entry copy is the live working tree: my recursive
+comparison under `crates/` finds 0 differences, and the only five paths
+that differ overall are the non-source dot directories and
+`scripts/__pycache__` the copy left out. The nine pinned files (the seven
+refusal production files, the shared entry, the permanent witness) hash
+match live. The candidate arm differs from entry in exactly the four named
+files; its three production files are byte-equal to brief 732's
+`source-candidate-a`, its test file is byte-identical to brief 732's probes
+arm (504 lines, the probe function verbatim, the pre-existing 444 lines and
+11 tests unchanged). The control arm differs from entry by the four C4
+harness files and exactly my confirmed removal of the one
+`refuse_nested_top_level_input` call line (`session_eval.rs:298`). The live
+tree is untouched: `git status` is still exactly the authorized stage-2
+install and no live file is newer than the dispatch; the brief-732,
+brief-731, `g15-c2` and brief-730 scenes have no file newer than the
+dispatch. The class-route binary links only the entry arm's rlibs and uses
+only public APIs.
+
+**My reproductions.** I ran the worker's route myself at eight and one and
+read the same tuples it recorded: the old owner's report prints
+`["old-prefix"]`; the raw inspection resume completes the owner and leaves
+`pending_input_request` None; a fresh raw `InputString` capture yields the
+typed refusal with the new owner pending; the request resume returns
+`"new-answer"` with `["old-prefix"]`. I then extended the route: the same
+stale-report state panics a public request resume — `eval_request` →
+`resume_inspect_rewrite_rules_with_input` → `resume_eval_request_with_input`
+panics at `suspension/core.rs:646:18`, `resume requires a pending suspended
+evaluation`, an unconditional `expect` in both build profiles
+(`.temp/director/gate-733/panic-route.rs`, compiled against the entry arm's
+rlibs).
+
+**The mechanism, read from source.** The report is stored by
+`finish_input_required_request` (`session_requests.rs:506` →
+`store_pending_request:70`) and taken only by the request driver's resume
+(`:293`) and by cancellation (`take_pending_report:53`). The raw resume
+`resume_suspended_slot` (`core.rs:635-714`) takes the slot, clears the
+host-facing prompt (`:664`, `finish_completed_resumption`
+`:607-624`), and never touches `pending_request`. A nested entry defers to
+a stored report (`refuse_nested_top_level_input`, `session_eval.rs:40-51`).
+So after a raw inspection resume a published report survives its owner;
+the worker's route attaches it to a different owner's response, and the
+panic route resumes a vacant slot through it. The class is the pairing
+itself: the report (the request driver's checkpoint and reported output)
+and the suspension are created together and must be destroyed together,
+and today a non-driver consumer can destroy one without the other. Brief
+733's step-6 invariant — whenever `pending_request.is_some()` a foreign
+capture sees that report's own suspension — is false on the live source,
+so the capture repair's guard cannot be certified from it.
+
+**Ruling.** Q1: the STOP is well taken, and the counterexample and the
+panic are genuine pre-existing lifecycle defects, not defects of the
+capture repair; the accepted three-file shape, the C4 evidence and the
+brief-732 design stand, and the report/slot pairing is a premise the design
+took for granted and the brief asked to prove. Brief 733 is held, not
+failed: its entry/control reds, its prepared candidate (unformatted,
+unbuilt, untested) and its scope receipts are preserved, none of the
+unrun gates is credited, and its 4 canonical builds stay untouched. Brief
+734 (design-only, `Scope: NONE`) designs the pairing in a byte copy of this
+live tree: it must reproduce both routes at eight and one itself,
+inventory every store/take/clear of `pending_request` and every install/
+consume/abandon/fault/reset/restore of the suspension with one disposition
+each and name every separation path, settle the public contract of
+`resume_inspect_rewrite_rules_with_input` on a request-created owner
+(typed refusal or report retirement, with every public surface and any API
+break named for `CHANGELOG.md`), recommend exactly one mechanism with exact
+signatures and evaluate at least two alternatives, prove from source that
+after the repair `pending_request.is_some()` is an exact ownership
+predicate so brief 733's guard is sound, keep the documented host workflow
+(`eval_request`, `resume_eval_request_with_input`, cancel, reset, script
+and file batches, snapshot), the permanent tests and the five C4 owner
+records byte-identical, measure the changed functions' instruction rows
+with no new work on the ordinary entry path, check the C2 ledger for an
+existing row or name the new obligation, and draft the implementation
+brief with the combined install and cost plan for brief 731 continuation 6
+(the seven-file stage-2 install + this pairing repair + the three-file
+capture repair + the accounting regression). Any change to 733's accepted
+shape, the witness, an assertion, a C4 record, the documented host contract
+or the budget is a STOP for my ruling. Recorded, not gated: the worker ran
+the class duty before steps 4-5 (candidate green, release equality) rather
+than after; I accept it because those receipts would be superseded by the
+repaired source and brief 732 already holds the candidate's 15/15 and the
+ten byte-exact C4 comparisons on the same patches. The entry-manifest
+FLAGGED is exactly the two director documents; the control's numeric tuple
+is brief-732 historical evidence, not re-instrumented; the class survey is
+51 anchored sites and six capture callers, not an ownership proof; the two
+`audit-stop` attempts are retained.
+
+**Next.** Write and dispatch brief 734; gate its design; write and gate its
+implementation brief; then resume brief 733 (a continuation forked from
+`01a1d151-2841-73b1-930e-3276e1c10ae2`) on the repaired source to
+re-establish its entry/control red, candidate green at eight and one
+ordinary and profiled, the ten C4 comparisons and the named surfaces; then
+brief 731 continuation 6 installs the combined delta and runs the standing
+replay, acceptance and cost lane on that final source; then continuation 38
+of brief 623; then C2's settlement round, CM, `CHANGELOG.md` before S10
+(including this lifecycle contract and the earlier enum break and
+`EvalError::Syntax` break), G13 S10-S54/F1-F23/R, E2.
