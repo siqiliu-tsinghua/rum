@@ -1014,6 +1014,55 @@ pair-column reconciliation), then CM, `CHANGELOG.md` before S10
 (including the public `EvalError::Syntax` break), G13 S10–S54/F1–F23/R,
 E2.
 
+**Continuation 30 is accepted at the round's end on cdx**: two rows
+settle `NoObservableTail` (`P1567`, `P1576`), each `equal_claim:false` on
+its own 30-cell armed-hit-surviving omission and complete real matrix. The
+round ran on `cdx` (gpt-6-astra, max; session `01a1ce7d-…`; 31,890-line /
+3,034,615 B log; 310,374 tokens; memory-scope peak 3.37 GB, oom 0, rc 0;
+113 run records, 109 exit 0 and four retained exit-1 attempts; report 16
+checks 10 PASS / 5 FLAGGED / 1 NA, `report.py check` 634 citations by my
+own run; no executed git or network; the live brief was not appended).
+`P1567` forwards the actual resumed request result before
+`package_eval_request_outcome`, whose only extra code on the installed
+release configuration is a `#[cfg(any(debug_assertions, test))]`
+invariant assertion (`debug_or_test=false` measured in every guest
+process), and `P1576` is the `resume_suspended_evaluation` whole-Result
+forwarder (`self.resume_suspended_slot::<Expr>(input)`); each has 30/30
+required cells five-part SAME with real == disabled and its own
+armed-hit survivor, and neither repeats C29's terminal-retirement or
+saved-state-restoration mechanisms. Evidence: 60 cells / 60 records SAME
+(0 errors), 60 own armed-hit survivors, 60 mutants = 60 survived / 0
+invalid / 0 unarmed with real == mutant record bytes, 12,632 fixtures
+(12,572 inherited byte-exact + 60 new; 37,896 files exact), two
+known-tail RED calibration carries (C29 `P1562`, C28 `P0508`), two
+observer witnesses, six controls RED / positive GREEN, three build
+receipts (forced spot fresh `f6c476a5…`), 0 new `unsafe` over 191 copied
+Rust pairs; the stricter cross-arm byte check stays red on 16 records
+that differ only in process-local symbol-id digits (44 exact) and is
+disclosed, never a settlement predicate. Gate: 2,726 live files at
+`73c8bc63…` equal to the entry manifest; production 1,622 files at
+`8313fbc1…` byte-identical to C29 (0 added, 0 removed, 0 rebases); the
+entry delta is exactly `TODO.md` and the brief; my own 1,996,378-file
+protected walk 0/0/0 in 112.2 s and 81,392-file sealed walk 0/0/0 in 1.5
+s (after my replay only `integrity-receipt.json` is refreshed, post-stop
+controllers 17→32, disclosed). Ledger: exactly two verdict changes,
+outcomes 9/159/5/1/122/149/594/3, residual 116 + 13 + 11 + 6 + 1 + 1 + 1
+= 149, 78,330 keys and 18,840 encoding rows unchanged, 60 tuple records
+on exactly the two rows, 13 pair columns byte-identical, `P1566` Lost,
+`P0496` Reserved, held rows and `P1585`–`P1591` unchanged. Transitive:
+entry re-derives from c13–c29 at 9,763 SAME keys / 170 proofs / 177
+matrices / 872 open; current 9,823 / 172 / 179 / 870 with 2 inherited
+duties closed, 170 retained, 24 unresolved, 13 pair columns and five
+owners. **Next:** continuation 31 of brief 623 on this unchanged
+installed source (the remaining 149-row tail by mechanism; the held rows
+are excluded and the C19–C30 families are not repeated without a
+genuinely new mechanism or instrument), then C2's settlement round
+(including P0496's ledger disposition, expected unreachable/source-closed,
+P1566's re-settlement on the installed source, and the `P0325`/`P0326`
+pair-column reconciliation), then CM, `CHANGELOG.md` before S10
+(including the public `EvalError::Syntax` break), G13 S10–S54/F1–F23/R,
+E2.
+
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
 other account — no automatic fallback. `mst` (Mistral Vibe / GLM-5.3) is
