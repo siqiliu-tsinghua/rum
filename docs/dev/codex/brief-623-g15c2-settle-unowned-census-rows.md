@@ -59799,3 +59799,45 @@ Open at 173 Residual + 1 Lost; S10 stays unopened.
 **Next:** continuation 21 of brief 623 on this unchanged installed source,
 measurement-only, then C2's settlement round, CM, `CHANGELOG.md` before
 S10, G13 S10–S54/F1–F23/R, E2.
+
+## Continuation 21 order (2026-11-12) — continue the settlement campaign on the unchanged installed source
+
+Brief 623 continuation 21 continues the C2 settlement campaign on the
+installed source, measurement-only, with no rebase.
+
+**Source and entry.** Every file under `crates/` must equal the C20
+entry manifest (`production_sha256` `8313fbc1…`, 1,622 files); any
+production difference, moved fingerprint or source rebase is a STOP.
+The entry re-derives 1,042 rows / 78,330 canonical keys / 18,840
+encoding rows with 0 moves, 1,018 paired sources and the 24 explicitly
+unresolved sites.
+
+**Settlement order.** The 21 C18 rows, the 27 C17 rows, the 13 C16 rows,
+the 30 C15 rows, the 28 C14 rows, the seven C13 rows and the continuation
+20 settlements are not re-settled. `P1566` stays Lost, `P0496` stays
+reserved for the settlement round, `P0528` and `P0340` stay held by the
+pair-column order, and `P0824` stays held. Work the remaining 173-row
+tail by mechanism — 138 LocalTail + 15 ReopenedOrNew + 11 StrictDropGap +
+6 StrictCallerGap + 1 StrictOtherCarrier + 1 New719Edge + 1 New725Edge —
+and keep each batch's own armed-hit caught-or-surviving omission: an Equal
+row needs its own caught omission and its complete real matrix, a
+proposal is `equal_claim: false` with a survivor for every required cell,
+and a row settled only by argument stays open. The C20 Equal rows and
+`P0832` keep their dispositions.
+
+**Families and duties.** The nine stopped families, the five C19
+families and the five C20 families are not repeated without a genuinely
+new mechanism. The 894 named open transitive duties, the 24 unresolved
+sites, the 13 pair columns and the five named owners stay explicit; no
+source design work. Port tables and the ledger only by canonical replay.
+
+**Rules.** The two-family stop-loss and every standing rule stand: no
+repository mutation outside `.temp/`, no git, no network, no assertion
+weakening, no re-pinned inventory, no deleted attempt, no relabelled
+invalid recipe. All scratch under `.temp/g15-c2/c21`, the shared probe
+cache and the existing Cargo cache; disclose every path. Invalid, unarmed
+and failed observations never certify a settlement.
+
+**Stop.** Stop for the director gate at the round's end or at the
+two-family stop-loss. C2 stays Open at 173 Residual + 1 Lost; S10 stays
+unopened.
