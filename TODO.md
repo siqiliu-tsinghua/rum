@@ -1167,6 +1167,67 @@ genuinely new mechanism or instrument), then C2's settlement round
 before S10 (including the public `EvalError::Syntax` break), G13
 S10–S54/F1–F23/R, E2.
 
+**Continuation 33 is accepted at the round's end on `cdx`** (the pause
+recorded above was lifted on the user's “重启回来了，继续下一步吧。”):
+one row settles Equal (`P0020`) on its own caught outgoing-retention-lease
+release omission and its complete real matrix, and the two-family
+stop-loss correctly does not fire. The round ran on `cdx`
+(gpt-6-astra, max; session `01a1cf27-…`; 21,941-line / 1,879,656 B log;
+181,820 tokens; memory-scope peak 4.44 GB, oom 0, rc 0; 46 run records,
+the round-end at index 20 and zero non-zero exits; report 14 checks
+10 PASS / 3 FLAGGED / 1 NA, `report.py check` 411 citations by my own
+run; no executed git or network; the live brief was not appended).
+`P0020` is `scoped` (`retained.rs:75`, the required site `:88`),
+previously Residual/LocalTail with the open obligation naming a concrete
+Drop carrier: after the body returns the real code executes
+`drop(receipt)` before returning the unchanged outcome (`:98-102`), and
+`RetentionLease::drop` decrements the ledger's live count and subtracts
+its bytes (`lease.rs:101-107`) while `Session::retention_snapshot`
+(`lease.rs:210`) is the existing public read. The round built a
+scratch-only native caller of the public armed retention API
+(`C33RetainedRelease`) that pushes 101, evaluates `Input["finish"]`
+inside `with_retention`, suspends through a root-traced `ReleaseFinish`
+continuation and resumes to `List[101,89]`; the armed omission replaces
+only the post-producer `drop(receipt)` with `mem::forget(receipt)`, and
+the public snapshot then reads `live=1 bytes=139` on the queued arm
+against 0/0 on the resumed arm (real tree 1 `enter` guard, mutant tree
+956). 60 real cells / 60 records five-part SAME with real == disabled and
+producer/route reach (0 errors), each cell-key set equal to the row's 60
+required nonencoding keys, 1 armed = 1 caught mutant with real == mutant
+records byte-identical, 12,783 fixtures (12,723 inherited byte-exact +
+60 new), three exact build receipts (forced spot `d9957476…`,
+`spot_check=pass`), 0 new `unsafe` over 3,160 compared Rust files and no
+live Rust file changed. My gate: live 2,726 files at `b513e850…` equal to
+the scene entry; production 1,622 files at `8313fbc1…` byte-identical
+with `source_rebases=0`; the entry delta exactly `TODO.md` and the brief;
+my own 2,246,820-file protected walk 0/0/0 in 121.7 s and 82,248-file
+sealed walk 0/0/0 in 1.2 s (after my replay only
+`integrity-receipt.json` is refreshed, post-stop controllers 14→26,
+disclosed). Ledger: exactly one verdict change, outcomes
+9/162/5/1/122/146/594/3, residual 113 + 13 + 11 + 6 + 1 + 1 + 1 = 146,
+78,330 keys and 18,840 encoding rows unchanged, 60 tuple records on
+exactly `P0020`, 13 pair columns byte-identical, `P1566` Lost, `P0496`
+Reserved, held rows and `P1585`–`P1591` unchanged. Transitive: entry
+re-derives from c13–c32 at 9,913 SAME keys / 174 proofs / 181 matrices /
+868 open; current 9,973 / 175 / 182 / 867 with 1 inherited duty closed,
+174 retained, 24 unresolved, 13 pair columns and five owners. My
+canonical replay (15 controllers plus the calibration carry) exits 0
+except the scene's single-shot `execution_attempt_audit.py`, which stops
+at its own creation guard because the scene already wrote the forced
+compiler transcript (the retained copy, the probe log and the recorded
+hash are all `cf5b3b9f…`, disclosed); six bad-ledger controls RED and
+the positive GREEN; a whole-scene 82,267-file comparison changes only
+`state.json`, `PROGRESS.md` and the refreshed `integrity-receipt.json`,
+0 added or removed. **Next:** continuation 34 of brief 623 on this
+unchanged installed source (the remaining 146-row tail by mechanism; the
+held rows are excluded and the C19–C33 families are not repeated without
+a genuinely new mechanism or instrument), then C2's settlement round
+(including `P0496`'s ledger disposition, expected unreachable/source-closed,
+`P1566`'s re-settlement on the installed source, and the
+`P0325`/`P0326` pair-column reconciliation), then CM, `CHANGELOG.md`
+before S10 (including the public `EvalError::Syntax` break), G13
+S10–S54/F1–F23/R, E2.
+
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
 other account — no automatic fallback. `mst` (Mistral Vibe / GLM-5.3) is
