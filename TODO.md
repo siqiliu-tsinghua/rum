@@ -1286,6 +1286,71 @@ source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
 `CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
 break), G13 S10–S54/F1–F23/R, E2.
 
+**Continuation 35 is accepted at the round's end on `cdx`**: one row
+settles Equal (`P0028`) on its own caught retained-owner rule-shell
+omission and its complete real matrix, and the two-family stop-loss
+correctly does not fire. The round ran on `cdx` (gpt-6-astra, max;
+session `01a1cf6c-…`; 23,138-line / 2,246,442 B log; 198,193 tokens;
+memory-scope peak 3.46 GB, oom 0, rc 0; 53 run records, the round-end
+at index 24 and five retained non-zero exits; report 14 checks
+10 PASS / 3 FLAGGED / 1 NA, `report.py check` 425 citations by my own
+run; no executed git or network; the live brief was not appended).
+`P0028` is the rule callback's option shell at the retained owner
+(`rule.rs:110`, the required producer call at `:111`,
+`cx.evaluate(empty, rhs.clone())`), previously Residual/LocalTail with
+the open obligation naming a concrete carrier: on a successful value
+the real code calls `CallbackValue::into_rule` (`bridge.rs:186`), which
+reserves two slots, pushes the actual RHS, resizes the retained values
+receipt, retires the incoming callback receipt and completes through
+`finish_rule`, charging the exact System`Rule head and returning
+`Rule[name, value]` as one retained shell. The round built a
+scratch-only native caller of the public option re-entry API
+(`C35OptionRule`) that evaluates
+`MemoryConstrained[C35OptionRule[c35name :> Input["finish"]], 100000000]`,
+returns the actual retained option values through the public
+merged-option API, and observes each actual option expression's head
+identity and arity read-only before publishing; the armed conditional
+replaces only `value.into_rule(name)` with a forwarder of the same
+actual value and its actual incoming receipt, and the real tree keeps
+the shell construction (probe copy 956 `enter` guard lines / 965 calls
+across 186 files). 60 real cells / 60 records five-part SAME with
+real == disabled and producer/route reach (0 errors), each cell-key set
+equal to the row's 60 required nonencoding keys (5 variants × 12
+contexts on the `evaluate_in@111` route), 1 armed = 1 caught mutant with
+real == mutant records byte-identical (`6bf8e538…`; own log
+`823d073c…`), the caught record differing only in its appended
+`C35ActualMergedOptionShell.0` row (queued `[0, 0, …]` against
+`[1, 2, …]`, and `List[89]` against `List[Rule[c35name, 89]]`),
+12,903 fixtures (12,843 inherited byte-exact + 60 new), three exact
+build receipts (forced spot `cf9a0a47…`, `spot_check=pass`), 0 new
+`unsafe` over 3,160 compared Rust files and no live Rust file changed.
+My gate: live 2,726 files at `c2a67a0e…` equal to the scene entry;
+production 1,622 files at `8313fbc1…` byte-identical with
+`source_rebases=0`; the entry delta exactly `TODO.md` and the brief; my
+own 2,411,694-file protected walk 0/0/0 in 117.9 s and 82,956-file
+sealed walk 0/0/0 in 1.2 s (after my replay only `integrity-receipt.json`
+is refreshed, post-stop controllers 17→29, disclosed). Ledger: exactly
+one verdict change, outcomes 9/164/5/1/122/144/594/3, residual
+111 + 13 + 11 + 6 + 1 + 1 + 1 = 144, 78,330 keys and 18,840 encoding
+rows unchanged, 60 tuple records on exactly `P0028`, 13 pair columns
+byte-identical, `P1566` Lost, `P0496` Reserved, held rows and
+`P1585`–`P1591` unchanged. Transitive: entry re-derives from c13–c34 at
+10,033 SAME keys / 176 proofs / 183 matrices / 866 open; current
+10,093 / 177 / 184 / 865 with 1 inherited duty closed, 176 retained, 24
+unresolved, 13 pair columns and five owners. My canonical replay (15
+controllers plus the calibration carry) all exit 0; six bad-ledger
+controls RED and the positive GREEN; a whole-scene 82,974-file
+comparison changes only `state.json`, `PROGRESS.md` and the refreshed
+`integrity-receipt.json`, 0 added or removed. **Next:** continuation 36
+of brief 623 on this unchanged installed source (the remaining 144-row
+tail by mechanism; the held rows are excluded and the C19–C35 families
+are not repeated without a genuinely new mechanism or instrument), then
+C2's settlement round (including `P0496`'s ledger disposition, expected
+unreachable/source-closed, `P1566`'s re-settlement on the installed
+source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
+`CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
+break), G13 S10–S54/F1–F23/R, E2.
+
 **Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
 now exist. A Codex quota death stops and asks whether to switch to the
 other account — no automatic fallback. `mst` (Mistral Vibe / GLM-5.3) is

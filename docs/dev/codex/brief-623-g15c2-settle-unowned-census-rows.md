@@ -106882,3 +106882,150 @@ unarmed and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 145 Residual + 1 Lost; S10 stays
 unopened.
+
+## Continuation 35 gate (2026-11-12) — ACCEPTED at the round's end on cdx: `P0028` settles Equal on its own caught retained-owner rule-shell omission and its complete real matrix, and the two-family stop-loss correctly does not fire
+
+**Run.** The round ran on `cdx` (Codex `gpt-6-astra`, reasoning max;
+session `01a1cf6c-cb18-7ce1-8247-b1d33a83a57b`), log
+`.temp/logs/cdx_brief_623.log` (23,138 lines, 2,246,442 B, sha
+`d1010c03…`), memory-scope peak 3,456,311,296 B, oom 0, oom_kill 0, rc 0;
+198,193 tokens; report 14 checks 10 PASS / 3 FLAGGED / 1 NA with
+`report.py check` 425 citations by my own run; 53 run records, the
+round-end at record index 24, five retained non-zero exits (three from
+the missing derive-trait imports and their two blocked wrappers, two
+from the missing calibration-budget bookkeeping and its parent), six
+guest processes and four build controllers; no executed git or network
+command; the worker did not append the live brief.
+
+**My gate.** 2,726 live files at `c2a67a0e…`, equal to the scene entry
+manifest path for path (0 differing); production 1,622 files at
+`8313fbc1…` byte-identical to both the C35 and the C34 entry manifests
+(0 added, 0 removed), `source_rebases=0`; the entry delta against C34
+is exactly `TODO.md` and the brief from my own post-gate commits, and
+the entry brief is byte-identical to the live brief at `1e99e494…`. My
+own 2,411,694-file protected walk is 0/0/0 in 117.9 s; my own
+82,956-file sealed walk is 0 missing / 0 changed at hand-back, and
+after my replay exactly the one sealed derived file
+`integrity-receipt.json` is refreshed (`90cd7dbe…` -> `2779bf58…`,
+post-stop controller snapshot 17 -> 29; disclosed, no assertion
+changed).
+
+**Ledger.** 1,042 rows, exactly one verdict change on the six
+settlement columns — `P0028`, Residual->Equal — the other 1,041 rows
+byte-identical. Outcomes 9/164/5/1/122/144/594/3; residual 111 LocalTail
++ 13 ReopenedOrNew + 11 StrictDropGap + 6 StrictCallerGap + 1
+StrictOtherCarrier + 1 New719Edge + 1 New725Edge = 144. The 78,330
+canonical keys are unchanged (0 added/removed/duplicated), the 18,840
+encoding rows are byte-identical, and 60 tuple records changed on
+exactly `P0028`. The 13 pair columns are byte-identical with 0 verdict
+changes; `P1566` is Lost, `P0496` is Residual, the held rows keep their
+inherited bytes, and `P1585`-`P1591` keep `NoObservableTail`. Every
+inherited artifact is byte-identical to the C34 final state.
+
+**Evidence.** One Equal proof packet over 60 cells and 60 records: every
+record is five-part SAME with real == disabled and producer/route reach
+(0 errors), each cell-key set equals its row's 60 required nonencoding
+keys (five variants × twelve contexts, all on the `evaluate_in@111`
+route), and `P0028`'s own omission is armed, hit once and caught on the
+required `Middle`/`phase_observation.trace` key. The caught record
+differs only in its appended `C35ActualMergedOptionShell.0` row —
+`[0, 0, …]` on the mutant's queued arm against `[1, 2, …]` on the real
+and resumed arms (a non-`Rule` actual option expression against
+`Rule[name, 89]`) — and its semantic observation `List[89]` against
+`List[Rule[c35name, 89]]`; the resumed arm, the logical phase rows, the
+epochs and the validity stay equal. The mutant receipt is 1 armed = 1
+caught, 0 invalid, 0 unarmed, and the real and mutant record files are
+byte-identical (`6bf8e538…`; the own log is `823d073c…`). 12,903 fixtures (12,843 inherited byte-exact + 60 new;
+38,709 files exact). Calibration carries: the four C4 semantic controls
+and the three pre-G15/pre-C1/current-C1 panels re-hash exact to their
+manifests, and the census parser binary hash is exact, on my own run.
+Three build receipts exact — the forced spot `cf9a0a47…` is fresh and
+equal (`spot_check=pass`, `scene_environment=true`), all offline and
+locked. 0 new `unsafe` over 3,160 compared Rust files and 210 changed
+pairs (and no live Rust file changed at all this round).
+
+**The settlement, read from source.** `P0028` is the rule callback's
+option shell at the retained owner: `evaluate_in`
+(`crates/rum-runtime/src/runtime/accounting_mode/rule.rs:110`, the
+required producer call at `:111`, `cx.evaluate(empty, rhs.clone())`),
+previously Residual/LocalTail with the open obligation naming a concrete
+carrier. On a successful value the real code calls
+`CallbackValue::into_rule` (`bridge.rs:186`): in the armed mode it
+reserves two slots, pushes the actual RHS, resizes the retained values
+receipt, retires the incoming callback receipt, and completes through
+`finish_rule`, which clones the name, swaps the children, charges the
+exact ``System`Rule`` head and returns `Rule[name, value]` as one
+retained shell. The round built a scratch-only native caller of the
+public option re-entry API (`C35OptionRule`, `option_rule_driver.rs`)
+that evaluates `MemoryConstrained[C35OptionRule[c35name :> Input["finish"]], 100000000]`,
+returns the actual retained option values through the public
+merged-option API, and observes each actual option expression's head
+identity and arity read-only before publishing. The armed conditional
+replaces only `value.into_rule(name)` with a scratch forwarder that
+hands the same actual value and its actual incoming receipt to the
+enclosing `RetainedResult`, skipping exactly the rule construction and
+its adoption; the real tree keeps `into_rule` and carries 956 `enter`
+guard lines (965 calls) across 186 files in the probe copy. This is a
+concrete retained-owner shell omission, distinct from C34's incoming
+callback-value receipt charge (`P0001`), C32's non-empty-prefix
+restoration (`P0002`) and C33's outgoing lease release (`P0020`); the
+family, strategy and instrument names are absent from every prior
+scene, so the anti-repetition bar is satisfied.
+
+**Entry and transitive.** From the c13-c34 evidence alone I re-derive
+176 complete proofs, 183 matrices, 10,033 SAME keys and 866 named open
+with 0 errors, equal to the C34 final status. The current graph adds
+exactly the one proof: 177 proofs, 184 matrices, 10,093 SAME keys, 865
+named open, 1 inherited duty closed (`P0028`), 176 retained, 0
+exclusions, 24 unresolved sites, 13 pair columns, five owners,
+`whole_graph_complete=false`.
+
+**Stop and integrity.** One completed family with 60 coverage cells, 60
+new cells, 1 caught row and 1 outcome; clock 0,
+`Continuation35RoundEnd`, `stop_loss_fired=false`. The scene's stop is
+not a replacement for the two-family stop-loss: the clock never reached
+2, and the round ended voluntarily exactly as the order allows. No guest
+and no Cargo run after the stop (0 of each at my replay), and 17
+post-stop controller records at the scene's integrity audit, 24 at
+publication, 29 counted at my replay.
+
+**Replay.** My canonical replay reproduced the scene: `final_replay`,
+`canonical_delta_audit`, `aggregate_audit`, `all_executions_audit`,
+`epoch_audit`, `execution_kind_audit`, `option_rule_route_audit`,
+`option_rule_observer_audit`, `proof_assurance`, `copy_safety_audit`,
+`provenance_audit`, `port`, `held_bytes_audit`, `integrity` and the
+calibration carry all exit 0; the six bad-ledger controls are RED and
+the positive GREEN on my own run; `report.py check` verifies 425
+citations; and a whole-scene 82,974-file hash comparison changes only
+the mutable, seal-excluded `state.json` and `PROGRESS.md` and the
+refreshed `integrity-receipt.json`; 0 files added or removed.
+
+**Rulings.** Q1: `P0028` is accepted as Equal — its complete 60-key real
+matrix is five-part SAME with real == disabled and producer/route reach,
+and its own armed-hit caught omission skips the actual retained-owner
+rule construction, leaving the public merged-option consumer reading a
+bare `89` against the real `Rule[c35name, 89]`; it is never a proposal.
+Q2: C2 stays Open at 144 Residual + 1 Lost; S10 stays unopened;
+continuation 36 owns the remaining tail on this unchanged source.
+
+**Recorded, not gated.** The first scratch native-driver build failed on
+the two missing derive-trait imports; the correction added exactly those
+two imports to the driver and its two copies, kept every failed driver,
+compiler transcript and blocked wrapper record, and repeated no completed
+stage. The post-stop all-executions audit initially lacked
+`calibration-budget.json`; the derived bookkeeping was supplied after
+execution with zero extra allowance and the original freeze hash, and
+both failure records stay in place. The per-family summary's
+`outcomes_gained: 0` against the batch record's 1 is the established
+per-family field. The family's execution record's permissive
+`attempt_unreached: true` is the retained selection flag; my own
+pause-attribution check independently confirms producer reach on all 60
+cells, and `source_reached_cells` reads 60. The unused inherited
+`audit_held_columns.py` and `report_builder.py` were retained but not
+executed. The FLAGGED transitive and source-owners checks and the
+post-stop controller count refresh in the sealed integrity receipt are
+as expected.
+
+**Next.** Continuation 36 of brief 623 on this unchanged installed
+source, then C2's settlement round, CM, `CHANGELOG.md` before S10, G13
+S10-S54/F1-F23/R, E2.
