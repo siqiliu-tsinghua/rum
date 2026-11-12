@@ -821,6 +821,15 @@ source, and the `P0325`/`P0326` pair-column reconciliation), then CM,
 `CHANGELOG.md` before S10 (including the public `EvalError::Syntax`
 break), G13 S10–S54/F1–F23/R, E2.
 
+**Worker routing corrected (user ruling 2026-11-12).** Two Codex accounts
+now exist. A Codex quota death stops and asks whether to switch to the
+other account — no automatic fallback. `mst` (Mistral Vibe / GLM-5.3) is
+only for a Codex safety-guardrail refusal; the 2026-11-07 "Codex-outage
+fallback" reading was my misreading, and the continuation-25 round should
+not have gone there. If both Codex accounts are drained, grok is preferred
+but the user is asked first. Every next task dispatches to `cdx`, the
+full-quota account the user switched to on 2026-11-12.
+
 **Continuation 11 is accepted as a STOP**: the 84-site crosswalk
 closes at 60 paired (42 exact unchanged-file, 18 unique named
 producer) and 24 explicitly unresolved with no coverage claimed;

@@ -183,12 +183,12 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   (run 5):** the fixed-point pass publication is installed, run 4's
   LP01 nested admission repaired at both sites, five modes green at 8/1;
   native 579 records and the 20/14 omissions re-anchor; `4,219/0/61`.
-  **Continuation 9 accepted:** P1470/P1471 (45/45 required cells each)
-  and P1566/P1568 (30/30) settle Equal; P0503/P0504 and P0353 are
-  accepted as `NoObservableTail`; P0492 is a new Lost row (resumed
-  `call.stage.prepare_arguments` samples the consumer's outcome, 9 DIFF
-  / 7 SAME, language SAME). `BRIEF_WORKER=mst` (GLM-5.3) is the fallback.
-- **Earlier lines** are in `director-log.md`; deferred items in `TODO.md`.
+  **Continuation 9 accepted:** P1470/P1471 (45/45 cells each) and
+  P1566/P1568 (30/30) settle Equal; P0503/P0504/P0353 are
+  `NoObservableTail`; P0492 is a new Lost row (resumed
+  `call.stage.prepare_arguments`; 9 DIFF / 7 SAME). **Worker routing
+  2026-11-12:** a Codex quota death asks about the 2nd Codex account;
+  `mst` only on a safety-filter refusal; both drained -> ask before grok.
 
 ## Pointers
 

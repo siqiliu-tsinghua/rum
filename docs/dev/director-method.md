@@ -60,8 +60,12 @@ keeps them with the incidents that produced them. Read it on demand.
   `CDX_SANDBOX=danger-full-access`, telling the user. The brief's
   **Scope + Hard rules** remain the inner fence.
 - Besides these dispatcher workers, the user added a Mistral Vibe account on
-  2026-11-07 (one-year subscription; $150/month on the Vibe pool) as the
-  Codex-outage fallback, mainly for its GLM-5.3 model. `BRIEF_WORKER=mst`
+  2026-11-07 (one-year subscription; $150/month on the Vibe pool), mainly
+  for its GLM-5.3 model. User ruling 2026-11-12: it is the **safety-filter
+  path**, used when Codex refuses work on its own guardrail — never a quota
+  fallback; a Codex quota death stops and asks whether to switch to the
+  user's second Codex account, and if both accounts are drained, grok is
+  preferred but the user is asked first. `BRIEF_WORKER=mst`
   (alias `vibe`) runs `mst -p` — a fish function `with_proxy vibe` over the
   Mistral Vibe CLI — and accepts only that function, never the bare binary.
   `MST_MODEL` defaults to `glm-5-3` (the thinking level comes from
