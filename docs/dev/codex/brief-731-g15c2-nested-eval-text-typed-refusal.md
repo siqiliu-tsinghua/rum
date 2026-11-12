@@ -384,3 +384,131 @@ evaluations. The `default_builtin_dispatch_spec_for_symbol` row is the
 known draw-varying instrument class and certifies nothing. The
 `b730_nested.rs` cost panel and the retained matrix test are distinct
 files and must not be interchanged in the continuation.
+
+## Continuation-1 gate (2026-11-13) — the 1.3 STOP is well taken, the refusal becomes an entry-scoped conversion that abandons only its own capture, and continuation 2 rebuilds the revised shape
+
+**Run.** `cdx` (Codex `gpt-6-astra`, reasoning max; session
+`01a1d083-63d3-77f1-b436-a2c4ac8aedc8`), fork of
+`01a1d067-5238-7dd1-9d20-b364012ed5f1`; log
+`.temp/logs/cdx_brief_731.log` (6,585 lines, 431,074 B); memory-scope
+peak 2,796,318,720 B with oom 0 and rc 0; 18 continuation-1 run
+records (13 exit 0; three retained exit 1: the first matrix parser,
+the ownership wrapper, the first report generator; two exit 101, the
+calibrated owner-probe red); `report.py check 731` 288 citations by my
+own run; seven of the 24 canonical builds consumed, 17 remain; no
+executed git or network; every write under `.temp/brief-731/` except
+my own gate scratch.
+
+**My scope gate.** Working tree clean at `bea71c91`; no live edit. The
+matrix tree is the retained C37 real tree plus exactly 13 added lines
+and 0 removed in `session_eval.rs` — the helper and its two
+`InputRequired` arms, nothing else; removing those lines recovers the
+C37 bytes. The other six production files in the matrix tree and all
+seven in the public tree are byte-identical to `source-layout2`
+(session_eval in the public tree included). Both probe binaries match
+their build receipts (`db842e4c…` public, `2c3f1eb3…` matrix). The
+frozen C37 scene has no file newer than the dispatch; no frozen
+artifact was edited.
+
+**Evidence, reproduced by me.** I re-ran the matrix audit; the
+regenerated 60-record proof file is byte-identical to the retained one,
+and the run reads 30/30 typed refusals with retired owners at both
+thread counts, native queued vectors 30/30 byte-exact, semantic 22
+byte-exact plus exactly the eight permitted `Global`c37answer`
+692↔681 full-token bijections (multiplicity, both directions, no other
+normalization), frozen reference unedited, zero zero-test runs. I
+re-ran the owner probe at 8 and 1 threads and reproduced the exact
+reported tuple: the nested `eval_text` returns
+`NestedEvaluationInputBoundary`, its prints contain the owner's early
+`owner-cleanup`, `pending=None`, the next resume fails with "no
+suspended evaluation is waiting for host input", and a fresh request
+returns 42; the overlap control passes at both counts.
+
+**The defect, read from source.** The selected helper classifies only
+`InputRequired` plus `evaluation_depth != 0` and then calls
+`abandon_pending_suspension`. But depth is not ownership: the resume
+driver `resume_eval_request_from_checkpoint`
+(`session_requests.rs:283-379`) takes the `Resumable` report, runs the
+captured frames, and finalizes through the same shared
+`finalize_top_level_eval_value` before `finish_input_required_request`
+stores the report again. Inside a nested evaluation that finalizer runs
+at nonzero depth, the helper refuses and abandons the request's own
+newly captured continuation, the report is never re-stored, the request
+cleanup runs early, and the owner is gone. The engine's own invariant —
+`SuspensionSlot::install` asserts the owner slot is empty
+(`suspension/core.rs:269-285`) — means an entry's own capture exists
+only when no stored request covers the slot, so ownership is decidable
+from existing state (`Session::pending_request`, `model/session.rs:114`)
+without a new field.
+
+**Ruling.** The STOP is well taken. The layout2 enum placement, the
+public surfaces and the cost ruling stay; the refusal contract changes
+from depth-keyed to entry-scoped and ownership-preserving:
+
+1. The refusal belongs to a nested top-level entry, not to the
+   finalizer that request drivers share. The resume driver's own
+   finalization is never a refused boundary: its `InputRequired` is the
+   request's own next pause and is stored exactly as today. The class
+   table must enumerate every call site of both shared finalizers
+   (`eval_input_with_terminated_handling` and the script/file entries,
+   `eval_expr_request_from_checkpoint`, the resume driver, the cancel
+   path, and the loader's `finalize_cycle_termination_value` site) with
+   a disposition each.
+2. A nested top-level entry never returns a raw `InputRequired`; it
+   converts it to `EvalError::NestedEvaluationInputBoundary` in every
+   case, exactly as the public contract already rules.
+3. The entry abandons only a continuation it captured itself. When the
+   pending continuation is covered by a stored request report
+   (`pending_request` is `Some`), the entry must not abandon, overwrite
+   or take it; the request stays resumable at its actual pause,
+   completes later with its own cleanup, and a fresh request works
+   afterward.
+4. The P1555 class is preserved: removing only the refusal conversions
+   still restores the silent differences byte-identically, and the
+   matrix cells still exercise the abandonment of an entry's own
+   capture.
+5. The revised shape must be re-measured on the standing cost lane
+   (shape change): the four hot rows, the `EvalError` drop row,
+   `finalize_cycle_termination_value`, the three sizes and the
+   equal-call positive-row scan, two draws at N=10/20, one codegen
+   unit, serial and pinned. No `rum_runtime` row may increase at equal
+   calls in either draw; a decrease is recorded, never normalized; any
+   increase is a STOP.
+6. The class may be closed within the same seven production files; any
+   additional production file, or any public surface beyond the ruled
+   one, is a STOP.
+
+**Continuation 2 order (stage 1 only, no live edit).**
+
+1. Rebuild the matrix from the retained C37 real tree with the revised
+   shape, keeping the C37 instrumentation, plans and `Checks::ALL`, and
+   re-run it at 8 and 1: 30/30 typed and retired, native 30/30
+   byte-exact, semantic 22 exact plus the eight bijections.
+2. The reentrant owner-preservation test becomes the rule-5 witness at
+   8 and 1: nested typed refusal, `after` at `owner-second`, the second
+   resume completing with its own prints and 42, fresh `6*7` = 42, and
+   no pending request at the end. The continuation-1 binary and its
+   exact tuple are the calibrated red; the revised binary is the green.
+   Add the controls that keep the ownership test from over-refusing: a
+   resume that completes inside the nested entry, and a nested entry
+   that completes normally while the owner stays pending.
+3. 1.4 the legacy contract as written.
+4. 1.5 the falsifier on the exact revised source: remove only the
+   refusal conversions; the four public parity differences and both
+   class differences return byte-identically to base, the ten public
+   queued cells and the runtime host records stay byte-identical, and
+   the typed-refusal tests turn red.
+5. The cost lane of item 5 above on base versus the revised shape.
+6. The class table of item 1 above, with the loader site and the
+   cancel path dispositioned, and the install-assert invariant cited.
+7. No live edit; report stage 1 and STOP for my gate. Stage 2 remains
+   blocked.
+
+**Recorded, not gated.** A public `eval_text` that itself suspends
+while a request is already suspended hits `SuspensionSlot::install`'s
+assert before any finalization; that pre-existing route is outside this
+brief's class, is not repaired here, and the class table must classify
+it as out of class without reopening it. The depth-only helper and its
+superseded readings remain recorded, never installed. The matrix tree
+was rebuilt by hand from the C37 real tree and is not a substitute for
+the install-time matrix.
