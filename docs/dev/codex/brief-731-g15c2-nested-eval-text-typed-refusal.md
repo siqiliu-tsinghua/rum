@@ -512,3 +512,169 @@ it as out of class without reopening it. The depth-only helper and its
 superseded readings remain recorded, never installed. The matrix tree
 was rebuilt by hand from the C37 real tree and is not a substitute for
 the install-time matrix.
+
+## Continuation-2 gate (2026-11-13) — the 1.4 STOP is well taken: the typed error is reachable through the legacy error wire from a resumed Block, and the wire — not the guard — must carry it
+
+**Run.** `cdx` (Codex `gpt-6-astra`, reasoning max; session
+`01a1d09e-87bb-7143-9216-8aef349b0363`), fork of
+`01a1d083-63d3-77f1-b436-a2c4ac8aedc8`; log
+`.temp/logs/cdx_brief_731.log` (8,190 lines, 525,059 B); memory-scope
+peak 3,263,926,272 B with oom 0, oom_kill 0, rc 0; 711,834 tokens;
+50 continuation-2 run records (39 exit 0; 8 exit 101 — the two old
+latent-assertion reds, the two old calibrated reds, the two new
+calibrated reds, the two legacy reds; 3 exit 1 — the two aggregate
+wrappers and the retained class-audit metadata-name attempt);
+`report.py check 731` 464 citations by my own run; 12 of the 24
+canonical builds consumed (seven before, five here), 12 remain; one
+prior forced-SHA spot check; no executed git or network; every write
+under `.temp/brief-731/` except my own gate scratch.
+
+**My scope gate.** Working tree clean at `d6dfd64d`; no file under
+`crates/`, `docs/` or `scripts/` is newer than the dispatch. I re-ran
+the scene's scope audit and it reproduces byte-identically: 2,728 live
+files unchanged, the 2,728-file C37 real tree unchanged, the 22 frozen
+references unchanged, the continuation-1 copied sources unchanged, the
+161 copied inventory TSVs byte-identical (0 installed cells, 0 moved
+rows), and every copy differs from its origin in exactly the declared
+files. The three non-matrix copies carry the same seven production
+bytes; each matrix-tree `session_eval.rs` strips back to the C37 real
+tree's file and the other six equal the revised copy's; the binaries
+match their receipts (`7d1681ff…` matrix, `c2e559f4…` public3,
+`34f77959…` runtime).
+
+**Evidence, reproduced by me.** The matrix audit regenerates the
+60-record proof byte-identically: 30/30 typed and retired at both
+thread counts, native 30/30 byte-exact, semantic 22 exact plus exactly
+the eight `Global`c37answer` 692↔681 full-token bijections. The owner
+witness is green at 8 and 1 with the exact tuple (nested typed
+refusal, `after` at `owner-second`, the resume completing with the four
+cumulative prints and 42, fresh 42, no pending request); its four
+completion/overlap/cumulative controls are green at 8 and 1; the
+continuation-1 binary reproduces the calibrated red bit-for-bit at
+both counts (`after=None`, early `owner-cleanup`, the next resume
+"no suspended evaluation is waiting for host input", fresh 42). The
+typed-channel unit passes. The class table regenerates
+byte-identically: six shared-finalizer call sites, the loader and
+cancel dispositions, the `install` assertion, the out-of-class raw
+capture. The legacy probe reproduces at 8 and 1: the three
+non-resumed controls pass and the resumed Block panics at
+`suspension/error.rs:272` with the quoted message, identically at both
+counts.
+
+**The defect, read from source.** layout2 folds
+`NestedEvaluationInputBoundary` into the wire's structural-slot
+`unreachable!` arm (`suspension/error.rs:271`). That guard's premise —
+no supported path carries a produced error into the wire — is false
+for the new variant. A real request suspended inside a `Block` body,
+resumed by host input, evaluates the rest of the body; when a native
+callback's nested public `eval_text` refuses, the body's `Result` is
+`Err(NestedEvaluationInputBoundary)`; `PrepareSingleBlockInitializerFinalizer`
+(`scoping/lexical/block/resume_frames.rs:41-45`) serializes the
+block's `initializer_outcome` through
+`SuspendedSingleBlockScope::into_continuation_expr` and
+`result_into_continuation_expr` into `ContinuationValue for EvalError`.
+Every produced variant except the structural slot fault has a wire arm
+there — `InputRequired` included — so the new variant is on the wrong
+side of that line. Depth is not the issue; this is a carrier
+reachability fact about a supported public route, and a panic here is
+worse than P1555's silent difference. The candidate cannot install in
+this shape.
+
+**My calibration of the resolution.** In a scratch copy of the public3
+tree I added the zero-argument wire arm in both directions
+(`InternalContinuationEvalErrorNestedEvaluationInputBoundary`; the
+guard keeps `ContinuationSlotMismatch(_)` alone), rebuilt the
+`b730_nested` binary at the scene's stable path (26.65 s, peak
+2,327,875,584 B, oom 0, binary `39b50799…`), and ran it: the resumed
+Block's panic is gone; twelve of the fourteen legacy cases return the
+typed error at 8 and 1 (direct, block-single, block-multi,
+block-resumed, block-init-resumed, loop, loop-resumed, cases-level,
+cases-level-resumed, position-level, test-report, test-report-resumed);
+the two `guest-get` cases are the documented guest file-load boundary:
+`Ok` with `$Failed` and a `Get`/`load` message whose text is exactly
+the refusal Display ("nested top-level evaluation cannot suspend for
+host input"), no pending input — `finish_guest_get`
+(`guest_loading/file.rs:146-164`) converts every error other than the
+five pass-through variants to `$Failed` plus a message, unchanged by
+this brief. The probe's typed-error expectation for that route was
+its author's error; its failure at `b731_legacy_probe.rs:56:9` is
+retained. The owner suite is green on the wire-arm build at 8 and 1
+(5/5).
+
+**Ruling.** The STOP is well taken. layout2's enum placement, the
+public surfaces, the seven-file scope and the cost ruling stand; the
+Q2 consolidation sentence is revised:
+
+1. The legacy wire carries every produced error, the typed boundary
+   included: `suspension/error.rs` gains the zero-argument forward and
+   inverse arms for `NestedEvaluationInputBoundary`; the `unreachable!`
+   arm returns to `EvalError::ContinuationSlotMismatch(_)` alone with
+   its existing text (the wire and guard are removed at R; the text
+   now names only the structural slot fault).
+2. Wire coverage is a class duty: every `EvalError` variant is
+   dispositioned as serialized in both directions or unreachable with
+   a source proof. `ContinuationSlotMismatch` is the only permitted
+   unreachable; its producer is the structural slot fault
+   (`suspension/core/fault.rs:40`), raised as a driver fault. Any
+   other variant on the guard is a STOP.
+3. The carrier round trip is tested: `into_continuation_expr` →
+   `from_continuation_expr` returns the new variant unchanged, and the
+   resumed-Block typed route becomes a permanent test in stage 2. Its
+   calibrated red is the continuation-2 public3 binary's panic at
+   `suspension/error.rs:272`; its green is the same route on the
+   wire-arm source.
+4. The 14-case legacy probe is corrected only in its two `guest-get`
+   expectations: the guest file-load boundary returns `Ok($Failed)`
+   with the `Get`/`load` refusal message, no pending input, and a
+   fresh request works; the resumed variant first takes a real outer
+   pause at `InputString["outer"]`. The twelve in-language cases return
+   the typed error. The old probe source, binaries and failures are
+   retained; the loader disposition in the class table is confirmed by
+   measurement, never changed.
+5. No other production file; any additional production file or public
+   surface is a STOP. The shape changed again, so the standing cost
+   lane is re-run on the exact revised shape (four hot rows, the
+   `EvalError` drop row, the finalizer row, the three sizes, the
+   equal-call positive scan; two draws at N=10/20, one codegen unit,
+   serial and pinned). No `rum_runtime` row may increase at equal
+   calls in either draw; a decrease is recorded, never normalized; any
+   increase is a STOP.
+6. The 1.5 falsifier stays exactly as written, on the exact revised
+   source.
+
+**Continuation 3 order (stage 1 only, no live edit).**
+
+1. Reassemble the four copies from the same origins with the wire arm
+   in `suspension/error.rs` (the same seven production files; the
+   matrix tree from the C37 real tree); rebuild through the canonical
+   builder with a fresh `LOGS` root and one `--force` sha256 spot
+   check; record every build receipt.
+2. Re-run at 8 and 1: the 30-cell matrix (30/30 typed and retired;
+   native 30/30 byte-exact; semantic 22 exact plus the eight
+   bijections); the owner witness with its four controls and the
+   unchanged calibrated red; the typed-channel unit.
+3. The 14-case legacy probe: the twelve in-language routes typed at
+   8 and 1; the two `guest-get` cases on the corrected expectation at
+   8 and 1, quoting the `$Failed` value and the message text and
+   asserting the pre-resume outer pause on the resumed variant; the
+   old expectation retained as the retained failure.
+4. The wire round-trip test on the new variant.
+5. 1.5 the falsifier on the exact revised source.
+6. The cost lane of item 5 above.
+7. The class table with the wire-carrier rows and the
+   `ContinuationSlotMismatch` source proof; the six finalizer sites,
+   the loader and cancel dispositions unchanged.
+8. No live edit; report stage 1 and STOP for my gate. Stage 2 remains
+   blocked.
+
+**Recorded, not gated.** The cumulative-output correction (the latent
+suffix-only assertion corrected to the exact four-element cumulative
+array, the old failure retained, and a direct 1/2/4 control) is
+accepted as a normative correction: `docs/guide/evaluation.md:327-331`
+and `docs/guide/embedding.md:298-300` make pause and terminal
+responses cumulative, and the direct control proves the prefix.
+The worker's probe order is preserved, and the cases it never reached
+are the continuation-3 duty. My wire-arm build is a director
+calibration, not a canonical build, and does not consume the brief's
+24. The install-time permanent matrix remains the install gate, not
+this copied matrix.
