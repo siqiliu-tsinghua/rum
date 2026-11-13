@@ -1633,6 +1633,24 @@ subprocess contract, exact 0/1 counts kept) before any claim of
 comprehensive profiling-test isolation. Do not fix it by weakening the
 equality or adding a skip.
 
+**Open obligation, measured at brief 733's step-4 gate (2026-11-13):** the
+logical profiler's epoch is process-global, so parallel sessions in one
+process share it. With `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`, the 15-test
+`nested_public_evaluation` suite at eight threads faults the epoch exactly
+once on every run of both the accepted capture candidate and the unrepaired
+entry (40 of 40 measured runs; brief 732's passing eight-thread log carries
+the same single fault), and the debug policy assertions fire intermittently
+— `queue_api.rs:47` (`logical_insert_boundary` after `policy()` reads a
+record the fault retired) and `profile_queue.rs:888` (the queue insert's
+policy check) — failing 5/20 candidate runs and 4/20 entry runs, across four
+different tests. At one thread both arms are clean (no fault; candidate
+15/15, entry at its stable capture red). The class is pre-existing and
+orthogonal to the capture repair; no candidate byte fixes it. A design brief
+must give parallel non-lease suites a valid profiled regime (per-process
+epochs or a serialized suite) with the accounting suite as its own check.
+Do not fix it by weakening either assertion, skipping tests or changing the
+threading requirement.
+
 Test isolation, done:
 - the design (brief-633) is gated;
 - the test-artifact constructors (brief-634: `PrivateScratch` and

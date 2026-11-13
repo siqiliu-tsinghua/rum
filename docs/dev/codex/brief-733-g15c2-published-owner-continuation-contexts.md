@@ -481,3 +481,100 @@ runtime filters, the seven host and nine stdlib suites, `check
 builds remain; brief 731's 8 stay separate.
 `prepared-four-file-unformatted.patch` is a review artifact, not the
 installable patch.
+
+## Director gate (2026-11-13) — step 4 accepted: the four-file candidate is installable, and the profiled eight-thread assertion is the pre-existing parallel-epoch class
+
+**Run.** `cdx` (gpt-6-astra, max; session
+`01a1d2d0-054b-77d3-b21f-e1e827611ea4`, forked from
+`01a1d2c3-625e-7290-a8ed-7b7a7a0b2a05`; log
+`.temp/logs/cdx_brief_733.log`, 900,342 B, sha256 `ad6548e5…`, `tokens
+used` 2,843,562 as the log reports it; memory-scope unit
+`brief-733-cdx-20261113-105010-470914`, peak 6,494,765,056 B, oom 0,
+oom_kill 0, rc 0; 62 run records — the 16 inherited preserved byte-exact
+and 46 new; report 12 PASS, 2 FLAGGED, 1 NA, `report.py check 733` OK
+with 505 citations by my own run; 2 of the 4 canonical builds, 2 remain,
+no transfer; 0 git attempts, no network; every write under
+`.temp/brief-733/`; the live tree untouched). The two FLAGGED items are
+the first profiled eight-thread permanent-suite attempt (14/1 at
+`profiling/logical/queue_api.rs:47:9`) and a 7.615-second overlap of two
+Cargo commands; Q3 asks how to dispose of the former.
+
+**My scope walk.** live 2,737 files == the scene's final live manifest;
+the only live difference from the entry copy is the governing brief
+itself (the scene copy is `90cc2500`'s bytes, live is HEAD `b0aa5bf4`'s —
+my two ruling appends, the authorized director delta). The four arms equal
+their final manifests (entry 2,737; control 2,741, exactly the five
+disclosed control paths; candidate 2,737; release 2,741); the candidate
+delta is exactly the four scoped paths; its three production files are
+byte-equal to brief 732's `source-candidate-a`; the touched test file is
+the entry's 444 lines / 11 tests plus `accounting-addition-formatted.rs`
+(sha `188fa2cc…`) byte for byte; the nine protected pins and the 24
+inventory receipt files are identical in live and all four arms; the
+four-file patch is `225c2db1…`; both release binaries are `ff25109a…`.
+
+**My reproductions.** Ordinary permanent suite: candidate 20/20 runs
+15/15 at eight threads, entry 20/20 runs 14/1 at
+`suspension/core/evaluation_context.rs:33:9` — the repaired red is stable
+on the entry arm and absent from the candidate. Profiled at one thread:
+candidate 3/3 runs 15/15 with zero `InstrumentationFault`, entry 3/3 runs
+14/1 with zero faults. Profiled at eight threads, forty runs: candidate
+15/20 green, all five failures at the two debug policy assertions
+(`queue_api.rs:47` twice, `profile_queue.rs:888` three times) in four
+different tests; entry 4/20 runs show the same two assertions. Every
+profiled eight-thread run on both arms carries exactly one
+`InstrumentationFault`; no run at one thread carries any; brief 732's
+passing eight-thread log carries one too. No candidate run ever fails the
+capture witness. From source: the logical epoch is process-global,
+`ProfileBoundary::policy` reads an epoch record, a fault retires those
+records, and both assertions validate the policy before any owner check —
+so one session's fault invalidates another session's boundary. The class
+is arm-independent and pre-existing.
+
+Accounting: 16/16 cases across four invocations (ordinary and profiled,
+eight and one), each with the four maintained-accounting tuples. Named
+surfaces: 181 runtime filter tests, 38 host tests over seven suites, 436
+stdlib tests over nine suites, each at eight and one. `cargo check
+--all-targets` exits 0. `cargo fmt --check` exits 1 on exactly the three
+ruled brief-731 files plus the `outcome.rs` alias, with no diff inside any
+touched file. The ten frozen C4 comparisons are byte-exact by record: 18
+records, 0 differing, no normalization. The 51-row `context-sites.tsv`
+re-surveys to 51 unique dispositions; the six production
+`resume_context()` callers are exactly `core.rs:556/591`,
+`evaluation_context.rs:72`, `driver.rs:89/136`, `queue_api.rs:59`; the
+ownership argument is sound on the installed report/ticket lifecycle with
+its frame-protocol premise stated.
+
+**Ruling (Q3: the assertion is the pre-existing class).** The intermittent
+profiled eight-thread assertion is not a candidate defect and not an
+inventory-ordering artifact. It is the process-global logical-profiler
+epoch's parallel-session test-isolation class: a fault retires the
+epoch's records, and another session's boundary then reads no policy, so
+the debug assertion fires. It fires on the entry arm at the same rate
+(4/20 against 5/20), on paths the candidate does not touch, and never at
+one thread. The candidate, the witness, the assertions and the threading
+stay unchanged, and the failure stays in the record. The profiled bar is
+met on the only valid instrument for this suite — the one-thread receipt
+(3/3 runs, 15/15, zero faults) together with the accounting regression's
+sixteen profiled cases; the eight-thread profiled suite is recorded as a
+known-invalid observation regime. The class is recorded in `TODO.md` as an
+open obligation for the profiling line (per-process epochs or a serialized
+non-lease suite; never a weakened assertion or a skip). The Cargo overlap
+is accepted as the worker's scheduling deviation: both affected receipts
+were replayed serially and I re-ran both groups clean; no timing is
+credited.
+
+**Accepted.** Step 4 is complete; the four-file candidate and the amended
+token proof are the installable shape; brief 733 is done. Steps 1-3 stand
+as ruled; 2 of brief 733's 4 canonical builds remain with its line and
+transfer to nothing; brief 731's 8 stay separate.
+
+**Next.** Brief 731 continuation 6 installs on the live tree: the three
+capture files byte-identical to the accepted candidate, the accounting
+regression (entry 444 lines plus the formatted addition), the ruled
+formatting of the three brief-731 arms with its re-pins, then `fmt` /
+`check` and the witness 15/15 ordinary at eight and one, then stage 3
+exactly as ordered (standing replay first, acceptance once, the combined
+cost lane — two draws, equal calls, one codegen unit, every positive row
+retained, one forced SHA; the 599/4 entry row and the no-increase scan
+unchanged). Then continuation 38 of brief 623; then C2's settlement
+round, CM, `CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2.

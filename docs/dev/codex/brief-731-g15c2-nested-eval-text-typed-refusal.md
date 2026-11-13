@@ -1129,3 +1129,51 @@ and dispatch the implementation brief, then dispatch brief 731 continuation 6
 the installed source; then C2's settlement round, CM, `CHANGELOG.md` before
 S10 (including this enum break and the earlier `EvalError::Syntax` break),
 G13 S10-S54/F1-F23/R, E2.
+
+## Continuation-6 order (2026-11-13) — install the accepted capture repair, then close stage 3
+
+Enter on the live tree at the director gate commit that appends this order
+(the tree is clean and pushed). The stage-2 install stands, committed at
+`0aca7e38`; this brief's stage-1 and stage-2 receipts stand and are not
+rerun. Brief 733's step-4 gate (its latest section) accepted the four-file
+capture repair — three production files and one accounting regression, with
+the formatted addition at sha256 `188fa2cc…`. Install it, then run stage 3.
+
+1. **Production install.** Replace the three files with the accepted
+   candidate bytes, byte-identical to
+   `.temp/brief-733/continuation-1/source-candidate`:
+   `suspension/core/evaluation_context.rs` (the published-owner bound in
+   `resume_context`), `suspension/core/queue.rs` (`back_context`), and
+   `suspension/core/storage.rs` (`FrameStorage::back_context`). No other
+   production file changes; no signature, surface, frame or accounting
+   formula moves.
+2. **Accounting regression.** `runtime/tests/resume_evaluation_context.rs`
+   becomes the entry file (its 444 lines and 11 tests byte-identical) plus
+   `accounting-addition-formatted.rs` (sha `188fa2cc…`), byte-identical to
+   the accepted candidate; the amended token proof in
+   `.temp/brief-733/continuation-1/accounting-amended-token-proof.json` is
+   its receipt. No other test file changes.
+3. **Formatting and re-pins.** Apply the ruled rustfmt expansions to the
+   three brief-731 arms (`outcome.rs:696`, `model/requests.rs:53`,
+   `request_errors.rs:133`; the fourth fmt entry is the same `outcome.rs`
+   through the `suspension_oracle` alias) and record them in a new receipt
+   as the installable hashes, superseding the C4 pins on formatting only.
+   The C4 receipt itself is never edited. `cargo fmt --check` must then be
+   clean and `cargo check --all-targets` must exit 0.
+4. **Witness.** The `nested_public_evaluation` suite must be 15/15
+   ordinary at eight and one threads — the capture repair removes the
+   pre-existing `evaluation_context.rs:33` red — and the accounting
+   regression must show its 16 cases in ordinary and profiled modes at
+   eight and one. The profiled eight-thread run of the permanent suite is
+   not a pass/fail instrument: brief 733's gate records its pre-existing
+   process-global-epoch class (also in `TODO.md`). Do not use it as a bar,
+   weaken an assertion or skip a test.
+5. **Stage 3, exactly as ordered above.** Standing inventories replay first
+   on the installed source, with their verdict lines quoted; acceptance
+   once; then the combined cost lane on the final source — the seven-file
+   refusal delta and the repair's delta — two draws, equal calls, one
+   codegen unit, every positive row retained, one forced SHA. The entry
+   row's 599/4 bar and the no-increase scan are unchanged. Eight canonical
+   builds remain; a required step that cannot fit is a STOP, not a
+   self-authorized cap.
+6. **Report and STOP** for the director's final gate; no live commit.
