@@ -1296,3 +1296,115 @@ receipts stand and are not rerun until the source changes.
    the no-increase scan are unchanged. Eight canonical builds remain; a
    required step that cannot fit is a STOP, not a self-authorized cap.
 4. **Report and STOP** for the director's final gate; no live commit.
+
+## Director gate (2026-11-13) — continuation 7: the census maintenance and the standing replay are accepted exactly as ruled; the two ordinary runtime reds are the recorded root-context obligation, not this round's defect; continuation 8 finishes stage 3
+
+Run: `cdx` (gpt-6-astra, max; session
+`01a1d31c-95e8-7a12-97ca-c0195e95da07`; log
+`.temp/logs/cdx_brief_731.log`, 772,664 B, sha256 `bbf4440f…`, `tokens used`
+198,340 as the log reports it; memory-scope unit
+`brief-731-cdx-20261113-121347-510052`, peak 4,913,836,032 B, oom 0,
+oom_kill 0, rc 0; 36 run records; report 12 PASS / 1 FLAGGED / 1 FAIL / 2
+NA, `report.py check 731` OK with 5,388 citations by my own run; 0
+canonical builds this round, 22 of 30 consumed and eight remain; 0 git
+attempts, no network; every write under `.temp/brief-731/`; the live tree
+carries the accepted C6 install plus the three C7 paths, uncommitted).
+
+**The round.** The census maintenance is exactly the ruled edit: the count
+pin 1,220 -> 1,229, the kinds map `{RET001: 14, RET002: 1,177, RET003: 38}`,
+the three `abandon.rs` positional expectations 43/44/94 -> 50/51/101, and
+one comment paragraph naming brief 735; the `wrapper.rejected.len() == 16`
+pin is untouched and the frontier prints `PUBLIC_WRAPPER=16`. The standing
+replay is canonical and ordered: the fingerprint generator emitted 68
+changed cells and the certificate merge 2 promoted rows, both installed
+from the generator's own output; ownership, LP01 and typed slots replayed
+with zero moves; the census is green at eight and one; `fmt --check` and
+`check --all-targets` green; no source outside the three scoped paths
+changed. The acceptance then stopped at `cargo test -p rum-runtime` before
+any later suite, with the one-thread reproduction retained and no
+assertion, test or skip changed.
+
+**My scope walk.** Live equals the C7 scene's final copy on all 1,627
+files under `crates/`; against the C6 scene's final copy the live delta is
+exactly the three ruled paths (the census test and the two re-emitted
+TSVs); the census-test delta against C6 is exactly the two ruled hunks; the
+`local-contracts.tsv` delta is 68 moved lines with every moved cell in the
+`fingerprint` column and no row added, removed or reordered; the
+`promoted.tsv` delta is two rows with only the `hash=true` / `hash=false`
+certificate cells moved. The census emission is one sha, `1e4ca317…`, for
+all six dumps (entry, maintained and final replay, at eight and one) and
+equals the brief-731 continuation-6 gate's own final emission; the fresh
+multiset against the 1,220 base (`15e6c2cc…`) is my own parse: six added
+keys totalling nine RET002 rows, zero removed, kinds 14/1,177/38, and the
+three `abandon.rs` sites read 50/51/101 with 43/44/94 absent.
+
+**My reproductions.** On the final tree at eight and one threads the
+filtered runtime pair reproduces at both counts with the exact text —
+`lp655_root_context_falsifier` (`catch.eval.total` calls 0 against 1,
+`control.rs:1137`) and `lp656_public_root_context_falsifier` (the public
+phase map empty against `catch.body.evaluate` and `catch.eval.total` with
+one completed call each, `control.rs:109`). I built the clean HEAD archive
+(`9f1e62df`, which already carries the stage-2 refusal install and brief
+735) at its own target and reproduced the identical two failures with
+identical values at eight and one; the filtered count differs by exactly
+one test (1403 against 1402), the accounting regression the C6 install
+adds. The failing file
+`crates/rum-runtime/src/runtime/profiling/tests/control.rs` is
+byte-identical (`6397a8ce…`) at HEAD, at the C6 entry and at the final
+tree. The census test is green at eight (56.18 s) and one (55.99 s) on my
+own runs. `report.py check 731` passes from my own run. The `changes` list
+names exactly the 16 live paths plus the two `.temp` report files.
+
+**The STOP, classified.** `TODO.md` records the pair verbatim as "The two
+root-context reds (`lp655`/`lp656`) remain a separate standing obligation"
+(it is also in the brief-719 and brief-735 gate records, the latter as
+`runtime lib 1432/2/5 with exactly lp655/lp656`). The pair is red
+identically on the pre-install HEAD tree and on the final source, at eight
+and one, in a test file no path of this brief touches. It is a
+pre-existing, arm-independent class: not a defect of the census
+maintenance, of the C6 capture repair or of this brief's line, and no
+repair belongs in this scope.
+
+**Ruling (Q1).** The STOP is well taken and the worker was right not to
+self-authorize an exclusion. The two tests are accepted as the standing
+pre-existing root-context obligation: the acceptance bar for stage 3 is
+"no new red", the ordinary runtime suite's parent verdict must read
+`1433 passed; 2 failed; 5 ignored` with exactly that pair failing, and the
+same pair is named wherever the workspace run meets `-p rum-runtime`. Do
+not edit the test, add a skip, change an assertion or re-pin anything. The
+remaining acceptance (host suite, workspace at eight threads, the
+no-default certificate gate) and the combined cost lane move to
+continuation 8; the standing replay is not rerun.
+
+**Next:** continuation 8 completes stage 3 on this final source and
+reports; then continuation 38 of brief 623; then C2's settlement round, CM,
+`CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2.
+
+## Continuation-8 order (2026-11-13) — finish stage 3 on the accepted final source
+
+Enter on the live tree at the director gate commit that appends this order
+(the tree carries the 16-path install, uncommitted for the final gate). The
+census maintenance, the standing replay and the accepted C6 install stand
+and are not rerun; the two named runtime tests are the recorded standing
+obligation, accepted at this gate.
+
+1. **Complete the acceptance, once.** On the final source run
+   `cargo test -p rum-host` and `cargo test --workspace --no-fail-fast` at
+   eight threads, and re-run the no-default-feature certificate gate. The
+   runtime parent verdict is `1433 passed; 2 failed; 5 ignored` with
+   exactly `lp655_root_context_falsifier` and
+   `lp656_public_root_context_falsifier` failing; the nine native ZeroMQ
+   loopback tests remain the documented worker-sandbox skip. Exactly those
+   failures are accepted; any other red is a STOP, reproduced at
+   `--test-threads=1` first. No test, assertion or skip changes.
+2. **Cost lane.** The combined lane on the final source — the seven-file
+   refusal delta and the repair's delta — two draws, equal calls, one
+   codegen unit, serial: the Callgrind identity lane on every changed
+   function and all affected hot functions, the
+   `scripts/core-language-microbench.sh` A/B with all labels and same-tier
+   neighbours, profiling off, every positive row retained and reported, one
+   forced SHA spot check. The entry row's 599/4 bar and the no-increase
+   scan are unchanged; a hot increase no shape removes is a STOP for my
+   ruling. Eight canonical builds remain; a required step that cannot fit
+   is a STOP, not a self-authorized cap.
+3. **Report and STOP** for the director's final gate; no live commit.
