@@ -109127,3 +109127,42 @@ therefore dispatches continuation 45 in a **fresh** session with
 tainted by the substituted model and over the flash model's 262,144-token
 context limit), no price ceiling and the standing 43,200 s time limit. The
 continuation-45 order above is unchanged.
+
+## Continuation 45 run 2 (2026-11-13) — stopped by the director: the provider's catalogue lost the full GLM-5.3, the user rejected the Flash variant, and continuation 45 re-dispatches on `cdx`
+
+Run 2 was dispatched at 21:20:11 +08:00 in a fresh `mst` session pinned to
+`MST_MODEL=zai-glm-5-3-flash` (unit
+`brief-623-mst-20261113-212011-749484`, session
+`fae73193-5760-b790-06ac-5691df09f537`, time limit 43,200 s, no price
+ceiling). At 21:27 the user rejected the weakened model (verbatim:
+“不行，flash模型比正版要弱啊，没有别的模型名了吗？”) and the director
+stopped the run at 21:28. The log (434 B, sha256
+`8668b68edd061bcbf3ad6c87f36d22311ba179338dddf19a8245f3c56a80d34e`)
+holds only the dispatch header and `Stopped: terminated`; the
+`.git-attempts` file is 0 B; no `.temp/g15-c2/c45` scene exists; nothing
+was written; `git status` is clean at `c6a90538`. The export reads
+`outcome: terminated`, `cost_usd: null`, no steps. The log and its 0 B
+`.git-attempts` are archived as
+`.temp/logs/archive/mst_brief_623.continuation-45.flash-stopped{,.git-attempts}`.
+
+The model removal is provider-side, not a local configuration choice.
+The brief-734 export (07:34) listed `mistral-large-4-0-3`, `zai-glm-5-3`
+(alias `glm-5-3`, $1.4/$4.4, thinking low/high/max) and
+`zai-glm-5-3-flash`; the 19:48 export still carried `glm-5-3` in its
+model map; the 21:20 export carries only `mistral-medium-3.5` and
+`zai-glm-5-3-flash`, whose internal name is
+`zai-glm-5-3-flash-vibe-free` (the free variant). Direct probes of
+`zai-glm-5-3`, `glm-5.3`, `glm-5-3-flash`, `zai-glm-5-3-air`,
+`glm-4.6`, `zai-glm-4.6`, `mistral-large-4-0-3`, `mistral-large-latest`
+and `mistral-vibe-cli-latest` all return `Error: Unknown model` with the
+same two-item list; the local `~/.vibe/config.toml` still names
+`glm-5-3`, which is why every start prints "Settings for model
+'glm-5-3' are ignored".
+
+User ruling (2026-11-13): continuation 45 continues on `cdx`, not on the
+weaker Flash model. The continuation-45 order above is unchanged; the
+round re-dispatches on `cdx` (gpt-6-astra max) in a fresh session on the
+unchanged installed source, re-authenticates the scene at Entry, and
+runs the settlement and the 138-row tail under the fresh bounded
+allocation. A provider safety-filter refusal stops the run for the
+director, who asks the user before any further routing change.
