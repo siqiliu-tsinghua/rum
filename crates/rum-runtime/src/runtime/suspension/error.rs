@@ -273,6 +273,10 @@ impl ContinuationValue for EvalError {
                     "a structural slot fault cannot enter the legacy error wire; this wire and guard are removed at R"
                 )
             }
+            EvalError::NestedEvaluationInputBoundary => tagged(
+                "InternalContinuationEvalErrorNestedEvaluationInputBoundary",
+                Vec::new(),
+            ),
             EvalError::Syntax {
                 error,
                 input_source,
@@ -617,6 +621,11 @@ impl ContinuationValue for EvalError {
             };
             request.password = password;
             Self::InputRequired { request }
+        } else if is_system_symbol_name(
+            &head,
+            "InternalContinuationEvalErrorNestedEvaluationInputBoundary",
+        ) {
+            Self::NestedEvaluationInputBoundary
         } else if is_system_symbol_name(&head, "InternalContinuationEvalErrorExceptionThrown") {
             Self::ExceptionThrown {
                 exception: args.next().expect("exception error stores its exception"),

@@ -35,6 +35,21 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    fn refuse_nested_top_level_input(&mut self, error: EvalError) -> EvalError {
+        if matches!(error, EvalError::InputRequired { .. }) {
+            if self.pending_request.is_some() {
+                return EvalError::NestedEvaluationInputBoundary;
+            }
+            if self.evaluation_depth.get() != 0 {
+                self.abandon_pending_suspension(AbandonReason::HelperBestEffortDiscard);
+                return EvalError::NestedEvaluationInputBoundary;
+            }
+        }
+        error
+    }
+
     pub(in crate::runtime) fn finalize_top_level_eval_value(
         &mut self,
         outcome: Result<Expr, EvalError>,
@@ -280,6 +295,7 @@ impl Session {
                 Ok(value)
             }
             Err(err) => {
+                let err = self.refuse_nested_top_level_input(err);
                 self.emit_non_loader_eval_message(mark, &err);
                 self.emit_top_level_control_flow_messages(&err);
                 self.last_message_list = self.messages.after_vec(mark);

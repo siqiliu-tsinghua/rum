@@ -134,7 +134,7 @@ fn restore_from_snapshot_source_that_requests_input_returns_synthesized_failure(
     let mut session = HostSession::new();
 
     let failure = session
-        .restore_from_bytes(b"x = InputString[\"name: \"]")
+        .restore_from_bytes(b"x=1\nInputString[\"name: \"]\nx=2")
         .expect_err("snapshot restore should reject input-requiring source");
 
     assert_eq!(failure.code, HostFailureCode::Other);
@@ -144,6 +144,21 @@ fn restore_from_snapshot_source_that_requests_input_returns_synthesized_failure(
     );
     assert!(failure.messages.is_empty());
     assert!(failure.prints.is_empty());
+    assert!(session.pending_input_request().is_none());
+    match session.resume_with_input("unused") {
+        HostEvalOutcome::Failure(failure) => {
+            assert_eq!(failure.code, HostFailureCode::Other);
+            assert!(failure.message.contains("no suspended evaluation"));
+        }
+        other => panic!("terminal restore must retire its owner: {other:?}"),
+    }
+    assert_success_text(session.eval("x"), "1");
+    assert_success_text(session.eval("6*7"), "42");
+    assert!(matches!(
+        session.eval("InputString[\"fresh\"]"),
+        HostEvalOutcome::InputRequired(_)
+    ));
+    assert_success_text(session.resume_with_input("ready"), "\"ready\"");
 }
 
 #[test]

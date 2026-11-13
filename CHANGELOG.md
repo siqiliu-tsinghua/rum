@@ -158,6 +158,30 @@ minor versions may include breaking changes; the project aims to follow
   heuristic are gone; `rum-stdlib`'s lazy steppers observe the request phase
   word directly.
 
+- The pending report and the request ticket now share one lifecycle. Every
+  pending report is stored, retired, and resumed beside the suspension it
+  names; a raw inspection resume that retires a published report ends that
+  report's request ticket at the consume authority; a deferred reservation
+  from `request_cancel_handle` is promoted only onto a request-owned owner,
+  by the report-gated cancellation hand-off or by an admitting request entry
+  after its overlap rejection; and the abandonment authority ends the request
+  whose stored report it retires, after the registered cleanup drain and never
+  before it — through the drain the ticket stays installed, so a cleanup that
+  cancels its own request is still observed.
+
+  A pending report now carries the identity of the accepted-request ticket it
+  belongs to, minted by the entry that installs that ticket; a report published
+  by a plain entry is ticketless, and every finish authority completes only a
+  matching active ticket. One observable behavior changes, rooted in that
+  borrowed composition: a nested plain publication running under a foreign
+  active ticket can no longer retire that ticket. A cancellation of the
+  foreign ticket leaves the nested report pair installed and the nested entry
+  returns its existing overlap refusal instead of a borrowed cancellation; a
+  raw takeover or an abandonment of the nested report retires it and leaves
+  the outer ticket installed through the cleanup drain, ending at its own
+  after-drain finish. Registered cleanup still runs exactly once, in the
+  documented order, on every exit.
+
 ## [0.2.0] — 2026-08-31
 
 ### Fixed

@@ -101,6 +101,21 @@ impl HostSessionBuilder {
 /// A session owns runtime definitions, contexts, pending input continuations,
 /// tracing state, timeout/cancel configuration, and the poison boundary used
 /// after a caught panic.
+///
+/// Native builtin callbacks receive a runtime [`Session`]. A same-session
+/// nested raw `eval_text`, `eval_script`, or `eval_file` call completes normally
+/// when its input is already queued. If it would actually suspend, it returns
+/// [`rum_runtime::EvalError::NestedEvaluationInputBoundary`], exposed here as
+/// [`HostFailureCode::NestedEvaluationInputBoundary`]. The entry abandons its
+/// captured continuation through ordered cleanup; a pre-existing pending request
+/// owner is preserved. The refused entry has no continuation for the host to
+/// resume, and a fresh request can run once any pre-existing owner completes.
+///
+/// A native callback may transform a synchronous successful value. Its Rust
+/// return processing is never captured or replayed after the typed refusal;
+/// callers must handle or propagate that error. Ordinary source request/resume,
+/// non-resumable script/file batches, and terminal snapshot restore retain their
+/// respective input contracts.
 pub struct HostSession {
     session: Session,
     config: HostConfig,

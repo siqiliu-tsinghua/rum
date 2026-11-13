@@ -1,6 +1,7 @@
 use super::super::*;
 use crate::runtime::model::{OutputLog, OutputMark};
 use rum_syntax::SourceText;
+use std::num::NonZeroU64;
 use std::time::Instant;
 
 pub(in crate::runtime) struct EvaluationRollbackSnapshot {
@@ -67,15 +68,42 @@ impl Session {
 
     pub(in crate::runtime) fn activate_pending_accepted_request(
         &mut self,
-    ) -> Result<(), SessionRequestFailure> {
+    ) -> Result<Option<NonZeroU64>, SessionRequestFailure> {
         if self.active_accepted_request.is_some() {
-            return Ok(());
+            return Ok(None);
         }
         let accepted = self.pending_accepted_request.borrow_mut().take();
         if let Some(accepted) = accepted {
+            let generation = accepted.generation();
             self.install_accepted_request(accepted)?;
+            return Ok(Some(generation));
         }
-        Ok(())
+        Ok(None)
+    }
+
+    /// True when `owner` names the session's currently active ticket.
+    pub(in crate::runtime) fn accepted_request_owned_by(&self, owner: ReportOwner) -> bool {
+        owner.as_generation().is_some_and(|generation| {
+            self.active_accepted_request
+                .as_ref()
+                .is_some_and(|ticket| ticket.generation() == generation)
+        })
+    }
+
+    /// Finishes the active accepted request only when `owner` names it. A
+    /// plain owner — a plain driver entry, or a plain nested publisher's
+    /// report — never finishes a ticket, borrowed or otherwise.
+    pub(in crate::runtime) fn finish_report_owner_ticket(&mut self, owner: ReportOwner) -> bool {
+        if !self.accepted_request_owned_by(owner) {
+            return false;
+        }
+        self.finish_active_accepted_request()
+    }
+
+    /// The active ticket is cancelled and `owner` names it: this driver's own
+    /// request is the cancelled one.
+    pub(in crate::runtime) fn cancels_owned_request(&self, owner: ReportOwner) -> bool {
+        self.active_accepted_request_is_cancelled() && self.accepted_request_owned_by(owner)
     }
 
     pub(in crate::runtime) fn active_accepted_request_is_cancelled(&self) -> bool {
@@ -90,7 +118,7 @@ impl Session {
         accepted
     }
 
-    pub(in crate::runtime) fn finish_active_accepted_request(&mut self) -> bool {
+    fn finish_active_accepted_request(&mut self) -> bool {
         self.take_active_accepted_request()
             .is_some_and(AcceptedRequest::finish)
     }

@@ -1,5 +1,6 @@
 use super::*;
 use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
+use std::num::NonZeroU64;
 
 impl fmt::Display for SessionRequestError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -53,6 +54,7 @@ impl fmt::Display for SessionRequestError {
             }
             Self::Exit { code } => write!(f, "Exit[{code}]"),
             Self::InputRequired { request } => write!(f, "{request}"),
+            Self::NestedEvaluationInputBoundary => f.write_str("nested top-level evaluation cannot suspend for host input"),
             Self::Other { message } => f.write_str(message),
         }
     }
@@ -219,6 +221,7 @@ pub enum SessionRequestError {
     Other {
         message: String,
     },
+    NestedEvaluationInputBoundary,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -310,11 +313,43 @@ impl ReportedOutput {
     }
 }
 
-/// The request a pending suspension belongs to: its admission mark and what
-/// the host has already been shown.
+/// The accepted-request ticket one pending report belongs to, taken from the
+/// interrupt generation word the ticket was minted with.
+///
+/// A `Ticketed` token exists only beside a driver admission that installed
+/// or promoted that ticket for its own invocation; a `Plain` token is any
+/// other publisher — a plain driver entry, or a plain nested publisher that
+/// pauses while a foreign active ticket is running. The private field keeps
+/// the token inside the ticket domain: outside this module a value can only
+/// be minted by an admission or read from a parked report.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(in crate::runtime) struct ReportOwner(Option<NonZeroU64>);
+
+impl ReportOwner {
+    /// Mints the identity of a ticket this admission itself installed or
+    /// promoted.
+    pub(in crate::runtime) fn ticketed(generation: NonZeroU64) -> Self {
+        Self(Some(generation))
+    }
+
+    /// Mints the identity of a publisher that owns no ticket; a retirement
+    /// of this report owes no ticket finish.
+    pub(in crate::runtime) fn plain() -> Self {
+        Self(None)
+    }
+
+    /// The generation of the ticket this owner names, if any.
+    pub(in crate::runtime) fn as_generation(self) -> Option<NonZeroU64> {
+        self.0
+    }
+}
+
+/// The request a pending suspension belongs to: its admission mark, the ticket
+/// it speaks for, and what the host has already been shown.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(in crate::runtime) struct PendingReport {
     pub(in crate::runtime) mark: OutputMark,
+    pub(in crate::runtime) owner: ReportOwner,
     pub(in crate::runtime) reported: ReportedOutput,
 }
 

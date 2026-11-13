@@ -126,6 +126,75 @@ Its structured diagnostic and rendered text describe the original answer,
 including its spans, lines, and columns. The failed request releases pending
 input so a fresh request can succeed.
 
+## Nested Evaluation In Native Callbacks
+
+Native builtin callbacks receive a runtime `Session`. A same-session nested raw
+`eval_text`, `eval_script`, or `eval_file` call finishes synchronously when input
+is already queued. If that entry would actually suspend for host input, it
+returns `EvalError::NestedEvaluationInputBoundary`. Request and host adapters
+preserve the distinction as `SessionRequestError::NestedEvaluationInputBoundary`
+and `HostFailureCode::NestedEvaluationInputBoundary`, with the message
+"nested top-level evaluation cannot suspend for host input".
+
+The refused entry retires its captured continuation through ordered abandonment,
+including cleanup exactly once from the inner scope outward. It leaves no new
+pending owner to resume. A pre-existing pending request owner is preserved and
+can still resume; fresh requests work after the owner completes. Overlapping
+request admission continues to reject a new evaluation while input is pending.
+
+A native callback can map a successful nested value, for example wrapping it in
+a list. That transformation still runs when queued input lets the call finish.
+On actual suspension the callback receives the typed failure and must handle or
+propagate it: its Rust frame and return processing are never replayed.
+
+The ordinary source/Expr request drivers, including accepted requests, keep
+their input/resume protocol. Lower-level `lower_text`/`evaluate` calls retain
+their existing contract. Script/file request batches remain non-resumable after
+empty-queue input; queued input is supported. Terminal snapshot restore reports
+`Other` with "snapshot restore unexpectedly requested input", retires its
+suspension, and preserves state installed before the failed input. Ordinary guest
+`TestReport` capture and `Get` loading still resume; their own failure handling
+also applies when guest code calls a native builtin that receives the new error.
+
+## Pending Report And Request Ticket Lifecycle
+
+Every pending report is stored, retired, and resumed beside the suspension it
+names. A request-driven evaluation that suspends for input publishes exactly
+one pending report, and each retirement — the request resume, a raw public
+inspection resume, the queued-input discard through the public input path, or
+a checkpoint rollback — publishes the reported prefix exactly once while it
+retires that same suspension. A raw consumption that retires a published
+report now also ends that report's request ticket at the consume authority:
+the takeover does not leave a report-less ticket half-installed. The
+abandonment authority ends the request whose stored report it retires, and it
+does so after the registered cleanup drain and never before it; through the
+drain the ticket stays installed, so a registered cleanup that cancels its own
+request is still observed.
+
+An accepted request's ticket is the generation-qualified cancellation lane of
+`accept_cancellable_request`. It ends at its own driver tail — completion,
+at-entry cancellation, or cancelled pause — or at a retirement authority
+acting on a report that names it, and never on a borrowed close. Tickets
+minted by `request_cancel_handle` before any request is admitted are deferred
+reservations; a reservation is promoted only onto a request-owned owner, by
+the report-gated cancellation hand-off or by an admitting request entry after
+its overlap rejection, never by a plain evaluation.
+
+The pending report carries the identity of the accepted-request ticket it
+belongs to, minted by the entry that installs that ticket. A report published
+by a plain entry — a plain driver entry, or a nested publisher running under a
+foreign active ticket — is ticketless. Every finish authority takes the stored
+identity and finishes only a matching active ticket, so a ticketless
+retirement leaves an active foreign ticket installed. In that borrowed
+composition this is observable: a nested plain publication under a foreign
+active ticket can no longer retire that ticket. A cancellation of the foreign
+ticket leaves the nested report pair installed, and the nested entry returns
+its existing overlap refusal instead of a borrowed `TerminatedEvaluation`
+cancellation; a raw takeover or an abandonment of the nested report retires it
+and leaves the outer ticket installed through the cleanup drain, ending at its
+own after-drain finish. Registered cleanup still runs exactly once, in the
+documented order, on every one of those exits.
+
 ## Deliberate Limits And Deferred Work
 
 - Source-created trees are protected by parser, evaluator, matcher, and native-

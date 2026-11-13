@@ -146,6 +146,8 @@ pub enum HostFailureCode {
     Exit,
     /// A failure that does not map to a more specific host code.
     Other,
+    /// A same-session nested top-level evaluation required unqueued host input.
+    NestedEvaluationInputBoundary,
 }
 
 impl HostFailureCode {
@@ -694,6 +696,7 @@ fn failure_code(error: &SessionRequestError) -> HostFailureCode {
             HostFailureCode::EvaluationPassLimitExceeded
         }
         SessionRequestError::Exit { .. } => HostFailureCode::Exit,
+        SessionRequestError::NestedEvaluationInputBoundary => HostFailureCode::NestedEvaluationInputBoundary,
         SessionRequestError::ContinuationSlotMismatch { .. }
         | SessionRequestError::StackLimitExceeded { .. }
         | SessionRequestError::InputRequired { .. }

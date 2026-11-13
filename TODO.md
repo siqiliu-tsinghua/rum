@@ -8144,3 +8144,33 @@ output. At n=800 the cost fell from 648 797 287 375 to 78 001 406, about
 | gate | fmt clean, **2 474 tests green**, nine native ZeroMQ binding loopback, zero skips | Step C
 carries a microbench A/B and step D carries the 29-chain prerequisite, so
 neither is a cheap-to-verify dispatch.
+
+## 2026-11-13 — G15-C2 brief 735 accepted: the request report/ticket ownership install
+
+Brief 735 (`mst`; $14.94; log `.temp/logs/mst_brief_735.log`) installs the
+combined repair on the working tree: the authorized eleven-file brief-731
+stage-2 base plus the sixteen scoped paths. The identity repair is byte-equal
+to the continuation-5 arm of record on eight of the nine production paths; the
+ninth carries the ordered one-line visibility shrink (`pub(in crate::runtime)
+fn` -> `fn`), so the compiler now enforces that `finish_report_owner_ticket` is
+the only finish reachable outside `session_helpers.rs`. The two re-entrant
+class witnesses and both pairing regressions carry their receipt bytes, the
+three capture-repair files stay at live bytes, and the derived inventory delta
+is exactly 68 fingerprint cells reproduced by the canonical generator.
+
+My gate reproduced the three-point ladder at eight and one (plain entry green
+with the entry tail, the four-change topology red 0/1 with the receipted
+tuples, the installed tree green 1/1 with the identity tail), the full gate
+set at its receipted totals (13/13 regressions, frozen 1/1, both C4 controls,
+filters 11/119/26/2/15/9, runtime lib 1432/2/5 with exactly lp655/lp656,
+host 50/50 x4 plus lifecycle 6/6, nested 14/15 with only the known pre-existing
+red, check green, fmt exactly the three ruled brief-731 arms), the nine
+changed-function cost rows exactly at the accepted C5 deltas from my own parse
+of all sixteen callgrind captures, and all twenty C4 owner comparisons
+byte-exact on the receipted release binaries. Q1 accepts the microbench
+wall-time flags as release-layout effects on the instruction lane's authority.
+
+After this line: brief 733's continuation on the repaired tree, brief 731
+continuation 6 (the three-file capture repair and the accounting regression),
+then continuation 38 of brief 623; then C2's settlement round, CM,
+`CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2.

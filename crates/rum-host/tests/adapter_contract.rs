@@ -281,3 +281,55 @@ fn public_config_facade_controls_core_builtin_installation() {
         other => panic!("expected evaluated Plus with installed builtins, got {other:?}"),
     }
 }
+
+#[test]
+fn nested_raw_evaluation_reports_a_typed_nonresumable_failure() {
+    fn nested(
+        session: &mut rum_runtime::Session,
+        _: &rum_core::Expr,
+        _: &rum_core::SharedArgs,
+    ) -> Result<rum_core::Expr, rum_runtime::EvalError> {
+        session
+            .eval_text("InputString[\"nested\"];42")
+            .map(|outcome| outcome.value)
+    }
+    let mut session = HostSession::builder()
+        .with_builtin_installer(|session| {
+            session.register_builtin(rum_runtime::BuiltinSpec::ordinary_with_hold(
+                "NestedBoundary",
+                "Host adapter boundary fixture.",
+                rum_runtime::HoldAttribute::HoldAll,
+                nested,
+                rum_runtime::MemoryGrowthContract::Incremental,
+            ));
+        })
+        .build();
+    match session.eval("NestedBoundary[]") {
+        HostEvalOutcome::Failure(failure) => {
+            assert_eq!(failure.code, HostFailureCode::NestedEvaluationInputBoundary);
+            assert_eq!(
+                failure.message,
+                "nested top-level evaluation cannot suspend for host input"
+            );
+            assert!(!failure.code.requires_reset());
+        }
+        other => panic!("expected typed boundary failure, got {other:?}"),
+    }
+    assert!(session.pending_input_request().is_none());
+    match session.resume_with_input("unused") {
+        HostEvalOutcome::Failure(failure) => {
+            assert_eq!(failure.code, HostFailureCode::Other);
+            assert!(failure.message.contains("no suspended evaluation"));
+        }
+        other => panic!("nested refusal must not be resumable: {other:?}"),
+    }
+    assert!(matches!(session.eval("6*7"),
+        HostEvalOutcome::Success(ref success) if success.value.text == "42"));
+    assert!(matches!(
+        session.eval("Input[\"ordinary\"]+2"),
+        HostEvalOutcome::InputRequired(_)
+    ));
+    assert!(matches!(session.resume_with_input("40"),
+        HostEvalOutcome::Success(ref success) if success.value.text == "42"));
+    assert!(session.pending_input_request().is_none());
+}

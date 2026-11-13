@@ -7,11 +7,14 @@ impl Session {
         reason: AbandonReason,
     ) -> AbandonReason {
         let pending = self.take_accounted_pending_suspension_for_abandon();
-        self.pending_request = None;
-        self.refresh_memory_owner(
-            crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
-        );
+        // The retired certificate: the parked report with the ticket it
+        // carries. A plain nested publisher's report retires without touching
+        // the foreign active ticket; an owned report finishes only its own.
+        let retired_owner = self.take_pending_report_owner();
         let Some(pending) = pending else {
+            if let Some(owner) = retired_owner {
+                self.finish_report_owner_ticket(owner);
+            }
             return reason;
         };
 
@@ -19,7 +22,11 @@ impl Session {
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::AbandonmentWorklist,
         );
-        self.drain_abandonment_worklist(reason)
+        let reason = self.drain_abandonment_worklist(reason);
+        if let Some(owner) = retired_owner {
+            self.finish_report_owner_ticket(owner);
+        }
+        reason
     }
 
     pub(super) fn drain_abandonment_worklist(&mut self, reason: AbandonReason) -> AbandonReason {

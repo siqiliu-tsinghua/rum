@@ -482,6 +482,14 @@ impl Session {
 
     fn take_accounted_pending_suspension_for_resume(&mut self) -> Option<SuspendedEvaluation> {
         let pending = self.suspension_access().take_for_resume();
+        // An explicit raw resume consumes the report with its owner, and
+        // finishes only the ticket the report carries: a plain nested
+        // publisher's report retires without touching a foreign active
+        // ticket. The request driver has already taken its report before
+        // reaching here.
+        if let Some(owner) = self.take_pending_report_owner() {
+            self.finish_report_owner_ticket(owner);
+        }
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
         );

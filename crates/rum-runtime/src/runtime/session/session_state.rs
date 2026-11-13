@@ -573,6 +573,8 @@ pub enum EvalError {
     Exit { code: i64 },
     #[error("{request}")]
     InputRequired { request: RuntimeInputRequest },
+    #[error("nested top-level evaluation cannot suspend for host input")]
+    NestedEvaluationInputBoundary,
     #[error("uncaught exception: {exception}")]
     ExceptionThrown { exception: Expr },
 }

@@ -196,6 +196,7 @@ const fn failure_code_name(code: HostFailureCode) -> &'static str {
         HostFailureCode::EvaluationPassLimitExceeded => "EvaluationPassLimitExceeded",
         HostFailureCode::Exit => "Exit",
         HostFailureCode::Other => "Other",
+        HostFailureCode::NestedEvaluationInputBoundary => "NestedEvaluationInputBoundary",
     }
 }
 

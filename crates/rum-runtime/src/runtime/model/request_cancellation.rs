@@ -71,6 +71,12 @@ impl AcceptedRequest {
         Arc::ptr_eq(&self.control, control)
     }
 
+    /// The interrupt generation word this ticket reserves: the identity a
+    /// published report of this request carries.
+    pub(in crate::runtime) fn generation(&self) -> NonZeroU64 {
+        self.generation
+    }
+
     pub(in crate::runtime) fn is_reserved(&self) -> bool {
         self.control.is_active(self.generation)
     }

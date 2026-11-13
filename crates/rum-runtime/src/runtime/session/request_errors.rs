@@ -133,6 +133,7 @@ pub(super) fn session_request_error_from_eval_error_with_source(
         EvalError::InputRequired { request } => SessionRequestError::InputRequired {
             request: request.clone(),
         },
+        EvalError::NestedEvaluationInputBoundary => SessionRequestError::NestedEvaluationInputBoundary,
         EvalError::ExceptionThrown { exception } => SessionRequestError::Other {
             message: format!("uncaught exception: {exception}"),
         },

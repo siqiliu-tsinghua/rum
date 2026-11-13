@@ -362,3 +362,88 @@ suite, scope hashes, the red/green calibration tuples, the cost rows,
 the doc receipts, and any open decision. Close with
 `python3 scripts/report.py summary 735` output and nothing else. Do not
 commit; STOP for the director's gate.
+
+## Director gate (2026-11-13)
+
+**Accepted in full.** Run: `mst` (GLM-5.3, session
+`dc09d88f-80aa-3927-660d-a27c19c94383`; log `.temp/logs/mst_brief_735.log`,
+34,207 B; $14.94, 49,686,627 in / 192,937 out; memory-scope peak
+3,595,362,304 B, oom 0, oom_kill 0, rc 0; 220 run records, 9 checks PASS,
+3 measurements PASS and one FLAGGED (microbench, settled below);
+`report.py check 735` OK with 712 citations by my own run; 5 of the 8
+canonical release builds used, 3 unused with no transfer; git-attempts 0,
+no network; every write under `.temp/brief-735/`; the tree left
+uncommitted as ordered).
+
+**My scope walk.** The post-install walk reads 2,737 files and equals
+`final-tree-hashes.json` exactly (0 missing / 0 extra / 0 differing); the
+change set against the pinned pre-state is exactly the 16 scoped paths
+(12 modified, 4 added, 0 deleted) on top of the authorized eleven-file
+brief-731 stage-2 base. Of the nine production paths, eight are
+byte-equal to the continuation-5 arm of record and to its after-replay
+receipt; the ninth (`session_helpers.rs`) differs from the arm by exactly
+line 121 (`pub(in crate::runtime) fn` -> `fn`), and the grep finds two
+matches, both in that file, so `finish_report_owner_ticket` is the only
+finish reachable outside it. The two witnesses are byte-equal to the arm
+and to the C4 probe sources; the four-change files carry their C4
+receipt bytes (`session_requests.rs c1257a27`, `suspension/core.rs
+0e971f88`, `abandon.rs 0900f344`, both pairing regressions). The three
+capture-repair files are at live bytes (`bd67758`, `de397f`, `cbc436`);
+the nine protected pins equal both the entry and the arm;
+`Cargo.lock`/`Cargo.toml` are untouched; there is no `unsafe`; every
+added `pub` is `pub(in crate::runtime)` or `pub(super)`, so the public
+surface is unchanged. The inventory delta against the entry TSV is
+exactly 68 fingerprint cells with 0 added/removed/reordered, and my own
+canonical regeneration reproduces the installed TSV byte-exactly
+(`9e7175cc…`).
+
+**My reproductions.** The three-point ladder at eight and one, on my own
+builds: the plain-entry copy green with the receipted entry tail
+(`ticket_free=false`, `observer=true`); the four-change topology red 0/1
+with the receipted tuples (`ticket_free_after_*=true`,
+`retirement_cancel_observed=false`, outer prints `["outer-cleanup"]`,
+observations 3); the installed tree green 1/1 with the identity tail
+(`ticket_free=true`, `observer=false`). The gate set: 13/13 regressions,
+the frozen at-entry test 1/1, both C4 controls 1/1, the six filters
+11/119/26/2/15/9, the runtime lib 1432/2/5 with exactly lp655/lp656
+(aggregate 1434 from the two 1/0/0 child receipts), the four host
+targets 50/50 ordinary and profiled, lifecycle cancel 6/6,
+`nested_public_evaluation` 14/15 with exactly the known pre-existing red
+(`evaluation_context.rs:33`), `check --all-targets` green, `fmt --check`
+exactly the three ruled brief-731 arms plus the aliased `outcome.rs`
+entry, and the docs reference test green. From my own parse of all
+sixteen callgrind captures, every named row is deterministic in every
+cell at the C5 deltas (pause +3.0, consume -3.5, abandon +8.0, accepted
+entry +4.0, value-entry shard +2.5, resume driver +22.0, hand-off +2.4,
+value tail +0.25, reservation mint 0); my equal-call scan finds exactly
+those seven rows scaling per call, all on changed functions, while the
+remaining increases are constant offsets in libc/std/address rows and
+the draw-varying interner rows, recorded and never normalized. I re-ran
+the twenty C4 owner comparisons on the receipted release binaries:
+20/20 byte-exact against the frozen brief-731 records, no normalization.
+The forced canonical rebuild reproduces the candidate binary byte-exact
+(`26ce86b9…`).
+
+**Q1 accepted.** The microbench wall-time flags are release-layout
+effects, not added work: the instruction lane is the stronger instrument
+and reads +0.0113% whole-process (+1,274 of 11,246,081) on the exact
+persistent-label workload, with the timed label interiors net -1,472 Ir
+and the positive rows being the authorized driver-protocol reshape at
+the accepted C5 values; the four remaining wall-time flags are at most
+1.65%, inside the documented release-layout envelope, and the canonical
+one-codegen-unit panel lane is deterministic at the accepted deltas.
+
+**Deviations accepted:** the plain-entry/identity tail difference is the
+two receipted shapes; the empty third inventory replay is a determinism
+receipt that my own regeneration confirms; the extra draws and the
+instruction control are a stronger instrument for the same bar.
+**Disclosures recorded:** the generator's fixed `target/brief-544/`
+review copy, and the microbench attempt-1 exec-bit failure redone on the
+chmod'ed binary with no source effect.
+
+**State:** the combined install (the eleven-file brief-731 stage-2 base
+plus this brief's 16 paths) is committed with this ruling and pushed.
+Next: brief 733's continuation on the repaired tree (its old dispatch
+log archived first), then brief 731 continuation 6, then continuation 38
+of brief 623; then C2's settlement round, CM, `CHANGELOG.md` before S10,
+G13 S10-S54/F1-F23/R, E2.

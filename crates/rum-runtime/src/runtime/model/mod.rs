@@ -46,7 +46,7 @@ pub use requests::{
     SessionIsCompleteResponse, SessionLowerResponse, SessionParseResponse, SessionRequestError,
     SessionRequestFailure,
 };
-pub(super) use requests::{PendingReport, PendingRequest, ReportedOutput};
+pub(super) use requests::{PendingReport, PendingRequest, ReportOwner, ReportedOutput};
 pub use session::Session;
 pub(super) use session::{EvaluationStackEntry, ModuleActivation};
 pub(super) use traversal::{

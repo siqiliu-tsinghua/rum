@@ -99,8 +99,10 @@ impl Session {
             if matches!(failure.error, SessionRequestError::InputRequired { .. }) {
                 // Only an admitted restore can return InputRequired. Admission
                 // rejection is Other and must not retire an unrelated owner.
+                // The abandonment authority retires the parked report with
+                // its own owner; a bare second finish here could close a
+                // foreign active ticket in a nested composition.
                 self.abandon_pending_suspension(AbandonReason::FailedSnapshotRestore);
-                self.finish_active_accepted_request();
                 failure.error = SessionRequestError::Other {
                     message: "snapshot restore unexpectedly requested input".to_string(),
                 };

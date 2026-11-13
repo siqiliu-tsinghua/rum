@@ -234,6 +234,7 @@ fn suspended_frames_charge_storage_repeated_roots_and_exception_payloads() {
     session.begin_input_suspension(RuntimeInputRequest::new(reserved("prompt", 73)));
     session.pending_request = Some(PendingRequest::Resumable(PendingReport {
         mark: crate::runtime::model::OutputMark::START,
+        owner: ReportOwner::plain(),
         reported: ReportedOutput::at(crate::runtime::model::OutputMark::START),
     }));
     let bare_symbol = Symbol::from_name("frameRoot");

@@ -4,6 +4,7 @@ use super::request_errors::{
     session_request_error_from_eval_error_with_source,
 };
 use crate::runtime::model::OutputMark;
+use std::num::NonZeroU64;
 
 /// One clock stamps every session output list, so one mark names the cut on
 /// all four channels.
@@ -67,6 +68,22 @@ impl Session {
         taken
     }
 
+    /// Takes the parked report with its owner token, publishing nothing. The
+    /// two retirement authorities read the ticket identity here, so a retired
+    /// report can finish only the ticket it names.
+    pub(in crate::runtime) fn take_pending_report_owner(&mut self) -> Option<ReportOwner> {
+        let owner = self
+            .pending_request
+            .take()
+            .map(|pending| pending.report().owner);
+        if owner.is_some() {
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::PendingRequest,
+            );
+        }
+        owner
+    }
+
     fn store_pending_request(&mut self, request: PendingRequest) {
         self.pending_request = Some(request);
         self.refresh_memory_owner(
@@ -78,10 +95,28 @@ impl Session {
     pub fn finish_cancelled_pending_evaluation_request(
         &mut self,
     ) -> Result<Option<SessionEvalResponse>, SessionRequestFailure> {
-        self.activate_pending_accepted_request()?;
+        let mut promoted_by_call = None;
+        if self.pending_request.is_some() {
+            promoted_by_call = self.activate_pending_accepted_request()?;
+        }
         if !self.active_accepted_request_is_cancelled()
             || self.pending_suspension_generation().is_none()
         {
+            return Ok(None);
+        }
+
+        // The cancelled ticket retires only its own work. Two parked adoptions
+        // are lawful: a report-less owner keeps the frozen at-entry retirement,
+        // and a ticket this call promoted - the reservation adopting the
+        // pending work, as `request_cancel_handle` documents - is this
+        // call's to finish with the pair. Any other parked report qualifies
+        // only when its owner names the active ticket; a plain nested
+        // publisher's report under a foreign ticket is not this ticket's work.
+        let parked = self.pending_request.as_ref().map(PendingRequest::report);
+        let retirement_owned = parked.is_none_or(|report| {
+            promoted_by_call.is_some() || self.accepted_request_owned_by(report.owner)
+        });
+        if !retirement_owned {
             return Ok(None);
         }
 
@@ -181,15 +216,25 @@ impl Session {
         &mut self,
         input: &str,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.eval_request_admitted(input, None)
+    }
+
+    fn eval_request_admitted(
+        &mut self,
+        input: &str,
+        installed: Option<NonZeroU64>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
             return Ok(cancelled);
         }
         self.reject_overlapping_evaluation_request()?;
+        let promoted = self.activate_pending_accepted_request()?;
         self.begin_top_level_interrupt_budget();
+        let owner = admission_owner(installed, promoted);
         let checkpoint = RequestCheckpoint::new(self);
         let reported = ReportedOutput::at(checkpoint.mark);
-        if self.active_accepted_request_is_cancelled() {
-            return self.finish_cancelled_active_request(checkpoint, reported);
+        if self.cancels_owned_request(owner) {
+            return self.finish_cancelled_active_request(checkpoint, reported, owner);
         }
         let result = (|| {
             let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;
@@ -197,9 +242,9 @@ impl Session {
                 self.finish_request_failure(checkpoint, ReportedOutput::at(checkpoint.mark), err)
             })?;
 
-            self.eval_expr_request_from_checkpoint(expr, checkpoint, reported)
+            self.eval_expr_request_from_checkpoint(expr, checkpoint, reported, owner)
         })();
-        self.finish_accepted_value_request(result)
+        self.finish_accepted_value_request(result, owner)
     }
 
     /// Evaluates an already-built expression through the top-level request protocol.
@@ -210,19 +255,29 @@ impl Session {
         &mut self,
         expr: Expr,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.eval_expr_request_admitted(expr, None)
+    }
+
+    fn eval_expr_request_admitted(
+        &mut self,
+        expr: Expr,
+        installed: Option<NonZeroU64>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
             return Ok(cancelled);
         }
         self.reject_overlapping_evaluation_request()?;
+        let promoted = self.activate_pending_accepted_request()?;
         self.begin_top_level_interrupt_budget();
+        let owner = admission_owner(installed, promoted);
         let checkpoint = RequestCheckpoint::new(self);
         let reported = ReportedOutput::at(checkpoint.mark);
-        if self.active_accepted_request_is_cancelled() {
-            return self.finish_cancelled_active_request(checkpoint, reported);
+        if self.cancels_owned_request(owner) {
+            return self.finish_cancelled_active_request(checkpoint, reported, owner);
         }
 
-        let result = self.eval_expr_request_from_checkpoint(expr, checkpoint, reported);
-        self.finish_accepted_value_request(result)
+        let result = self.eval_expr_request_from_checkpoint(expr, checkpoint, reported, owner);
+        self.finish_accepted_value_request(result, owner)
     }
 
     /// Evaluates source text under a previously accepted request identity.
@@ -231,8 +286,9 @@ impl Session {
         accepted: AcceptedRequest,
         input: &str,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        let installed = Some(accepted.generation());
         self.install_accepted_request(accepted)?;
-        self.eval_request(input)
+        self.eval_request_admitted(input, installed)
     }
 
     /// Evaluates an expression under a previously accepted request identity.
@@ -241,8 +297,9 @@ impl Session {
         accepted: AcceptedRequest,
         expr: Expr,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        let installed = Some(accepted.generation());
         self.install_accepted_request(accepted)?;
-        self.eval_expr_request(expr)
+        self.eval_expr_request_admitted(expr, installed)
     }
 
     fn eval_expr_request_from_checkpoint(
@@ -250,6 +307,7 @@ impl Session {
         expr: Expr,
         checkpoint: RequestCheckpoint,
         reported: ReportedOutput,
+        owner: ReportOwner,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         let previous_message_list_checkpoint = self
             .current_message_list_checkpoint
@@ -270,6 +328,7 @@ impl Session {
                 return Err(
                     self.finish_input_required_request(PendingRequest::Resumable(PendingReport {
                         mark: checkpoint.mark,
+                        owner,
                         reported,
                     })),
                 );
@@ -318,6 +377,7 @@ impl Session {
         pending: PendingReport,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         let checkpoint = RequestCheckpoint { mark: pending.mark };
+        let owner = pending.owner;
         let reported = pending.reported;
         let previous_message_list_checkpoint = self
             .current_message_list_checkpoint
@@ -329,9 +389,10 @@ impl Session {
         let outcome = self.resume_suspended_evaluation(input.clone());
         let outcome = match outcome {
             Err(error @ EvalError::InputRequired { .. }) => {
-                if self.active_accepted_request_is_cancelled() {
+                if self.cancels_owned_request(owner) {
                     self.store_pending_request(PendingRequest::Resumable(PendingReport {
                         mark: checkpoint.mark,
+                        owner,
                         reported,
                     }));
                     return self
@@ -349,7 +410,7 @@ impl Session {
                 Err(error)
             }
             outcome => {
-                if self.finish_active_accepted_request() {
+                if self.finish_report_owner_ticket(owner) {
                     Err(EvalError::Cancelled)
                 } else {
                     outcome
@@ -370,6 +431,7 @@ impl Session {
             Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(
                 PendingRequest::Resumable(PendingReport {
                     mark: checkpoint.mark,
+                    owner,
                     reported,
                 }),
             )),
@@ -384,10 +446,20 @@ impl Session {
         &mut self,
         source: &str,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.eval_script_request_admitted(source, None)
+    }
+
+    fn eval_script_request_admitted(
+        &mut self,
+        source: &str,
+        installed: Option<NonZeroU64>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
             return Ok(cancelled);
         }
         self.reject_overlapping_evaluation_request()?;
+        let promoted = self.activate_pending_accepted_request()?;
+        let owner = admission_owner(installed, promoted);
         let checkpoint = RequestCheckpoint::new(self);
         let reported = ReportedOutput::at(checkpoint.mark);
 
@@ -398,6 +470,7 @@ impl Session {
             Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(
                 PendingRequest::Batch(PendingReport {
                     mark: checkpoint.mark,
+                    owner,
                     reported,
                 }),
             )),
@@ -405,7 +478,7 @@ impl Session {
                 Err(self.finish_completed_request_failure(checkpoint, reported, Some(source), err))
             }
         };
-        self.finish_accepted_value_request(result)
+        self.finish_accepted_value_request(result, owner)
     }
 
     /// Evaluates a script under one previously accepted request identity.
@@ -414,21 +487,31 @@ impl Session {
         accepted: AcceptedRequest,
         source: &str,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        let installed = Some(accepted.generation());
         self.install_accepted_request(accepted)?;
-        self.eval_script_request(source)
+        self.eval_script_request_admitted(source, installed)
     }
 
     pub fn eval_file_request(
         &mut self,
         path: impl AsRef<Path>,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        self.eval_file_request_admitted(path.as_ref(), None)
+    }
+
+    fn eval_file_request_admitted(
+        &mut self,
+        path: &Path,
+        installed: Option<NonZeroU64>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
             return Ok(cancelled);
         }
         self.reject_overlapping_evaluation_request()?;
+        let promoted = self.activate_pending_accepted_request()?;
+        let owner = admission_owner(installed, promoted);
         let checkpoint = RequestCheckpoint::new(self);
         let reported = ReportedOutput::at(checkpoint.mark);
-        let path = path.as_ref();
 
         let result = match self.eval_file_retaining_output(path) {
             Ok((value, termination)) => {
@@ -437,6 +520,7 @@ impl Session {
             Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(
                 PendingRequest::Batch(PendingReport {
                     mark: checkpoint.mark,
+                    owner,
                     reported,
                 }),
             )),
@@ -456,7 +540,7 @@ impl Session {
                 ))
             }
         };
-        self.finish_accepted_file_request(result)
+        self.finish_accepted_file_request(result, owner)
     }
 
     /// Evaluates a file under one previously accepted request identity.
@@ -465,8 +549,9 @@ impl Session {
         accepted: AcceptedRequest,
         path: impl AsRef<Path>,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        let installed = Some(accepted.generation());
         self.install_accepted_request(accepted)?;
-        self.eval_file_request(path)
+        self.eval_file_request_admitted(path.as_ref(), installed)
     }
 
     pub fn inspect_request(&self, name: &str) -> Option<SessionInspectResponse> {
@@ -601,6 +686,7 @@ impl Session {
     fn finish_accepted_value_request(
         &mut self,
         result: Result<SessionEvalResponse, SessionRequestFailure>,
+        owner: ReportOwner,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         if matches!(
             &result,
@@ -609,7 +695,7 @@ impl Session {
                 ..
             })
         ) {
-            if !self.active_accepted_request_is_cancelled() {
+            if !self.cancels_owned_request(owner) {
                 return result;
             }
 
@@ -626,7 +712,7 @@ impl Session {
             return self.package_eval_request_outcome(Ok(response));
         }
 
-        let result = if self.finish_active_accepted_request() {
+        let result = if self.finish_report_owner_ticket(owner) {
             self.force_cancelled_eval_result(result)
         } else {
             result
@@ -637,6 +723,7 @@ impl Session {
     fn finish_accepted_file_request(
         &mut self,
         result: Result<SessionEvalResponse, SessionRequestFailure>,
+        owner: ReportOwner,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         if matches!(
             &result,
@@ -645,9 +732,9 @@ impl Session {
                 ..
             })
         ) {
-            return self.finish_accepted_value_request(result);
+            return self.finish_accepted_value_request(result, owner);
         }
-        let result = if self.finish_active_accepted_request() {
+        let result = if self.finish_report_owner_ticket(owner) {
             self.force_cancelled_file_result(result)
         } else {
             result
@@ -686,8 +773,9 @@ impl Session {
         &mut self,
         checkpoint: RequestCheckpoint,
         reported: ReportedOutput,
+        owner: ReportOwner,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
-        let cancellation_won = self.finish_active_accepted_request();
+        let cancellation_won = self.finish_report_owner_ticket(owner);
         debug_assert!(cancellation_won);
         let response = self.finish_cancelled_eval_response(checkpoint, reported);
         self.package_eval_request_outcome(Ok(response))
@@ -759,6 +847,17 @@ impl Session {
             prints: reported.prints,
             trace: reported.trace,
         }
+    }
+}
+
+/// The ticket identity of a driver admission: the ticket this admission
+/// installed or promoted for itself, or no ticket at all. An inherited or
+/// foreign active ticket contributes nothing - that admission is plain, and
+/// its report retires with no ticket finish.
+fn admission_owner(installed: Option<NonZeroU64>, promoted: Option<NonZeroU64>) -> ReportOwner {
+    match installed.or(promoted) {
+        Some(generation) => ReportOwner::ticketed(generation),
+        None => ReportOwner::plain(),
     }
 }
 
