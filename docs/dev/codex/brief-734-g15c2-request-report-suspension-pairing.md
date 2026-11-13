@@ -1346,3 +1346,116 @@ edit; no git; no network; the probe binaries link only public APIs; no
 assertion, witness, inventory or C4 record changes; a counterexample,
 an unproven row or a public-surface change is a STOP, never an
 exclusion.
+
+## Continuation-5 gate (2026-11-13)
+
+**The design round is accepted. The ownership identity is ruled sound
+as implemented, with three director amendments carried into brief 735.**
+Run: `mst` (GLM-5.3, session `2d49cb8d-44a8-3a2c-2ca9-7a2f92899341`;
+log `.temp/logs/mst_brief_734.log`, 27,577 B; $15.90, 53,352,300 in /
+241,759 out; memory-scope peak 4,453,531,648 B, oom 0, oom_kill 0,
+rc 0; checks 13 PASS, measurements 5 PASS; `report.py check 734` OK
+with 1,209 citations by my own run; 3 of the continuation's 4 canonical
+design builds used, 5 of the overall 8 remain; git-attempts 0, no
+network; every write under `.temp/brief-734/continuation-5/` or the
+scene's own `report.json`/`PROGRESS.md`).
+
+**My scope walk.** Live 2,732 files = the round's entry pin exactly
+(0 missing / 0 extra / 0 differing); `git status` is still the
+authorized eleven-file stage-2 install plus the one untracked witness
+at `5a7a351e`; no live file is newer than the dispatch except the
+brief itself (07:33:21, my own pre-dispatch append); no other scene
+was touched. The entry copy equals live except the three untracked
+`scripts/__pycache__` artifacts it left out. The identity arm equals
+its `source-identity-c5-after-replay-hashes.json` receipt on 2,736
+files (0/0/0); against the continuation-4 minimal arm it differs in
+exactly the nine runtime paths, the two added witnesses and the
+canonical inventory (68 fingerprint-only cells, 0 added/removed/
+reordered, 0 non-fingerprint changes, `installed:false`); the two
+witnesses are byte-equal to the C4 probe sources and both pairing
+regressions byte-equal to the C4 minimal arm. Bookkeeping: the named
+`identity-source-delta.json` is stale for three source files and omits
+the inventory cell; `identity-source-delta.attempt4.json` reproduces
+the arm's hashes on the nine source paths and the two added tests
+(only the derived TSV's hash is superseded by the final replay), so
+**the arm plus its after-replay receipt is the install manifest, never
+the stale file.**
+
+**My reproduction.** Both witnesses green 1/1 at eight and one on the
+identity arm with the receipted green tuple (`inside=(false,true,None)`,
+outer `Ok(("outer-answer", None, [], ["WithCleanup::skipped"]))`,
+observations 5, cleanup skipped); the 12-case ticket panel plus the C1
+pairing regression 13/13 at eight and one; the frozen at-entry test 1/1
+at both counts; the six named filters 11/119/26/2/15/9 green at both;
+the runtime lib suite 1432 passed / the two standing root reds lp655
+and lp656 / 5 ignored at both; the four host targets 50/50 ordinary and
+profiled at both (switch on where gated); `check --all-targets` green
+at rc 0; `fmt --check` exactly the three ruled brief-731 arms (plus
+the aliased `outcome.rs` entry). The C4 red arms stand as receipted by
+the continuation-4 gate and this round's 12-run reproduction, which I
+re-verified then; this gate reproduces the green side.
+
+**One false bar, corrected.** The draft's measured-state list claims
+`nested_public_evaluation` 15/15 ordinary and profiled. The suite is
+**14/15** on the identity arm and on the live tree, at eight and one;
+the single failure is the known pre-existing
+`nested_reentrant_resume_preserves_the_real_preexisting_owner`
+(`evaluation_context.rs:33`, `continuation contexts unwind a saved
+prefix`), which brief 733 / brief 731 continuation 6 own. The 735 bar
+is 14/15 with exactly that failing set on live and on the installed
+tree; a fifteenth red or a moved failure is a STOP.
+
+**The cost, accepted (Q1).** The seven per-call rows — resume driver
++22.0, abandon +8.0, accepted entry +4.0, pause store +3.0,
+entry-from-checkpoint +2.5, hand-off +2.4, value tail +0.25 — are the
+identity's own functions, deterministic in every draw/thread/N cell;
+the consume site is a measured decrease (`take_accounted_pending...`
+-3.5 per take); no non-changed function shows a deterministic per-call
+increase (the four fixed one-time startup rows and the draw-varying
+interner/address rows are recorded, never normalized). The
+continuation-1 strict letter is clarified: the ordinary path is the
+guest evaluation hot interior, which shows no delta; the request-driver
+protocol rows are the authorized cost of the new state, and a
+mint-at-store reshape would only move the same instructions. The
+analyzer's `deterministic_across_all_4_runs=false` flag on
+`abandon_finish` is an absolute-Ir artifact — the per-call cells are
+exact +8.0 in all eight.
+
+**Rulings.** Q2 ratified: brief 735 gets at most **8** canonical
+release builds through `scripts/probe-build.py`, one release codegen
+unit, one forced SHA spot-check, standing separate from brief 733's
+held 4 and brief 731's remaining 8. The design is accepted: the
+private-field `ReportOwner` riding the existing interrupt generation,
+the entry-local mint (installed-or-promoted, never reading the active
+field), the owner-gated finishes and the ticketless-retirement no-op
+are sound; I read the nine-file diff and the induction's six points
+hold against the source. The continuation-4 Q5/Q6 rulings are
+satisfied (the two probes enter the install fleet as permanent
+witnesses). The four deviations are accepted: the hand-off gate
+refinement is the change-3 ruling's own promotion leg with the failed
+panel case retained; the resolved fourth filter selector and the
+runtime-lib aggregate distinction; the two arm-local formatting fixes
+(formatting-only, replayed); and the four-change base choice for the
+identity A/B, with the combined-install A/B owed at 735.
+
+**Amendments carried into brief 735.**
+1. `finish_active_accepted_request` shrinks to module-private (`fn`).
+   The design's tooth 1 claims the two authorities cannot name a bare
+   finish, but the helper is still `pub(in crate::runtime)` and
+   therefore reachable from both. Its only caller is
+   `finish_report_owner_ticket` in the same file, so the shrink is
+   behavior-free and makes the compiler enforce the claim; a grep
+   proof of no other caller is required at install.
+2. The `nested_public_evaluation` bar is 14/15 with the named
+   pre-existing red, never 15/15.
+3. The install manifest is the arm `source-identity-c5` plus its
+   after-replay receipt; the stale `identity-source-delta.json` is not
+   a manifest, and the derived inventory TSV is regenerated canonically,
+   never installed by hash.
+
+**Next:** brief 735 (implementation, the combined install) is written
+and dispatched on `mst` under the user's 2026-11-13 ruling that this
+task line is unsuitable for Codex; after its gate, brief 733's
+continuation on the repaired tree, brief 731 continuation 6,
+continuation 38 of brief 623; then C2's settlement round, CM,
+`CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2.
