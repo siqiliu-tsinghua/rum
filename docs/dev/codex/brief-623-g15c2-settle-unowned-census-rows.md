@@ -107819,3 +107819,252 @@ and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 141 Residual + 2 Lost until this
 round re-settles `P1555`; S10 stays unopened.
+
+## Continuation 39 ruling (2026-11-13) — the `P1555` literal queued-byte STOP is well taken; the eight-cell `Global`c37answer` bijection is the C4-ruled predicate restated, and `P1555` settles `Boundary` with `equal_claim:false`
+
+Continuation 39 stopped at `P1555`'s literal queued-byte gate after
+authenticating the entry, completing the one authorized source rebase,
+and running the matrix, the six minimized witnesses and the refusal
+suites. All 30 cells return the typed refusal and retire their
+continuation at eight and one threads; the native queued counters match
+30/30 and the semantic records 22/30; the eight differing cells differ
+only in the `Global`c37answer` Symbol and SymbolText intern ID (692 in
+the C37 reference, 681 in the round's process). The round refused to
+normalize, did not promote `P1555`, and started no tail family. That is
+the correct behaviour; the red is well taken.
+
+**Cause: my order's sentence, not the round's work.** The order said
+"queued arms byte-identical" without restating the predicate this
+campaign already ruled at brief 731 continuation 3 and verified at the
+C4 gate — semantic identity under the proven bijective intern-ID
+renaming (same text, same multiplicity, the `Global`c37answer`
+692↔681 pair only, every other token byte-equal; native 30/30 exact; no
+other normalization). A ruled exclusion belongs to the instrument and
+must be restated whenever the instrument is reused; the round could not
+infer it and did not.
+
+**My own verification** (`.temp/director/gate-623c39/`):
+- Entry pins: the five receipt files hash to their pins exactly; live
+  `crates/` is byte-identical to the round's `source-current` copy (0
+  differing paths); no commit has touched `crates/` since `22e0fb4c`
+  and the work tree is clean at `0d40e4e4`.
+- Rebase: exactly one; 1,042 rows / 78,330 canonical keys / 18,840
+  encoding rows; 0 verdict moves, 0 rows added or removed; 1,018 paired
+  (1,012 exact stable-function matches plus six pinned brief-735
+  admission-refactor endpoints); 24 unresolved; the ten changed
+  functions are named with current and prior hashes; `settled.tsv`,
+  `required-tuples.tsv`, `residuals.tsv`, `residual-list.tsv` and
+  `frozen-policies.tsv` are byte-identical to the C37 copies.
+- Matrix: I re-ran the receipted binary (`3ae151b9…`, forced spot
+  `spot_check=pass`) at eight and one threads; my raw record lines are
+  byte-identical to the round's logs (0 differing lines). 30/30 cells
+  typed and retired; native 30/30 exact; semantic 22/30 exact; the
+  eight differing cells differ only by the whole-token
+  `Symbol { id: 692, … "c37answer" } }` → `Symbol { id: 681, …
+  "c37answer" } }` renaming (Symbol and SymbolText), proven by exact
+  replacement equality in both directions with equal multiplicity; the
+  eight ids are exactly the C4 proof's eight.
+- Minimized: 6/6 cells exact in both fields at both thread counts (4
+  typed refusals, 2 direct controls); the permanent
+  `nested_public_evaluation` suite is 15/15 and the host
+  `adapter_contract` test 1/0 at eight and one on my own reruns.
+- The matrix tree is the C37 reference tree plus exactly the 36
+  installed paths plus the two appended fixture tests; the queued
+  drivers (`descriptors.rs`, `support/drive.rs`), `c2_probe.rs`,
+  `lib.rs`, `logical/mod.rs`, `fixtures/mod.rs` and `plans.rs` are
+  byte-identical to the C37 tree, and the fixture's existing 103 lines
+  are untouched.
+- Scope: 8,357 changes all under `.temp/g15-c2/c39/`, the shared
+  `.temp/g15-c2/probe/` cache and the existing Cargo cache; no git, no
+  network, no live edit; the protected scenes replay with 0 byte
+  changes; four builds (cap four) with the forced spot pass; eight
+  guest processes (cap eight); 0 guest and 0 Cargo after the stop; 36
+  tests passed; the six negative ledger controls are RED and the
+  positive GREEN; `report.py check` verifies 371 citations on my own
+  run. The retained non-zero attempts are preparation or instrument
+  failures (three rebase preparations, one source assembly, the
+  prescribed STOP, a stale source-owner metadata assertion, a text-based
+  source-owner replay); the AST replay and `integrity_finish` close
+  them, and no attempt was deleted or credited.
+
+**Ruling (Q1): yes — the queued-byte bar is the C4 predicate,
+restated.** For `P1555`'s queued reference the bar is raw byte identity
+except the single, proven injective renaming of the `Global`c37answer`
+Symbol and SymbolText intern ID 692→681, with the same text and the
+same multiplicity and every other byte equal, in exactly the eight
+cells (`Middle`, `Twice`, `AlreadyResumed`, `Nested` ×
+`prefix_and_tail.log` and `return_boundary.loop-store-reset`),
+reproduced at eight and one threads; native 30/30 exact; no other
+normalization. Any other byte, cell, symbol or ID difference is a STOP.
+The raw red stays in the record, no log or verdict is normalized, the
+diagnosis is not used as acceptance, and the claim stays
+`equal_claim:false`. The continuation-39 order's "byte-identical
+queued arms" sentence is amended by this restatement.
+
+**Ruling (Q2): `P1555` settles `Boundary` with `equal_claim:false`.**
+On this evidence the installed typed refusal is the documented
+non-resumable nested-evaluation boundary: the actual returned error in
+all 30 cells, the captured continuation retired (pending cleared) in
+all 30 at eight and one, the queued reference preserved under the
+restated predicate, the six minimized witnesses exact, the boundary
+documented and distinct from the script/file batch boundary, and its
+own suites green at eight and one. It is never Equal or
+`NoObservableTail`, and it is not settled by argument. Continuation 40
+applies the ledger move: `P1555` Lost→Boundary, the sole verdict
+change; outcomes Boundary 10 / Equal 164 / Identity 5 / Lost 1 /
+NoObservableTail 124 / Residual 141 / Transferred 594 / Unreachable 3;
+C2 Open at 141 Residual + 1 Lost.
+
+**Accepted:** the entry, the one rebase, the frozen requirements, the
+transitive replay (177 full proofs / 183 matrices / 10,093 SAME keys /
+865 named open), the retained attempts, the scope and the STOP. The ten
+changed-function duties stand except `P1555`'s, which this settlement
+discharges; `P1562` and `P1563` are newly pending and their accepted
+Equal verdicts remain unrevoked until a current full re-proof; `P1566`
+stays Lost; `P0496` stays reserved; the held pair columns and the
+`P0325`/`P0326` candidates are untouched. The C39 scene is a protected
+evidence scene from now on: it is read-only, and the continuation-40
+round cites it by path and sha256 rather than rewriting it. The C4
+bijection proof is copied stable under
+`.temp/g15-c2/references/brief-731-continuation-4-matrix-bijection-proof.json`
+(sha256 `30119d842f2924569a1b3403b4d4ca1c7327b08a05e798c1cb14488e12c487d9`).
+
+**C39 evidence pinned by sha256** (all under `.temp/g15-c2/c39/`, which
+disk hygiene never prunes): `matrix-queued-proof.json`
+`7dded38a5e259c82e844663c5f4e4405039f77e272eb10e1b2e357c26edce73a`;
+`matrix-queued-differences.json`
+`15e0e52735e640891419b723bfbe84db525aa2feb750814329d6b39bb0a130b9`;
+`queued-byte-diagnosis.json`
+`1b1ee81c054ccee766d0057e22655caaee8ca06026711afb68f23c7a7dc9eaa0`;
+`minimized-queued-proof.json`
+`43bb55c076df96e02e37d521cc94deff1a5b91813866272ad3c7e8fdb4c0779d`;
+`minimized-queued-differences.json` (empty)
+`37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570`;
+`build-refusal-matrix.json`
+`069ae75f0552542f627d06f1b048ecf766549561247b437b5e9e59d45c2c01e0`;
+`build-refusal-matrix-spot.json`
+`37b48cca6432f242efe005ab3df73adbc465d89a58d628ab92b0885c515c2006`;
+`rebase-summary.json`
+`618d15ab7665bd88cc8d5641e97683b161b2c99dba75845eb6693e5f6d93637f`;
+`rebase-current.json`
+`9f88f11943ad0700f460822101fe549fc629d0149cc0dd96f0a4ef1964956041`;
+`function-recheck-duties.json`
+`564888e859bb295fa1a247ec56eafe3ebc3af855766cb289329560d7d722a155`;
+`changed-function-packets.json`
+`adba8333867289fe63ce8a1c94cebf8f16aa34437bd2816e922337f680bc39a9`;
+`recheck-closure.tsv`
+`e58141bc879896c78d31f5b2df901e46a3c36e08f1c6975d1b1052aa3b759c63`;
+`transitive-recheck-summary.json`
+`a3c4a1c9ea129d9381a15fa72dad1f4856eb49f0aa8cc7b15e34f88cb2213f70`;
+`final-summary.json`
+`eca4f54b5cec708796236a9dbf2581038bb0e62accc3c788da250ae587e8f463`;
+`report.json`
+`b5bdc29293fa45bb2b803a0853fa815533c632f83f2447f63df005da2c0e3bce`;
+`settled.tsv` (byte-identical to C37)
+`123a468d21e39370461f54afd60acf01702ec048782c7cb01f9aacd62ddc5f0b`;
+`required-tuples.tsv` (byte-identical to C37)
+`3c2dcdff623890341df3fb71e9d7e3810b22bd233b7ffac80dc7f573c99fcc1f`;
+`residuals.tsv` (byte-identical to C37)
+`863371ea106fb45af5b65406b8528de7188d30cc5dca2734dbc88d91c5920fe5`.
+A cited packet whose bytes differ from its pin is a STOP.
+
+**Erratum (mine).** The continuation-39 order's "byte-identical queued
+arms" sentence is amended to the restated predicate above. The 30-cell
+matrix, the six minimized witnesses and the refusal suites are the
+settlement's evidence; nothing else changes.
+
+## Continuation 40 order (2026-11-13) — apply the `P1555` `Boundary` settlement, re-check the nine remaining changed-function rows in full, and resume the 141-row tail by mechanism
+
+Brief 623 continuation 40 continues the C2 settlement campaign,
+measurement-only, on the same installed source at `22e0fb4c`; the
+ruling commit above and this order's commit touch no crate file.
+Scratch is `.temp/g15-c2/c40`.
+
+**Source and entry.** Every file under `crates/` must equal HEAD's tree
+and the pinned installed pin. No second source rebase: the C39 rebase is
+the one; verify its receipts byte-exactly against the pins in the
+preceding ruling (`rebase-summary.json`, `rebase-current.json`,
+`function-recheck-duties.json`, `changed-function-packets.json`,
+`recheck-closure.tsv`, `transitive-recheck-summary.json`), and verify
+the five entry pins, the 36-path delta (31 modified, 5 added, 0
+removed), the 1,042 rows / 78,330 canonical keys / 18,840 encoding rows,
+0 verdict moves, 1,018 paired sources and the 24 unresolved sites. A
+changed live source, a receipt whose bytes differ from its pin, a missing
+pin, or a second rebase is a STOP. The C37, C38 and C39 scenes are
+read-only.
+
+**The `P1555` settlement.** Apply exactly what the ruling records:
+`P1555` Lost→Boundary with `equal_claim:false`, citing the C39 matrix
+packet (60 records), the queue-difference packet (16 entries, 8
+distinct cells), the diagnosis, the six minimized witnesses and the
+refusal suites, under the restated predicate. It is the sole verdict
+change: outcomes Boundary 10 / Equal 164 / Identity 5 / Lost 1 /
+NoObservableTail 124 / Residual 141 / Transferred 594 / Unreachable 3,
+0 rows added or removed, 78,330 keys and 18,840 encoding rows
+byte-identical. Do not re-run the C39 evidence (the source is
+unchanged); cite it by path and sha256.
+
+**The changed-function duties.** Re-check the nine remaining
+changed-function rows in full on this source, each with its own
+complete real matrix, its required nonencoding cells, its own armed-hit
+caught-or-surviving omission and its producer reach — `P1562` and
+`P1563` (`Session::eval_request_admitted`,
+`Session::eval_expr_request_admitted`) and `P1568`
+(`Session::resume_eval_request_from_checkpoint`) stay Equal only on a
+current complete proof; `P1570` and `P1572`
+(`Session::eval_accepted_script_request`,
+`Session::eval_accepted_file_request`) re-prove their Boundary evidence;
+`P1566` (`Session::eval_expr_request_from_checkpoint`) re-verifies its
+documented loss and stays Lost; `P1564` and `P1565`
+(`Session::eval_accepted_request`,
+`Session::eval_accepted_expr_request`) and `P1573`
+(`Session::abandon_pending_suspension`) are Residual tail rows and are
+addressed by the tail families that match them. A red or a surviving
+silent difference is a STOP; a verdict is never moved on the strength of
+an old receipt, and `P1562`/`P1563`'s accepted Equal verdicts are not
+revoked except by a current full re-proof that fails, which is a STOP
+for my ruling.
+
+**The tail.** Work the remaining 141-row tail by mechanism — 110
+LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 4 StrictCallerGap + 1
+StrictOtherCarrier + 1 New719Edge + 1 New725Edge — with each batch's
+own armed-hit caught-or-surviving omission: an Equal row needs its own
+caught omission and its complete real matrix, a proposal is
+`equal_claim:false` with a survivor for every required cell, and a row
+settled only by argument stays open. `P1566` stays Lost, `P0496` stays
+reserved, the 13 pair-column rows (including `P0528`, `P0340`, `P0475`
+and `P0824`) stay held and are not executed, and the `P0325`/`P0326`
+candidate measurements are retained and not promoted. Do not repeat the
+continuation-26 `resumed-call-argument-append` family, and do not repeat
+the continuation-27 through continuation-39 families or the C19–C37
+families without a genuinely new mechanism or instrument. The
+wrapper-tail identity is not carried: a further wrapper-tail row may be
+proposed to the director but is not executed without an explicit
+ruling. The standing instruments and their bounds are unchanged (public
+API only, never fabricating a value or an outcome, live source
+untouched, calibrated RED on its target, never reopening an accepted
+disposition); a row that needs an uncompilable configuration may use the
+feature-isolated driver construction and a row that needs a direct state
+read may add a scratch-only accessor or use an existing public
+accessor, both disclosed and measurement-only.
+
+**Families and duties.** The nine stopped families and the C19–C39
+families are not repeated without a genuinely new mechanism. The 863
+inherited named open transitive duties, the 24 unresolved sites, the 13
+pair columns and the five named owners stay explicit; the two newly
+pending current proofs (`P1562`, `P1563`) must be re-closed or named
+open with reasons; no source design work. Port tables and the ledger
+only by canonical replay. The round declares its own bounded build and
+guest budget before execution and records it; a required step that
+cannot fit is a STOP for my ruling, never a self-authorized exception.
+
+**Rules.** The two-family stop-loss and every standing rule stand: no
+repository mutation outside `.temp/`, no git, no network, no assertion
+weakening, no re-pinned inventory, no deleted attempt, no relabelled
+invalid recipe. All scratch under `.temp/g15-c2/c40`, the shared probe
+cache and the existing Cargo cache; disclose every path. Invalid,
+unarmed and failed observations never certify a settlement.
+
+**Stop.** Stop for the director gate at the round's end or at the
+two-family stop-loss. C2 stays Open at 141 Residual + 1 Lost after the
+settlement; S10 stays unopened.
