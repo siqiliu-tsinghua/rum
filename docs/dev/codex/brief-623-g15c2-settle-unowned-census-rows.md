@@ -109784,3 +109784,200 @@ attempt, no relabelled invalid recipe; C44, C45, C46, C47 and C48 are
 read-only scenes. Stop for the director gate at the round end or the
 two-family stop-loss. **Dispatch:** `scripts/dispatch-brief.sh 623`
 (background, `BRIEF_WORKER` unset = `cdx`).
+
+## Continuation 49 ruling (2026-11-14) — accepted in full; `P0813` settles `Equal` and continuation 50 applies the move; the `P1312`/`P0934` partial evidence is accepted with both rows Residual; the four-family allocation stop is well taken and the parked calibration is a source-explained observer blindness
+
+**Run accepted.** `cdx` (gpt-6-astra max, session
+`01a1d5bb-5fe5-7780-aa59-359e64c58683`, unit
+`brief-623-cdx-20261114-002629-818861`, started 2026-11-14 00:26:29 +08:00,
+rc 0, peak 3,205,451,776 B, oom 0, oom_kill 0; log
+`.temp/logs/cdx_brief_623.log`, 33,976 lines, 2,986,199 B, sha256
+`dd1742d6abcfcd3f4b5fcc64136d3a0fca28e2c905f0f5c7b39cc7f28ef91fba`, 204 run
+records, `tokens used` 393,547 as the log reports it; report
+`.temp/brief-623/report.json`, 12 PASS / 2 FLAGGED / 1 NA checks and one
+measurement PASS, `report.py check 623` 1,107 citations by my own run; no
+`.git-attempts`; every write under `.temp/g15-c2/c49` plus the shared
+probe/Cargo caches and the authorized report publication; 0 source edits;
+six retained non-zero runs — two controller corrections before any guest
+(`approved-settlement` attempt 1 on my ruling's line-wrapped phrase,
+`campaign-collector` attempt 1 `StopIteration` with 0 prior guests), two
+park-script assertion corrections, one replay-script `NameError`, and the
+designed exit-3 calibration STOP).
+
+**Entry and source.** 24 pins exact (12 receipt pins, 12 director pins), five
+entry receipts and the pinned C39 rebase receipt; 2,737 live files; 1,627
+production files at `3acf8a34…`; 1,042 rows / 78,330 keys / 18,840 encoding
+rows; 1,018 paired, 24 unresolved; 0 rebases this round. My own walk: 2,737
+live files 0 missing / 0 extra / 0 differing against `entry-hashes.json`, the
+production digest recomputed exactly, `git log 22e0fb4c..HEAD -- crates`
+empty, tree clean at `67c1055f`.
+
+**The settlement.** Exactly `P2642` and `P2648`, `Residual`->`Equal`,
+`equal_claim:true`, applied by the canonical ledger replay and not by hand:
+the C48 packets are pinned by path and sha256 (20 pins, 10 per family:
+freeze, calibration, coverage, mutants, gain, plans.json, plans.tsv,
+required, source-proof and full proofs, all checked against the C48 sealed
+manifest); 60 armed / hit / caught omissions (30+30) and 60 real SAME cells;
+`settled.tsv` equals the settlement-receipt hash `1721d291…`; exactly two
+lines differ from `inherited-settled.tsv`, only the settlement columns;
+outcomes 10/171/5/1/126/132/594/3; residual composition 103 LocalTail + 13
+ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1 New719Edge + 1
+New725Edge + 1 StrictOtherCarrier; the other 1,040 rows byte-identical; the
+78,330 keys (`requirements_sha256 3c2dcdff…`) and 18,840 encoding rows
+byte-identical; `P1573` Residual with its five explicit-cycle keys, `P1566`
+Lost, `P0496` Residual; the 13 pair columns and the 24 unresolved sites
+byte-identical to the inherited files. My own run of the final replay prints
+the canonical PASS line and seven RED negative controls (including the
+`blocked-encoding-matrix-promoted` control on `P2651`) with the positive
+GREEN, and the idempotence replay reads 0 new guests, 0 new builds and 0
+ledger hand edits.
+
+**The families (4 of 4 slots; 8/16 builds, 158/512 guests, 432/4,000 records,
+0 encoding runs; every family separately frozen before its builds and first
+guest — freeze indices 5/45/56/121, builds 6-7/46-47/57-58/122-123, first
+guests 9/49/60/126).**
+
+`catch-body-result-dispatch` (`P0813`): 30/30 fresh required keys, 30 armed /
+30 hit / 25 valid caught / 0 survived / 5 invalid; complete nonencoding
+matrix; real == disabled; producer reached; the actual
+`crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:80:Session::eval_catch`,
+the `resume_catch_after_body` dispatch at `:104`; the own queued omission
+forwards the actual `body_result` instead of executing the terminal match,
+after the original body profile boundary and before the original total
+boundary; both profile records remain; the real branch is `if false`; the
+omission flips the observable outcome (resumed Success against queued
+uncaught Throw); the five `return_boundary.loop-store-reset` invalid
+omissions are retained and never credited; `eligible_Equal`. The mechanism
+is absent from every c13–c48 scene and the family name appears nowhere
+before C49.
+
+`flat-collector-depth-restoration` (`P1312`): 55/55 nonencoding keys
+five-part SAME, 55/55 armed-hit-caught omissions, complete nonencoding
+matrix, new instrument — the actual ReplaceList all-matches consumer reaches
+the exact `collect_compiled_orderless_flat_choices_matches_owned` closure at
+`collect.rs:161`/`:172` (the earlier C17 route used MatchQ and never reached
+it; 55 real SAME with zero producer reach and zero armed there); but the
+row's 20 `BLOCKED_ENCODING` G13-transport keys keep `complete_matrix:false`
+and the row Residual, under the same rule that keeps `P2651`/`P2652`
+Residual and that the `blocked-encoding-matrix-promoted` negative control
+enforces.
+
+`held-pattern-completed-value-phase` (`P0934`): 55/55 nonencoding keys
+five-part SAME, 24 valid caught / 16 armed-hit survivors / 15 named
+non-executing cells / 0 invalid, with 20 G13-owned `SAME_SAVED` keys; the own
+omission returns the actual `Expr` before `normalize_match_expr` in
+`pattern_resolution.rs:22:Session::resolve_held_matcher_pattern@30`. The row
+stays Residual: no Equal (survivors and the 20 keys) and no
+`NoObservableTail` proposal (not every executing cell survives).
+**Recorded observation:** the completed-pattern read is
+`HoldComplete[c49orderless[1, 2]]` on the resumed arm against
+`HoldComplete[c49orderless[2, 1]]` on the queued arm, identical before that
+suffix — an orderless-container permutation, consistent with the Orderless
+contract and recorded, never promoted.
+
+`held-pattern-root-orderless-normalization` (`P0934`): frozen and built,
+calibration STOP at `known_tail_caught:false`; parked with
+`coverage_credited:0`, `matrix_not_run:true`, `equal_claim:false`. The source
+explanation is accepted: `CasesSpec::Pattern` re-normalizes through
+`compile_matcher_for_expr` → `normalize_match_expr` → `compile_matcher`, so
+removing the earlier success normalization leaves the measured final
+outcome and its trace unchanged; that explains the survivor but does not
+prove the earlier tail unobservable. The named next instrument is a read-only
+read of the actual completed `Expr` at the ordinary/root-resume return
+boundaries, without altering evaluation, recipes, checks or the omission.
+
+**The two FLAGGED checks are exactly these two items and are accepted.**
+`invalid=5` (P0813 loop context), `named_nonexecuting=15` and
+`armed_hit_survived=16` (P0934) are all retained, all uncited, `invalid_credited=0`,
+`NoObservableTail_proposals=0`. The one disclosure `deviations` entry — retained
+controller failures before settlement, calibration and replay — is accepted as
+instrument repair: no frozen packet, assertion or inventory cell changed.
+
+**My gate.** My own re-audit of the three matrices from the raw logs
+reproduces 30/55/55 groups, every group passing five-part SAME, real/disabled
+parity, actual producer reach and binding applicability. My own ledger diff
+reads exactly two lines; composition, keys, encodings, pair columns,
+unresolved sites and owners exact. Eight build receipts with eight binaries
+and eight assembled trees exact (all fresh, `cache_hit:false`,
+`spot_check:none` — no reuse, so the forced spot-check clause is vacuous).
+The C48 scene carry receipts (26 files) and director pins (7 files) are
+byte-identical and no C48 scene file is newer than the dispatch. My own
+protected walk reads 2,750,488 files with 0 missing, 0 extra and exactly one
+difference — `.temp/brief-623/report.json` (`93d2426c…` -> `5c8315c2…`), the
+authorized publication. The C49 evidence seal covers 22,525 files with 0
+missing and 0 changed. Post-stop: 158 guests in total with 0 after the stop,
+0 Cargo, 0 encoding, 0 held-row targeted runs. `report.py check 623` passes at
+1,107 citations. No assertion was weakened, no attempt deleted, no recipe
+relabelled, no inventory re-pinned.
+
+**Q1 — accepted.** `P0813` settles `Equal` on its complete 30/30 required
+matrix, its 25 valid caught omissions and a genuinely new mechanism.
+Continuation 50 applies the single `Residual`->`Equal` move by the canonical
+ledger replay, citing the C49 packets by path and sha256; no other row moves;
+outcomes become 10/172/5/1/126/131/594/3; the residual composition becomes
+102 LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1
+New719Edge + 1 New725Edge + 1 StrictOtherCarrier; C2 Open at 131 Residual +
+1 Lost.
+
+**Q2 — accepted, both rows Residual.** `P1312` and `P0934` keep `Residual`.
+`P1312`'s 20 blocked G13-transport encoding keys are the same class as
+`P2651`/`P2652`; a further attempt needs the G13 transport or an explicit
+ruling, never a relabel. `P0934`'s 16 armed-hit survivors and 20 G13 keys keep
+it Residual; a further attempt needs an observer that separates the
+completed value's orderless permutation and resolves the 20 keys. The parked
+root-orderless calibration is accepted as
+`ArmedHitSurvivor; observation blind to the intermediate normalized pattern`,
+with 0 coverage credited and the named next instrument; the source explanation
+is recorded and is not a product signal. The five invalid P0813 loop
+omissions and the 15+16 P0934 exception cells stay recorded and uncited.
+
+**Q3 — the allocation stop is well taken.** All four separately frozen family
+slots were used; each family was frozen before its builds and first guest; the
+two-family stop-loss did not fire (no two consecutive executed zero-progress
+families); the parked calibration counts as a failed calibration, never a
+coverage event; the retained controller and script corrections are instrument
+failures, never product signals. The inherited `tail_*` block in the
+transitive summary (`tail_families_executed=2`, `tail_coverage_keys_added=190`,
+`tail_current_SAME_keys=10403`, `tail_rows` `P1564`/`P1565`/`P1573`) is
+unchanged inherited metadata from C47/C48, not a C49 claim; the C49 counts are
+`families_frozen=4`, `families_attempted=4`, `families_executed=3`,
+`frozen_unrun_families=0`, `parked_calibrations=1`.
+
+**Continuation 50 order.** Entry on the unchanged installed source
+`22e0fb4c`: every file under `crates/` equals the C49 final manifest
+(production digest `3acf8a34…`, 1,627 files; 2,737 live files); verify the 24
+pins, the five entry receipts and the C39 rebase receipt; re-derive 1,042
+rows / 78,330 keys / 18,840 encoding rows with 0 moves, 1,018 paired sources
+and 24 unresolved sites. Apply exactly the single `Equal` move `P0813` by
+canonical ledger replay, citing the C49 packets; any other verdict move, key
+or encoding change, or hand edit is a STOP. Then work the remaining 131 rows
+by mechanism (102 LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2
+StrictCallerGap + 1 New719Edge + 1 New725Edge + 1 StrictOtherCarrier `P1573`),
+each batch with its own armed-hit caught-or-surviving omission; Equal only
+with its own caught omission and a complete real matrix; every proposal
+`equal_claim:false` with a survivor in every cell where the frozen omission
+can execute and every non-executing cell named. `P1312` and `P0934` are not
+rerun without the G13 blocking keys resolved or a genuinely new instrument
+that separates the intermediate completed value (P0934) or restores a
+complete observer for the blocked collector contexts (P1312); `P2599` and
+`P2595` may be attempted only under the separately frozen lifecycle-aware
+observer with the 18-fault accounting; `P2651`/`P2652` are not rerun. `P1573`
+stays `Residual` with its five explicit-cycle keys and is not re-attempted
+without an explicit-cycle-capable instrument and an explicit ruling. `P1566`
+and `P0496` stay reserved; the 13 pair columns stay held; the nine stopped
+families and the C19–C49 families are not repeated without a genuinely new
+mechanism or instrument; the wrapper-tail identity is not carried; the 860
+named open duties, 24 unresolved sites and five owners stay explicit; port
+tables and the ledger only by canonical replay; the two-family stop-loss
+stands. Fresh allocation: at most four concrete families, at most 16 logged
+builds (two arms per family plus an eight-build correction allowance), 512
+guest processes, 4,000 diagnostic records, 0 encoding runs, no transfer; every
+family separately frozen before build and guest; a reused build only with
+exact records and a pinned receipt, one forced `--force` sha spot check per
+reused-build family; exhaustion is a STOP. Scratch `.temp/g15-c2/c50`; shared
+probe cache and Cargo cache; no repo mutation outside `.temp/`, no git, no
+network, no assertion weakening, no re-pinned inventory, no deleted attempt,
+no relabelled invalid recipe; C44, C45, C46, C47, C48 and C49 are read-only
+scenes. Stop for the director gate at the round end or the two-family
+stop-loss. **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
+`BRIEF_WORKER` unset = `cdx`).
