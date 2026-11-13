@@ -1496,3 +1496,95 @@ not rerun.
    ruling. Eight canonical builds remain; a required step that cannot fit
    is a STOP, not a self-authorized cap.
 3. **Report and STOP** for the director's final gate; no live commit.
+
+## Director gate (2026-11-13) — continuation 9: the STOP is well taken and its eight-thread red is the recorded pre-existing parallel-epoch class; continuation 10 finishes the remaining acceptance and the combined cost lane
+
+Run: `cdx` (gpt-6-astra, max; session
+`01a1d350-7b7f-7dc1-826e-21258a886701`, fork of
+`01a1d33e-a58e-73b3-bf0a-79e1106c460a`; log
+`.temp/logs/cdx_brief_731.log`, 191,620 B, `tokens used` 300,743 as the
+log reports it; memory-scope unit
+`brief-731-cdx-20261113-131026-554932`, peak 6,828,326,912 B, oom 0,
+oom_kill 0, rc 0; 8 run records; report 16 PASS / 2 FLAGGED / 1 FAIL / 1
+NA checks and one NA measurement, `report.py check 731` OK with 770
+citations by my own run; 0 canonical builds this round, 22 of 30 consumed
+and eight remain; 0 git attempts, no network; every write under
+`.temp/brief-731/continuation-9`; the live tree still carries the accepted
+C6 install plus the three C7 paths, uncommitted). **The round:** the entry
+and source audit reads live, entry copy and final copy at 2,737 files, 0
+changed paths and 0 inventory edits; the switch-gated class is green
+(lp03 3/3; lp658 eval and resume pass at eight and one); the host
+acceptance at eight threads reads 26 parent summaries, 221 passed / 1
+failed / 2 ignored, `cleanup_errors` 16/1/0 with only
+`b3f2_cancelled_cleanup_uncaught_throw` failing; the same command at one
+thread is 222/0/2; the workspace, the no-default certificate gate and the
+cost lane were not run; no live edit and no assertion, inventory, skip or
+profiling-default change. **My scope walk:** `git status` is exactly the
+16 accepted install paths; against the C8 final manifest the live tree is
+2,737 files with 0 missing, 0 extra and the only difference my own brief
+append in `54b8709c`. **The red, measured:** `queue_api.rs:47:9`
+(`assertion failed: matches!(boundary.policy(), …)` in
+`logical_insert_boundary`, host-caught as `Failure code=Panic`) and
+`cleanup_errors.rs:119` (`did not suspend`), with the draw-9/10 variants at
+`profile_queue.rs:888:5`. I ran the `cleanup_errors` target under the
+switch myself: on the live tree at eight threads 10 draws are 6 green / 4
+red (2 at `queue_api.rs:47`, 2 at `profile_queue.rs:888`); on the clean
+pre-install HEAD archive `9f1e62df` built at its own target 10 draws are 5
+green / 5 red (1 at `queue_api.rs:47`, 4 at `profile_queue.rs:888`); at
+one thread 5/5 green. Both files are byte-identical to the C6/C7/C8 entry
+and the C4 base (`d438d06a…`, `c55dcb20…`) and neither is among the 16
+install paths. **Ruling (Q1):** the STOP is well taken as written — the
+round ran the brief's command, reproduced the red at one thread where it
+was green, and claimed neither a regression nor an exclusion. The red is
+the pre-existing parallel-epoch test-isolation class recorded in
+`TODO.md` at brief 733's step-4 gate: the logical epoch is process-global,
+a concurrent instrumentation fault under the switch retires the records
+`boundary.policy()` reads, and the two debug policy assertions fire
+intermittently; it is arm-independent (the pre-install tree fires at the
+same or a higher rate), one-thread clean, and orthogonal to this brief's
+install. It is not a product signal and is not repaired here: no
+assertion, skip, witness, threading or test change; the class stays the
+`TODO.md` design obligation (a profiled regime for parallel non-lease
+suites). The eight-thread profiled host bar's authority is the one-thread
+receipt — my continuation-8 gate run and this round's C9 receipt both read
+26 parent summaries, 222 passed / 0 failed / 2 ignored, rc 0 — with the
+eight-thread record (221/1/2 at the two recorded assertion sites) retained,
+not excluded by name; a red at any other site is a STOP. The round is
+accepted as a stage-3 partial round: source preservation, the switch
+class, the failure-source proof, the one-thread receipt and the report
+stand; the workspace, the no-default certificate gate and the cost lane
+are not credited; no build was consumed.
+
+## Continuation-10 order (2026-11-13) — finish the acceptance and the combined cost lane on the accepted final source
+
+Enter on the live tree at the director gate commit that appends this order
+(the tree carries the 16-path install, uncommitted for the final gate).
+The accepted C6/C7 work, the C8 and C9 entry/source audits and the host
+receipts below are not rerun.
+
+1. **Complete the remaining acceptance, once.** Workspace:
+   `RUM_PROFILE_LEXICAL_SUBSTITUTION=1 RUST_TEST_THREADS=8 cargo test
+   --workspace --no-fail-fast`. The runtime parent verdict is
+   `1433 passed; 2 failed; 5 ignored` with exactly
+   `lp655_root_context_falsifier` and
+   `lp656_public_root_context_falsifier` failing; the nine native ZeroMQ
+   loopback tests are the documented worker-sandbox EPERM boundary; a red
+   whose panic text is one of the two recorded parallel-epoch policy
+   assertions (`queue_api.rs:47`, `profile_queue.rs:888`) is the accepted
+   class — record its target, test and counts, and run that target once at
+   one thread green — and any other red is a STOP, reproduced at one
+   thread first. The no-default-feature certificate gate:
+   `cargo test -p rum-stdlib --lib local_production_acceptance
+   --no-default-features` at eight and one threads, installing only its
+   generated certificate cells. No test, assertion or skip changes.
+2. **Cost lane.** The combined lane on the final source — the seven-file
+   refusal delta and the repair's delta — two draws, equal calls, one
+   codegen unit, serial: the Callgrind identity lane on every changed
+   function and all affected hot functions, the
+   `scripts/core-language-microbench.sh` A/B with all labels and same-tier
+   neighbours, profiling off, every positive row retained and reported, one
+   forced SHA spot check. The entry row's 599/4 bar and the no-increase
+   scan are unchanged; a hot increase no shape removes is a STOP for my
+   ruling. Eight canonical builds remain; a required step that cannot fit
+   is a STOP, not a self-authorized cap.
+3. **Report and STOP** for the director's final gate; no live commit.
