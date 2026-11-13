@@ -108268,3 +108268,163 @@ unarmed and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 141 Residual + 1 Lost; S10 stays
 unopened.
+
+## Continuation 41 ruling (2026-11-13) — the `P1566` documented-loss STOP is well taken; the loss was repaired by the accepted brief-729 Input syntax packaging, and `P1566`'s `Lost` disposition is reserved for C2's settlement round
+
+**Run.** `cdx` gpt-6-astra max, forked from
+`01a1d3e1-d700-7c72-a5f6-c5e906a3a042`; session
+`01a1d403-a00e-75d0-91ce-a1e650775d1d`; log
+`.temp/logs/cdx_brief_623.log`; memory-scope unit
+`brief-623-cdx-20261113-162607-663166`, peak 4,513,832,960 B, oom 0,
+oom_kill 0, rc 0; 48 run records — 47 exit 0, one retained controller
+preparation failure (`prepare-checkpoint` attempt 1, a `KeyError` on a
+C40 `PROGRESS.md` file-set assumption, re-run green in the same scene),
+and the designed exit-3 `P1566DocumentedLossDoesNotReproduce` STOP;
+report 12 PASS / 1 FLAGGED / 1 FAIL / 1 NA, and `report.py check` OK
+with 279 citations on my own run; 5 of 20 builds (the forced spot
+check passes, sha `bb471e80…`), 22 of 700 guest processes, 264 of
+4,500 diagnostic records (260 SAME plus four expected own DIFF), eight
+passing tests, zero encoding executions; every write under
+`.temp/g15-c2/c41` (11,380 added files) plus the shared probe and
+Cargo caches; zero live source edits, zero git, zero network; no file
+of the C39, C40, references, brief-623 or brief-726/727/728/729
+scenes is newer than the dispatch.
+
+**The STOP is well taken.** The order's own rule governs: "re-verify
+`P1566` as Lost with its documented loss; a movement of its evidence is
+a STOP." The round ran the three frozen minimal programs — the
+malformed `Input["answer"]` answered `"("`, the `InputString["answer"]`
+control, and the valid `Input["answer"]` answered `"83"` — through the
+prepared native public host driver at eight and one threads on both the
+real and the disabled arms. All twelve records are valid and SAME; the
+malformed answer produces the identical structured
+`SessionRequestFailure::Syntax` with `syntax_rendered` present on both
+the queued and the resumed path; the two controls are SAME; the
+producer is reached; and real equals disabled exactly. The documented
+C12 loss — queued `Other` against resumed `Syntax` — does not
+reproduce.
+
+**Why the evidence moved, read from source.** C12's mechanism was the
+queued ordinary tail's `finish_request_failure`
+(`session_requests.rs:621-637`) mapping `EvalError::Syntax` through
+`session_request_error_from_eval_error` with source `None`, which
+produced `SessionRequestError::Other`, while the resumed peer matched
+`EvalError::Syntax` and supplied the input source. The accepted
+brief-729 install (the R3 shape, `EvalError::Syntax { error,
+input_source }`) made the typed error itself carry the input source:
+the `Input` answer parse attaches it (`builtins_input.rs:311/315` via
+`with_input_source`, `session_state.rs:592-600`), and the public
+mapping now prefers `input_source.as_deref().or(source)`
+(`request_errors.rs:42-62`), so the queued tail produces structured
+`SessionRequestError::Syntax` with no change to the tail. The loss was
+repaired by an accepted install; it is not a current loss, and no
+regression or new loss is claimed.
+
+**Disposition.** No verdict moves this round. `P1566` stays `Lost` in
+the frozen ledger as a reserved historical disposition; the ledger,
+required tuples, residual list, held matrix, pair columns, unresolved
+sites and named owners are byte-identical to C40 — 0 rows and 0 keys
+added or removed, 1,042 rows, 78,330 keys, 18,840 encoding rows, 13
+pair columns, `P0496` Residual, `P1555` Boundary carried. The C40
+invalid lifecycle records stay invalid and uncited; this round's
+instrument does not reference them (`C40_invalid_used=0`). `P1568`
+stays Equal with its dependency open (`dependency_P1566_open: true`);
+its current disposition proof is correctly withheld until the
+settlement round. C2 stays Open at 141 Residual + 1 Lost; S10 stays
+unopened.
+
+**Credited this round.** (1) The new, separately frozen current-source
+`P1562`/`P1563` lifecycle instrument, exactly as Q1 ordered: new
+names (`admitted-request-resumed-sentinel-lifecycle`), and each arm
+differs from its C40 base only in `support/session.rs`, whose
+`empty_queue` answers the real sentinel through the public
+`resume_eval_request_with_input` API while both `fresh` checks stay
+mandatory and no report owner is fabricated; every arm records the
+exact typed lifecycle outcome (`C41_LIFECYCLE`, 1,260 typed outcomes)
+and the ticket state reads (`C41_STATE`, 1,008 reads); the
+red-before-matrix calibration fires both own omissions (2 armed, 2
+hit, 2 caught, 0 survived, 0 invalid) with the retained ticket `[1,1]`
+the sole delta in the own queued arm against `[0,0]` everywhere else
+and the guest observation intact (0 guest normalizations); the 60-cell
+matrix reads 120 SAME and 0 DIFF, and its 120 `C2_NATIVE` lines are
+byte-identical to the C29 reference (my own canonical sha
+`bf017011…`), with the `C5_FIXTURE` lines exact and 0 invalid. (2)
+`P1568`'s prepared `request-checkpoint-current-recheck` arms: 60 cells
+SAME, one own armed-hit catch, the `P1566` dependency retained. (3)
+`P1566`'s checkpoint matrix on the same family (60 cells SAME, one own
+catch), recorded but not promoted. (4) The entry, ledger, protected
+scene and budget integrity.
+
+**My own gate.** My snapshot walk is 2,737 files at 0 missing, 0 extra
+and 0 differing against the round's `entry-hashes.json` (digest
+equal), differing from the C40 entry only in my own brief append; the
+24 entry pins hash to their pins; `git log 22e0fb4c..HEAD -- crates`
+is empty and the tree is clean; production is 1,627 files at
+`3acf8a34…`; the C39 (8,357 files), C40 (11,084 files), references,
+brief-623 and brief-726/727/728/729 scenes have 0 files newer than the
+dispatch and replay 0 changes; six ledger negative controls are RED
+and the positive is GREEN; 0 guest and 0 Cargo run after the STOP; the
+one retained controller failure and the designed STOP are retained,
+nothing deleted, nothing invalid credited.
+
+**Q1 answer.** Keep the historical and the current evidence distinct;
+retain every verdict until the settlement round; continue on the same
+installed source with no second source rebase. `P1566`'s
+re-settlement is owned by C2's settlement round, which must settle the
+row by evidence — the complete current 30-cell checkpoint matrix with
+its own valid caught omission, the three-program documented-loss
+recheck at eight and one threads, and the C12-to-729 source chain —
+never by relabelling. `P1568`'s dependency closes only when `P1566` is
+settled; until then its current disposition proof stays withheld.
+
+## Continuation 42 order (2026-11-13) — the remaining changed rows and the 141-row tail on the installed source
+
+**Source.** Same installed source `22e0fb4c`: every file under
+`crates/` must equal the C41 entry manifest, production digest
+`3acf8a34…`, 1,627 files; verify the C39 rebase receipts, the five
+entry pins and the 24 pinned receipts; any production difference, or
+any second source rebase, is a STOP.
+
+**Carried, not re-run.** The C41 evidence stands as recorded:
+`P1562`/`P1563` current Equal re-certification through the lifecycle
+instrument, `P1568` Equal with its `P1566` dependency open, the
+`P1566` checkpoint matrix and documented-loss recheck, and the
+entry/ledger state. Do not re-run the `P1566` documented loss or its
+matrices, and do not re-run `P1562`/`P1563`/`P1568`. `P1566` and
+`P0496` stay reserved for the settlement round; the 13 pair columns
+stay held; the held rows stay excluded; no verdict moves without the
+settlement round.
+
+**Work.** The remaining steps of the continuation-41 order, in order:
+(1) re-prove `P1570`/`P1572` Boundary on the current installed source
+with their own boundary evidence on this source (the C29 contract
+proof is the reference, not a substitute); (2) `P1564`/`P1565`/
+`P1573` through tail families, each with its own armed-hit
+caught-or-surviving omission, Equal only with its own caught omission
+and complete real matrix, and every proposal `equal_claim:false` with
+a survivor per cell; (3) then the 141-row tail by mechanism — 110
+LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 4 StrictCallerGap +
+1 StrictOtherCarrier + 1 New719Edge + 1 New725Edge — each batch with
+its own omission evidence.
+
+**Families and duties.** The nine stopped families and the C19–C41
+families are not repeated without a genuinely new mechanism or
+instrument; the wrapper-tail identity is not carried without an
+explicit ruling. The 862 current named open transitive duties (864
+inherited minus the two re-closed), the 24 unresolved sites, the 13
+pair columns and the five named owners stay explicit;
+`whole_graph_complete=false`. Port tables and the ledger only by
+canonical replay. The round declares its own bounded build and guest
+budget before execution; a required step that cannot fit is a STOP for
+my ruling, never a self-authorized exception.
+
+**Rules.** The two-family stop-loss and every standing rule stand: no
+repository mutation outside `.temp/`, no git, no network, no assertion
+weakening, no re-pinned inventory, no deleted attempt, no relabelled
+invalid recipe. All scratch under `.temp/g15-c2/c42`, the shared probe
+cache and the existing Cargo cache; disclose every path. Invalid,
+unarmed and failed observations never certify a settlement.
+
+**Stop.** Stop for the director gate at the round's end or at the
+two-family stop-loss. C2 stays Open at 141 Residual + 1 Lost; S10
+stays unopened.
