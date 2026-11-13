@@ -298,3 +298,52 @@ replay, acceptance and cost lane on that final source; then continuation 38
 of brief 623; then C2's settlement round, CM, `CHANGELOG.md` before S10
 (including this lifecycle contract and the earlier enum break and
 `EvalError::Syntax` break), G13 S10-S54/F1-F23/R, E2.
+
+## Continuation order (2026-11-13) — resume on the repaired tree
+
+The pairing/identity repair this brief's class-duty STOP opened is installed
+and committed: HEAD `0aca7e38`, the working tree is clean, and the live tree
+now carries the report/ticket lifecycle repair (the authorized eleven-file
+brief-731 stage-2 base plus brief 735's sixteen scoped paths). The
+capture-repair line's premises are unchanged — the three capture files
+(`suspension/core/evaluation_context.rs`, `queue.rs`, `storage.rs`) are still
+at their live bytes and the debug assertion at `evaluation_context.rs:33` is
+untouched — but the base under the candidate is new, so every gate of this
+brief re-executes on it; nothing from run 1's unrun gates is credited.
+
+What changes relative to the body above:
+
+- **Entry base.** Take the entry copy from the live working tree at
+  `0aca7e38` (clean). `.temp/brief-732/live-entry-hashes.json` is historical:
+  record a fresh complete entry manifest instead (`entry-hashes.json`, a full
+  sha256 walk excluding `.git`, `.temp`, `target` and `__pycache__`) and
+  verify the copy equals the live tree file for file. The repaired tree is
+  2,737 files; disclose any difference.
+- **Arms.** The four arms keep run 1's shape: entry; control (entry plus the
+  four C4 harness files with the single `refuse_nested_top_level_input` call
+  removed in `session_eval.rs`); candidate (entry plus the three accepted
+  production files from brief 732's `source-candidate-a` bytes plus the
+  accounting regression); release (candidate plus the four harness files).
+  The three production files must still be byte-equal to brief 732's
+  `source-candidate-a`; the regression addition keeps the probe function's
+  exact tokens, assertions and four cases. The repaired tree is never edited.
+- **Re-establish every gate on the repaired base**, in the body's order: the
+  entry red 14/15 at eight and one with the named assertion; the control red
+  at the same assertion with its tuple; the candidate green 15/15 ordinary
+  and profiled at eight and one; the accounting regression in both modes;
+  the six runtime filters, the seven host suites and the nine stdlib suites
+  named in run 1's report, `check --all-targets`, and the fmt check exactly
+  the three ruled brief-731 arms (the `model/requests.rs` entry now reads
+  line 54; any diff inside the touched files is a STOP); the release arm's
+  five C4 owner probes at eight and one — the ten frozen comparisons —
+  byte-exact against `.temp/brief-731/continuation-4/logs/owner4-*` by C4's
+  marker rule only; one forced SHA; the re-surveyed `context-sites.tsv` and
+  the source ownership proof, now with the committed report/ticket lifecycle
+  as a premise (its invariants are not to be changed).
+- **Budget.** This brief's 4 canonical builds are untouched and stand (the
+  release arm plus its forced rebuild normally uses two); brief 731's
+  remaining 8 stay separate.
+- If any re-established gate now differs because of the repaired base — a
+  witness that no longer fires, an assertion whose tuple moved, a C4 record
+  that changed — STOP and report the verbatim diff; never adjust an
+  assertion, a witness, an arm or the shipped bytes.
