@@ -109981,3 +109981,193 @@ no relabelled invalid recipe; C44, C45, C46, C47, C48 and C49 are read-only
 scenes. Stop for the director gate at the round end or the two-family
 stop-loss. **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
 `BRIEF_WORKER` unset = `cdx`).
+
+## Continuation 50 ruling (2026-11-14) — accepted in full; `P0813` is `Equal`; the `P0341`/`P0336` partial matrices are carried with both rows `Residual`; the `P0847`/`P0537` carrier-only parks are well taken with no identity or default shape; the two-family stop-loss is well taken and continuation 51 gets a fresh bounded tail allocation
+
+**Run accepted.** `cdx` (gpt-6-astra max, session
+`01a1d5ed-d4c1-71a1-8a6a-18f969fc37f3`, unit
+`brief-623-cdx-20261114-012135-838260`, started 2026-11-14 01:21:35 +08:00,
+rc 0, peak 3,213,082,624 B, oom 0, oom_kill 0; log
+`.temp/logs/cdx_brief_623.log`, 23,442 lines, 2,064,623 B, sha256
+`c71dceb9b62ca05bba98882a1f20b6827ad7d54665bdb0596510d71938dfea19`, 157 run
+records (153 at the report), `tokens used` 229,749 as the log reports it;
+report `.temp/brief-623/report.json`, 11 PASS / 2 FLAGGED / 1 NA checks and one
+measurement PASS, `report.py check 623` 991 citations by my own run; no
+`.git-attempts`; every write under `.temp/g15-c2/c50` plus the shared
+probe/Cargo caches and the authorized report publication; 0 source edits; two
+retained non-zero runs — the E0599 build and its propagating family wrapper,
+both retained with their compiler log — and three retained report rewrites as
+run records accumulated (146/149/153).
+
+**Entry and source.** 24 pins exact; C49's 22,525 sealed artifacts, its 12
+director pins and the report copies exact; 2,737 live files; 1,627 production
+files at `3acf8a34…`; 1,042 rows / 78,330 keys / 18,840 encoding rows; 1,018
+paired, 24 unresolved; 0 rebases this round. My own walk: 2,737 live files 0
+missing / 0 extra / 0 differing against `entry-hashes.json`, the production
+digest recomputed with the scene's own formula, `git log 22e0fb4c..HEAD --
+crates` empty, tree clean at `2717394e`, and the live tree equal to C49's
+entry plus my own brief append.
+
+**The settlement.** Exactly `P0813`, `Residual`->`Equal`, by canonical replay
+citing the ten C49 packets pinned by path and sha256 (my own re-hash 10/10).
+`settled.tsv` sha `0f897542…` equals the receipt; exactly one line differs
+from the inherited ledger and only the six settlement columns moved on it
+(`verdict`, `tail_observed`, `disposition`, `mutant_result`, `ledger_kind`,
+`settlement_evidence`); outcomes 10/172/5/1/126/131/594/3; composition 102
+LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1
+New719Edge + 1 New725Edge + 1 StrictOtherCarrier; the other 1,041 rows
+byte-identical; the 78,330 keys (`requirements_sha256 3c2dcdff…`) and 18,840
+encoding rows byte-identical; the 13 pair columns, the 24 unresolved sites and
+the five owners byte-identical. My own run of the canonical replay prints the
+PASS line and the seven RED negative controls with the positive GREEN, and the
+five derived files remain byte-identical to the seal.
+
+**The two measured families (2 of 4 slots; 5/16 builds, 120/512 guests,
+336/4,000 records, 0 encoding; freeze indices 4/72, builds 5/8/9 and 73/74,
+first guests 11/76).**
+
+`inspect-rule-info-guard-reconstruction` (`P0341`): 55/55 nonencoding required
+keys five-part SAME with parsed real/disabled parity, actual producer reach and
+binding applicability; 55 armed, 16 hit, 16 valid caught, 0 survived, 39
+non-executing. The actual producer is
+`crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:212:Session::drive_rewrite_rule_infos_owned`
+and the omitted work is the `rebuild_definition_rhs_guards` reattachment inside
+`RewriteRuleInfoContinuation::InspectRewriteRules::resume` (`:108`), observed
+through the public `Session::inspect_rewrite_rules` /
+`resume_inspect_rewrite_rules_with_input` driver and its actual
+`RewriteRuleInfo` result; the real branch is `if false`. The same helper is
+omitted at this distinct consumer, call site and instrument from C25's
+`normalized-rule-guard-reconstruction` (`P0338`), which built the normalized
+`Expr` list; the family name and instrument are absent from every prior scene.
+The row's 20 blocked G13-transport encoding keys keep it `Residual`.
+
+`cases-symbol-spec-completed-normalization` (`P0336`): 55/55 nonencoding keys
+five-part SAME with parity, reach and binding; 55 armed and hit, 16 caught, 39
+armed-hit survivors. The actual producer is
+`crates/rum-runtime/src/runtime/definitions/definition_catalog/rewrite_rules.rs:143:Session::resolve_cases_spec_expr_for_matching_owned`
+(`self.evaluate(candidate)` at `:150`); the own omission forwards the actual
+resolved `Expr` before the compile-rule test and the fallback
+`normalize_match_expr`, the real branch is `if false`, and a read-only
+projection at the ordinary finish and the dedicated
+`ResolveCasesSpecExprForMatchingOwnedSuspensionFrame` finish records the
+completed `Expr` — the exact instrument continuation 49 named. The calibration
+reads `HoldComplete[c50orderless[1, 2]]` on resumed against `[2, 1]` on
+queued, with equal native counts and an equal final Cases result. This is a
+different row and producer from the parked C49 `P0934` family, which is not
+rerun. The row's 20 blocked encoding keys keep it `Residual`.
+
+**My own re-audit of both matrices** from the raw logs reproduces 55/55 groups
+each, every group passing five-part SAME, real/disabled parity, actual producer
+reach and binding applicability; every measured key set equals the row's
+nonencoding required keys exactly, and the 20 gaps per row are exactly that
+row's `guest_heads.*` blocked keys; my own recomputation of every own log gives
+`P0336` 55 armed / 55 hit / 16 caught / 39 survived and `P0341` 55 armed / 16
+hit / 16 caught / 39 non-executing; all six calibration arms parse real ==
+disabled with the own arm valid and unequal; the mutant arms differ from the
+real arms only in the constant-false branch and the producer arming.
+
+**The two carrier-only parks (zero build, zero guest, zero coverage).**
+`evaluated-selector-carrier-construction` (`P0847`) and
+`threaded-dispatch-some-construction` (`P0537`) each froze their 55 nonencoding
+keys with their 20 blocked encoding keys retained and ran one bounded
+source-shape search with five rejected shapes each. I verified the source
+arguments: `Session::evaluate_part_selectors_owned`'s tail is exactly
+`EvaluatedPartSelectors::from_evaluated(values)` and its dedicated frame
+completes the same map, so forwarding the actual `Vec<Expr>` is ill-typed and a
+default or wrapper-identity shape is fabrication or the bounded wrapper-tail
+identity; `run_call_dispatch_stage`'s `Listable` threaded route completes
+`Ok(Some(value))` and the shared frame's memory-growth branch cannot execute
+for `threaded_call` (`builtin_name=None`, `args=None`). Both parks are the
+brief's explicit "no mutant shape exists" exception.
+
+**The two FLAGGED checks are exactly these items and are accepted.** The 39
+`P0341` non-executing omissions and the 39 `P0336` survivors are named and
+uncited; zero invalids; no `NoObservableTail` proposal was made, correctly.
+
+**Q1 — accepted.** Both partial matrices are carried: 110 new certified SAME
+keys, two rows with their own armed omission, zero outcome moves. `P0341` and
+`P0336` remain `Residual` on their 20 blocked G13-transport encoding keys each;
+the block is the same class as `P2651`/`P2652`/`P1312`/`P0934`, and only the
+G13 transport unblock or an explicit ruling can complete those matrices.
+Neither row may be promoted by argument.
+
+**Q2 — accepted as parked; no identity or default shape.** `P0847` and
+`P0537` stay `Residual` with all their requirements. The obstruction is real:
+their tails are carrier constructions with no separate phase to omit, and the
+only remaining shapes are an identity wrapper — the bounded C30 wrapper-tail
+identity, which the C36 gate permits only under an explicit director ruling
+and continuation 50's order did not carry — or a fabricated default, which the
+brief forbids. I give no carrier-specific ruling now. A further attempt needs a
+genuinely new instrument that observes the constructor's own work on the
+actual carrier; a source-only search cannot manufacture a catch, and no
+identity or default mutant may ever be used to manufacture one.
+
+**The stop is well taken.** Two measured families gained 110 keys; the next two
+frozen families were source-only searches that gained nothing; the brief's
+two-consecutive-batch stop-loss fires (C27 precedent: parked families are
+batches). No further guest or build execution in C50. The inherited `tail_*`
+transitive block is historical C47/C48 metadata, not a C50 execution claim; the
+C50 counts are `families_frozen=4`, `families_attempted=4`,
+`families_executed=2`, `frozen_unrun_families=2`,
+`source_only_shape_searches=2`, `stop_loss_ticks=2`.
+
+**My gate.** Live 2,737 files 0/0/0; production `3acf8a34…` (1,627); `git log
+22e0fb4c..HEAD -- crates` empty; tree clean at `2717394e`; the 24 pins and the
+C44 director pins exact; the C49 seal 22,525 files 0 missing / 0 changed and
+the C50 seal 16,927 files 0 missing / 0 changed by my own replays, with the 23
+mutable exclusions exactly the report/log/state/progress/nested-`PROGRESS.md`
+class; my own protected walk 2,795,340 entries 0 missing / 0 extra / exactly
+one difference = the authorized report publication
+(`.temp/brief-623/report.json`); four fresh build receipts with exact binaries
+and assembled trees (`cache_hit:false` each, so the forced spot-check clause is
+vacuous); the failed E0599 assembly and its compiler log retained, and the
+correction confined to `crates/rum-host/tests/c50_host.rs` in both arms — the
+public resume sentinel replacing the nonexistent `reset()`, no observation or
+assertion changed; 157 run records with exactly two non-zero exits; 120 guests
+and 336 records recomputed by me from the run logs, 0 guests and 0 Cargo after
+the stop marker at run index 139 (18 post-stop controller records);
+`report.py check 623` 991 citations by my own run; three disclosures and one
+deviation accepted; no assertion weakened, no attempt deleted, no recipe
+relabelled, no inventory re-pinned.
+
+**Continuation 51 order.** Entry on the unchanged installed source `22e0fb4c`:
+every file under `crates/` equals the C50 final manifest (production digest
+`3acf8a34…`, 1,627 files; 2,737 live files); verify the 24 pins, the five entry
+receipts and the C39 rebase receipt; re-derive 1,042 rows / 78,330 keys / 18,840
+encoding rows with 0 moves, 1,018 paired sources and 24 unresolved sites. The
+C50 settlement is not re-applied; the two measured families are not rerun and
+their 110 keys are current with both rows `Residual`. Then work the remaining
+131 rows by mechanism (102 LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2
+StrictCallerGap + 1 New719Edge + 1 New725Edge + 1 StrictOtherCarrier `P1573`).
+Priority: the 53 rows whose required keys are entirely nonencoding (50 at 30
+keys, 3 at 35) can reach `Equal` with a complete matrix and their own caught
+omission; the 78 rows that each retain 20 blocked G13-transport encoding keys
+can never reach `Equal` under this order and may only be proposed
+`NoObservableTail` (a survivor in every cell where the frozen omission can
+execute, every non-executing cell named) or left `Residual`. Each batch with
+its own armed-hit caught-or-surviving omission; `Equal` only with its own
+caught omission and a complete real matrix; every proposal `equal_claim:false`.
+`P0341`/`P0336` are not rerun; `P0847`/`P0537` are not re-attempted without an
+explicit ruling or a genuinely new instrument; `P1312`/`P0934` are not rerun
+without the G13 blocking keys resolved or a genuinely new instrument (P0934:
+one that separates the intermediate completed value); `P2599`/`P2595` may be
+attempted only under the separately frozen lifecycle-aware observer with the
+18-fault accounting; `P2651`/`P2652` are not rerun; `P1573` stays `Residual`
+with its five explicit-cycle keys and is not re-attempted without an
+explicit-cycle-capable instrument and an explicit ruling; `P1566` and `P0496`
+stay reserved; the 13 pair columns stay held; the nine stopped families and the
+C19–C50 families are not repeated without a genuinely new mechanism or
+instrument; the wrapper-tail identity is not carried; the 860 named open
+duties, 24 unresolved sites and five owners stay explicit; port tables and the
+ledger only by canonical replay; the two-family stop-loss stands. Fresh
+allocation: at most four concrete families, at most 16 logged builds (two arms
+per family plus an eight-build correction allowance), 512 guest processes,
+4,000 diagnostic records, 0 encoding runs, no transfer; every family separately
+frozen before build and guest; a reused build only with exact records and a
+pinned receipt, one forced `--force` sha spot check per reused-build family;
+exhaustion is a STOP. Scratch `.temp/g15-c2/c51`; shared probe cache and Cargo
+cache; no repo mutation outside `.temp/`, no git, no network, no assertion
+weakening, no re-pinned inventory, no deleted attempt, no relabelled invalid
+recipe; C44, C45, C46, C47, C48, C49 and C50 are read-only scenes. Stop for the
+director gate at the round end or the two-family stop-loss. **Dispatch:**
+`scripts/dispatch-brief.sh 623` (background, `BRIEF_WORKER` unset = `cdx`).
