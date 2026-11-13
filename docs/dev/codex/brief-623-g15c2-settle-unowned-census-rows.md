@@ -111612,3 +111612,158 @@ network, no `unsafe`, no inventory edit, assertions unchanged. **Dispatch:**
 (`P0496`, `P1566`, the `P0325`/`P0326` pair-column reconciliation), CM,
 `CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2; retention resumes from
 E0 + Q3, then Q1/Q2/Q4/Q5.
+## Continuation 58 ruling (2026-11-14) — accepted in full on `cdx` with no ledger move; both ordered source inspections are parked with zero credit, the two failed priority preflights are retained, my priority prose is corrected, and continuation 59 takes `P2656` and the remaining tail under a fresh bounded allocation
+
+**Run accepted.** `cdx` (gpt-6-astra max, session
+`01a1d706-b95b-7141-8e76-363f9496676f`, unit
+`brief-623-cdx-20261114-062824-925514`, started 2026-11-14 06:28:24 +08:00,
+ended 06:54, rc 0, peak 3,462,922,240 B, oom 0, oom_kill 0; log
+`.temp/logs/cdx_brief_623.log`, 22,869 lines, 2,012,187 B, sha256
+`baac38ac351362c5ec2123797a36f57b611648b5b841609eceed01d1d13bf157`, 27 run
+records — 25 exit 0 and two retained exit 1 priority preflights —
+`tokens used` 186,344 as the log reports it; report 10 PASS / 2 FLAGGED / 1
+NA checks and no measurements, `report.py check 623` 780 citations by my own
+run; `.git-attempts` absent; 218 reported changes (217 added, 1 modified) all
+under `.temp/`; 0 source edits; 0 builds, 0 guest processes, 0 diagnostic
+records, 0 encoding runs).
+
+**Entry and source.** 24 pins exact; 2,737 live files at 0 missing / 0
+changed / 0 extra by my own walk; production 1,627 files at `3acf8a34…`; 1,042
+rows / 78,330 canonical keys / 18,840 encoding rows; 1,018 paired sources and
+the 24 explicitly unresolved sites; `source_rebases_this_round=0`; the C57
+evidence seal replays 5,689 files 0/0 and the C58 seal 204 files 0/0 by my own
+walks; the inherited replay binds the C57 scene's sealed `brief-entry.md`
+(`b00b61c3…`).
+
+**The ledger does not move.** `settled.tsv` `ed8cc891…` and
+`required-tuples.tsv` `3c2dcdff…` are byte-identical to C57; outcomes Boundary
+12 / Equal 174 / Identity 5 / Lost 1 / NoObservableTail 126 / Residual 127 /
+Transferred 594 / Unreachable 3; residual composition 98 LocalTail + 13
+ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1 New719Edge + 1
+New725Edge + 1 StrictOtherCarrier = 127; C2 Open at 127 Residual + 1 Lost;
+`P1573` Residual, `P1566` Lost, `P0496` reserved; the two C57 `Boundary`
+settlements are not re-applied; the held pair rows and the 13 pair columns are
+held; `P2631`/`P2644` and every row whose required keys carry blocked encoding
+stay behind G13; the C57 parks (`P2618`,
+`cli-callback-whole-result-returns`, `cli-owned-repl-scope-result-tails`) and
+every earlier park are not re-attempted.
+
+**The two ordered source inspections — parked with zero credit.** Family
+`replace-all-adopted-root-carrier` (`P0275`, 75 keys, producer
+`crates/rum-runtime/src/runtime/definitions/application/replace_all.rs:83:Session::apply_replace_all@90`):
+the actual producer returns `Result<ReplaceAllTraversalOutcome, EvalError>`,
+the only ordinary success tail at `:94` is the field projection
+`Ok(outcome.expr)` that `ApplyReplaceAllSuspensionFrame::resume` repeats, and
+the changed Boolean is discarded; seven rejected shapes
+(`ForwardActualTraversalOutcome`; `ProjectActualExpr` — the exact original
+ordinary and resumed tail; `AlterChangedFlag`; `ReturnOriginalInput` — the
+input was moved into the producer; `ReturnDefaultExpr`;
+`RemoveTypedFrameAttachment`; `SkipOuterBuiltinEvaluationFinish` — the separate
+outer finish, `C1.P0942`/`C1.P0949`); status `ParkedNoAdmissibleOmissionFound`.
+Family `definition-rhs-guard-decision-carrier` (`P0463`, 75 keys, producer
+`crates/rum-runtime/src/runtime/definitions/rhs_guards.rs:454:::evaluate_definition_rhs_guards_for_match@462`):
+the producer returns `Result<CompiledMatchOutcome, EvalError>`, the ordinary
+continuation at `:471` is `Ok(outcome.matched)` repeated by
+`resume_frames.rs:150`, neither closure evaluates, writes back a binding or
+restores an option scope, and the discarded `CompiledMatchOutcome.bindings`
+map destruction is unmeasured; seven rejected shapes
+(`ForwardActualMatchOutcome`; `ProjectActualMatched`;
+`ForceOrInvertBoolean`; `ReplaceWithDefaultCarrier`;
+`LeakBindingsWithoutLifecycleObserver`; `OmitGuardOrOptionScopeEvaluation`;
+`SkipOuterStringCollectorOrFrameProtocol`); status
+`ParkedCarrierProjectionAndCleanupObserverGap`. Both families were separately
+frozen before any search (freeze shas `6d22b01e…` and `2e144f5f…`), ran one
+bounded source-search pass each with 0 builds / 0 guests / 0 records / 0
+coverage, and retained all 150 keys and the 40 `SAME_SAVED` G13-transport
+encoding cells (20 each) with every claim `false`; the source packets
+hash-match live (`2bf9d354…`, `55dcbf6f…`).
+
+**Priority preflight correction accepted; the erratum is mine.** My C58 order
+called five rows "fully nonencoding": `P0275`/`P0463` each carry 20
+`SAME_SAVED` G13-transport encoding cells, and `P0529`/`P1574` are held pair
+rows (the order's `symbol.rs:332` and `abandon.rs:108` coordinates are also not
+the ledger's `symbol.rs:131` and `abandon.rs:65`). The only genuinely
+never-attempted eligible paired row is `P2656`
+(`crates/rum-repl/src/request.rs:122:::drive@219`, target `abandon`, 30
+required nonencoding keys, 0 encoding cells, not held). The round's first two
+admission assertions failed — the first asserted every `guest_heads` key was
+`BLOCKED_ENCODING`, the second equated the held pair columns with a prohibition
+on the explicitly ordered source inspection — and both are retained with their
+original scripts and logs under
+`failed-attempts/priority-status-assumption/` and
+`failed-attempts/priority-held-assumption/`; the correction is disclosed, the
+inherited `freeze_shape.py` stayed unchanged and unused, and the separate
+named-source gate retained every key and column and authorized no settlement.
+No failed run was relabelled.
+
+**Stop accepted.** Two consecutive zero-gain families — source-only searches
+count as batches — fired the stop-loss at ticks 2: 2/4 family slots, 0/16
+builds, 0/512 guests, 0/4,000 records, 0 encoding, and 0 guests / 0 Cargo after
+the stop.
+
+**Rulings.** Q1 — `P0275`/`P0463` stay `Residual`: a source shape cannot
+replace a complete real matrix and a caught own omission, and no fabricated
+`Expr`/Boolean, identity projection or carrier-projection disposition rule is
+authorized; a further attempt needs a concrete own omission with the row's
+actual carrier. Q2 — yes: a further `P0463` attempt requires a new, separately
+frozen lifecycle observer of the actual discarded
+`CompiledMatchOutcome.bindings` map destruction (the actual map, a real
+producer pause and a documented cleanup observation, calibrated before it can
+settle anything; no leak, borrowed owner or neutrality assumption substitutes
+for it), and it is not executed in this round. Q3 — the next order names rows
+plus a verified eligibility predicate rather than assuming one: fully
+nonencoding means zero `SAME_SAVED`/`DIFF_SAVED` encoding cells, zero blocked
+encoding keys and not a held pair row; source-inspection authority is a
+separate gate that freezes nothing, executes no probe, grants no settlement and
+counts as a batch for the stop-loss; promotion still requires the standing
+evidence bar; held rows stay held absent a disclosed re-pairing ruling; every
+encoding cell stays G13-owned.
+
+**Continuation 59 order.** Entry on the unchanged installed source
+`22e0fb4c`: every file under `crates/` equals the C58 final manifest
+(production digest `3acf8a34…`, 1,627 files; 2,737 live files); the entry
+re-derives 1,042 rows / 78,330 canonical keys / 18,840 encoding rows with 0
+moves, 1,018 paired sources and the 24 explicitly unresolved sites;
+`settled.tsv` `ed8cc891…` and `required-tuples.tsv` `3c2dcdff…` are the
+baseline and the two `Boundary` settlements are not re-applied; `P1573` stays
+`Residual`, `P1566` stays `Lost`, `P0496` stays reserved; held pair rows and
+the 13 pair columns stay held (`P0529`/`P1574` among them, not promoted);
+`P2631`/`P2644` and every encoding-blocked row stay behind G13; the C57/C58
+parks are not re-attempted without a genuinely new instrument or an explicit
+ruling (the Q2 observer is the named route for `P0463`, not this round's work).
+Priority `P2656` (`request.rs:219`, the only remaining never-attempted eligible
+paired row), then the remaining tail by mechanism; each batch carries its own
+armed-hit caught-or-surviving omission; `Equal` only with its own caught
+omission and a complete real matrix; every proposal `equal_claim:false` with a
+survivor per cell; a `Boundary` proposal only with a documented terminal
+contract measured on the actual producer path. The two-family stop-loss stands;
+fresh bounded allocation 4 families / 16 builds / 512 guests / 4,000 records /
+0 encoding, no transfer; scratch `.temp/g15-c2/c59`; C44–C58 read-only
+evidence; no live edit, no git, no network, no `unsafe`, no inventory edit,
+assertions unchanged. **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
+`BRIEF_WORKER` unset = `cdx`).
+
+**My gate.** Entry, pins, carry tables and seals exact; the C57 seal 5,689 files
+and the C58 seal 204 files replay 0/0 by my own walks; my own canonical replay
+PASS (seven RED negative controls, the positive GREEN, eight exact outputs, the
+eight derived files byte-identical) and my own inherited C53–C57 replays exact
+(eight outputs each, 0 prior-scene writes, the C53 and C57 receipts
+re-deriving their two already-accepted moves); both families' seven rejected
+shapes and their live-matching source packets read in full; the two failed
+preflights retained with their original scripts and logs (exit 1, no frozen
+family, no source search, no guest); the ledger controls seven negatives RED
+and the positive GREEN; `report.py check 623` 780 citations; the report copies
+byte-identical (`e28771bf…`); my protected walk 2,857,691 entries 0 missing /
+exactly 1 difference = the authorized report publication
+(`.temp/brief-623/report.json`); `git log 22e0fb4c..HEAD -- crates` empty; tree
+clean at `f2c57612`; no assertion weakened, no attempt deleted, no recipe
+relabelled, no inventory re-pinned. **Recorded, not gated:** the bootstrap
+stdout said `copied_helpers=12` while its own source hash map records 11 (no
+measured receipt or outcome uses the printed count); one read-only `rg` miss on
+two guessed nonexistent paths (exit 2, nothing launched, no file changed);
+zero deleted attempts, zero edited copied assertions, zero rerun guests.
+
+**Next:** gate continuation 59 when it stops; then C2's settlement round
+(`P0496`, `P1566`, the `P0325`/`P0326` pair-column reconciliation), CM,
+`CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2; retention resumes from E0
++ Q3, then Q1/Q2/Q4/Q5.
