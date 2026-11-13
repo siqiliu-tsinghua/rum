@@ -109166,3 +109166,132 @@ unchanged installed source, re-authenticates the scene at Entry, and
 runs the settlement and the 138-row tail under the fresh bounded
 allocation. A provider safety-filter refusal stops the run for the
 director, who asks the user before any further routing change.
+
+## Continuation 45 ruling (2026-11-13) — accepted in full; `P2602` settles `Equal`; the three host rows stay `Residual` and continuation 46 gets a fresh tail allocation
+
+**Run.** `cdx` (gpt-6-astra max, unit `brief-623-cdx-20261113-213201-755797`,
+started 21:32:01 +08:00, rc 0, peak 3,340,115,968 B, oom 0, oom_kill 0;
+log `.temp/logs/cdx_brief_623.log`, 2,482,875 B, sha256 `7d3bf8ca…`,
+29,082 lines; 180 runs; report `.temp/g15-c2/c45/report.json`, 10 PASS /
+1 NA checks, 1 measurement PASS, 3 deviations, `report.py check 623` OK
+with 933 citations by my own run; `.git-attempts` absent; every write
+under `.temp/g15-c2/c45` plus the shared probe/Cargo caches and the
+authorized report publication).
+
+**Entry and source.** 24 pins exact (12 receipt pins, 12 director pins),
+five entry receipts; 2,737 live files; 1,627 production files at
+`3acf8a34…`; 1,042 rows / 78,330 keys / 18,840 encoding rows; 1,018
+paired, 24 unresolved; the single C39 rebase carried, 0 rebases this
+round; the pinned C44 raw replay executed with writes redirected and all
+nine derived outputs byte-identical. My own walk: 2,737 live files
+0 missing / 0 extra / 0 differing against `entry-hashes.json`,
+production digest `3acf8a34…`, `git log 22e0fb4c..HEAD -- crates` empty,
+tree clean at `cbdff450`.
+
+**The settlement.** Exactly `P1564` and `P1565`, `Residual`→
+`NoObservableTail`, `equal_claim:false`, applied by the canonical ledger
+replay and not by hand: `settled.tsv` equals the settlement-receipt hash;
+exactly two lines differ from `inherited-settled.tsv`; the C44 packet
+pins and the 22 named non-executing cells are recorded; outcomes
+10/164/5/1/126/139/594/3; the other 1,040 rows byte-identical; the
+78,330 keys and 18,840 encoding rows byte-identical; `P1573` Residual
+with its five explicit-cycle keys, `P1566` Lost, `P0496` Residual; the
+13 pair columns and the 24 unresolved sites byte-identical to the
+inherited files. My own `final_replay.py` prints the canonical PASS line
+and seven RED negative controls and rewrites all six derived files
+byte-identically.
+
+**The four families.** `host-timeout-terminal-retirement` (`P2602`):
+30/30 required keys, 30 armed / hit / caught, 0 survived, complete
+matrix — `eligible_Equal`. `host-call-terminal-retirement` (`P2596`):
+30/30 keys, 30 armed / hit / survived, no own catch.
+`host-eval-terminal-retirement` (`P2595`): 28/30 keys, two
+`RestoreSealedReferences.body` descriptor gaps, all omissions survive.
+`host-resume-terminal-retirement` (`P2603`): 15/30 keys, fifteen
+`native623.repl.ordinary` descriptor gaps, all omissions survive; its
+separate timeout-parent calibration catches the resumed-phase omission
+but is not required-key coverage. Each family was separately frozen
+before its builds (freezes 21:43/21:49/21:51/21:54; builds 21:46-21:56);
+103 new coverage keys; 8 exact build receipts (fresh, `cache_hit:false`,
+`spot_check:none` — no reuse, so the forced spot-check clause is
+vacuous); 9/16 builds (one retained timeout-real compile failure),
+140/512 guests, 372/4,000 records, 0 encoding runs; every family gained
+coverage or an armed omission, stop-loss ticks 0.
+
+**My gate.** My protected walk reads 2,680,285 files with 0 missing,
+0 extra and exactly one difference — `.temp/brief-623/report.json`, the
+authorized publication, byte-identical to `.temp/g15-c2/c45/report.json`;
+the C44 record file remains `6f491dac…` exactly as pinned. My re-run of
+`integrity.py` stops at that same path: the round's integrity ran before
+the publication, so the difference is the publication ordering, not a
+protected edit; the same walk proves every other protected root
+unchanged. The eight build receipts reproduce their binary and
+assembled-tree hashes; the five named source owners hash to their live
+files; the pair-column and unresolved-site files are byte-identical to
+the inherited copies. The three deviations are retained instruments (the
+guest-count classifier corrected before the stop; a preparation attempt
+with the existing adapter target present; one timeout build compile
+failure), and none weakens an observation.
+
+**Q1 — accepted.** `P2602` settles `Equal` on its complete 30-key matrix
+and thirty own caught omissions: the producer is
+`crates/rum-host/src/session.rs:542:HostSession::eval_with_timeout@561`
+(`native623.timeout`), every required nonencoding key reads five-part
+SAME with real == disabled and producer reach, and the frozen omission
+(return the actual outcome before `clear_owned_eval_timeout`) armed and
+hit in every one of the 30 cells and was caught by the read-only
+ownership observer in every one. Continuation 46 applies the single move
+`P2602` `Residual`→`Equal` by its canonical ledger replay, citing this
+family's freeze, calibration, coverage, mutants, gain and full proofs by
+path and sha256; no other row moves; outcomes become
+10/165/5/1/126/138/594/3; the residual composition becomes
+109 LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap
++ 1 New719Edge + 1 New725Edge + 1 StrictOtherCarrier (`P1573`); C2 Open
+at 138 Residual + 1 Lost.
+
+**Q2 — the three rows stay Residual; a fresh bounded allocation is
+authorized.** The same 30-cell matrix is not repeated. `P2596` may be
+retried only with a real pending timed-request/cancellation caller that
+makes the omission observable; `P2595` only with the original
+`RestoreSealedReferences` driver for its two `value.base` keys; `P2603`
+only with the actual REPL/ordinary adapter driver for its fifteen
+`native623.repl.ordinary` keys; any attempt without those mechanisms is
+a STOP. Continuation 46 gets a fresh allocation: at most four concrete
+families, at most 16 logged builds (two arms per family plus an
+eight-build correction allowance), 512 guest processes, 4,000 diagnostic
+records, 0 encoding runs, no transfer; every family separately frozen
+before build and guest; a reused build only with exact records and a
+pinned receipt, one forced `--force` sha spot check per reused-build
+family; the two-family stop-loss stands; exhaustion is a STOP.
+
+**Continuation 46 order.** Entry on the unchanged installed source
+`22e0fb4c`: every file under `crates/` equals the C45 final manifest
+(production digest `3acf8a34…`, 1,627 files; 2,737 live files); verify
+the 24 pins, the five entry receipts and the C39 rebase receipt;
+re-derive 1,042 rows / 78,330 keys / 18,840 encoding rows with 0 moves,
+1,018 paired sources and 24 unresolved sites. Apply exactly the `P2602`
+`Equal` move by canonical ledger replay, citing the C45
+`host-timeout-terminal-retirement` packet; any other verdict move, key
+or encoding change, or hand edit is a STOP. Then work the remaining
+138 rows by mechanism (109 LocalTail + 13 ReopenedOrNew + 11
+StrictDropGap + 2 StrictCallerGap + 1 New719Edge + 1 New725Edge +
+1 StrictOtherCarrier `P1573`), each batch with its own armed-hit
+caught-or-surviving omission; Equal only with its own caught omission
+and a complete real matrix; every proposal `equal_claim:false` with a
+survivor in every cell where the frozen omission can execute and every
+non-executing cell named. `P2596`/`P2595`/`P2603` may be attempted only
+under Q2's stronger drivers. `P1573` stays `Residual` with its five
+explicit-cycle keys and is not re-attempted without an
+explicit-cycle-capable instrument and an explicit ruling. `P1566` and
+`P0496` stay reserved; the 13 pair columns stay held; the nine stopped
+families and the C19–C45 families are not repeated without a genuinely
+new mechanism; the wrapper-tail identity is not carried; the 860 named
+open duties, 24 unresolved sites and five owners stay explicit; port
+tables and the ledger only by canonical replay; the two-family
+stop-loss stands. Scratch `.temp/g15-c2/c46`; shared probe cache and
+Cargo cache; no repo mutation outside `.temp/`, no git, no network, no
+assertion weakening, no re-pinned inventory, no deleted attempt, no
+relabelled invalid recipe; C44 and C45 are read-only scenes. Stop for
+the director gate at the round end or the two-family stop-loss.
+**Dispatch:** `scripts/dispatch-brief.sh 623` (background,
+`BRIEF_WORKER` unset = `cdx`).
