@@ -108839,3 +108839,57 @@ post-stop audit, scope), write the whole round's `rum-report/1`
 record covering both worker segments with `report.py check 623`
 passing, and STOP for the director gate. C2 stays Open at 141
 Residual + 1 Lost; S10 stays unopened; no verdict moves.
+
+## Continuation 44 resume 2 (2026-11-13) — the `mst` session hit its configured $40 price ceiling after re-authenticating the scene and calibrating tail family 1; the round resumes on that same session at the family-1 matrix
+
+The first `mst` segment (session `4650fa4e-6ce4-b376-37ae-5228e5968116`,
+unit `brief-623-mst-20261113-185450-709835`, peak 2,504,704,000 B, oom 0,
+oom_kill 0, rc 3) stopped at its dispatch ceiling with `stop=interrupted
+cost_usd=40.33 input_tokens=28,427,522 output_tokens=120,646`. This is a
+director-set parameter, not a quota or provider event, and the routing
+stands unchanged: this task line stays on `mst` under the user's
+2026-11-13 ruling. The log (687 B, sha256
+`20f8845f0dc56707d5e3dd8abc3b2e20aed755393f595c6447b058163bd469c8`)
+is archived as
+`.temp/logs/archive/mst_brief_623.continuation-44.mst-price-1`, its
+`.git-attempts` (0 B) beside it; the tree is clean (no `.git-attempts`),
+and every write is under `.temp/g15-c2/c44` plus the shared probe cache.
+
+**Completed and carried without rerun, once re-authenticated.** The
+re-authentication (`reauthenticate.py`, `resume-reauthentication.json`):
+`mismatches: []`, `reruns_required: 0`, 2,737 live files, 1,627
+production files at `3acf8a34…`, 24 receipt pins, 1,042 rows / 78,330
+keys / 18,840 encoding rows / 1,018 paired / 24 unresolved, the boundary
+audit and canonical-replay outputs equal to the archived evidence, and 82
+preserved runs. Tail family 1 `accepted-strict-tail-forward` (rows
+`P1564`, `P1565`; 13 contexts x 5 variants x 2 rows = 130 frozen cells,
+the 20 encoding keys per row excluded under the zero-encoding-runs
+freeze): `prepare_tail.py` froze the plans and source proof (real arm 10
+harness-only changed files, mutant arm 196 guard-layer files,
+`production_changes=0`, live source untouched); both arms were built
+fresh (`cache_hit=false`: real `32bd6eb9…` in 68.4 s, mutant
+`c3665b00…` in 65.0 s — 2 of the 10-build cap); the calibration passed
+for both rows (armed, hit, survived; `real_disabled_GREEN=2`, producer
+reached on the disabled stack, encoding 0, 6 guest processes of the
+256-guest cap), and the stage is `tail-family-1-calibrated` with the
+family's remaining plan at 2 matrix processes and 2 armed survivor runs.
+
+**Not done.** `execute_tail.py` never ran: attempts 1 and 2 exited 1 on
+their own Python `SyntaxError` before any guest process, and both failed
+attempts and logs are retained. The 130-cell matrix, the two armed
+survivor runs, families 2-4 (including `P1573`), the two-family
+stop-loss and the round-end integrity were not started. Budget spent:
+2/10 builds, 6/256 guest processes, records inside the 2,500 cap, 0
+encoding runs.
+
+**Resume 2.** Resume the same `mst` session at the family-1 matrix
+execution on the preserved scene; re-authenticate anything inherited
+(the two build receipts, the calibration JSON with its six logs, the
+freeze and source proof, `state.json`) before crediting it, and treat a
+mismatch as a STOP that the round reports rather than repairs. The two
+failed `execute_tail.py` attempts stay on record as instrument
+corrections; correcting the script is not a shape change. The frozen
+tail allocation, the two-family stop-loss, the no-rerun rule, and the
+round-end integrity and `rum-report/1` duties of the previous amendment
+stand unchanged; C2 stays Open at 141 Residual + 1 Lost; S10 stays
+unopened.
