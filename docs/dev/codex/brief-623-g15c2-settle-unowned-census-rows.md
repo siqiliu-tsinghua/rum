@@ -111441,3 +111441,174 @@ copies byte-identical (`6769bccd…`); `git log
 22e0fb4c..HEAD -- crates` empty; tree clean at `5baacc3a` = `origin/main`;
 no assertion weakened, no attempt deleted, no recipe relabelled, no
 inventory re-pinned.
+
+## Continuation 57 ruling (2026-11-14) — accepted in full on `cdx`; exactly the two approved `Boundary` moves were applied by canonical raw replay, `P2618`'s test-only file lifecycle is measured and the row stays `Residual`, six source-only parks and one pre-freeze admission rejection are accepted with zero credit, and continuation 58 gets a fresh bounded tail allocation
+
+**Run accepted.** `cdx` (gpt-6-astra max, session
+`01a1d6e5-8c4c-7950-9c5e-8a6db1999e38`, unit
+`brief-623-cdx-20261114-055209-915253`, started 2026-11-14 05:52:09 +08:00,
+ended 06:19, rc 0, peak 4,036,681,728 B, oom 0, oom_kill 0; log
+`.temp/logs/cdx_brief_623.log`, 28,242 lines, 2,415,050 B, sha256
+`2dc428b52862a55cd649962ae544c123c51d5a8925d562ed3df0a760bd40d11b`, 36 run
+records — 35 exit 0 and one retained exit 1 admission controller —
+`tokens used` 204,227 as the log reports it; report
+`.temp/brief-623/report.json`, 10 PASS / 2 FLAGGED / 1 NA checks and 1 PASS
+measurement, `report.py check 623` 767 citations by my own run;
+`.git-attempts` absent; 5,707 reported changes (5,704 added, 3 modified) all
+under `.temp/`; 0 source edits; 2 builds, 3 guest processes, 12 diagnostic
+records, 0 encoding runs).
+
+**Entry and source.** 24 pins exact; 2,737 live files at 0 missing / 0
+changed / 0 extra by my own walk, and the only delta against C56's entry
+manifest is my own brief append; production 1,627 files at `3acf8a34…` (my
+own recompute); 1,042 rows / 78,330 keys / 18,840 encoding rows; C44's 12
+pins, C50's 7, C51's 7 and C52's 7 exact, the 26+26 C51/C52 carry receipts
+and the 27-entry C53, C54, C55 and C56 tables exact (27+27+27+27); C52's
+5,879-file, C53's 149-file and C54's 132-file seals replay 0/0 by my own
+walks, C55's 11,122-file and C56's 22,159-file seals carrying only the
+derived-receipt refreshes my own gates disclosed; no prior scene's seal
+moved; `source_rebases_this_round=0`.
+
+**The two approved moves were applied exactly.** `P2645` and `P2657`, each
+`Residual`→`Boundary` by canonical raw replay, citing the C56 packets pinned
+by sha256 (freeze `971ba36d…` and `0a6d48c2…`, instrument `3dc1f4de…` and
+`e8a6f478…`, source-proof `d101fe60…` and `af9ca02a…`, lifecycle
+`4d590b1f…` and `b6d839f1…`, build receipts `b0ad0682…`, `0112f3e7…`,
+`58020c22…`, `30ed94eb…`, raw logs `fd1928f2…`, `f4645505…`, `d23fa224…`,
+`b4bf63c1…`, `e3d0a55d…`, `f5aedde1…` — all recomputed by me); exactly the
+six settlement columns move on those two lines and the other 1,040 rows are
+byte-identical; `required-tuples.tsv` `3c2dcdff…` byte-identical; outcomes
+Boundary 12 / Equal 174 / Identity 5 / Lost 1 / NoObservableTail 126 /
+Residual 127 / Transferred 594 / Unreachable 3; C2 Open at 127 Residual + 1
+Lost; residual composition 98 LocalTail + 13 ReopenedOrNew + 11
+StrictDropGap + 2 StrictCallerGap + 1 New719Edge + 1 New725Edge + 1
+StrictOtherCarrier; `P1573` Residual, `P1566` Lost, `P0496` reserved, the
+held pair rows and the 13 pair columns held; `equal_claim:false`, equality
+credit 0, no fresh guest or build for the replay.
+
+**Inherited replays and canonical state.** C53 (`b8573023…` / receipt
+`f85babb7…`), C54 (`2d4bf24f…` / `e76f0bd8…`) and C55 (`b5874760…` /
+`2484108e…`) each reproduce eight exact outputs against their sealed briefs
+with their receipts unchanged; the new C56 replay binds the sealed C56 brief
+(`d2281e92…`), reproduces eight exact outputs byte-identically to my own C56
+gate receipts and writes nothing into the C56 scene (receipt `0c11ed0a…`);
+my own canonical replay PASS with seven RED negative controls, the positive
+GREEN and eight exact outputs, and the C57 idempotence replay PASS (receipt
+raw-log pointer fresh, one new log); transitive state unchanged from C56
+(182 full proofs, 205 matrices, 11,099 SAME keys, 860 named open, 24
+unresolved sites, 13 pair columns, five owners,
+`whole_graph_complete=false`), with the two new boundary rows recorded at
+`boundary_equality_credit=0`.
+
+**Family `cli-file-temporary-destruction` (`P2618`, 30 keys) — measured,
+stays `Residual`.** Producer `crates/rum-cli/src/eval_tests.rs:52:::invoke@60`,
+the actual `eval_file(session, File::new(source).path())` call inside the
+`#[cfg(test)] mod eval_tests` CLI test module, whose statement-end temporary
+`File::drop` removes the file; four cases (ordinary-success, queued-success,
+terminal-cleanup, terminal-simple); real == disabled byte-exact on all four;
+the own omission `SkipActualSelectedFileRemoval` armed and hit on the two
+pause cases only and changed exactly `file_present` / `remaining_contents`,
+with the phase rows and the session snapshot unchanged; two fresh builds
+(real `21201a96…`, mutant `bf64e79b…`) whose real arm differs from live only
+by the scratch observer and an `if false` guard and whose mutant arm arms
+exactly that guard plus the `enter` probe; three guests and twelve records;
+0 assertion edits; zero coverage on the row's five channels
+(`error_before_tail`, `phase_observation`, `prefix_and_tail`,
+`return_boundary`, `value`).
+
+**Q1 — `P2618` stays `Residual`.** The measured difference is the test
+fixture's own `File::drop` removal, not the row's post-producer duty: the
+temporary drops when the statement ends whatever `eval_file` does with the
+session, so the observation cannot distinguish the row's behaviour, and the
+row's own five channels were not exercised (0 coverage). A fixture's
+hygiene is not a documented terminal contract, so a `Boundary` settlement
+would credit test scaffolding as the row's tail. The two caught cells are
+accepted as a calibrated fixture-lifecycle control with zero credit and
+retained in the round's evidence; a further attempt needs a row-channel
+observer at the actual call site with a real pause (or an explicit ruling
+that test-only call-site tails are settleable — this ruling does not make
+that ruling).
+
+**Parks accepted.** `cli-callback-whole-result-returns` (`P2621`, `P2637`,
+`P2639`, `P2641`, 120 keys) is `ParkedNoAdmissibleOmissionFound`: each
+closure returns the whole `HostEvalOutcome` as its entire expression, seven
+rejected shapes per row, source packets hash-match live, and the named outer
+owner `P2642` at `main.rs:260` cannot lend its mutant.
+`cli-owned-repl-scope-result-tails` (`P2625`, `P2635`, 65 keys) is
+`ParkedOwnedCleanupObserverGap`: seven rejected shapes, the named missing
+instruments are the actual owned `HostSession` with enabled generation/drop
+accounting and the actual terminal descriptor/lock lifetime, and no
+neutral-destruction, identity or transfer claim is made. Both families were
+separately frozen before any search and carry 0 builds, 0 guests and 0
+coverage.
+
+**Admission rejection accepted.** The broader owned family selected
+`P2631`/`P2644` and failed pre-freeze admission because each carries 20
+blocked `guest_heads` encoding keys (80 required keys each); the unchanged
+guard rejected it before any freeze, source search, build or guest, both
+rows and all 160 required keys are unchanged, and the failed controller and
+its log are preserved under `failed-attempts/owned-family-admission/`. No
+eligibility assertion was weakened, no recipe relabelled, no encoding run
+executed; those rows stay behind G13.
+
+**Stop accepted.** The two-family stop-loss fired at ticks 2 (the callback
+and owned-REPL searches gained no requirement, coverage cell, armed row or
+outcome; the file family's one armed row counted as progress), with 3 of 4
+family slots used, 2/16 builds, 3/512 guests, 12/4,000 records, 0 encoding
+runs, and 0 guests / 0 Cargo after the stop (15 post-stop controller
+records, none a guest).
+
+**My gate.** Entry, pins, carry tables and seals exact; the two moves
+re-derived exactly with all C56 packet hashes recomputed; my own inherited
+C53–C56 replays PASS and my own canonical replay PASS; the family's
+real/disabled/own logs re-read (real == disabled, the own arm differing in
+exactly the two named fields on the two pause cases, pause-keyed arming,
+phase and snapshot equal); both build receipts and binaries exact
+(`0ed1f33c…`/`21201a96…` and `2cf59466…`/`bf64e79b…`) with harness-only
+source deltas; both parks' packets hash-match live with seven rejected
+shapes per row; the admission rejection's blocked keys and untouched rows
+exact; `report.py check 623` 767 citations; the report copies
+byte-identical (`7ea19aed…`); the C57 evidence seal 5,689 files 0 missing /
+0 changed with 0 scene files outside it (8 mutable exclusions and 5 log
+prefixes honored); my own protected walk 2,851,983 entries 0 missing /
+exactly 1 difference = the authorized report publication
+(`.temp/brief-623/report.json`); `git log 22e0fb4c..HEAD -- crates` empty;
+tree clean at `d21f2448` = `origin/main`; no assertion weakened, no attempt
+deleted, no recipe relabelled, no inventory re-pinned.
+
+**Continuation 58 order.** Entry on the unchanged installed source
+`22e0fb4c`: every file under `crates/` equals the C57 final manifest
+(production digest `3acf8a34…`, 1,627 files; 2,737 live files); the entry
+re-derives 1,042 rows / 78,330 canonical keys / 18,840 encoding rows with 0
+moves, 1,018 paired sources and the 24 explicitly unresolved sites; the two
+`Boundary` settlements are not re-applied (`settled.tsv` `ed8cc891…` and
+`required-tuples.tsv` `3c2dcdff…` are the baseline); `P1573` stays
+`Residual` with its five explicit-cycle keys, `P1566` stays `Lost`,
+`P0496` stays reserved, the held pair rows and the 13 pair columns stay
+held (`P0325`/`P0340`/`P0475`/`P0528` among them, not promoted);
+`P2631`/`P2644` and every row whose required keys carry blocked encoding
+stay behind G13 and may not enter a family; the C57 parks
+(`cli-file-temporary-destruction`, `cli-callback-whole-result-returns`,
+`cli-owned-repl-scope-result-tails`) and every earlier park are not
+re-attempted without a genuinely new instrument or an explicit ruling.
+Priority: the remaining fully nonencoding paired rows never attempted —
+`P0275` (`definitions/application/replace_all.rs:90`), `P0463`
+(`definitions/rhs_guards.rs:462`), `P0529` (`eval_core/symbol.rs:332`; its
+held sibling `P0528` is not promoted), `P1574`
+(`suspension/core/abandon.rs:108`) and `P2656`
+(`rum-repl/src/request.rs:219`) — then the remaining fully nonencoding
+paired rows on merits; any of the 24 unresolved sites needs a disclosed
+re-pairing before it can enter a family. Each batch carries its own
+armed-hit caught-or-surviving omission; `Equal` only with its own caught
+omission and a complete real matrix; every proposal `equal_claim:false`
+with a survivor per cell; a `Boundary` proposal only with a documented
+terminal contract measured on the actual producer path. The two-family
+stop-loss stands; fresh bounded allocation 4 families, 16 logged builds,
+512 guests, 4,000 records, 0 encoding, no transfer. Scratch
+`.temp/g15-c2/c58`; C44–C57 read-only evidence; no live edit, no git, no
+network, no `unsafe`, no inventory edit, assertions unchanged. **Dispatch:**
+`scripts/dispatch-brief.sh 623` (background, `BRIEF_WORKER` unset = `cdx`).
+**Next:** gate continuation 58 when it stops; then C2's settlement round
+(`P0496`, `P1566`, the `P0325`/`P0326` pair-column reconciliation), CM,
+`CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2; retention resumes from
+E0 + Q3, then Q1/Q2/Q4/Q5.
