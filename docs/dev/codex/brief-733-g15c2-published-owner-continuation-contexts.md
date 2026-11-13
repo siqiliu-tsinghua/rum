@@ -403,3 +403,81 @@ comparisons, the forced SHA, the re-surveyed 51-site table and the source
 ownership proof. Any further difference in the entry/control red or the
 tuple is a STOP. The 4 canonical builds remain; brief 731's 8 stay
 separate.
+
+## Director gate (2026-11-13) — the four punctuation tokens are rustfmt's reflow; resume step 4
+
+The step-4 STOP is well taken as a conflict in this brief's own bar, not a
+worker error: the addition must carry the probe function's "exact tokens",
+while the touched file must also be `cargo fmt --check` clean, and default
+rustfmt (max_width 100) renders the added match arm with four punctuation
+tokens changed. Q2 is answered yes, with the exact transformation recorded
+below; the candidate resumes at step 4 with the formatted addition
+installed.
+
+**Run:** `cdx` (gpt-6-astra, max; session
+`01a1d2c3-625e-7290-a8ed-7b7a7a0b2a05`, fork of
+`01a1d2ad-7dd0-7232-b779-bdbd59b146a7`; log `.temp/logs/cdx_brief_733.log`,
+254,464 B; `tokens used` 2,565,078 as the log reports it; memory-scope peak
+366,317,568 B, oom 0, oom_kill 0, rc 0; 16 run records — the retained 10
+plus 6 new; report 9 checks PASS, 1 FAIL (the designed token-proof STOP),
+1 NA (`remaining-gates`), `report.py check 733` OK with 122 citations by
+my own run; 0 of the 4 canonical builds; exactly one Cargo invocation
+(`cargo fmt --package rum-runtime -- --emit stdout`); 0 git attempts, no
+network; every write under `.temp/brief-733/`; the live tree untouched).
+
+**My scope walk:** live 2,737 files == the scene's `entry-hashes.json`
+except exactly one path, my own governing brief append (`90cc2500`,
+`15e60ca8`) — the disclosed `sole_live_manifest_delta`; `git status` is
+clean at `15e60ca8` and no live file is newer than the dispatch. The
+candidate arm differs from entry in exactly the four scoped paths; the
+three production files are byte-equal to brief 732's `source-candidate-a`
+at `runtime/suspension/core/{evaluation_context,queue,storage}.rs`; the
+touched test file is the entry's 444 lines and 11 tests plus the probe
+tail byte-for-byte (504 lines, `cmp`-equal to
+`.temp/brief-732/source-probes-candidate-a/...`); no `.git-attempts`; the
+24 inventory receipt files are unchanged in the scene and in all three
+copied arms.
+
+**My reproduction of the STOP:** independently of the worker's scripts I
+extracted the touched file's section from the retained `cargo fmt --emit
+stdout` log (618 file sections, one match): its prefix is byte-equal to
+the original file and the extracted addition is byte-equal to
+`accounting-addition-formatted.rs` (sha256
+`188fa2cc6b2054d4ff2d9891289f5fdc3f82086b02d11bba149fb8b79fc2658f`). My
+own tokenizer reads 507 tokens on each side and exactly three edits, once
+each, at the recorded contexts — delete `[","]` from `resume_existing`'s
+parameter list, insert `["{"]` after the `InputRequired` arm's `=>`,
+replace `[","]` with `["}"]` at that arm's end — with every other token
+equal and every string literal byte-equal. The formatted addition
+therefore carries the probe function's entire token stream, its
+assertions and its four armed/cancel cases; the only differences are
+rustfmt's four punctuation tokens.
+
+**Ruling (Q2: yes).** The four punctuation tokens are rustfmt's canonical
+rendering of the added text, not a content change (the brief-731
+continuation-5 precedent: a formatting change is not a shape change).
+Authorized exactly, and only: the trailing comma removed from
+`resume_existing`'s parameter list; the `{` inserted after the
+`InputRequired` arm's `=>`; the arm's trailing comma replaced by `}`; each
+exactly once, at the recorded contexts. The amended step-4 predicate: the
+token proof must show the formatted addition equals the probe addition
+after discarding inter-token whitespace and applying exactly those three
+recorded edits (507 tokens each side; the edit list itself is the proof;
+no other normalization; no literal, identifier, assertion or case
+changed; the pre-existing 444 lines and 11 tests byte-identical). Any
+additional token difference is a STOP. The unformatted addition is never
+installable; the candidate's touched file is the entry file plus the
+formatted addition; the subsequent `cargo fmt --check` must then report
+exactly the three ruled brief-731 arms and no diff inside any touched
+file.
+
+**Resume:** install `accounting-addition-formatted.rs` (sha256
+`188fa2cc…`) in the candidate arm, re-run the token proof under the
+amended predicate, regenerate the four-file patch, and continue step 4 in
+the body's order; steps 1-3 stay unrerun and their evidence un-recredited.
+Everything else stands — the four arms, the ten C4 comparisons, the six
+runtime filters, the seven host and nine stdlib suites, `check
+--all-targets`, the 51-site table and the ownership proof. The 4 canonical
+builds remain; brief 731's 8 stay separate.
+`prepared-four-file-unformatted.patch` is a review artifact, not the
+installable patch.
