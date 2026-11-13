@@ -110171,3 +110171,149 @@ weakening, no re-pinned inventory, no deleted attempt, no relabelled invalid
 recipe; C44, C45, C46, C47, C48, C49 and C50 are read-only scenes. Stop for the
 director gate at the round end or the two-family stop-loss. **Dispatch:**
 `scripts/dispatch-brief.sh 623` (background, `BRIEF_WORKER` unset = `cdx`).
+
+## Continuation 51 ruling (2026-11-14) — accepted in full on `cdx`; no ledger move; `P0772`/`P0775`/`P1582` are accepted as source-only parks and stay `Residual` on all 100 required keys; the two-family stop-loss is well taken; continuation 52 gets a fresh bounded tail allocation aimed at the remaining nonencoding rows with an actual post-producer operation
+
+**Run accepted.** `cdx` (gpt-6-astra max, session
+`01a1d615-6b24-7f80-9ab2-7a70b6518feb`, unit
+`brief-623-cdx-20261114-020449-850187`, started 2026-11-14 02:04:49 +08:00,
+rc 0, peak 3,318,251,520 B, oom 0, oom_kill 0; log
+`.temp/logs/cdx_brief_623.log`, 22,427 lines, 1,952,832 B, sha256
+`4e69890d83e9dbda8f6bdaa0e871d467a2a571f1c6716c2d50911157e4a06027`, 26 run
+records all exit 0, `tokens used` 186,494 as the log reports it; report
+`.temp/brief-623/report.json`, 9 PASS / 2 FLAGGED / 1 NA checks and one NA
+measurement, `report.py check 623` 562 citations by my own run; no
+`.git-attempts`; every write under `.temp/g15-c2/c51` plus the shared
+probe/Cargo caches and the authorized report publication; 0 source edits; 0
+builds, 0 guest processes, 0 diagnostic records, 0 encoding runs).
+
+**Entry and source.** 24 pins exact; 2,737 live files, and my own walk of
+`entry-hashes.json` reads 0 missing / 0 changed; the only delta against C50's
+entry is this brief; production 1,627 files at `3acf8a34…` (my own recompute);
+1,042 rows / 78,330 keys / 18,840 encoding rows; 1,018 paired, 24 unresolved;
+C50's 16,927 sealed artifacts 0 missing / 0 changed; C50's seven director pins
+and C44's 12 pins exact; the tree clean at `aab22975` = `origin/main`, and
+`git log aab22975..HEAD -- crates` empty. C50's final replay is re-executed
+against C50's raw evidence with all writes redirected: eight outputs
+byte-identical to C50's, 0 verdict moves, 0 guests, 0 builds — my own rerun
+of the scene's `replay_c50.py` prints the same PASS line.
+
+**The ledger does not move.** Outcomes 10/172/5/1/126/131/594/3; `settled.tsv`
+sha `0f897542…` and `required-tuples.tsv` sha `3c2dcdff…` byte-identical to
+C50; 131 residual rows in the same composition; `P0813` not re-applied; the
+13 pair columns, 24 unresolved sites and five owners unchanged; `P1573`
+`Residual`, `P1566` `Lost`, `P0496` `Residual`. The only `residuals.tsv`
+change is the `attempted_families` / `what_remains` text on the three parked
+rows — bookkeeping, not a verdict move. My own canonical replay prints the
+PASS line and the seven RED negative controls with the positive GREEN, and all
+eight derived files remain byte-identical to the receipt.
+
+**The two source-only parks are well taken (zero build, zero guest, zero
+coverage).**
+
+`exception-handler-error-carrier` (`P0772`/`P0775`): 70 required nonencoding
+keys (35 each), zero encoding keys, frozen before the search (index 4; search
+index 5) with all 70 keys identical to `required-tuples.tsv`. Seven rejected
+shapes per row. I read the source myself: the tail is the
+`map_err(ResumeStop::failure)` conversion at `exceptions.rs:421` and `:467`,
+`ResumeStop::failure` only constructs `TypedAction::complete(Err(error))`, and
+the encode closure cannot execute on the `Err` path; forwarding the actual
+whole `Result` is mis-typed (`EvalError` against `ResumeStop<Expr>`),
+rebuilding the wrapper is the identical projection, `complete_work` belongs to
+the caller, a default/`Abort` fabricates, and omitting the producer or
+dropping dispatch state changes the operation being indexed. No admissible
+omission; `ParkedNoAdmissibleOmissionFound`; all 70 keys retained.
+
+`typed-adapter-action-projection` (`P1582`): 30 required nonencoding keys,
+zero encoding keys, frozen before the search (index 6; search index 7) with
+all 30 keys identical to `required-tuples.tsv`. Seven rejected shapes. I read
+the tail at `adapter.rs:49`: `self.inner.clone().resume(session, decoded,
+token).inner` projects the actual `Action` out of `TypedAction`, the erased
+boundary requires `Action`, destructuring spells the same field move, a
+default/`Complete(Err(Abort))` fabricates, and decode/token mint/inner resume
+are operations before the producer. No admissible omission;
+`ParkedNoAdmissibleOmissionFound`; all 30 keys retained. Four source packets
+hash-match live in both families.
+
+**The stop is well taken.** Two separately frozen source-only batches, both
+with zero new requirement, coverage cell, armed mutant or outcome, fire the
+brief's two-consecutive-batch stop-loss (C27/C50 precedent: a parked family
+is a batch). `stop_loss_ticks=2`; the round correctly stopped instead of
+spending its two remaining family slots; 17 controller records after the stop
+and 0 guests / 0 Cargo.
+
+**Q1 — answered as recommended.** `P0772`, `P0775` and `P1582` stay
+`Residual` with all 100 required keys and zero execution credit. No
+`Identity`, `Transferred`, `NoObservableTail` or `Unreachable` claim; no
+fabricated default and no identity mutant. No carrier-specific rule now (the
+C50 Q2 discipline): a further attempt needs a genuinely new instrument that
+observes distinct post-producer work on the actual carrier, or an explicit
+director ruling. They are not re-attempted in continuation 52.
+
+**Q2 — answered yes, with a steered priority.** Continuation 52 gets a fresh
+bounded tail allocation:
+
+**Continuation 52 order.** Entry on the unchanged installed source
+`22e0fb4c`: every file under `crates/` equals the C51 final manifest
+(production digest `3acf8a34…`, 1,627 files; 2,737 live files); verify the 24
+pins, the five entry receipts and the C39 rebase receipt; re-derive 1,042
+rows / 78,330 keys / 18,840 encoding rows with 0 moves, 1,018 paired sources
+and 24 unresolved sites. The C50 settlement is not re-applied; the C51
+records are carried as is (outcomes 10/172/5/1/126/131/594/3, 11,039 current
+SAME keys, 182 full proofs, 203 complete matrices, 860 named open, 13 pair
+columns, five owners). Then work the remaining 131 rows by mechanism.
+Priority: the nonencoding rows whose site holds an actual post-producer
+operation — the session evaluation/request rows (`P1557`/`P1559`/`P1560`/
+`P1569`/`P1571`), the suspension core rows (`P1575`/`P1580`/`P1581`), the
+Jupyter rows (`P2605`–`P2614`), the CLI rows (`P2615`–`P2645`), the REPL rows
+(`P2646`/`P2649`/`P2654`–`P2657`) and the adapter row
+`618.frameless-transforms.076` — ahead of the 78 rows that each retain 20
+blocked G13-transport encoding keys and can only be proposed
+`NoObservableTail` or left `Residual`. Pure carrier conversions, wrapper
+identities and default substitutions are not admissible omissions (the C36/
+C50/C51 rule); `Equal` only with a complete real matrix and its own caught
+armed omission; a `NoObservableTail` proposal only with a survivor in every
+cell where the frozen omission can execute and every non-executing cell
+named; every proposal `equal_claim:false`. Each batch with its own armed-hit
+caught-or-surviving omission. `P0341`/`P0336` are not rerun; `P0847`/`P0537`
+and the three C51 parks are not re-attempted without a genuinely new
+instrument or an explicit ruling; `P1312`/`P0934` are not rerun without the
+G13 blocking keys resolved or a genuinely new instrument; `P2599`/`P2595`
+may be attempted only under the separately frozen lifecycle-aware observer
+with the 18-fault accounting; `P2651`/`P2652` are not rerun; `P1573` stays
+`Residual` with its five explicit-cycle keys; `P1566` `Lost`; `P0496`
+reserved; the held pair rows `P0528`/`P0529`/`P1574` stay held and the 13
+pair columns stay held; the nine stopped families and the C19–C51 families
+are not repeated without a genuinely new mechanism or instrument; the
+wrapper-tail identity is not carried; the 860 named open duties, 24
+unresolved sites and five owners stay explicit; port tables and the ledger
+only by canonical replay; the two-family stop-loss stands. Fresh allocation:
+at most four concrete families, at most 16 logged builds (two arms per family
+plus an eight-build correction allowance), 512 guest processes, 4,000
+diagnostic records, 0 encoding runs, no transfer; every family separately
+frozen before build and guest; a reused build only with exact records and a
+pinned receipt, one forced `--force` sha spot check per reused-build family;
+exhaustion is a STOP. Scratch `.temp/g15-c2/c52`; shared probe cache and
+Cargo cache; no repo mutation outside `.temp/`, no git, no network, no
+assertion weakening, no re-pinned inventory, no deleted attempt, no
+relabelled invalid recipe; C44, C45, C46, C47, C48, C49, C50 and C51 are
+read-only scenes. Stop for the director gate at the round end or the
+two-family stop-loss. **Dispatch:** `scripts/dispatch-brief.sh 623`
+(background, `BRIEF_WORKER` unset = `cdx`).
+
+**My gate.** Live 2,737 files 0/0/0 against `entry-hashes.json`; production
+`3acf8a34…` (1,627) recomputed; the C50 seal 16,927 files 0 missing / 0
+changed; C50's seven director pins and C44's 12 pins exact; `settled.tsv` and
+`required-tuples.tsv` byte-identical to C50; the residual diff exactly the
+three parked rows' bookkeeping columns; freeze keys exactly the rows'
+required tuples (70/70 and 30/30, no duplicates); source packets hash-match
+live; my own canonical replay PASS with seven RED negatives and eight exact
+derived outputs; my own C50 inherited replay PASS with eight exact outputs;
+`report.py check 623` 562 citations; the evidence seal 135 files 0 missing /
+0 changed before my rerun, and my own replay refreshed exactly the derived
+`canonical-replay-receipt.json` (raw log pointer `-1` -> `-2`; every output
+still byte-identical — disclosed, not a scene change); my own protected walk
+2,812,290 entries 0 missing / 0 extra / exactly 1 difference = the
+authorized report publication (`.temp/brief-623/report.json`); tree clean at
+`aab22975` = `origin/main`; no assertion
+weakened, no attempt deleted, no recipe relabelled, no inventory re-pinned.
