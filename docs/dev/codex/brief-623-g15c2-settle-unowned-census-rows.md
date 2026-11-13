@@ -107639,3 +107639,183 @@ and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 141 Residual + 2 Lost until this
 round re-settles `P1555`; S10 stays unopened.
+
+## Continuation 38 ruling (2026-11-13) — the entry STOP is well taken; my order under-enumerated the accepted C37-to-installed delta, and continuation 39 runs on the authenticated installed source
+
+Continuation 38 stopped at its entry audit, before any rebase, guest or
+Cargo run. The C37-to-installed crate delta is 36 paths (31 modified, 5
+added, 0 removed): the ten production files my order credited, the
+accepted brief-735 install's seven runtime production files, one
+rustdoc-only host path, and eighteen test/inventory paths from the two
+accepted installs.
+
+**The stop is well taken, and its cause is the order.** The entry
+sentence named only "the brief-731 install's ten production files" as
+the production delta from C37 and made every other production difference
+a STOP; but the accepted brief-735 install (`0aca7e38`) also lies
+between the C37 source and the installed tree, and it carries its own
+seven runtime production files and one rustdoc-only host path. The round
+refused to reconcile the contradiction on its own authority, which is
+the correct behaviour; the defect is mine. This is the recorded
+under-enumerated-permission-list class: the allowance is a duty, not a
+name list to skim.
+
+**My own verification** (`.temp/director/gate-623c38/verify.py`): the
+work tree is clean at `8655b65d`; the live `crates/` tree is 1,627 files
+and equals the C38 entry snapshot and brief 731's accepted
+`final-source-hashes.json` pin; the C37 scene's entry manifest differs
+in exactly 36 crate paths (31 modified, 5 added, 0 removed); the delta
+partitions as 10 authorized (brief 731's seven refusal and three
+capture-repair files) + 7 executable runtime files + 1 rustdoc-only host
+file + 18 test/inventory paths; the seven runtime files are byte-exact
+to `.temp/brief-735/final-tree-hashes.json`; every changed path's C37
+bytes equal its blob at `4a611e74` and every installed path's bytes
+equal its blob at HEAD; the only commits touching `crates/` since
+`4a611e74` are `0aca7e38` and `22e0fb4c`, and every changed path
+belongs to them; the host `session.rs` delta is 15 added rustdoc lines
+and 0 removed; the 16 inherited artifacts are byte-exact to the C37
+scene's originals; all 114 reported changes are additions under
+`.temp/g15-c2/c38/`; the dispatch produced no `.git-attempts` file and
+its seven run records are all `run-bounded.py` controller runs with no
+guest and no Cargo; the inherited ledger is 1,042 rows / 78,330
+canonical keys / 18,840 encoding rows with 0 verdict changes at 141
+Residual + 2 Lost; `report.py check` verifies 43 citations on my own
+run. No source byte is unexplained: the delta is exactly the two
+accepted installs' delta.
+
+**Ruling (Q1): the allowance is amended to the authenticated full
+delta.** Continuation 39 runs on the same installed source (`crates/`
+equal to HEAD, whose subtree equals `22e0fb4c`); its entry duty is the
+exact 36-path delta with endpoint receipts pinned by sha256 below, and
+any other crate path, any removed path, or any byte outside those
+receipts is a STOP. The one-rebase authorization, the `P1555`
+re-settlement on the installed typed refusal, and the 141-row tail order
+stand unchanged. The entry sentence of the continuation-38 order is
+superseded by the amended allowance below. The C38 scene, its entry
+snapshot and its 114 files are kept as the round's record; nothing is
+deleted or relabelled.
+
+**Entry receipts (sha256).** The C37 entry manifest
+`.temp/g15-c2/c37/entry-hashes.json`
+`c4e2a3fdb0d6ef1ff7cd6ce7bc7b548f77d2077c0acd683aa79fdffd9e2412e9`;
+the installed pin
+`.temp/g15-c2/references/brief-731-continuation-11-final-source-hashes.json`
+`b340b600af6ec6ec04e7bf29ee3881556be3dcfe3900078b33d9b66f749a5903`;
+the brief-731 production-delta receipt (the ten)
+`.temp/g15-c2/references/brief-731-continuation-11-cost-source-receipt.json`
+`4faf5f608ba7949e48031b9e4f6ba5201ae1fabea60e3f39de6cadf424963edd`;
+the seven refusal-file hashes
+`.temp/g15-c2/references/brief-731-continuation-4-production-hashes.json`
+`75617891af4a9a95b3bc6dfbf6612b7b8ff05c4819ed1cfbadbe67fd83a0da5e`;
+the accepted brief-735 final tree
+`.temp/g15-c2/references/brief-735-final-tree-hashes.json`
+`c31073cab0181d0a2b9b6718e9db5370c29116bc1e77e79c64be902efd05616b`.
+A receipt whose bytes differ from its pin is a STOP. The reference
+copies are stable under `.temp/g15-c2/`, which disk hygiene never
+prunes.
+
+## Continuation 39 order (2026-11-13) — re-base once on the installed typed-refusal source with the amended entry allowance, re-settle `P1555` as the documented typed boundary, and work the remaining 141-row tail
+
+Brief 623 continuation 39 continues the C2 settlement campaign,
+measurement-only, on the installed source committed by the brief-731
+line at `22e0fb4c`; the ruling commit above and this order's commit
+touch no crate file. Scratch is `.temp/g15-c2/c39`.
+
+**Source and entry.** Every file under `crates/` must equal HEAD's tree.
+Snapshot the live tree and compare it with the C37 entry manifest; the
+crate delta must be exactly the authenticated 36 paths: 31 modified, 5
+added, 0 removed. They partition exactly as the continuation-38 ruling
+records: the ten brief-731 production files (the seven refusal files
+and the three capture-repair files) under the pinned production-delta
+receipt; the seven brief-735 runtime production files byte-exact to the
+pinned accepted 735 final tree; the rustdoc-only host
+`crates/rum-host/src/session.rs` (added `///` lines only); and the 18
+test/inventory paths of the two accepted installs (four modified
+host/runtime tests, six ownership-graph inventories, the retention
+census test, two retention inventories and the five added permanent
+tests). Any other crate path, any removed path, any byte outside the
+pinned receipts, or any receipt whose bytes differ from its pin is a
+STOP. Re-base the ledger exactly once on that source — rows in changed
+functions re-checked in full (the ten brief-731 files and the seven
+brief-735 runtime files are the changed-function surface; the host file
+is rustdoc-only), the rest by fingerprint — and re-derive 1,042 rows /
+78,330 canonical keys / 18,840 encoding rows with 0 moves, 1,018 paired
+sources and the 24 explicitly unresolved sites. A second rebase is a
+STOP.
+
+**The `P1555` re-settlement.** The nested public `Session::eval_text`
+boundary is installed and gated: a same-session nested top-level entry
+that would require unqueued host input retires its own captured
+continuation through the ordered abandonment protocol and returns the
+typed `NestedEvaluationInputBoundary` from `EvalError`,
+`SessionRequestError` and `HostFailureCode`; the permanent
+`nested_public_evaluation` suite, the host and Jupyter arms and the
+zero-arity wire tag are in HEAD. Re-settle `P1555` on this installed
+source with its own evidence: re-run its 30-cell matrix and its six
+minimized witnesses and show the typed refusal at the boundary with the
+queued path unchanged (byte-identical queued arms), the refusal's own
+tests green at eight and one, and the documented boundary distinct from
+the script/file boundary. A `Boundary` settlement with
+`equal_claim:false` is the expected shape; it is never Equal or
+`NoObservableTail`, and it is never settled by argument. A red or a
+surviving silent difference is a STOP.
+
+**Settlement order.** The 21 C18 rows, the 27 C17 rows, the 13 C16 rows,
+the 30 C15 rows, the 28 C14 rows, the seven C13 rows and the
+continuation 20 through continuation 37 settlements (including `P0239`,
+`P0245`, `P0544`, `P0508`, `P0543`, `P1562`, `P1563`, `P1577`, `P1567`,
+`P1576`, `P1476`, `P0002`, `P0020`, `P0001`, `P0028`, `P0021`, `P0022`
+and the `P1555` row this order re-settles) are not re-settled. `P1566`
+stays Lost, `P0496` stays reserved for the settlement round, and the 13
+pair-column rows (including `P0528`, `P0340`, `P0475` and `P0824`) stay
+held by the pair-column order; the `P0325`/`P0326` candidate measurements
+are retained for that settlement round and are not promoted. **Do not
+execute the held pair-column rows in this round**, do not repeat the
+continuation-26 `resumed-call-argument-append` family, and do not repeat
+the continuation-27 through continuation-37 families without a genuinely
+new mechanism or instrument: `P0544`, `P0543`, `P0508`, `P1562`, `P1563`,
+`P1577`, `P1567`, `P1576`, `P1476`, `P0002`, `P0020`, `P0001`, `P0028`,
+`P0021`, `P0022` and `P1555` are settled and their instruments are used,
+including the wrapper-tail identity, the
+`OmitResumedEqualityPhaseWithSynchronousEventObserver` equality-accounting
+instrument, the nonempty retained-prefix native-caller instrument, the
+outgoing-lease-release instrument, the incoming callback-value
+receipt-charge instrument and the retained-option rule-shell instrument,
+under their standing bounds (public API only, never fabricating a value or
+an outcome, live source untouched, never reopening an accepted
+disposition). **The wrapper-tail identity is not carried:** a further
+wrapper-tail row may be proposed to the director but is not executed
+without an explicit ruling. A row that needs a configuration the installed
+workspace cannot compile may use the feature-isolated driver construction
+(manifest feature lists only, disclosed, live source untouched); a row
+that needs a direct state read may add a scratch-only accessor or use an
+existing public accessor in the same shape. Work the remaining 141-row
+tail by mechanism — 110 LocalTail + 13 ReopenedOrNew + 11 StrictDropGap +
+4 StrictCallerGap + 1 StrictOtherCarrier + 1 New719Edge + 1 New725Edge —
+and keep each batch's own armed-hit caught-or-surviving omission: an Equal
+row needs its own caught omission and its complete real matrix, a proposal
+is `equal_claim:false` with a survivor for every required cell, and a row
+settled only by argument stays open. The C20–C37 dispositions are
+unchanged.
+
+**Families and duties.** The nine stopped families, the five C19
+families, the five C20 families, the three C21 families, the two C22
+families, the two C23 families, the two C24 families, the two C25
+families, the C26 family, the C27 family, the two C28 families, the two
+C29 families, the C30 family, the two C31 families, the C32 family, the
+C33 family, the C34 family, the C35 family, the C36 family, the C37
+family and the continuation-38 entry audit are not repeated without a new
+mechanism. The 863 named open transitive duties, the 24 unresolved sites,
+the 13 pair columns and the five named owners stay explicit; no source
+design work. Port tables and the ledger only by canonical replay.
+
+**Rules.** The two-family stop-loss and every standing rule stand: no
+repository mutation outside `.temp/`, no git, no network, no assertion
+weakening, no re-pinned inventory, no deleted attempt, no relabelled
+invalid recipe. All scratch under `.temp/g15-c2/c39`, the shared probe
+cache and the existing Cargo cache; disclose every path. Invalid, unarmed
+and failed observations never certify a settlement.
+
+**Stop.** Stop for the director gate at the round's end or at the
+two-family stop-loss. C2 stays Open at 141 Residual + 2 Lost until this
+round re-settles `P1555`; S10 stays unopened.
