@@ -109099,3 +109099,31 @@ the C44 scene and every earlier scene are read-only.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 139 Residual + 1 Lost; S10 stays
 unopened.
+
+## Continuation 45 run 1 (2026-11-13) — no work: a silent model substitution, and run 2 pins the served GLM alias
+
+Continuation 45's first segment (`mst`, resumed session
+`4650fa4e-6ce4-b376-37ae-5228e5968116`, unit
+`brief-623-mst-20261113-210719-745533`, started 21:07:19 +08:00) produced
+no work and is uncredited. The provider had removed the `glm-5-3` alias:
+the CLI printed `Model 'glm-5-3' is not available — running 'Mistral
+Medium 3.5'` and silently ran a different, weaker model, which re-emitted
+an abridged copy of the continuation-44 STOP report and exited 0. Nothing
+was written: no `.temp/g15-c2/c45` scene, no ledger replay, no settlement,
+no run records; `.temp/brief-623/report.json` is untouched; `git status`
+is clean at `e995f420`. The segment made two read-only git attempts
+(`git rev-parse HEAD`, `git log --oneline -10`), both refused by the
+installed shim and recorded in the `.git-attempts` log. Cost $0.91
+(4,183,450 in / 15,794 out), peak 651,628,544 B, no oom. The log (7,750 B)
+and its two-attempt `.git-attempts` are archived as
+`.temp/logs/archive/mst_brief_623.continuation-45.noop-resume{,.git-attempts}`.
+
+A direct probe of the CLI now reads `Error: Unknown model: glm-5-3.
+Available: mistral-medium-3.5, zai-glm-5-3-flash`; the GLM is served under
+`zai-glm-5-3-flash` ("GLM-5.3 Flash (Mistral Hosted)", thinking levels
+low/high/max), and a one-turn probe on that alias answers normally. Run 2
+therefore dispatches continuation 45 in a **fresh** session with
+`MST_MODEL=zai-glm-5-3-flash`, no `MST_RESUME` (the old session is both
+tainted by the substituted model and over the flash model's 262,144-token
+context limit), no price ceiling and the standing 43,200 s time limit. The
+continuation-45 order above is unchanged.
