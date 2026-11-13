@@ -109446,3 +109446,169 @@ recipe; C44, C45 and C46 are read-only scenes. Stop for the director
 gate at the round end or the two-family stop-loss. **Dispatch:**
 `scripts/dispatch-brief.sh 623` (background, `BRIEF_WORKER` unset =
 `cdx`).
+
+## Continuation 47 ruling (2026-11-13) — accepted in full; P2600, P2603 and P2647 settle Equal; P2599 keeps its two original-driver keys; continuation 48 applies the three moves and continues the tail
+
+**Run accepted.** `cdx` (gpt-6-astra max, unit
+`brief-623-cdx-20261113-231051-784994`, started 23:10:51 +08:00, rc 0,
+peak 3,249,909,760 B, oom 0, oom_kill 0; log
+`.temp/logs/cdx_brief_623.log`, 1,910,395 B, sha256
+`e2d72e90847442b4852116355eb878029527e6855a34339261b50effd55f8fd7`,
+147 run records, `tokens used` 213,232 as the log reports it; report
+`.temp/brief-623/report.json`, 10 checks PASS / 1 NA and 1 measurement
+PASS, `report.py check 623` 796 citations by my own run; no
+`.git-attempts`; every write under `.temp/g15-c2/c47` plus the shared
+probe/Cargo caches and the authorized report publication; no live source
+edit, no git, no network; every run exit 0; 0 deviations and three
+disclosures).
+
+**Entry and source.** 24 pins exact (12 receipt pins, 12 director pins),
+five entry receipts and the pinned C39 rebase receipt; 2,737 live files;
+1,627 production files at `3acf8a34…`; 1,042 rows / 78,330 keys / 18,840
+encoding rows; 1,018 paired, 24 unresolved; 0 rebases this round. My own
+walk: 2,737 live files 0 missing / 0 extra / 0 differing against
+`entry-hashes.json`, the production digest recomputed exactly,
+`git log 22e0fb4c..HEAD -- crates` empty, tree clean at `92093cf7`; the
+only live difference from the C46 entry manifest is my own brief append.
+
+**The settlement.** Exactly `P2596`, `Residual`->`Equal`,
+`equal_claim:true`, applied by the canonical ledger replay and not by
+hand: `settled.tsv` equals the settlement-receipt hash `d82b1002…`;
+exactly one line differs from `inherited-settled.tsv`; the C46
+`host-call-pending-timeout-cancellation` packet is pinned by path and
+sha256; 30 armed / hit / caught omissions and 30 real SAME cells;
+outcomes 10/166/5/1/126/137/594/3; residual composition
+108 LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap
++ 1 New719Edge + 1 New725Edge + 1 StrictOtherCarrier; the other 1,041
+rows byte-identical; the 78,330 keys (`requirements_sha256 3c2dcdff…`)
+and 18,840 encoding rows byte-identical; `P1573` Residual with its five
+explicit-cycle keys, `P1566` Lost, `P0496` Residual; the 13 pair columns
+and the 24 unresolved sites byte-identical to the inherited files. My own
+`final_replay.py` prints the canonical PASS line
+(`rows=1042 keys=78330 ... verdict_moves=1 approved=P2596 other_moves=0`)
+and seven RED negative controls, and rewrites all seven derived files
+byte-identically.
+
+**The four families.** `host-call-structured-result-output` (`P2600`):
+30/30 fresh required keys, 30 armed / hit / caught, 0 survived, complete
+matrix — `eligible_Equal`; producer
+`crates/rum-host/src/session.rs:442:HostSession::call_unprotected@482`
+(`native623.call`); the own omission skips only the existing
+`outputs.push(HostStructuredOutput { kind: Result, .. })` statement in
+`eval_success_from_runtime`, under a scope entered only in this
+producer's success arm; the frozen `HostEvalOutcome` observation reads
+the omitted event; the real branch is `if false`, and real == disabled on
+all 30. `host-eval-structured-result-output` (`P2599`): the same
+packaging phase on the `eval_request` producer
+(`crates/rum-host/src/session.rs:435:HostSession::eval_request_unprotected@436`);
+28/30 keys with 28 armed / hit / caught and the two frozen
+`RestoreSealedReferences.body` keys (`Middle`/`Twice` `value.base`) named
+as gaps that require their original driver; no Equal claim.
+`host-resume-timeout-owning-boundary` (`P2603`): the 30-key matrix is
+1 fresh key plus 29 carried from authenticated C45/C46 raw coverage
+(15 from `c45/host-resume-terminal-retirement-coverage.tsv`, 14 from
+C46's `host-resume-actual-repl-driver-coverage.tsv`); 1 armed / hit /
+caught; the driver is exactly the C46 Q2 requirement — the actual
+`Repl::new` and production `request::drive`, then a real
+`eval_with_timeout` parent pauses, `resume_with_input`
+(`crates/rum-host/src/session.rs:586:HostSession::resume_with_input@592`)
+reaches a second actual `InputRequired` inside P2603, and a second resume
+completes that timed parent; the read-only `owns_eval_timeout` observer
+samples the returned resumed boundary
+(`C47HostOwnsEvalTimeoutAtTerminalBoundary`); the omission forwards the
+actual outcome before `clear_owned_eval_timeout`, only in the resumed
+phase armed by its own actual pause; the caught record differs only in
+that native row (resumed owned 1 against queued 0) with the semantic
+outcome equal; no bare 30-cell matrix was rerun.
+`repl-command-history-tail` (`P2647`): 30/30 fresh keys, 30 armed / hit /
+caught; producer `crates/rum-repl/src/lib.rs:113:Repl<R,W>::run@152`
+(`native623.repl.trace` / `native623.repl.ordinary`); the actual
+`:trace` command producer executes; the own omission skips only the two
+existing `record_history(trimmed)` statements in the `Some(execution)`
+arm, preserving `RequestExit` and control flow; a read-only history
+observer exposes the actual Vec; the caught record differs only in
+`history=[..]` against `[]` with the outcome equal. Each family was
+separately frozen before its two builds and first guest (freeze indices
+4/44/82/122; builds 5-6/45-46/83-84/123-124; first guests 8/48/86/126);
+8 exact build receipts (all fresh, `cache_hit:false`, `spot_check:none`
+— no reuse, so the forced spot-check clause is vacuous), binaries and
+assembled trees exact; 8/16 builds, 109/512 guests, 279/4,000 records,
+0 encoding runs; 89 measured SAME cells, 89 caught own omissions, 0
+survived, 0 invalid; 88 new unique coverage keys; every family gained
+coverage or a caught omission, stop-loss ticks 0.
+
+**My gate.** My own protected walk reads 2,705,495 entries with 0 missing
+and exactly one difference — `.temp/brief-623/report.json`, the
+authorized publication; the C47 protected manifest adds exactly the C46
+scene's 22,610 files, and the C46 scene's seven derived files carry my
+own C46 gate replay's 23:02:35 write with hashes still matching. The
+five named owners, the pair-column and unresolved-site files are
+byte-identical to the inherited copies; the eight build receipts
+reproduce their binaries and assembled trees; the post-stop audit reads
+0 guest and 0 Cargo after the round end, 0 encoding; publication
+verification reads 0 live changes and 0 sealed changes. No assertion was
+weakened, no attempt deleted, no recipe relabelled, no inventory
+re-pinned.
+
+**Q1 — accepted.** `P2600`, `P2603` and `P2647` settle `Equal`, each on a
+complete required matrix and its own caught omission: `P2600` and
+`P2647` on 30/30 fresh cells, `P2603` on its one fresh timeout-owning
+cell plus the 29 authenticated carries, which is the exact instrument
+C46 Q2 ordered and not a repeated matrix. Continuation 48 applies the
+three `Residual`->`Equal` moves by the canonical ledger replay, citing
+each family's freeze, calibration, coverage, mutants, gain and full
+proofs by path and sha256; no other row moves; outcomes become
+10/169/5/1/126/134/594/3; the residual composition becomes
+105 LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap
++ 1 New719Edge + 1 New725Edge + 1 StrictOtherCarrier; C2 Open at 134
+Residual + 1 Lost.
+
+**Q2 — P2599 stays Residual.** Its 28 caught cells are recorded, never
+credited: the two frozen `RestoreSealedReferences.body` keys
+(`Middle`/`Twice` `value.base`) require their original driver and were
+not executed. `P2599` may be retried only with that original driver —
+never by re-running the 28-cell matrix, never by assigning the gap to a
+native producer. `P2595` keeps its own original `RestoreSealedReferences`
+driver requirement; `P2651`/`P2652` stay Residual on their 40 blocked
+G13-transport encoding keys and are not rerun; `P1573` keeps its five
+explicit-cycle keys; `P1566` is Lost and `P0496` reserved; the 13 pair
+columns stay held; the wrapper-tail identity is not carried.
+
+**Continuation 48 order.** Entry on the unchanged installed source
+`22e0fb4c`: every file under `crates/` equals the C47 final manifest
+(production digest `3acf8a34…`, 1,627 files; 2,737 live files); verify
+the 24 pins, the five entry receipts and the C39 rebase receipt;
+re-derive 1,042 rows / 78,330 keys / 18,840 encoding rows with 0 moves,
+1,018 paired sources and 24 unresolved sites. Apply exactly the three
+`Equal` moves `P2600`, `P2603` and `P2647` by canonical ledger replay,
+citing the C47 packets; any other verdict move, key or encoding change,
+or hand edit is a STOP. Then work the remaining 134 rows by mechanism
+(105 LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap
++ 1 New719Edge + 1 New725Edge + 1 StrictOtherCarrier `P1573`), each
+batch with its own armed-hit caught-or-surviving omission; Equal only
+with its own caught omission and a complete real matrix; every proposal
+`equal_claim:false` with a survivor in every cell where the frozen
+omission can execute and every non-executing cell named. `P2599` may be
+attempted only with its original `RestoreSealedReferences` driver;
+`P2595` only with its own original driver; `P2651`/`P2652` are not
+rerun. `P1573` stays `Residual` with its five explicit-cycle keys and is
+not re-attempted without an explicit-cycle-capable instrument and an
+explicit ruling. `P1566` and `P0496` stay reserved; the 13 pair columns
+stay held; the nine stopped families and the C19–C47 families are not
+repeated without a genuinely new mechanism or instrument; the
+wrapper-tail identity is not carried; the 860 named open duties, 24
+unresolved sites and five owners stay explicit; port tables and the
+ledger only by canonical replay; the two-family stop-loss stands. Fresh
+allocation: at most four concrete families, at most 16 logged builds
+(two arms per family plus an eight-build correction allowance), 512
+guest processes, 4,000 diagnostic records, 0 encoding runs, no
+transfer; every family separately frozen before build and guest; a
+reused build only with exact records and a pinned receipt, one forced
+`--force` sha spot check per reused-build family; exhaustion is a STOP.
+Scratch `.temp/g15-c2/c48`; shared probe cache and Cargo cache; no repo
+mutation outside `.temp/`, no git, no network, no assertion weakening,
+no re-pinned inventory, no deleted attempt, no relabelled invalid
+recipe; C44, C45, C46 and C47 are read-only scenes. Stop for the
+director gate at the round end or the two-family stop-loss. **Dispatch:**
+`scripts/dispatch-brief.sh 623` (background, `BRIEF_WORKER` unset =
+`cdx`).
