@@ -108893,3 +108893,34 @@ tail allocation, the two-family stop-loss, the no-rerun rule, and the
 round-end integrity and `rum-report/1` duties of the previous amendment
 stand unchanged; C2 stays Open at 141 Residual + 1 Lost; S10 stays
 unopened.
+
+**Resume 3 (2026-11-13) — the director stopped the running `mst` segment by
+hand to remove the price ceiling.** The user ruled that the `mst`
+subscription is an annual plan paid for the year, so this task line carries
+no `--max-price` bound from here on; the stop was director-side, not a
+quota, provider or scene event, and no completed stage is rerun. The
+preserved scene stands at `tail-family-2-executed-with-proposal`: family 1
+(`accepted-strict-tail-forward`) executed its 130-cell matrix and two armed
+survivor runs — 130 armed, 108 hit survivors, 22 named error carriers, 0
+caught, both complete real matrices, and its two `NoObservableTail`
+proposals on `P1564`/`P1565`; family 2
+(`accepted-cancellation-abandonment`, `P1573`) froze, built and calibrated,
+then executed its 65-cell matrix with 65 survivors and five named retained
+same-type-error keys, recording its one `NoObservableTail` proposal;
+neither family moved a verdict or ticked the stop-loss clock
+(`equal_claim:false`, `verdict_moves=0`, `outcomes_gained=0`,
+`stop_loss_ticks=0`). The canonical replay's attempts 1-3 exited 1 on its
+own assertions and stay on record as instrument corrections; correcting
+the script is not a shape change.
+
+**Resume 3.** Resume the same `mst` session at the canonical replay on this
+scene; re-authenticate everything inherited before crediting it — the two
+families' freeze, source proof, build receipts, calibration, matrix,
+survivor and outcome records, `state.json` and the budget ledger — and
+treat a mismatch as a STOP that the round reports rather than repairs.
+Then run the round-end integrity and write the single `rum-report/1` record
+covering all three `mst` segments with `report.py check 623` passing, and
+stop for the director gate. The frozen tail allocation, the two-family
+stop-loss, the no-rerun rule, the held rows and reserved rows, and every
+boundary of the previous amendments stand unchanged; C2 stays Open at 141
+Residual + 1 Lost; S10 stays unopened.
