@@ -108068,3 +108068,203 @@ unarmed and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 141 Residual + 1 Lost after the
 settlement; S10 stays unopened.
+
+## Continuation 40 ruling (2026-11-13) — the `P1562` calibration STOP is well taken; the invalid records stay invalid and a separately frozen current-source lifecycle instrument is authorized
+
+The round applied the continuation-39 `P1555` `Boundary` settlement and
+then stopped at the first changed-function calibration. The settlement is
+accepted exactly as ruled: `P1555` Lost→Boundary with `equal_claim:false`
+is the sole verdict change; the other 1,041 rows are byte-identical;
+outcomes are Boundary 10 / Equal 164 / Identity 5 / Lost 1 /
+NoObservableTail 124 / Residual 141 / Transferred 594 / Unreachable 3;
+the residual composition is 110 LocalTail + 13 ReopenedOrNew + 11
+StrictDropGap + 4 StrictCallerGap + 1 StrictOtherCarrier + 1 New719Edge +
+1 New725Edge = 141; 0 rows added or removed; 78,330 canonical keys and
+18,840 encoding rows are byte-identical; the 13 pair-column rows are
+held with 0 verdict changes; `P1566` stays Lost and `P0496` stays
+Reserved. The acceptance cites the C39 evidence by path and sha256 with
+0 fresh guest executions, as the order required.
+
+**My gate.** My own snapshot walk reproduces the round's entry manifest
+exactly — 2,737 files, digest
+`51691ba7697147c8cee776d9d255161eb19bddc42ec268c7a0398e1c9217e44c` —
+and differs from the C39 entry manifest by exactly the governing brief
+(my own continuation-39 ruling and continuation-40 order append); all 24
+entry pins hash to their pins; `git log 22e0fb4c..HEAD -- crates` is
+empty and the work tree is clean, so the live source is the installed
+`22e0fb4c` tree; `source_rebases_this_round` is 0 and the inherited
+`rebase.tsv`, `rebase-summary.json` and `rebase-current.json` are
+byte-identical to their inherited copies; the 24 unresolved sites and
+the 13 pair columns stand; the C39 scene has 0 files newer than the
+dispatch and its protected replay is 8,357 files with 0 changes; the
+writes are confined to `.temp/g15-c2/c40` and the shared probe and Cargo
+caches; the round used 3 of its 20 builds, 6 of its 700 guest processes,
+6 of its 4,500 diagnostic-record slots, 6 passing tests and 0 encoding
+executions; `report.py check` passes with 234 citations on my own run;
+the six mandatory negative ledger controls are RED and the positive
+control is GREEN on my re-read. The two retained exit-1 attempts are
+controller failures (a TSV field-set mismatch and an audit expectation
+that omitted it), disclosed in the report, re-run green, and they
+certify nothing. The round is accepted as a partial round: the `P1555`
+settlement is credited; no changed-function recheck is credited; the
+two-family stop-loss correctly did not fire because no tail family ran.
+
+**The STOP.** `P1562`'s own omission armed and hit exactly once and the
+terminal read differs as predicted — queued `active=1 reserved=1` against
+the real and disabled `active=0 reserved=0` — but the record is invalid:
+the descriptor's `empty_queue` sentinel pauses, `retire` cancels the
+retained ticket, and `finish_cancelled_pending_evaluation_request`
+correctly declines to retire the sentinel's plain report because that
+report's owner does not name the active ticket (`session_requests.rs`
+`:96-135`, the `retirement_owned` qualification; `session_helpers.rs`
+`:93-100`). The sentinel's suspension therefore stays pending, and the
+following `fresh` request is refused by
+`reject_overlapping_evaluation_request` (`session_requests.rs:136-150`),
+which the harness reports as its generic `FreshRequest` label
+(`support/session.rs:22-28`). The rule is the accepted brief-735
+ownership contract, not a defect: the omission leaves a state the
+installed source cannot reach after a completed request, and the real
+arm reads `[0,0]`, passes the same `fresh` check and is `real ==
+disabled`. The invalid records have no comparison fields, no catch and
+no survivor; the worker retained them as invalid, revoked no accepted
+verdict, relabelled nothing and did not run the full matrix. The STOP is
+well taken.
+
+**Q1 answered: authorize a separately frozen current-source instrument;
+do not relabel the invalid records.** A current-source `P1562`/`P1563`
+calibration that preserves the fresh-request lifecycle check is
+authorized under these conditions.
+
+1. The new instrument records the exact typed outcome of the fresh
+   request and of the sentinel cleanup on **every** arm, not the
+   harness's generic `FreshRequest` label, and proves from the source
+   that the retained ticket's `[1,1]` is the sole delta while the guest
+   observation completes identically (semantic and native). The real
+   arm must stay `[0,0]` and fully valid.
+2. The real and disabled arms keep the complete current matrix — 30
+   cells each for `P1562` and `P1563` — and the full comparison schema.
+   The new instrument runs on all arms; any difference between its
+   real/disabled records and the C29 matrix must be explained as
+   lifecycle-only with the guest observation unchanged, or the run is a
+   STOP.
+3. The fresh-request lifecycle check is preserved on both arms. Either
+   the fresh request succeeds on both arms — in which case the driver's
+   sentinel cleanup must use a route that can abandon a plain pending
+   suspension under a foreign ticket (for example resuming the sentinel,
+   never fabricating a report owner) and its effect on the real/disabled
+   records is shown — or the own arm's refusal is recorded as the exact
+   typed consequence of the retained foreign ticket. A panic, a timeout,
+   an unexplained non-`Ok` or a fabricated report owner is a STOP for my
+   ruling.
+4. The calibration must be red on its own omission for the required key
+   and green on the real and disabled arms **before** any full matrix;
+   only then do the 30-cell matrices for `P1562` and `P1563` run on the
+   current source. `P1568`'s prepared `request-checkpoint` family
+   follows, then the remaining six rows and the tail.
+5. The C40 invalid records stay invalid, retained and uncited. No
+   accepted Equal verdict is revoked or promoted on this round; the
+   transitive status stays `FullCurrentEvidenceRequired` for `P1562` and
+   `P1563` until their complete current matrices exist. No second
+   source rebase.
+
+## Continuation 41 order (2026-11-13) — the current-source `P1562`/`P1563` lifecycle instrument, the nine-row rechecks, then the 141-row tail
+
+Brief 623 continuation 41 continues the C2 settlement campaign,
+measurement-only, on the same installed source at `22e0fb4c`; the ruling
+commit above and this order's commit touch no crate file. Scratch is
+`.temp/g15-c2/c41`; the C40 scene becomes a read-only evidence scene.
+
+**Source and entry.** Every file under `crates/` must equal HEAD's tree
+and the pinned installed pin. No second source rebase: the C39 rebase is
+the one; verify its receipts byte-exactly against the pins in the
+continuation-39 ruling (`rebase-summary.json`, `rebase-current.json`,
+`function-recheck-duties.json`, `changed-function-packets.json`,
+`recheck-closure.tsv`, `transitive-recheck-summary.json`), the five entry
+pins and the 36-path delta (31 modified, 5 added, 0 removed), and
+re-derive the 1,042 rows / 78,330 canonical keys / 18,840 encoding rows,
+0 verdict moves, 1,018 paired sources and the 24 unresolved sites. A
+changed live source, a receipt whose bytes differ from its pin, a
+missing pin, or a second rebase is a STOP. The C37, C38, C39 and C40
+scenes are read-only.
+
+**The ledger.** The continuation-40 settlement stands: `P1555` is
+Boundary with `equal_claim:false`, the sole verdict change, with
+outcomes Boundary 10 / Equal 164 / Identity 5 / Lost 1 /
+NoObservableTail 124 / Residual 141 / Transferred 594 / Unreachable 3
+and the 141-row residual composition unchanged. Do not re-settle it and
+do not re-run its C39 evidence.
+
+**The `P1562`/`P1563` instrument.** Build the authorized separately
+frozen current-source instrument in new arms with new names; never reuse
+the invalid C40 records as a catch, a survivor or a validity claim.
+Calibrate first — the own omission red on the required key, the real and
+disabled arms green, the exact lifecycle outcome recorded, the guest
+observation intact — and only then run the complete 30-cell matrix for
+each row on this source. The instrument may adapt the descriptor's
+lifecycle cleanup and observation route (the `empty_queue`/`fresh`
+route) but must not change the guest observation, the required keys, the
+comparison predicate or the validity rule for the guest matrix; every
+adaptation is disclosed, and a difference between its real/disabled
+records and the C29 matrix that is not lifecycle-only is a STOP. A
+current complete proof of both rows is required before either accepted
+Equal verdict is re-certified; a current red is a STOP for my ruling,
+never a relabel.
+
+**The remaining changed-function rows.** Build and run the prepared
+`request-checkpoint-current-recheck` arms for `P1568`
+(`Session::resume_eval_request_from_checkpoint`) with its own complete
+matrix and its own armed-hit caught omission. Re-prove `P1570` and
+`P1572` (`Session::eval_accepted_script_request`,
+`Session::eval_accepted_file_request`) as Boundary on current evidence.
+Re-verify `P1566` (`Session::eval_expr_request_from_checkpoint`) as Lost
+with its documented loss; a movement of its evidence is a STOP.
+`P1564` and `P1565` (`Session::eval_accepted_request`,
+`Session::eval_accepted_expr_request`) and `P1573`
+(`Session::abandon_pending_suspension`) are Residual and are addressed
+by the tail families that match them. Verdicts never move on old
+receipts.
+
+**The tail.** Work the remaining 141-row tail by mechanism — 110
+LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 4 StrictCallerGap + 1
+StrictOtherCarrier + 1 New719Edge + 1 New725Edge — with each batch's
+own armed-hit caught-or-surviving omission: an Equal row needs its own
+caught omission and its complete real matrix, a proposal is
+`equal_claim:false` with a survivor for every required cell, and a row
+settled only by argument stays open. `P1566` stays Lost, `P0496` stays
+reserved, the 13 pair-column rows (including `P0528`, `P0340`, `P0475`
+and `P0824`) stay held and are not executed, and the `P0325`/`P0326`
+candidate measurements are retained and not promoted. Do not repeat the
+continuation-26 `resumed-call-argument-append` family, the
+continuation-27 through continuation-40 families, or the C19–C37
+families without a genuinely new mechanism or instrument. The
+wrapper-tail identity is not carried: a further wrapper-tail row may be
+proposed to me but is not executed without an explicit ruling. The
+standing instruments and their bounds are unchanged (public API only,
+never fabricating a value or an outcome, live source untouched,
+calibrated RED on its target, never reopening an accepted disposition);
+a row that needs an uncompilable configuration may use the
+feature-isolated driver construction and a row that needs a direct state
+read may add a scratch-only accessor or use an existing public
+accessor, both disclosed and measurement-only.
+
+**Families and duties.** The nine stopped families and the C19–C40
+families are not repeated without a genuinely new mechanism. The 864
+current named open transitive duties (863 inherited), the 24 unresolved
+sites, the 13 pair columns and the five named owners stay explicit; the
+two newly pending current proofs (`P1562`, `P1563`) must be re-closed or
+named open with reasons; no source design work. Port tables and the
+ledger only by canonical replay. The round declares its own bounded
+build and guest budget before execution and records it; a required step
+that cannot fit is a STOP for my ruling, never a self-authorized
+exception.
+
+**Rules.** The two-family stop-loss and every standing rule stand: no
+repository mutation outside `.temp/`, no git, no network, no assertion
+weakening, no re-pinned inventory, no deleted attempt, no relabelled
+invalid recipe. All scratch under `.temp/g15-c2/c41`, the shared probe
+cache and the existing Cargo cache; disclose every path. Invalid,
+unarmed and failed observations never certify a settlement.
+
+**Stop.** Stop for the director gate at the round's end or at the
+two-family stop-loss. C2 stays Open at 141 Residual + 1 Lost; S10 stays
+unopened.
