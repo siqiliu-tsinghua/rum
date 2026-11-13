@@ -1588,3 +1588,108 @@ receipts below are not rerun.
    ruling. Eight canonical builds remain; a required step that cannot fit
    is a STOP, not a self-authorized cap.
 3. **Report and STOP** for the director's final gate; no live commit.
+
+
+## Director gate (2026-11-13) — continuation 10: the STOP is well taken and its 23 CLI stderr reds are the mandated switch itself reaching child processes; the output-contract targets run without it, and continuation 11 finishes the no-default certificate gate and the combined cost lane
+
+Run: `cdx` (gpt-6-astra, max; session
+`01a1d35d-fb0e-7a51-a8da-801545f6a652`, fork of
+`01a1d350-7b7f-7dc1-826e-21258a886701`; log
+`.temp/logs/cdx_brief_731.log`, 275,056 B, sha256 `1091aee6…`, `tokens
+used` 584,604 as the log reports it; memory-scope unit
+`brief-731-cdx-20261113-132511-571033`, peak 13,778,599,936 B, oom 0,
+oom_kill 0, rc 0; 18 run records; report 17 PASS / 9 FLAGGED / 1 FAIL / 1
+NA checks and one NA measurement, `report.py check 731` OK with 12,589
+citations by my own run; 0 canonical builds this round, 22 of 30 consumed
+and eight remain; 0 git attempts, no network; every write under
+`.temp/brief-731/continuation-10`; the live tree still carries the 16-path
+install, uncommitted). **The round:** source preservation is exact (live,
+entry and final copies at 2,737 files, 0 changed paths, 0 inventory
+edits); one profiled eight-thread workspace run reads 69 parent summaries,
+4,234 passed / 38 failed / 61 ignored (raw 4,245/40/61 including child
+verdicts), whose failed targets are exactly: the runtime parent
+`1433/2/5` with exactly `lp655_root_context_falsifier` and
+`lp656_public_root_context_falsifier`; `rum-jupyter` `143/9/0` with the
+nine native ZeroMQ loopback `Operation not permitted` failures;
+`retirement_interrupt` 8/1/0 failing
+`expired_deadline_before_retirement_skips_every_cleanup` and
+`input_abandonment` 10/1/0 failing
+`read_error_retires_request_before_returning_original_error` at
+`queue_api.rs:47`, `lazy_pull_continuations` 68/1/0 failing
+`bounds::lazytable_cancel_first_suspension` and
+`sow_trace_continuations` 50/1/0 failing `lifecycle::sow_cancel_0_false`
+at `profile_queue.rs:888`; and the two rum-cli output-contract targets
+`cli` 11/17/0 and `input_requests` 0/6/0. The `typed_slot_census` parent
+is green 10/0/1 with its two designed forced-red child summaries
+retained, not parent failures. The no-default certificate gate and the
+cost lane were not run; no live edit and no assertion, inventory, skip or
+profiling change. **My scope walk:** `git status` is exactly the 16
+accepted install paths at HEAD `441f9804`; the worker's 68 changes are
+those 16 paths plus `.temp` files; both CLI test files hash to their C4
+base and C6/C9 entry values (`2b4621ee…`, `665f17aa…`). **The red,
+measured:** on the exact receipted C10 executables, `-p rum-cli --test
+cli` is 11/17/0 and `--test input_requests` 0/6/0 at one thread under the
+switch with the same failing names as the eight-thread run; without
+`RUM_PROFILE_LEXICAL_SUBSTITUTION` the same binaries are 28/28 and 6/6
+green at eight and one. On the clean pre-install HEAD archive `9f1e62df`
+built at its own target, the same switch reproduces 11/17/0 with the
+identical 17 names and 0/6/0 with the identical 6 names, and the same
+binaries are 28/28 and 6/6 without it. The mechanism: `rum-cli` in filter
+mode writes 0 bytes of stderr without the switch and 11,032 bytes / 54
+`rum-profile` lines with it; the tests spawn `rum-cli` through the
+compile-time `CARGO_BIN_EXE_rum-cli` and assert empty or exact stderr
+(`cli.rs:353`, `:415`); neither test file is among the 16 install paths.
+I also re-ran the four policy targets at one thread myself on the
+receipted executables under the switch: 9/0, 11/0, 69/0, 51/0, all green.
+**Ruling (Q1):** the STOP is well taken as written — the round ran the
+brief's command, reproduced the reds at one thread, claimed no exclusion
+and changed no contract. The red is the mandated switch itself: the
+switch deliberately writes profiler diagnostics to stderr at process
+exit, and a target that asserts empty or exact stderr cannot run under a
+diagnostic switch; its contract is the default environment. The C8
+sentence "item 1's host and workspace commands carry
+RUM_PROFILE_LEXICAL_SUBSTITUTION=1 from here on" is amended for exactly
+these two output-contract integration targets: they run without the
+switch at eight and one, under the switch on every other target. No
+assertion, skip, contract or test change; the 23 reds stay recorded, not
+excluded by name, with their no-switch green as the proof. The workspace
+bar is the union of the C10 switch-lane campaign with every red classified
+and the two targets' no-switch green; no re-run of the campaign is
+required. The round is accepted as a stage-3 partial round: source
+preservation, the workspace campaign with its classified failure set, the
+four policy one-thread receipts (mine and the round's), the CLI proof and
+the report stand; the no-default certificate gate and the cost lane are
+not credited; no build was consumed.
+
+## Continuation-11 order (2026-11-13) — close the output-contract environment, take the no-default certificate gate, and run the combined cost lane on the accepted final source
+
+Enter on the live tree at the director gate commit that appends this
+order (the tree carries the 16-path install, uncommitted for the final
+gate). The accepted C6/C7 work and the C8/C9/C10 audits and receipts stand
+and are not rerun.
+
+1. **Close the output-contract environment.** On the C10 receipted
+   workspace executables — `cli-bc0b4c8761b62ae9` (sha
+   `dbfb6498…`) and `input_requests-e84d0b9e62f1dd0f` (sha
+   `38e89a34…`), or their hash-verified rebuilds on the unchanged source —
+   with `RUM_PROFILE_LEXICAL_SUBSTITUTION` unset, run `-p rum-cli --test
+   cli` and `-p rum-cli --test input_requests` at eight and one threads:
+   `cli` 28 passed / 0 failed and `input_requests` 6 passed / 0 failed at
+   both counts. Record the executables, their SHAs and the exact verdict
+   lines. A red is a STOP. No assertion, skip or contract change; the 23
+   switch-lane reds stay recorded.
+2. **The no-default certificate gate.** `cargo test -p rum-stdlib --lib
+   local_production_acceptance --no-default-features` at eight and one
+   threads, installing only its generated certificate cells; any other
+   inventory move is a STOP.
+3. **Cost lane.** The combined lane on the final source — the seven-file
+   refusal delta and the repair's delta — two draws, equal calls, one
+   codegen unit, serial: the Callgrind identity lane on every changed
+   function and all affected hot functions, the
+   `scripts/core-language-microbench.sh` A/B with all labels and same-tier
+   neighbours, profiling off, every positive row retained and reported, one
+   forced SHA spot check. The entry row's 599/4 bar and the no-increase
+   scan are unchanged; a hot increase no shape removes is a STOP for my
+   ruling. Eight canonical builds remain; a required step that cannot fit
+   is a STOP, not a self-authorized cap.
+4. **Report and STOP** for the director's final gate; no live commit.
