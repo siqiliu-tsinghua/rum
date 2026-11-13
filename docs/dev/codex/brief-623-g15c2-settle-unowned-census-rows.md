@@ -111151,3 +111151,293 @@ exactly 1 difference = the authorized report publication
 `93300c9f` = `origin/main`; no assertion weakened, no attempt deleted, no
 recipe relabelled, no inventory re-pinned.
 
+
+## Continuation 56 ruling (2026-11-14) — accepted in full on `cdx` with no ledger move this round; `P2645` and `P2657` are accepted as `Boundary` settlements on their measured terminal lifecycle contracts and continuation 57 applies exactly those two moves by canonical replay; `P2624` and `P1559` stay `Residual` as two source-explained parks with zero execution credit; continuation 57 gets a fresh bounded tail allocation
+
+**Run accepted.** `cdx` (gpt-6-astra max, session
+`01a1d6b1-6141-7a71-b017-b006d8d38133`, unit
+`brief-623-cdx-20261114-045511-898561`, started 2026-11-14 04:55:11 +08:00,
+ended 05:38:28, rc 0, peak 3,456,516,096 B, oom 0, oom_kill 0; log
+`.temp/logs/cdx_brief_623.log`, 34,543 lines, 2,958,657 B, sha256
+`65760880aabfbae2c729124c62c28b4b471734769a1689ef4865bf4838203f6f`, 63 run
+records — 51 exit 0 and 12 retained exit 1 (nine expected CLI failures of
+the process cases, one process controller, the two abandon build attempts)
+— `tokens used` 285,872 as the log reports it; report
+`.temp/brief-623/report.json`, 10 PASS / 2 FLAGGED / 1 NA checks and 2 PASS
+measurements, `report.py check 623` 841 citations by my own run;
+`.git-attempts` absent; 22,182 reported changes (22,179 added, 3 modified)
+all under `.temp/`; 0 source edits; 7 build attempts (6 successful), 18
+guest processes, 42 diagnostic records, 0 encoding runs).
+
+**Entry and source.** 24 pins exact; 2,737 live files at 0 missing / 0
+changed / 0 extra by my own walk, and the only delta against C55's entry
+manifest is my own brief append; production 1,627 files at `3acf8a34…` (my
+own recompute); 1,042 rows / 78,330 keys / 18,840 encoding rows; C44's 12
+pins, C50's 7, C51's 7 and C52's 7 exact, the 26+26 C51/C52 carry receipts
+and the 27-entry C53, C54 and C55 tables exact (27+27+27); C52's
+5,879-file, C53's 149-file, C54's 132-file and C55's 11,122-file seals
+replay 0 missing / 0 unexpected by my own walks (C55 carrying only the
+derived receipt refresh my continuation-55 gate disclosed); no prior
+scene's seal moved; `source_rebases=0`.
+
+**The ledger does not move this round.** `settled.tsv` `93a0640b…` and
+`required-tuples.tsv` `3c2dcdff…` are byte-identical to C55; outcomes
+10 Boundary / 174 Equal / 5 Identity / 1 Lost / 126 NoObservableTail / 129
+Residual / 594 Transferred / 3 Unreachable; the derived residual tables
+change on exactly the four attempted rows and exactly their
+`attempted_families` / `what_remains` columns; `final-summary.json` carries
+only this round's bookkeeping (`approved_moves:[]`, four families, two
+boundary-review rows, `verdict_moves:0`); the transitive state is identical
+to C55 (182 full proofs, 205 complete matrices, 11,099 current SAME keys,
+860 named open, 24 unresolved sites, 13 pair columns, five owners,
+`whole_graph_complete=false`). `P1573` Residual with its five explicit-cycle
+keys; `P1566` the reserved historical Lost; `P0496` reserved; the held pair
+rows and the 13 pair columns stay held.
+
+**The inherited replays ran against their own sealed briefs.** C53 bound
+`.temp/g15-c2/c53/brief-entry.md` (`b8573023…`), C54 bound
+`.temp/g15-c2/c54/brief-entry.md` (`2d4bf24f…`) and C55 bound
+`.temp/g15-c2/c55/brief-entry.md` (`b5874760…`); each re-derived its eight
+outputs byte-identically with the sealed receipts unchanged (C53
+`f85babb7…`, C54 `e76f0bd8…`, C55 `2484108e…`). My own rerun prints all
+three PASS lines and leaves every replay output and receipt byte-identical,
+so the C52/C53/C54 settlements and the C55 parks are re-derived without
+being applied again.
+
+**Family 1 — `cli-setup-binding-outcome-tail` (`P2645`; 30 keys; freeze
+`971ba36d…`) is accepted as a measured terminal setup boundary.** The shape
+was frozen before the bounded source pass, the instrument before any build
+and the build before any guest. The six-case native lifecycle contract
+covers the call site's route space: ordinary success, ordinary failure,
+queued success, refused admission, and the two terminal pause shapes
+`terminal-nested` and `terminal-simple`. The producer is the actual
+`session.eval(source)` at `crates/rum-cli/src/main.rs:323`; the
+post-producer work is the actual `retire_input_request(session, &cancel,
+&mut suspension)` at `:327`, the CLI helper contract that non-interactive
+helpers own retirement even when their caller keeps the session
+(`input_retirement.rs` module doc). Three guests (real/disabled/own) exit 0;
+the real and disabled records are byte-identical on all six cases; the own
+omission `SkipActualSetupInputRetirement` arms and hits once on each
+terminal case and fails the frozen boundary contract on all six named
+fields (`state`, `prints`, `retired`, `queue-empty`, `fresh-request`,
+`pending-owner`) — without the retirement the session keeps
+`Some(HostInputRequest { kind: InputString, prompt: "c56.setup" })`, the
+prints are lost and a fresh request fails; the four non-executing cases are
+named controls. Zero equality credit: `equality_SAME=0`, `equality_DIFF=0`,
+`equality_not_applicable=18`, all 30 required keys retained,
+`equal_claim:false`. The real and mutant arm deltas against live are the
+scratch probe harness only (12 and 13 files; the real omission branch is a
+literal `if false`), `assertion_edits=0`, `live_source_edits=0`, and the
+build receipts are fresh (`cache_hit:false`; real `0c44b16d…`, mutant
+`4a639b52…`). I read the live site and the two source packets myself: the
+retirement is a genuine operation on the actual carrier, not a neutrality,
+identity or default claim, and the call site never resumes the request.
+The row therefore settles `Boundary` on the measured terminal contract,
+never Equal.
+
+**Family 2 — `repl-abandonment-result-tail` (`P2657`; 30 keys; freeze
+`0a6d48c2…`) is accepted as a measured abandonment boundary.** The four
+cases cover the four `Abandon` variants up to the two notice-match arms
+(Eof and Interrupt are identical; Password and Io differ only in the detail
+suffix; the two pausing cases are Eof and Password, the two non-pausing
+controls Eof and Io). The producer is the actual
+`session.resume_with_input("")` at `crates/rum-repl/src/request.rs:252`;
+the post-producer work is the actual `omit_cancel_notice` in the cancelled
+success arm at `:279` (the same helper also serves the failure arm at
+`:289`, which this omission does not arm). The request is cancelled and
+abandoned: all arms leave the same unanswered cleanup, the response must be
+a cancelled Success/Failure, and an `InputRequired` outcome is the driver's
+own error — there is no resumable continuation at this call site. Three
+guests exit 0; the real and disabled records are byte-identical on all four
+cases; the own omission
+`SkipActualSuccessfulCancellationNoticeRemoval` arms and hits once on each
+pausing case and adds exactly one `! General::cancel: evaluation cancelled
+by host` message (`output` and `delivered_messages` differences); the two
+non-executing controls agree. Zero equality credit:
+`equality_SAME=0`, `equality_DIFF=0`, `equality_not_applicable=12`, all 30
+required keys retained, `equal_claim:false`; fresh builds (real
+`a7e86476…`, mutant `c61e5696…`), the same harness-only arm deltas, no
+assertion or live-source edit.
+
+**Family 3 — `cli-process-entry-error-tail` (`P2624`; 30 keys; freeze
+`9e220027…`) is parked
+`ParkedExplainedObserverCalibration` with zero credit.** The frozen process
+predicate required `stderr == "error: input required: c56.process\n"` on
+the two terminal cases, but the actual CLI legitimately writes both the
+helper line `! input required: c56.process` (the
+`input_suspension_to_cli_error` emission at `crates/rum-cli/src/main.rs:423`)
+and the outer `error: {err}` line at `:47`; I reproduced the two-line
+stderr myself in the raw real, disabled and own logs. The real arm fails
+its own unchanged predicate on both terminal cases, so the observer is
+baseline-red: four real/disabled records are exact and the own arms arm/hit
+twice, but no calibrated catch, equality credit or outcome move exists. The
+predicate is untouched and the twelve raw processes are retained without a
+rerun.
+
+**Family 4 — `script-form-result-aggregation` (`P1559`; 30 keys; freeze
+`c26b1d05…`) is parked `ParkedUnparsedBatchObserverGap` with zero credit.**
+One bounded source pass and seven rejected shapes. The authenticated
+producer is the `ScriptForm::Unparsed` arm at
+`crates/rum-runtime/src/runtime/session/session_eval.rs:356-363`; the park
+is right: the lex-failure fallback contains valid earlier forms that
+evaluate and can pause (`crates/rum-syntax/src/parser/script.rs:46-52` and
+`:65-75`), so a pause-armed observer cannot be attributed to the Unparsed
+producer; a well-formed recipe reaches the distinct Parsed producer at
+`:348` (wrong row); the documented non-resumable batch contract is not a
+measurement of this exact Unparsed call; and no Unreachable, Parsed-row
+substitution, identity or default-carrier claim is available. All 30 keys
+and the source packet are retained; no build and no guest.
+
+**The stop is well taken.** The four-family allocation is exhausted with no
+further execution: 3 families executed and 1 source-only shape search, 4
+rows attempted, 120 keys retained, 6 own hits, 4 boundary catches, 2
+uncalibrated hits, 0 equality coverage, `stop_loss_ticks=0` (each
+executable family gained an armed row), 7/16 build attempts, 18/512 guests,
+42/4,000 records, 0 encoding runs; 0 guests and 0 Cargo after the stop (16
+post-stop controller records). The four-row family cap, not a zero-gain
+rule, ended the round.
+
+**Recorded, not gated.** (1) The one retained compile correction: a scratch
+driver passed `&String` where `From<&str>` was required; both original
+source trees and the compiler log are archived under
+`.temp/g15-c2/c56/failed-attempts/abandon-source-v1`, one call expression
+was corrected, the original source proof and frozen instrument were
+retained, 0 guests ran before the correction, and the frozen predicate and
+recipes are unchanged. (2) The four read-only discovery misses (nonexistent
+paths, exit 2, nothing launched). (3) My own canonical replay rerun
+refreshed exactly the derived `canonical-replay-receipt.json` (its
+`raw_replay_log` pointer moved from attempt 1 to attempt 2; all eight
+outputs byte-identical) and added `logs/final-canonical-replay-2.log`;
+disclosed, derived-only. (4) The entry booked the C55 receipt refresh my
+continuation-55 gate disclosed (`16982eca…` → `72b6b650…`). (5) The
+attempt audit's 52-record point-in-time count versus the 63 records at
+round end. (6) The abandon instrument's `omission_site` names
+`request.rs:280` while the actual guarded statement is the success-arm
+`omit_cancel_notice` at `:279`; a citation offset only, no source or claim
+changed. (7) The two FLAGGED checks are retained and uncited.
+
+**Q1 — answered yes, with the move by canonical replay.** `P2645` settles
+`Residual`→`Boundary` on the six-case native lifecycle contract and the two
+own retirement catches, `equal_claim:false`, all 30 required keys retained,
+the four non-executing controls named; the settlement cites the C56
+packets (family freeze `971ba36d…`, instrument `3dc1f4de…`, source proof
+`d101fe60…`, lifecycle `4d590b1f…`, build receipt files `b0ad0682…`/`0112f3e7…`,
+raw logs `fd1928f2…`/`f4645505…`/`d23fa224…`). The move is applied by
+continuation 57's canonical replay, not by this commit.
+
+**Q2 — answered yes, with the move by canonical replay.** `P2657` settles
+`Residual`→`Boundary` on the four-case abandonment contract and the two own
+notice-removal catches, `equal_claim:false`, all 30 required keys retained,
+the four variants covered up to the two notice-match arms by symmetry; the
+settlement cites the C56 packets (freeze `0a6d48c2…`, instrument
+`e8a6f478…`, source proof `af9ca02a…`, lifecycle `b6d839f1…`, build
+receipt files `58020c22…`/`30ed94eb…`, raw logs `b4bf63c1…`/`e3d0a55d…`/
+`f5aedde1…`). The move is applied by continuation 57's canonical replay.
+
+**Q3 — answered: keep the park; a new instrument must include both
+emissions.** `P2624` stays `Residual` with all 30 keys, the failed
+predicate and the twelve raw processes retained, never edited and never
+reused as passing. A further attempt needs a separately frozen full-stderr
+process observer that includes the existing `! input required:` helper line
+(`main.rs:423`) and the outer `error:` line (`main.rs:47`), calibrated on
+the real binary before any own mutation credit, under a fresh allocation.
+
+**Q4 — answered: keep the park; the observer is the lex-failure-fallback
+batch lifecycle.** `P1559` stays `Residual` with all 30 keys and the source
+packet; no Unreachable, Parsed-row substitution, identity or default-carrier
+claim. A further attempt needs an explicit lex-failure-fallback batch
+lifecycle/phase observer that can isolate the Unparsed producer, under a
+fresh allocation.
+
+**Continuation 57 order.** Entry on the unchanged installed source
+`22e0fb4c`: every file under `crates/` equals the C56 final manifest
+(production digest `3acf8a34…`, 1,627 files; 2,737 live files); verify the
+24 pins, the carry-receipt tables and the C39 rebase receipt; replay the
+C52/C53/C54/C55/C56 evidence seals 0 missing / 0 unexpected (C55's and
+C56's single disclosed derived receipt refreshes only); re-derive
+1,042 rows / 78,330 keys / 18,840 encoding rows with 0 moves, 1,018 paired
+sources and 24 unresolved sites. **Apply exactly the two ruled moves**:
+`P2645` and `P2657`, each `Residual`→`Boundary` by canonical replay, citing
+the C56 packets pinned by sha256 above, `equal_claim:false`, all 30 keys
+retained each, the six/four case contracts and the two-plus-two own catches
+as the settlement evidence, and no other move; the other 1,040 rows and
+`required-tuples.tsv` stay byte-identical; after the moves outcomes
+10/174/5/1/126/127/594/3, C2 Open at 127 Residual + 1 Lost (LocalTail 98 +
+13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1
+StrictOtherCarrier + 1 New719Edge + 1 New725Edge), Boundary 12. The
+C50/C52/C53 settlements, the C54 parks and the C55/C56 parks are not
+re-applied; `P2645`/`P2657` are settled and not re-attempted; `P2624` and
+`P1559` are not re-attempted without the Q3/Q4 instruments; the C55 parks
+(`P2608`/`P2613`/`P2623`, `P2605`/`P2606`, `P2610`), the eleven C54 parks,
+the five C53 parks, the C52/C51/C50 parks and every earlier prohibition
+stand; `P2611`/`P2612`, `P1555`'s settled state, `P1566` Lost, `P1573`
+Residual with its five explicit-cycle keys, `P0496` reserved, the held pair
+rows and the 13 pair columns held; the 860 named open duties, 24 unresolved
+sites and five owners stay explicit; port tables and the ledger only by
+canonical replay; the two-family stop-loss stands. Priority: the remaining
+paired CLI wrappers (`P2618`/`P2621`/`P2625`/`P2631`/`P2635`/`P2637`/
+`P2639`/`P2641`/`P2644`) on their own merits, where a whole-result or
+last-expression wrapper is the C54 park class and a row whose only
+post-producer effect is an owned session or a temporary destructor needs a
+lifecycle instrument or a ruling, never a neutrality claim; then the
+remaining fully nonencoding paired rows whose site holds an actual
+post-producer operation; rows carrying `BLOCKED_ENCODING` keys stay behind
+the G13 transport keys; the 24 unpaired sites stay explicit Residual
+obligations and may enter a family only after a disclosed read-only
+re-pairing naming the current producer site; pure carrier conversions,
+wrapper identities and default substitutions are not admissible omissions;
+`Equal` only with a complete real matrix and its own caught armed omission;
+a `NoObservableTail` proposal only with a survivor in every cell where the
+frozen omission can execute and every non-executing cell named; every
+proposal `equal_claim:false`; each batch with its own armed-hit
+caught-or-surviving omission. The inherited C56 replay re-derives the C56
+outputs against the scene's sealed `brief-entry.md` (`d2281e92…`, the brief
+as committed at `5baacc3a`) and asserts the eight C56 outputs byte-identical
+before any new work; the inherited C53, C54 and C55 replays keep their own
+sealed briefs (`b8573023…`, `2d4bf24f…`, `b5874760…`); the C56 scene's
+canonical receipt carries my disclosed raw-log refresh (`8493a60e…` →
+`e7ade170…`) and the extra `logs/final-canonical-replay-2.log`; any other
+difference is a STOP. Fresh allocation: at most four concrete families, at
+most 16 logged builds (two arms per family plus an eight-build correction
+allowance), 512 guest processes, 4,000 diagnostic records, 0 encoding runs,
+no transfer; every family separately frozen before build and guest; a
+reused build only with exact records and a pinned receipt, one forced
+`--force` sha spot check per reused-build family; exhaustion is a STOP.
+Scratch `.temp/g15-c2/c57`; shared probe cache and Cargo cache; no repo
+mutation outside `.temp/`, no git, no network, no assertion weakening, no
+re-pinned inventory, no deleted attempt, no relabelled invalid recipe;
+C44–C56 are read-only scenes. Stop for the director gate at the round end
+or the two-family stop-loss. **Dispatch:** `scripts/dispatch-brief.sh 623`
+(background, `BRIEF_WORKER` unset = `cdx`).
+
+**My gate.** Live 2,737 files 0/0/0 against `entry-hashes.json`; production
+`3acf8a34…` (1,627) recomputed; the 24 pins, C44's 12, C50's 7, C51's 7,
+C52's 7, the 26+26 C51/C52 carry receipts and the 27+27+27 C53/C54/C55
+carry receipts exact; C52's 5,879-file, C53's 149-file, C54's 132-file and
+C55's 11,122-file seals replayed by my own walks (C55's single changed file
+the derived receipt refresh disclosed at continuation 55); `settled.tsv`
+and `required-tuples.tsv` byte-identical to C55 with 1,042 rows / 78,330
+unique keys / 18,840 encoding rows recomputed; the residual-table diff
+confined to the four rows' two bookkeeping columns; my own inherited C53,
+C54 and C55 replays PASS (eight exact outputs each, receipts unchanged); my
+own canonical replay PASS with the positive GREEN and seven RED negative
+controls, re-deriving the eight outputs byte-identically (receipt refreshed
+only in its raw-log pointer and one new log, disclosed); freeze keys
+exactly the rows' required tuples (4 × 30 = 120, no duplicates, 0 encoding
+keys), six/four/four frozen cases per family with seven rejected shapes per
+source-only row, source packets hash-match live and every excerpt matches;
+the six build receipts and binaries exact, the real arms differing from
+live only by the scratch probe harness with `if false` omission guards and
+the mutant arms arming exactly those guards plus the `enter`/`pause`
+probes; the
+carried C52 binary/tree receipts exact; 63 run records with the one
+retained compile correction, 0 deleted attempts and 0 rerun guests; 0
+guests / 0 Cargo after the stop at run index 47; the C56 evidence seal
+22,159 files 0 missing with exactly my one disclosed derived receipt
+refresh; `report.py check 623` 841 citations; my own protected walk
+2,829,799 entries 0 missing / 0 extra / exactly 1 difference = the
+authorized report publication (`.temp/brief-623/report.json`); the report
+copies byte-identical (`6769bccd…`); `git log
+22e0fb4c..HEAD -- crates` empty; tree clean at `5baacc3a` = `origin/main`;
+no assertion weakened, no attempt deleted, no recipe relabelled, no
+inventory re-pinned.
