@@ -1693,3 +1693,99 @@ and are not rerun.
    ruling. Eight canonical builds remain; a required step that cannot fit
    is a STOP, not a self-authorized cap.
 4. **Report and STOP** for the director's final gate; no live commit.
+
+## Director gate (2026-11-13) — continuation 11: the acceptance set closes (CLI targets 28/28 and 6/6 without the switch, the no-default certificate gate green at eight and one) and the combined instruction lane passes; the 13 separated microbench timing rows are the recorded layout class on the association key read, not executed work, and brief 731's stage 3 closes
+
+Run: `cdx` (gpt-6-astra, max; session
+`01a1d383-1551-7ca1-8dc7-f146126913e2`, fork of
+`01a1d35d-fb0e-7a51-a8da-801545f6a652`; log
+`.temp/logs/cdx_brief_731.log`, 519,730 B, sha256 `591a5bbd…`, `tokens
+used` 740,527 as the log reports it; memory-scope unit
+`brief-731-cdx-20261113-140542-624427`, peak 2,627,465,216 B, oom 0,
+oom_kill 0, rc 0; 44 run records; report 24 PASS / 12 FLAGGED / 1 FAIL
+checks and 1 PASS / 1 FAIL measurement, `report.py check 731` OK with
+1,216 citations by my own run; five fresh canonical builds, 27 of 30
+consumed and three remain; 0 git attempts, no network; every write under
+`.temp/brief-731/`; the live tree still carries the 16-path install
+remainder, uncommitted). **The round.** Item 1 is closed: on the C10
+receipted executables (`cli-bc0b4c8761b62ae9`, sha `dbfb6498…`;
+`input_requests-e84d0b9e62f1dd0f`, sha `38e89a34…`; child `rum-cli` sha
+`8ed1acaa…`) with `RUM_PROFILE_LEXICAL_SUBSTITUTION` unset, `cli` is 28
+passed / 0 failed and `input_requests` 6 passed / 0 failed at eight and
+one threads. Item 2 is green: `cargo test -p rum-stdlib --lib
+local_production_acceptance --no-default-features` passes 1/0/0 at eight
+(34.57 s) and one (34.46 s), the two emissions are byte-identical
+(`296bb46a…`), and the installed inventory moves 0 rows and 0 cells.
+Item 3: five fresh canonical builds — `cli-base` `306d19e7…` (tree
+`bb024b0a…`), `cli-candidate` `35c4472c…` (tree `d68f3360…`),
+`public-base` `6d623229…`, `public-candidate` `e3dc9e8d…`, and the
+forced candidate rebuild `e3dc9e8d…` (`cache_hit=false`,
+`spot_check=pass`), one codegen unit through `probe-build.py`'s
+`CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1`; the eight combined Callgrind
+captures read the entry row 599 Ir / 4 calls, `prepare_arguments…`
+1649/6, `evaluate_inner_unstable` 865/5 and its `'2` 173/1, the
+`EvalError` drop 23/1 and the `RuntimeMessage` `Vec` drop 323/17 in all
+four cells, sizes 136/80/136, 15 required rows exactly equal, 0 runtime
+equal-call positive rows, 0 runtime call mismatches, and 16 positive
+rows retained (interner, hashbrown, `Symbol::system`, float formatting,
+libc addresses, the once closure, `try_process`, and the standing
+noncertifying dispatch row) — every one outside changed code; the new
+helper and typed variant are absent from all eight captures. The timing
+lane covers 120 labels in a declared ABBA schedule (base d1, candidate
+d1, candidate d2, base d2, `reps=7`, scale 1, pinned CPU 2, profiling
+off): 56 labels positive in at least one pairing and 13 candidate
+values above both base draws, led by
+`association-part-key-read-width4000` +9.94%/+25.71% and
+`association-part-key-read-width32000` +28.48%/+26.30%. `audit-cost`
+attempt 1 failed on the inherited parser's duplicate `(below main)` ids;
+the corrected regrouping sums them (78 Ir / 1 call -> 90 Ir / 2 calls on
+that row only) and every per-iteration row is unchanged; both attempts
+and every positive row are retained. **My scope walk.** `git status
+--porcelain` is exactly the 16 accepted paths of the install remainder
+at HEAD `4a3df4b3` (3 ruled rustfmt arms, 3 capture-repair files, the
+capture regression, the census test, eight inventory files; +415/−287),
+with the refusal's control flow, the enum variants and the host/Jupyter
+arms already in HEAD at `0aca7e38`; 44 run records, none mentions git;
+`report.py check 731` OK with 1,216 citations by my own run. My own
+2,737-file walk reads live = `source-final` = `source-entry` with 0
+missing, 0 extra, 0 differing; `source-cost-base` is live with exactly
+the ten delta paths inverted (seven refusal files, three capture files)
+plus the cost harness `crates/rum-stdlib/tests/b730_nested.rs`, and
+`source-cost-candidate` is live plus the same harness; the harness is
+byte-identical in both arms (`3c90b46e…`) — a disclosed instrument file
+confined to the copies, not a live path. The four CLI executables hash
+to their recorded values. **The timing STOP, measured by me.** The
+worker's STOP is well taken as a bar evaluation: it ran the brief's
+lane, retained every positive row, made no adaptive rerun or shape
+claim, and asked. I settled the question with the instruction lane on
+the exact timing binaries and the exact panel program (`rumMicroReps` 1,
+everything else identical): two Callgrind captures per arm, pinned and
+serial. The association key read's dominant function —
+`collect_upvalue_candidate_symbols_in_matching_order'2`, the function
+`TODO.md` names as carrying 75% of this label's cycles — executes
+453,285,507 self Ir at 11,893,754 calls in all four captures (38.11
+Ir/call), and its sibling 28,146,125 at 32,315 calls in all four; every
+association-path row is identical or inside the within-arm instrument
+noise, and the panel totals overlap (base 4,075,719,767 / 4,076,046,293
+against candidate 4,074,893,565 / 4,076,096,486). The two arms place
+that function at different entry offsets — base `0x5a0a10` (16 mod 64),
+candidate `0x5a0cc0` (0 mod 64) — which is the code-layout movement the
+recorded class is about. **Ruling (Q1).** The timing lane is secondary
+and the instruction lane decides (the standing rule; the 703, 721 and
+735 precedents). On the exact binaries the flagged label executes
+identical instructions per call and an identical call count, so its
++27% is not executed work: it is the release-layout residual already
+recorded in `TODO.md` for this exact label — instructions identical,
+cycles moving with the entry's offset inside a 64-byte line, the
+difference at +1.3% when both arms are built with every function
+64-byte aligned, and the same label moving +18.43% between two runs of
+the identical binary; its `width4000` sibling is excluded from the
+legacy set by the brief-620 key-read finding. No shape change, no
+assertion, skip, bar or exclusion change; all 56 positive timing rows
+stay recorded and the 13 separated ones are named here; the instruction
+lane's 16 positives are likewise retained. The round is accepted in
+full: items 1 and 2 close the acceptance set, item 3 passes on the
+instruction authority, stage 3 closes, and brief 731 is complete.
+**Next:** the director's final gate and the live commit of the install
+remainder; then continuation 38 of brief 623; then C2's settlement
+round, CM, `CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2.
