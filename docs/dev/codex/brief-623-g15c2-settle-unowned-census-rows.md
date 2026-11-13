@@ -108924,3 +108924,178 @@ stop for the director gate. The frozen tail allocation, the two-family
 stop-loss, the no-rerun rule, the held rows and reserved rows, and every
 boundary of the previous amendments stand unchanged; C2 stays Open at 141
 Residual + 1 Lost; S10 stays unopened.
+
+## Continuation 44 ruling (2026-11-13) — the round's evidence, integrity and single record are accepted; `P1564`/`P1565` settle `NoObservableTail` with the 22 named error-carrier cells recorded, `P1573` stays `Residual`, and a fresh bounded tail allocation is authorized
+
+**Run.** The completed round spans the `cdx` boundary segment and three
+`mst` segments (session `4650fa4e-6ce4-b376-37ae-5228e5968116`) on the
+unchanged installed source `22e0fb4c`: entry 24 pins exact, 2,737 live
+files, 1,627 production files at `3acf8a34…`, 1,042 rows / 78,330 keys /
+18,840 encoding rows, the C39 rebase carried, 0 rebases this round; the
+row-isolated `P1570`/`P1572` boundary instrument carried from the `cdx`
+segment (3 of 4 builds; 20 declared calibrations, 19 typed catches plus
+`P1572`'s structural `batch_file.rs:20:9` channel; 32 typed records; the
+8-cell matrix; `complete=true`, `SAME_keys=0`, C42/C43 invalid records
+unused); tail family 1 `accepted-strict-tail-forward` (rows `P1564`,
+`P1565`) with 130/130 coverage keys, both complete real matrices, 108 hit
+survivors (54 per row) and 22 named error carriers; tail family 2
+`accepted-cancellation-abandonment` (`P1573`) with 65/65 armed-hit
+survivors and 60 of 65 coverage keys, the five
+`same_type_error_finish.explicit-cycle-controls-required` keys retained;
+every outcome `equal_claim:false`, `verdict_moves=0`, `outcomes_gained=0`,
+`stop_loss_ticks=0`; the round canonical replay re-derived the boundary
+outputs exactly and extended the closure to 182 proofs / 189 matrices /
+10,403 current SAME keys / 860 named open, with seven RED negative
+controls; round-end integrity, protected scenes, 7 build receipts, the
+sealed evidence and publication all pass; one `rum-report/1` record
+covers every segment. Log `.temp/logs/mst_brief_623.log` (23,065 B,
+sha256 `cd1a9a1b…`); memory-scope unit
+`brief-623-mst-20261113-203321-736219`, peak 2,952,818,688 B, oom 0,
+oom_kill 0, rc 0; `cost_usd` 14.2877426, 10,027,607 in / 56,612 out;
+git-attempts 0; 156 runs; the report's 13 checks PASS and 1 NA, one
+measurement PASS, four deviations, Q1 and Q2.
+
+**My gate.** My own tree walk reads 2,737 live files with 0 missing, 0
+extra and exactly one difference — the brief appendix (9,274 B, sha256
+`0b2d74da…`); every file under `crates/` is unchanged from the entry
+manifest; the ledger at 1,042 rows / 78,330 tuples / 141 residual rows
+reads outcomes Boundary 10, Equal 164, Identity 5, Lost 1,
+NoObservableTail 124, Residual 141, Transferred 594, Unreachable 3 with
+0 verdict moves, `P1566` Lost and `P0496` Residual; 156 runs with 8 tail
+build rows (two retained compile failures), 24 tail guest processes of
+256 and 585 five-part records of 2,500, 0 encoding runs; `report.py check
+623` OK with 571 citations by my own run; git clean at `010100b8`,
+`.git-attempts` 0 B; the protected scenes and production digest are as
+the integrity receipt states; every disclosure and retained attempt is
+on record.
+
+**Q1 — the three proposals.** `P1564`/`P1565` are accepted as
+`NoObservableTail` with `equal_claim:false`, bounded exactly as measured:
+65/65 required keys per row have valid five-part SAME records on both
+arms with the producer reached and the disabled arm exact; the frozen
+`OrdinarySuccessPassThrough` omission armed and hit in 54 of 65 cells per
+row and survived every one; the other eleven cells per row — the five
+variants on `error_before_tail.last-pause-throw` plus the `Error` variant
+on `consumer_routes.route-original`,
+`held_and_splice.held-evaluate`, `phase_observation.trace`,
+`prefix_and_tail.log`, `return_boundary.loop-store-reset` and
+`value.base` — are cells where the queued program exits before the row's
+tail, so the frozen omission cannot execute; they ran the original path
+with valid five-part records and contribute matrix validity only. The
+freeze's "Armed Surviving omissions in every required cell" and my
+order's "survivor per cell" are amended to read "a survivor in every
+cell where the frozen omission can execute, with every non-executing
+cell named": the bar is a calibration of the instrument's reach, not a
+weakening of the evidence, and no key or SAME-key count is claimed
+beyond the measured cells. `P1573` stays `Residual`: its 65 cells all
+armed, hit and survived, but five of its 65 required keys — the
+`same_type_error_finish.explicit-cycle-controls-required` cells across
+the five variants — have no current coverage, exactly as its freeze
+predicted (the cancellation lane ends the primary at its first pause
+before any recurrence), and the canonical promotion gate rejects the row
+in both reasons. It stays a named residual obligation; a further attempt
+requires an explicit-cycle-capable instrument and my explicit ruling,
+never a repeat of this lane.
+
+**The settlement.** Exactly two verdict moves, applied by continuation
+45's canonical ledger replay and not by hand: `P1564` and `P1565`,
+`Residual` -> `NoObservableTail`, `equal_claim:false`, citing this
+round's family-1 freeze, source proof, gain, coverage, survivors and
+full proofs by path and sha256. No other row moves: the other 1,040 rows
+stay byte-identical, the 78,330 keys and 18,840 encoding rows are
+unchanged, `P1573` stays `Residual` with its five keys named, `P1566`
+stays `Lost`, `P0496` stays `Residual`, the 13 pair columns stay held.
+Outcomes become Boundary 10, Equal 164, Identity 5, Lost 1,
+NoObservableTail 126, Residual 139, Transferred 594, Unreachable 3; the
+residual composition becomes 110 LocalTail + 13 ReopenedOrNew + 11
+StrictDropGap + 2 StrictCallerGap + 1 StrictOtherCarrier (`P1573`) + 1
+New719Edge + 1 New725Edge; C2 Open at 139 Residual + 1 Lost; S10
+unopened.
+
+**Q2 — the next allocation.** A fresh bounded tail allocation is
+authorized for continuation 45: at most four concrete families, at most
+16 logged builds (two arms per family plus an eight-build correction
+allowance; family 2 needed six logged rows for one family's pair), 512
+guest processes, 4,000 diagnostic records, 0 encoding runs, no transfer;
+every family frozen before its build and guest; a reused build only with
+exact records and a pinned receipt; one forced `--force` sha spot check
+per family where a build is reused; exhaustion is a STOP, never a
+self-authorized increase. The two-family stop-loss stands.
+
+**Recorded, not gated.** The resume-3 re-authentication instrument's
+early attempts printed a hardcoded zero mismatch count while attempts 3-4
+truthfully recorded four field-shape mismatches; the corrected instrument
+gates its verdict on the real mismatch list, and attempts 5-7 passed
+cleanly (its stage whitelist was extended at attempt 6 to include this
+round's own stop-gate stage; no inherited evidence artifact was changed).
+The canonical replay's six attempts (1-3 instrument assertions, 4
+director-interrupted, 5 passed, 6 corrected a guest-count field to the
+integrity's 24) and the two retained compile failures plus the unlogged
+outer-timeout-killed build are retained without credit. One transient
+staging file was briefly written to `/tmp` and immediately moved under
+this scene; it is a disclosed fence deviation against the never-`/tmp`
+rule, recorded and not repeated. The
+`survivor-promotion-gate-errors=['no own caught omission: P1564']`
+disclosure is the promotion gate correctly rejecting a survivor row's
+Equal promotion, not a defect. **Erratum to the resume-3 amendment:** the
+user corrected the plan description the same day — the `mst` plan is a
+$150/month credit, not an annual paid plan; the operative ruling is
+unchanged (no self-imposed price ceiling, and if the monthly credit is
+exhausted the user can open another GLM worker). The C44 scene is now
+protected read-only evidence; its packets are pinned by sha256:
+`resume3-reauthentication.json` `06fe8fee…`, family-1 freeze
+`6f7cd627…`, source proof `d2e80dea…`, gain `972a9c51…`, family-2
+freeze `7c50401d…`, source proof `7639c685…`, gain `322dbc1f…`,
+`final-summary.json` `7bd48475…`, `integrity-receipt.json`
+`baf4b636…`, `publication-receipt.json` `5fc44166…`,
+`.temp/brief-623/report.json` `6f491dac…`, `stop-marker.json`
+`f5d6c990…`.
+
+## Continuation 45 order (2026-11-13) — apply the `P1564`/`P1565` `NoObservableTail` settlement, then the remaining 138 by-mechanism tail rows under a fresh bounded allocation
+
+**Entry.** Unchanged installed source `22e0fb4c`: every file under
+`crates/` must equal the C44 final manifest (production digest
+`3acf8a34…`, 1,627 files; 2,737 live files); verify the 24 pins, the
+five entry receipts and the C39 rebase receipts, and re-derive 1,042
+rows / 78,330 keys / 18,840 encoding rows with 0 moves, 1,018 paired
+sources and the 24 explicitly unresolved sites. Apply the settlement by
+canonical ledger replay — exactly `P1564` and `P1565`, `Residual` ->
+`NoObservableTail`, `equal_claim:false`, citing the pinned C44 packets;
+any other verdict move, any key or encoding change, and any hand edit of
+the ledger is a STOP. Outcomes 10/164/5/1/126/139/594/3; C2 Open at 139
+Residual + 1 Lost. No second rebase.
+
+**The tail.** The remaining 138 by-mechanism rows: 110 LocalTail + 13
+ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1 New719Edge + 1
+New725Edge, each batch with its own armed-hit caught-or-surviving
+omission; Equal only with its own caught omission and complete real
+matrix; every proposal `equal_claim:false` with a survivor in every cell
+where the frozen omission can execute, every non-executing cell named
+with its matrix validity; `P1573` stays `Residual` with its five
+explicit-cycle keys named and is not re-attempted without an
+explicit-cycle-capable instrument and my explicit ruling; `P1566` and
+`P0496` stay reserved; `P1562`/`P1563`/`P1568` are not re-run; the 13
+pair columns stay held; the nine stopped families and the C19-C44
+families are not repeated without a genuinely new mechanism or
+instrument; the wrapper-tail identity is not carried without an explicit
+ruling; the 860 named open duties, the 24 unresolved sites and the five
+named owners stay explicit.
+
+**Allocation.** At most four concrete families; at most 16 logged builds
+(two arms per family plus an eight-build correction allowance; a build
+on anything else is a STOP); 512 guest processes; 4,000 diagnostic
+records; 0 encoding runs; no budget transfer; every family separately
+frozen before any build or guest; a reused build only with exact records
+and a pinned receipt; one forced `--force` sha spot check per family
+where a build is reused; the two-family stop-loss stands; exhaustion is
+a STOP.
+
+**Rules.** No repository mutation outside `.temp/`, no git, no network,
+no assertion weakening, no re-pinned inventory, no deleted attempt, no
+relabelled invalid recipe; all scratch under `.temp/g15-c2/c45`, the
+shared probe cache and the existing Cargo cache; disclose every path;
+the C44 scene and every earlier scene are read-only.
+
+**Stop.** Stop for the director gate at the round's end or at the
+two-family stop-loss. C2 stays Open at 139 Residual + 1 Lost; S10 stays
+unopened.
