@@ -1177,3 +1177,122 @@ the formatted addition at sha256 `188fa2cc…`. Install it, then run stage 3.
    builds remain; a required step that cannot fit is a STOP, not a
    self-authorized cap.
 6. **Report and STOP** for the director's final gate; no live commit.
+
+## Director gate (2026-11-13) — continuation 6: stage 2 is accepted in full; the census STOP is the accepted 735 install's own emission
+
+Run: `cdx` (gpt-6-astra, max; session
+`01a1d2f3-acb8-7383-8bdd-345e1474d26a`; log
+`.temp/logs/cdx_brief_731.log`, 1,597,443 B, sha256 `1362206d…`, `tokens
+used` 231,526 as the log reports it; memory-scope unit
+`brief-731-cdx-20261113-112906-491490`, peak 4,916,838,400 B, oom 0,
+oom_kill 0, rc 0; 44 run records; report 15 PASS / 1 FLAGGED / 1 FAIL / 2
+NA, `report.py check 731` OK with 5,059 citations by my own run; 0
+canonical builds this round, 22 of 30 consumed and eight remain; 0 git
+attempts, no network; every write under `.temp/brief-731/`; the live tree
+carries the installed 15 paths).
+
+**The round.** Installed the accepted four-file capture repair (three
+production files byte-identical to brief 733's `source-candidate`, and the
+accounting regression as the entry's 444-line/11-test prefix plus
+`accounting-addition-formatted.rs`), the three ruled rustfmt arm
+expansions, and the eight canonical inventory cells; `fmt --check` and
+`check --all-targets` green; the permanent `nested_public_evaluation`
+suite 15/15 at eight and one (the pre-existing
+`evaluation_context.rs:33` red is gone); the accounting regression's 16
+cases ordinary and profiled at eight and one; fingerprints, both
+certificates, ownership, LP01 and typed slots replayed canonically; then
+STOP at stage 3's rejection census.
+
+**My scope walk** (`.temp/director/gate-731c6/`): live 2,737 files = the
+entry manifest plus exactly 15 paths — the four repair files, the three
+formatted arms and the eight inventory TSVs; the repair files hash to the
+install receipt and are byte-equal to the accepted 733 candidate; the test
+file is the entry's 15,189-byte prefix plus the 3,305-byte formatted
+addition; the three arms hash to the receipted after-values; the
+source-final copy equals the live tree on all 2,737 files;
+`.temp/brief-731/continuation-4` and `-5` and the brief-733 scene are
+untouched; no `.git-attempts` and no git invocation in any run. The
+inventory delta is emitted-only: the fingerprint file changes 68 rows in
+column 18 only, `promoted.tsv` two rows in columns 4-5, and the six
+ownership TSVs carry the canonical 182 MOVE + 11 NEW with 0 removed, 0
+MOVE-FILE, 0 new `UnknownHostPayload` and no
+identity/status/disposition/exclusion change; my own runs of
+`production_inventory_is_exact` and `local_production_acceptance` are
+green.
+
+**My reproductions:** `fmt --check` exit 0; the witness 15/15 at eight
+and one; the accounting test green with four cases in each of the four
+cells (six flags each); the rejection census on the live tree emits 1,229
+rows (14/1,177/38) with byte-identical dumps at eight and one. My own
+keyed multiset against the pinned 1,220-row base (sha `15e6c2cc…`)
+reproduces the worker's comparison exactly: six keys, nine added `RET002`
+rows, zero removed. The nine sites are the accepted brief-735 install's
+own ticket-ownership code — `session_helpers.rs:97/116/117/122-123`
+(`accepted_request_owned_by`, `take_active_accepted_request`,
+`finish_active_accepted_request`) and `session_requests.rs:75-79`
+(`take_pending_report_owner`); `git log -L` attributes both ranges to
+`0aca7e38`, and the two containing files are byte-identical to the
+brief-733 entry. The three historical `abandon.rs` positions moved with
+the same install (43/44/94 → 50/51/101; the pre-735 source holds the same
+three statements at the old lines). C6's own three files add zero census
+rows.
+
+**Ruling (Q1).** The STOP is well taken and is not a C6 defect: the +9 is
+the accepted 735 install's own call edge from the abandonment route into
+the ticket machinery, and the 1,220 pin and the `abandon.rs` positions are
+stale because brief 735's gate never replayed the retention census (I
+checked its report and log: no such run). The census test's authored pins
+are hereby authorized for canonical maintenance: the count 1,220 → 1,229,
+the kinds map to 14/1,177/38, and the three `abandon.rs` positions to
+50/51/101, each re-derived from a fresh emission that is byte-identical at
+eight and one, with one comment paragraph naming brief 735's install, the
+ticket call edge and the +7-line header shift. No other assertion changes;
+no retention mark, classification, coverage or promotion moves; no emitted
+inventory is hand-edited; the census test file is the only path this
+ruling adds to the delta. If re-running the test surfaces a further
+authored count/position pin in this file (the `wrapper.rejected.len() ==
+16` pin), it may receive the same treatment only when the fresh emission
+shows the same 735 class under the keyed pairing, and the pairing must be
+quoted; any other red — a changed rejection classification, an unexplained
+multiplicity, a retention mark, or an assertion outside these pins — is a
+STOP for my ruling.
+
+**Accepted:** stage 2 is complete on the installed source; the round's
+scope, witness, accounting and inventory evidence stand; the census STOP
+and its disclosure stand. The deferred acceptance and cost are not
+credited.
+
+## Continuation-7 order (2026-11-13) — canonical census maintenance, then stage 3
+
+Enter on the live tree at the director gate commit that appends this order
+(the tree carries the accepted 15-path install, uncommitted for the final
+gate). The continuation-6 scope, witness, accounting and inventory
+receipts stand and are not rerun until the source changes.
+
+1. **Census maintenance.** Apply the ruled update to
+   `crates/rum-stdlib/src/tests/retention_closure/census/tests.rs` only:
+   the count pin 1,220 → 1,229, the kinds map to `{RET001: 14, RET002:
+   1,177, RET003: 38}`, the three `abandon.rs` positional expectations
+   43/44/94 → 50/51/101, and one comment paragraph naming brief 735's
+   install (the abandonment route's `take_pending_report_owner` /
+   `finish_report_owner_ticket` call edge into the ticket machinery adds
+   nine RET002 boundaries across six keys, and the rewritten header shifts
+   the three historical sites by seven lines). Re-derive every number from
+   the fresh emission; never type it from the report. If the test then
+   first reds on the `wrapper.rejected.len() == 16` pin or another authored
+   count/position pin in this file, update it the same way only with the
+   fresh keyed pairing quoted; any other red is a STOP.
+2. **Standing replay on the final source.** The census edit is a `.rs`
+   file under `crates/`, so the fingerprint/certificate cells move again
+   as the canonical emission class (68 fingerprint cells and the two
+   promoted rows): replay the standing inventories in the canonical order,
+   install the canonical emissions, and quote every verdict line,
+   including the census green at eight and one. A new `UnknownHostPayload`,
+   a removed identity or a disposition/exclusion change is a STOP.
+3. **Stage 3, exactly as ordered above.** Acceptance once on the final
+   source; then the combined cost lane — the seven-file refusal delta and
+   the repair's delta — two draws, equal calls, one codegen unit, every
+   positive row retained, one forced SHA. The entry row's 599/4 bar and
+   the no-increase scan are unchanged. Eight canonical builds remain; a
+   required step that cannot fit is a STOP, not a self-authorized cap.
+4. **Report and STOP** for the director's final gate; no live commit.
