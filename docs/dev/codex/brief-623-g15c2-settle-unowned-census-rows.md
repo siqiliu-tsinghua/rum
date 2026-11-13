@@ -108579,3 +108579,201 @@ unarmed and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 141 Residual + 1 Lost; S10
 stays unopened.
+
+## Continuation 43 ruling (2026-11-13) — the `P1570`/`P1572` boundary-instrument STOP is well taken; the file row's resume-refusal omission crosses the pre-existing abandonment-only rollback frame, and continuation 44 runs a row-isolated corrected instrument under a fresh bounded allocation
+
+**Run.** `cdx` gpt-6-astra max, forked from
+`01a1d42d-e0f7-77a2-847e-5e671db13a49`, session
+`01a1d452-27db-7c00-9cff-92f0887368d8`; log
+`.temp/logs/cdx_brief_623.log`, 1,224,789 B, sha256 `4d98fdfb…`,
+`tokens used` 2,339,937 as the log reports it; memory-scope unit
+`brief-623-cdx-20261113-175153-687780`, peak 4,340,822,016 B, oom 0,
+oom_kill 0, rc 0; 29 run records — 25 exit 0, one failed first
+boundary compile (E0412 in the scratch probe, corrected before any
+calibration), one retained port-evidence controller failure, the
+designed exit-3 `BoundaryComponentNotCaught` STOP, and the two
+designed exit-101 panic processes; report 10 PASS / 2 FLAGGED / 1 FAIL
+/ 1 NA, `report.py check` OK with 307 citations on my own run; 4/24
+builds and 4/4 boundary builds (one failed compile, real, mutant,
+forced spot `bdca4fc2…` pass), 9/1,000 guest processes, 52/8,000
+diagnostic records (50 valid = 44 control + 6 own catches; two missing
+case records; four invalid case attempts), 0 tests, 0 encoding
+executions; writes confined to `.temp/g15-c2/c43` plus the shared
+probe/Cargo caches; the live brief was not appended.
+
+**The STOP.** The freeze declared ten components and twenty
+row-component calibrations, and forbade the matrix until all twenty
+were caught. Six were caught: `initial_boundary`, `owner_retention`
+and `batch_checkpoint_retention` on both rows, each armed on an actual
+`InputRequired`, hit once, its own predicate false, in a zero-exit
+process whose stage matches the reference. The fourth component,
+`resume_refusal`, is invalid: the selected actual omission — forward
+the actual `Batch` `PendingReport` to the existing resume producer —
+is legal on `P1570` (the script request completes with the actual
+`Ok(83)`), but on `P1572` it resumes the public file transaction's
+captured `PublicFileRollbackFrame`, whose only legal consumption is
+abandonment: the pre-existing `unreachable!("a public file rollback
+obligation is abandonment-only")` at
+`crates/rum-runtime/src/runtime/session/batch_file.rs:20:9` (live sha
+`8de04b7b…`, equal to HEAD; introduced at `34e57a8d`, 2026-09-30)
+aborts the process. The two rows share one process, so the abort also
+invalidates the `P1570` record under the frozen validity rule
+(complete actual typed/state records, no panic or error exit), and
+`P1572` has no record at all. The file transaction's structural
+invariant is the product asserting itself, not a product defect: the
+omission route is outside the public contract, because a public file
+batch cannot be resumed at all. No runtime regression, no inventory
+ordering artifact, and no failed process is credited. The worker
+stopped before the matrix and asked instead of authorising a build
+outside the frozen cap — correct.
+
+**The FLAGGED items are correctly recorded, not gated.** The file
+omission's route is an invalid instrument mutation, and the `P1572`
+trace metadata shows the raw replay's one arm and one hit before each
+panic while the original controller packet (which derives from the
+absent record) reports zero; the original packet is retained and the
+supplement corrects the description only. Both are instrument
+observations with zero credit.
+
+**My gate.** My own snapshot walk is 2,737 files equal to the round
+entry (0 missing / 0 extra / 0 differing; digest `2660f0f7…`),
+production 1,627 files at `3acf8a34…`; all 24 entry pins hash to their
+pins; the tree is clean at `ebf4e27d` and `git log 22e0fb4c..HEAD --
+crates` is empty. I reran the receipted binaries myself: the real and
+disabled arms each emit the 20 control records, all measurement-valid
+and contract-passing, parsed-identical across arms; the three
+component omissions each emit two records with their own predicate
+false, one arm and one hit; `resume_refusal` exits 101 at eight and
+one threads with the exact `batch_file.rs:20:9` panic, the `P1570`
+record carrying the actual `Ok(83)` and the `P1572` case having none.
+My records are byte-identical to the scene's. The ledger files are
+byte-identical to C42 (`settled`, `required-tuples`, `residual-list`,
+`residuals`, `frozen-policies`, `frozen-policy-counts`): 1,042 rows,
+78,330 keys, 18,840 encoding rows, outcomes Boundary 10 / Equal 164 /
+Identity 5 / Lost 1 / NoObservableTail 124 / Residual 141 /
+Transferred 594 / Unreachable 3, zero verdict moves; my canonical
+replay of `final_replay.py` passes and rewrites every derived file
+byte-identically; six negative ledger controls stay RED and the
+positive GREEN. Publication reads 2,737 live files with 0 changes and
+the live brief unappended; the sealed evidence is 5,633 files with 0
+changes; no protected scene has a file newer than the dispatch; 0
+guest and 0 Cargo after the STOP; no git or network command. The first
+build failure is the scratch probe's E0412 (`crate::Expr` →
+`rum_core::Expr`), corrected with zero semantic instrument changes and
+its failed log retained.
+
+**Disposition.** Zero credited; the C43 scene becomes read-only
+evidence; the six valid component catches stay recorded, the four
+invalid case attempts and two missing case records stay retained and
+uncited; `P1570` and `P1572` stay `FullCurrentBoundaryEvidenceRequired`
+with their accepted Boundary dispositions retained; no verdict moves;
+C2 stays Open at 141 Residual + 1 Lost; S10 stays unopened. Q1 is
+answered yes: a corrected, separately frozen row-isolated instrument
+is authorised under the continuation-44 order, with a fresh bounded
+allocation and the exact source-enforced channel below.
+
+## Continuation 44 order (2026-11-13) — the row-isolated `P1570`/`P1572` boundary instrument, then the remaining changed rows and the 141-row tail
+
+**Source and entry.** Unchanged installed source `22e0fb4c`: every
+file under `crates/` must equal the C43 entry manifest (production
+digest `3acf8a34…`, 1,627 files); verify the 24 receipt pins, the
+five entry receipts and the C39 rebase receipts, and re-derive 1,042
+rows / 78,330 keys / 18,840 encoding rows with 0 moves, 1,018 paired
+sources and the 24 explicitly unresolved sites. Any production
+difference is a STOP. No second rebase.
+
+**The corrected instrument.** A new family under `.temp/g15-c2/c44`,
+separately frozen before any build or guest, and separate from the
+C43 freeze. The C43 scene is read-only; its six valid component
+catches and its receipted binaries (real `80a19427…`, mutant
+`bdca4fc2…`, forced spot `bdca4fc2…`) may be carried by sha256; its
+four invalid case attempts and two missing case records are not
+evidence and are not cited. No C42 invalid record is read or reused.
+Conditions:
+
+- **Row isolation.** Add a row selector to the scratch driver only
+  (no production change; the omission set unchanged), and run every
+  row-component calibration in its own bounded process, so one row's
+  process-level consequence can never invalidate another row's
+  record. The frozen validity rule stays exactly as written: zero
+  exit, the actual producer's `InputRequired` in its callee chain, the
+  requested stage reached, complete actual typed/state records; a
+  panic or error exit is invalid.
+- **Twenty declared calibrations.** Nineteen are typed catches: the
+  ten components on both rows less the file row's `resume_refusal`.
+  The twentieth, `P1572`'s `resume_refusal`, is the source-enforced
+  channel: its own process runs the same actual omission, records
+  exactly one armed and one hit on the actual `InputRequired`, and the
+  exact consequence `internal error: entered unreachable code: a
+  public file rollback obligation is abandonment-only` at
+  `batch_file.rs:20:9` with exit 101. It is credited only as the row's
+  structural non-resumability consequence — never as a typed catch,
+  never as SAME or Equal evidence, never as a matrix cell — and the
+  freeze states that bound explicitly. The typed refusal on the real
+  arm remains the row's typed observation, and the shared source
+  statement's typed falsifier is the script row's catch. Any other
+  component whose omission panics, misses its stage or produces no
+  valid typed record is a STOP for my ruling, never an exemption.
+- **The remaining six components** — `prompt_clear`,
+  `queue_retention`, `overlap_refusal`, `admission_refusal`,
+  `cancellation_retirement`, `prequeued_retirement` — run on both rows
+  as declared, each with its own armed-hit-caught omission.
+- **Controls.** Real and disabled arms re-run exact: 20 records each,
+  every check true, byte-equal with no normalization; the real
+  binary's dead probe branches stay const-false; the controls carry
+  the C43 receipts or fresh receipts, pinned.
+- **The matrix.** Only after all twenty declared calibrations are
+  executed and valid under their declared classes: eight protocol
+  cells per row (Input/InputString × cancel/replace) on both arms at
+  eight and one threads, with every current check kept — the actual
+  typed `InputRequired`, the exact owner-retention contract, snapshot
+  and tail unchanged, prompt present at pause and cleared on queue as
+  the API's own consequence, queue retention, the post-queue overlap
+  and acceptance refusals, the typed resume refusals, the
+  cancel+resume escape to all-false, fresh ordinary and accepted
+  requests, the prequeued completion to all-false with `List[1, 1]`,
+  exact real/disabled records and producer reach.
+- **Claims.** `equal_claim:false`, no SAME-key claim and no unobserved
+  key-count claim; the 65 required nonencoding and 20 encoding keys
+  per row stay recorded under the Boundary disposition and are not
+  claimed SAME; any unreached cell is named with its reason. The
+  `P1555` bookkeeping shape is permitted only as bookkeeping: the
+  row's current Boundary proof may be marked complete with the matrix
+  claim false; the verdict stays `Boundary`, and the transitive
+  bookkeeping moves only through the canonical replay with every
+  movement named.
+
+**Budget.** A fresh bounded boundary allocation of at most 4 fresh
+builds (the recommended shape: rebuild both arms from the corrected
+shared driver — two — plus one forced `--force` sha spot check, with
+one compile-failure allowance); a build on anything else is a STOP;
+reuse of the C43 receipted binaries is allowed only if the records
+stay exactly equal and the new freeze pins them; the C43 budget is
+consumed and does not transfer; guest and record caps are declared in
+the freeze; the tail families get their own declared allocation after
+the boundary proof passes.
+
+**After the boundary proof.** `P1564`/`P1565`/`P1573` through tail
+families, each with its own armed-hit caught-or-surviving omission,
+Equal only with its own caught omission and complete real matrix, and
+every proposal `equal_claim:false` with a survivor per cell; then the
+141-row tail by mechanism — 110 LocalTail + 13 ReopenedOrNew + 11
+StrictDropGap + 4 StrictCallerGap + 1 StrictOtherCarrier + 1
+New719Edge + 1 New725Edge. `P1566` and `P0496` stay reserved;
+`P1562`/`P1563`/`P1568` are not re-run; the 13 pair columns stay
+held; the nine stopped families and the C19–C43 families are not
+repeated without a genuinely new mechanism or instrument; the
+wrapper-tail identity is not carried without an explicit ruling; the
+862 duties, the 24 unresolved sites and the five named owners stay
+explicit.
+
+**Rules.** The two-family stop-loss and every standing rule stand: no
+repository mutation outside `.temp/`, no git, no network, no assertion
+weakening, no re-pinned inventory, no deleted attempt, no relabelled
+invalid recipe. All scratch under `.temp/g15-c2/c44`, the shared probe
+cache and the existing Cargo cache; disclose every path. Invalid,
+unarmed and failed observations never certify a settlement.
+
+**Stop.** Stop for the director gate at the round's end or at the
+two-family stop-loss. C2 stays Open at 141 Residual + 1 Lost; S10
+stays unopened.
