@@ -1408,3 +1408,91 @@ obligation, accepted at this gate.
    ruling. Eight canonical builds remain; a required step that cannot fit
    is a STOP, not a self-authorized cap.
 3. **Report and STOP** for the director's final gate; no live commit.
+
+## Director gate (2026-11-13) — continuation 8: the STOP is well taken, and its red is the switch-gated lp03 target run without `RUM_PROFILE_LEXICAL_SUBSTITUTION`; the standing host bar carries the switch; continuation 9 finishes the acceptance and the combined cost lane
+
+**Run.** `cdx` (Codex `gpt-6-astra`, reasoning max; session
+`01a1d33e-a58e-73b3-bf0a-79e1106c460a`; log
+`.temp/logs/cdx_brief_731.log`, 515,052 B, sha256 `ba48f7f0…`,
+`tokens used` 126,139 as the log reports it; memory-scope unit
+`brief-731-cdx-20261113-125100-534280`, peak 6,542,741,504 B, oom 0,
+oom_kill 0, rc 0; 8 run records; report 13 PASS / 2 FLAGGED / 1 FAIL / 1 NA
+checks and one NA measurement, `report.py check 731` OK with 680 citations
+by my own run; 0 canonical builds this round, 22 of 30 consumed and eight
+remain; 0 git attempts, no network; every write under `.temp/brief-731/`;
+the live tree still carries the accepted C6 install plus the three C7
+paths, uncommitted). **The round:** the entry audit reads 2,737 files and
+the source audit reads live, entry copy and final copy at 0 changed paths
+and 0 inventory edits; the accepted C7 replay stands and no replay is
+required; the host acceptance at eight and one threads reads 160 passed /
+3 failed / 0 ignored over 14 targets, the three failures exactly
+`lp03_adopted_phases_are_exact_in_completed_and_resumed_runs`,
+`lp658_host_eval_reset` and `lp658_host_resume_reset`, reproduced at one
+thread; the workspace, the no-default certificate gate and the cost lane
+were not run; no live edit and no assertion, inventory, skip or profiling
+change. **My scope walk:** `git status` is exactly the 16 accepted install
+paths; live equals the C8 entry manifest and the C8 final copy on all
+2,737 files (0 missing, 0 differing) and no non-skipped file lies outside
+the manifest; the report's live references are the scene's own files.
+**The red, measured by me:** all three tests live in
+`crates/rum-host/tests/lp03_phase_rows.rs` and read the logical profiler
+through the test lease; `lexical_profile_configured_admitted` initializes
+`LEXICAL_PROFILE_ENABLED` from `RUM_PROFILE_LEXICAL_SUBSTITUTION`
+(`profiling/config.rs:569-573`), so with the variable unset the profiler
+records nothing and every row list is empty. On the live tree at one
+thread without the switch I reproduce the identical three failures
+(`evaluate.total missing …: []`; `post-reset host compound record
+missing: []`); with `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` the same binary
+is 3/3 green. On the clean pre-install HEAD archive `9f1e62df` built at
+its own target the same pair holds: three identical no-switch failures
+and 3/3 green with the switch. The full host suite under the switch on the
+live tree is 26 summaries, 222 passed / 0 failed / 2 ignored at eight and
+at one threads. The standing bar for the switch-gated host targets has
+carried the switch since the profiler line; the brief-723 gate records the
+unfiltered lp03 target as base-reproduced, not a regression. **Ruling
+(Q1):** the STOP is well taken as written — the round ran the brief's
+command, and the worker rightly refused to infer an exclusion from the
+separate `lp655`/`lp656` ruling. The red itself is not a product signal:
+it is the switch-gated lp03 target run without its environment switch,
+identical on the clean pre-install HEAD tree, and no install path is
+involved (the first failing program does not even suspend). The three
+tests are not excluded by name: they remain watched, under the switch, in
+the standing host bar; no test, assertion, skip or inventory change and no
+profiling default change. Item 1's host and workspace commands carry
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1` from here on. The round is accepted as
+a stage-3 partial round — the entry/source audit and the report stand; no
+build was consumed and nothing else is credited.
+
+## Continuation-9 order (2026-11-13) — finish stage 3 on the accepted final source
+
+Enter on the live tree at the director gate commit that appends this order
+(the tree carries the 16-path install, uncommitted for the final gate). The
+accepted C6/C7 work, the C8 entry/source audit and the host bar below are
+not rerun.
+
+1. **Complete the acceptance, once.** Host:
+   `RUM_PROFILE_LEXICAL_SUBSTITUTION=1 RUST_TEST_THREADS=8 cargo test
+   -p rum-host --no-fail-fast` (the director's bar: 26 summaries,
+   222 passed / 0 failed / 2 ignored at eight threads; once at one
+   thread). Workspace: `RUM_PROFILE_LEXICAL_SUBSTITUTION=1
+   RUST_TEST_THREADS=8 cargo test --workspace --no-fail-fast`, where the
+   runtime parent verdict is `1433 passed; 2 failed; 5 ignored` with
+   exactly `lp655_root_context_falsifier` and
+   `lp656_public_root_context_falsifier` failing and the nine native
+   ZeroMQ loopback tests remain the documented worker-sandbox skip. The
+   no-default-feature certificate gate: `cargo test -p rum-stdlib --lib
+   local_production_acceptance --no-default-features` at eight and one
+   threads, installing only its generated certificate cells. Any red
+   outside the two named runtime failures is a STOP, reproduced at
+   `--test-threads=1` first. No test, assertion or skip changes.
+2. **Cost lane.** The combined lane on the final source — the seven-file
+   refusal delta and the repair's delta — two draws, equal calls, one
+   codegen unit, serial: the Callgrind identity lane on every changed
+   function and all affected hot functions, the
+   `scripts/core-language-microbench.sh` A/B with all labels and same-tier
+   neighbours, profiling off, every positive row retained and reported, one
+   forced SHA spot check. The entry row's 599/4 bar and the no-increase
+   scan are unchanged; a hot increase no shape removes is a STOP for my
+   ruling. Eight canonical builds remain; a required step that cannot fit
+   is a STOP, not a self-authorized cap.
+3. **Report and STOP** for the director's final gate; no live commit.
