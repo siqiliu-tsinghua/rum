@@ -111767,3 +111767,205 @@ zero deleted attempts, zero edited copied assertions, zero rerun guests.
 (`P0496`, `P1566`, the `P0325`/`P0326` pair-column reconciliation), CM,
 `CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2; retention resumes from E0
 + Q3, then Q1/Q2/Q4/Q5.
+## Continuation 59 ruling (2026-11-14) — accepted in full on `cdx`; `P2656` settles `Boundary` and continuation 60 applies the one move by canonical replay; the reused-build identity STOP is the recorded `libmimalloc-sys` `__DATE__`/`__TIME__` epoch class, and the per-round forced spot check becomes a same-epoch control
+
+**Run accepted.** `cdx` (gpt-6-astra max, session
+`01a1d724-1c14-7363-b8a6-1522fadae38f`, unit
+`brief-623-cdx-20261114-070029-934423`, started 2026-11-14 07:00:29 +08:00,
+ended 07:30:11, rc 0, peak 3,464,237,056 B, oom 0, oom_kill 0; log
+`.temp/logs/cdx_brief_623.log`, 30,357 lines, 2,448,575 B, sha256
+`59dd85c52f12e37cb07a76694c8e516a564051c15a0daf6325f30bc294efe60b`, 41 run
+records — 37 exit 0, two retained exit 1 assembly/controller preflights and
+two retained exit 3 build-control runs — `tokens used` 232,476 as the log
+reports it; report 11 PASS / 1 FLAGGED / 1 FAIL / 1 NA checks and one
+measurement PASS, `report.py check 623` 865 citations by my own run;
+`.git-attempts` absent; 11,216 reported changes (11,215 added, 1 modified)
+all under `.temp/` — the one modified path is the authorized
+`.temp/brief-623/report.json`; 0 source edits; 4 logged builds, 3 guest
+processes, 12 diagnostic records, 0 encoding runs).
+
+**Entry and source.** 24 pins exact; 2,737 live files at 0 missing / 0
+changed / 0 extra by my own walk; production 1,627 files at `3acf8a34…`; 1,042
+rows / 78,330 canonical keys / 18,840 encoding rows; 1,018 paired sources and
+the 24 explicitly unresolved sites; `source_rebases_this_round=0`; the C52–C58
+seals replay 0/0 with only the inherited disclosed C55/C56 receipt refresh
+(`raw_replay_log` `final-canonical-replay-1` → `-2`, sealed hash reconstructed,
+eight outputs exact each); the C58 seal 204 files and the C59 seal 11,198 files
+are 0/0 by my own walks before and after my replays; my own protected walk of
+2,857,912 files finds 0 missing and exactly one difference — the authorized
+report publication; the inherited replay binds the C59 scene's sealed
+`brief-entry.md` (`3f647330…`).
+
+**The ledger does not move this round.** `settled.tsv` `ed8cc891…` and
+`required-tuples.tsv` `3c2dcdff…` are byte-identical to C58; outcomes
+Boundary 12 / Equal 174 / Identity 5 / Lost 1 / NoObservableTail 126 /
+Residual 127 / Transferred 594 / Unreachable 3; residual composition 98
+LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1
+New719Edge + 1 New725Edge + 1 StrictOtherCarrier = 127; C2 Open at 127
+Residual + 1 Lost; `P1573` Residual, `P1566` Lost, `P0496` reserved; the held
+pair rows and the 13 pair columns held; `P2631`/`P2644` and every
+blocked-encoding row behind G13; the C57/C58 parks not re-attempted.
+
+**Family `repl-io-abandonment-result-tail` (`P2656`, 30 keys, zero encoding) —
+a measured terminal I/O boundary.** The actual producer is
+`crates/rum-repl/src/request.rs:219` (`abandon(session, cancel, output,
+&mut delivered, request, Abandon::Io)` in `drive`'s error arm); the live code
+discards the producer's `io::Result<()>` with `let _ =` and returns the
+already-held original I/O error, as documented at
+`crates/rum-repl/src/lib.rs:18-19` ("Other I/O errors retire the request
+before returning the error"). Four frozen cases (plain/paused writer ×
+ok/error): 4/4 real contracts PASS and real == disabled byte-exact; the two
+paused cases reach the actual producer pause (`C2_ARM`/`C2_PAUSE` at
+`c59.cleanup-input`), the paused Ok carrier is an armed nonexecuting control,
+and the two nonpausing controls are unarmed. The own omission
+`ForwardActualAbandonErrorBeforeOriginalIoError` arms/hits/catches exactly
+once on `paused-writer-error`, changing only `error_kind`/`error_text` (real
+`Other`/`c59-original-read`; own `PermissionDenied`/`c59-abandon-write`): the
+producer's actual error is a real, distinguishable value that the documented
+contract deliberately discards. Zero equality credit (`equal_claim:false`,
+`equality_SAME=0`, `equality_not_applicable=12`), all 30 keys retained, no
+encoding credit, no live source edit, `real_branch_const_false=true`, 0
+assertion edits; two fresh builds (`221e0296…`/`704d77e9…`, `cache_hit:false`),
+three guests, twelve records; freeze `358eb748…`, instrument `1b3336d3…`,
+source-proof `8740c2b7…`, lifecycle `e83be07c…`, gain `63907bac…`, calibration
+`bf912447…`, `build-io-real.json` `2d1fac0e…`, `build-io-mutant.json`
+`d1acd12d…`, raw logs `f0b17986…`/`d889975e…`/`27f51909…`, proposal packet
+`port/current-native-boundary-proposals.json` `6c7de683…`.
+
+**Family `cli-process-full-stderr-error-tail` (`P2624`, 30 keys, zero
+encoding) — frozen, zero credit, blocked by the build control.** A new,
+separately frozen full-stderr process observer under the C56 Q3 authority: four
+cases (ordinary success, ordinary syntax, terminal-nested, terminal-simple),
+the predicate requiring both the existing `main.rs:423` `! input required:`
+helper line and the `main.rs:47` outer `error:` line; freeze `9a501e32…`,
+instrument `aa3d5a2a…`, source-proof `db0c1eb7…` (the two sealed C56
+instrumented trees, with only the two C56-unsealed `PROGRESS.md` files
+authenticated against protected-entry). The required forced cache-reuse
+identity check failed before any guest (cached `e517e558…` vs rebuilt
+`8dea5f49…`), so the family has 0 builds of its own beyond the attempt, 0
+guests, 0 records, 0 calibration, 0 own mutations and 0 proposals. The C56
+failed predicate remains failed, sealed and unused.
+
+**The build-identity STOP, measured and explained.** Same assembled tree
+`c1e34c63…`, key `b610ac23…`, rustc 1.85.0, same cargo argv and stable path;
+the forced rebuild recompiled all 58 units because the preceding io-family
+build had left a different manifest set in the shared probe target
+(`probe-build.py`'s `full_clean` path removes the target and state). A full
+clean rebuild re-runs `libmimalloc-sys`'s C build, which embeds
+`__DATE__`/`__TIME__`: cached `05:13:49`, rebuilt `07:15:50`, and the linker's
+tail-string merge absorbs the separate `"0"` option string into the new
+timestamp, shifting mimalloc's string pool. My own byte analysis of the two
+preserved binaries: section sizes identical, symbol table identical, 1,503
+differing `.rodata` bytes in the one string-pool window, 136 differing `.text`
+bytes all inside 23 mimalloc C functions (`_mi_stats_print` 58,
+`mi_printf_amount` 30, `mi_options_print_out` 9, …), none in rum code, and 52
+`.data`/`.rela.dyn` entries that are the shifted string pointers. The failure
+is therefore the recorded mimalloc build-stamp class — not a source, language
+or cache-corruption signal — and the worker's STOP is well taken.
+**Control refinement (my erratum to the 2026-11-07 probe-budget practice):**
+the per-round `--force` sha256 spot check is a *same-epoch* control — run it on
+a build made in the same round, immediately in the same probe target epoch, and
+require a byte-identical rebuild; a cached binary from an older epoch is
+verified by `probe-build.py`'s on-hit receipt/binary hash check and may be
+refreshed by removing its stale cache entry and building fresh (recording the
+new receipt and sha), never by a cross-epoch byte-identity bar. My calibration
+(`.temp/director/gate-c59/epoch_calibration.py`, private probe root): a fresh
+build reads `272104b3…`; the immediate same-epoch `--force` reproduces
+`272104b3…` with `spot_check=pass`; after deleting target and state the same
+source rebuilds to `ecb16ff9…` and exits 3 — the same stamp-class failure as
+this round's `e517e558…`/`8dea5f49…` pair.
+
+**Rulings.** Q1 — yes: `P2656` settles `Residual`→`Boundary` on its documented
+terminal I/O-error retirement contract, its four exact real/disabled cases, the
+actual producer pause and its one own caught `Err`-forwarding mutation, with
+`equal_claim:false`, zero equality credit, all 30 keys retained and no encoding
+credit; the paused Ok carrier is a nonexecuting control, not a survivor.
+Continuation 60 applies exactly this one move by canonical raw replay citing
+the C59 packets pinned above and asserts the post-move outcomes Boundary 13 /
+Equal 174 / Identity 5 / Lost 1 / NoObservableTail 126 / Residual 126 /
+Transferred 594 / Unreachable 3, residual composition 97 LocalTail + 13
+ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1 New719Edge + 1
+New725Edge + 1 StrictOtherCarrier = 126, C2 Open at 126 Residual + 1 Lost,
+`required-tuples.tsv` byte-identical and every other row byte-identical. Q2 —
+as measured: the stop is the mimalloc build-stamp epoch class; no cached
+binary is re-pinned, both binaries and the compiler log stay retained, and
+`P2624` keeps zero credit; the control is refined as above and no cross-epoch
+force check is ordered again. Q3 — a later allocation carries the `P2656`
+accepted evidence without rerunning it, the frozen `P2624` full-stderr
+instrument without re-freezing it, every reservation, held column and encoding
+restriction, and the refined build control.
+
+**Continuation 60 order.** Entry on the unchanged installed source `22e0fb4c`:
+every file under `crates/` equals the C59 final manifest (production digest
+`3acf8a34…`, 1,627 files; 2,737 live files); the entry re-derives 1,042 rows /
+78,330 canonical keys / 18,840 encoding rows with 0 moves, 1,018 paired sources
+and the 24 explicitly unresolved sites; `settled.tsv` `ed8cc891…` and
+`required-tuples.tsv` `3c2dcdff…` are the baseline. Apply exactly one approved
+move, `P2656` `Residual`→`Boundary`, by canonical raw replay citing the pinned
+C59 packets (freeze `358eb748…`, instrument `1b3336d3…`, source-proof
+`8740c2b7…`, lifecycle `e83be07c…`, gain `63907bac…`, calibration `bf912447…`,
+`build-io-real.json` `2d1fac0e…`, `build-io-mutant.json` `d1acd12d…`, raw logs
+`f0b17986…`/`d889975e…`/`27f51909…`, proposal packet `6c7de683…`), with
+`equal_claim:false`, zero equality credit, all 30 keys retained and no encoding
+credit. Then `P2624` under the frozen full-stderr instrument (freeze
+`9a501e32…`, instrument `aa3d5a2a…`, source-proof `db0c1eb7…`): assemble the
+two sealed C56 trees exactly as C59 did, build and calibrate the eight
+real/disabled records before any own execution, the predicate keeping both
+emissions; the C56 failed predicate stays failed and unused; only then the
+four-case matrix, the two armed cases, the controls and any Boundary proposal.
+**Build control:** the round's one `--force` sha256 spot check must be a
+same-epoch rebuild of a build made in this round and must reproduce
+byte-identically; a cached binary from an older target epoch is verified by the
+on-hit receipt/hash check and may be refreshed by removing its stale cache
+entry and building fresh; a cross-epoch byte-identity bar is not applied. If
+every arm of the round is a cache hit, refresh one key (remove its stale entry),
+build it fresh, and run the force check on that build in the same epoch. Then
+the remaining tail by mechanism, each batch with its own armed-hit
+caught-or-surviving omission, `Equal` only with its own caught omission and a
+complete real matrix, every proposal `equal_claim:false` with a survivor per
+cell, and a `Boundary` proposal only with a documented terminal contract
+measured on the actual producer path. `P1573` Residual, `P1566` Lost, `P0496`
+reserved; held pair rows and the 13 pair columns held; `P2631`/`P2644` and
+every blocked-encoding row behind G13; the C57/C58/C59 parks are not
+re-attempted without a genuinely new instrument or an explicit ruling. Fresh
+bounded allocation 4 families / 16 builds / 512 guests / 4,000 records / 0
+encoding, no transfer; scratch `.temp/g15-c2/c60`; C44–C59 read-only evidence;
+no live edit, no git, no network, no `unsafe`, no inventory edit, assertions
+unchanged. The inherited replay binds the C59 scene's sealed `brief-entry.md`
+(`3f647330…`). **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
+`BRIEF_WORKER` unset = `cdx`).
+
+**My gate.** Entry, pins, carry tables and seals exact; my own 2,737-file live
+walk 0/0/0 and my own 2,857,912-file protected walk 0 missing / exactly 1
+difference = the authorized report publication (`.temp/brief-623/report.json`);
+the C58 seal 204 files and the C59 seal 11,198 files 0/0 by my own walks before
+and after my replays; my own canonical replay PASS (seven RED negative
+controls, the positive GREEN, eight exact outputs, every derived file
+byte-identical) and my own inherited C53–C58 replays exact (eight outputs each,
+0 prior-scene writes, each sealed brief bound; C53 and C57 re-derive their two
+already-accepted moves); the P2656 real records match the frozen contracts on
+all shared fields, the disabled records are byte-exact, and the own arm differs
+only in `error_kind`/`error_text` on the one paused-writer-error case; both
+families' source packets (4 and 3) hash-match live; the build-control evidence
+read in full (diagnosis.json, both preserved binaries, the 55,164-byte compiler
+log); the seven ledger negatives RED and the positive GREEN; `report.py check
+623` 865 citations; the report copies byte-identical (`0fb3e2cf…`); `git log
+22e0fb4c..HEAD -- crates` empty; tree clean at `1e6f5020`; no assertion
+weakened, no attempt deleted, no recipe relabelled, no inventory re-pinned. My
+calibration of the refined control (`gate-c59/epoch_calibration.py`, private
+probe root): fresh `272104b3…`, immediate same-epoch `--force` reproduces
+`272104b3…` with `spot_check=pass`, and after deleting target+state the same
+source rebuilds to `ecb16ff9…` and exits 3. **Recorded, not gated:** the initial
+`assemble_process.py` KeyError on C56's unsealed nested `PROGRESS.md` (the two
+files are instead authenticated against protected-entry; the original script
+and log retained under `failed-attempts/process-source-seal-membership/`); the
+inherited C55/C56 receipt refresh (sealed hash reconstructed, outputs exact);
+the report's `unexplained` stop prose, now explained by this ruling; the four
+retained non-zero runs (assembly preflight, guarded controller, forced spot,
+propagating controller) and the FLAGGED proposal / FAIL build-identity checks
+retained and cited.
+
+**Next:** gate continuation 60 when it stops; then C2's settlement round
+(`P0496`, `P1566`, the `P0325`/`P0326` pair-column reconciliation), CM,
+`CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2; retention resumes from E0
++ Q3, then Q1/Q2/Q4/Q5.
