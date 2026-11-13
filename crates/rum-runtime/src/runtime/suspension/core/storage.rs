@@ -181,6 +181,14 @@ impl FrameStorage {
         }
     }
     #[inline]
+    pub(super) fn back_context(&self) -> Option<ResumeContext> {
+        match self {
+            Self::Guest(queue) => queue.entries.back_context(),
+            Self::Profiled(queue) => queue.guest().entries.back_context(),
+        }
+    }
+
+    #[inline]
     pub(super) fn pop_front(&mut self) -> Option<Queued<Entry>> {
         match self {
             Self::Guest(q) => q.entries.pop_front(),

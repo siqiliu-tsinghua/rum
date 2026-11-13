@@ -54,7 +54,9 @@ impl fmt::Display for SessionRequestError {
             }
             Self::Exit { code } => write!(f, "Exit[{code}]"),
             Self::InputRequired { request } => write!(f, "{request}"),
-            Self::NestedEvaluationInputBoundary => f.write_str("nested top-level evaluation cannot suspend for host input"),
+            Self::NestedEvaluationInputBoundary => {
+                f.write_str("nested top-level evaluation cannot suspend for host input")
+            }
             Self::Other { message } => f.write_str(message),
         }
     }

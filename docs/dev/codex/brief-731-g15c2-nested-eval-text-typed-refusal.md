@@ -1789,3 +1789,20 @@ instruction authority, stage 3 closes, and brief 731 is complete.
 **Next:** the director's final gate and the live commit of the install
 remainder; then continuation 38 of brief 623; then C2's settlement
 round, CM, `CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2.
+
+## Final gate and install (2026-11-13) — the install remainder is committed
+
+The director's final gate on the accepted final source: `cargo fmt --check`
+is clean and `cargo check --all-targets` is green (cache-warm, rc 0) on
+the live tree at HEAD `648ddb8e`; `git status --porcelain` is exactly the
+sixteen install-remainder paths (+415/−287); and live, `source-final` and
+`source-entry` agree on all 2,737 files with 0 differences. The install
+remainder — the three ruled rustfmt arms, the three capture-repair files
+with their permanent regression, the census test and the eight derived
+inventory files — is committed and pushed with this record; the refusal
+control flow, the enum variants, the host and Jupyter arms, the permanent
+`nested_public_evaluation` suite and the docs are already in HEAD at
+`0aca7e38`. Brief 731 is complete; no live commit remains outstanding for
+this line. **Next:** continuation 38 of brief 623 on the installed source;
+then C2's settlement round, CM, `CHANGELOG.md` before S10, G13
+S10-S54/F1-F23/R, E2.

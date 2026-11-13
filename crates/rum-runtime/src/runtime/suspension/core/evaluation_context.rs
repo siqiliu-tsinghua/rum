@@ -23,8 +23,21 @@ impl<P> Queued<P> {
 
 impl Session {
     pub(in crate::runtime) fn resume_context(&self) -> ResumeContext {
+        let mut stack_len = self.evaluation_stack.len();
+        // A published request owns its queue before the native caller unwinds.
+        // Appended caller frames can only retain the prefix left by that owner;
+        // their independent logical depth is still the caller's captured depth.
+        if self.pending_request.is_some() {
+            if let Some(pending) = self.pending_suspension.as_ref() {
+                let remaining_prefix = pending
+                    .frames
+                    .back_context()
+                    .map_or(pending.active_stack.len(), |context| context.stack_len);
+                stack_len = stack_len.min(remaining_prefix);
+            }
+        }
         ResumeContext {
-            stack_len: self.evaluation_stack.len(),
+            stack_len,
             depth: self.evaluation_depth.get(),
         }
     }

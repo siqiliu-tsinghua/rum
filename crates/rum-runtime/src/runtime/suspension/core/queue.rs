@@ -117,6 +117,14 @@ impl FrameQueue {
     }
 
     #[inline]
+    pub(super) fn back_context(&self) -> Option<ResumeContext> {
+        match self {
+            Self::Legacy(frames) => frames.back().map(|cell| cell.context),
+            Self::Mixed(frames) => frames.back().map(|cell| cell.context),
+        }
+    }
+
+    #[inline]
     pub(super) fn pop_front(&mut self) -> Option<Queued<Entry>> {
         match self {
             Self::Legacy(frames) => frames.pop_front().map(|cell| cell.map(Entry::Legacy)),

@@ -442,3 +442,79 @@ fn resumed_frame_checks_native_headroom_without_entering_a_new_logical_level() {
         (0, 29)
     );
 }
+
+#[test]
+fn b732_reentrant_published_owner_keeps_accounting_and_cleanup() {
+    fn resume_existing(s: &mut Session, _: &Expr, _: &SharedArgs) -> Result<Expr, EvalError> {
+        s.resume_eval_request_with_input("one")
+            .map(|r| r.value)
+            .map_err(|f| match f.error {
+                SessionRequestError::InputRequired { request } => {
+                    EvalError::InputRequired { request }
+                }
+                other => panic!("unexpected nested resume: {other:?}"),
+            })
+    }
+    let lease = Session::logical_profile_test_acquire();
+    Session::logical_profile_test_reset(&lease);
+    for armed in [false, true] {
+        for cancel in [false, true] {
+            let mut s = session_with_test_control_builtins();
+            s.register_builtin(BuiltinSpec::ordinary_with_hold(
+                "B732ResumeExisting",
+                "Real owner resume.",
+                HoldAttribute::HoldAll,
+                resume_existing,
+                MemoryGrowthContract::Incremental,
+            ));
+            if armed {
+                s.resource_limits.eval_memory_limit = Some(1_000_000_000);
+            }
+            let first=s.eval_request(
+                "WithCleanup[(InputString[\"first\"];InputString[\"second\"];42),Print[\"cleanup\"]]",
+            ).unwrap_err();
+            assert!(
+                matches!(&first.error,SessionRequestError::InputRequired { request } if request.prompt=="first")
+            );
+            if armed {
+                s.assert_maintained_memory_accounting();
+            }
+            assert!(matches!(
+                s.eval_text("B732ResumeExisting[]"),
+                Err(EvalError::NestedEvaluationInputBoundary)
+            ));
+            assert_eq!(s.pending_input_request().unwrap().prompt, "second");
+            if armed {
+                s.assert_maintained_memory_accounting();
+            }
+            let result = if cancel {
+                s.request_cancel_handle().cancel();
+                let response = s
+                    .finish_cancelled_pending_evaluation_request()
+                    .unwrap()
+                    .unwrap();
+                assert_eq!(response.termination, Some(EvalTerminationReason::Cancelled));
+                response
+            } else {
+                let response = s.resume_eval_request_with_input("two").unwrap();
+                assert_eq!(response.value.to_string(), "42");
+                response
+            };
+            assert_eq!(result.prints, ["cleanup"]);
+            assert!(s.pending_suspension.is_none());
+            assert!(s.resuming_suspension.is_none());
+            assert!(s.pending_request.is_none());
+            assert!(s.abandonment_worklist.is_empty());
+            if armed {
+                s.assert_maintained_memory_accounting();
+            }
+            let counters = s.ensure_accounting_shadow().snapshot();
+            assert_eq!(counters.pushes, counters.pops);
+            assert_eq!(counters.live, 0);
+            assert_eq!(s.eval_request("6*7").unwrap().value.to_string(), "42");
+            println!(
+                "B732 ACCOUNTING CASE armed={armed} cancel={cancel} owner_retired=true cleanup_once=true maintained_oracle_exact=true shadow_balanced=true fresh_request=true"
+            );
+        }
+    }
+}

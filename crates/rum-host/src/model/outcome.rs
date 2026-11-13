@@ -696,7 +696,9 @@ fn failure_code(error: &SessionRequestError) -> HostFailureCode {
             HostFailureCode::EvaluationPassLimitExceeded
         }
         SessionRequestError::Exit { .. } => HostFailureCode::Exit,
-        SessionRequestError::NestedEvaluationInputBoundary => HostFailureCode::NestedEvaluationInputBoundary,
+        SessionRequestError::NestedEvaluationInputBoundary => {
+            HostFailureCode::NestedEvaluationInputBoundary
+        }
         SessionRequestError::ContinuationSlotMismatch { .. }
         | SessionRequestError::StackLimitExceeded { .. }
         | SessionRequestError::InputRequired { .. }

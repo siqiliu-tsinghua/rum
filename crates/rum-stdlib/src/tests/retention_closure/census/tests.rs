@@ -217,7 +217,7 @@ fn baseline(source: &Source) {
     // and brief-629 shifts the three sites from lines 41, 42 and 92 to 43, 44
     // and 94. These remain unresolved boundaries; the loader earns no retention
     // mark.
-    for line in [43, 44, 94] {
+    for line in [50, 51, 101] {
         assert!(options.rejected.iter().any(|row| row.kind == Kind::RET002
             && row.site.file.ends_with("suspension/core/abandon.rs")
             && row.site.start.0 == line));
@@ -386,14 +386,20 @@ fn baseline(source: &Source) {
     // `lease_generation: _access.generation()`, from the accepted C26
     // provenance field. Every other kind/file/callee/reason multiplicity
     // stays unchanged; no rejection status, coverage or promotion moves.
+    // Brief 735: the abandonment route's take_pending_report_owner /
+    // finish_report_owner_ticket edge reaches the ticket machinery, adding
+    // 9 RET002 boundaries across 6 keys; the rewritten header shifts
+    // the three historical abandon.rs sites by 7 lines. Fresh paired
+    // emissions contain 1229 rows (14/1177/38), with no removed
+    // rejection, classification change, retention mark or promotion.
     assert_eq!(
         options.rejected.len(),
-        1220,
+        1229,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 14), (Kind::RET002, 1168), (Kind::RET003, 38)])
+        BTreeMap::from([(Kind::RET001, 14), (Kind::RET002, 1177), (Kind::RET003, 38)])
     );
     let wrapper = regions::frontier(
         source,

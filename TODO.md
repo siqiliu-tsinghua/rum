@@ -8192,3 +8192,36 @@ After this line: brief 733's continuation on the repaired tree, brief 731
 continuation 6 (the three-file capture repair and the accounting regression),
 then continuation 38 of brief 623; then C2's settlement round, CM,
 `CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2.
+
+## 2026-11-13 — G15-C2 brief 731 accepted: the nested-eval typed refusal install
+
+Brief 731 completes with the typed refusal installed. A same-session nested
+top-level evaluation that would require unqueued host input now retires its
+own captured continuation through the ordered abandonment protocol and
+returns the typed `NestedEvaluationInputBoundary` from `EvalError`,
+`SessionRequestError` and `HostFailureCode` — with its Display, the Jupyter
+name, the zero-arity legacy-wire tag and the consolidated typed-only guard —
+instead of silently losing the inner completion. The cold helper rides the
+shared entry's existing outer error arm; the nested re-pause capture repair
+(truncating the captured prefix to the owner's remaining cells) lands with
+its permanent regression.
+
+The acceptance set on the final source: the C10 switch-lane workspace
+campaign with every red classified (the standing `lp655`/`lp656` pair, the
+nine native ZeroMQ sandbox failures, the four parallel-epoch policy rows and
+the CLI switch artifact); the two output-contract targets green without the
+profiler switch at 28/28 and 6/6 at eight and one; the no-default
+`local_production_acceptance` certificate gate 1/0/0 with zero moved cells;
+and the combined instruction lane reading the entry row 599 Ir / 4 calls
+with no runtime equal-call increase and no call mismatch. The 13 separated
+microbench timing rows are the recorded release-layout class on the
+association key read — my own panel probe on the exact binaries reads the
+label's dominant function at 453,285,507 self Ir / 11,893,754 calls in all
+four captures, with the entry at `0x5a0a10` (16 mod 64) against `0x5a0cc0`
+(0 mod 64).
+
+The public API break this lands (the three new unit variants and the legacy
+wire tag) is named for `CHANGELOG.md` before S10, together with the earlier
+`EvalError::Syntax` break. After this line: continuation 38 of brief 623 on
+the installed source; then C2's settlement round, CM, `CHANGELOG.md` before
+S10, G13 S10-S54/F1-F23/R, E2.
