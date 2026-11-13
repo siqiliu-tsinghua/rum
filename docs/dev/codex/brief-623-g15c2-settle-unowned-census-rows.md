@@ -108428,3 +108428,154 @@ unarmed and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 141 Residual + 1 Lost; S10
 stays unopened.
+
+## Continuation 42 ruling (2026-11-13) — the `P1570`/`P1572` boundary-instrument STOP is well taken; the pending prompt is a public-API consequence, not an ownership component, and continuation 43 runs the corrected instrument
+
+**Run.** `cdx` gpt-6-astra max, forked from
+`01a1d403-a00e-75d0-91ce-a1e650775d1d`, session
+`01a1d42d-e0f7-77a2-847e-5e671db13a49`; log
+`.temp/logs/cdx_brief_623.log`, 4,077,000 B, sha256 `1c8411ba…`,
+`tokens used` 1,984,510 as the log reports it; memory-scope unit
+`brief-623-cdx-20261113-171215-675680`, peak 4,169,224,192 B, oom 0,
+oom_kill 0, rc 0; 25 run records — 24 exit 0 and the designed exit-3
+`CurrentBoundaryEvidenceRed` STOP; report 8 PASS / 1 FLAGGED / 1 FAIL /
+1 NA, `report.py check` OK with 327 citations on my own run; 2/20
+builds (one forced spot `90bee452…` pass), 4/700 guest processes,
+32/4,500 diagnostic records (all invalid), 0 tests, 0 encoding
+executions; writes confined to `.temp/g15-c2/c42` plus the shared
+probe/Cargo caches; the live brief was not appended.
+
+**The STOP.** The frozen `P1570`/`P1572` instrument required the
+four-component state tuple — accepted ticket, reservation, batch
+owner, `pending_input_request().is_some()` — to survive
+`queue_input_response`. That public API clears the pending prompt by
+design (`session_api.rs:334-348`, the clearing statement at `:343`;
+the same statement is at `:341` in the pre-install C37 source, sha
+`dbcaf459…`), so `late_queue_state_equals_first` is unsatisfiable by
+construction: all 32 records are invalid on that sole predicate, the
+three ownership components stay true everywhere, and real and disabled
+at eight and one threads are parsed-identical. The documented contract
+is pre-queued input with an empty-queue non-resumable script/file
+boundary (`docs/runtime-evaluation-audit.md:132-135`,
+`docs/host-embedding-and-hardening.md:118-121`); the clear is the API's
+own semantics, not a loss, and it opens no new row.
+
+**My gate.** My own snapshot walk reads 2,737 files equal to the
+round's entry manifest (0 missing / 0 extra / 0 differing), and that
+manifest differs from C41's entry exactly in my own brief append; the
+1,627 crate files are byte-identical; 24/24 receipt pins hash to their
+pins; the tree is clean at `9d183086` and `git log 22e0fb4c..HEAD --
+crates` is empty; I reran the receipted boundary binary (sha
+`90bee452…`; the forced-spot build byte-identical) at eight and one
+threads on both arms and read records byte-identical to the round's:
+paused `(true,true,true,true)`, post-queue `(true,true,true,false)`,
+resume and overlap unchanged with their exact typed `Other` refusals,
+escape and prequeued completion all-false, snapshot and tail
+definitions unchanged, and 16 site lines showing the accepted producer
+reached on both rows. The ledger files `settled.tsv`,
+`required-tuples.tsv`, `residual-list.tsv`, `residuals.tsv` and
+`frozen-policies.tsv` are byte-identical to C41, so outcomes stay
+Boundary 10 / Equal 164 / Identity 5 / Lost 1 / NoObservableTail 124 /
+Residual 141 / Transferred 594 / Unreachable 3 with 78,330 keys, 18,840
+encoding rows and 0 verdict moves; the six bad-ledger controls are RED
+and the positive GREEN; no protected-scene file is newer than the
+dispatch; nothing ran after the STOP; the only retained non-zero exit
+is the designed STOP. The first `final-integrity` attempt printed a
+stale `writes=.temp/g15-c2/c41` label inherited from its copied
+predecessor controller; it is read-only, the c41 scene is 0-changed,
+and the label was corrected before attempt 2 — recorded, not gated.
+The report's `instrument-diagnosis` FLAGGED is accepted, and the one
+deviation (later steps unexecuted) is the STOP's consequence.
+
+**Disposition.** The STOP is well taken; zero credited; the 32 invalid
+records stay invalid and uncited; `P1570`/`P1572` stay
+`FullCurrentBoundaryEvidenceRequired` with their accepted Boundary
+dispositions retained; no verdict moves; the later changed rows and
+the tail did not execute. Q1 is answered yes: a new, separately frozen
+current boundary instrument is authorized under the conditions below.
+
+## Continuation 43 order (2026-11-13) — the corrected `P1570`/`P1572` boundary instrument, then the remaining changed rows and the 141-row tail
+
+**Source.** Same installed source `22e0fb4c`: every file under
+`crates/` must equal the C42 entry manifest, production digest
+`3acf8a34…`, 1,627 files; verify the C39 rebase receipts, the five
+entry pins and the 24 pinned receipts; any production difference, or
+any second source rebase, is a STOP.
+
+**Carried, not re-run.** The C41 evidence stands as recorded
+(`P1562`/`P1563` current Equal re-certification through the lifecycle
+instrument, `P1568` Equal with its `P1566` dependency open, the
+`P1566` checkpoint matrix and documented-loss recheck). Do not re-run
+`P1562`/`P1563`/`P1568`, the `P1566` documented loss or its matrices.
+`P1566` and `P0496` stay reserved for the settlement round; the 13
+pair columns stay held; the held rows stay excluded; no verdict moves
+without the settlement round.
+
+**Work.** In order: (1) the corrected `P1570`/`P1572` boundary
+instrument; (2) `P1564`/`P1565`/`P1573` through tail families, each
+with its own armed-hit caught-or-surviving omission, Equal only with
+its own caught omission and complete real matrix, and every proposal
+`equal_claim:false` with a survivor per cell; (3) the 141-row tail by
+mechanism — 110 LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 4
+StrictCallerGap + 1 StrictOtherCarrier + 1 New719Edge + 1 New725Edge —
+each batch with its own omission evidence.
+
+**The corrected instrument.** A new, separately frozen instrument
+under new names in `.temp/g15-c2/c43`; the 32 C42 invalid records and
+their observations stay untouched and uncited, and no invalid credit
+is reused. It must:
+
+- record the pending prompt as its own contract-specified observation
+  — present while paused, cleared by `queue_input_response` (the
+  source pin), with the queued response not consumed by the
+  non-resumable route — never as an equality across the queue route;
+- require the actual owner-retention contract on every cell: accepted
+  ticket, reservation and batch owner true across the pause and across
+  the queue route;
+- add the post-queue checks: the overlap refusal still fires with its
+  exact typed message, `accept_cancellable_request` is still refused
+  (`RequestAlreadyAccepted`) while the boundary holds, and a resume
+  still returns the typed `Other`;
+- keep every current check: the actual typed `InputRequired`, snapshot
+  unchanged, tail definition unchanged, cancel+resume escape →
+  all-false, fresh ordinary and fresh accepted requests working, the
+  prequeued completion → all-false with `List[1, 1]`, real/disabled
+  parsed-identical at eight and one threads, and producer reach on both
+  rows;
+- be calibrated red-before-matrix: every declared boundary component
+  has its own real source omission that is armed, hit and caught by its
+  own predicate, with armed/hit/caught/survived recorded; a component
+  whose omission survives is not certified, and an instrument whose
+  omissions all survive certifies nothing;
+- state exactly what it claims: the Boundary contract on this source
+  with `equal_claim:false`, no SAME-key claim, and no required-key
+  count it did not observe. The 65 required nonencoding keys per row
+  stay recorded under the Boundary disposition and are not claimed as
+  SAME; any variant/context cell the boundary cannot reach is named
+  with its reason, never silently omitted. A completed boundary proof
+  may mark the row's current disposition proof complete with the matrix
+  claim false (the `P1555` bookkeeping shape); the verdict stays
+  `Boundary`, and the transitive bookkeeping moves only through the
+  canonical replay with every movement named.
+
+**Families and duties.** The nine stopped families and the C19–C42
+families are not repeated without a genuinely new mechanism or
+instrument; the wrapper-tail identity is not carried without an
+explicit ruling. The 862 current named open transitive duties, the 24
+unresolved sites, the 13 pair columns and the five named owners stay
+explicit; `whole_graph_complete=false`. Port tables and the ledger only
+by canonical replay. The round declares its own bounded build and guest
+budget before execution; the C42 budget is consumed and does not
+transfer; a required step that cannot fit is a STOP for my ruling,
+never a self-authorized exception.
+
+**Rules.** The two-family stop-loss and every standing rule stand: no
+repository mutation outside `.temp/`, no git, no network, no assertion
+weakening, no re-pinned inventory, no deleted attempt, no relabelled
+invalid recipe. All scratch under `.temp/g15-c2/c43`, the shared probe
+cache and the existing Cargo cache; disclose every path. Invalid,
+unarmed and failed observations never certify a settlement.
+
+**Stop.** Stop for the director gate at the round's end or at the
+two-family stop-loss. C2 stays Open at 141 Residual + 1 Lost; S10
+stays unopened.
