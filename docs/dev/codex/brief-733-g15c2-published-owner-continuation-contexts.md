@@ -347,3 +347,59 @@ What changes relative to the body above:
   witness that no longer fires, an assertion whose tuple moved, a C4 record
   that changed — STOP and report the verbatim diff; never adjust an
   assertion, a witness, an arm or the shipped bytes.
+
+## Director gate (2026-11-13) — the control tuple is measured; resume at step 4
+
+The continuation run's STOP at step 3 is well taken as the worker-sandbox
+instrument boundary (`warning: ptrace: Operation not permitted`), not a
+product signal. The control tuple is supplied by the director from a host
+gdb run on the continuation's own control binary; no source observer is
+authorized and the four-arm scope is unchanged.
+
+**Run:** `cdx` (gpt-6-astra, max; session
+`01a1d2ad-7dd0-7232-b779-bdbd59b146a7`, fork of
+`01a1d151-2841-73b1-930e-3276e1c10ae2`; log `.temp/logs/cdx_brief_733.log`,
+1,371,537 B; 2,460,744 tokens; memory-scope peak 2,733,981,696 B, oom 0,
+oom_kill 0, rc 0; 10 run records; report 6 checks PASS, 1 FLAGGED, 2 NA
+with `report.py check 733` OK and 89 citations by my own run; 0 of the 4
+canonical builds; 0 git attempts, no network; every write under
+`.temp/brief-733/`; the live tree untouched).
+
+**My scope walk:** live 2,737 files == the fresh entry manifest exactly
+(0 missing / 0 extra / 0 differing; git clean at `90cc2500`); the four
+manifests (`entry-hashes`, `live-final-hashes`, `source-entry-hashes`,
+`source-entry-final-hashes`) are one byte; the control arm differs from
+entry in exactly the five disclosed paths — one line removed at
+`session_eval.rs:298` (`let err = self.refuse_nested_top_level_input(err);`)
+and the four C4 harness files byte-equal to
+`.temp/brief-732/source-release-candidate-a/crates/rum-stdlib/tests/`;
+entry red 14/1 at eight and one and control red 0/1 at both threads are
+re-run by me (exit 101, `evaluation_context.rs:33:9`, "continuation
+contexts unwind a saved prefix").
+
+**The tuple (Q1 answered):** my host gdb on the continuation's own control
+binary (`rbreak restore_resume_context`, one thread; receipts
+`.temp/director/gate-733c1/rbreak-control-t1.log`,
+`breakpoint33-t1.log`, `epoch-control-t1.log`) reads the full restore
+sequence — 20 calls — identical event for event to brief 732's control
+observation (`.temp/brief-732/logs/observe-control-t1-1.log`, its 20
+`B732 RESTORE` records): the last valid restore is `stack_len=0 depth=0
+installed_len=0 current_depth=0`, and the failing one is `stack_len=1
+depth=1 installed_len=0 current_depth=0`, which fires the unchanged
+assertion. The first restore's installed entry carries epoch 857
+(`0x359`, read at `EvaluationStackEntry.epoch`, `sizeof(Expr)=32`), and
+the helper name `B731ResumePending[]` is literal in the byte-identical
+probe source. The repaired base did not move the tuple, the epoch or the
+helper.
+
+**Ruling:** step 3 is complete on the repaired base; no source observer is
+authorized. Resume in the existing `.temp/brief-733/continuation-1` scene
+at step 4, in the body's order; steps 1-3 are not rerun and their evidence
+is not re-credited; quote the director's gdb receipts in the report.
+Everything after step 4 stands exactly as written — the candidate and
+release arms, the six runtime filters, the seven host and nine stdlib
+suites, `check --all-targets` and the three-arm fmt, the ten frozen C4
+comparisons, the forced SHA, the re-surveyed 51-site table and the source
+ownership proof. Any further difference in the entry/control red or the
+tuple is a STOP. The 4 canonical builds remain; brief 731's 8 stay
+separate.
