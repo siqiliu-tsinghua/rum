@@ -108777,3 +108777,65 @@ unarmed and failed observations never certify a settlement.
 **Stop.** Stop for the director gate at the round's end or at the
 two-family stop-loss. C2 stays Open at 141 Residual + 1 Lost; S10
 stays unopened.
+
+## Continuation 44 resume (2026-11-13) — the provider's safety filter stopped the `cdx` run after the complete row-isolated boundary proof; the round resumes on `mst` in the preserved scene at the tail, with every completed boundary stage carried and not rerun
+
+At 10:52:11Z the `cdx` process was refused by the provider's own
+safety filter ("This content was flagged for possible cybersecurity
+risk …"). This is the standing provider boundary, not a product
+signal and not a defect of this brief or of the round's task shape;
+per the user's 2026-11-13 ruling this task line is unsuitable for
+Codex, and the round resumes on `mst` (GLM-5.3) under the standing
+routing with no rewording to evade the filter. The dispatch log
+`.temp/logs/cdx_brief_623.log` (361,176 B, sha256
+`cdf43ce12daecacbc5480c50925524c8df543abae895ee0b2887ca11f551fb39`)
+is archived as `.temp/logs/archive/cdx_brief_623.continuation-44.cdx-filter`;
+the live tree is unchanged (git clean; every write under
+`.temp/g15-c2/c44` and the shared caches) and no git attempt exists.
+
+**Preserved and carried without rerun, once re-authenticated.** The
+scene `.temp/g15-c2/c44` holds the complete boundary segment: the
+entry authentication (`initialize.py`: 24 receipt pins, 2,737 live
+files, 1,627 production files at `3acf8a34…`, 1,042 rows / 78,330
+keys / 18,840 encoding rows, 0 verdict moves, 0 rebases this round);
+the corrected separately frozen row-isolated instrument
+(`prepare_boundary.py`, `isolated-accepted-batch-owner-contract-*`);
+its three builds (real, mutant and forced spot, 3 of the 4-build cap);
+the 20 declared row-component calibrations, each in its own process
+(`calibrate-own-*`: nineteen typed catches, plus `P1572`'s
+`resume_refusal` as the declared source-enforced structural channel
+at 8 and 1 threads, exit 101 with the exact
+`batch_file.rs:20:9` panic, never a typed catch and never SAME/Equal
+evidence); the 32 typed protocol records; the 8-cell matrix on both
+rows and both arms at 8 and 1; the boundary audit (`complete=true`,
+`typed_calibration_catches=19`, `structural_classes=1`,
+`structural_attempts=2`, `builds=3/4`, `guest_processes=69/128`,
+`typed_records=91/512`, `invalid_typed_records_credited=0`,
+`C42_invalid_records_used=0`, `C43_invalid_case_attempts_used=0`,
+`SAME_keys=0`, `current_boundary_proofs=2`); the canonical replay
+(outcomes 10/164/5/1/124/141/594/3, 1,018 paired, 24 unresolved,
+`P1570`/`P1572` reclosed as current full proofs — 182 proofs / 860
+named open / 187 matrices / 10,213 SAME, 0 verdict moves); and the
+frozen tail allocation (`tail-budget.json`: stage `tail`, 4 families,
+10 builds, 256 guest processes, 2,500 diagnostic records, 0 encoding
+runs, no budget transfer, two-family stop-loss on executed families
+with source-only parking not ticking).
+
+**Resume at the tail.** `P1564`/`P1565`/`P1573` through tail
+families, then the 141-row tail by mechanism, exactly as the
+continuation-44 order states, under the frozen tail allocation — no
+build, guest or record beyond it; exhaustion is a STOP, never a
+self-authorized increase. Do not rerun a completed build, calibration
+or matrix cell; a rerun of a frozen boundary stage needs a director
+order. Before crediting anything inherited, re-authenticate it from
+the scene: the entry hashes and pins, the production digest, the
+ledger files, the boundary audit and the canonical-replay outputs; a
+mismatch is a STOP and the round reports it rather than repairing it.
+
+**Round end.** At the round's end or at the two-family stop-loss,
+run the round's final integrity (source and ledger replay, the six
+bad-ledger negative controls, protected scenes, publication, the
+post-stop audit, scope), write the whole round's `rum-report/1`
+record covering both worker segments with `report.py check 623`
+passing, and STOP for the director gate. C2 stays Open at 141
+Residual + 1 Lost; S10 stays unopened; no verdict moves.
