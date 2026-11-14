@@ -112894,3 +112894,123 @@ weaken nothing.
 
 **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
 `BRIEF_WORKER` unset = `cdx`).
+
+## Continuation 68 order (2026-11-14) — open the C2 settlement round: `P0496`'s source-closure disposition, `P1566`'s re-settlement, and the held pair-column dispositions
+
+The campaign invariants section above stands and is not restated. This
+order adds the round's delta only.
+
+**Entry.** The live tree's delta against the C67 entry snapshot
+`.temp/g15-c2/c67/entry-hashes.json` (`ec45de5f…`, 2,738 files) is
+exactly this brief — the prefix through the continuation-67 order is
+`570ddb10d3876215285602fdaef2301cdabfec779d9c5687091b1a5ed9e3222c`
+(14,845,230 B) and the order text below; any other live delta is a
+STOP. The snapshot carries the three pinned paths: the two
+engine-written declarations at `ead1d8e6…`/`ca41f066…` and
+`scripts/campaign-gate.py` at `ffae5f27…`; all three hashes must hold,
+and the gate script is the director's instrument — do not edit it. The
+source is the unchanged installed tree: every file under `crates/`
+equals the C60 final manifest, production digest `3acf8a34…` over 1,627
+files (it already carries the accepted brief-729 input-syntax
+packaging); git is director-side only, and the director pins the
+dispatch commit. The C62 scene seal carries exactly the derived-receipt
+refresh authenticated by the continuation-63 ruling (seal
+`.temp/g15-c2/c62/artifact-hashes.json` `c96773c9…`, sealed receipt
+`e6c06bc2…`, live receipt `b93cafb3…`, only `raw_replay_log`, the eight
+output hashes, plus the added raw log); accept that one delta and
+nothing else. The C64/C65/C66/C67 scenes are read-only evidence; the C67
+ledger is final at `settled.tsv` `405d18d9…` with outcomes
+20/174/5/1/126/119/594/3 and `required-tuples.tsv` `3c2dcdff…`;
+hash-bind it, apply only the moves below and do not re-derive it. C2 is
+Open at 119 Residual + 1 Lost until the moves land.
+
+**The settlement round.** This round owns the dispositions the
+campaign invariants reserved. Apply exactly these items, each on its own
+frozen evidence:
+
+1. **`P0496` `Residual`→`Unreachable` on a re-verified structural source
+   closure.** The proof is brief 724's three-caller closure:
+   `build_call_dispatch_plan` returns a SpecialForm-only plan or pushes
+   PrepareArguments first (`eval_dispatch/mod.rs:51-66`); the suspension
+   resumes pass `stage_index + 1` (`eval_core/call.rs:479`, `:499`); the
+   external LHS entry passes index 0 with
+   `CallDispatchState::from_prepared`
+   (`definitions/definition_lhs_preparation.rs:230-234`), which
+   `call.rs:350` skips by `is_prepared`; the preparation branch
+   (`call.rs:359`) therefore cannot execute from any production caller;
+   both prepared-suspension helpers (`call.rs:26`, `:46`) construct the
+   shared `PreparedDispatchFrame`, whose sole resume is
+   `resume_prepared_call_dispatch_frame` (`call.rs:462`), the P0505
+   consumer's call. Re-verify every citation on the installed source,
+   enumerate every caller of the containing function to closure, and
+   calibrate the closure check: a known reachable production branch must
+   not classify as unreachable, and a synthetic fourth caller must be
+   rejected. Freeze the closure packet before the move, then settle
+   `P0496` by canonical raw replay of that frozen packet
+   (`new_execution:false`, all 75 keys retained, its 20 encoding keys
+   stay G13-owned, zero equality credit). If any citation or caller fails
+   to re-verify, do not move; report the gap.
+
+2. **`P1566` `Lost`→`Equal` only on a complete current matrix.** Brief
+   729 (accepted) repaired the queued/resumed input-syntax packaging and
+   the continuation-41 ruling reserved this row's re-settlement for this
+   round. Re-derive the row (`session/session_requests.rs:259`, 30 keys)
+   and its P1568 dependency on the installed source: the ordinary
+   `P1566` tail and the resumed `P1568` peer must publish the same
+   `SessionRequestError::Syntax(...)` from the original Input answer. Run
+   the full matrix under the standing `Equal` bar — its own caught
+   omission, the complete real matrix, real == disabled parsed
+   identically, queued == resumed — and move `P1566` only when every
+   cell and the own caught omission hold; otherwise it stays `Lost` with
+   the fresh evidence, and `P1568`'s dependency is re-derived, never
+   assumed. No relabelling on argument.
+
+3. **The held pair-column dispositions, released only where a complete
+   current matrix authenticates.** The C15 pair-column order held these
+   dispositions pending this settlement ruling; a pairing is not
+   coverage. Release the held disposition only for a row whose complete
+   nonencoding candidate matrix authenticates on its current function
+   sha with real == disabled parsed identically and an own
+   armed-hit-caught omission on every nonencoding cell. The named
+   candidate is the `P0325`/`P0326` pair (their retained C20 packets
+   record 50 cells, 50 real SAME, an armed-hit-caught own omission and 0
+   invalid); authenticate them on the installed source and, only if that
+   holds, settle both `Equal`, keeping their 20 encoding keys each
+   G13-owned. `P0528` (surviving, not caught), `P0529`, `P1574`,
+   `P0340`, `P0342`, `P0475`, `P0824`, every other held row and the 13
+   pair columns keep their held dispositions and 0 verdict changes;
+   candidate survivors are not promotions.
+
+For items 2 and 3 the round may execute fresh matrices on the installed
+source within the bounds where the inherited evidence does not
+authenticate; each move cites this round's own hash-pinned packet and
+raw records, `equal_claim:false` for a candidate and equality credit
+only for the row's own caught omission and complete matrix. A `Lost`
+stays `Lost` and a held row stays held when its bar is not met; report a
+cannot-start rather than relaxing.
+
+**No other work.** Do not re-screen or re-attempt the C50–C63 parks:
+`P1559`, `P2613`, `P2618`, `P2610`, `P2599`/`P2595` and the
+original-restore pair stand as ruled; the 78 encoding-held rows stay
+behind G13; the 7 unresolved sites stay explicit Residual obligations
+with no coverage claimed; `P1573` stays `Residual`. The two-family
+stop-loss and the four-family cap stand; target the three settlement
+items as the round's families.
+
+**Verification reuse.** Recalibrate an instrument only when its
+implementation changes; replay an inherited scene only when this
+round's move cites it, plus one rotating older scene as a control; the
+rest of the prior-scene set is the mtime scan. Gate replays on sealed
+scenes run on copies under `.temp/director/gate-<scene>/`; a sealed
+scene is never written. The build control is one same-epoch `--force`
+sha256 spot check.
+
+**Bounds.** Fresh allocation 4 families / 16 builds / 512 guests /
+4,000 records / 0 encoding in `.temp/g15-c2/c68`; no live edit, git,
+network, `unsafe` or inventory edit; assertions unchanged. Report one
+`rum-report/1` with `report.py check 623` passing and stop for my gate;
+if the entry fails, stop the same way, retain the failed attempt,
+weaken nothing.
+
+**Dispatch:** `scripts/dispatch-brief.sh 623` (background,
+`BRIEF_WORKER` unset = `cdx`).
