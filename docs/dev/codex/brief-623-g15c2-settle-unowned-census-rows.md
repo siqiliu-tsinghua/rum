@@ -113014,3 +113014,85 @@ weaken nothing.
 
 **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
 `BRIEF_WORKER` unset = `cdx`).
+
+## Continuation 69 ruling (2026-11-14) — brief 736 (G15-CM design) accepted; continuation 70 opens CM1 as brief 737
+
+rules brief 623 continuation 69: brief 736 accepted on `cdx` — the G15-CM
+obligation-manifest design lands as reviewed material with eight rulings and
+four accepted disclosures, and continuation 70 opens CM1 as brief 737. The plan
+reconciles the accepted population exactly once: 2,204 aliases = 2,186 original
+− 1,024 replaced by their C68 record + 1,042 current rows (18 additions: eight
+C1, one C3, five brief-719, four brief-725), plus 964 G13-deferred rows over 44
+S-step owners and 198 prior settlements (43 Equal / 5 Lost / 140 Unreachable /
+10 Boundary), with 78,330 five-component C2 keys (18,840 encoding), 1,018
+paired sites and 24 unresolved pairings; it separates manifest integrity from
+owner closure, inventories what today's oracle already enforces
+(catalog/descriptor exactness, LP01 1,115 required / 875 bound+executed / 240
+G13-owned with fingerprints and losses, typed-slot anchors, retention
+fingerprints, ownership inventories, native rows and the existing negatives),
+stages five implementation briefs (CM1 identity/discovery, CM2
+requirements/owners, CM3 bindings/receipts/proofs, CM4 mutants/promotions, CM5
+integration/budget) and costs no production hot path. Rulings: Q1 the
+continuation1/2/3 inputs are absent and not restorable — verified on disk: no
+copy survives
+(`.temp/brief-621/{census,continuation1,continuation2,continuation3}` pruned;
+the committed brief-621 report cites their paths but records no hashes), so a
+director-ratified replacement derivation is authorized for the identity layer,
+calibrated against the retained controls (44 owners with S10 28 deferred + 10
+measured + 1 loss, 964 deferred, 2,682 historical graph edges, 513 excluded /
+283 rootless strict tails, 24 unresolved pairings), with every unrecoverable
+datum `PortBlocked` and no invented hash, row, key, owner or receipt. Q2 the
+manifest-integrity predicate and `owner_closure` are separate: integrity may be
+green only with explicitly admitted Open deferrals whose identities,
+requirements, named bar and owner are checked and all active evidence still
+runs; `owner_closure(C2)` stays false at 118 Residual + 0 Lost, CHANGELOG and
+S10 stay blocked, and no partial or import-only stage may report full CM green.
+Q3 the 77 encoding-blocked residuals keep C2 row ownership and G13 tuple
+ownership with no implicit whole-row transfer; an explicit exact cross-walk and
+a named receiving owner require my ruling. Q4 the five named source-provenance
+duties (ToExpression, Session::lower_text, outer-request lowering, loader,
+file-reread provenance) stay Open and separate from C2; their exact subject and
+row-dependency mapping is a CM2 input review and each contract needs its own
+design before promotion — they are not five alternate owners for C2 rows. Q5
+the pinned accepted ledger is authoritative: each disposition packet is
+authenticated or replayed in fresh scratch, missing required evidence is
+`PortBlocked` and blocks complete-manifest acceptance, and the 857 false
+secondary proof flags plus 10 stale secondary cells are never treated as new
+semantic losses or reopened verdicts. Q6 the cdx sandbox has no user bus, so
+nested `scripts/memory-scope.sh` dies before Cargo (all four worker attempts
+exit 1 on "Failed to connect to user scope bus") — my host gate runs the four
+bounded commands, and worker briefs from now on run cargo directly inside the
+dispatched 16G scope, one command at a time at -j8 / t8 / offline, and disclose
+it; the tests' fixed scratch paths (`fixtures/logical_profile/mod.rs:12`,
+`typed_slot_census/reporting.rs:39`) are test-side scratch, reported not
+hidden. Q7 the ≤1,500 s per expanded oracle build+run bound stands; CM3/CM4
+measure the complete program/mutant schedule first, and exceeding the bound or
+needing a new carrier schema stops for a schedule decision — never sampling,
+never dropping a context. Q8 the canonical pair counts are 70 keys (50 non-
+encoding + 20 encoding) per row for `P0325`/`P0326`, 140/40 combined — my C68
+bullet's "140 keys each" and "per row arm" were wrong; the frozen requirement
+file and ledger are unchanged and this bullet is the prose correction. The four
+FLAGGED are accepted: the absent inputs; the not-run verification, resolved by
+my green host runs; the held-pair count narration; the retained read-only
+parser retry. My gate: entry exactly the brief-736 delta (36 files, all under
+`.temp/brief-736/`), 0 tracked changes and 0 production changes — 1,627 files
+at `3acf8a34…` byte-identical; all 16 input pins verify by SHA-256 and bytes;
+my own citation scan of the plan and five drafts resolves all 73 references (67
+unique cited lines; one meta-citation drift noted: `Cargo.toml:24` is blank,
+the `[dev-dependencies]` header is line 25); the report passes `check 736` with
+124 citations, 5 PASS / 4 FLAGGED / 1 NA, and its artifact audit passes; my
+host runs of the four mandatory commands are green — oracle default 500/500 in
+172.99 s (peak 1,437,003,776 B), oracle no-default 500/500 in 166.92 s (peak
+1,496,838,144 B), typed default 10/10 in 57.59 s with 1 ignored maintenance
+test (peak 3,784,974,336 B), typed no-default 10/10 in 65.83 s with 1 ignored
+(peak 3,779,899,392 B), all rc 0 with oom 0 / oom_kill 0; tree clean at
+`eab752c1`. Continuation 70 opens CM1 as brief 737
+(`docs/dev/codex/brief-737-g15cm1-accepted-population-discovery.md`, test-
+only): the accepted population bound by hash, stable source keys, discovery and
+exact alias cross-walk over the current tree, and the strict-tail transfer
+fixed point, all with named diagnostics and both-feature falsifiers; no row is
+settled and no owner promoted, and the later CM stages follow my gate of each
+one.** Run: `cdx` (unit `brief-736-cdx-20261114-131016-80712`, rc 0, peak
+344,948,736 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_736.log`, 48,574
+lines / 3,787,848 B, sha256 `e737f6ac…`; 36 files all under `.temp/brief-736/`;
+report 5 PASS / 4 FLAGGED / 1 NA, 124 citations; 0 source edits).
