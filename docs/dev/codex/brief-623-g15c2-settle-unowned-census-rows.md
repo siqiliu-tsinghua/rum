@@ -112671,3 +112671,68 @@ weaken nothing.
 
 **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
 `BRIEF_WORKER` unset = `cdx`).
+
+## Continuation 65 order (2026-11-14) — apply the one approved `P2623` `Residual`→`Boundary` move by canonical raw replay of the pinned C62 packets, then the remaining 121-row tail
+
+The campaign invariants section above stands and is not restated. This
+order adds the round's delta only.
+
+**Entry.** The live tree's delta against the C64 entry snapshot
+`.temp/g15-c2/c64/entry-hashes.json` (`f9c151dd…`, 2,738 files) is
+exactly this brief — the prefix through the continuation-64 order is
+`2cd671dd3e4a7edaed6862e28ee8dcc7fbce9521a06421195426f328348a2dcc`
+(14,832,271 B) and the order text below; any other live delta is a
+STOP. The snapshot already carries the four paths authenticated against
+the C60 entry manifest: the two engine-written declarations pinned at
+`ead1d8e6…`/`ca41f066…` and `scripts/campaign-gate.py` pinned at
+`ffae5f27…` (continuation-64 ruling); all three hashes must hold, and
+the gate script is the director's instrument — do not edit it. The
+source is the unchanged installed tree: every file under `crates/`
+equals the C60 final manifest, production digest `3acf8a34…` over 1,627
+files; git is director-side only, and the director pins the dispatch
+commit. The C62 scene seal carries exactly the derived-receipt refresh
+authenticated by the continuation-63 ruling: seal
+`.temp/g15-c2/c62/artifact-hashes.json` `c96773c9…`, sealed receipt
+`e6c06bc2…`, live receipt `b93cafb3…`, only `raw_replay_log`
+(`final-canonical-replay-1.log` → `final-canonical-replay-2.log`), the
+eight output hashes listed in that ruling, plus the one added raw log
+`logs/final-canonical-replay-2.log`; accept that one delta and nothing
+else. The pinned ledger baselines are `settled.tsv` `70981712…` and
+`required-tuples.tsv` `3c2dcdff…`; do not re-derive the full ledger —
+hash-bind the pinned files and apply the move only. C44–C64 are
+read-only evidence.
+
+**The one move.** Apply exactly `P2623` `Residual`→`Boundary` by
+canonical raw replay of the pinned C62 packets, exactly as the
+continuation-63 order directed (`new_execution=false`,
+`equal_claim:false`, all 30 required keys retained, zero equality
+credit, no fresh guest or build). Assert Boundary 18 / Equal 174 /
+Identity 5 / Lost 1 / NoObservableTail 126 / Residual 121 / Transferred
+594 / Unreachable 3, composition 92+13+11+2+1+1+1 = 121, C2 Open at 121
+Residual + 1 Lost, `required-tuples.tsv` `3c2dcdff…` byte-identical,
+exactly that row's six settlement columns moved and the other 1,041
+rows byte-identical, the 13 pair columns, the held pair rows, `P1573`
+Residual, `P1566` Lost and `P0496` reserved unchanged.
+
+**Then the remaining 121-row tail by mechanism** under the two-family
+stop-loss and the invariants; target 3–4 productive mechanism batches
+this round, and report a batch that cannot start rather than relaxing a
+rule.
+
+**Verification reuse.** Recalibrate an instrument only when its
+implementation changes; replay an inherited scene only when this
+round's move cites it, plus one rotating older scene as a control; the
+rest of the prior-scene set is the mtime scan. Gate replays on sealed
+scenes run on copies under `.temp/director/gate-<scene>/`; a sealed
+scene is never written. The build control is one same-epoch `--force`
+sha256 spot check.
+
+**Bounds.** Fresh allocation 4 families / 16 builds / 512 guests /
+4,000 records / 0 encoding in `.temp/g15-c2/c65`; no live edit, git,
+network, `unsafe` or inventory edit; assertions unchanged. Report one
+`rum-report/1` with `report.py check 623` passing and stop for my gate;
+if the entry fails, stop the same way, retain the failed attempt,
+weaken nothing.
+
+**Dispatch:** `scripts/dispatch-brief.sh 623` (background,
+`BRIEF_WORKER` unset = `cdx`).
