@@ -112736,3 +112736,80 @@ weaken nothing.
 
 **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
 `BRIEF_WORKER` unset = `cdx`).
+
+## Continuation 66 order (2026-11-14) — unblock the parked tail by building the instruments its parks name; no approved moves remain
+
+The campaign invariants section above stands and is not restated. This
+order adds the round's delta only.
+
+**Entry.** The live tree's delta against the C65 entry snapshot
+`.temp/g15-c2/c65/entry-hashes.json` (`5391bd2a…`, 2,738 files) is
+exactly this brief — the prefix through the continuation-65 order is
+`e5f55f34de3082397c2775f926194c5628f73b9d98b62f395c17c9c2471e089a`
+(14,835,993 B) and the order text below; any other live delta is a
+STOP. The snapshot carries the three pinned paths: the two
+engine-written declarations at `ead1d8e6…`/`ca41f066…` and
+`scripts/campaign-gate.py` at `ffae5f27…`; all three hashes must hold,
+and the gate script is the director's instrument — do not edit it. The
+source is the unchanged installed tree: every file under `crates/`
+equals the C60 final manifest, production digest `3acf8a34…` over 1,627
+files; git is director-side only, and the director pins the dispatch
+commit. The C62 scene seal carries exactly the derived-receipt refresh
+authenticated by the continuation-63 ruling: seal
+`.temp/g15-c2/c62/artifact-hashes.json` `c96773c9…`, sealed receipt
+`e6c06bc2…`, live receipt `b93cafb3…`, only `raw_replay_log`
+(`final-canonical-replay-1.log` → `final-canonical-replay-2.log`), the
+eight output hashes listed in that ruling, plus the one added raw log
+`logs/final-canonical-replay-2.log`; accept that one delta and nothing
+else. The C64/C65 scenes are read-only evidence; the C65 ledger is
+final at `settled.tsv` `2a39e0e5…` with outcomes 18/174/5/1/126/121/594/3
+and `required-tuples.tsv` `3c2dcdff…`; hash-bind it, apply no move and
+do not re-derive it. C2 stays Open at 121 Residual + 1 Lost.
+
+**No approved moves remain; the tail is admitted to named blockers.**
+The continuation-65 screen classified all 121 Residual rows: 78
+encoding-held (G13-owned; 0 encoding runs), 7 unresolved sites (repair
+line), 3 held pair rows, 31 parks and the 2 original-restore rows (C48
+prerequisite). Do not screen again, do not relax an admission rule, and
+do not re-run a park on its old instrument. Work the tail by building
+the instruments the parks name, in this priority order:
+
+- `P2625`/`P2635` — the actual owned `HostSession` with enabled
+  generation/drop accounting and the actual terminal descriptor/lock
+  lifetime (the C57 parked-owned-cleanup gap).
+- `P1559` — an explicit lex-failure-fallback batch lifecycle/phase
+  observer at the `session_eval.rs` Unparsed producer (the C56 Q4
+  instrument).
+- `P2613` — a distinct real route or instrument for the adapter
+  empty-input retirement (the C62 Q2 bar).
+- `P2599`/`P2595` — only behind the continuation-65 Q1 bar: a
+  separately frozen, calibrated lifecycle-aware original-driver observer
+  that attributes all 18 historical faults individually; without it
+  these two do not start.
+
+For each mechanism: freeze the instrument before any build or guest,
+calibrate it against a known answer including a negative control, and
+execute only on a real producer path with a real pause and a documented
+terminal contract. If a prerequisite cannot be met, report it as
+cannot-start and move to the next mechanism; never weaken an assertion,
+delete an attempt, rerun the prohibited native cells, or relabel a
+recipe to start a batch. The two-family stop-loss, the four-family cap
+and the move rules stand; target 3–4 productive mechanism batches.
+
+**Verification reuse.** Recalibrate an instrument only when its
+implementation changes; replay an inherited scene only when this
+round's move cites it, plus one rotating older scene as a control; the
+rest of the prior-scene set is the mtime scan. Gate replays on sealed
+scenes run on copies under `.temp/director/gate-<scene>/`; a sealed
+scene is never written. The build control is one same-epoch `--force`
+sha256 spot check.
+
+**Bounds.** Fresh allocation 4 families / 16 builds / 512 guests /
+4,000 records / 0 encoding in `.temp/g15-c2/c66`; no live edit, git,
+network, `unsafe` or inventory edit; assertions unchanged. Report one
+`rum-report/1` with `report.py check 623` passing and stop for my gate;
+if the entry fails, stop the same way, retain the failed attempt,
+weaken nothing.
+
+**Dispatch:** `scripts/dispatch-brief.sh 623` (background,
+`BRIEF_WORKER` unset = `cdx`).
