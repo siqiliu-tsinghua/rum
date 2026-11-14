@@ -113592,3 +113592,60 @@ with the measured data and the sharing analysis; never sample, never substitute
 a historical timing. C2 stays Open at 118 Residual + 0 Lost; no settlement, no
 promotion, no encoding key; `CHANGELOG.md` and S10 stay blocked. The partial
 tree is the state to continue from.
+
+### Continuation 72 — fifth run: the placement preflight compiles 55 of 56 sources, the REPL placement is structurally blocked, and the campaign continues over the remaining 8,535 keys
+
+**2026-11-14 — brief 739's fifth run executed continuation 4's placement
+preflight and stopped before the campaign on `P2647`/`P2648`. The STOP is
+accepted and Q8 is ruled: the two rows are `PortBlocked`; no Cargo edit.**
+Run `cdx`, unit `brief-739-cdx-20261114-225340-428863`, rc 0, peak
+1,014,820,864 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 1,840,024 B; zero retained changes — the
+1,819-file entry and final manifests are byte-identical and the Cargo
+manifests are unchanged; report 7 PASS / 1 FLAGGED / 1 FAIL, one FLAGGED
+measurement, 2 deviations, Q8; 90 citations verified. All 56 source
+placements and 25 non-source routes (1,370 key rows) are accounted for; 55
+source placements compile in both feature arms through the authorized source
+reuse, and 17 included production files are unchanged. The ledger is
+unchanged at 525 bound keys, 8,595 active keys, 1,385 director-named blocked
+keys, 749 proof records / 43,390 keys (130 packets authenticated / 7,425,
+105 current-source verified / 5,965), 21 present duties / 830 keys, 598
+absent / 35,135, and 5 known-loss records; no campaign batch, receipt, proof
+credit or full CM green.
+
+**The Q8 ruling.** `P2647`/`P2648` bind
+`crates/rum-repl/src/lib.rs:113:Repl<R,W>::run@152`. The included `lib.rs`
+compiles `completeness.rs:581`'s `#[path = "completeness_tests.rs"] mod
+tests` under `cfg(test)`, and that child's `use crate::resolve_completeness`
+names the plain-private `fn resolve_completeness` at `lib.rs:306`; `crate::`
+is the oracle root inside the test crate, whose root cannot re-export a
+child's private item, so only a stub or an edited/copied source could satisfy
+it — both forbidden. The missing `rustix`/`signal_hook` dev-dependencies are
+real but secondary: a Cargo edit (the union of rum-repl's Unix dependency and
+dev-dependency specs) cannot fix the private path, so it would buy no
+evidence. The minimal request/terminal layout compiles against them but is
+not the named placement and cannot produce `Repl::run` receipts. The block is
+recorded as
+`PortBlocked(crates/rum-repl/src/lib.rs:113:Repl<R,W>::run@152 — included
+cfg(test) child completeness_tests.rs imports the private
+crate::resolve_completeness, unresolvable at the oracle root; rustix and
+signal_hook are also absent from the rum-stdlib integration target)`.
+The Execute ledger moves to 24 blocked rows / 1,445 keys, 142 active rows /
+8,535 keys remain, and a zero-evidence batch of named blockers does not count
+toward the stop-loss. A compiled include of the unchanged `lib.rs` under
+`cfg(test)` with no edit, copy, Cargo change or stub would lift the block.
+
+**Continuation 5.** Continue the campaign over the 142 rows / 8,535 keys and
+the 25 non-source route instantiations, authenticate and current-verify the 21
+present proof duties / 830 keys, keep the 598 absent records / 35,135 keys,
+the 25 authenticated-but-current-blocked proof records (15 unresolved
+targets / 880 keys, 10 source mismatches / 580 keys), the 22 director-named
+Execute blockers / 1,385 keys and the new `P2647`/`P2648` block named, then
+measure the complete active schedule and run the acceptance suite under the
+1,500 s bound. The preflight tables are compile-only and reusable only by
+source-hash identity; a placement that compiles but cannot execute is
+`PortBlocked(<exact cause>)` under the same rule. No Cargo change, no
+production edit, no dependency, no stub, no Host-eval substitution; included
+sources stay byte-for-byte unchanged. C2 stays Open at 118 Residual + 0 Lost;
+no settlement, no promotion, no encoding key; `CHANGELOG.md` and S10 stay
+blocked. The partial tree is the state to continue from.

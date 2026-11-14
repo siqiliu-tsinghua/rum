@@ -665,3 +665,100 @@ C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
 no encoding key runs, `CHANGELOG.md` and S10 stay blocked. The partial tree is
 the state to continue from; do not restart and do not hand-edit a generated
 cell.
+
+## Continuation 5 ruling (director) — the REPL placement is blocked by a private crate path, not by the missing dependencies; the campaign proceeds over the remaining 8,535 keys with no Cargo edit
+
+**2026-11-14 — brief 739's fifth run ran continuation 4's placement preflight,
+accounted for all 56 source placements and 25 non-source routes, compiled 55
+in both feature arms, and stopped on `P2647`/`P2648` before any campaign
+batch. The STOP is accepted; Q8 is answered by naming those 60 keys
+`PortBlocked`.**
+Run `cdx`, unit `brief-739-cdx-20261114-225340-428863`, rc 0, peak
+1,014,820,864 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 1,840,024 B; zero retained changes — the
+1,819-file entry manifest equals the final manifest byte for byte
+(`.temp/brief-739/{entry,final}-hashes.json`), and `Cargo.toml`, `Cargo.lock`
+and `crates/rum-stdlib/Cargo.toml` are unchanged; report 7 PASS / 1 FLAGGED /
+1 FAIL, one FLAGGED measurement, 2 deviations, 1 question; 90 citations
+verified by `scripts/report.py check 739`. The only two temporary edits
+(`tests/suspension_oracle.rs` probe includes and a temporary
+`source_placements.rs`) were restored or removed and are disclosed in the
+report; no source or inventory delta remains, so the maintenance replay is
+correctly skipped by hash identity.
+
+**What the preflight established, as I reproduced it.**
+- `source-reachability.tsv` (`e2f75657…`): 56 rows, 55
+  `CompiledSourceOnly`, 1 `PortBlocked`; every compiled row names its
+  dependency-file evidence in both arms; `actual_executions=0`.
+- `non-source-reachability.tsv` (`e47a7b39…`): 25 routes covering exactly
+  1,370 key rows, all 25 owning sources compile, all route instantiations and
+  executions `unrun` — a compile-only preflight, not evidence.
+- `included-production.tsv` (`0f82bcf8…`): 17 unchanged production files
+  (host-facade children, Jupyter `model`/`adapter` children,
+  `rum-terminal/src/lib.rs`); I re-sha256'd samples including
+  `rum-terminal/src/lib.rs` (`f40f6874…`) and the two Jupyter files, all
+  matching.
+- The ledger is unchanged: 525 bound keys; 8,595 active keys; 1,385
+  director-named blocked keys; 749 proof records / 43,390 keys with 130
+  packets authenticated / 7,425 keys and 105 current-source verified / 5,965;
+  21 present duties / 830 keys; 598 absent / 35,135; 5 known-loss records.
+  No campaign batch, no receipt, no proof credit, no full CM green.
+- The blocked placement reproduces E0433 `rustix`, E0432/E0433
+  `signal_hook` in both arms (`placements-request-{default,no-default}.log`),
+  and the unchanged full `lib.rs` include additionally reports
+  `unresolved import crate::resolve_completeness`
+  (`placements-full-default.log:27`).
+
+**Q8 ruling — the placement is `PortBlocked`, and no Cargo edit is
+authorized.** The rows bind `crates/rum-repl/src/lib.rs:113:Repl<R,W>::run@152`.
+Including the unchanged `lib.rs` under the oracle's `cfg(test)` compiles
+`crates/rum-repl/src/completeness.rs:581`'s `#[path = "completeness_tests.rs"]
+mod tests`, whose `use crate::resolve_completeness` names the plain-private
+`fn resolve_completeness` at `lib.rs:306`. Inside the oracle crate `crate::`
+is the oracle root, and the root cannot re-export a child module's private
+item; satisfying that import would need a stub or an edit to the included
+source, both forbidden. The missing `rustix`/`signal_hook` dev-dependencies
+are a second, real blocker, but adding them — even the union of rum-repl's
+`[target.'cfg(unix)'.dependencies]` and `[target.'cfg(unix)'.dev-dependencies]`
+specs, `rustix 1.1.4` with `std,termios,fs,event,pipe` plus `pty` and
+`signal-hook 0.3.18` — cannot fix the private `crate::` import, so the Cargo
+change would yield no evidence. The minimal `request`/`terminal` layout does
+compile against them, but it is not the named placement and cannot produce
+`Repl::run` receipts; driving it instead would be a substitute execution and
+is refused. Per continuation 4's rule the placement is named:
+
+`PortBlocked(crates/rum-repl/src/lib.rs:113:Repl<R,W>::run@152 — included
+cfg(test) child completeness_tests.rs imports the private
+crate::resolve_completeness, unresolvable at the oracle root; rustix and
+signal_hook are also absent from the rum-stdlib integration target)`
+
+This sets the Execute ledger to 24 blocked rows / 1,445 keys (the 22
+director-named / 1,385 plus `P2647` 30 and `P2648` 30) and 142 active rows /
+8,535 keys remaining; a zero-evidence batch of named blockers does not count
+toward the stop-loss. If the worker can exhibit a compiled include of the
+unchanged `lib.rs` under `cfg(test)` with no source edit or copy, no Cargo
+change and no stub, the blocker is lifted and the rows return to the campaign;
+otherwise the block stands.
+
+**Continuation 5.** Continue the campaign over the remaining 142 rows /
+8,535 keys and the 25 non-source route instantiations (1,370 key rows), with
+the same multiplicity-one receipt discipline, the same 13-channel and
+lifecycle protocol, and the excluded rows named; authenticate and
+current-verify the 21 present proof duties / 830 keys; keep named the 598
+absent records / 35,135 keys, the 25 authenticated-but-current-blocked proof
+records (15 unresolved targets / 880 keys, 10 source mismatches / 580 keys),
+the 22 director-named Execute blockers / 1,385 keys and the new
+`P2647`/`P2648` block. The preflight tables may be reused only by source-hash
+identity and remain compile-only claims: every row's execution is still owed,
+and a placement that compiles but cannot execute is `PortBlocked(<exact
+cause>)` under the same rule. Then measure the complete active schedule and
+run the acceptance suite under the 1,500 s bound — over it, STOP with the
+measured build+run data and the sharing analysis; never sample, never drop a
+context, never substitute a historical timing. No `Cargo.toml`/`Cargo.lock`
+change, no production edit, no dependency, no stub, no Host-eval
+substitution; every included source stays byte-for-byte unchanged.
+
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
+no encoding key runs, `CHANGELOG.md` and S10 stay blocked. The partial tree is
+the state to continue from; do not restart and do not hand-edit a generated
+cell.

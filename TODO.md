@@ -68,7 +68,14 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   reachability probe, with the 22 director-named Execute blockers / 1,385
   keys, the 598 absent proof records / 35,135 keys and the 25
   authenticated-but-current-blocked proof records named, under the 1,500 s
-  schedule bound; then CM4-CM5.
+  schedule bound. The fifth run ran that preflight: 56 source placements and
+  25 non-source routes (1,370 key rows) accounted for, 55 compiled in both
+  arms, and `P2647`/`P2648` (60 keys, `Repl::run` at
+  `rum-repl/src/lib.rs:113`) `PortBlocked` because the included `lib.rs`
+  pulls a cfg(test) child importing the private `crate::resolve_completeness`,
+  which no Cargo edit can fix — so continuation 5 makes 24 blocked Execute
+  rows / 1,445 keys and 142 active rows / 8,535 keys, and continues the
+  campaign; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
