@@ -303,3 +303,97 @@ Next is CM4 after my gate.
 
 **Dispatch:** `scripts/dispatch-brief.sh 739` (background, `BRIEF_WORKER`
 unset = `cdx`).
+
+## Continuation 1 ruling (director) — the calibration cohort is selected; absent packets stay `PortBlocked`
+
+Your STOP is accepted, and the omission is mine: the shape gate named a
+"director-selected complete calibration cohort" and named none. This section
+selects it and settles Q1/Q2. The scope, permitted files and tables, the six
+shape tests, the falsifiers, the campaign, the acceptance suite and every hard
+rule stand unchanged.
+
+**My audit of the evidence (presence only).** I re-read the C68 ledger's
+`settlement_evidence` for the settled rows and tested every cited path on this
+host. Presence is not authentication — you authenticate contents — but the
+absences are exhaustive:
+
+| disposition | rows with packet present | rows absent | keys present | keys blocked |
+| --- | --- | --- | --- | --- |
+| Equal | 166 | 9 | 9,905 | 600 |
+| Boundary | 20 | 0 | 735 | 0 |
+| NoObservableTail | 126 | 0 | 7,260 | 0 |
+| Transferred | 1 | 593 | 50 | 34,950 |
+| Identity | 0 | 5 | 0 | 185 |
+| Unreachable | 4 | 0 | 210 | 0 |
+
+The absent packets are continuation2 tables that exist nowhere on the host:
+`continuation2/{identity-decisions,identity-receipts,transfers,equal-decisions,
+equal-real-receipts}.tsv`. The `port/rebase.tsv` half survives at
+`.temp/g15-c2/port/rebase.tsv`. The 9 Equal rows are `P0018` (60 nonencoding
+keys), `P0580` (70), `P0709` (165), `P0790` (60), `P0795` (60), `P0798` (60),
+`P0801` (60), `P2287` (35), `P2288` (30) — 600 keys in all.
+
+- **Q1 — the cohort.** Exactly these rows:
+  - known loss (C1 promotion): `P0941` and `P0946` —
+    `docs/dev/codex/brief-622-g15c1-replaceall-application-tail.md` line
+    21065 (sha256
+    `5c88efea8c602e0320c5148ae0e10c8aba786a376b24cc99f262892f33cdc8e1`),
+    imported as immutable promotion records and never as fresh allowed-DIFF
+    baselines.
+  - Execute: `P0001` — the first Equal row in the C68 ledger order whose cited
+    packet is present (`c34/empty-prefix-callback-value-charge-full-proofs.json`),
+    60 nonencoding keys. Bind and actually execute all 60 through the real
+    Host facade. A failure here is a shape failure: STOP with the concrete
+    blocker; do not swap in another row.
+  - Boundary: `P1556` — `.temp/g15-c2/c10/script-boundary-proof.json` (sha256
+    `c593907dba5a082702fbe24425a34d0dccaf15b6964a73300d55e32a6d279e04`).
+  - NoObservableTail: `P0011` —
+    `.temp/g15-c2/c17/retained-option-arity-and-retry-revisit-full-proofs.json`
+    (sha256
+    `57315416ea214c70598741ef8dc2e4b3f8ac88a2b3c4edf79b28564d20b2b81c`).
+  - Unreachable: `P0496` — `.temp/g15-c2/c68/p0496-closure-freeze.json`
+    (sha256
+    `a36d25977531686e805a8372e3a708c8bbc9a20b909e3ab4c421902b3aeb2639`).
+  - Transferred: `P0500` — the only Transferred row whose cited packet is
+    present (`.temp/g15-c2/c10/transfer-recheck.json`), 50 keys. It
+    calibrates only if that packet authenticates its accepted disposition; if
+    it does not, the row becomes a blocked record with the mismatch named and
+    the class is not positively calibrated.
+  - Identity: no row; all five cited packets are absent.
+
+  Each present packet must authenticate its row's pin, row, verdict, target
+  and counts before it calibrates. A selected row whose packet fails to
+  authenticate becomes a blocked record with the mismatch named — not a STOP,
+  and never a positive calibration.
+- **Q2 — the absent packets.** For every absent row — the 9 Equal rows' 600
+  Execute keys, the 593 Transferred rows' 34,950 proof keys and the 5
+  Identity rows' 185 proof keys — the binding or certificate still imports
+  from the pinned C68 ledger with its pin, row, verdict, target, scope and
+  dependency, and its duty is `PortBlocked` with the exact missing paths:
+  - Execute keys: `PortBlocked(continuation2/equal-decisions.tsv,
+    continuation2/equal-real-receipts.tsv)`; never bound, never executed,
+    never credited. The campaign's "every active Execute key" means the other
+    9,905 keys, each bound and executed at multiplicity one.
+  - Proof rows: `PortBlocked(continuation2/transfers.tsv)` for Transferred and
+    `PortBlocked(continuation2/identity-decisions.tsv,
+    continuation2/identity-receipts.tsv)` for Identity; never `SAME`, never an
+    execution. Certificates imported stay 749 rows / 43,390 keys, of which
+    151 rows / 8,255 keys are verified by a present packet (Boundary 20/735,
+    NoObservableTail 126/7,260, Unreachable 4/210, Transferred 1/50) and 598
+    rows / 35,135 keys are blocked records (Identity 5/185, Transferred
+    593/34,950). Print both totals.
+  - Neither blocked class may be reported as positively calibrated. For a
+    class with no surviving packet, the shape calibration is its committed
+    exactness test — the blocked record carries pin, row, verdict, scope,
+    dependency and the named paths — plus that class's own falsifier, proven
+    red for its named predicate (an unarmed or wrong-row Identity survivor; a
+    removed transfer target or a rootless cycle). A non-crediting validator
+    control built only from committed inputs may stand in for the
+    well-formed-record half.
+  - Do not reconstruct, re-derive, re-pin or bless history, and do not run a
+    guest to manufacture a replacement packet. Full CM green stays false
+    until a reviewed evidence program supplies these packets; nothing here
+    authorizes that program.
+  - No committed standing assertion reads a `.temp` file. Any packet replay
+    you perform is a scratch run recorded with its sha256 in the report; the
+    standing tests read only committed inputs.

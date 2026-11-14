@@ -57,6 +57,11 @@ director tokens up front rather than worker hours on a wrong route).**
   listed. An exclusion ruled once belongs to the instrument and is
   restated in every brief that reuses it.
 - **State the concurrency plan** (pitfall 9).
+- **Resolve every decision in the brief.** No `director-selected X`, `TBD` or
+  `choose a representative Y`: name the exact rows, paths, hashes and counts,
+  or give a deterministic rule the worker can apply. A decision left open is
+  a stopped dispatch; three have now come from this shape (737's acceptance
+  skip list, 738's owner namespace, 739's calibration cohort).
 
 ---
 

@@ -113351,3 +113351,66 @@ deferred keys (5,595 residual + 18,840 encoding) stay deferred and never
 executed or credited; exact required/bound/executed reconciliation at row
 granularity with multiplicity one and immutable known-loss records; no
 promotion, no encoding run.
+
+## Continuation 72 — brief 739 stopped pre-edit on the unselected calibration cohort; ruling Q0–Q4 and re-dispatch
+
+**2026-11-14 — brief 739 (G15-CM 3) stopped at its input checkpoint before any
+edit.** Run `cdx`, unit `brief-739-cdx-20261114-181543-281943`, rc 0, peak
+568,721,408 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_739.log`,
+2,843,715 B; 0 tracked changes, 0 source edits, 0 inventory edits, 0 cargo
+runs, 0 guests, 0 receipts imported, 0 encoding runs, 0 promotions; 24 scratch
+files under `.temp/brief-739/` (720,315 B); report 4 PASS / 1 FLAGGED / 1 NA,
+`check: OK, 85 citations verified`.
+
+**Q0 — the STOP is accepted as correctly raised.** The brief's shape gate
+required a "director-selected complete calibration cohort" and named none; a
+dispatched brief cannot ask the director mid-run. The omission is mine.
+
+**Q1 — the cohort is selected.** Known loss: `P0941`, `P0946` (brief 622 line
+21065, sha256 `5c88efea…`). Execute: `P0001`, the first Equal row in the C68
+ledger order whose cited packet is present (`c34/empty-prefix-callback-value-
+charge-full-proofs.json`), 60 nonencoding keys, executed end to end. Boundary:
+`P1556` (`c10/script-boundary-proof.json`, sha256 `c593907d…`).
+NoObservableTail: `P0011` (`c17/retained-option-arity-and-retry-revisit-full-
+proofs.json`, sha256 `57315416…`). Unreachable: `P0496`
+(`c68/p0496-closure-freeze.json`, sha256 `a36d2597…`). Transferred: `P0500`
+(`c10/transfer-recheck.json`), the only Transferred row whose cited packet is
+present. Identity: no row; all five packets are absent. A present packet must
+authenticate its row's pin, row, verdict, target and counts; a selected row
+whose packet fails to authenticate becomes a blocked record with the mismatch
+named, never a positive calibration and never a STOP of its own.
+
+**Q2 — absent packets stay `PortBlocked` with exact paths.** My own audit of
+the C68 ledger's `settlement_evidence` (presence only; content authentication
+is the worker's) found the continuation2 tables absent from the host at every
+location — `continuation2/{identity-decisions,identity-receipts,transfers,
+equal-decisions,equal-real-receipts}.tsv` exist nowhere; the `port/rebase.tsv`
+half survives at `.temp/g15-c2/port/rebase.tsv`. By class: Equal 166 rows /
+9,905 keys present, 9 rows / 600 keys absent (`P0018` 60, `P0580` 70, `P0709`
+165, `P0790` 60, `P0795` 60, `P0798` 60, `P0801` 60, `P2287` 35, `P2288` 30);
+Boundary 20/735 present; NoObservableTail 126/7,260 present; Unreachable
+4/210 present; Transferred 1 row / 50 keys present (`P0500`), 593 rows /
+34,950 keys absent; Identity 0/185 present, 5 rows absent. Bindings and
+certificates still import from the pinned ledger with pin, row, verdict,
+target, scope and dependency, and their duty is `PortBlocked` with those
+paths — never bound, executed, `SAME` or credited. Certificates imported stay
+749 rows / 43,390 keys: 151 rows / 8,255 keys verified by a present packet,
+598 rows / 35,135 keys blocked records. A class with no surviving packet is
+calibrated by its committed exactness test on the blocked record plus its own
+falsifier, proven red; it must be reported as not positively calibrated. No
+reconstruction, re-derivation, re-pin or historical blessing; full CM green
+stays false until a reviewed evidence program supplies the packets.
+
+**Q3 — the run is a clean STOP.** Scope verified: 0 tracked changes, 0
+production or inventory edits, scratch only under `.temp/brief-739/`; the six
+pinned C68 authority inputs and the 1,042-row / 78,330-key requirement seals
+authenticate; no suite ran and none is claimed. The 1 FLAGGED
+(`calibration-prerequisite`) is the accurate state, the 1 NA is the unrun
+campaign, and the 2 disclosures (the exploratory inline inspections are not
+byte-replayable; the run stopped before implementation) are accepted.
+
+**Q4 — brief 739 is amended in place and re-dispatched on `cdx`.** The
+continuation-1 section selects the cohort and rules the blocked classes; every
+other rule, table, replay and gate is unchanged. C2 stays Open at 118 Residual
++ 0 Lost; no row settles, no owner is promoted, no guest executes, and
+`CHANGELOG.md` and S10 stay blocked.
