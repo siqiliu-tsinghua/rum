@@ -113707,3 +113707,71 @@ measures the complete schedule and runs the acceptance suite under the 1,500 s
 bound; any other production need is a STOP. C2 stays Open at 118 Residual +
 0 Lost; no settlement, no promotion, no encoding key; `CHANGELOG.md` and S10
 stay blocked. The partial tree is the state to continue from.
+
+### Continuation 72 — seventh run: the C29 accessor lands, 60 keys execute, and the resuming-driver observer is authorized
+
+**2026-11-15 — brief 739's seventh run executed continuation 6: the
+authorized C29 accessor landed, `P1562`/`P1563` were bound and executed in
+both arms, and the run stopped at `P1577`, whose authenticated discriminator
+needs two more private `Session` reads. The STOP is accepted and Q10 is
+ruled: one more narrow read-only accessor is authorized, by the same
+reasoning as the accepted P0001 and C29 getters, and the campaign
+continues.**
+Run `cdx`, unit `brief-739-cdx-20261115-014918-518988`, rc 0, peak
+15,983,349,760 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 2,252,569 B; 23 recorded changes (12 added,
+11 modified, 0 deleted), the temporary probe restored byte-exact; report
+14 PASS / 5 FLAGGED / 1 FAIL, 3 disclosures, 5 deviations, Q10; 17,181
+citations verified. The only production change is the authorized accessor;
+no manifest or lock hash changed.
+
+**What landed.** The accessor is one unconditional `#[doc(hidden)]`
+read-only inherent `Session` method appended to
+`crates/rum-runtime/src/runtime/model/session.rs` (`:201`), returning
+exactly the two accepted-request bits; entry bytes remain a prefix, field
+visibility and every existing body and caller are unchanged, the default
+rlib emits one new symbol, and there are zero production call sites and one
+oracle call site. The deterministic gate passed; the unrun machine-code
+byte comparison is disclosed. The 60 C29 keys were bound and executed in
+both arms at multiplicity one through the real accepted text/expr routes,
+with the two-bit read at the terminal return before projections or fresh
+requests; the ten-field native row is `[0,0]` on both sides and four new
+falsifiers reject the 0,0-versus-1,1 and both-stale discriminations by
+`Native`. Totals: 58/3,095 → 60/3,155 over 29 families (5,252 actual
+pauses, 7,930 lifecycle observations); 91 active rows / 5,905 keys remain,
+of which `P1577` is 1/30 and 90 unported rows are 5,875; 24
+director-excluded rows / 1,445 keys stay named. Proofs are untouched
+(749/43,390 imported; 151/8,255 packet-authenticated; 115/6,270 current
+verified; 36/1,985 current blocked; 598/35,135 absent; five known losses).
+The 68 retention fingerprints and four promotion cells were regenerated and
+mechanically installed twice with every non-cell column equality-checked;
+the six ownership inventories replayed unchanged; the stale-C01
+certificate reds before the install are ordering artifacts, and both
+one-thread certificate reruns pass. The run's own workspace arms show only
+the nine sandbox loopback `EPERM` guards; the host gate decides green. The
+complete 9,060-key schedule is unmeasured because 5,905 keys remain after
+the STOP; the partial 3,155-key shape times are 272.766 s and 275.855 s and
+substitute for nothing.
+
+**Q10 ruling.** `P1577` needs the exact post-request
+`evaluation_depth`/`evaluation_stack` observation at the real
+`resume_suspended_slot` route; both probes fail E0616 and the row's own
+omission is exactly `1,0`-versus-`0,0`. Authorized: one unconditional
+`#[doc(hidden)]` read-only inherent `Session` method `actual_evaluation_state`
+returning exactly `(self.evaluation_depth.get(), self.evaluation_stack.len())`;
+no field visibility, body, caller, dependency, Cargo or `unsafe` change; no
+call site outside the oracle; the audit records it and the deterministic
+gate replaces the hot-path A/B. First action: land it, replay the
+retention/ownership maintenance, and rerun `local_production_acceptance` in
+both arms at one thread; an audit rejection is a STOP, never a widened
+predicate. Then bind and execute the 30 keys through the real route at the
+exact authenticated observation point, with the ten-field native row and
+the `1,0`-versus-`0,0` own-omission discriminator at multiplicity one.
+Continuation 7 continues the campaign over the remaining 90 rows / 5,875
+keys and the 25 non-source route instantiations, keeps the 36 current-blocked
+proof records, the 598 absent / 35,135 and the 24 named Execute blockers /
+1,445 keys named, then measures the complete schedule and runs the
+acceptance suite under the 1,500 s bound; any other production need is a
+STOP. C2 stays Open at 118 Residual + 0 Lost; no settlement, no promotion,
+no encoding key; `CHANGELOG.md` and S10 stay blocked. The partial tree is
+the state to continue from.

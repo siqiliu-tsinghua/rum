@@ -869,3 +869,103 @@ C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
 no encoding key runs, `CHANGELOG.md` and S10 stay blocked. The partial tree is
 the state to continue from; do not restart and do not hand-edit a generated
 cell.
+
+### Continuation 7 — seventh run: the C29 accessor lands and 60 keys execute; the resuming-driver observer is authorized
+
+**2026-11-15 — brief 739's seventh run executed continuation 6. The
+authorized C29 accessor landed, both C29 rows were bound and executed in
+both feature arms, and the run stopped at P1577, whose authenticated
+discriminator needs two more private `Session` reads. The STOP is accepted
+and Q10 is ruled: one more narrow read-only `Session` accessor is authorized
+under the same precedent, and the campaign continues.**
+Run `cdx`, unit `brief-739-cdx-20261115-014918-518988`, rc 0, peak
+15,983,349,760 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 2,252,569 B; 23 recorded changes (12 added,
+11 modified, 0 deleted), the temporary P1577 probe restored byte-exact;
+report 14 PASS / 5 FLAGGED / 1 FAIL, 3 disclosures, 5 deviations, Q10;
+17,181 citations verified. The only production change is the authorized
+accessor; no manifest or lock file changed.
+
+**What landed.** The accessor is append-only at the end of
+`crates/rum-runtime/src/runtime/model/session.rs` (10 lines, method at
+`:201`): one unconditional `#[doc(hidden)]` read-only inherent
+`Session::actual_accepted_request_state(&self) -> (bool, bool)` returning
+exactly `(active_accepted_request.is_some(),
+!request_interrupt_control.borrow().is_idle())`. The entry bytes remain a
+prefix; field visibility, existing bodies and callers are unchanged; the
+default rlib emits exactly one new symbol; there are zero production call
+sites and one oracle call site. The deterministic gate passed and the
+unrun machine-code byte comparison is disclosed, as Q9 required.
+
+`P1562` and `P1563` are now complete rows: 60 keys bound and executed in
+both arms at multiplicity one, 42 actual pauses and 72 lifecycle
+observations per row, through the real accepted text/expr routes
+(`accept_cancellable_request` + `eval_accepted_request`, and
+`lower_request` + `eval_accepted_expr_request`), with the two-bit read on
+the executing thread at the terminal return before any projection or fresh
+request. The ten-field native row `C29TerminalAcceptedRequestState` is
+`[0,0]` on both sides, and four new falsifiers reject the 0,0-vs-1,1 and
+both-stale discriminations by `Native`.
+
+Campaign totals: 58 rows / 3,095 keys → 60 rows / 3,155 keys over 29
+families (5,252 actual pauses, 7,930 lifecycle observations); 91 active
+rows / 5,905 keys remain, of which `P1577` is 1 row / 30 keys and 90
+unported rows / 5,875 keys; the 24 director-excluded rows / 1,445 keys
+stay named. The proof ledger is untouched: 749 rows / 43,390 keys imported,
+151 / 8,255 packet-authenticated, 115 / 6,270 current-source verified,
+36 / 1,985 current blocked, 598 / 35,135 absent, five known-loss records.
+The 68 retention fingerprints and four promotion cells were regenerated
+and mechanically installed twice — only the fingerprint column in
+`local-contracts.tsv`, only the two instance columns in `promoted.tsv`,
+every non-cell column equality-checked — the six ownership inventories
+replayed unchanged, and the stale-C01 certificate reds before the install
+are ordering artifacts; both one-thread certificate reruns pass.
+
+**The STOP.** `P1577` (`C29ResumingDriverEvaluationStateMax`, 30 keys) needs
+the exact post-request observation of `evaluation_depth` and
+`evaluation_stack` at `Session::resume_suspended_slot`
+(`crates/rum-runtime/src/runtime/suspension/core.rs:609@659`); both feature
+probes fail E0616 on the `pub(in crate::runtime)` fields
+(`session.rs:87,91`), and the row's authenticated own-omission is exactly
+`1,0` versus `0,0`. A second production change was outside continuation 6's
+authorization, so the run stopped with the 30 keys retained as active
+requirements. Accepted.
+
+**Q10 ruling — one more narrow accessor, then the keys execute.**
+Authorized, and nothing more:
+- One unconditional `#[doc(hidden)]` read-only inherent method on the
+  runtime `Session`, called `actual_evaluation_state`, returning exactly
+  `(self.evaluation_depth.get(), self.evaluation_stack.len())`; no field
+  visibility change, no body or caller change, no new dependency, no
+  `Cargo.toml`/`Cargo.lock` edit, no `unsafe`.
+- The same audit gate as Q9: append-only source, prior bytes a prefix,
+  exactly one new symbol, zero production call sites, the declaration
+  recorded by the production audit. A cfg-dependent impl is rejected; an
+  audit rejection is a STOP, never a widened predicate or a hand-edited
+  cell.
+- First action: land exactly this, replay the retention/ownership
+  maintenance, and rerun `local_production_acceptance` in both arms at one
+  thread.
+- Then bind and execute `P1577`'s 30 keys through the real route named by
+  its authenticated consumer route, observing the two values from the
+  executing thread at the exact point its matrix names, with the ten-field
+  native row and the own-omission `1,0`-versus-`0,0` discriminator at
+  multiplicity one. A cached scalar, a projection, a substituted guest
+  evaluation or a skipped key is not an observation; the falsifier must
+  reject the discrimination by `Native`.
+
+**Continuation 7.** Continue the campaign over the remaining 90 rows /
+5,875 keys and the 25 non-source route instantiations (1,370 key rows);
+keep the 36 current-blocked proof records, the 598 absent records / 35,135
+keys and the 24 named Execute blockers / 1,445 keys named with their exact
+predicates. Then measure the complete 9,060-key active schedule and run the
+acceptance suite under the 1,500 s bound — over it, STOP with the measured
+build+run data and the sharing analysis; never sample, never drop a
+context, never substitute a historical or partial timing. If any other
+production change becomes necessary, STOP; this authorization covers the
+single resuming-driver accessor only.
+
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is
+promoted, no encoding key runs, `CHANGELOG.md` and S10 stay blocked. The
+partial tree is the state to continue from; do not restart and do not
+hand-edit a generated cell.

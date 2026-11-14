@@ -85,7 +85,19 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   (no field/body/caller/dependency/Cargo change; the audit records it), and
   continuation 6 executes those 60 keys through the real routes while
   continuing over the remaining 93 rows / 5,965 keys and 25 non-source
-  routes, then the complete schedule under the 1,500 s bound; then CM4-CM5.
+  routes, then the complete schedule under the 1,500 s bound. The seventh
+  run landed that accessor and executed the 60 C29 keys in both arms (60
+  rows / 3,155 keys over 29 families, 5,252 pauses / 7,930 lifecycle
+  observations; the proof ledger and the 24 excluded rows / 1,445 keys
+  unchanged), then stopped at `P1577` (30 keys), whose authenticated row
+  needs the private `evaluation_depth`/`evaluation_stack` reads (both probes
+  E0616; own-omission exactly `1,0` versus `0,0`); the Q10 ruling authorizes
+  one more unconditional `#[doc(hidden)]` read-only `Session` accessor
+  returning exactly `(evaluation_depth.get(), evaluation_stack.len())`
+  under the same precedent, and continuation 7 executes those 30 keys
+  through the real resume route while continuing over the remaining 90 rows
+  / 5,875 keys and 25 non-source routes, then the complete schedule under
+  the 1,500 s bound; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
