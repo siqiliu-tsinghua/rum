@@ -112176,3 +112176,104 @@ suite.
 `P1566`, the `P0325`/`P0326` pair-column reconciliation), CM,
 `CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2; retention resumes from
 E0 + Q3, then Q1/Q2/Q4/Q5.
+
+## Continuation 61 order (2026-11-14) — apply the four accepted `Boundary` moves by canonical raw replay, then resume the remaining 122-row tail on the unchanged installed source
+
+Entry on the unchanged installed source `22e0fb4c`: every file under
+`crates/` equals the C60 final manifest (production digest `3acf8a34…`,
+1,627 files; 2,737 live files) and `git log 22e0fb4c..HEAD -- crates` is
+empty; the entry re-derives 1,042 rows / 78,330 canonical keys / 18,840
+encoding rows with 0 moves, 1,018 paired sources and the 24 explicitly
+unresolved sites; `settled.tsv` `f6cd8509…` and `required-tuples.tsv`
+`3c2dcdff…` are the baseline; `source_rebases_this_round=0`.
+
+**The four approved moves.** Apply exactly four rows — `P2624`, `P2605`,
+`P2606` and `P2608` — `Residual`→`Boundary` by canonical raw replay of the
+pinned C60 packets with `new_execution=false`, `equal_claim:false`, zero
+equality credit, all required keys retained (30 + 60 + 30 = 120: `P2624`
+30, `P2605`/`P2606` 60 across the two rows, `P2608` 30), no encoding credit,
+and no fresh guest or build for the moves. The packets, by path and sha256
+(sealed read-only evidence in `.temp/g15-c2/c60/`; the scene's
+`artifact-hashes.json` fixes every raw record log, 22,342 files, 0 missing /
+0 changed at my gate):
+
+- `cli-process-full-stderr-error-tail-freeze.json` `9a501e32…`,
+  `-instrument.json` `aa3d5a2a…`, `-source-proof.json` `c8a38bc0…`,
+  `-lifecycle.json` `81d286ec…`, `-gain.json` `d213a140…`,
+  `-calibration.json` `c9094b9f…`; builds `build-process-real.json`
+  `97f6cfc6…`, `build-process-mutant.json` `56b164bc…`,
+  `build-process-real-spot.json` `ab179e63…`.
+- `jupyter-synchronous-terminal-response-freeze.json` `7a2f8a4f…`,
+  `-instrument.json` `75751eb1…`, `-source-proof.json` `404e0e5b…`,
+  `-lifecycle.json` `eefb1445…`, `-gain.json` `23bd4667…`,
+  `-calibration.json` `e96cf716…`; builds `build-sync-real.json`
+  `7249cd48…`, `build-sync-mutant.json` `31bb3c95…`; the descriptive
+  coordinate erratum `sync-location-erratum.json` `07fd1e95…` (instrument
+  byte-identical).
+- `jupyter-cleanup-output-after-retirement-freeze.json` `2264fbfb…`,
+  `-instrument.json` `a1ba2cde…`, `-source-proof.json` `ffb1db9a…`,
+  `-lifecycle.json` `1aba7704…`, `-gain.json` `0f5e6db7…`,
+  `-calibration.json` `43169dab…`; builds
+  `build-jupyter-retirement-real.json` `9846b7bc…`,
+  `build-jupyter-retirement-mutant.json` `2cc4063b…`.
+
+Each move's approval records `required_keys`, `real_contract_PASS` and
+`disabled_exact` from the accepted records — `P2624` 30 / 4 / 4, `P2605`
+30 / 4 / 4, `P2606` 30 / 4 / 4, `P2608` 30 / 4 / 4 — plus `own_armed` 2,
+`own_hits` 2, `boundary_caught` 2 and `unarmed_controls` 2 per row,
+`equality_credit: 0`, `equal_claim: false`, `new_execution: false`,
+`raw_evidence_replayed: true`, and `other_verdict_moves_allowed: false`.
+The approval embeds the continuation-60 ruling's four-family paragraphs
+verbatim with their own `ruling_sha256`, and pins the live brief's entry
+sha (the appended brief) as the authority.
+
+After the four moves assert: outcomes Boundary 17 / Equal 174 / Identity 5 /
+Lost 1 / NoObservableTail 126 / Residual 122 / Transferred 594 /
+Unreachable 3; residual composition 93 LocalTail + 13 ReopenedOrNew + 11
+StrictDropGap + 2 StrictCallerGap + 1 New719Edge + 1 New725Edge + 1
+StrictOtherCarrier = 122; C2 Open at 122 Residual + 1 Lost;
+`required-tuples.tsv` `3c2dcdff…` byte-identical; exactly the four rows'
+settlement columns moved and every other row byte-identical; the 13 pair
+columns, the held pair rows, `P1573` Residual, `P1566` Lost and `P0496`
+reserved unchanged; no row added or removed.
+
+**Then the tail.** Work the remaining 122-row tail by mechanism (93
+LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1
+New719Edge + 1 New725Edge + 1 StrictOtherCarrier), each batch with its own
+armed-hit caught-or-surviving omission; `Equal` only with its own caught
+omission and a complete real matrix; every proposal `equal_claim:false`
+with a survivor per cell; a `Boundary` proposal only with a documented
+terminal contract measured on the actual producer path; the two-family
+stop-loss stands. `P2623` stays `Residual` (armed-survivor park with zero
+credit; the frozen catch expectation and the failed controller unchanged,
+and a further attempt requires a separately frozen buffered-setup
+lifecycle observer at the same cancellation producer with an actual pause,
+under a fresh allocation). The C57–C60 parks are not re-attempted without
+a genuinely new instrument or an explicit ruling. `P1573` Residual,
+`P1566` Lost, `P0496` reserved; the held pair rows and the 13 pair columns
+held; `P0325`/`P0326` not promoted; `P2631`/`P2644` and every
+blocked-encoding row behind G13; every encoding cell G13-owned, 0 encoding
+runs. The 24 unresolved sites, the 13 pair columns and the five named
+owners stay explicit; port tables and the ledger only by canonical replay.
+
+**Build control.** The round's one `--force` sha256 spot check must be a
+same-epoch rebuild of a build made in this round and must reproduce
+byte-identically; a cached binary from an older target epoch is verified
+by `probe-build.py`'s on-hit receipt/hash check and may be refreshed by
+archiving and removing its stale cache entry and building fresh, recording
+the new receipt and sha; a cross-epoch byte-identity bar is not applied.
+Record `build-control-receipt.json` with `byte_identical: true`,
+`flags_changed: false` and `old_binaries_repinned: false`; 0 cross-epoch
+checks and 0 re-pins.
+
+**Bounds.** Fresh bounded allocation 4 families / 16 builds / 512 guests /
+4,000 records / 0 encoding runs, no transfer; scratch `.temp/g15-c2/c61`;
+C44–C60 are read-only evidence; no live edit, no git, no network, no
+`unsafe`, no inventory edit, assertions unchanged. The inherited replay
+binds the C60 scene's sealed `brief-entry.md` (`3cbda7ea…`) and writes
+nothing into the C60 scene; that seal stays 22,342 files 0/0. Report one
+`rum-report/1` record with `report.py check 623` passing and stop for my
+gate; no continuation-62 order is written.
+
+**Dispatch:** `scripts/dispatch-brief.sh 623` (background, `BRIEF_WORKER`
+unset = `cdx`).
