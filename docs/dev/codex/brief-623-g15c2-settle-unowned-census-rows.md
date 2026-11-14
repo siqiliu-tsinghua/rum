@@ -112367,3 +112367,100 @@ attempt, weaken nothing.
 
 **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
 `BRIEF_WORKER` unset = `cdx`).
+
+## Continuation 63 order (2026-11-14) — apply the one accepted `P2623` `Boundary` move by canonical raw replay of the pinned C62 packets, then resume the remaining 121-row tail under the fresh bounded allocation
+
+Continuation 62 is accepted in full and its evidence is now
+read-only. The entry bar is the same pinned three-path allowance
+that continuation 62 passed: the live tree's delta against
+`.temp/g15-c2/c60/entry-hashes.json` is exactly this brief's append
+(whose prefix is the C62 sealed `brief-entry.md`,
+`6b47595bc0b8fb287833d1c832fdb5e4b6421913c88115d2901e541d54486c9b`)
+plus the two engine-written declarations at their pinned hashes —
+`tools/claude-mod/rum-director/.claude-plugin/types/claude-code-tools/index.d.ts`
+`ead1d8e6c68a9a317b48248e5ba147c90880af50b38f6d1e0739b13bda451dd0`
+and `…/types/claude-code/index.d.ts`
+`ca41f0660ee9a92483c771e32ddc497dbd9547a2b26fb2e0b97967aab09b5fe1`
+— and nothing else; 2,737 live files; every file under `crates/`
+equals the C60 final manifest (production digest
+`3acf8a341f34995cdfbd47e0174d5a7eb24814aead4b973715998f14404b24e2`,
+1,627 files); `git log 22e0fb4c..HEAD -- crates` is empty; the tree
+is clean at the ruling commit. Any fourth delta, a different hash at
+either pinned path, or any production difference is a STOP. The entry
+re-derives 1,042 rows / 78,330 canonical keys / 18,840 encoding rows
+with 0 moves, 1,018 paired sources and the 24 explicitly unresolved
+sites; `settled.tsv` `709817129c48e972…` and `required-tuples.tsv`
+`3c2dcdff62389034…` are the baseline; `source_rebases_this_round=0`.
+The C62 scene's seal stays 11,278 files 0/0 and nothing is written
+into it.
+
+**The one move. Apply exactly `P2623` `Residual`→`Boundary` by
+canonical raw replay of the pinned C62 packets** — the buffered family
+freeze `cli-buffered-setup-cleanup-delivery-freeze.json`
+`87af467c51600b55…`, its instrument
+`f9f5e52155df1cf7…`, the driver `buffered_driver.rs`
+`c40c21ca31dd82aa…`, the build receipts `build-buffered-real.json`
+`0efefeaa0e7abc00…`, `build-buffered-real-spot.json`
+`01d9bcdb85226078…`, `build-buffered-mutant.json`
+`1f1eb5c8a7d8c33e…` (binaries `7957b512…` / `5b323736…`), and the
+twelve `logs/tail-buffered-*-{real,disabled,own}-1.log` records, all
+bound through `.temp/g15-c2/c62/artifact-hashes.json`
+`c96773c98040ed1d…` — with `new_execution=false`, `equal_claim:false`,
+zero equality credit, all 30 required keys retained and no fresh guest
+or build for the move. The settlement rests on the documented terminal
+contract (`docs/guide/getting-started.md`: cleanup `Print` output goes
+to stdout exactly once) measured on the actual producer path: the
+actual cancellation producer `session.eval("")` at
+`crates/rum-cli/src/input_retirement.rs:15`, the buffered delivery loop
+at `:47`, an actual cleanup `InputString` pause, `4/4` real native
+contracts PASS, real == disabled byte-exact on all four records, and
+the own `SkipActualCleanupPrintDelivery` omission armed/hit/caught on
+both cleanup-pausing cases, losing `stdout` only, with both controls
+unarmed and exact. Assert Boundary 18 / Equal 174 / Identity 5 /
+Lost 1 / NoObservableTail 126 / Residual 121 / Transferred 594 /
+Unreachable 3, composition `92+13+11+2+1+1+1 = 121`, C2 Open at 121
+Residual + 1 Lost, `required-tuples.tsv` `3c2dcdff…` byte-identical,
+exactly that row's six settlement columns moved and the other 1,041
+rows byte-identical, the 13 pair columns, the held pair rows, `P1573`
+Residual, `P1566` Lost and `P0496` reserved unchanged.
+
+**Then the remaining 121-row tail by mechanism under the two-family
+stop-loss**, each batch with its own armed-hit caught-or-surviving
+omission; `Equal` only with its own caught omission and a complete real
+matrix; every `equal_claim:false` proposal with a survivor per cell; a
+`Boundary` proposal only with a documented terminal contract measured
+on the actual producer path. `P2623` is settled and is never
+re-attempted. `P2613` stays `Residual` with the C62 async survivor
+evidence (both cleanup cases arm/hit; the intermediate worker carrier
+changes, but the actual outer interrupt owner at
+`crates/rum-jupyter/src/adapter/execute.rs:78-80` repeats the
+cancellation normalization and all four terminal native records are
+exact) — a further attempt needs a distinct real route or instrument
+and preserves the outer normalization and all 30 keys. The C57–C62
+parks are not re-attempted without a genuinely new instrument or an
+explicit ruling; `P2631`/`P2644` and every blocked-encoding row stay
+behind G13; every encoding cell stays G13-owned; 0 encoding runs; the
+24 unresolved sites, the 13 pair columns and the five named owners
+stay explicit.
+
+**Build control.** The round's one `--force` sha256 spot check is a
+same-epoch rebuild of a build made in this round and must reproduce
+byte-identically; an older-epoch cache entry is verified by
+`probe-build.py`'s on-hit receipt/hash check and may be refreshed by
+archiving and removing it and building fresh; no cross-epoch
+byte-identity bar; `build-control-receipt.json` with
+`byte_identical:true`, `flags_changed:false`,
+`old_binaries_repinned:false`; 0 cross-epoch checks and 0 re-pins.
+
+**Bounds.** Fresh bounded allocation 4 families / 16 builds / 512
+guests / 4,000 records / 0 encoding runs, no transfer; scratch
+`.temp/g15-c2/c63`; C44–C62 are read-only evidence; no live edit, no
+git, no network, no `unsafe`, no inventory edit, assertions unchanged.
+The inherited replay binds the C62 scene's sealed `brief-entry.md`
+(`6b47595bc0b8…`) and writes nothing into the C62 scene. Report one
+`rum-report/1` record with `report.py check 623` passing and stop for
+my gate; if the entry fails, stop the same way, retain the failed
+attempt, weaken nothing.
+
+**Dispatch:** `scripts/dispatch-brief.sh 623` (background,
+`BRIEF_WORKER` unset = `cdx`).
