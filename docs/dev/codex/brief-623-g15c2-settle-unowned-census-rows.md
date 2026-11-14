@@ -112277,3 +112277,93 @@ gate; no continuation-62 order is written.
 
 **Dispatch:** `scripts/dispatch-brief.sh 623` (background, `BRIEF_WORKER`
 unset = `cdx`).
+
+## Continuation 62 order (2026-11-14) — the continuation-61 order stands whole; its entry assertion becomes a pinned three-path allowance for the two engine-written declaration bundles; then the four accepted `Boundary` moves by canonical raw replay, then the 122-row tail
+
+Continuation 61 stopped at the inherited entry assertion, before
+pin, seal, ledger and move authentication. That round is booked
+uncredited — 0 settlement moves, 0 source rebases, 0 builds, 0 guests,
+0 records, 0 encoding runs, 0 edits — and its failed attempt is
+retained, never rerun. The assertion itself was not weakened and stays
+in force; this order amends only what it is allowed to see.
+
+**Why the assertion fired.** Two paths changed between the C60 entry
+manifest and the live tree besides my brief append:
+`tools/claude-mod/rum-director/.claude-plugin/types/claude-code-tools/index.d.ts`
+(`b636cb8a…` → `ead1d8e6c68a9a317b48248e5ba147c90880af50b38f6d1e0739b13bda451dd0`)
+and
+`tools/claude-mod/rum-director/.claude-plugin/types/claude-code/index.d.ts`
+(`bfbbc814…` → `ca41f0660ee9a92483c771e32ddc497dbd9547a2b26fb2e0b97967aab09b5fe1`).
+They are the engine-written TypeScript declarations of the built-in
+tool schemas for the director plugin — their own `.gitignore` reads
+"Written by the engine at each load" — both are gitignored and
+untracked, both were written at 08:59:51 +08:00 (the director session's
+own start, before the 09:03:56 dispatch), and neither is a build input
+of any crate. They are authenticated at the new hashes, not restored:
+the sealed bytes are not held anywhere and the engine rewrites them at
+each load, so a restore would be an unfalsifiable edit to an
+environment file. No crate, inventory, ledger, seal or replay reads
+them.
+
+**The entry bar.** The live tree's delta against
+`.temp/g15-c2/c60/entry-hashes.json` is exactly the brief append plus
+those two paths at the pinned hashes above, and nothing else; 2,737
+live files; every file under `crates/` equals the C60 final manifest
+(production digest `3acf8a341f34995cdfbd47e0174d5a7eb24814aead4b973715998f14404b24e2`,
+1,627 files); `git log 22e0fb4c..HEAD -- crates` is empty; the tree is
+clean at the ruling commit. Any fourth delta, a different hash at
+either pinned path, or any production difference is a STOP. The entry
+re-derives 1,042 rows / 78,330 canonical keys / 18,840 encoding rows
+with 0 moves, 1,018 paired sources and the 24 explicitly unresolved
+sites; `settled.tsv` `f6cd8509…` and `required-tuples.tsv`
+`3c2dcdff…` are the baseline; `source_rebases_this_round=0`.
+
+**Everything else in the continuation-61 order stands unchanged** —
+`.temp/director/c61-order.md` (`5c02b0c8…`), already appended to this
+brief — and is restated here only as its goal: apply exactly the four
+accepted rows `P2624`, `P2605`, `P2606`, `P2608` `Residual`→`Boundary`
+by canonical raw replay of the pinned C60 packets with
+`new_execution=false`, `equal_claim:false`, zero equality credit, all
+required keys retained (30 + 60 + 30 = 120), no encoding credit and no
+fresh guest or build for the moves; assert Boundary 17 / Equal 174 /
+Identity 5 / Lost 1 / NoObservableTail 126 / Residual 122 / Transferred
+594 / Unreachable 3, composition 93+13+11+2+1+1+1 = 122, C2 Open at
+122 Residual + 1 Lost, `required-tuples.tsv` `3c2dcdff…`
+byte-identical, exactly the four rows' settlement columns moved and
+every other row byte-identical, the 13 pair columns, the held pair
+rows, `P1573` Residual, `P1566` Lost and `P0496` reserved unchanged;
+then the remaining 122-row tail by mechanism under the two-family
+stop-loss, each batch with its own armed-hit caught-or-surviving
+omission, `Equal` only with its own caught omission and a complete real
+matrix, every proposal `equal_claim:false` with a survivor per cell, a
+`Boundary` proposal only with a documented terminal contract measured
+on the actual producer path; `P2623` stays `Residual` (armed-survivor
+park, zero credit, a further attempt only under a separately frozen
+buffered-setup lifecycle observer at the same cancellation producer
+with an actual pause and a fresh allocation); the C57–C60 parks are not
+re-attempted without a genuinely new instrument or an explicit ruling;
+`P0325`/`P0326` not promoted; `P2631`/`P2644` and every
+blocked-encoding row behind G13; every encoding cell G13-owned, 0
+encoding runs; the 24 unresolved sites, the 13 pair columns and the
+five named owners explicit. Build control: the round's one `--force`
+sha256 spot check is a same-epoch rebuild of a build made in this round
+and must reproduce byte-identically; an older-epoch cache entry is
+verified by `probe-build.py`'s on-hit receipt/hash check and may be
+refreshed by archiving and removing it and building fresh; no
+cross-epoch byte-identity bar; `build-control-receipt.json` with
+`byte_identical:true`, `flags_changed:false`,
+`old_binaries_repinned:false`; 0 cross-epoch checks and 0 re-pins.
+
+**Bounds.** Fresh bounded allocation 4 families / 16 builds / 512
+guests / 4,000 records / 0 encoding runs, no transfer; scratch
+`.temp/g15-c2/c62`; C44–C61 are read-only evidence; no live edit, no
+git, no network, no `unsafe`, no inventory edit, assertions unchanged.
+The inherited replay binds the C60 scene's sealed `brief-entry.md`
+(`3cbda7ea…`) and writes nothing into the C60 scene; that seal stays
+22,342 files 0/0. Report one `rum-report/1` record with
+`report.py check 623` passing and stop for my gate; if this entry
+fails, stop the same way continuation 61 did — retain the failed
+attempt, weaken nothing.
+
+**Dispatch:** `scripts/dispatch-brief.sh 623` (background,
+`BRIEF_WORKER` unset = `cdx`).
