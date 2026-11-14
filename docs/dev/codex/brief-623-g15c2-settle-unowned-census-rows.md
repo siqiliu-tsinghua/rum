@@ -111969,3 +111969,210 @@ retained and cited.
 (`P0496`, `P1566`, the `P0325`/`P0326` pair-column reconciliation), CM,
 `CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2; retention resumes from E0
 + Q3, then Q1/Q2/Q4/Q5.
+
+## Continuation 60 ruling (2026-11-14) — accepted in full on `cdx`: the approved `P2656` move is applied `Residual`→`Boundary` by canonical raw replay, and `P2624`, `P2605`/`P2606` and `P2608` are accepted as four `Boundary` settlements on their documented native terminal contracts (to be applied by continuation 61); `P2623` is parked as an armed survivor with zero credit, and the campaign pauses at the user's instruction for a system update and reboot
+
+**Run accepted.** `cdx` (gpt-6-astra max, session
+`01a1d74d-bc81-7781-b641-db3c215344f5`, unit
+`brief-623-cdx-20261114-074558-948752`, started 2026-11-14 07:45:58 +08:00,
+ended 08:37, rc 0, peak 3,461,984,256 B, oom 0, oom_kill 0; log
+`.temp/logs/cdx_brief_623.log`, 63,709 lines, 4,680,387 B, sha256
+`c7f16106752f5901355875bfb0cc961e487d3c666b0bca1844ef16cb1915b173`; 99 run
+records — 79 exit 0 and 20 exit 1: the 18 expected terminal CLI/process
+exit-1 guests, one retained failed CLI catch controller, and one retained
+report-schema check — `tokens used` 296,689 as the log reports it; report 14
+PASS / 1 FLAGGED / 1 FAIL / 1 NA checks and 3 PASS / 1 FLAGGED measurements,
+`report.py check 623` 1,255 citations by my own run; `.git-attempts` absent;
+0 source edits; 10 logged builds, 33 guest processes, 60 diagnostic records,
+0 encoding runs).
+
+**Entry and source.** 24 receipt pins exact; my own 2,737-file live walk is
+0 missing / 0 extra / 0 changed; production 1,627 files at `3acf8a34…`; 1,042
+rows / 78,330 canonical keys / 18,840 encoding rows; 1,018 paired sources and
+the 24 explicitly unresolved sites; `source_rebases_this_round=0`; the
+C52–C59 seals are 0 missing with exactly the two inherited disclosed C55/C56
+`canonical-replay-receipt.json` refreshes (attempt 1→2, outputs exact), and
+the C60 seal 22,342 files is 0/0 by my own walks before and after my
+replays; my own protected walk of 2,869,131 entries finds 0 missing and
+exactly one difference — the authorized report publication
+(`.temp/brief-623/report.json`).
+
+**The approved move.** `P2656` `Residual`→`Boundary` is applied by canonical
+raw replay of the sealed C59 packets (`settlement-approval.json`
+`0669ed82…`, pins `358eb748…`/`1b3336d3…`/`8740c2b7…`/`e83be07c…`/
+`63907bac…`/`bf912447…`, builds `2d1fac0e…`/`d1acd12d…`, raw logs
+`f0b17986…`/`d889975e…`/`27f51909…`, proposal packet `6c7de683…`), with
+`new_execution=false`, one own armed-hit caught `Err`-forwarding omission,
+one armed nonexecuting Ok carrier and two unarmed controls. `settled.tsv`
+`f6cd8509…` differs from C59 on exactly one line (P2656, six settlement
+columns); the other 1,041 rows are byte-identical; `required-tuples.tsv`
+`3c2dcdff…`, `frozen-policies.tsv` `6eb58290…`, `mutant-schema.tsv`
+`2178491a…` and the pair-column reconciliation are byte-identical to C59.
+Outcomes Boundary 13 / Equal 174 / Identity 5 / Lost 1 / NoObservableTail 126
+/ Residual 126 / Transferred 594 / Unreachable 3; residual composition
+97 LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1
+New719Edge + 1 New725Edge + 1 StrictOtherCarrier = 126; C2 Open at 126
+Residual + 1 Lost; `P1573` Residual, `P1566` Lost, `P0496` reserved; the held
+pair rows and the 13 pair columns held; every encoding cell behind G13.
+
+**Family `cli-process-full-stderr-error-tail` (`P2624`, 30 keys, 0 encoding) —
+`Boundary` accepted.** The C59-carried freeze `9a501e32…` and instrument
+`aa3d5a2a…` are byte-exact; the source-proof is re-issued for the C60 copies
+(`c8a38bc0…`, same claims, the sealed C56 trees bound as
+`exact_sealed_C56_tree`, the prior proof hash recorded). The documented
+contract is `docs/guide/getting-started.md`’s non-interactive section: all
+script modes are non-interactive, and an unanswered input request is
+reported on stderr (the suspension rendering at `main.rs:423` plus the outer
+`error:` report at `main.rs:47`), cancelled, cleaned up once and exited 1.
+Four cases: 4/4 real contracts PASS, real == disabled byte-exact, the
+ordinary-success and ordinary-syntax controls unarmed; both terminal cases
+arm, hit and catch the own `SkipActualMainErrorPrint` omission, differing
+only in `stderr` (the outer `error:` line). Zero equality credit
+(`equal_claim:false`, `equality_SAME=0`, `equality_not_applicable=12`), all
+30 keys retained; the frozen C56 failed predicate stays failed and unused;
+lifecycle `81d286ec…`, gain `d213a140…`, calibration `c9094b9f…`, builds
+`97f6cfc6…`/`ab179e63…`/`56b164bc…` (binaries `f208daa6…`/`e51983d8…`); 12
+guests, 12 records.
+
+**Family `jupyter-synchronous-terminal-response` (`P2605`/`P2606`, 60 keys,
+0 encoding) — `Boundary` accepted.** A new, separately frozen observer
+(freeze `7a2f8a4f…`, instrument `75751eb1…`, source-proof `404e0e5b…`,
+driver `67c503d5…`): four cases per row, 8/8 real contracts PASS, real ==
+disabled byte-exact, both ordinary controls unarmed. The documented
+contract is `KernelAdapter::execute`’s rustdoc (`execute.rs:5-14`): an
+admitted input request is cancelled and retired, running guest cleanup,
+before returning the original `InputRequired` error, and its outputs include
+the prefix and cleanup once; only the terminal segment emits a result or
+error. `P2605`’s own `SkipActualInputRequiredOutputPush` at the actual
+`render.rs:121` terminal error push is caught on both terminal cases in
+`error_names`/`response`; `P2606`’s own
+`SkipActualSynchronousInputRetirement` at `execute.rs:248` is caught on both
+terminal cases in `fresh`/`fresh_ok`/`pending`/`prints`/`response`/`stdout`
+(the request stays pending, cleanup does not run, a fresh evaluation is
+refused). Zero equality credit (`equality_SAME=0`,
+`equality_not_applicable=24`), all 60 keys retained; lifecycle `eefb1445…`,
+gain `23bd4667…`, calibration `e96cf716…`, builds `7249cd48…`/`31bb3c95…`
+(binaries `a3aeca43…`/`d643d014…`); 6 guests, 24 records. The frozen
+instrument’s descriptive omission coordinate (`render.rs:126`) is corrected
+by `sync-location-erratum.json` to the actual statement at `render.rs:121`;
+the frozen instrument, keys and predicates are byte-identical — a
+descriptive erratum, not a re-freeze.
+
+**Family `jupyter-cleanup-output-after-retirement` (`P2608`, 30 keys, 0
+encoding) — `Boundary` accepted.** A new separately frozen observer (freeze
+`2264fbfb…`, instrument `a1ba2cde…`, source-proof `ffb1db9a…`): four cases,
+4/4 real contracts PASS, real == disabled byte-exact, the success and
+no-cleanup controls unarmed. The documented contract is the retirement
+helper’s module doc and `KernelAdapter`’s rustdoc (“its outputs include the
+prefix and cleanup once”): after cancellation the helper re-evaluates empty
+source at `input_retirement.rs:15` and extends the original suspension with
+the cleanup prints at `:40`. The own `SkipActualCleanupPrintDelivery`
+omission is caught on both terminal cases in `prints`/`response`/`stdout`
+only; the original `InputRequired` reason, messages and trace are retained,
+and the old C55 lifecycle DIFF is unchanged. Zero equality credit
+(`equality_SAME=0`, `equality_not_applicable=12`), all 30 keys retained;
+lifecycle `1aba7704…`, gain `0f5e6db7…`, calibration `43169dab…`, builds
+`9846b7bc…`/`2cc4063b…` (binaries `d8a5b95f…`/`90170220…`); 3 guests, 12
+records.
+
+**Family `cli-cleanup-output-after-retirement` (`P2623`, 30 keys, 0
+encoding) — armed survivor, parked with zero credit.** A new separately
+frozen full-process observer (freeze `26c37653…`, instrument `5ee51397…`,
+source-proof `af7418eb…`): four cases, 4/4 real contracts PASS, real ==
+disabled byte-exact; both terminal cases arm and hit the own
+`SkipActualCleanupPrintDelivery` omission at the actual producer pause, but
+every process field is byte-identical — the `--eval` caller installs its
+exclusive streaming `ClosurePrintSink` during the producer, so the later
+buffered print-delivery loop has no observable effect in these cases. The
+frozen catch predicate remains rejected byte-for-byte (asserted by the
+round and re-asserted in my replay), the failed controller is retained, and
+no `NoObservableTail` or `Boundary` proposal is made: a finite four-case
+native matrix does not cover the 30 equality keys or the buffered setup
+route. Lifecycle `13123bad…`, gain `07c184e3…`, calibration `2fb822da…`,
+builds `58f77d97…`/`76dc0adb…` (binaries `281cb47e…`/`28d2642f…`); 12
+guests, 12 records; 2 armed, 2 hits, 0 caught, 2 survived, 2 unarmed
+controls.
+
+**Build control and stop.** The C59 refinement is exercised exactly: the
+stale cache entry for key `b610ac23…` is archived (`cache-refresh/…`, prior
+binary `e517e558…`, prior receipt `cfa338f4…`), removed and rebuilt fresh in
+this round’s epoch — `f208daa6…` in 52.6 s — and the immediate same-epoch
+`--force` reproduces `f208daa6…` byte-identically (`spot_check=pass`, 49.5
+s, state before == after); the mutant binary is an on-hit cache reuse
+(`e51983d8…`, receipt check only); 0 cross-epoch force checks and 0 old
+receipts re-pinned. The round then stops on both the two-family zero-progress
+rule and the four-family cap: process = 0 progress, sync = 2 newly armed
+rows, jupyter-retirement = 0, cli-retirement = 0 (ticks 2), 4/4 families,
+10/16 builds, 33/512 guests, 60/4,000 records, 0 encoding, 0 post-stop
+guests, builds or Cargo.
+
+**Rulings.** Q1 — yes: `P2624`, `P2605`/`P2606` and `P2608` settle
+`Residual`→`Boundary` on their four documented native terminal contracts,
+each with real == disabled parity, its own producer-pause-armed
+armed-hit-caught omission, all required keys retained, `equal_claim:false`
+and zero equality credit; the four moves are applied by continuation 61 by
+canonical raw replay citing the pinned C60 packets, asserting the post-move
+outcomes Boundary 17 / Equal 174 / Identity 5 / Lost 1 / NoObservableTail 126
+/ Residual 122 / Transferred 594 / Unreachable 3, residual composition 93
+LocalTail + 13 ReopenedOrNew + 11 StrictDropGap + 2 StrictCallerGap + 1
+New719Edge + 1 New725Edge + 1 StrictOtherCarrier = 122, C2 Open at 122
+Residual + 1 Lost, `required-tuples.tsv` byte-identical and every other row
+byte-identical. Q2 — `P2623` stays `Residual`: the two armed-hit survivors
+are retained as a calibrated streaming-route control with zero credit, the
+frozen catch expectation and failed controller stay unchanged, no
+`NoObservableTail` or `Boundary` proposal is accepted, and a further attempt
+requires a separately frozen buffered-setup lifecycle observer at the same
+cancellation producer in which cleanup prints travel the buffered loop
+rather than the streaming sink, with an actual pause, under a fresh
+allocation. Q3 — a later allocation carries this round’s accepted raw
+evidence without rerunning any completed guest or build, binds the C60
+scene’s sealed `brief-entry.md` (`3cbda7ea…`) for canonical replay, and
+preserves every reservation, held column and encoding restriction.
+
+**Paused by the user’s instruction (2026-11-14, verbatim: “这轮回来后暂停，因为又要更新后重启了。”).**
+No continuation-61 order is written and nothing is dispatched. When
+resumed: continuation 61 applies the four accepted `Boundary` moves by
+canonical raw replay on the unchanged installed source `22e0fb4c`, then
+resumes the remaining tail by mechanism under the standing rules; C2 remains
+Open at 126 Residual + 1 Lost until those moves land; S10 stays unopened.
+
+**My gate.** Entry, pins, carry tables and seals exact; my own 2,737-file
+live walk 0/0/0 and production 1,627 files at `3acf8a34…`; my own seal walks
+of c52–c60 with only the two disclosed C55/C56 receipt refreshes; my own
+canonical replay PASS (seven RED negative controls, the positive GREEN, eight
+exact outputs, 1,041 other rows byte-identical, `P1573`/`P1566`/`P0496`
+unchanged, 13 held pair rows and five owners); my own inherited C53–C59
+replays exact (eight outputs each, 0 prior-scene writes, each sealed brief
+bound: `b8573023…`, `2d4bf24f…`, `b5874760…`, `d2281e92…`, `b00b61c3…`,
+`bf6ce4c2…`, `3f647330…`; C53/C57 re-derive their two accepted moves); my
+own execution of the round’s native audit replays all four families from the
+raw logs (20 real contracts PASS, 20 disabled records byte-exact, 10 armed /
+10 hits / 8 caught / 2 survived / 10 unarmed controls, 60 records, 0 equality
+cells); the ten build receipts, their binaries and the same-epoch control
+exact; `report.py check 623` 1,255 citations; report copies byte-identical
+(`76d3c875…`); publication receipt 0 live / 0 sealed changes; my own
+protected walk 2,869,131 entries 0 missing / exactly 1 difference = the
+authorized report publication; `git log 22e0fb4c..HEAD -- crates` empty and
+the tree clean at `90bdd8c0`; no assertion weakened, no attempt deleted, no
+recipe relabelled, no inventory re-pinned.
+
+**Recorded, not gated:** the P2623 survivor park with its rejected frozen
+catch predicate and retained failed controller; the P2605 descriptive
+coordinate erratum (`:126` frozen vs the actual `:121` statement, instrument
+byte-identical); the seven read-only lookup misses in
+`attempt-disclosures.json`; the initial `report.py check` failure on the
+missing `stop.rule` field, corrected by `report-schema-correction.json` with
+the original report, writer, failed check and eight derived outputs retained
+(seven byte-identical, only the three failure-accounting fields of
+`final-summary.json` moved); the P2624 source-proof re-issue for the C60
+copies (same claims, sealed C56 trees still bound); the 18 expected terminal
+exit-1 guests; the FLAGGED boundary-proposals check and the FAIL CLI
+catch-expectation check retained and cited; the standing-inventory replay is
+NA because this round made no covered live edit and ran no live acceptance
+suite.
+
+**Next:** after the reboot, continuation 61 applies the four accepted
+`Boundary` moves and resumes the tail; then C2’s settlement round (`P0496`,
+`P1566`, the `P0325`/`P0326` pair-column reconciliation), CM,
+`CHANGELOG.md` before S10, G13 S10-S54/F1-F23/R, E2; retention resumes from
+E0 + Q3, then Q1/Q2/Q4/Q5.
