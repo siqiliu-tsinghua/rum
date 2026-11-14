@@ -275,3 +275,45 @@ after my gate.
 
 **Dispatch:** `scripts/dispatch-brief.sh 738` (background, `BRIEF_WORKER`
 unset = `cdx`).
+
+## Continuation 1 ruling (director) — `G13-transport` is an admitted Open owner
+
+Your input checkpoint 01 and STOP are accepted, and the omission is mine: this
+section amends the brief in place. Proceed with the same scope, files, tables
+and gates.
+
+- **The identity.** All 18,840 canonical encoding keys name
+  `encoding_owner = G13-transport` in the frozen C2 tuple table
+  (`required-tuples.tsv`, sha `3c2dcdff…`: 18,840 of 78,330 rows carry a
+  non-empty `encoding_status`, all with `encoding_owner = G13-transport`, all
+  with row `owner = G15-C2`); CM1's committed `aliases.tsv` binds the same
+  counts per row (1,042 C2 rows; `keys` 78,330, `encoding` 18,840). The design
+  names "the classified G13 transport promotion" (`MANIFEST-DESIGN.md:189`);
+  the historical `.temp/brief-621/encoding-owner-additions.tsv` lists it, and
+  its witness file is absent — `PortBlocked` provenance, not authority.
+- **The ruling.** Admit `G13-transport` as one explicit Open owner of kind
+  `g13-transport`, alongside — not among — the 44 G13 S-step owners:
+  - subject: exactly the 18,840 encoding keys, bound per row by CM1's
+    committed `aliases.tsv` `encoding` counts and `key_digest`s; do not
+    commit an enumerated tuple table and do not read a `.temp` file in a
+    standing assertion;
+  - it never owns a C2 row; the row owner stays `G15-C2`;
+  - named bar: "transport encoding program not opened: no encoding execution,
+    receipt, scheduling or credit";
+  - identity, kind, state, subject binding and bar appear explicitly in one of
+    the permitted new tables; CM1's six committed tables are not edited;
+  - the registry `cm_owner_integrity` checks is the 50 CM1 states plus this one
+    (51 explicit states); an encoding key assigned to any other owner is red
+    for its own named predicate; `owner_closure(C2)` stays false;
+  - every encoding key is `Deferred(G13-transport, bar)` regardless of its
+    row's accepted disposition; nothing is scheduled, credited or executed.
+- **The 920 `NotYetBound` G13 rows** are the admitted PortBlocked debt (the
+  brief's "where possible" rule): of 964, 44 carry recorded numeric counts
+  totalling 3,025 and 920 are `NotYetBound`; no estimate, no zero-fill, each
+  one named.
+- **Unchanged:** every other rule of this brief — the permitted module and
+  table lists, the counted requirement bag (1,042 / 78,330 / 18,840), the
+  partition and proof identities, the owner-integrity negatives, the
+  maintenance replays, the two-mode suites and falsifiers, the campaign stop,
+  and every hard rule. The report must carry the new state in its counts and
+  its owner table.

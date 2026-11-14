@@ -113174,3 +113174,86 @@ named.** Run: `cdx` (unit `brief-737-cdx-20261114-135022-92947`, rc 0, peak
 modified, 0 deleted; report 7 PASS / 2 FLAGGED / 1 FAIL re-ruled, 459
 citations; 0 source edits; 0 historical-input edits).
 
+
+## Continuation 71 ruling — brief 738's pre-edit STOP is accepted, and
+`G13-transport` is admitted as an explicit Open owner for the 18,840 encoding
+keys
+
+**Run.** `cdx` (unit `brief-738-cdx-20261114-155211-166151`, rc 0, peak
+426,635,264 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_738.log`,
+520,190 B; 21 files all under `.temp/brief-738/` — 21 added, 0 modified, 0
+deleted; report 5 PASS / 1 FLAGGED / 1 FAIL / 2 NA, 48 citations; 0 source
+edits, 0 cargo runs, 0 guests, 0 encoding executions, 0 receipts, 0
+promotions). The worker stopped at input checkpoint 01 before writing any
+module or table: every one of the 18,840 canonical encoding keys names
+`encoding_owner = G13-transport` in the frozen C2 tuple table, and CM1's
+50-state owner registry (`owners.tsv`: `G15-C2`, the 44 G13 S-step owners,
+five source duties) carries no state for that identity. No substitute owner or
+Open state was inferred.
+
+**Q0 — the STOP is accepted, and the omission is mine.** The brief's
+owner-namespace sentence enumerated `G15-C2`, the 44 G13 S-step owners and the
+five source-provenance duties while requiring every deferral to carry an
+explicitly admitted Open owner; it did not admit the transport owner the
+encoding keys already name. I reproduced the worker's read-only audit from the
+same frozen inputs: `.temp/g15-c2/c68/required-tuples.tsv` (sha `3c2dcdff…`)
+has 78,330 data rows, of which 18,840 have a non-empty `encoding_status`
+(9,486 `BLOCKED_ENCODING`, 8,334 `SAME_SAVED`, 480
+`BlockedNewRouteNoEncodingExecution`, 440 `DIFF_SAVED`, 100
+`BlockedNewRoute_NoNewInternalEncodingRuns`); every one of those 18,840 rows
+carries `encoding_owner = G13-transport`, and every one carries row
+`owner = G15-C2`. CM1's committed `aliases.tsv` binds the same counts per row
+over the 1,042 C2 rows (`keys` sums to 78,330, `encoding` to 18,840 — my
+recomputation). `G13-transport` is not an invented identity: the governing
+design's known-loss promotion list names "the classified G13 transport
+promotion" (`MANIFEST-DESIGN.md:189`), and the historical G13 owner-additions
+table lists it (`G13-transport 94 94 14530 …` in
+`.temp/brief-621/encoding-owner-additions.tsv`). The two classification paths
+the worker looked for are absent (`.temp/brief-621/continuation2/
+classify_encoding.py`, `.temp/brief-621/witness-additions/G13-transport.tsv`),
+so their provenance is `PortBlocked` and nothing is restored. CM1's
+`owners.tsv` is not amended; its 50 states remain correct for its scope.
+
+**Q1 — admitted.** `G13-transport` is one explicit Open owner of kind
+`g13-transport`, alongside — not among — the 44 G13 S-step owners. Its subject
+is exactly the 18,840 encoding keys, bound per row by CM1's committed
+`aliases.tsv` counts and `key_digest`s; no enumerated tuple table is committed
+and no standing assertion reads a `.temp` file. It never owns a C2 row (the
+row owner stays `G15-C2`), it cannot be promoted or given a Done state in
+CM2, and its named bar is "transport encoding program not opened: no encoding
+execution, receipt, scheduling or credit". Its identity, kind, state, subject
+binding and bar appear explicitly in one of CM2's permitted new tables; every
+encoding key is `Deferred(G13-transport, bar)` regardless of its row's
+accepted disposition, and nothing is scheduled or credited. The registry CM2
+checks is the 50 CM1 states plus this one (51 explicit states); an encoding
+key assigned to any other owner is red for its own named predicate, and
+`owner_closure(C2)` stays false.
+
+**Q2 — the 920 `NotYetBound` rows are the brief's admitted PortBlocked debt,
+not a STOP.** Of the 964 G13 deferred rows, 44 carry recorded numeric counts
+totalling 3,025 and 920 are `NotYetBound`; all 964 are named in the worker's
+scratch `g13-count-input-audit.tsv`. The partial total is neither a bag count
+nor an estimate, no missing count is zero-filled, and each of the 920 stays
+`PortBlocked` and named. CM2 re-derives what the surviving 621 tables allow
+and names the rest.
+
+**Q3 — the run is a clean STOP.** 0 tracked changes, 0 source edits, 0 cargo
+runs, 0 guests, 0 encoding executions, 0 receipts, 0 promotions; all 21
+scratch files exist under `.temp/brief-738/` and were verified present;
+`scripts/report.py check 738` passes with 48 citations; the `--against-git`
+arm's 21 "in change but unchanged in the tree" problems are the expected
+invisibility of git-ignored `.temp` paths, not a scope violation; there was no
+filter interruption. Shape, maintenance, campaign and acceptance gates are
+unrun and are not claimed.
+
+**Q4 — re-dispatch.** Brief 738 is amended in place with a continuation-1
+ruling section naming `G13-transport` and the encoding keys' deferral,
+committed, and re-dispatched on `cdx` as the same one-stage brief. Everything
+else stands: the permitted modules and tables, the 32-MB prohibition (bind by
+per-row counts and digests), the canonical 70/20 pair counts (140/40), the 247
+unresolved aliases, the 7,061/3,034/826 diagnostics, the 42/12/24 transfer
+diagnostics, the five source duties, the maintenance replays, the two-mode
+suites and falsifiers, and every hard rule.
+
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
+no guest executes, and CHANGELOG and S10 stay blocked.
