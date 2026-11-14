@@ -112464,3 +112464,99 @@ attempt, weaken nothing.
 
 **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
 `BRIEF_WORKER` unset = `cdx`).
+
+## Continuation 63 ruling (2026-11-14) — entry STOP accepted uncredited; the cause is the director's C62 gate replay writing into the sealed scene; the one-field derived-receipt refresh is authenticated, the editor swap file is resolved, and continuation 64 re-runs the order body with that allowance
+
+Continuation 63 stopped at its entry, before any settlement move: the
+C62 seal assertion failed on exactly one artifact,
+`.temp/g15-c2/c62/canonical-replay-receipt.json`. The round is booked
+uncredited — zero settlement moves, builds, guests, records, replay
+runs, encoding runs, live edits or source edits; `P2623` remains
+approved but unapplied; C2 stays Open at 122 Residual + 1 Lost. The
+failed entry attempt (`logs/initialize-1.log`, exit 1), the failed
+final-publication attempt, the checkpoint syntax error and the
+premature seal are retained; nothing was weakened.
+
+**The cause is mine.** At the C62 gate I re-ran the canonical replay
+inside the sealed C62 scene; it wrote
+`logs/final-canonical-replay-2.log` and refreshed the derived
+`canonical-replay-receipt.json`'s `raw_replay_log` pointer
+(`final-canonical-replay-1.log` → `final-canonical-replay-2.log`). The
+C62 ruling disclosed the refresh; the C63 entry bar did not carry it
+into the C62 seal check. My independent verification: the C62 seal
+file is unchanged at
+`c96773c98040ed1dbbfb21f34d111c7b511bf1a8fb2a97bcd1815ad9b0d317e2`;
+the sealed manifest has 11,278 members with 0 missing and exactly that
+one changed path; reverting only `raw_replay_log` in the live receipt
+reproduces the sealed
+`e6c06bc253405a625cee3f246fe2770bfcf6676321c7ee3e189ccc8451b3f3c5`
+byte-exactly, and all eight derived outputs are exact. The only
+additional unsealed member is the attempt-2 raw replay log, which is
+the raw log of that refresh, not evidence content.
+
+**Q1: authenticate, do not restore.** The C55/C56 precedent stands:
+the refresh is a derived bookkeeping field, the seal is never
+re-pinned or edited, and the scene is bound by exactly one disclosed
+delta. The binding for continuation 64's entry:
+
+- seal `.temp/g15-c2/c62/artifact-hashes.json`
+  `c96773c98040ed1dbbfb21f34d111c7b511bf1a8fb2a97bcd1815ad9b0d317e2`;
+- sealed receipt `e6c06bc253405a625cee3f246fe2770bfcf6676321c7ee3e189ccc8451b3f3c5`,
+  live receipt `b93cafb3e939571df2925f7c73d609e4fdb50e270ab54cba62cebb5e44ac4729`;
+- the only differing field is `raw_replay_log`:
+  `.temp/g15-c2/c62/logs/final-canonical-replay-1.log` →
+  `.temp/g15-c2/c62/logs/final-canonical-replay-2.log`;
+- the eight derived outputs exact: `current-frozen-policy-counts.tsv`
+  `105e04a1…`, `family-freeze-order.json` `57a23d69…`,
+  `final-summary.json` `9f30d1e8…`,
+  `final-transitive-recheck-status.json` `03aff3dc…`,
+  `final-transitive-recheck-summary.json` `02473eaf…`,
+  `ledger-control-results.json` `c1793664…`, `residual-list.tsv`
+  `da4a4f39…`, `residuals.tsv` `da4a4f39…`;
+- one additional unsealed member,
+  `.temp/g15-c2/c62/logs/final-canonical-replay-2.log`, an append-only
+  raw log;
+- the original seal file and every other sealed byte unchanged; no
+  re-pin.
+
+**Q2: the editor artifact is resolved under director control.** The
+`.PROGRESS.md.swp` path that failed the final publication check was an
+environment editor artifact outside the worker's writes; it is absent
+now, no `.swp`/`.swo` file remains anywhere in the tree, and
+`PROGRESS.md`'s content is unchanged. The worker correctly left it
+untouched and retained the failed attempt. The final publication gate
+for the C63 round stays FAIL and is recorded as such; no assertion was
+weakened.
+
+**Root cause and fix (director workflow).** My gate replays must not
+write into sealed scenes. From continuation 64 on, a director replay
+runs against a copy under `.temp/director/gate-<scene>/` and the sealed
+scene is read-only. This is adopted in the workflow cleanup that
+follows this gate at the user's instruction (2026-11-14): the
+redundant per-round verifications are replaced by hash-identity reuse,
+and the handoff and commit-message duplication is pruned.
+
+**My own gate evidence.** Live tree 2,737 files at 0 missing / 0
+changed against the round's entry snapshot; tree clean at
+`326e772a` = `origin/main`; `git log 22e0fb4c..HEAD -- crates` empty;
+production 1,627 files at `3acf8a34…`; the live three-path entry delta
+exact (brief `3cbda7ea…` → `27f314b4…`, the two pinned declarations
+`ead1d8e6…`/`ca41f066…`); my protected walk 2,902,857 files equal to
+the worker's manifest with 0 diffs and 0 missing, the only allowed
+difference being the authorized `.temp/brief-623/report.json`
+publication (`e1160aad…`, identical to the scene copy; the C62 report
+`54a5ccf1…` archived); the C63 scene against its own 65-file seal 0
+missing / 0 changed with 20 mutable extras (the eight scene-mutable
+files and the twelve mutable-prefix logs); 19 run records with exactly
+three retained non-zero exits (the entry assertion, the checkpoint
+syntax error, the final publication); `.git-attempts` absent; the
+report is a valid `rum-report/1` (STOP, 7 PASS / 1 NA / 1 FLAGGED / 2
+FAIL checks, 0 measurements, 83 changes all under `.temp/`) and
+`report.py check 623` passes with 277 citations by my own run.
+
+**Next:** the workflow cleanup the user ordered (state.md pruning,
+commit-message and brief duplication removal, hash-identity reuse in
+the per-round checks, and `scripts/campaign-gate.py`), then
+continuation 64 re-runs the continuation-63 order body — apply the one
+`P2623` move by canonical raw replay, then the remaining 121-row tail
+— with the entry allowance above and the lean order format.
