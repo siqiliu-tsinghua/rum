@@ -112560,3 +112560,53 @@ the per-round checks, and `scripts/campaign-gate.py`), then
 continuation 64 re-runs the continuation-63 order body — apply the one
 `P2623` move by canonical raw replay, then the remaining 121-row tail
 — with the entry allowance above and the lean order format.
+
+## Campaign invariants (from continuation 64 on)
+
+These stand every round and are not restated in each order.
+
+- **Parks and reservations.** Every park (C50–C63) is not re-attempted
+  without a genuinely new instrument or an explicit ruling. The C58
+  source-only parks (`P0275`/`P0463`), the held `P0529`/`P1574` rows,
+  `P1573` Residual, `P1566` Lost and `P0496` reserved stand; the 13
+  pair columns stay held.
+- **Encoding.** Every encoding cell is G13-owned; `P2631`/`P2644` and
+  every blocked-encoding row stay behind G13; 0 encoding runs.
+- **Ledger.** 1,042 rows / 78,330 canonical keys / 18,840 encoding
+  rows; 1,018 paired sources; 24 explicitly unresolved sites with the
+  five named owners. Never weaken an assertion, delete an attempt,
+  relabel an invalid recipe or re-pin an inventory.
+- **Moves.** A settlement move is one canonical raw replay of the
+  pinned packet with `new_execution=false`, `equal_claim:false`, all
+  required keys retained and zero equality credit. `Equal` only with
+  its own caught omission and a complete real matrix; a `Boundary` only
+  with a documented terminal contract measured on the actual producer
+  path; `NoObservableTail` only with its own armed-hit survivor per
+  cell.
+- **Stop-loss.** Two consecutive zero-progress families stop the
+  round. The fresh allocation is 4 families / 16 builds / 512 guests /
+  4,000 records / 0 encoding, no transfer.
+- **Entry allowance.** The live tree's delta against
+  `.temp/g15-c2/c60/entry-hashes.json` is exactly this brief's appends
+  plus the two engine-written declarations at their pinned hashes; any
+  fourth delta is a STOP. A scene seal is checked by its sealed
+  manifest; a disclosed derived-receipt refresh is authenticated as
+  data (seal hash, sealed and live receipt hashes, the one differing
+  field, the eight output hashes, the added raw log) and the seal is
+  never re-pinned or edited.
+- **Verification reuse.** An instrument, manifest or scene whose hash
+  is unchanged reuses its calibration; a full re-derivation or full
+  content walk runs only on a source/generator change, a red scan or an
+  unexplained write. Inherited replays cover the scene this round's
+  move cites plus one rotating older scene; the rest is the mtime scan.
+  Director gate replays run on copies under
+  `.temp/director/gate-<scene>/`; a sealed scene is never written.
+- **Build control.** One same-epoch `--force` sha256 spot check of a
+  build made in this round must reproduce byte-identically; an
+  older-epoch entry is verified by the probe-build on-hit receipt/hash
+  check; no cross-epoch byte-identity bar.
+- **Delivery.** One `rum-report/1` record with `report.py check 623`
+  passing per round; scratch under `.temp/g15-c2/cNN`; no live edit,
+  git, network, `unsafe` or inventory edit. The director gate uses
+  `scripts/campaign-gate.py` (live, seal, move, protected, mtime,
+  report) for the bookkeeping table; evidence reading stays human.
