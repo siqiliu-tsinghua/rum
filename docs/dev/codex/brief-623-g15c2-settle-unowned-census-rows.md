@@ -113462,3 +113462,66 @@ the retention-fingerprint and ownership-graph maintenance replays, which are
 replayed, never hand-edited. C2 stays Open at 118 Residual + 0 Lost; no row
 settles, no owner is promoted, no guest executes, and `CHANGELOG.md` and S10
 stay blocked. The amended brief is re-dispatched on `cdx`.
+
+### Continuation 72 — third run: the CM3 layer lands partially; the certificate blocker and the campaign stop are ruled; continuation 3 continues from the tree
+
+**2026-11-14 — brief 739's third run implemented the layer and stopped with
+two FAILs.** Run `cdx`, unit `brief-739-cdx-20261114-185536-292099`, rc 0,
+peak 5,485,318,144 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_739.log`,
+5,514,326 B (sha256 `0c17972e…`); 62 files (51 added, 11 modified, 0 deleted);
+report 9 PASS / 3 FLAGGED / 2 FAIL / 1 NA, 990 citations; scratch
+`.temp/brief-739/` (58,073,026 B). No encoding run, no new `SAME`, no
+settlement, no owner promotion, no git, no network, no dependency.
+
+**What landed.** The two receipt accessors under the authorized feature; the
+CM3 modules (`coverage/{bindings,receipts,schedule,source,execution_tests}.rs`,
+`ledger/{proofs,known_losses,proof_tests}.rs`,
+`fixtures/obligations/{guest,native,boundaries,proof_controls}.rs`) and the
+five tables; the frozen requirement bag 21,010 rows (10,505 required + 10,505
+declarations: 120 bound, 10,385 blocked); two complete Execute families with
+120 bindings and 120 actual receipts per arm (168 subject pauses, 288
+lifecycle observations); 749 proof records (Boundary 20/735, Identity 5/185,
+NoObservableTail 126/7,260, Transferred 594/35,000, Unreachable 4/210) and 5
+known-loss records (3 exact, 2 authenticated C1 promotions); 68 retention
+fingerprints and the ownership cells replayed; the 15 runtime frame tests and
+both failing-free shape tests green; `cargo fmt --check` green (I reran it,
+rc 0).
+
+**FAIL 1 — `promoted-certificates`.** The fresh certificate rejects the
+feature-gated impl: `rule boundary impl changed:
+rum_runtime::runtime::accounting_mode::retained::RetainedValues <'_ ,
+AccountingShadow >`, identical at one thread and in both feature arms. This is
+the declaration audit requiring unconditional boundary declarations, not a
+stale cell. **Q4 ruling:** withdraw the feature and make both accessors
+unconditional, `#[doc(hidden)]`, read-only, with no call site outside the
+oracle test; the audit then records them like any other boundary declaration.
+The predicate is not touched and the paused retention line is not entangled.
+The first action of continuation 3 is that change plus the certificate rerun in
+both arms and at one thread; a failure not caused by the cfg is a STOP with
+the exact error.
+
+**FAIL 2 — `active-campaign`.** The mandatory stop-loss fired after `P0020`
+and `P0028` each added zero evidence: both have `target = -` in the accepted
+`aliases.tsv`. **Q5 ruling:** 13 unresolved-target rows / 785 keys (`P0020`
+60, `P0028` 60, `P0327` 50, `P0479` 50, `P1310` 60, `P1331` 55, `P1333` 60,
+`P1335` 60, `P2596` 30, `P2602` 30, `P2603` 30, `P2604` 210, `P2642` 30) are
+`PortBlocked(unresolved CM1 identity target)`, exactly named, never guessed; a
+later reviewed CM1 crosswalk may resolve them. With the 9 absent-packet rows
+(600 keys) the Execute side is 22 blocked rows / 1,385 keys and 153 bindable
+rows / 9,120 keys; `P0001`/`P0002` are done, so 151 rows / 9,000 keys remain. A
+batch that yields zero evidence because its rows are `PortBlocked` with a
+named cause does not count toward the stop-loss.
+
+**Q6 ruling:** the C1 promotion stays authenticated; the absent original
+baseline details stay `PortBlocked` with the path named; no fresh allowed-DIFF
+baseline and no reconstruction.
+
+**The remainder (continuation 3).** Complete the 151 remaining families, the
+146 present-packet proof duties / 8,030 keys and the `P0011` current-source
+blocker; keep the 598 absent records and the 13 unresolved rows named; rerun
+the shape tests, the both-arm falsifiers and the maintenance replays from the
+final source; then measure the complete schedule and run the acceptance suite.
+The 1,500 s bound stands: over it, STOP with the measured data and the sharing
+analysis, never sampling and never substituting a historical timing. The
+partial tree is the state to continue from. C2 stays Open at 118 Residual +
+0 Lost; `CHANGELOG.md` and S10 stay blocked.

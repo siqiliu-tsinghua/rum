@@ -42,16 +42,22 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   obligations, the exact 10,505 Execute / 24,435 Deferred / 43,390 Proof
   partition, 51 Open owners (including `G13-transport` for the 18,840
   encoding keys) and 30 falsifiers; the workspace is 4,295/0/64 in both
-  modes. CM3 (brief 739) stopped pre-edit twice under continuation 72: first
-  on an unselected calibration cohort, now on `P0001`'s receipt-charge
-  observer. Rulings: the cohort is selected (`P0941`/`P0946`, `P0001`,
-  `P1556`, `P0011`, `P0496`, `P0500`), the absent continuation2 packets
-  leave 600 Execute keys and 598 proof rows `PortBlocked` with named paths,
-  and the production prerequisite is authorized — an off-by-default
-  `test-receipt-observers` feature adding `#[doc(hidden)]`
-  `actual_receipt_bytes()` to `RetainedValues` and `CallbackValue`, with the
-  deterministic shape gate replacing the timing A/B; the brief is
-  re-dispatched, then CM4-CM5.
+  modes. CM3 (brief 739) stopped twice pre-edit under continuation 72 (the
+  unselected cohort, then `P0001`'s receipt-charge observer) and its third
+  run landed the layer partially: 120 bindings and 120 actual receipts per
+  arm over two families, 749 proof records (5 packets authenticated, 4 rows
+  current-source verified), 5 known-loss records, 68 fingerprints replayed.
+  Rulings: the cohort is selected (`P0941`/`P0946`, `P0001`, `P1556`,
+  `P0011`, `P0496`, `P0500`); the absent continuation2 packets leave 600
+  Execute keys and 598 proof rows `PortBlocked` with named paths; the
+  observer is an unconditional `#[doc(hidden)] actual_receipt_bytes()` on
+  `RetainedValues`/`CallbackValue` (the feature is withdrawn — the
+  rule-boundary audit rejects cfg-dependent impls — and the timing A/B is
+  replaced by the deterministic shape gate); the 13 unresolved-target rows /
+  785 keys are `PortBlocked` names and the campaign continues; the C1
+  baseline details stay blocked. Continuation 3 finishes the 151 rows /
+  9,000 keys, the 146 present-packet proof duties / 8,030 keys and the
+  acceptance suite under the 1,500 s schedule bound; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

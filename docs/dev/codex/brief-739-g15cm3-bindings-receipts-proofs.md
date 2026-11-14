@@ -472,3 +472,81 @@ the scope by exactly four files; every other ruling and gate stands.
   a substitute.
 - **Gates unchanged:** the six shape tests, both-arm falsifiers, the
   campaign, the acceptance suite, the report format and every hard rule.
+
+## Continuation 3 ruling (director) — the observer is unconditional; the campaign continues past the named blockers
+
+Your STOP is accepted: the campaign stop-loss fired correctly, and the
+certificate failure is real, not an ordering artifact. I reproduce it exactly —
+`rule boundary impl changed:
+rum_runtime::runtime::accounting_mode::retained::RetainedValues <'_ ,
+AccountingShadow >`, same at one thread and in both feature arms. The
+maintenance work is preserved and no cell was hand-edited. This section rules
+Q4–Q6 and defines the remainder; everything else in this brief stands.
+
+- **Q4 — the observer design is revised; the audit predicate is not touched.**
+  `rules.rs` and `option_boundaries.rs` require boundary declarations to be
+  unconditional, and a cfg-dependent impl can never be audited this way.
+  Widening that predicate would entangle the paused retention line with this
+  branch, so the feature is withdrawn instead:
+  - remove `test-receipt-observers` from `crates/rum-runtime/Cargo.toml` and
+    from `crates/rum-stdlib/Cargo.toml`;
+  - make both accessors unconditional, `#[doc(hidden)]`, read-only, with no
+    `unsafe` and no call site outside the oracle test:
+
+  ```rust
+  #[doc(hidden)]
+  impl RetainedValues<'_, AccountingShadow> {
+      pub fn actual_receipt_bytes(&self) -> Option<usize> {
+          AccountingShadow::bytes(&self.receipt)
+      }
+  }
+  ```
+
+  and the parallel impl for `CallbackValue<'_, '_, AccountingShadow>`. The
+  "no default-path cost" rule is about runtime cost: an uncalled getter has
+  none, and the audit records it like every other boundary declaration. My
+  earlier "a default build must not contain them" is superseded by this
+  ruling, for this reason.
+
+  **First action:** land exactly this change and rerun the failing
+  `local_production_acceptance` in both arms and at one thread. If it still
+  fails for a reason not caused by the cfg, STOP with the exact error before
+  porting anything else.
+- **Q5 — the 13 unresolved-target rows are `PortBlocked`; the campaign
+  continues.** `P0020` (60 keys), `P0028` (60), `P0327` (50), `P0479` (50),
+  `P1310` (60), `P1331` (55), `P1333` (60), `P1335` (60), `P2596` (30),
+  `P2602` (30), `P2603` (30), `P2604` (210), `P2642` (30) — 13 rows / 785
+  keys whose target is `-` in the accepted `aliases.tsv`. Each is
+  `PortBlocked(unresolved CM1 identity target)`, exactly named, never guessed
+  by suffix, nearest-line or observation; a later reviewed CM1 crosswalk may
+  resolve them. With the 9 absent-packet rows (`P0018`, `P0580`, `P0709`,
+  `P0790`, `P0795`, `P0798`, `P0801`, `P2287`, `P2288`; 600 keys) the Execute
+  side is 22 blocked rows / 1,385 keys and 153 bindable rows / 9,120 keys —
+  `P0001` and `P0002` (120 keys) are already bound and executed, so 151 rows /
+  9,000 keys remain. A batch that yields zero evidence *because its rows are
+  `PortBlocked` with a named cause* does not count toward the two-batch
+  stop-loss; continue with the remaining rows.
+- **Q6 — the C1 promotion stays as it is.** The authenticated promotion is
+  imported; the missing original program/tuple/request/structured-difference
+  details stay `PortBlocked` with the absent path named. No fresh
+  allowed-DIFF baseline and no reconstruction.
+- **The remainder.** After the accessor fix and the green certificate:
+  - complete every remaining bindable family (151 rows / 9,000 keys) with
+    exact row/key progress and every authenticated attempt retained;
+  - authenticate the 146 present-packet proof duties / 8,030 keys, and record
+    `P0011` as a current-source blocker with its own predicate; the 598 absent
+    records / 35,135 keys and the 13 unresolved rows stay named;
+  - rerun the six shape tests and the both-arm falsifiers;
+  - rerun the maintenance replays after the accessor change (the retention
+    fingerprints and the ownership-graph cells), once, from the final source;
+  - then measure the complete schedule and run the acceptance suite. The
+    1,500 s bound stands: if the complete schedule exceeds it, STOP with the
+    measured build+run data and the sharing analysis — never sample, never
+    drop a context, never substitute a historical timing.
+  - Report every count, the blocked totals (Execute 22 rows / 1,385 keys;
+    proof 598 rows / 35,135 keys absent, 146 rows / 8,030 keys pending
+    authentication, `P0011` blocked), and the exact pending state if you stop
+    again.
+- **The tree is the state to continue from.** The partial work already in the
+  tree (62 files) is kept; do not restart from scratch and do not copy a
+  stale generated cell.
