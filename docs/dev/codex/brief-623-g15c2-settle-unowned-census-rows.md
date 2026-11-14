@@ -113096,3 +113096,81 @@ one.** Run: `cdx` (unit `brief-736-cdx-20261114-131016-80712`, rc 0, peak
 344,948,736 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_736.log`, 48,574
 lines / 3,787,848 B, sha256 `e737f6ac…`; 36 files all under `.temp/brief-736/`;
 report 5 PASS / 4 FLAGGED / 1 NA, 124 citations; 0 source edits).
+## Continuation 70 ruling (2026-11-14) — brief 737 (G15-CM 1, accepted population and stable source discovery) accepted; continuation 71 opens CM2 as brief 738
+
+rules brief 623 continuation 70: brief 737 (G15-CM 1, the accepted population
+and stable source discovery) accepted on `cdx` as a test-only identity layer,
+and continuation 71 opens CM2 as brief 738. The layer binds the accepted
+population to committed tables: 2,204 aliases = 1,024 C2-original rows replaced
+by their C68 record + 18 C68 additions + 964 G13-deferred rows over 44 S-step
+owners (S10 = 28 deferred + 10 measured Equal + 1 known loss) + 198 prior
+settlements (43 Equal / 5 Lost / 140 Unreachable / 10 Boundary); the 1,042 C2
+rows carry 78,330 five-component canonical keys and 18,840 encoding keys; 513
+excluded strict tails and 283 retained roots stay explicit with their original
+indexed caller/root links; 247 aliases remain unresolved (197 PortBlocked, 37
+ambiguous occurrences, 13 unapproved alias collisions) and stay named, never
+retired or merged. Discovery derives ProducerId (qualified function/impl/trait
++ normalized signature + cfg arm), ConsumerSiteId (enclosing qualified function
++ call-token digest + occurrence index), EdgeKey, ObligationKey and the
+transfer fixed point from the current tree with syn: 799 files, 9,458
+functions, 72,696 calls, 26,344 resolved source edges and 9,477 evaluation
+candidates; reconcile reports exactly NewEdge 7,061, AmbiguousDispatch 3,034,
+UnknownConstruct 826, PortBlocked 239, AmbiguousOccurrence 50,
+MissingTransferTarget 12 and ChangedCallerGraph 24, with
+missing/stale-tail/stale-destructor zero, and both feature arms are
+byte-identical. My independent reproduction of the inventory: every count above
+recomputed from the committed TSVs; all 1,042 per-row key digests recomputed
+from `required-tuples.tsv`; `P0325`/`P0326` each 70 keys / 20 encoding
+(140/40); the verdict composition (Equal 175 / Transferred 594 /
+NoObservableTail 126 / Residual 118 / Boundary 20 / Identity 5 / Unreachable 4)
+equals the sealed C68 ledger; every mapped alias's (legacy function, tokens)
+matches exactly one discovered row and all 37 position admissions carry a
+verified whole-file pairing hash; all 22 provenance pins verify; the six
+committed tables' sha256 equal the scope log; the 2,430-row population's alias
+cells and policy unions are exact; the maintenance delta is 68 retention rows
+at column 19 only, 2 promoted rows at columns 5/6 only, six byte-identical
+ownership inventories and the sole `pub mod obligations;` line. Rulings: Q0 the
+worker's workspace red is the documented switch-gating, not a regression — the
+host falsifiers record only under `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`
+(`profiling/config.rs:570`, the SWITCH_GATED list at
+`scripts/director-gate.py:87`); my runs are green — default workspace 70
+binaries / 4,272 passed / 0 failed / 63 ignored (peak 13,789,741,056 B),
+no-default workspace the same totals (peak 10,964,045,824 B),
+`suspension_oracle` 506 passed + 2 ignored in 164.83 s / 163.46 s and
+`typed_slot_census` 10 + 1 ignored in 57.45 s / 57.64 s in the two modes, the
+lp03 binary 3/3 and lp04/lp05 1/1 each under the switch, and `lp655`/`lp656`
+are the documented standing two-arm reds (brief 701's expected 192/2/2) — so
+the FAIL is re-ruled a protocol artifact: my brief's acceptance wording omitted
+the skip list and `--no-fail-fast`. Q1 the 247 unresolved aliases stay
+PortBlocked/ambiguous; a later reviewed, versioned cross-walk may add
+identities only on exact evidence, never by retirement, merge or nearest-line.
+Q2 the 7,061 new candidate edges are named diagnostics, not accepted
+obligations; CM2 performs the requirements/owners review and nothing is waived
+into the population. Q3 the 3,034 ambiguous dispatch and 826 unknown-construct
+diagnostics stay blockers; no suffix matching, no feature pruning, and a scoped
+resolution brief may add macro/type resolution with copied-source falsifiers.
+Q4 the 42 unresolved transfer sources, 12 missing targets and 24 changed
+caller-graph diagnostics stay preserved with their original links; no root or
+cycle proof is invented and transfer completeness remains blocked. Q5 the
+ratified replacement derivation stands; the four absent 621 inputs stay named
+and no historical restoration or execution closure is claimed. Q6 the module
+split is deferred: `discovery.rs` (707 lines) and `tests.rs` (601 lines) stay
+within the fence; the split lands with the next substantive extension under a
+rewritten scope. The three disclosures are accepted (authorized scratch, the
+existing certificate replay path, the ignored regenerator output). C2 stays
+Open at 118 Residual + 0 Lost; no row is settled, no owner promoted, no guest
+executed, and CHANGELOG and S10 stay blocked. Continuation 71 opens CM2 as
+brief 738 (`docs/dev/codex/brief-738-g15cm2-requirements-owners.md`,
+test-only): exhaustive policy/applicability/route tables, the counted
+requirement bag over the accepted population (1,042 / 78,330 / 18,840 exact,
+the 964 G13 rows re-derived from the surviving 621 tables), an exact and
+disjoint enforced/deferred/proof partition, explicit owner states for the 44
+G13 owners and the five named source-provenance duties, and test-only
+integrity/closure predicates with `owner_closure(C2)` false; no execution, no
+promotion, and every unrecoverable requirement datum is PortBlocked and
+named.** Run: `cdx` (unit `brief-737-cdx-20261114-135022-92947`, rc 0, peak
+11,089,420,288 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_737.log`,
+85,056 lines / 4,258,890 B, sha256 `10376fba…`; 16 files — 13 added, 3
+modified, 0 deleted; report 7 PASS / 2 FLAGGED / 1 FAIL re-ruled, 459
+citations; 0 source edits; 0 historical-input edits).
+

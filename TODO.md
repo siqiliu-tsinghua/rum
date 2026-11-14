@@ -4,7 +4,7 @@ This file is for active or near-term work only. Completed history and
 operational lessons live in [PROGRESS.md](./PROGRESS.md) (append-only log),
 and release-facing changes live in [CHANGELOG.md](./CHANGELOG.md).
 
-Status checkpoint: 2026-11-10. The committed tree runs through:
+Status checkpoint: 2026-11-14. The committed tree runs through:
 - G13 step S9 (brief-617, control and cleanup; gated, below);
 - G15-A (brief-619, `afdcd02f`) and G15-B (brief-620, `43a26c72`);
 - the G15-C design (brief-621, accepted `8f77793c`) and G15-C1 (brief-622,
@@ -28,6 +28,15 @@ Status checkpoint: 2026-11-10. The committed tree runs through:
   disabled source-timing seam's repair (brief 718, accepted 2026-11-10:
   3 Ir/call on both campaign labels, helper at zero calls, workspace
   4,212/0/61);
+- G15-CM 1 (brief 737, accepted 2026-11-14): the test-only obligation
+  identity layer binds the accepted 2,204-alias population (1,042 C2 rows /
+  78,330 keys / 18,840 encoding, every key digest recomputed; 964 G13 rows
+  over 44 owners; 198 prior settlements; 513/283 transfers), derives the
+  source graph (799 files / 26,344 resolved edges / 9,477 candidates) and
+  names every delta (7,061 new / 3,034 ambiguous dispatch / 826 unknown /
+  12 missing transfer targets / 24 changed caller graphs); the workspace is
+  green in both modes under the seven switch-gated skips; C2 stays Open at
+  118 Residual + 0 Lost. CM2 (brief 738) follows, then CM3-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

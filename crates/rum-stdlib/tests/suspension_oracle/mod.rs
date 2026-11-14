@@ -4,4 +4,5 @@ pub mod descriptors;
 pub mod fixtures;
 pub mod manifest;
 mod mutations;
+pub mod obligations;
 pub mod support;
