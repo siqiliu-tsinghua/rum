@@ -113525,3 +113525,70 @@ The 1,500 s bound stands: over it, STOP with the measured data and the sharing
 analysis, never sampling and never substituting a historical timing. The
 partial tree is the state to continue from. C2 stays Open at 118 Residual +
 0 Lost; `CHANGELOG.md` and S10 stay blocked.
+
+### Continuation 72 — fourth run: the getter ruling lands, nine rows complete, and the adapter source wall is opened by test-only source reuse
+
+**2026-11-14 — brief 739's fourth run implemented the continuation-3 getter
+ruling, expanded the executed layer to nine complete rows, and stopped at the
+first source-scope wall.** Run `cdx`, unit
+`brief-739-cdx-20261114-201343-315874`, rc 0, peak 15,786,823,680 B (under the
+16 GiB unit), oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_739.log`,
+13,465,975 B; 170 files (162 added, 8 modified, 0 deleted); report 12 PASS / 3
+FLAGGED / 1 FAIL, one FLAGGED measurement, 3 disclosures, 4 deviations, 1
+question; 3,016 citations verified. No encoding run, no new `SAME`, no
+settlement, no owner promotion, no git, no network, no dependency.
+
+**What landed.** The two unconditional `#[doc(hidden)] actual_receipt_bytes`
+accessors; nine complete Execute rows (`P0001`, `P0002`, `P0145`, `P0214`,
+`P0216`, `P0239`, `P0245`, `P0248`, `P0249`) at 525 keys per arm over seven
+fixture families (940 pauses, 1,318 lifecycle observations); 21,010 binding
+rows (10,505 required + 10,505 declarations: 525 bound, 9,980 blocked); 749
+proof records / 43,390 keys with 130 packets authenticated / 7,425 keys and
+105 current-source verified / 5,965 keys; 5 known-loss records (3 Lost + 2
+Promoted); the 68 retention fingerprints and the ownership cells replayed;
+`cargo fmt --check` green. My own gate reproduced the totals in both feature
+arms (six shape tests each), the certificate at one thread in both arms (zero
+rejections), the switched LP targets 5/5 in both arms, and — on the host — the
+workspace 70 suites 4,303 passed / 0 failed / 64 ignored in both feature modes
+(the nine sandbox loopback `EPERM` failures pass outside the sandbox).
+
+**The STOP — accepted.** `P2611`/`P2612` bind
+`crates/rum-jupyter/src/adapter/worker.rs:350:::run_segment@358`; the unchanged
+source imports `crate::{KernelExecuteOutcome, KernelExecuteRequest,
+KernelMessageHeader}` and `super::{render, input_retirement}`. The worker's
+read-only source-reuse probe failed E0432/E0433, its single edit was restored
+byte-exact, and the two 30-key packets were authenticated with zero bindings
+and zero receipts — no fabricated credit and no scope creep. The STOP is
+correct under "no source-scope expansion".
+
+**Q7 ruling — test-only source reuse is authorized.** I proved the fix
+compiles: at the oracle test root, `extern crate self as rum_host;` plus
+`#[path]` includes of `crates/rum-jupyter/src/model.rs` (with root re-exports)
+and `crates/rum-jupyter/src/adapter/mod.rs` compile the unchanged adapter
+(`worker`, `execute`, `render`, `iopub`, `input_retirement`) under `cargo check`
+and `cfg(test)`; the same pattern covers `crates/rum-repl/src/request.rs` with
+`crates/rum-terminal/src/lib.rs` if that row is reached. Authorized: editing
+the test root and new test-only modules, the `#[path]` includes, and the
+minimal root re-exports/aliases. Forbidden: editing, copying or rewriting any
+included source; any Cargo change; adding `rum-jupyter`/`rum-repl` as a
+dependency; stubs or re-typed stand-ins; substituting Host eval for adapter
+execution. The receipts must come from the actual included-source execution at
+multiplicity one through the same private constructor and 13-channel/lifecycle
+protocol, with observations crossing the adapter's worker thread captured from
+the executing thread.
+
+**Continuation 4.** Before the campaign, compile-probe every distinct source
+placement of the 144 remaining rows (56 files today plus 25 non-source routes
+over 1,370 rows) and report the reachability table; a placement that cannot
+compile is `PortBlocked(<exact path/error>)` and does not count toward the
+stop-loss; a production or Cargo need is still a STOP. Then continue the
+campaign over the 144 rows / 8,595 keys, authenticate and current-verify the 21
+present proof duties / 830 keys, and keep named: the 598 absent records /
+35,135 keys, the 25 authenticated-but-current-blocked proof records (15
+unresolved targets / 880 keys, 10 source mismatches / 580 keys) and the 22
+director-named Execute blockers / 1,385 keys. Measure the complete active
+schedule and run the acceptance suite under the 1,500 s bound — over it, STOP
+with the measured data and the sharing analysis; never sample, never substitute
+a historical timing. C2 stays Open at 118 Residual + 0 Lost; no settlement, no
+promotion, no encoding key; `CHANGELOG.md` and S10 stay blocked. The partial
+tree is the state to continue from.

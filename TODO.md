@@ -55,9 +55,20 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   rule-boundary audit rejects cfg-dependent impls — and the timing A/B is
   replaced by the deterministic shape gate); the 13 unresolved-target rows /
   785 keys are `PortBlocked` names and the campaign continues; the C1
-  baseline details stay blocked. Continuation 3 finishes the 151 rows /
-  9,000 keys, the 146 present-packet proof duties / 8,030 keys and the
-  acceptance suite under the 1,500 s schedule bound; then CM4-CM5.
+  baseline details stay blocked. The fourth run landed the getter ruling and
+  nine complete rows / 525 keys per arm (940 pauses, 1,318 lifecycle
+  observations; 130 proof packets authenticated / 7,425 keys, 105
+  current-source verified / 5,965 keys; 21 present duties / 830 keys
+  pending), then stopped at the Jupyter adapter source wall; the
+  continuation-4 ruling authorizes test-only source reuse at the oracle root
+  (`extern crate self as rum_host;` plus `#[path]` includes of the unchanged
+  `model.rs` and `adapter/mod.rs`, and the same pattern for
+  `rum-repl`/`rum-terminal` if reached), proven to compile, and continues the
+  campaign over the remaining 144 rows / 8,595 keys after a placement
+  reachability probe, with the 22 director-named Execute blockers / 1,385
+  keys, the 598 absent proof records / 35,135 keys and the 25
+  authenticated-but-current-blocked proof records named, under the 1,500 s
+  schedule bound; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

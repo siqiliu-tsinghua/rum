@@ -550,3 +550,118 @@ Q4–Q6 and defines the remainder; everything else in this brief stands.
 - **The tree is the state to continue from.** The partial work already in the
   tree (62 files) is kept; do not restart from scratch and do not copy a
   stale generated cell.
+
+## Continuation 4 ruling (director) — the adapter source wall is opened by test-only source reuse; the campaign continues to the end of the active bag
+
+**2026-11-14 — brief 739's fourth run implemented the continuation-3 getter
+ruling and expanded the layer to nine complete rows, then stopped at the first
+source-scope wall. The STOP is accepted; the scope is now authorized; continue.**
+Run `cdx`, unit `brief-739-cdx-20261114-201343-315874`, rc 0, peak
+15,786,823,680 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 13,465,975 B; 170 files (162 added, 8 modified,
+0 deleted); report 12 PASS / 3 FLAGGED / 1 FAIL, one FLAGGED measurement, 3
+disclosures, 4 deviations, 1 question; `scripts/report.py check 739` passes
+with 3,016 citations.
+
+**What landed and what I reproduced myself.**
+- The two `#[doc(hidden)] actual_receipt_bytes` accessors are unconditional and
+  append-only (`retained.rs`, `bridge.rs`), `test-receipt-observers` is gone,
+  and no `Cargo.toml`/`Cargo.lock` line changed. `cargo fmt --check` rc 0 (my
+  run).
+- 21,010 binding rows (10,505 required + 10,505 declarations): 525 bound and
+  9,980 blocked. The nine complete rows are `P0001` 60, `P0002` 60, `P0145` 30,
+  `P0214` 30, `P0216` 60, `P0239` 55, `P0245` 55, `P0248` 120, `P0249` 55 =
+  525 keys over 7 fixture families.
+- 749 proof records / 43,390 keys with the exact class counts; 130 packets
+  authenticated / 7,425 keys; 105 current-source verified / 5,965 keys; 21
+  present duties / 830 keys pending; 598 absent records / 35,135 keys; 5
+  known-loss records (3 Lost + 2 Promoted) with the C1 baseline details
+  explicitly `PortBlocked`.
+- My shape runs, both feature arms, six tests each: `cm_bindings_exact`,
+  `cm_receipts_exact`, `cm_proof_certificates_exact`, `cm_loss_baselines_exact`
+  and the two negative-control suites pass (`CM RECEIPTS PASS calibration=P0001
+  rows=9 families=7 bound=525 executed=525 multiplicity=1 actual_pauses=940
+  lifecycle=1318 campaign_remaining=8595 PortBlocked=1385`;
+  `CM PROOFS PASS imported=749/43390 packet_authenticated=130/7425
+  absent=598/35135 current_verified=105/5965`); the 18 execution and 15
+  proof/loss falsifiers reject at their named predicates.
+- My certificate runs: `local_production_acceptance` green in both arms at one
+  thread with zero rejections.
+- Spot-checks: the sample `VerifiedPacket` rows' packet sha256 and source-file
+  sha256 match the table and the filesystem; the nine workspace failures in
+  both worker logs are the sandbox loopback `Operation not permitted` guard at
+  `zeromq_native_test_support.rs:346`, not a tree red.
+- My host workspace runs, seven documented skips: default 70 suites,
+  4,303 passed / 0 failed / 64 ignored (6.99 GB peak) and no-default the same
+  4,303 / 0 / 64 (7.29 GB peak), rc 0 — exactly the worker's 4,294 passed plus
+  the nine loopback tests, which pass outside the sandbox. The switched LP
+  targets pass 5/5 in both arms (`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`).
+
+**Q7 ruling — test-only source reuse is authorized for downstream-crate source
+placements.** The STOP is correct: `P2611`/`P2612` bind
+`crates/rum-jupyter/src/adapter/worker.rs:350:::run_segment@358`, whose
+unchanged source imports `crate::{KernelExecuteOutcome, KernelExecuteRequest,
+KernelMessageHeader}` and `super::{render, input_retirement}`; the worker's
+probe fails with E0432/E0433 through the oracle files alone, its single edit
+was restored byte-exact, and the two 30-key packets were authenticated with
+zero bindings and zero receipts. I verified independently that the fix
+compiles and drives: at the oracle test root, `extern crate self as rum_host;`
+plus `#[path]` includes of `crates/rum-jupyter/src/model.rs` (with root
+re-exports) and `crates/rum-jupyter/src/adapter/mod.rs` (whose `worker`,
+`execute`, `render`, `iopub` and `input_retirement` children resolve under it)
+compile the unchanged adapter under `cargo check` and under `cfg(test)`; a
+probe test constructs the included `HostSession`, wraps it in the unchanged
+`KernelAdapter` and calls `kernel_info` — 13 tests pass under
+`.temp/director/probe-adapter/` — and `extern crate self as ...` works in a
+test binary.
+
+Authorized (this supersedes the earlier Scope file list where they differ):
+- Editing the test root `crates/rum-stdlib/tests/suspension_oracle.rs` and
+  adding test-only modules under `crates/rum-stdlib/tests/suspension_oracle/`
+  for the adapter driver.
+- `#[path]`-including unchanged sources of downstream workspace crates when a
+  required key's named source placement needs them: today
+  `crates/rum-jupyter/src/model.rs` and `crates/rum-jupyter/src/adapter/{mod,
+  worker,execute,render,iopub,input_retirement}.rs` for `P2611`/`P2612`, and,
+  if reached, `crates/rum-repl/src/request.rs` with
+  `crates/rum-terminal/src/lib.rs`. The duty is general: any required key whose
+  named placement is a workspace-crate source may be reached this way, with the
+  exact included set disclosed. `host_facade.rs` and every included source stay
+  byte-for-byte unchanged.
+- The minimal crate-root re-exports and `extern crate self as <crate>` aliases
+  needed to make those unchanged sources resolve.
+
+Forbidden, unchanged: editing, copying or rewriting any included production
+source; any `Cargo.toml`/`Cargo.lock` change; adding `rum-jupyter` or
+`rum-repl` as a dependency (it would compile a second host stack inconsistent
+with the included facade); stubs, shims or re-typed stand-ins for production
+types; substituting Host eval for adapter execution.
+
+Requirements:
+- The receipts for these rows come from the actual execution of the included
+  source at multiplicity one, through the same private constructor, the same
+  13-channel set and the same lifecycle protocol as every other row;
+  observations crossing the adapter's execute-worker thread must be captured
+  from the executing thread (join/channel), never assumed.
+- Before the campaign, compile-probe every distinct source placement of the 144
+  remaining rows — 56 distinct files today (rum-runtime 40, rum-stdlib 13,
+  rum-repl 1, rum-jupyter 1, rum-host 1) plus the 25 non-source routes over
+  1,370 rows — and report the reachability table; a placement that cannot
+  compile under this rule is `PortBlocked(<exact unresolved path/error>)` and a
+  zero-evidence batch of named blockers does not count toward the stop-loss; a
+  need for a production change or a Cargo edit is still a STOP.
+- Continue the campaign over the remaining 144 rows / 8,595 keys; authenticate
+  and current-verify the 21 present proof duties / 830 keys; keep the 598
+  absent records / 35,135 keys, the 25 authenticated-but-current-blocked
+  proof records (15 unresolved targets / 880 keys, 10 source mismatches /
+  580 keys) and the 22 director-named Execute blockers / 1,385 keys named with
+  their exact predicates.
+- Then measure the complete active schedule and run the acceptance suite under
+  the 1,500 s bound; over it, STOP with the measured build+run data and the
+  sharing analysis — never sample, never drop a context, never substitute a
+  historical timing.
+
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
+no encoding key runs, `CHANGELOG.md` and S10 stay blocked. The partial tree is
+the state to continue from; do not restart and do not hand-edit a generated
+cell.
