@@ -113414,3 +113414,51 @@ continuation-1 section selects the cohort and rules the blocked classes; every
 other rule, table, replay and gate is unchanged. C2 stays Open at 118 Residual
 + 0 Lost; no row settles, no owner is promoted, no guest executes, and
 `CHANGELOG.md` and S10 stay blocked.
+
+### Continuation 72 — second STOP: `P0001` needs a production receipt-charge observer; Q3 ruled and the scope rewritten
+
+**2026-11-14 — the amended brief stopped again, still pre-edit, on its
+mandatory `P0001` calibration.** Run `cdx`, unit
+`brief-739-cdx-20261114-183953-287859`, rc 0, peak 322,494,464 B, oom 0 /
+oom_kill 0; log `.temp/logs/cdx_brief_739.log`, 825,502 B; 0 tracked changes,
+0 source or inventory edits, 0 cargo runs, 0 guests, 0 receipts, 0 encoding,
+0 promotions; 37 scratch files under `.temp/brief-739/` (1,055,190 B); report
+6 PASS / 1 FLAGGED / 1 NA, `check: OK, 138 citations verified`.
+
+The blocker is real and I verified every element in the tree:
+`CallbackValue.receipt` is private, `RetainedValues.receipt` is `pub(super)`,
+`Mode` is `pub(in crate::runtime)` and its `bytes` is runtime-only; no direct
+receipt accessor exists. The historical direct read lives only in the scratch
+instrumented kernel (`.temp/g15-c2/c34/prepare_callback_charge.py`). `P0001`'s
+own-omission control differs from its real arm in exactly one channel,
+`C34ActualCallbackReceiptBytes.0` 32/0, and every public observation and other
+native row is equal — so the ledger total, a public scalar or a skipped key
+cannot stand in for the actual charge.
+
+**Q3 — the production prerequisite is authorized; the scope is rewritten by
+exactly four files.** `rum-runtime` gains the off-by-default feature
+`test-receipt-observers` and two `#[doc(hidden)]` read-only inherent methods
+`actual_receipt_bytes()` on `RetainedValues<'_, AccountingShadow>` and
+`CallbackValue<'_, '_, AccountingShadow>` (parallel `Unarmed` impls returning
+`None` only if the disabled arm needs the call); `rum-stdlib`'s dependency
+gains the feature beside the existing test features. The `Mode` and
+`RetentionMode` traits, every field, existing function body and call site stay
+untouched; no `unsafe`, dependency, `Cargo.lock` change or new warning.
+
+**The hot-path A/B is replaced, openly.** The rule exists to catch changed
+emitted code; this change adds dead getters under a default-off feature and
+edits no existing line, so there is no emitted-code delta to measure. The gate
+is deterministic: the diff adds only feature-gated lines, no runtime code
+calls the accessors, and the default-feature build of `rum-runtime` is green;
+symbol inspection is reported where symbols materialize and disclosed where
+they do not.
+
+**Unchanged:** all 60 `P0001` keys, its 60 frozen plans, 84 planned pauses, the
+two observer points (`callback-value` before adoption, `resumed-value` after
+`resume_values` and `push`) and the 32/0 discriminator; the selected cohort;
+the blocked-classes ruling; the six shape tests; both-arm falsifiers; the
+campaign; the acceptance suite; every hard rule. The production edit triggers
+the retention-fingerprint and ownership-graph maintenance replays, which are
+replayed, never hand-edited. C2 stays Open at 118 Residual + 0 Lost; no row
+settles, no owner is promoted, no guest executes, and `CHANGELOG.md` and S10
+stay blocked. The amended brief is re-dispatched on `cdx`.

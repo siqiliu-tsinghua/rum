@@ -397,3 +397,78 @@ keys), `P0580` (70), `P0709` (165), `P0790` (60), `P0795` (60), `P0798` (60),
   - No committed standing assertion reads a `.temp` file. Any packet replay
     you perform is a scratch run recorded with its sha256 in the report; the
     standing tests read only committed inputs.
+
+## Continuation 2 ruling (director) — the receipt-charge observer is an authorized production prerequisite
+
+Your second STOP is accepted: correct under the hard rule, and the blocker is
+real. I verified each element in the tree: `CallbackValue.receipt` is private
+(`accounting_mode/bridge.rs:9`), `RetainedValues.receipt` is `pub(super)`
+(`accounting_mode/retained.rs:13`), `Mode` is `pub(in crate::runtime)`
+(`accounting_mode/lease.rs:129`), and no direct receipt accessor exists. The
+historical direct read lives only in the scratch instrumented kernel
+(`.temp/g15-c2/c34/prepare_callback_charge.py`). No row is swapped, no ledger
+total substitutes for the charge, and the `32/0` omission discriminator is
+preserved. This section authorizes the production prerequisite and rewrites
+the scope by exactly four files; every other ruling and gate stands.
+
+- **Authorized production scope (the only additions to the Scope list):**
+  - `crates/rum-runtime/Cargo.toml` — add the feature
+    `test-receipt-observers = []`.
+  - `crates/rum-runtime/src/runtime/accounting_mode/retained.rs` — under that
+    feature, one `#[doc(hidden)]` inherent method
+    `actual_receipt_bytes(&self) -> Option<usize>` on
+    `RetainedValues<'_, AccountingShadow>`, returning
+    `AccountingShadow::bytes(&self.receipt)`; if the disabled arm needs the
+    same call, the parallel impl for `Unarmed` returns `None`.
+  - `crates/rum-runtime/src/runtime/accounting_mode/bridge.rs` — the same
+    method on `CallbackValue<'_, '_, AccountingShadow>`, returning
+    `AccountingShadow::bytes(&self.receipt)` with the same `Unarmed` handling
+    if needed.
+  - `crates/rum-stdlib/Cargo.toml` — add `"test-receipt-observers"` to the
+    `rum-runtime` dependency's feature list (line 28, beside
+    `test-builtin-memory-growth` and `test-continuation-slots`).
+
+  Shape as code:
+
+  ```rust
+  #[cfg(feature = "test-receipt-observers")]
+  #[doc(hidden)]
+  impl RetainedValues<'_, AccountingShadow> {
+      pub fn actual_receipt_bytes(&self) -> Option<usize> {
+          AccountingShadow::bytes(&self.receipt)
+      }
+  }
+  ```
+
+  and the parallel impl for `CallbackValue<'_, '_, AccountingShadow>`. A
+  concrete impl is required: it must be callable from the `rum-stdlib`
+  integration test without touching anything else. If it cannot compile or
+  cannot be called from there, STOP again with the exact error; do not widen
+  the scope.
+- **What must not change:** the `Mode` and `RetentionMode` traits and their
+  visibility, every existing field, every existing function body and every
+  call site; no `unsafe`, no new dependency, no `Cargo.lock` change, no new
+  warning. The accessors are read-only and appear only under the feature; a
+  build of `rum-runtime` with default features must not contain them.
+- **No timing A/B, and why.** The hot-path A/B rule exists to catch changed
+  emitted code. This change adds dead getters under an off-by-default feature
+  and edits no existing line, so there is no emitted-code delta to measure
+  and a timing comparison would compare identical code. The gate is
+  deterministic instead: the diff adds only feature-gated lines; no code in
+  `crates/rum-runtime` calls the accessors; `cargo build -p rum-runtime`
+  (default features) is green. Report the accessor's presence or absence by
+  symbol inspection where the symbols materialize, and say so plainly if they
+  do not — never claim a check you could not run.
+- **Maintenance now triggers.** Any edit under `crates/` expires the
+  retention fingerprints and the ownership-graph cells. Replay them exactly
+  as the Maintenance section says, quote every verdict line, and treat a new
+  function entering the ownership-graph inventory as a replay, never a hand
+  edit.
+- **The row is unchanged.** `P0001` keeps all 60 keys, its 60 frozen plans
+  and 84 planned pauses, and the two observer points — `callback-value`
+  before adoption and `resumed-value` after `resume_values` and `push`. The
+  own-omission discriminator stays `C34ActualCallbackReceiptBytes.0` 32/0.
+  A ledger total, a public scalar, a saved aggregate or a skipped key is not
+  a substitute.
+- **Gates unchanged:** the six shape tests, both-arm falsifiers, the
+  campaign, the acceptance suite, the report format and every hard rule.
