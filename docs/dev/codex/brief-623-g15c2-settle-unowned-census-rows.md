@@ -112813,3 +112813,84 @@ weaken nothing.
 
 **Dispatch:** `scripts/dispatch-brief.sh 623` (background,
 `BRIEF_WORKER` unset = `cdx`).
+
+## Continuation 67 order (2026-11-14) — apply the two accepted `Boundary` moves (`P2625`, `P2635`), then continue the tail by building the parks' named missing instruments
+
+The campaign invariants section above stands and is not restated. This
+order adds the round's delta only.
+
+**Entry.** The live tree's delta against the C66 entry snapshot
+`.temp/g15-c2/c66/entry-hashes.json` (`d213c46d…`, 2,738 files) is
+exactly this brief — the prefix through the continuation-66 order is
+`bd107f5207d08d789cd481f32dd0feac611b999516bd01f613990e0f91a376c2`
+(14,840,384 B) and the order text below; any other live delta is a
+STOP. The snapshot carries the three pinned paths: the two
+engine-written declarations at `ead1d8e6…`/`ca41f066…` and
+`scripts/campaign-gate.py` at `ffae5f27…`; all three hashes must hold,
+and the gate script is the director's instrument — do not edit it. The
+source is the unchanged installed tree: every file under `crates/`
+equals the C60 final manifest, production digest `3acf8a34…` over 1,627
+files; git is director-side only, and the director pins the dispatch
+commit. The C62 scene seal carries exactly the derived-receipt refresh
+authenticated by the continuation-63 ruling (seal
+`.temp/g15-c2/c62/artifact-hashes.json` `c96773c9…`, sealed receipt
+`e6c06bc2…`, live receipt `b93cafb3…`, only `raw_replay_log`, the eight
+output hashes, plus the added raw log); accept that one delta and
+nothing else. The C64/C65/C66 scenes are read-only evidence; the C66
+ledger is final at `settled.tsv` `2a39e0e5…` with outcomes
+18/174/5/1/126/121/594/3 and `required-tuples.tsv` `3c2dcdff…`;
+hash-bind it, apply only the two moves below and do not re-derive it.
+C2 is Open at 121 Residual + 1 Lost until the moves land.
+
+**The two moves.** Apply exactly `P2625` and `P2635`
+`Residual`→`Boundary` by canonical raw replay of the pinned C66
+owned-family packets — `owned-host-terminal-lifecycle-{freeze,preflight,
+instrument,calibration,gain,source-proof}.json`, the three build receipts
+plus the same-epoch control receipt, and the six real, six disabled, four
+own and two control raw logs — exactly as the continuation-66 ruling
+directs (`new_execution:false`, `equal_claim:false`, all 65 keys
+retained — 35 + 30 — zero equality credit, no fresh guest or build).
+Assert Boundary 20 / Equal 174 / Identity 5 / Lost 1 / NoObservableTail
+126 / Residual 119 / Transferred 594 / Unreachable 3, composition
+91+13+10+2+1+1+1 = 119, C2 Open at 119 Residual + 1 Lost,
+`required-tuples.tsv` `3c2dcdff…` byte-identical, exactly those two
+rows' six settlement columns moved and the other 1,040 rows
+byte-identical, the 13 pair columns, the held pair rows, `P1573`
+Residual, `P1566` Lost and `P0496` reserved unchanged.
+
+**Then the remaining tail by mechanism.** Do not re-screen; build the
+named missing instruments of the remaining parks. Priority: `P2618`'s
+row-channel observer at the actual call site with a real pause (the C57
+Q1 shape, not the test fixture's own drop), then the other CLI/REPL/
+Jupyter park freezes whose packets name a concrete nonencoding
+instrument. For each: freeze the instrument before any build or guest,
+calibrate it against a known answer including a negative control, and
+execute only on a real producer path with a real pause and a documented
+contract. Parked by the continuation-66 ruling and not re-attempted:
+`P1559` (its instrument is established and reused by hash; it needs an
+admissible queued-path producer pause, and the cancel/reset survivors
+stay zero-credit evidence), `P2613` (the distinct unpolled route is
+recorded; it needs a distinct real route/instrument or a documented
+contract for the intermediate carrier), `P2599`/`P2595` (the historical
+18-fault provenance is unrecoverable under the C48 bar; no new
+execution). Report a batch that cannot start rather than relaxing a
+rule; the two-family stop-loss and the four-family cap stand; target 3–4
+productive mechanism batches.
+
+**Verification reuse.** Recalibrate an instrument only when its
+implementation changes; replay an inherited scene only when this
+round's move cites it, plus one rotating older scene as a control; the
+rest of the prior-scene set is the mtime scan. Gate replays on sealed
+scenes run on copies under `.temp/director/gate-<scene>/`; a sealed
+scene is never written. The build control is one same-epoch `--force`
+sha256 spot check.
+
+**Bounds.** Fresh allocation 4 families / 16 builds / 512 guests /
+4,000 records / 0 encoding in `.temp/g15-c2/c67`; no live edit, git,
+network, `unsafe` or inventory edit; assertions unchanged. Report one
+`rum-report/1` with `report.py check 623` passing and stop for my gate;
+if the entry fails, stop the same way, retain the failed attempt,
+weaken nothing.
+
+**Dispatch:** `scripts/dispatch-brief.sh 623` (background,
+`BRIEF_WORKER` unset = `cdx`).
