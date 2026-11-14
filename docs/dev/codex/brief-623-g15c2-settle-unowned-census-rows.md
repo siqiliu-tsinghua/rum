@@ -113775,3 +113775,84 @@ acceptance suite under the 1,500 s bound; any other production need is a
 STOP. C2 stays Open at 118 Residual + 0 Lost; no settlement, no promotion,
 no encoding key; `CHANGELOG.md` and S10 stay blocked. The partial tree is
 the state to continue from.
+
+### Continuation 72 — eighth run: P1577 executes (61 rows / 3,185 keys) and the feature-isolated build lane is authorized for P0543
+
+**2026-11-15 — brief 739's eighth run executed continuation 7: the
+authorized resuming-driver accessor landed, P1577's 30 keys were bound and
+executed in both arms, and the run stopped at P0543, whose authenticated
+unchecked-dispatch route cannot be reached from the mandated oracle build.
+The STOP is accepted and Q11 is ruled: one feature-isolated build lane is
+authorized, by the same reasoning that made the C28 driver's evidence
+admissible, and the campaign continues.**
+Run `cdx`, unit `brief-739-cdx-20261115-033757-605315`, rc 0, peak
+15,162,417,152 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 2,160,394 B; 23 recorded changes (12 added,
+11 modified, 0 deleted); report 17 PASS / 2 FLAGGED / 2 FAIL, 5
+disclosures, 4 deviations, Q11; 9,086 citations verified. The only
+production change is the authorized accessor; no manifest or lock hash
+changed.
+
+**What landed.** The second accessor is one unconditional `#[doc(hidden)]`
+read-only inherent `Session` method appended to
+`crates/rum-runtime/src/runtime/model/session.rs` (`:211`), returning
+exactly `(evaluation_depth.get(), evaluation_stack.len())`; the previous
+bytes remain a prefix, field visibility and every existing body and caller
+are unchanged, exactly one symbol was added, and there are zero production
+call sites. The unrun machine-code comparison is disclosed. P1577's 30 keys
+executed in both arms at multiplicity one (72 actual pauses, 72 lifecycle
+observations, 132 direct request-return state samples); the ten-field
+`C29ResumingDriverEvaluationStateMax` row is `[0; 10]` on both sides,
+matching the authenticated packet's own raw record, and four new falsifiers
+reject the `1,0`-versus-`0,0` leak, the both-stale variant, a missing
+sample and a sample disagreeing with the saved maximum. Totals: 60/3,155 →
+61/3,185 over 30 families (5,324 actual pauses, 8,002 lifecycle); the 90
+unported rows / 5,875 keys remain active, P0543 among them (55 keys); 24
+director-excluded rows / 1,445 keys stay named. Proofs are untouched
+(749/43,390 imported; 151/8,255 packet-authenticated; 115/6,270 current
+verified; 36/1,985 current blocked; 598/35,135 absent; five known losses).
+The 68 retention fingerprints and four promotion cells were regenerated and
+mechanically installed with every non-cell column equality-checked; the six
+ownership inventories replayed unchanged; the stale-cell reds before each
+install are ordering artifacts. The worker's workspace arms show only the
+nine sandbox loopback `EPERM` guards; the host gate decides green. The
+complete 9,060-key schedule is unmeasured because 5,875 keys remain after
+the STOP.
+
+**Q11 ruling.** P0543 needs rum-runtime built with both terms of
+`builtin_memory_growth_test_enabled()`'s early return false; the mandated
+arms force the dev-dependency feature on
+(`crates/rum-stdlib/Cargo.toml:28`), `--no-default-features` does not remove
+it, and the `cfg!` early return precedes the environment read, so no env
+value reaches the unchecked branch. The historical C28 driver built the
+same `suspension_oracle` target from a copy with nine dev-dependency edits.
+Authorized: one feature-isolated build lane for P0543's 55 keys — the same
+test target built from a content-addressed copy of the current workspace
+through the probe-build system, whose only differences are the manifest
+feature entries needed to remove `test-builtin-memory-growth` from the
+oracle target's build graph (`test-continuation-slots` stays so the oracle
+sources compile unchanged); every non-manifest file must hash-match the
+workspace; the copy's manifest diffs, tree hash, build artifact hash and
+profile are recorded in provenance; no repository manifest or lock edit, no
+new dependency, no production source change, the copy only under `.temp/`.
+First action: build the lane and prove the configuration both ways — the
+build graph carrying no `test-builtin-memory-growth`, and a behavioral
+discriminator whose checked-only `NonAmplifying` enforcement must fire in
+the mandated arms and must not fire in the lane, with a falsifier proving
+the discriminator can fire and no scratch-only production read authorized;
+a build or audit failure is a STOP.
+Then bind and execute the 55 keys through the real unchecked route at
+multiplicity one, with the same ten-field native observer and channel set;
+the lane's receipts carry a distinct third identity binding the tree hash
+and manifest-diff digest. Continuation 8 first binds and executes `P0508`'s 30 keys (authenticated
+this run: 30 programs, 207 direct state samples), then continues the
+campaign over the remaining 89 rows / 5,820 keys and the 25 non-source
+route instantiations, keeps the 36 current-blocked proof records, the 598 absent
+/ 35,135 and the 24 named Execute blockers / 1,445 keys named, then measures
+the complete schedule and runs the acceptance suite under the 1,500 s bound
+for the two mandated arms as before, with the lane's build and run measured
+separately and included in the acceptance accounting; over the bound, STOP
+with the measured data and the sharing analysis. Any other Cargo or
+production need is a STOP. C2 stays Open at 118 Residual + 0 Lost; no
+settlement, no promotion, no encoding key; `CHANGELOG.md` and S10 stay
+blocked. The partial tree is the state to continue from.

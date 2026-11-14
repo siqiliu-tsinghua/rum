@@ -97,7 +97,23 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   under the same precedent, and continuation 7 executes those 30 keys
   through the real resume route while continuing over the remaining 90 rows
   / 5,875 keys and 25 non-source routes, then the complete schedule under
-  the 1,500 s bound; then CM4-CM5.
+  the 1,500 s bound. The eighth run landed that accessor and executed
+  `P1577` in both arms (61 rows / 3,185 keys over 30 families; 72 pauses,
+  132 request-return samples; proofs and the 24 excluded rows / 1,445 keys
+  unchanged), then stopped at `P0543` (55 keys), whose unchecked-dispatch
+  route needs `test-builtin-memory-growth` off while both mandated arms
+  force it on (dev-dependency; the `cfg!` early return precedes the
+  environment read); the Q11 ruling authorizes one feature-isolated build
+  lane for P0543 only — the same oracle target built from a
+  content-addressed workspace copy whose only differences are the nine
+  manifest feature entries, non-manifest files hash-identical, the
+  configuration proven by the build graph plus a checked-only `NonAmplifying`
+  discriminator, the lane's receipts carrying a distinct identity, and no
+  repository manifest, lock, dependency or production change. Continuation
+  8 binds `P0508` (authenticated, 30 keys) and continues over the remaining
+  89 rows / 5,820 keys and 25 non-source routes, then the complete schedule
+  under the 1,500 s bound with the lane's build and run measured separately;
+  then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
