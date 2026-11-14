@@ -112,8 +112,23 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   repository manifest, lock, dependency or production change. Continuation
   8 binds `P0508` (authenticated, 30 keys) and continues over the remaining
   89 rows / 5,820 keys and 25 non-source routes, then the complete schedule
-  under the 1,500 s bound with the lane's build and run measured separately;
-  then CM4-CM5.
+  under the 1,500 s bound with the lane's build and run measured separately.
+  The ninth run landed the lane and executed `P0543`'s 55 keys through the
+  real unchecked route (the copy's only differences are the nine
+  dev-dependency manifests, all 3,687 non-manifest files hash-identical, the
+  build graph carrying no `test-builtin-memory-growth`, the checked-only
+  `NonAmplifying` discriminator true in the mandated arms and false in the
+  lane with a firing falsifier, the receipts carrying the third identity),
+  and completed `P0508` (30), `P0544` (55) and
+  `C10.prepared.profiled_consumer` (55): 65 rows / 3,380 keys over 34
+  families, proofs and the 24 excluded rows / 1,445 keys unchanged. It
+  stopped at the option matrix (1,430 keys), whose scratch importer failed
+  twice on fields the C6 plans inherit from fixture descriptors; Q12
+  authorizes a test-only continuation that derives the inheritance through
+  the canonical `logical_profile` behavior (no director-authored manifest),
+  keeps the frozen keys, names any underivable field `PortBlocked`, executes
+  the option rows and then the remaining 83 active rows / 4,250 keys and 24
+  non-source routes / 1,315 keys under the 1,500 s bound; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

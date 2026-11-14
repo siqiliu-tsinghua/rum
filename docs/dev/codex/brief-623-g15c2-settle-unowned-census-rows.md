@@ -113856,3 +113856,93 @@ with the measured data and the sharing analysis. Any other Cargo or
 production need is a STOP. C2 stays Open at 118 Residual + 0 Lost; no
 settlement, no promotion, no encoding key; `CHANGELOG.md` and S10 stay
 blocked. The partial tree is the state to continue from.
+
+### Continuation 72 — ninth run: four rows execute (65 rows / 3,380 keys), the P0543 lane is proven both ways, and the option-matrix importer is the next wall
+
+**2026-11-15 — brief 739's ninth run executed continuation 8 and is accepted
+at its STOP. The isolated P0543 lane was built, proven and used; `P0543`
+(55), `P0508` (30), `P0544` (55) and `C10.prepared.profiled_consumer` (55)
+completed, carrying the campaign from 61 rows / 3,185 keys to 65 rows / 3,380
+keys over 34 families. The run then stopped at the option matrix, whose
+importer failed twice on fields the C6 plans inherit from their fixture
+descriptors. Q12 is ruled: continuation 9 derives the inheritance through the
+canonical `logical_profile` behavior; no director-authored adapter manifest.**
+Run `cdx`, unit `brief-739-cdx-20261115-052344-694898`, rc 0, peak
+14,680,698,880 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 4,098,133 B; 45 recorded changes (34 added,
+11 modified, 0 deleted); report 14 PASS / 3 FLAGGED / 1 FAIL, 5 disclosures,
+3 deviations, Q12; 22,325 citations verified. The 11 modified files are six
+test Rust files, three obligation tables and the two mandatory retention
+maintenance tables; no production source, repository manifest, lock,
+dependency or script changed.
+
+**What landed.** `P0543` executes its 55 keys through the real unchecked route
+in the authorized isolated lane. The lane copy is content-addressed (tree
+`4bf43439…`, 3,696 files), its only differences are the nine dev-dependency
+manifests (`test-builtin-memory-growth` removed, `test-continuation-slots`
+kept), and all 3,687 non-manifest files hash-match the workspace; I re-hashed
+every one and recomputed the tree and artifact hashes. The release artifact is
+`68c7b6b4…` at one codegen unit, built in 61.277 s. `cargo tree -e features`
+carries no `test-builtin-memory-growth`; the behavioral discriminator sees the
+checked-only `NonAmplifying` enforcement true in both mandated arms and false
+in the lane, forces it true in a fresh-process control in both builds, and its
+falsifier rejects `NonAmplifying` with the exact panic. Every lane receipt
+carries the distinct third identity (`feature=p0543-unchecked` bound to the
+artifact sha256, tree, manifest-diff, profile and codegen units); the mandated
+`feature=default` receipts keep their existing format. The native row
+`CM739UncheckedDispatchBuildConfiguration` is `[0; 10]` on both sides in both
+arms, with three Native falsifiers. `P0508` executes 30 keys (42 pauses, 72
+lifecycle, 102 direct request-return samples per arm; row
+`C28BetweenRequestsEvaluationStateMax` `[0; 10]`; the packet's 207 samples are
+its own authentication record, not an execution claim; four Native
+falsifiers). `P0544` and `C10.prepared.profiled_consumer` complete through
+their real routes (110 keys selected and executed); C10 is the first of the 25
+non-source routes to complete, leaving 24 / 1,315 keys. Totals: 65 rows /
+3,380 keys over 34 families, 5,652 actual pauses, 8,470 lifecycle; 86 active
+rows / 5,680 keys remain; the 24 director-excluded rows / 1,445 keys stay
+named; the requirement bag stays 175 rows / 10,505 keys. Proofs are untouched
+(749/43,390; 151/8,255; 115/6,270; 36/1,985; 598/35,135; five known losses),
+all 24 immutable pins hash-match and predate the run, the 68 retention
+fingerprint cells changed only in the fingerprint column, and the four
+promotion cells only in the two certificate columns. The stale C01 reds are
+ordering artifacts.
+
+**The STOP.** The option matrix (`P1139` 715, `P1142` 165, `P1147` 550 =
+1,430 keys) authenticated against the original seals, but the scratch importer
+failed twice before any install (`KeyError: 'trace'`, then
+`KeyError: 'source'`): the C6 plans inherit fixture descriptor fields and the
+importer treated the descriptors as complete programs. Both attempts are
+retained, and zero bindings, receipts or proofs were credited. Accepted.
+
+**Q12 ruling.** Continuation 9 stays test-only and derives the inherited
+fields (source, setup, trace, configure, files, projections) through the
+canonical `logical_profile` plan/fixture behavior the other 65 rows already
+use; the 1,430 frozen keys are unchanged (no re-pin, no sampling, no
+exclusion); a field that cannot be derived names its key/row PortBlocked with
+the exact cause rather than being invented; bindings and receipts are installed
+and executed at multiplicity one. Then the remaining 83 active rows / 4,250
+keys and the 24 non-source routes / 1,315 keys, keeping the 36 current-blocked
+proof records, the 598 absent / 35,135 and the 24 named Execute blockers /
+1,445 keys named, under the two-batch zero-evidence stop-loss. The P0543 lane
+remains the only feature-isolated build: rebuilt content-addressed whenever the
+tree changes, with the same nine-manifest audit, build-graph plus discriminator
+proof and falsifier, and third receipt identity; its costs stay separate and
+inside the acceptance accounting. The complete schedule and acceptance run
+under the 1,500 s bound for the two mandated arms. Any production, Cargo,
+dependency, manifest or lock change is a STOP. Option 2 is declined: a
+director-supplied adapter manifest would assert data the seals do not produce.
+My host gate is green: `cargo fmt --check` rc 0; the one-thread retention
+certificate passes in both arms (35 s / 36 s); the oracle `cm_` suite passes
+in both arms (37 passed / 0 failed / 1 ignored, 277 s / 279 s) with the
+`CM RECEIPTS PASS ... rows=65 families=34 bound=3380 executed=3380
+multiplicity=1 actual_pauses=5652 lifecycle=8470 campaign_remaining=5680
+PortBlocked=1445`, `CM PROOFS PASS ... 151/8255 ... 115/6270 ... 598/35135`,
+`CM P0543 RECEIPTS PASS ... lane=p0543-unchecked native_fields=10` and
+`CM BUILD CONFIGURATION PASS lane=mandated checked_only_enforcement=true`
+lines; the ignored provenance audit passes in both arms (`PROVENANCE AUDIT
+PASS pins=22 diagnostics=4`); the switched LP targets are 5/5 in both arms;
+and the workspace is 4,309 passed / 0 failed / 64 ignored over 70 suites in
+both feature modes. The sandbox's nine loopback denials do not appear on the
+host. C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
+no encoding key runs; `CHANGELOG.md` and S10 stay blocked. The partial tree is
+the state to continue from.

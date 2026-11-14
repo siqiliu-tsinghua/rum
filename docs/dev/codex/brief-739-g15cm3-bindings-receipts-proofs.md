@@ -1081,3 +1081,151 @@ C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is
 promoted, no encoding key runs, `CHANGELOG.md` and S10 stay blocked. The
 partial tree is the state to continue from; do not restart and do not
 hand-edit a generated cell.
+
+### Continuation 9 — ninth run: four rows execute (65 rows / 3,380 keys), the P0543 lane is proven both ways, and the option-matrix importer is the next wall
+
+**2026-11-15 — brief 739's ninth run executed continuation 8. The isolated
+P0543 lane was built from a content-addressed copy, proven by the build graph
+and a behavioral discriminator, and used to execute its 55 keys through the
+real unchecked route; `P0508` (30), `P0544` (55) and
+`C10.prepared.profiled_consumer` (55) completed as well, carrying the campaign
+from 61 rows / 3,185 keys to 65 rows / 3,380 keys over 34 families. The run
+then stopped at the option matrix: two importer attempts added no binding,
+receipt or proof evidence because the C6 plans inherit fixture descriptor
+fields the scratch importer treated as complete. The STOP is accepted and Q12
+is ruled: the continuation resolves that inheritance through the canonical
+`logical_profile` plan/fixture behavior, and a director-authored adapter
+manifest is declined.**
+Run `cdx`, unit `brief-739-cdx-20261115-052344-694898`, rc 0, peak
+14,680,698,880 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 4,098,133 B; 45 recorded changes (34 added,
+11 modified, 0 deleted); report 14 PASS / 3 FLAGGED / 1 FAIL, 5 disclosures,
+3 deviations, Q12; 22,325 citations verified. The changes are 34
+content-addressed `.rum` programs, six test Rust files, three obligation
+tables and the two mandatory retention maintenance tables; no production
+source, repository manifest, lock, dependency or script changed.
+
+**What landed.**
+- **P0543** (55 keys): the lane was built from
+  `.temp/brief-739/p0543-tree-4bf43439…` — 3,696 files whose only differences
+  from the workspace are the nine dev-dependency manifests (the
+  `test-builtin-memory-growth` feature removed, `test-continuation-slots`
+  kept), with all 3,687 non-manifest files hash-matching the workspace; I
+  re-hashed every one of them file by file and recomputed the tree hash and
+  the artifact hash. `cargo tree -e features` on the lane carries no
+  `test-builtin-memory-growth`; the release artifact is `68c7b6b4…` built at
+  one codegen unit in 61.277 s. The behavioral discriminator observes the
+  checked-only `NonAmplifying` enforcement through the real dispatch route as
+  true in both mandated arms and false in the lane, forces it true in a
+  fresh-process control in both builds, and its falsifier rejects
+  `NonAmplifying` with the exact panic. The 55 keys execute in the lane at
+  multiplicity one (`CM P0543 RECEIPTS PASS`), and every lane receipt carries
+  the distinct third identity `feature=p0543-unchecked,
+  build=sha256=68c7b6b4…;tree=4bf43439…;manifest-diff=a6f12578…;profile=release;codegen-units=1`;
+  the mandated `feature=default` receipts keep their existing format. The
+  native row `CM739UncheckedDispatchBuildConfiguration` is `[0; 10]` on both
+  sides in both arms (220 rows per arm), with three falsifiers rejecting the
+  own-omission, the checked-route substitution and the both-routes-checked
+  variants by `Native`. The lane's provenance is recorded in the preserved
+  identity, manifest-diff, file-hash and build-receipt JSON and in every live
+  receipt identity; it is not inserted into a copied source table, which
+  would change the tree being identified. The two earlier lane builds are
+  preserved with `-1`/`-2` suffixes and are not relabelled as final.
+- **P0508** (30 keys): 42 actual pauses, 72 lifecycle observations and 102
+  direct request-return samples per arm; the row
+  `C28BetweenRequestsEvaluationStateMax` is `[0; 10]` on both sides (120 rows
+  per arm). The packet's 207 samples are its own authentication record, not
+  an execution claim; the live observer samples at every request return (42
+  pauses + 30 queued + 30 resumed = 102). Four Native falsifiers reject the
+  `2,2`-versus-`0,0` leak, the both-stale variant, a missing sample and a
+  sample disagreeing with the saved maximum.
+- **P0544** (55 keys) and **C10.prepared.profiled_consumer** (55 keys)
+  complete through their real routes (`CM SELECTED FAMILIES PASS bound=110
+  executed=110`); C10 is the first completed member of the 25 non-source
+  route instantiations, leaving 24 routes / 1,315 keys.
+- Campaign: 65 rows / 3,380 keys over 34 families, 5,652 actual pauses and
+  8,470 lifecycle observations; 86 active rows / 5,680 keys remain; the 24
+  director-excluded rows / 1,445 keys stay named; the 175-row / 10,505-key
+  requirement bag is unchanged.
+- Proofs untouched: 749/43,390 imported, 151/8,255 packet-authenticated,
+  115/6,270 current-source verified, 36/1,985 current blocked, 598/35,135
+  absent, five known losses (3 Lost + 2 Promoted). All 24 immutable pins
+  hash-match; I re-verified each pin, and every one of those files predates
+  this run.
+- Maintenance: the 68 retention fingerprint cells (only the fingerprint
+  column changed) and the four promotion cells (C01/C02, only the two
+  certificate columns) were regenerated and mechanically installed. The
+  initial reds were the stale C01 cells and are ordering artifacts.
+
+**The STOP.** The option matrix (`P1139` 715, `P1142` 165, `P1147` 550 =
+1,430 keys) authenticated against the original seals, but its scratch
+importer failed twice before any install: `KeyError: 'trace'`, then
+`KeyError: 'source'`. The C6 plans inherit fields from their fixture
+descriptors, and the importer treated the descriptors as complete programs.
+Both attempts are retained; zero bindings, receipts or proofs were credited;
+the two-batch stop-loss is accepted.
+
+**Q12 ruling — derive the inheritance; do not author a manifest.**
+Authorized for continuation 9, within the existing test-only CM3 scope, and
+nothing more:
+- Resolve the C6 fixture descriptors' inherited fields (source, setup, trace,
+  configure, files, projections) through the canonical `logical_profile`
+  plan/fixture behavior the other 65 rows already use — the same machinery,
+  not a parallel resolver and not hand-written literals.
+- Authenticate each of the three option rows against its original packet and
+  every frozen key before any install; the frozen 1,430 keys stay exactly as
+  they are, with no historical re-pin, no sampling and no new exclusion.
+- A field that cannot be derived from the surviving packets and the canonical
+  fixture behavior names its key/row `PortBlocked` with the exact cause;
+  never invent a value and never silently drop a key.
+- Install the bindings, execute the rows at multiplicity one through the real
+  routes with the same observers and channel set, and reconcile the receipts.
+- Then continue the campaign over the remaining active bag, keeping the 36
+  current-blocked proof records, the 598 absent / 35,135 and the 24 named
+  Execute blockers / 1,445 keys named. The two-batch zero-evidence stop-loss
+  stays.
+- P0543's lane remains the only feature-isolated build. Whenever the tree
+  changes it must be rebuilt content-addressed with the same audit (nine
+  manifest feature entries only; every non-manifest file hash-identical), the
+  same build-graph and discriminator proof both ways with its falsifier, and
+  the same third receipt identity; its build and run costs stay measured
+  separately and inside the acceptance accounting.
+- The complete active schedule and the acceptance suite run under the 1,500 s
+  bound for the two mandated arms as before; over the bound, STOP with the
+  measured data and the sharing analysis.
+- Any production, Cargo, dependency, manifest or lock change is a STOP.
+- Q12's second option is declined: I will not supply a descriptor/binding
+  adapter manifest the seals do not produce. That would turn a derivation
+  into an assertion and put invented data under a frozen key.
+
+**Host gate.** My own gate on the final tree is green: `cargo fmt --check`
+rc 0; the one-thread retention certificate passes in both feature arms (35 s
+/ 36 s); the oracle `cm_` suite passes in both arms — 37 passed / 0 failed /
+1 ignored, 277 s / 279 s — with `CM RECEIPTS PASS calibration=P0001 rows=65
+families=34 bound=3380 executed=3380 multiplicity=1 actual_pauses=5652
+lifecycle=8470 campaign_remaining=5680 PortBlocked=1445` and `CM PROOFS PASS
+imported=749/43390 packet_authenticated=151/8255 absent=598/35135
+current_verified=115/6270`, the lane's `CM P0543 RECEIPTS PASS required=55
+bound=55 executed=55 multiplicity=1 lane=p0543-unchecked native_fields=10`,
+and `CM BUILD CONFIGURATION PASS lane=mandated control=false
+checked_only_enforcement=true`; the ignored provenance audit passes in both
+arms (`PROVENANCE AUDIT PASS pins=22 diagnostics=4`); the switched LP targets
+are 5/5 in both arms; and the workspace is 4,309 passed / 0 failed / 64
+ignored over 70 suites in both feature modes, with the lane environment
+authenticated before each invocation. On the host none of the sandbox's nine
+loopback denials appears; the worker's raw failure count was its sandbox, not
+the tree.
+
+**Continuation 9.** Entry state: 65 rows / 3,380 keys complete; 86 active
+rows / 5,680 keys; 24 director-excluded rows / 1,445 keys; proofs 749/43,390;
+encoding 0 of 18,840. Resolve and execute the three option rows (1,430 keys)
+first, then the remaining 83 active rows / 4,250 keys and the 24 non-source
+routes / 1,315 keys, then measure the complete active schedule and run the
+acceptance suite for the two mandated arms under the 1,500 s bound, with the
+lane's build and run measured separately and included in the accounting. The
+P0543 lane must be rebuilt iff the tree changes, and the driver must launch
+through the authenticated lane environment; a missing lane is a hard error,
+never a skip. C2 stays Open at 118 Residual + 0 Lost; no settlement, no
+promotion, no encoding key; `CHANGELOG.md` and S10 stay blocked. The partial
+tree is the state to continue from; do not restart and do not hand-edit a
+generated cell.
