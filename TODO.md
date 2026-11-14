@@ -74,8 +74,18 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   `rum-repl/src/lib.rs:113`) `PortBlocked` because the included `lib.rs`
   pulls a cfg(test) child importing the private `crate::resolve_completeness`,
   which no Cargo edit can fix — so continuation 5 makes 24 blocked Execute
-  rows / 1,445 keys and 142 active rows / 8,535 keys, and continues the
-  campaign; then CM4-CM5.
+  rows / 1,445 keys and 142 active rows / 8,535 keys. The sixth run carried
+  the campaign to 58 rows / 3,095 keys and authenticated the whole present
+  proof bag (151 rows / 8,255 keys packet-authenticated; 115 / 6,270
+  current-source verified; 36 / 1,985 current blocked; 598 absent / 35,135),
+  replayed the retention/ownership maintenance unchanged, and stopped at
+  `P1562`/`P1563` (60 keys) whose C29 native row needs the two private
+  `Session` bits; the Q9 ruling authorizes one unconditional
+  `#[doc(hidden)]` read-only `Session` accessor under the P0001/Q4 precedent
+  (no field/body/caller/dependency/Cargo change; the audit records it), and
+  continuation 6 executes those 60 keys through the real routes while
+  continuing over the remaining 93 rows / 5,965 keys and 25 non-source
+  routes, then the complete schedule under the 1,500 s bound; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

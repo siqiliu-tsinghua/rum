@@ -762,3 +762,110 @@ C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
 no encoding key runs, `CHANGELOG.md` and S10 stay blocked. The partial tree is
 the state to continue from; do not restart and do not hand-edit a generated
 cell.
+
+## Continuation 6 ruling (director) — the C29 accepted-request observer is authorized by the Q4 precedent; P1562/P1563 bind and execute through the real routes, and the campaign continues
+
+**2026-11-15 — brief 739's sixth run carried the campaign from 9 rows / 525
+keys to 58 rows / 3,095 keys, authenticated every present proof duty, and
+stopped at the C29 two-bit private-observer wall. The STOP is accepted; Q9 is
+answered by authorizing one narrow read-only accessor, and the brief is
+re-dispatched.**
+Run `cdx`, unit `brief-739-cdx-20261114-232115-435918`, rc 0, peak
+15,330,988,032 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 4,400,252 B; 721 recorded changes (707 added,
+14 modified, 0 deleted), the two temporary probe edits restored and
+disclosed; report 18 PASS / 4 FLAGGED / 1 FAIL, 4 deviations, Q9; 13,065
+citations verified by `scripts/report.py check 739`. No production source,
+manifest or lock hash changed (the audit's 1,309 production Rust files and 12
+manifests match entry), so no production A/B was owed or claimed.
+
+**What landed, as I reproduced it from the tables and logs.**
+- 58 complete Execute rows / 3,095 keys now carry fresh exact receipts in
+  both feature modes (49 rows / 2,570 keys added), with 58 rows / 3,155
+  actual pauses and their lifecycle observations; 93 rows / 5,965 keys
+  remain, including all 25 non-source routes / 1,370 key rows; the 24
+  director-excluded rows / 1,445 keys stay named.
+- The proof bag is unchanged at 749 certificates / 43,390 keys. All 21
+  present duties / 830 keys were authenticated: 151 rows / 8,255 keys are
+  now packet-authenticated, 115 / 6,270 are current-source verified, and 36 /
+  1,985 fail closed at current identity (22 unresolved targets / 1,155 keys
+  and 14 source-dependency mismatches / 830 keys); the 598 absent records /
+  35,135 keys remain named. I independently re-hashed all 57 distinct packet
+  files named by the 151 authenticated rows (all match) and every
+  `source_files` pin on the 115 verified rows (all match; the mismatches fall
+  exactly on the 14 source-dependency rows and three already-unresolved
+  rows).
+- The five known-loss records replay with 3 immutable differences and 2 C1
+  promotions; the 68 retention fingerprints and 4 promotion cells were
+  regenerated and installed mechanically with every non-cell column
+  equality-checked; the ownership replay reproduced all six inventories with
+  no new row (`.temp/brief-739/c5-install-retention-cells.log`,
+  `c5-install-promotion-cells.log`, `c5-ownership-reconcile.log`).
+- The two stale-C01 replay reds are ordering artifacts (the cells were
+  installed after the replay); both reruns at one thread pass with zero
+  rejections. The first six switched-LP runs used binary names as test-name
+  filters and ran zero tests; the corrected commands pass 5/5 in both arms,
+  and the empty runs receive no credit. The typed-slot raw 10/2/1 sums
+  contain the two expected child failures of the scratch-copy falsifiers; the
+  top-level target is 10 passed / 0 failed / 1 ignored in both arms.
+- The complete 9,060-key schedule is unmeasured because the run stopped at
+  the C29 wall: the partial 3,095-key shape gate took 269.650 s default and
+  271.773 s no-default, and the 1,500 s complete-schedule bound remains
+  unfulfilled. That is the correct state under the STOP, not a substitute
+  measurement.
+
+**Q9 ruling — one narrow C29 accessor is authorized; the keys stay real.**
+`P1562`/`P1563` (30 keys each) require the accepted text/expr request routes
+and the native C29 row; their authenticated matrix agrees on every other
+field and differs only in `C29TerminalAcceptedRequestState` (0,0 versus 1,1).
+`Session.active_accepted_request` and `Session.request_interrupt_control` are
+`pub(in crate::runtime)` (`crates/rum-runtime/src/runtime/model/session.rs:119,122`)
+and `RequestInterruptState::is_idle` is runtime-private
+(`crates/rum-runtime/src/runtime/model/request_cancellation.rs:200`); both
+oracle-root probes fail E0616, and no public cancellation read substitutes
+for the two original bits. This is the same shape as the accepted P0001
+receipt accessor (ruling 87330bdc, made unconditional by e73df1f1, and
+explicitly justified at brief-739's Q4: an uncalled getter has no
+default-path cost and the audit records it like every other boundary
+declaration).
+
+Authorized, and nothing more:
+- One unconditional `#[doc(hidden)]` read-only inherent method on the
+  runtime `Session`, returning exactly the two bits
+  `active_accepted_request.is_some()` and
+  `!request_interrupt_control.borrow().is_idle()`; the worker chooses the
+  file. No field visibility change, no body or caller change, no new
+  dependency, no `Cargo.toml`/`Cargo.lock` edit, no `unsafe`.
+- The method is declared unconditionally (no feature or `cfg(test)` gate):
+  the rule-boundary audit rejects cfg-dependent impls. It has no call site
+  outside the oracle test, and the production audit records it. The Q4
+  precedent replaces the hot-path A/B with the deterministic gate: no
+  emitted-code delta, default-feature build green, and a reported symbol
+  inspection; if the change emits a production call site or any body change,
+  STOP.
+- First action: land exactly this and rerun `local_production_acceptance` in
+  both arms at one thread after the retention/ownership maintenance replays.
+  If the audit rejects the new impl, STOP with the exact error — never widen
+  the predicate.
+- Then bind and execute `P1562` and `P1563` through the actual accepted
+  text/expr routes, observing the two bits from the executing thread at the
+  terminal request point before any fresh request, with the full ten-field
+  native row and the own-omission 0,0-vs-1,1 discriminator, at multiplicity
+  one. A public scalar, a fresh-request probe, a saved aggregate or a
+  skipped key is not an observation.
+
+**Continuation 6.** Continue the campaign over the remaining 93 rows / 5,965
+keys, beginning with the 60 C29 keys, and the 25 non-source route
+instantiations (1,370 key rows); keep the 36 current-blocked proof records,
+the 598 absent records / 35,135 keys and the 24 named Execute blockers /
+1,445 keys named with their exact predicates. Then measure the complete
+active schedule and run the acceptance suite under the 1,500 s bound — over
+it, STOP with the measured build+run data and the sharing analysis; never
+sample, never drop a context, never substitute a historical timing. If any
+other production change becomes necessary, STOP; this authorization covers
+the single C29 accessor only.
+
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
+no encoding key runs, `CHANGELOG.md` and S10 stay blocked. The partial tree is
+the state to continue from; do not restart and do not hand-edit a generated
+cell.

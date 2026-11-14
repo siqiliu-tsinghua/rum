@@ -113649,3 +113649,61 @@ production edit, no dependency, no stub, no Host-eval substitution; included
 sources stay byte-for-byte unchanged. C2 stays Open at 118 Residual + 0 Lost;
 no settlement, no promotion, no encoding key; `CHANGELOG.md` and S10 stay
 blocked. The partial tree is the state to continue from.
+
+### Continuation 72 — sixth run: the campaign reaches 58 rows / 3,095 keys and the whole present proof bag authenticates; the C29 observer is authorized and the campaign continues
+
+**2026-11-15 — brief 739's sixth run executed the continuation-5 campaign,
+authenticated all 21 pending proof duties, and stopped at the C29 private
+two-bit observer. The STOP is accepted and Q9 is ruled: one narrow read-only
+`Session` accessor is authorized, by the same reasoning as the accepted P0001
+receipt accessor.**
+Run `cdx`, unit `brief-739-cdx-20261114-232115-435918`, rc 0, peak
+15,330,988,032 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 4,400,252 B; 721 recorded changes (707 added,
+14 modified, 0 deleted), temporary probes restored; report 18 PASS / 4
+FLAGGED / 1 FAIL, 4 deviations, Q9; 13,065 citations verified. No production,
+manifest or lock hash changed.
+
+**What landed.** 58 complete Execute rows / 3,095 keys with fresh exact
+receipts in both modes (49 rows / 2,570 keys added; 3,155 actual pauses and
+their lifecycle observations). All 21 present proof duties / 830 keys
+authenticated: 151 rows / 8,255 keys packet-authenticated, 115 / 6,270
+current verified, 36 / 1,985 current blocked (22 unresolved targets / 1,155
+keys, 14 source-dependency mismatches / 830 keys), 598 / 35,135 absent. The
+five known-loss records replay; the 68 retention fingerprints and 4 promotion
+cells were regenerated and mechanically installed with the other columns
+equality-checked; the ownership inventories replayed unchanged. I re-hashed
+all 57 distinct packet files named by the 151 authenticated rows and every
+`source_files` pin on the 115 verified rows: all match, and the mismatches
+fall exactly on the 14 source-dependency rows plus three already-unresolved
+rows. The two stale-C01 reds are ordering artifacts; both one-thread
+certificate reruns pass. The first six switched-LP runs were empty filter
+mistakes, retained with zero credit; the corrected runs pass 5/5 in both
+arms, the typed-slot top level is 10/0/1 in both arms, and the oracle
+acceptance sums 546/0/3 in both arms. Both workspace runs show only the nine
+sandbox loopback `EPERM` guards; the host gate decides green. The complete
+9,060-key schedule is unmeasured because 5,965 keys remain after the STOP;
+the partial 3,095-key shape times are 269.650 s and 271.773 s and substitute
+for nothing.
+
+**Q9 ruling.** `P1562`/`P1563` need the two private bits
+`active_accepted_request.is_some()` and
+`!request_interrupt_control.borrow().is_idle()` at the terminal request point
+on the real accepted text/expr routes; the omission differs only in that
+native row (0,0 versus 1,1) and no public read substitutes. Authorized: one
+unconditional `#[doc(hidden)]` read-only inherent method on the runtime
+`Session` returning exactly those two bits; no field visibility, body,
+caller, dependency, Cargo or `unsafe` change; no call site outside the oracle;
+the audit records it and the deterministic gate replaces the hot-path A/B
+(uncalled getter, no emitted-code delta). First action: land it, replay the
+retention/ownership maintenance, and rerun `local_production_acceptance` in
+both arms at one thread; an audit rejection is a STOP, never a widened
+predicate. Then bind and execute the 60 keys through the real routes at
+multiplicity one with the ten-field native observer. Continuation 6 continues
+the campaign over the remaining 93 rows / 5,965 keys and the 25 non-source
+route instantiations, keeps the 36 current-blocked proof records, the 598
+absent / 35,135 and the 24 named Execute blockers / 1,445 keys named, then
+measures the complete schedule and runs the acceptance suite under the 1,500 s
+bound; any other production need is a STOP. C2 stays Open at 118 Residual +
+0 Lost; no settlement, no promotion, no encoding key; `CHANGELOG.md` and S10
+stay blocked. The partial tree is the state to continue from.
