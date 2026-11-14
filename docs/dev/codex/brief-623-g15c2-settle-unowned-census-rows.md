@@ -113257,3 +113257,97 @@ suites and falsifiers, and every hard rule.
 
 C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
 no guest executes, and CHANGELOG and S10 stay blocked.
+
+## Continuation 71 ruling (resumed run) — brief 738 (G15-CM 2) accepted;
+continuation 72 opens CM3 as brief 739
+
+**Run.** `cdx` (unit `brief-738-cdx-20261114-160924-170418`, rc 0, peak
+14,282,199,040 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_738.log`,
+5,853,290 B; 152 changes — 149 added, 3 modified, 0 deleted, the tracked
+subset exactly the brief's 17 files; report 15 PASS / 2 FLAGGED, 2
+measurements PASS, 24,773 citations, `check` OK; 0 guests, 0 receipts, 0
+promotions, 0 encoding runs). The input STOP of the first run was resolved by
+continuation 1's owner admission; this run implemented the stage.
+
+**Scope and maintenance, verified by me.** Tracked changes are exactly 17
+files: 3 modified (`obligations/mod.rs` and the two retention inventories) and
+14 added (7 modules `policy/applicability/routes/requirements/partition/
+owners/requirement_tests.rs`, 7 tables `policies/applicability/routes/
+enforcement/owned/source-duties/proof-modes.tsv`). Production source,
+`Cargo.toml`/lock, scripts, docs and CM1's six committed tables are unchanged.
+The maintenance delta is exactly 68 rows at column 19 of
+`local-contracts.tsv` and 2 rows at columns 5/6 of `promoted.tsv`, all other
+cells byte-identical; the six ownership inventories are byte-identical; no
+LP01 or typed-slot cell moved.
+
+**Independent reproduction of every count and seal.** `policies.tsv` 25 tokens
+with 3,543 historical and 3,582 accepted occurrences; `applicability.tsv` 154
+row kinds; `routes.tsv` 1,114 records (22 leaves, 1,085 frozen bindings, 2
+Twice phases, 5 generic route gaps); `owned.tsv` 2,204 row records plus 51
+state records; `enforcement.tsv` 1,042 approvals whose modes match each row's
+verdict (175 Execute / 749 Proof / 118 Deferred) and whose per-row counts and
+`key_digest`s equal CM1's `aliases.tsv`; the seven rows' bars are exactly 118
+`c2-residual-evidence` + 964 `g13-step-promotion` + 1,122
+`accepted-disposition`, and every owner/subject matches CM1. Every route
+binding sums to its row's `keys` and `encoding` (recomputed: 1,042 rows /
+78,330 / 18,840), and every binding leaf family resolves in the committed leaf
+table. The partition is 10,505 Execute + 24,435 Deferred (5,595 nonencoding
+residual + 18,840 encoding) + 43,390 Proof; the proof modes are Boundary 20 /
+735, Identity 5 / 185, NoObservableTail 126 / 7,260, Transferred 594 / 35,000,
+Unreachable 4 / 210 (keys sum 43,390). The 964 G13 rows over 44 S-step owners
+split 44 recorded counts totalling 3,025 and 920 `NotYetBound`; I re-derived
+all 44 recorded counts from the committed policy/variant/leaf rules with 0
+mismatch. Prior settlements are 198 (43 Equal / 5 Lost / 140 Unreachable / 10
+Boundary). The owner registry is 51 states, all Open, with `G13-transport`
+carrying exactly the 18,840 encoding keys, bar `transport-program-not-opened`
+and provenance `738:continuation-1`; the five source duties carry the exact
+subjects and dependencies (ToExpression P2485;P2486, lower_text none, outer
+request P1562, loader P1560, file reread P1571). The campaign diagnostics are
+3,362 named PortBlocked records (920 counts, 44 tuple identities, 2,084 Twice
+phase records, 62 source-specific row/family differences over 61 rows, 247
+CM1 unresolved identities, 5 generic route gaps) plus CM1's own 247
+diagnostics, which my recomputation matches exactly.
+
+**My own suites (host, authoritative).** `cargo fmt --check` rc 0. Workspace
+default: 70 binaries / 4,295 passed / 0 failed / 64 ignored (peak
+7,223,140,352 B); workspace `--no-default-features`: the same totals (peak
+6,881,779,712 B). `suspension_oracle` 529 passed + 3 ignored in 164.17 s /
+165.74 s and `typed_slot_census` 10 + 1 ignored in 57.63 s / 58.91 s in the
+two modes. Switch-gated host binaries under
+`RUM_PROFILE_LEXICAL_SUBSTITUTION=1` in both modes: lp03 3/3, lp04 1/1, lp05
+1/1. All 30 named falsifiers reject with their own predicate in both modes
+(identical sorted hashes), and both campaigns print identical counts and
+identical parity hashes (my own hash `085398d4…`; elapsed 806 ms / 801 ms).
+`lp655`/`lp656` remain the documented standing two-arm reds, not part of the
+green set. The nine native ZeroMQ loopback checks the sandbox had to skip ran
+and passed in my host workspace run; the sandbox EPERM is environmental.
+
+**Rulings.** Q1 the 920 `NotYetBound` counts and 44 missing tuple identities
+stay Open as named PortBlocked data; no estimate, no zero-fill, and any new
+evidence program is separately scoped. Q2 the frozen count/digest boundary
+stands: source-specific applicability, the distinct Twice phase and the five
+concrete generic routes stay named port blockers; a later reviewed, versioned
+input may supply them, with a size ruling if enumerated keys become necessary,
+and nothing is inferred from passed observations. Q3 the 247 unresolved
+aliases and every CM1 candidate/dispatch/construct/transfer blocker are
+preserved without waiver. Q4 the native ZeroMQ transport checks receive real
+loopback coverage in the director gate; the sandbox's documented opt-in skip
+(`AGENTS.md:128`) was used only there, and the native set stays in every later
+host acceptance. The FLAGGED `missing-data` is accepted as the brief's
+admitted debt with frozen counts and dispositions unchanged; the FLAGGED
+`native-loopback-boundary` is accepted and resolved for this gate by my host
+run. Both deviations are accepted: the sandbox retry with the existing
+environment switch, and the final-review addition of four bag-corruption
+controls with all final gates rerun after the last edit (earlier runs preserved
+as pre-hardening evidence).
+
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
+no CM2 guest executes, and CHANGELOG and S10 stay blocked. Continuation 72
+opens CM3 as brief 739 (test-only): binding of the Execute bag's 10,505
+nonencoding keys over the 175 Equal rows to immutable fixtures and actual
+execution receipts; import of the five proof classes (43,390 keys over 749
+rows) as certificates with exact scope and dependency, never SAME; the 24,435
+deferred keys (5,595 residual + 18,840 encoding) stay deferred and never
+executed or credited; exact required/bound/executed reconciliation at row
+granularity with multiplicity one and immutable known-loss records; no
+promotion, no encoding run.

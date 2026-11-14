@@ -36,10 +36,13 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   names every delta (7,061 new / 3,034 ambiguous dispatch / 826 unknown /
   12 missing transfer targets / 24 changed caller graphs); the workspace is
   green in both modes under the seven switch-gated skips; C2 stays Open at
-  118 Residual + 0 Lost. CM2 (brief 738) is in flight: its first run stopped
-  pre-edit on the transport owner, the director admitted `G13-transport`
-  (explicit Open, the 18,840 encoding keys, named bar) and re-dispatched the
-  amended brief; CM3-CM5 follow.
+  118 Residual + 0 Lost. CM2 (brief 738, accepted 2026-11-14) lands the
+  counted requirements/ownership stage: 25 policies / 154 applicability
+  kinds / 1,085 frozen routes, the 2,204-row bag of 3,582 policy
+  obligations, the exact 10,505 Execute / 24,435 Deferred / 43,390 Proof
+  partition, 51 Open owners (including `G13-transport` for the 18,840
+  encoding keys) and 30 falsifiers; the workspace is 4,295/0/64 in both
+  modes. CM3 (brief 739) follows, then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
