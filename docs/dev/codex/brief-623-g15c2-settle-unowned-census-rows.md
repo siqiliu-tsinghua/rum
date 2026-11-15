@@ -114368,3 +114368,147 @@ status and key with only the evidence column changed. C2 stays Open at
 118 Residual + 0 Lost; no row settles, no owner is promoted, no encoding
 key runs; `CHANGELOG.md` and S10 stay blocked. The partial tree is the
 state to continue from.
+
+### Continuation 74 — fourteenth run: Q16's audited C31 accessor executes P1476 (133 rows / 8,220 keys); Q17 opens the private checkpoint pair
+
+**2026-11-15 — brief 739's fourteenth run executed continuation 13 and is
+accepted at its STOP. Q16's single unconditional `#[doc(hidden)]`
+read-only `Session` accessor landed append-only (10,303-byte prefix kept,
+891 bytes added, one new symbol, zero production call sites) and
+`P1476`'s 30 keys executed through their real route with the sealed
+ten-field synchronous row at multiplicity one in both arms; 33 further
+rows executed (1,745 keys), carrying the campaign to 133 rows / 8,220
+keys over 57 families with 14,865 actual pauses and 23,390 lifecycle
+observations. The run then stopped at `P1566`/`P1568`, whose 60 active
+keys need the private message-checkpoint pair; Q17 authorizes one
+unconditional append-only read-only getter for that pair plus explicit
+test-only scope at `host_facade.rs:17`, then both 30-key matrices and the
+remaining 16 rows / 780 keys.**
+Run `cdx`, unit `brief-739-cdx-20261115-160720-1044767`, rc 0, peak
+13,377,794,048 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 4,723,826 B, sha256 `feefa2c3…`; report
+`.temp/brief-739/report.json`, 2,584,567 B, sha256 `4db86c15…`; 634
+recorded changes (622 added `.rum` assets, 12 modified, 0 deleted); 16
+PASS / 4 FLAGGED / 1 FAIL / 1 NA (the FAIL is the campaign unfinished), 6
+disclosures, 6 deviations, Q17; 21,089 citations verified.
+
+**What landed.** The Q16 accessor is exactly the authorized shape and
+nothing else: one `#[doc(hidden)]` impl block with one `pub fn`, the
+recorded `Runtime { phase: "evaluate.fixed_point_equal" }` events
+formatted `C31Synchronous {key:?}` as `[vector[0..7], input_required, 0,
+0]`, sorted; `epoch::existing()` so no epoch is created; unconditional,
+no `cfg`, no `unsafe`, no field-visibility, body or caller change, no
+dependency, manifest or lock edit. `P1476`'s 30 keys execute through
+their real route; the vector is read on the executing thread after the
+subject and before the projections, and the validator requires exactly
+one synchronous row per side equal to the seal-derived counts (the Rust
+table is byte-equal to the sealed events); the own omission 6,6 → 4,4 is
+rejected by `Native` with equal output, and the both-stale, missing and
+duplicate controls fire. 33 further rows installed and executed with
+1,745 keys and 8,670 constituent plans over 8,220 keys (351 multi-record
+keys, maximum three), every constituent content-addressed; 622 new
+`.rum` assets (2,639 total); all 6,475 entry program rows and every
+required/bound entry row persist verbatim, and exactly the 1,745 blocked
+rows convert to bound with evidence naming their root probe and sealed
+proof, with no other blocked-row change. Batch6 (5 rows / 280) and
+batch7 (5 rows / 290) were authenticated only and earn nothing. Proofs
+are untouched (749/43,390; 151/8,255; 115/6,270; 36/1,985; 598/35,135;
+five known losses); the 133 canonical-source pins, every provenance pin
+and the program-table pin (8,220) hash-match; 133 bound rows stand over
+57 families, and 18 active rows / 840 keys remain against the 24 named
+exclusions / 1,445 and the 175-row / 10,505-key requirement bag.
+Maintenance replayed 68 fingerprint cells in one column and 4
+certificate cells in two columns; ownership went 9,003 → 9,006 (three
+`UnknownConstruct` rows from the appended getter) and the final replay
+added none. The lane was rebuilt from the final tree (5,426 files, tree
+`7560325d…`, artifact `f1f040fa…`, manifest-diff `6de69589…`, release at
+one codegen unit, build 83.989 s, growth feature absent,
+`test-continuation-slots` kept, discriminator both ways). No production,
+repository manifest, lock, dependency, doc or script change.
+
+**The STOP.** `P1566`/`P1568` (2 rows, 60 active keys): the sealed C68
+records require the pair `(current_message_list_checkpoint.is_some(),
+current_message_list_dirty)` sampled after the host outcome and before
+snapshot / fresh / projections. Both fields are private and no getter
+exists (`E0599`, `E0616`). The sealed matrices show resumed and queued
+agreeing in all 30 cells (20 × `(false,false)`, 10 × `(false,true)`),
+while the own omission flips the pair (`P1566` `(false,false)` versus
+`(true,true)`, `P1568` the reverse) with every public effect byte-equal.
+Accepted with zero credit; no public-effect substitute exists.
+
+**Q17 ruling.** Authorize one unconditional append-only read-only
+`#[doc(hidden)]` inherent `Session` getter returning exactly that pair,
+under the Q4/Q9/Q10/Q16 audit gate (prefix preserved, one new symbol,
+zero production call sites, the declaration recorded, the deterministic
+gate instead of a hot-path A/B; no `cfg`, no `unsafe`, no
+field-visibility change, no dependency/manifest/lock edit; an audit
+rejection is a STOP). Also authorize explicit test-only scope at
+`crates/rum-stdlib/tests/suspension_oracle/host_facade.rs:17` to bridge
+the private `HostSession.session` inside the source-reused
+`host_facade::session` module: the reused host source stays
+byte-identical to `crates/rum-host/src/session.rs`, the only added item
+is that one test-only accessor, no production host body or field
+visibility changes, no copied host logic; if the reuse cannot be kept
+byte-exact, STOP. Then execute both complete 30-key matrices at the
+sealed sampling point from the executing thread, the pair at
+multiplicity one in both arms, the expected value taken from the sealed
+records, with the own-omission `Native` rejection (P1566 and P1568 in
+their sealed directions) and a constant-pair control firing; a public
+phase row, the snapshot, a cached scalar or a constant is not an
+observation. Then install and execute the remaining 16 rows / 780 keys —
+batch6 (280) and batch7 (290) by their authenticated artifacts and hash
+identity, then `P0813`/C49 (30), `P1470`/`P1471` (90), `P2600` (30) and
+`P2611`/`P2612` (60) — keeping the 36 current-blocked proof records, the
+598 absent / 35,135 and the 24 named exclusions / 1,445 named, no
+settlement, no promotion, no encoding key, maintenance replayed after
+the source edit, the lane rebuilt content-addressed from the final tree,
+and the complete schedule and acceptance under the 1,500 s bound per
+expanded-oracle build+run with the cumulative cost disclosed separately
+(this run 582.990 / 586.139 s; cumulative mode-labelled 2,321.344 /
+2,173.309 s; the complete 9,060-key schedule unmeasured while 840 keys
+are unported). Any other production, Cargo, dependency, manifest or lock
+change is a STOP. Option 2 is declined: the getter is the established
+Q4/Q9/Q10/Q16 form with no default-path cost, and leaving 60 active keys
+blocked would weaken the frozen active bag without cause.
+
+**Host gate.** My own gate on the final tree is green: `cargo fmt --check`
+rc 0; the one-thread certificate both arms (35 s each); the oracle `cm_`
+both arms — 42 passed / 0 failed / 2 ignored plus child summaries (547 s
+/ 539 s) reproducing the exact `CM RECEIPTS PASS … rows=133 families=57
+bound=8220 executed=8220 multiplicity=1 actual_pauses=14865
+lifecycle=23390 campaign_remaining=840 PortBlocked=1445 …`,
+`CM BINDINGS PASS … declared_bound=8220 PortBlocked=2285 …
+unported_programs=840 …`, `CM P1476 RECEIPTS PASS … executed=30
+multiplicity=1 actual_pauses=102 lifecycle=132 native_fields=10 …`,
+`CM PROOFS PASS …`, `CM P0543 RECEIPTS PASS … lane=p0543-unchecked …`,
+`CM BUILD CONFIGURATION PASS …` and `CM CANONICAL LEGACY PASS plans=796
+…` lines, with all four `P1476` falsifiers firing; the ignored provenance
+audit both arms (`pins=22 diagnostics=4`); switched LP 5/5 both arms;
+and the workspace 4,314 passed / 0 failed / 65 ignored over 70 suite
+summaries both modes. My wrapper re-verified the lane binary, tree,
+manifest-diff and all 5,426 copied files before every invocation. My
+independent audit closed with zero failures: entry continuity on 3,692
+shared files; the exact 12 + 622 change set (0 deletions, one production
+accessor); the append-only accessor shape and its single call site; the
+binding/program table arithmetic (10,505 required, 8,220 bound, 2,285
+blocked over 133 rows / 57 families; 18 active / 840; 24 excluded /
+1,445); 6,475 entry rows verbatim; 1,745 conversions with sealed
+evidence; 8,670 constituent plans, all content-addressed; every pin;
+the maintenance cells column-wise; the lane identity; the checkpoint
+evidence pins, pairs and equal public effects; and the Rust C31 table
+equal to the sealed events. `report.py check --against-git`'s 2,036
+"problems" are an artifact of the HEAD baseline over the uncommitted
+campaign tree, not of this run. C2 stays Open at 118 Residual + 0 Lost;
+no row settles, no owner is promoted, no encoding key runs;
+`CHANGELOG.md` and S10 stay blocked. The partial tree is the state to
+continue from.
+
+**Continuation 14.** Entry state: 133 rows / 8,220 keys; 18 active rows /
+840 keys; 24 excluded / 1,445; proofs 749/43,390; encoding 0 of 18,840.
+Land the Q17 getter and the test-only bridge, replay maintenance, rerun
+acceptance in both arms at one thread, execute both `P1566`/`P1568`
+matrices with the pair at multiplicity one and the own-omission `Native`
+falsifier, then the remaining 16 rows / 780 keys, replay maintenance,
+rebuild the lane from the final tree, and run the complete schedule and
+acceptance under the 1,500 s bound. The partial tree is the state to
+continue from; do not restart and do not hand-edit a generated cell.

@@ -156,8 +156,31 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   behind a runtime-private epoch (E0599/E0603, own omission 6,6 versus 4,4,
   zero credit, 750 further keys authenticated only); Q16 authorizes exactly
   one unconditional `#[doc(hidden)]` read-only `Session` accessor in the
-  Q4/Q9/Q10 audited form, then `P1476`'s 30 keys and the remaining 50 rows /
-  2,555 keys under the 1,500 s bound; then CM4-CM5.
+  Q4/Q9/Q10 audited form. The fourteenth run landed that accessor append-only
+  (10,303-byte prefix kept, 891 bytes added, one symbol, zero production call
+  sites) and executed `P1476`'s 30 keys with the sealed ten-field synchronous
+  row at multiplicity one in both arms (own omission 6,6 versus 4,4 rejected
+  by `Native`, with the stale/missing/duplicate controls), then 33 further
+  rows — 1,745 keys — carrying the campaign to 133 rows / 8,220 keys over 57
+  families (14,865 pauses, 23,390 lifecycle observations, 8,670 constituent
+  plans), with 18 active rows / 840 keys left and no new exclusion; it then
+  stopped at `P1566`/`P1568`'s private message-checkpoint pair
+  (`(current_message_list_checkpoint.is_some(), current_message_list_dirty)`):
+  both fields are private (`E0599`/`E0616`), the sealed matrices show resumed
+  and queued agreeing in all 30 cells (20 × `(false,false)`, 10 ×
+  `(false,true)`) while the own omission flips the pair with every public
+  effect byte-equal, so no snapshot, projection or constant can discriminate
+  it; zero credit, and batch6 (5 rows / 280) plus batch7 (5 rows / 290) were
+  authenticated only. Q17 authorizes exactly one unconditional append-only
+  read-only `#[doc(hidden)]` `Session` getter for that pair under the
+  Q4/Q9/Q10/Q16 audit gate, plus explicit test-only scope at
+  `host_facade.rs:17` to bridge the private `HostSession.session` through one
+  test-only forwarding accessor with the reused host source byte-identical
+  and no production host change; then both complete 30-key matrices at the
+  sealed sampling point with the own-omission `Native` rejection, then the
+  remaining 16 rows / 780 keys (batch6/batch7 by hash identity, `P0813`/C49,
+  `P1470`/`P1471`, `P2600`, `P2611`/`P2612`) under the 1,500 s bound; then
+  CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
