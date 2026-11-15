@@ -260,7 +260,9 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   sealed ten-field value pins with all prior provenance rows and historical
   native pins intact; maintenance replayed only derived cells; the complete
   schedule is 738.69 s / 736.49 s per build+run under the 1,500 s cap; the
-  whole CM3 test layer lands in this commit. Then CM4-CM5.
+  whole CM3 test layer lands in this commit. CM4 is opened as brief 740
+  (own-omission receipts and atomic owner promotions; test layer only, copied
+  mutation builds, synthetic promotions), then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
