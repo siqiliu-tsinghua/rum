@@ -211,7 +211,19 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   — and stopped at Q19 rather than invent a difference; Q19 rules each row's
   own sealed direction (`P0813` Native, `P2600` Output), with the timeout
   field under a constant-field Native control and missing/duplicate
-  controls, then the remaining 150 keys complete the 9,060-key campaign;
+  controls, then the remaining 150 keys complete the 9,060-key campaign.
+  The seventeenth run executed `P0813`/`P2600` (60 keys in their own sealed
+  directions with constant/missing/duplicate controls; the five
+  sealed-invalid C49 records at zero credit) and `P1470`/`P1471` (90 keys,
+  own pass-publication omission Native): 149 rows / 9,000 keys over 67
+  families, 16,574 pauses, 25,144 lifecycle observations, 9,451 constituent
+  plans, 38 new content-addressed assets, then stopped at
+  `P2611`/`P2612`'s private adapter worker (`worker::run_segment`/
+  `ExecuteSegment`; `E0603` in both modes; the temporary probe restored
+  byte-exactly; 60 keys authenticated with zero credit); Q20 authorizes one
+  test-only include-based driver over the seven unchanged adapter sources
+  with the per-record `Output` direction and the constant/missing/duplicate
+  controls, then the last 60 keys complete the 9,060-key campaign;
   then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

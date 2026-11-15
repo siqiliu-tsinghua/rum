@@ -2473,3 +2473,223 @@ the requirement bag 175 / 10,505 named; replay maintenance, rebuild the
 lane content-addressed, and treat any further private access as a STOP
 and a question. The partial tree is the state to continue from; do not
 restart and do not hand-edit a generated cell.
+
+### Continuation 17 — seventeenth run: Q19's per-row directions execute 150 keys (149 rows / 9,000 keys over 67 families) and both timeout packets authenticate, then Q20 authorizes one test-only include-based adapter driver for the last 60 keys
+
+**2026-11-16 — brief 739's seventeenth run executed continuation 16 and is
+accepted at its STOP. The Q19 matrices executed both timeout rows in
+their own sealed directions (`P0813` Native on a sealed-valid
+representative with the sealed `catch.eval.total` difference
+`[1,1,0,0,0,0,0,0,0,0] → [1,0,1,0,0,0,1,0,0,0]`, public effects equal;
+`P2600` Output dropping exactly the structured Result `"43"` with the
+native vectors equal) with the constant-field, missing and duplicate
+timeout controls all rejected `Native`, and the five sealed-invalid
+`P0813` `return_boundary.loop-store-reset` records recorded as
+sealed-invalid with zero falsifier credit; the fixed-point pair
+`P1470`/`P1471` executed with its own pass-publication omission
+rejected `Native` on the sealed omitted-resumed vector with queued
+unchanged. The campaign moved from 145 rows / 8,850 keys to 149 rows /
+9,000 keys over 67 families (16,574 actual pauses, 25,144 lifecycle
+observations, 9,451 constituent plans, 38 new content-addressed
+assets). The run then stopped at `P2611`/`P2612`, whose sealed C52
+adapter rows need `worker::run_segment` and `ExecuteSegment` at the
+executing-thread terminal boundary: the unchanged-source include
+compiles, but the private `worker` module rejects the call with `E0603`
+in both modes, and the temporary Q7 reachability probe was restored
+byte-exactly (`suspension_oracle.rs` `adb6aae9…`; all seven included
+adapter sources unchanged). The STOP is accepted with zero
+binding/receipt/proof/execution credit: all 60 keys were authenticated
+against their seals (70 pins) and remain unported. Q20 authorizes one
+narrow test-only include-based driver over the same seven unchanged
+adapter sources, then the last 60 keys complete the 9,060-key active
+campaign (151 rows) and the complete schedule and acceptance are
+measured under the 1,500 s bound.**
+Run `cdx`, unit `brief-739-cdx-20261115-234837-1332615`, rc 0, peak
+13,717,585,920 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 6,217,642 B, sha256 `cf4cc7c5…`; report
+`.temp/brief-739/report.json`, 2,548,689 B, sha256 `499b6dfe…`; 48
+recorded changes (38 added, 10 modified, 0 deleted); 13 PASS / 2
+FLAGGED / 1 FAIL (the Q20 private-access stop), 1 disclosure, 6
+deviations, Q20; 11,540 citations verified; no manifest or lock hash
+changed.
+
+**What landed.** `host_facade.rs` was not touched this run: the Q18
+accessor is read at the sealed sampling point by the shared fixture
+runner (`fixtures/obligations/guest.rs`), which samples
+`actual_owns_eval_timeout()` immediately after the terminal host
+outcome and before `snapshot_to_bytes`, the checkpoint fresh request
+and the projections. `execution_tests.rs` gains `cm_timeout_receipts_exact`
+and `cm_fixedpoint_receipts_exact`; both execute all bound plans
+through the real host routes (P0813 via real eval/Catch; P2600 via the
+sealed c47 driver through `HostSession::call`; P1470/P1471 through the
+pure C8 next-pass driver in real fixed-point frames) and validate the
+13-channel/lifecycle rows unchanged. The timeout packet
+authentication reproduced the same sealed verdicts as the sixteenth
+run (60 keys / 88 pins; per row `frozen_keys=30 real_valid=30
+real_native_equal=30 real_timeout_zero=30 disabled_exact=30`;
+`P0813` own 25 valid / 5 sealed-invalid; `P2600` own 30 valid with
+`native_same=30`), the fixed-point packet authenticated 90 keys (14
+pins; both rows valid with pause owners exact), and the adapter packet
+authenticated 60 keys (70 pins; all 60 own omissions valid and caught
+with `native_same=true` and `semantic_same=false`). Maintenance replayed
+under the flat rot guard: 68 fingerprint cells regenerated in their own
+column and mechanically installed, four C01/C02 certificate cells in
+their two columns (both generation-stage stale cells were ordering
+artifacts, resolved by the replay before acceptance), no other column
+or row changed, the 15 immutable obligation tables hash-unchanged, and
+ownership stayed 9,006 rows with no delta. The lane was rebuilt from
+the final tree: 5,739 files (5,730 byte-identical + nine
+feature-removal manifest edits), tree `02aa9d42…`, manifest-diff
+`c392e13a…`, release at one codegen unit, build 65.668 s / wrapper
+67.181969 s, discriminator true in both mandated arms and false in the
+lane with its forced control. The full oracle target inside the
+workspace acceptance passed 551/0/4 in both modes at 706.39 s / 710.2 s
+with zero filtered tests; typed-slot 10/0/1; switched LP 5/0/0 in both
+modes; the workspace raws (4,333/11/65) contain the nine documented
+loopback `EPERM` failures plus the two forced-red probe children,
+reproduced at one thread as 0/9/0 `EPERM`; the source tree and all four
+target binaries are sealed in `acceptance-identities.json` under the
+hash-identity reuse ruling.
+
+**The STOP.** Q19's last sentence makes any further private access a
+STOP and a question. `P2611`/`P2612`'s sealed C52 rows require the
+adapter's executing-thread terminal boundary: the pinned
+`jupyter_driver.rs` constructs `ExecuteSegment` and calls
+`run_segment`, then samples the native rows before the snapshot and
+fresh work. The adapter's `mod worker;` is private and `run_segment` is
+not re-exported, so an external test crate cannot reach it (`E0603` in
+both modes); the unchanged source itself compiles in the test crate.
+The run authenticated the 60 keys against their seals with zero credit
+and did not add a bridge. The temporary probe that proved the
+reachability boundary was restored byte-exactly, with all seven
+production adapter sources unchanged, so the tree carries no claim of
+private access it did not receive.
+
+**Q20 ruling — one test-only include-based adapter driver; then the
+last 60 keys.**
+- Evidence verified independently: the seven included source hashes
+  (`mod.rs` `b3feb8ef…`, `worker.rs` `94df4c10…`, `execute.rs`
+  `cbdc0f8d…`, `input_retirement.rs` `5ca28f9a…`, `iopub.rs`
+  `ac5ed850…`, `render.rs` `ca824c5e…`, `model.rs` `69c59a46…`); the
+  byte-exact probe restore; the `E0603` failures in both modes; the
+  pinned C52 driver at `jupyter_driver.rs:50` and `:75`; and the 60
+  sealed own-omission records, every one `valid=true`,
+  `native_same=true`, `semantic_same=false`.
+- Authorized, and nothing more: compile those seven unchanged adapter
+  sources into one test-only include-based module, in the Q17 host
+  form, and add exactly one local observation driver in that same
+  module. It may construct `ExecuteSegment` and call `run_segment`,
+  capturing the complete native row bag at the terminal outcome on the
+  executing thread, before snapshot/projections/fresh work.
+- Constraints: no production byte, field visibility, Cargo graph or
+  lock change; no copied logic; the receipt constructor unchanged; the
+  temporary reachability probe stays removed; the driver declaration is
+  recorded; an audit rejection or a non-byte-exact reuse is a STOP.
+  (The include mechanics are proven: a director probe compiled an
+  `include!`-ed module whose path-based submodules resolve relative to
+  the included file, so the private `worker` module and its
+  `run_segment` are reachable from a driver appended in the same
+  module.)
+- Then both 30-key matrices (`P2611` Eval route, `P2612` Resume route)
+  at multiplicity one in both arms at the sealed sampling point. Each
+  record's own omission rejects in its sealed direction: all 60 sealed
+  records are native-identical and semantic-different, so the direction
+  is `Output`; no record may use `Native`, and a direction the sealed
+  record does not show is a STOP, never a substitution. The observed
+  boundary row bag stays under Native control: a substituted nonzero
+  value in it must be rejected as `Native`, alongside missing and
+  duplicate controls. Any sealed-invalid record is recorded as
+  sealed-invalid with zero credit (none here: all 60 are valid and
+  caught).
+- Then complete the 9,060-key active campaign (151 rows), and measure
+  the complete schedule and acceptance under the 1,500 s bound per
+  expanded-oracle build+run, with the cumulative cost disclosed
+  separately (this run: partial oracle 722.71 / 728.45 s inside the
+  workspace; workspace 1,168.979190 / 1,040.287780 s; all recorded
+  leaves 3,136.034974 s; lane build 67.181969 s; the 9,060-key
+  schedule stays unmeasured while any key is unported).
+- Keep the 36 current-blocked proof records, the 598 absent / 35,135,
+  the 24 named exclusions / 1,445 and the requirement bag 175 / 10,505
+  named; no settlement, no owner promotion, no encoding key; replay
+  maintenance after the fixture change; rebuild the lane
+  content-addressed from the final tree. Any further private access is
+  a STOP and a question, never a substitution.
+- Option 2 is declined: a separately reviewed public-adapter evidence
+  program would add permanent public observation surface for a
+  test-only need and would not be the sealed route. The sealed C52
+  evidence itself was produced through `worker::run_segment` on the
+  executing thread by the pinned driver, and no public adapter API
+  exports executing-thread native samples; the driver preserves that
+  route exactly with no production change.
+
+**Host gate.** My own gate on the final tree is green: `cargo fmt
+--check` rc 0; the one-thread retention certificate both arms (1 passed
+/ 0 failed; 36 s / 36 s); the oracle `cm_` both arms — 45 passed / 0
+failed / 2 ignored (616.05 s / 618.09 s) plus child summaries with the
+exact `CM RECEIPTS PASS calibration=P0001 rows=149 families=67
+bound=9000 executed=9000 multiplicity=1 actual_pauses=16574
+lifecycle=25144 campaign_remaining=60 PortBlocked=1445
+full_CM_green=false`, `CM BINDINGS PASS required=10505 active=9060
+declared_bound=9000 PortBlocked=1505 absent_packets=600
+unresolved_targets=785 repl_placement=60 unported_programs=60
+full_CM_green=false`, `CM TIMEOUT RECEIPTS PASS row=P0813 … 30/30/30 …
+actual_pauses=49 lifecycle=70 timeout_zero=30 …` and `row=P2600 …
+49/60 …`, `CM FIXEDPOINT RECEIPTS PASS row=P1470 … 45/45/45 … 153/90
+…` and `row=P1471 … 153/108 …`, `CM CHECKPOINT RECEIPTS PASS
+row=P1566 …` and `row=P1568 …`, `CM P0543 RECEIPTS PASS … 55/55/55 …
+lane=p0543-unchecked …`, `CM PROOFS PASS imported=749/43390
+packet_authenticated=151/8255 absent=598/35135 current_verified=115/6270
+partial=true executions=0 SAME=0 full_CM_green=false`, `CM BUILD
+CONFIGURATION PASS lane=mandated control=false
+checked_only_enforcement=true` and its forced control, `CM CANONICAL
+LEGACY PASS plans=796 frozen_fingerprints=796 executions=0` and `CM
+LOSSES PASS prior_Lost=5 immutable_differences=3 C1_promotions=2
+missing_original_baselines=2 encoding_runs=0 fresh_allowed_DIFF=0`
+lines, all new falsifiers (`P0813`/`P2600` sealed-valid own omission,
+constant-timeout, missing-timeout, duplicate-timeout; `P1470`/`P1471`
+own-pass-publication-omission) firing in both arms, the five sealed
+C49 invalid records printed with zero credit, the ignored provenance
+audit both arms (`PROVENANCE AUDIT PASS pins=22 diagnostics=4`),
+switched LP 5/5 both arms, and the workspace 4,317 passed / 0
+failed / 65 ignored in both feature modes over 70 suite
+summaries (the full oracle binary itself 45/0/2 under the `cm_`
+filter). My wrapper re-verified the lane binary (`1a1c9dc6…`), the
+recomputed tree (`02aa9d42…`), the manifest-diff (`c392e13a…`), the
+nine manifest edits and all 5,739 copied files before every oracle and
+workspace invocation; the wrapper's first form exported the wrong
+variable name for the manifest diff and was refused by the oracle
+identity check (a director-script defect, corrected against the test
+source and re-run; no tree change). My independent audit of the run
+closed with zero failures: the entry tree 5,701 files → 5,739 with
+exactly 10 modified + 38 added test-side files and nothing else; the
+host source `ef78a1de…` unmodified in git; the timeout, fixed-point
+and adapter authentications reproduced from copies with byte-identical
+JSON output; the four new rows' sealed representative differences
+exact (`P0813` `catch.eval.total` `[1,1,0,…] → [1,0,1,…]`, `P2600`
+counters equal with the Result `"43"` drop); the 68 fingerprint cells
+and four certificate cells confined to their columns; the 150
+blocked→bound moves with only `program`/`evidence` edited and the
+program table 8,850 → 9,000; provenance 17,623 → 17,883; all 15
+immutable obligation tables unchanged; the 5,739-file lane identity
+recomputed independently; the temporary probe root restored
+byte-exactly; and the report's 11,540 citations. C2 stays Open at 118
+Residual + 0 Lost; no row settles, no owner is promoted, no guest
+executes beyond the receipts, no encoding key runs, and `CHANGELOG.md`
+and S10 stay blocked. The partial tree is the state to continue from.
+
+**Continuation 17.** Entry state: 149 rows / 9,000 keys; 2 active rows
+/ 60 keys (`P2611`, `P2612`); 24 director-excluded rows / 1,445;
+proofs 749/43,390; encoding 0 of 18,840. The Q19 matrices are executed
+and maintenance is replayed; the lane is rebuilt at tree
+`02aa9d42…`. Add the Q20 test-only include-based adapter driver over
+the seven unchanged sources, execute both complete 30-key matrices with
+the per-record `Output` direction and the constant/missing/duplicate
+controls on the observed boundary row bag, and complete the 9,060-key
+active campaign (151 rows); measure the complete schedule and
+acceptance under the 1,500 s bound; keep the 36 current-blocked proof
+records, the 598 absent / 35,135, the 24 named exclusions / 1,445 and
+the requirement bag 175 / 10,505 named; replay maintenance after the
+fixture change; rebuild the lane content-addressed; and treat any
+further private access as a STOP and a question. The partial tree is
+the state to continue from; do not restart and do not hand-edit a
+generated cell.
