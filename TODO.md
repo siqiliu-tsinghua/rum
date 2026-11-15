@@ -238,7 +238,17 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   those calls provenance-only — the live fixture keeps the live
   lease/reset, the adapter route, the terminal native sample and all
   controls, imports no probe, and carries the facade allow so the test
-  target stays warning-free; then CM4-CM5.
+  target stays warning-free. The twentieth run made two C52
+  authentication attempts that failed on its own importer assertions
+  (the pre-activation `c52.handoff` pause in the probe log, then the
+  generic `.temp/g15-c2/mutant_support.rs` `bbe4577c…` instead of the
+  sealed witness copy `512785d2…`), firing the exact two-attempt
+  stop-loss with zero credit and an unchanged tree; Q23 authorizes one
+  fresh bounded continuation with the two sealed `c2_probe.rs` copies
+  (`source-…-{real,mutant}`, both `512785d2…`) as the only inputs and
+  the handoff read as outside the counted epoch, then the same
+  continuation carries the two 30-key matrices and the last 60 keys;
+  then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

@@ -115037,3 +115037,63 @@ probe calls per Q22, execute both 30-key matrices with the per-record
 `Output` direction and the constant/missing/duplicate controls,
 complete the 9,060-key campaign, and measure the complete schedule and
 acceptance under the 1,500 s bound.
+
+### Continuation 80 — twentieth run: two worker importer defects fire the exact two-attempt stop-loss (zero credit, tree unchanged), and Q23 supplies the sealed witness paths for one fresh bounded continuation
+
+**2026-11-16 — brief 739's twentieth run executed continuation 19 and is
+accepted at its STOP. Its two self-authored C52 authentication attempts
+failed on their own assertions — attempt 1 wanted the pre-activation
+`c52.handoff` pause in the probe log, attempt 2 (which printed both
+sealed packet lines and all seven source pins) asserted the generic
+`.temp/g15-c2/mutant_support.rs` (`bbe4577c…`) instead of the sealed
+witness copy (`512785d2…`) — so the exact two-attempt stop-loss fired
+with zero credit and an unchanged tree. Both attempts are preserved
+(`baf36ba8…`, `0a941c5f…`), the sealed inputs are intact and listed in
+`artifact-hashes.json`, and the handoff is outside the probe's counted
+epoch (`jupyter_driver.rs:38-47`). Q23 authorizes one fresh bounded
+continuation with those sealed copies as the authentication inputs.**
+Run `cdx`, unit `brief-739-cdx-20261116-035346-1456047`, rc 0, peak
+225,046,528 B, oom 0 / oom_kill 0; log 1,638,755 B sha256 `58b040c9…`;
+report 43,400 B sha256 `5a1d715d…`; 0 changes, 0 disclosures;
+6 PASS / 1 FAIL / 1 NA, 3 deviations, Q23; 170 citations verified.
+
+**Q23 ruling.** Option 1: continue from the unchanged tree with the two
+sealed witness copies
+`.temp/g15-c2/c52/source-jupyter-segment-cancelled-result-normalization-{real,mutant}/crates/rum-runtime/src/c2_probe.rs`
+as the only authentication inputs (both `512785d2…`, both in the sealed
+`artifact-hashes.json`), and read the initial `c52.handoff` pause as
+outside the probe epoch, never expected in the probe log. The generic
+`mutant_support.rs` is not a sealed input. The copies are read-only
+provenance: Q22 still forbids importing or reproducing `c2_probe` in the
+live fixture. No production change, no scope expansion, no new
+exclusion, no re-pin. The same continuation then carries the Q21/Q22
+execution stage — the nested include and one driver, both 30-key
+matrices at multiplicity one in both arms with each record's own
+`Output` direction and the constant/missing/duplicate controls — and
+the last 60 keys complete the 9,060-key campaign (151 rows) with the
+complete schedule and acceptance measured under the 1,500 s bound. Keep
+the 36 current-blocked, 598/35,135, 24 exclusions / 1,445 and
+requirement bag 175 / 10,505 named; no settlement, no promotion, no
+encoding; replay maintenance after the fixture change; rebuild the lane
+content-addressed; any further private access is a STOP and a question;
+two more consecutive zero-evidence attempts stop the line again.
+
+**Host gate.** The run's audit re-ran green under my invocation (both
+`Q22 PATH DIAGNOSTIC PASS` lines, `IMPORTER PATH ERROR CONFIRMED`, the
+two `ATTEMPT PRESERVED` lines, the unchanged bindings/programs/proofs/
+owners/losses/deferred, the unchanged maintenance pins and
+`MAINTENANCE REUSE PASS`, `CAMPAIGN STOP`, `CURRENT RUN CREDIT PASS …`,
+`ACCEPTANCE UNRUN`); I verified both sealed copies at `512785d2…` and
+their listing in the 5,879-entry sealed hash file; my full 5,739-file
+snapshot is unchanged against the seventeenth run's lane workspace
+except the three committed docs (0 added or missing); the 170 citations
+verify. C2 stays Open at 118 Residual + 0 Lost; no row settles, no
+owner is promoted, no encoding key runs; `CHANGELOG.md` and S10 stay
+blocked. The partial tree is the state to continue from.
+
+**Continuation 20.** Entry state: 149 rows / 9,000 keys; 2 active rows /
+60 keys; 24 excluded / 1,445; proofs 749/43,390; encoding 0 of 18,840.
+Complete the C52 authentication with the sealed copies, then the Q21
+nested include and one driver, both 30-key matrices with the per-record
+`Output` direction and the controls, the 9,060-key campaign, and the
+complete schedule and acceptance under the 1,500 s bound.

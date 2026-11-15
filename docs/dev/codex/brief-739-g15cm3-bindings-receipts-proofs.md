@@ -2954,3 +2954,106 @@ constant/missing/duplicate controls, complete the 9,060-key campaign
 (151 rows), and measure the complete schedule and acceptance under the
 1,500 s bound. The partial tree is the state to continue from; do not
 restart and do not hand-edit a generated cell.
+
+### Continuation 20 — twentieth run: two worker importer defects fire the exact two-attempt stop-loss (zero credit, tree unchanged), and Q23 authorizes one fresh bounded continuation with the sealed witness copies
+
+**2026-11-16 — brief 739's twentieth run executed continuation 19 and is
+accepted at its STOP. It made two self-authored C52 authentication
+attempts and no binding or execution: attempt 1 asserted the initial
+`c52.handoff` pause inside the probe log, though that handoff happens
+before the probe's counted epoch; attempt 2 got both sealed packet
+lines and all seven source pins through, then asserted the generic
+`.temp/g15-c2/mutant_support.rs` (sha `bbe4577c…`) where the sealed
+witness copy (`512785d2…`) was required. The exact two-attempt
+stop-loss fired, the tree is unchanged, both attempts are preserved,
+and zero binding/receipt/proof/execution/encoding credit is claimed or
+owed. Both defects are the worker's importer; the sealed inputs
+themselves are intact and pinned. Q23 authorizes one fresh bounded
+continuation from the unchanged tree with the corrected provenance
+inputs — the two `source-…-{real,mutant}/crates/rum-runtime/src/c2_probe.rs`
+copies, both `512785d2…`, both listed in the sealed `artifact-hashes.json`
+— and the handoff read as outside the counted epoch (`jupyter_driver.rs:38-47`).**
+Run `cdx`, unit `brief-739-cdx-20261116-035346-1456047`, rc 0, peak
+225,046,528 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 1,638,755 B, sha256 `58b040c9…`; report
+`.temp/brief-739/report.json`, 43,400 B, sha256 `5a1d715d…`; 0 recorded
+changes (0 added, 0 modified, 0 deleted), 0 disclosures; 6 PASS / 1
+FAIL / 1 NA (the stop-loss), 3 deviations, 1 question; 170 citations
+verified; no manifest or lock hash changed and no git or network command
+ran.
+
+**What the run did.** Two authentication/importer attempts, both exit
+1 and preserved (`authenticate_c52-attempt1.py` `baf36ba8…`,
+`authenticate_c52.py` `0a941c5f…`): attempt 1 stopped on its pause-log
+assertion (`pp[0]==['c52.handoff','P2611']`), attempt 2 printed both
+`C52 SEALED PACKET AUTH PASS` lines (`frozen_keys=30 real_valid=30
+disabled_exact=30 own_valid=30 own_native_same=30
+own_semantic_different=30 direction=Output`) and all seven source pins,
+then stopped on the probe-path assertion. The final audit reads `Q22
+PATH DIAGNOSTIC PASS` for both sealed copies at `512785d2…`, `IMPORTER
+PATH ERROR CONFIRMED … production_defect=false`, `CAMPAIGN STOP
+consecutive_zero_evidence_attempts=2 third_attempt=false`, zero current
+credit and `ACCEPTANCE UNRUN`; all 5,739 workspace files are unchanged
+(my own snapshot equals the seventeenth run's lane workspace except the
+three committed docs, 0 added or missing). No maintenance replay was
+needed; no cargo, build, guest or execution ran; four Python leaf
+commands total 1.037397 s; the complete schedule stays unmeasured.
+
+**Q23 ruling — one fresh bounded continuation with the corrected
+provenance inputs.**
+- Authorized: continue from the unchanged tree, using as the
+  authentication inputs exactly
+  `.temp/g15-c2/c52/source-jupyter-segment-cancelled-result-normalization-real/crates/rum-runtime/src/c2_probe.rs`
+  and its `-mutant` sibling, each `512785d2…` and each listed in the
+  sealed `artifact-hashes.json` (5,879 entries). The initial
+  `c52.handoff` pause precedes `Session::logical_profile_test_reset` and
+  `c2_probe::begin` (`jupyter_driver.rs:38-47`), so it is outside the
+  counted epoch and must not be expected in the probe log. The generic
+  `.temp/g15-c2/mutant_support.rs` (`bbe4577c…`) is not a sealed input
+  and must not be substituted for one.
+- Those sealed copies are read-only provenance for the authentication;
+  Q22 still forbids importing or reproducing `c2_probe` in the live
+  fixture. No production change, no scope expansion, no new exclusion,
+  and no re-pin of history.
+- Then the same continuation carries the Q21/Q22 execution stage: the
+  nested include and the one driver, both 30-key matrices (`P2611`
+  Eval, `P2612` Resume) at multiplicity one in both arms at the sealed
+  sampling point with each record's own `Output` direction and the
+  constant-field Native, missing and duplicate controls, and the last
+  60 keys complete the 9,060-key active campaign (151 rows). The
+  complete schedule and acceptance are measured under the 1,500 s bound
+  per expanded-oracle build+run, with cumulative cost disclosed
+  separately (this run: four Python leaves 1.037397 s; no cargo or
+  build cost; schedule unmeasured).
+- Keep the 36 current-blocked proof records, the 598 absent / 35,135,
+  the 24 named exclusions / 1,445 and the requirement bag 175 / 10,505
+  named; no settlement, no owner promotion, no encoding key; replay
+  maintenance after the fixture change; rebuild the lane
+  content-addressed from the final tree; any further private access is a
+  STOP and a question. If two more consecutive attempts again add no
+  evidence, the stop-loss stops again rather than a third attempt.
+
+**Host gate.** The run's audit re-ran green under my invocation with its
+verdict lines intact: the two `Q22 PATH DIAGNOSTIC PASS` lines, `IMPORTER
+PATH ERROR CONFIRMED`, the two `ATTEMPT PRESERVED` lines, the unchanged
+binding/program/proof/ownership/loss/deferred verdicts, the unchanged
+maintenance pins and `MAINTENANCE REUSE PASS`, `CAMPAIGN STOP`, `CURRENT
+RUN CREDIT PASS …` and `ACCEPTANCE UNRUN`. I verified both sealed copies
+hash `512785d2…`, that `artifact-hashes.json` lists both, and that
+`jupyter_driver.rs:38-47` places the handoff before the probe's epoch. My
+full 5,739-file snapshot is unchanged against the seventeenth run's lane
+workspace except the three committed docs. The report's 170 citations
+verify. C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner
+is promoted, no guest executes, no encoding key runs, and `CHANGELOG.md`
+and S10 stay blocked. The partial tree is the state to continue from.
+
+**Continuation 20.** Entry state: 149 rows / 9,000 keys; 2 active rows /
+60 keys (`P2611`, `P2612`); 24 director-excluded rows / 1,445; proofs
+749/43,390; encoding 0 of 18,840. Complete the C52 authentication with
+the two sealed witness copies, then retain the Q21 nested include and
+the one driver, omit the historical probe calls per Q22, execute both
+30-key matrices with the per-record `Output` direction and the
+constant/missing/duplicate controls, complete the 9,060-key campaign
+(151 rows), and measure the complete schedule and acceptance under the
+1,500 s bound. The partial tree is the state to continue from; do not
+restart and do not hand-edit a generated cell.
