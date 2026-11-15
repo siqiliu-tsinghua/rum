@@ -115342,3 +115342,126 @@ copies the cached compiler log aside before any forced check.
 C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is
 promoted, no encoding key runs; `CHANGELOG.md` and S10 stay blocked. The
 partial tree is the state to continue from.
+
+### Continuation 82 — third run: the source entry admits P0543's first complete own-omission packet, C10 stops on its source-only observation gap, and Q3 admits the mutation-observer path
+
+**2026-11-16 — brief 740's third run implemented continuation 2's admitted
+source entry and both-mode falsifiers, captured P0543's first complete
+own-omission packet on that schema, replayed maintenance, and stopped at
+C10's source-only admission gap before any fresh C10 build or case. The
+packet is real and measured: 55/55 real keys at multiplicity one, 165
+record-exact disabled records (I verified the 110 observation/lifecycle
+lines byte-identical myself), one source hit and baseline producer pause,
+the own `Native` red with equal public output, four preserved compiler
+logs. The STOP is correct: C10's retained carrier exists and the retained
+C13 log shows a native difference, but it was produced with a conditional
+deletion of the quiescence assertion in the mutant collector; the current
+shared runner asserts before returning the observation, so a current-source
+catch cannot be observed through the source-only entry. No credit was
+claimed for C10; it is `PortBlocked` with a named missing observation, 149
+other own rows `NotAttempted`, and no acceptance suite ran. Q3 admits
+option 1: one additive, constructor-private mutation-observer path in
+`fixtures/obligations/guest.rs` capturing the row's actual observation
+before the ordinary assertion while every ordinary runner path and the
+strict loader keep their full force, with a completely fresh twelve-block
+round — nineteen blocks consumed at completion, ≤28,500 s allocated, the
+eight unspent continuation-2 blocks voided.**
+Run `cdx`, unit `brief-740-cdx-20261116-063607-1532081`, rc 0, peak
+3,388,854,272 B, oom 0 / oom_kill 0; log 5,359,465 B sha256 `95725e26…`;
+report 128,365 B sha256 `5bfef9b2…`; 11 changes (7 added, 4 modified);
+10 PASS / 1 FLAGGED / 1 FAIL / 2 NA; 4 deviations; 1 question; 290
+citations verified; the continuation-2 report preserved at
+`.temp/brief-740/c2/report-before-ruling.json` (`ffda534c…`).
+
+**What passed.** The source entry is live at `guest.rs:1326` beside the
+untouched strict `programs()` (`guest.rs:1319`); only the file reader is
+shared. My rerun passes four source controls in each mandated mode (20
+named negatives per mode, `E0451` forged-field, `E0308` wrong-arm, route
+postimage and unlisted-path reds); `fmt --check` is zero. The fresh lane
+arms built as real `36d82c6d…` / tree `15bdbeb0…` / 86.890781 s, forced
+real 88.466939 s with the identical binary, disabled `2302a212…` /
+`32fa2a67…` / 87.428718 s, armed `e1bf8a7f…` / `1c795634…` / 88.010693 s,
+each with exactly one named runtime overlay beyond the shared lane tree;
+live Cargo and production bytes are unchanged. The real matrix is 55/55 at
+multiplicity one with ten native fields and the three checked-route
+`Native` falsifiers. The armed selected case differs from real in the
+resumed record, equals it in the queued record and public output, and
+yields `Err(Native)`; the disabled arm's 110 observation/lifecycle lines
+are byte-identical to the real arm's. Packet `49bb6e7a…`, parity
+`a72232b3…`. Maintenance replayed 68 last-column fingerprints and four
+generated certificate cells over two rows; the initial stale-certificate
+exit-101 reds are preserved ordering artifacts and the unchanged
+production acceptance passed in both modes afterwards; six ownership
+inventories, rejection counts and covered source sites are unmoved. Seven
+of fifteen blocks consumed 607.314352 s; eight remain unspent; live
+snapshot 5,784 files / 7 added / 4 modified / 0 deleted,
+`production_changes=0`; 104 recorded commands, 0 git, 0 network; 51 Open
+owners; C2 at 118 Residual + 0 Lost; no settlement, promotion, SAME or
+encoding credit.
+
+**The gap.** C10's retained carrier still pins the current `segments.rs`
+(`f9c7a2f9…`); the retained C13 log (`a27e408e…`) shows
+`semantic_same=true`, `native_same=false`, one epoch fault. That log came
+from a mutant collector with the quiescence assertion conditionally
+deleted (`.temp/g15-c2/c12/prepare_main.py:35`). The current shared runner
+asserts at `guest.rs:2004` before returning the observation at `:2164`, so
+the source-only entry cannot produce the row's own current-source
+observation. Importing the deletion, catching the panic or patching a
+baseline observation is inadmissible. C10 stays `PortBlocked` with the
+concrete missing evidence; no fresh C10 build, run, hit or catch is
+claimed.
+
+**Q3 ruling.** Option 1: one additive, constructor-private mutation
+observer in `fixtures/obligations/guest.rs`, test layer only. Ordinary
+`run`, `run_adapter`, `programs()` and every existing call site keep the
+quiescence assertion in its present position; a shared body extraction is
+allowed only if every ordinary path still executes it, and a falsifier
+must show an armed ordinary run still hits it; the historical conditional
+deletion is never imported and no env var switches the shared runner off.
+The observer is reachable only through an authenticator-produced,
+arm-typed capability plus the admitted row and armed selector; forged,
+unauthenticated, wrong-arm, wrong-row and unarmed uses are rejected before
+any observation is supplied; the disabled arm keeps the ordinary path and
+record-exact parity; the schema names the row's observation mode, and C10
+is the first, with the same independent falsifiers for every such row. It
+captures the actual native rows, output, phases/pauses and producer pause
+at the existing capture point before the assertion and continues the same
+runner body, so the returned observation is comparable; the own predicate
+is the actual resumed-vs-queued native/output difference with equal public
+output; the epoch fault is provenance only; no panic catching, fault
+clearing, synthesis or baseline patching; the assertion or an earlier
+guard is never the row's catch. Falsifiers, each red on both mandated
+modes: wrong row, unarmed selector, absent source hit, absent pause,
+absent native difference, quiescence-only rejection with equal native
+rows, fault from another row, forged/unauthenticated/wrong-arm use,
+disabled/armed swap, the preserved strict-loader `SourceIdentity` negative
+in a copied build, and the preserved ordinary-run quiescence assertion
+under an armed run. The catch bar is unchanged: C10 is admitted only with
+its own source hit, actual phase, baseline producer pause, disabled
+record-exact parity, own `Native` red with equal public output and the
+full real matrix still passing; otherwise it stays `PortBlocked`. Nothing
+else moves; a needed runtime accessor is a STOP and a new question.
+
+**Allocation.** A completely fresh twelve-block round — nine canonical
+real/disabled/armed builds across the three configurations plus three
+same-epoch forced byte-identity spot checks, each ≤1,500 s. The `guest.rs`
+edit changes every lane binary, so no build, spot check or receipt is
+reusable; evidence reuses only by authenticated identity. The eight unspent
+continuation-2 blocks are voided, never consumed and never transferable;
+consumed allocation reaches nineteen blocks / ≤28,500 s at completion (an
+allocation, not a duration; the seven consumed blocks measured
+607.314352 s). The frozen case count stays 255 / 510; a second carrier
+schema or an exceeded allocation STOPs. The P0543 packet stays immutable
+evidence of its own epoch and cannot serve as the final schema's receipt;
+the final campaign re-executes it on the final schema.
+
+**Order.** Land the observer and falsifiers; fresh round; re-admit P0543
+and C10 on the final schema; then the remaining 150 own rows, 100 pair
+cells and four structural controls; then the promotion transaction; then
+the shape/falsifier gates in both mandated arms; then the complete
+unsampled campaign and the acceptance suite. Retention replays before
+acceptance and quotes every verdict.
+
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is
+promoted, no encoding key runs; `CHANGELOG.md` and S10 stay blocked. The
+partial tree is the state to continue from.

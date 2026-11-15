@@ -277,7 +277,25 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   live change), and Q2 admits one test-only constructor-private
   mutation-source entry point in `fixtures/obligations/guest.rs` beside the
   untouched strict loader, with a fresh twelve-block round (fifteen blocks
-  / ≤22,500 s allocated with the three consumed diagnostics); then CM5.
+  / ≤22,500 s allocated with the three consumed diagnostics). Its third run
+  executed continuation 2 and landed the authenticated source entry plus
+  both-mode falsifiers; it admitted P0543's first complete own-omission
+  packet (real `36d82c6d…` / tree `15bdbeb0…`, 55/55 keys at multiplicity
+  one, disabled `2302a212…` record-exact at 165 records, armed `e1bf8a7f…`
+  with its own `Native` red and one source hit; seven of fifteen blocks
+  consumed 607.314352 s) and replayed maintenance (68 last-column
+  fingerprints, four generated certificate cells; the stale initial reds
+  are ordering artifacts), then stopped at C10's source-only observation
+  gap: its retained carrier exists and the historical log shows a native
+  difference, but the current runner asserts quiescence before returning
+  the observation, so no current-source catch is admissible through the
+  source-only entry. Q3 admits one additive, constructor-private
+  mutation-observer path in `fixtures/obligations/guest.rs` beside the
+  untouched ordinary runner and strict loader, with the historical bypass
+  never imported and full wrong-row/fault/earlier-guard falsifiers, and a
+  completely fresh twelve-block round (nineteen blocks consumed at
+  completion / ≤28,500 s allocated; the eight unspent blocks of the old
+  schema are voided). C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
