@@ -2062,3 +2062,208 @@ bound. C2 stays Open at 118 Residual + 0 Lost; no settlement, no
 promotion, no encoding key; `CHANGELOG.md` and S10 stay blocked. The
 partial tree is the state to continue from; do not restart and do not
 hand-edit a generated cell.
+
+### Continuation 15 — fifteenth run: Q17's getter and bridge execute P1566/P1568 (60 keys) and batch6/7 adds 570 keys (145 rows / 8,850 keys), then P0813's private timeout flag opens Q18
+
+**2026-11-15 — brief 739's fifteenth run executed continuation 14. Q17's
+single append-only read-only `#[doc(hidden)]` `Session` getter and the
+test-only `host_facade` bridge landed exactly as authorized, both
+`P1566`/`P1568` complete 30-key matrices executed at the sealed sampling
+point (60 keys, 20 × `(false,false)` + 10 × `(false,true)` per row,
+own omission reversed in each sealed direction with equal public effects,
+constant/missing/duplicate controls firing), and batch6/batch7 executed
+570 keys over 571 canonical constituents (P0492 keeping its two
+records). The campaign stands at 145 rows / 8,850 keys over 64 families
+with 16,170 actual pauses and 24,816 lifecycle observations. The run then
+stopped at `P0813`: its sealed
+`C49HostOwnsEvalTimeoutAtTerminalBoundary` row needs the private
+`HostSession.owns_eval_timeout` sampled after the host outcome and before
+snapshot/fresh/projections, the field is private with no getter (E0599
+and E0616 in both feature modes), and a second test-only accessor exceeds
+Q17's one-accessor scope. Q18 authorizes exactly that one additional
+test-only accessor with the reused host source byte-identical, then
+`P0813`'s and `P2600`'s 30-key matrices and the remaining
+`P1470`/`P1471` (90) and `P2611`/`P2612` (60) keys complete the
+9,060-key active campaign.**
+Run `cdx`, unit `brief-739-cdx-20261115-190214-1154517`, rc 0, peak
+14,390,767,616 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 5,641,382 B, sha256 `61c2c703…`; report
+`.temp/brief-739/report.json`, 3,610,085 B, sha256 `3ab4ba24…`; 287
+recorded changes (275 added `.rum` assets, 12 modified, 0 deleted);
+24 PASS / 5 FLAGGED / 1 FAIL (the FAIL is the campaign unfinished), 4
+disclosures, 6 deviations, Q18; 21,225 citations verified.
+
+**What landed.** Q17's getter is exactly the authorized shape:
+`crates/rum-runtime/src/runtime/model/session.rs` keeps its 11,194-byte
+prefix and gains 232 bytes (one `#[doc(hidden)]` impl with one
+read-only `pub fn actual_message_checkpoint_state` returning
+`(current_message_list_checkpoint.is_some(), current_message_list_dirty)`),
+one new symbol, zero production call sites, unconditional, no `cfg`, no
+`unsafe`, no field-visibility change, no dependency/manifest/lock edit.
+`host_facade.rs` now `include!`s the unchanged `crates/rum-host/src/session.rs`
+(sha `ef78a1de…`, byte-identical, still unmodified in git) inside the
+module and adds exactly one `pub(crate)` forwarding accessor and no other
+item. Both checkpoint rows execute their complete 30-key matrix at the
+sealed sampling point — after the host outcome, before
+snapshot/fresh/projections, on the executing thread — with the pair at
+multiplicity one in both arms and the expected values taken from the
+sealed records; the Rust expectation table is byte-equal to all 30 sealed
+cells per row (resumed equal to queued). The own omission (P1566 queued
+`(true,true)` against resumed `(false,false)`, P1568 the reverse) is
+rejected by `Native` with every public effect equal, and the constant
+`0,0` / `0,1`, missing and duplicate controls all fire. Batch6/7
+(P0416 50, P0820 60, P0825 60, P1477 60, P2593 50; P0267 60, P0312 60,
+P0323 60, P0410 55, P0492 55) were reauthenticated from the original
+sealed packets (50 pins), installed and executed as 570 keys / 571
+constituents at multiplicity one in both modes. 275 new `.rum` assets
+(2,914 total, all content-addressed), all 8,220 entry program rows
+verbatim, exactly 630 blocked keys converted to bound (60 checkpoint +
+570 batch), the 30 `P0813` blocked rows keeping status and changing only
+their evidence column, 9,301 constituent plans over 8,850 keys (352
+multi-record, maximum three), 17,623 provenance rows with 133 canonical
+pins and one unchanged absent packet path, the program-table pin at
+8,850, all 15 immutable tables hash-unchanged, proofs 749/43,390
+(151/8,255 packet-authenticated; 115/6,270 verified; 36/1,985 blocked;
+598/35,135 absent) and the five known losses unchanged. Maintenance
+replayed 68 fingerprint cells in one column and four certificate cells in
+two columns; ownership stayed 9,006 rows with the regenerated discovery
+exactly equal and no new unknown construct. The lane was rebuilt from the
+final tree: 5,701 files (5,692 byte-identical + nine manifest edits),
+tree `de4a57fa…`, artifact `84195207…`, manifest-diff `0ab8e71c…`,
+release at one codegen unit, build 84.304587 s, growth feature absent,
+`test-continuation-slots` kept, the discriminator true in both mandated
+arms and false in the lane with its forced control. No production,
+repository manifest, lock, dependency, doc or script change beyond the
+one runtime accessor.
+
+**The STOP.** `P0813` (1 row, 30 active keys, sealed family
+`catch-body-result-dispatch`): the sealed
+`C49HostOwnsEvalTimeoutAtTerminalBoundary` ten-field row reads
+`HostSession.owns_eval_timeout` at the real host return, before snapshot,
+fresh evaluation and projections. The field is private and no getter
+exists; both compiled source-reuse probes fail with exactly `E0599`
+(absent `c49_timeout_owned`) and `E0616` (private field). The sealed
+native driver (`sha256 14d425e7…`) shows the sampling line and all 30
+sealed records are zero, but a constant is not an observation. `P2600`
+records the equivalent C47 terminal timeout field in its own 30 sealed
+records. Q17 authorizes only the checkpoint accessor, so the run stopped
+with zero binding/receipt/proof/execution credit; `P1470`/`P1471` (90),
+`P2600` (30) and `P2611`/`P2612` (60) were authenticated only (210 keys
+in total, 42 sealed pins, every own omission armed and caught).
+
+**Q18 ruling — the timeout observer, then the last 210 keys.**
+- Evidence verified independently: the 11 checkpoint pins and the sealed
+  matrices; the 107 authentication pins across the checkpoint, guest and
+  remaining records; the sealed C49/C47 drivers and their sampling
+  points; the all-zero 30-cell matrices for both rows; and the
+  `E0599`/`E0616` probes in both feature modes.
+- Authorized, and nothing more: one additional unconditional test-only
+  read-only accessor in the same include-based `host_facade::session`
+  module returning `self.owns_eval_timeout`. The reused production host
+  source stays byte-identical to `crates/rum-host/src/session.rs`
+  (hash recorded and checked), the workspace host file stays unmodified,
+  the only added item is that one test-only accessor, no production host
+  body or field-visibility change, no copied host logic, no `cfg`, no
+  `unsafe`, no new dependency, no `Cargo.toml`/`Cargo.lock` edit; the
+  declaration is recorded by the production audit. An audit rejection is
+  a STOP, never a widened predicate. If the source reuse cannot be kept
+  byte-exact, STOP.
+- Then bind and execute both complete 30-key `P0813`/`P2600` matrices at
+  the sealed sampling point — after the host outcome, before
+  snapshot/fresh/projections — from the executing thread, with the field
+  recorded at multiplicity one in both arms and the expected value taken
+  from the sealed records (`[0;10]` in every cell); a public phase row, a
+  cached scalar, the snapshot or a constant is not an observation. The
+  own-omission `Native` rejection must fire in each row's sealed
+  direction and a constant-field control must fire, alongside missing and
+  duplicate controls.
+- Then execute the remaining `P1470`/`P1471` (90) and `P2611`/`P2612`
+  (60) keys through their real routes, completing the 9,060-key active
+  campaign (151 rows), and measure the complete schedule and acceptance
+  under the 1,500 s bound per expanded-oracle build+run with the
+  cumulative cost disclosed separately (this run: 626.062692 / 624.682699
+  s; cumulative direct oracle commands 947.307843 / 846.898824 s; the
+  complete 9,060-key schedule stays unmeasured while any key is
+  unported).
+- Keep the 36 current-blocked proof records, the 598 absent / 35,135,
+  the 24 named exclusions / 1,445 and the requirement bag 175 / 10,505
+  named; no settlement, no owner promotion, no encoding key; replay
+  maintenance after the manifest change; rebuild the lane
+  content-addressed from the final tree. Any further private access is a
+  STOP and a question, never a substitution.
+- Option 2 is declined: leaving 210 active keys blocked would weaken the
+  frozen active bag without cause, and the accessor is test-only with no
+  production byte changed.
+
+**Host gate.** My own gate on the final tree is green: `cargo fmt --check`
+rc 0; the one-thread retention certificate both arms (1 passed / 0 failed;
+35.24 s / 35.00 s); the oracle `cm_` both arms — 43 passed / 0 failed /
+2 ignored in the main binary (568.80 s / 569.73 s) plus child summaries,
+reproducing the exact `CM RECEIPTS PASS calibration=P0001 rows=145
+families=64 bound=8850 executed=8850 multiplicity=1 actual_pauses=16170
+lifecycle=24816 campaign_remaining=210 PortBlocked=1445
+full_CM_green=false`, `CM BINDINGS PASS required=10505 active=9060
+declared_bound=8850 PortBlocked=1655 absent_packets=600
+unresolved_targets=785 repl_placement=60 unported_programs=210
+full_CM_green=false`, `CM CHECKPOINT RECEIPTS PASS row=P1566
+required=30 bound=30 executed=30 multiplicity=1 actual_pauses=72
+lifecycle=60 pair_false_false=20 pair_false_true=10 native_fields=10
+full_CM_green=false` and the same for `row=P1568` (`actual_pauses=72
+lifecycle=84`), `CM P1476 RECEIPTS PASS required=30 bound=30 executed=30
+multiplicity=1 actual_pauses=102 lifecycle=132 native_fields=10
+full_CM_green=false`, `CM PROOFS PASS imported=749/43390
+packet_authenticated=151/8255 absent=598/35135 current_verified=115/6270
+partial=true executions=0 SAME=0 full_CM_green=false`, `CM P0543
+RECEIPTS PASS … lane=p0543-unchecked …`, `CM BUILD CONFIGURATION PASS
+lane=mandated control=false checked_only_enforcement=true`,
+`CM CANONICAL LEGACY PASS plans=796 frozen_fingerprints=796 executions=0`
+and `CM LOSSES PASS prior_Lost=5 immutable_differences=3 C1_promotions=2
+missing_original_baselines=2 encoding_runs=0 fresh_allowed_DIFF=0` — with
+all ten checkpoint falsifiers and all four `P1476` falsifiers firing in
+both arms; the ignored provenance audit both arms (`PROVENANCE AUDIT PASS
+pins=22 diagnostics=4`); switched LP 5/5 both arms; and the workspace
+4,315 passed / 0 failed / 65 ignored over 70 suite summaries in both
+feature modes (the full oracle binary itself 549 passed / 0 failed /
+4 ignored at 616.90 s; its only panics are the intentional negative
+controls). My wrapper re-verified the lane binary (`84195207…`), the
+recomputed tree (`de4a57fa…`), the manifest-diff (`0ab8e71c…`) and all
+5,701 copied files before every oracle and workspace invocation. My
+independent audit of the run closed with zero failures: entry continuity
+with the fourteenth-run final tree plus only the three committed docs; the
+exact 12 + 275 change set (0 deletions, one production accessor, every
+added file a content-addressed asset); the 232-byte append keeping the
+11,194-byte prefix with one `pub fn`, no `cfg`, no `unsafe` and four code
+occurrences (definition, guest observation, bridge plus forward); the
+host source at `ef78a1de…` unmodified in git with the include-based
+module adding exactly one accessor; the 11 checkpoint pins, the sealed
+observer and the own-omission directions with equal public effects; every
+one of the 30 sealed cells per row equal to the Rust expectation table
+with resumed equal to queued; the `E0599`/`E0616` probes in both modes and
+the sealed C49 driver hash; 21,010 binding rows = 10,505 required + 8,850
+bound + 1,655 blocked over 145 bound rows / 64 families, exactly 630
+blocked→bound conversions with the only same-status edit the 30 `P0813`
+evidence cells, and the 24 named exclusions / 1,445 plus six active rows /
+210; all 8,220 entry program rows verbatim and 630 new ones; 9,301
+constituent plans over 8,850 keys (352 multi-record, maximum three) with
+every constituent content-addressed; 2,914 assets all content-addressed;
+17,623 provenance rows with 133 canonical pins, one unchanged absent
+packet path and only the program-table pin replaced (8,850); all 15
+immutable tables hash-unchanged; proofs 749 rows / 43,390 keys and the
+five losses; 68 + 4 maintenance cells in their columns; ownership 9,006
+rows with the regenerated discovery exactly equal; the lane identity and
+the nine manifest edits; and the sealed pause-ownership table equal to
+the sealed `C2_PAUSE` owners on all 1,161 pause instances of the 570 new
+keys. The worker's report passes `scripts/report.py check` with 21,225
+citations verified; its 4,306/9/65 workspace lines are the documented
+sandbox loopback `EPERM` artifact, reproduced by my host run as
+4,315/0/65.
+
+**Continuation 15.** Entry state: 145 rows / 8,850 keys complete; 6 active
+rows / 210 keys (P0813, P1470, P1471, P2600, P2611, P2612); 24
+director-excluded rows / 1,445; proofs 749/43,390; encoding 0 of 18,840.
+Land the Q18 accessor exactly, replay maintenance, rerun acceptance in
+both arms at one thread, execute the two timeout matrices and the
+remaining 150 keys, replay maintenance, rebuild the lane from the final
+tree, and run the complete 9,060-key schedule and acceptance under the
+1,500 s bound. The partial tree is the state to continue from; do not
+restart and do not hand-edit a generated cell.

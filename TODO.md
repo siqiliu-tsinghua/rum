@@ -179,8 +179,29 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   and no production host change; then both complete 30-key matrices at the
   sealed sampling point with the own-omission `Native` rejection, then the
   remaining 16 rows / 780 keys (batch6/batch7 by hash identity, `P0813`/C49,
-  `P1470`/`P1471`, `P2600`, `P2611`/`P2612`) under the 1,500 s bound; then
-  CM4-CM5.
+  `P1470`/`P1471`, `P2600`, `P2611`/`P2612`) under the 1,500 s bound. The
+  fifteenth run executed Q17 exactly — the 232-byte append-only getter
+  (11,194-byte prefix kept, one symbol, zero production call sites) and the
+  include-based bridge with the host source byte-identical `ef78a1de…` — and
+  ran both `P1566`/`P1568` matrices (60 keys; 20 × `(false,false)` + 10 ×
+  `(false,true)` per row; own omission rejected in each sealed direction
+  with equal public effects; constant/missing/duplicate controls) plus
+  batch6/batch7 (570 keys / 571 constituents): 145 rows / 8,850 keys over 64
+  families, 16,170 pauses, 24,816 lifecycle observations, 9,301 constituent
+  plans (352 multi-record, max three), 2,914 content-addressed assets, with 6
+  active rows / 210 keys left. It then stopped at `P0813`'s private
+  `HostSession.owns_eval_timeout` (sealed C49 row all zero; C47 equivalent
+  for `P2600`; `E0599`/`E0616` in both modes; zero credit; 210 keys
+  authenticated only). Q18 authorizes exactly one additional unconditional
+  test-only read-only accessor in the same include-based
+  `host_facade::session` module returning that flag, with the reused
+  production host source byte-identical and the declaration recorded (an
+  audit rejection or any production change is a STOP), then both 30-key
+  `P0813`/`P2600` matrices at the sealed sampling point with the own-omission
+  `Native` rejection and a constant-field control, then the remaining
+  `P1470`/`P1471` (90) and `P2611`/`P2612` (60) keys, completing the
+  9,060-key active campaign (151 rows) and measuring the complete schedule
+  under the 1,500 s bound; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
