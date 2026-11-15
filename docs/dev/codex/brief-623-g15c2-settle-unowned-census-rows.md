@@ -114113,3 +114113,122 @@ sandbox's nine loopback `EPERM` failures pass on the host). C2 stays Open at
 118 Residual + 0 Lost; no row settles, no owner is promoted, no encoding key
 runs; `CHANGELOG.md` and S10 stay blocked. The partial tree is the state to
 continue from.
+
+### Continuation 72 — twelfth run: 27 rows execute (98 rows / 6,365 keys), the C18 union resolves per probe, and P0450/P0455's three-packet union is opened by Q15
+
+**2026-11-15 — brief 739's twelfth run executed continuation 11 and is
+accepted at its STOP. The cross-packet C18 union resolved `P0260` and
+`P0305` per probe (49 adopted-accounting + 6 counter-revisit each) and 25
+further rows executed, carrying the campaign from 71 rows / 4,995 keys to 98
+rows / 6,365 keys over 47 families, with 10,832 actual pauses and 16,928
+lifecycle observations. The run then stopped at `P0450`/`P0455`, whose proof
+cells need two and three records per key from three sealed C19 packets while
+the importer accepted at most two; each of its two attempts added zero
+evidence. Q15 authorizes a bounded continuation with the full three-packet
+union and up to three constituent programs under one key receipt; 51 rows /
+2,585 keys remain.**
+Run `cdx`, unit `brief-739-cdx-20261115-103445-866881`, rc 0, peak
+15,987,343,360 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 6,407,908 B, sha256 `d9616436…`; report
+`.temp/brief-739/report.json`, 1,933,926 B, sha256 `20c68358…`; 663 recorded
+changes (654 added `.rum` assets, 9 modified, 0 deleted); report 17 PASS / 5
+FLAGGED / 1 FAIL / 1 NA (the FAIL is the campaign unfinished), 6
+disclosures, 4 deviations, Q15; 14,235 citations verified.
+
+**What landed.** Q14's union is fulfilled: `P0260` and `P0305` each 55 keys
+resolved by probe prefix to 49 adopted-accounting + 6 counter-revisit
+records, authenticated against the sealed C18 packets, installed as 2 rows /
+110 keys with 30 new assets and the 4,995 legacy programs unchanged, and
+executed at multiplicity one in both arms, the 110 canonical plans carrying
+zero field differences through the canonical `from_rows` resolver. 25
+further rows / 1,260 keys executed in five batches (9 / 500, 1 / 60,
+1 / 60, 13 / 610, 1 / 30), each install asserting
+`legacy_bindings_unchanged=true` and `frozen_requirements_unchanged=true`.
+Campaign: 98 rows / 6,365 keys over 47 families, 10,832 actual pauses and
+16,928 lifecycle observations; 53 active rows / 2,695 keys remain; the 24
+director-excluded rows / 1,445 keys stay named (9 absent-packet + 13
+unresolved + 2 Repl rows); the requirement bag stays 175 / 10,505. Fifteen
+frozen cycle keys (five each `P0256`/`P0259`/`P0266`) retain two constituent
+programs under one key receipt: 6,365 tuple receipts cover 6,380 programs,
+with 16 embedded paired records (15 campaign pairs plus one control) and
+multiplicity one kept per key; the receipt identity check recurses into the
+paired receipt and fails if either side is missing. The three `P0515` timing
+fixtures are the only rows with non-empty duration paths (`[[0]]`); the
+comparison masks only the declared leaf while sibling values, prints,
+messages, trace events and structured outputs stay exact, and four duration
+falsifiers reject sibling, print, trace-event and negative-duration
+mutations. Programs are 6,365 rows with 654 new content-addressed `.rum`
+assets (1,987 total, every filename equal to its sha256); all 4,995 entry
+program rows and all 4,995 entry bound key rows persist verbatim, and
+exactly the 1,370 converted blocked rows are absent from the entry table.
+Proofs are untouched (749/43,390; 151/8,255; 115/6,270; 36/1,985;
+598/35,135; five known losses), the 15 immutable inventories, the proof and
+loss tables, aliases and all 133 canonical-source pins hash-match.
+Maintenance changed 68 fingerprint cells only in the fingerprint column and
+four certificate cells only in the two certificate columns, in both rounds
+(column-wise verified); the ownership inventories replay unchanged. The
+P0543 lane was rebuilt from the final tree: 4,365 copied files (4,356
+nonmanifest byte-identical + nine manifest edits), tree `3b8e3d51…`,
+artifact `8621d453…`, manifest-diff `a6f12578…`, release at one codegen
+unit, build 61.5 s, no `test-builtin-memory-growth` in the graph and
+`test-continuation-slots` kept, the discriminator true in both mandated arms
+and false in the lane with a forced control and a firing falsifier, and
+every lane receipt carrying the third identity (110 occurrences per arm).
+No production, repository manifest, lock, dependency, doc or script change.
+
+**The STOP.** `P0450`/`P0455`: the sealed proof records need 55 × 2 = 110 and
+(49 × 3) + (6 × 2) = 159 records from three C19 packets
+(`owned-guard-suffix-and-deferred-registration`,
+`owned-guard-suffix-finalizer-revisit`,
+`registered-match-and-guard-owners`); the importer accepts at most two
+records per cell. Attempt 1 omitted the finalizer packet and failed before
+authentication (`ValueError`); attempt 2 selected original + finalizer,
+authenticated `P0450` locally, then failed its own maximum-two assertion on
+`P0455`'s 49 three-record cells. Neither attempt emitted a complete
+artifact, installed a binding, executed a new key or imported a new proof;
+no third attempt ran; the two-batch zero-evidence stop-loss fired. Accepted.
+
+**Q15 ruling.** Authorize a bounded continuation that loads the sealed union
+of the three C19 packets and resolves each of `P0450`'s and `P0455`'s 55
+keys by its cell's record set; I verified both records have 55 distinct
+cells split 55 × 2 and 49 × 3 + 6 × 2, that every packet's five files and
+the proof file are sealed in `.temp/g15-c2/c19/artifact-hashes.json` and
+hash-match, that every probe names exactly one packet and exists in that
+packet's plan table, and that every cell key equals its records'
+row/variant/context. Extend the receipt mechanism from two to up to three
+constituent programs under one key's single receipt at multiplicity one,
+exactly as the 15 paired keys already retain two: each constituent keeps its
+own canonical fingerprint, content-addressed source/setup, answer plan and
+fresh session; no constituent is dropped, deduplicated away or executed as
+a second key; execution credit equals bound keys. A key whose canonical
+inputs or fingerprints do not match its sealed cell's record count, or a
+probe missing from its named packet or resolving ambiguously, names its
+key/row `PortBlocked` with the exact cause; never pick a packet by
+preference, invent a record, drop a key or add an exclusion. Both failed
+attempts keep zero credit. Then the remaining active bag (51 rows / 2,585
+keys after the two union rows) and families, keeping the 36 current-blocked
+proof records, the 598 absent / 35,135 and the 24 named exclusions / 1,445
+named; the 355 authenticated-but-uninstalled keys (`P0339` 55,
+`P0348`–`P0351` 200, `P0823`/`P0827` 100) stay reusable by hash identity and
+earn nothing until installed and executed. Replay maintenance after the
+source edit and before acceptance; rebuild the lane content-addressed from
+the final tree whenever it changes with the same audit, discriminator and
+third identity; the complete schedule and acceptance run under the 1,500 s
+bound per expanded-oracle build+run, with the cumulative validation cost
+disclosed separately and no aggregate budget claimed (this run: 438.57 /
+439.64 s per expanded-oracle build+run, under the 1,500 s cap and the 900 s
+steady target; the 1,384.2 / 1,257.8 s subtotals include overlapping suites;
+the complete active schedule remains unmeasured while 2,695 keys are
+unported). The two-batch zero-evidence stop-loss stays; any production,
+Cargo, dependency, manifest or lock change is a STOP. Option 2 is declined:
+the union is sealed, complete and non-overlapping; the failures were importer
+selection and multiplicity limits, not missing provenance. My host gate is
+green: fmt rc 0; the one-thread retention certificate both arms (35 s each);
+the oracle `cm_` both arms (40 passed / 0 failed / 2 ignored plus two child
+summaries, 418 s / 415 s) with the exact PASS lines; the ignored provenance
+audit both arms (`PROVENANCE AUDIT PASS pins=22 diagnostics=4`); switched LP
+5/5 both arms; and the workspace 4,312 passed / 0 failed / 65 ignored over
+70 binaries in both feature modes (the sandbox's nine loopback `EPERM`
+failures pass on the host). C2 stays Open at 118 Residual + 0 Lost; no row
+settles, no owner is promoted, no encoding key runs; `CHANGELOG.md` and S10
+stay blocked. The partial tree is the state to continue from.

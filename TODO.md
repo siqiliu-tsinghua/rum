@@ -139,8 +139,17 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   rows / 4,995 keys over 37 families with all 25 non-source routes covered —
   then stopped at `P0260`'s cross-packet union (49 + 6 probes over two sealed
   C18 packets; both importer attempts zero-credit; `P0305` the same shape);
-  Q14 authorizes exact per-probe lookup across the sealed union, then the
-  remaining 78 rows / 3,955 keys under the 1,500 s bound; then CM4-CM5.
+  Q14 authorizes exact per-probe lookup across the sealed union. The twelfth
+  run fulfilled Q14 (`P0260`/`P0305` each 55 keys, 49 + 6 per probe, zero
+  field differences, multiplicity one in both arms) and executed 25 further
+  rows — 98 rows / 6,365 keys over 47 families, 10,832 actual pauses and
+  16,928 lifecycle observations with 15 frozen cycle keys retaining two
+  constituent programs under one receipt — then stopped at `P0450`/`P0455`'s
+  three-packet owned-guard union (110 = 55 × 2 and 159 = 49 × 3 + 6 × 2
+  records over three sealed C19 packets; the importer accepts at most two,
+  both attempts zero-credit); Q15 authorizes the full three-packet union with
+  up to three constituent programs under one key receipt, then the remaining
+  51 rows / 2,585 keys under the 1,500 s bound; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
