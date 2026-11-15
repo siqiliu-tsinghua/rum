@@ -2833,3 +2833,124 @@ driver exactly as ruled, execute both 30-key matrices with the per-record
 the 9,060-key campaign (151 rows), and measure the complete schedule and
 acceptance under the 1,500 s bound. The partial tree is the state to
 continue from; do not restart and do not hand-edit a generated cell.
+
+### Continuation 19 — nineteenth run: the Q21 nested include compiles in both modes, the historical `c2_probe::begin/end` requirement fails `E0433` (zero credit, exact restore), and Q22 rules those calls provenance-only
+
+**2026-11-16 — brief 739's nineteenth run executed continuation 18 and is
+accepted at its STOP. It built the Q21 layout exactly (the three root
+shims, the `adapter_facade.rs` include of the unchanged
+`adapter/mod.rs`, and the nested `observed_worker` module that includes
+the unchanged `worker.rs` and holds the one observation driver): both
+feature modes compiled with rc 0 (exit 0, 0.878356 s / 0.874020 s, no
+test run), confirming the layout I ruled. It then wired the shared
+fixture with the historical probe calls Q21's parenthetical named, and
+both modes rejected them with exactly two `E0433` diagnostics per arm
+(`could not find c2_probe in rum_runtime`: `begin` and `end`), because
+the module is scratch-only; the run stopped rather than omit a named
+call, restored every temporary edit byte-exactly, and claimed no credit.
+The STOP is correct and the fault is my Q21 wording: the historical
+`c2_probe` is witness-tree instrumentation (`prepare_native_campaign.py:7,8`
+copies `mutant_support.rs` as `c2_probe.rs`; `begin`/`end` only toggle
+its `ACTIVE` flag), not part of the adapter route or the observation.
+Q22 rules those two calls provenance-only: the live fixture keeps the
+live lease/reset, the adapter route, the terminal native sample and all
+controls, and does not import or reproduce the probe.**
+Run `cdx`, unit `brief-739-cdx-20261116-033720-1450980`, rc 0, peak
+595,234,816 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 837,672 B, sha256 `1a3faa22…`; report
+`.temp/brief-739/report.json`, 39,989 B, sha256 `b2dc25df…`; 0 recorded
+changes (0 added, 0 modified, 0 deleted), 3 disclosures; 5 PASS / 1
+FLAGGED / 1 FAIL (the Q22 probe question), 4 deviations, 1 question; 103
+citations verified; no manifest or lock hash changed and no git or
+network command ran.
+
+**What the run did.** The nested include compiled in both arms with no
+test executed. The temporary shared-fixture probe check failed with
+exactly `E0433` twice per arm, and the run's source-scope verdict reads
+`Q21 PROBE SOURCE SCOPE STOP live_runtime_references=0
+live_module=absent historical_probe_sha256=512785d2…
+required_calls=jupyter_driver.rs:47,77
+substitution_authorized=false`. It restored `suspension_oracle.rs`, the
+facade and `fixtures/obligations/guest.rs` byte-exactly (the attempted
+bytes and patches are preserved under `.temp/brief-739/`), so the
+5,740-file entry hash scope is final-identical; the sealed C52 packets
+re-authenticated at both rows (`frozen_keys=30 real_valid=30
+disabled_exact=30 own_valid=30 own_native_same=30
+own_semantic_different=30 direction=Output`) with zero credit, and all
+72 historical pins are unchanged. No binding, receipt, proof, execution
+or encoding credit; no maintenance replay (nothing retained); no
+acceptance; the complete schedule stays unmeasured.
+
+**Q22 ruling — the historical probe calls are provenance-only, not part
+of the live observation.**
+- Evidence verified independently: `c2_probe` exists only in the copied
+  witness trees (`.temp/g15-c2/prepare_native_campaign.py:7,8` appends
+  `pub mod c2_probe;` to a copied `rum-runtime/src/lib.rs` and copies
+  `mutant_support.rs`; its `begin`/`end` only set and clear an `ACTIVE`
+  flag used by the mutation-attribution arms), and the live runtime has
+  no such module (`live_runtime_references=0`, module absent). The live
+  observation is `Session::logical_profile_test_rows()`
+  (`crates/rum-runtime/src/runtime/profiling/logical/mod.rs:637,686,728`)
+  with the lease and reset; the historical driver reads those rows
+  before its `end()` call (`jupyter_driver.rs:47,77`).
+- Therefore the live fixture must not import or reproduce `c2_probe`; it
+  supplies the live lease/reset around the adapter route, reads the
+  terminal native sample on the executing thread before
+  snapshot/projections/fresh, and applies the constant-field Native,
+  missing and duplicate controls. No new test-only probe import, no
+  production edit, no substitution; the declaration records the
+  omission and the historical pin `512785d2…`. Any attempt to add a
+  probe module or to substitute one is a STOP.
+- Q21's parenthetical ("and the probe begin/end the sealed route uses")
+  is corrected by this ruling; the run's STOP under it is accepted.
+- The facade carries `#![allow(dead_code, unused_imports)]` at its root,
+  as in the shape I compile-verified, so the test target keeps the
+  baseline's zero warnings (the temporary form's 63 dead-code warnings
+  are not acceptable in the retained implementation).
+- Then both 30-key matrices (`P2611` Eval, `P2612` Resume) at multiplicity
+  one in both arms at the sealed sampling point, each record's own
+  omission in its sealed direction — all 60 sealed records are
+  `valid=true`, `native_same=true`, `semantic_same=false`, so `Output`; a
+  direction the sealed record does not show is a STOP — with the observed
+  boundary row bag under a constant-field Native control plus missing and
+  duplicate controls (any sealed-invalid record is recorded as
+  sealed-invalid at zero credit; none here). Then the last 60 keys
+  complete the 9,060-key active campaign (151 rows), and the complete
+  schedule and acceptance are measured under the 1,500 s bound per
+  expanded-oracle build+run, cumulative cost disclosed separately (this
+  run: compile 0.878356 / 0.874020 s; leaves unmeasured for the
+  schedule).
+- Keep the 36 current-blocked proof records, the 598 absent / 35,135,
+  the 24 named exclusions / 1,445 and the requirement bag 175 / 10,505
+  named; no settlement, no owner promotion, no encoding key; replay
+  maintenance after the fixture change; rebuild the lane
+  content-addressed from the final tree; any further private access is a
+  STOP and a question.
+
+**Host gate.** The run reproduces: its audit prints `Q21 NESTED INCLUDE
+COMPILE PASS` for both arms, `Q21 PROBE DIAGNOSTIC EXACT PASS` with the
+two `E0433` missing items and no unrelated error, the eight `SOURCE PIN
+PASS` lines (seven adapter sources plus the host source `ef78a1de…`),
+both `C52 SEALED PACKET AUTH PASS` lines above, `C52 HISTORICAL PINS
+PASS pins=72 changed=0`, the unchanged binding/program/proof/ownership
+and loss verdicts, `MAINTENANCE REUSE PASS`, `CURRENT RUN CREDIT PASS
+bindings=0 receipts=0 proofs=0 executions=0 encoding=0 SAME=0
+settlements=0 promotions=0` and `ACCEPTANCE UNRUN`. I re-ran that audit
+myself with rc 0; the run's 5,740-file entry scope is final-identical,
+my full 5,739-file snapshot still equals the seventeenth run's sealed
+lane workspace except the three committed docs (0 added or missing), and
+the baseline `cargo check -p rum-stdlib --test suspension_oracle` emits
+zero warnings on the unchanged tree. The report's 103 citations verify.
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is
+promoted, no guest executes, no encoding key runs, and `CHANGELOG.md`
+and S10 stay blocked. The partial tree is the state to continue from.
+
+**Continuation 19.** Entry state: 149 rows / 9,000 keys; 2 active rows /
+60 keys (`P2611`, `P2612`); 24 director-excluded rows / 1,445; proofs
+749/43,390; encoding 0 of 18,840. Retain the Q21 nested include and the
+one driver, omit the historical probe calls per Q22, execute both 30-key
+matrices with the per-record `Output` direction and the
+constant/missing/duplicate controls, complete the 9,060-key campaign
+(151 rows), and measure the complete schedule and acceptance under the
+1,500 s bound. The partial tree is the state to continue from; do not
+restart and do not hand-edit a generated cell.

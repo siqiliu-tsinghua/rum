@@ -114965,3 +114965,75 @@ matrices with the per-record `Output` direction and the
 constant/missing/duplicate controls, complete the 9,060-key campaign,
 and measure the complete schedule and acceptance under the 1,500 s
 bound.
+
+### Continuation 79 — nineteenth run: the Q21 nested include compiles in both modes, my historical `c2_probe` requirement fails `E0433` (zero credit, exact restore), and Q22 rules those calls provenance-only
+
+**2026-11-16 — brief 739's nineteenth run executed continuation 18 and is
+accepted at its STOP. Q21's layout compiles in both feature modes (exit
+0, 0.878356 s / 0.874020 s, no tests), but the shared-fixture check of
+the historical `c2_probe::begin/end` calls fails with exactly two
+`E0433` per arm because the module is scratch-only. The run stopped
+rather than omit a named call, restored every temporary edit
+byte-exactly (5,740-file scope final-identical), and claimed zero
+binding, receipt, proof or execution credit; the sealed C52 packets
+re-authenticated both rows at 30/30 with `direction=Output` and the 72
+historical pins are unchanged. My Q21 parenthetical named witness-tree
+instrumentation as a requirement; Q22 corrects it: the live fixture
+omits `c2_probe`, keeps the live lease/reset, the adapter route, the
+terminal native sample and all controls, and imports no new probe.**
+Run `cdx`, unit `brief-739-cdx-20261116-033720-1450980`, rc 0, peak
+595,234,816 B, oom 0 / oom_kill 0; log 837,672 B sha256 `1a3faa22…`;
+report 39,989 B sha256 `b2dc25df…`; 0 changes, 3 disclosures;
+5 PASS / 1 FLAGGED / 1 FAIL, 4 deviations, Q22; 103 citations verified.
+
+**Q22 ruling.** Option 1: the two historical probe calls are
+provenance-only. `c2_probe` exists only in the copied witness trees
+(`prepare_native_campaign.py:7,8`; `mutant_support.rs`), its
+`begin`/`end` only toggle an `ACTIVE` flag for mutation attribution, and
+the live runtime has no such module (`live_runtime_references=0`,
+module absent). The live observation is
+`Session::logical_profile_test_rows()`
+(`runtime/profiling/logical/mod.rs:637,686,728`), read with the lease
+and reset at the terminal outcome on the executing thread; the
+historical driver reads the same rows before its `end()` call
+(`jupyter_driver.rs:47,77`). The live fixture therefore does not import
+or reproduce the probe; no new test-only probe import, no production
+edit, no substitution, and the declaration records the omission and the
+historical pin `512785d2…`. Q21's parenthetical is corrected by this
+ruling; the STOP under it is accepted. The facade carries
+`#![allow(dead_code, unused_imports)]` (the verified shape) so the test
+target keeps the baseline's zero warnings; the temporary form's 63
+dead-code warnings are not acceptable in the retained implementation.
+Then both 30-key matrices at multiplicity one in both arms with each
+record's own `Output` direction and the constant/missing/duplicate
+controls, then the last 60 keys complete the 9,060-key campaign (151
+rows) and the complete schedule and acceptance are measured under the
+1,500 s bound. Keep the 36 current-blocked, 598/35,135, 24 exclusions /
+1,445 and requirement bag 175 / 10,505 named; no settlement, no
+promotion, no encoding; replay maintenance after the fixture change;
+rebuild the lane content-addressed; any further private access is a STOP
+and a question.
+
+**Host gate.** The run's audit re-ran green under my own invocation: the
+two `Q21 NESTED INCLUDE COMPILE PASS` and `Q21 PROBE DIAGNOSTIC EXACT
+PASS` lines, the eight `SOURCE PIN PASS` lines, both `C52 SEALED PACKET
+AUTH PASS` lines (30/30, `native_same=30`, `semantic_different=30`,
+`direction=Output`), `C52 HISTORICAL PINS PASS pins=72 changed=0`, the
+unchanged binding/program/proof/ownership and loss verdicts,
+`MAINTENANCE REUSE PASS`, zero current-run credit and `ACCEPTANCE
+UNRUN`. The run's 5,740-file scope is final-identical; my full
+5,739-file snapshot equals the seventeenth run's sealed lane workspace
+except the three committed docs; the baseline `cargo check -p
+rum-stdlib --test suspension_oracle` emits zero warnings on the
+unchanged tree; the 103 citations verify. C2 stays Open at 118 Residual
++ 0 Lost; no row settles, no owner is promoted, no encoding key runs;
+`CHANGELOG.md` and S10 stay blocked. The partial tree is the state to
+continue from.
+
+**Continuation 19.** Entry state: 149 rows / 9,000 keys; 2 active rows /
+60 keys; 24 excluded / 1,445; proofs 749/43,390; encoding 0 of 18,840.
+Retain the Q21 nested include and the one driver, omit the historical
+probe calls per Q22, execute both 30-key matrices with the per-record
+`Output` direction and the constant/missing/duplicate controls,
+complete the 9,060-key campaign, and measure the complete schedule and
+acceptance under the 1,500 s bound.

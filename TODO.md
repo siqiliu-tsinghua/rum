@@ -231,7 +231,14 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   nested test-only include of the unchanged `worker.rs` with the single
   observation driver inside it (director compile-verified in both modes),
   after which both 30-key matrices and the last 60 keys complete the
-  campaign; then CM4-CM5.
+  campaign. The nineteenth run confirmed that include compiles in both
+  modes; the historical `c2_probe::begin/end` calls (scratch-only
+  witness-tree instrumentation named by my Q21 wording) failed `E0433`,
+  so it stopped with zero credit and byte-exact restoration; Q22 rules
+  those calls provenance-only — the live fixture keeps the live
+  lease/reset, the adapter route, the terminal native sample and all
+  controls, imports no probe, and carries the facade allow so the test
+  target stays warning-free; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
