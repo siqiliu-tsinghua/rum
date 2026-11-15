@@ -115254,3 +115254,91 @@ all falsifiers on both mandated arms, then the complete unsampled campaign
 and the acceptance suite. C2 stays Open at 118 Residual + 0 Lost; no
 settlement, no owner promotion, no SAME, no encoding key; `CHANGELOG.md` and
 S10 stay blocked. The partial tree is the state to continue from.
+
+### Continuation 82 — second run: the fresh lane real arm passes, the disabled copy is rejected before selection by the loader's source guard, and Q2 admits the mutation-source entry point
+
+**2026-11-16 — brief 740's second run executed continuation 2 and stopped at
+the shape gate. The fresh P0543 lane real arm was built, authenticated and
+passed both ways (build graph, configuration, forced byte-identity spot
+check) and P0543's 55-key real matrix passed at multiplicity one; the
+disabled and armed copies were assembled with exactly three named overlays
+each and the disabled arm built, but its copied adapter calls the ordinary
+`guest::programs()`, whose whole-file guest-route `SourceIdentity` guard
+rejects the intentional source mutation before any program selection at
+eight and one test thread. Zero observations, zero source hits, no live
+change, no credit. Accepted: the failure is a copied-source admission
+ordering artifact, not a catch and not a regression; P0543 is CM4
+`PortBlocked` with the four missing items. Q2 admits option 1: one test-only,
+constructor-private mutation-source entry point in
+`fixtures/obligations/guest.rs` beside the untouched strict loader, with
+exact preimage/postimage/binary/tree/inventory authentication and inherent
+falsifiers, and a fresh twelve-block round — fifteen blocks / ≤22,500 s
+allocated with the three consumed diagnostics.**
+Run `cdx`, unit `brief-740-cdx-20261116-055723-1520211`, rc 0, peak
+2,600,419,328 B, oom 0 / oom_kill 0; log 2,212,189 B sha256 `d1deb5e4…`;
+report 49,209 B sha256 `ffda534c…`; 0 changes; 12 PASS / 1 FAIL / 3 NA;
+1 question; 101 citations verified; the continuation-1 report is preserved
+at `.temp/brief-740/c1/report-before-ruling.json` (`ee1a1121…`).
+
+**What passed.** The allocation was printed before any build (three
+configurations, nine canonical builds, three forced spot checks, twelve
+blocks, 18,000 s allocated, measured=false) with 151 selected own tuples
+frozen and the 255 / 510 case count unchanged. The fresh lane real copy is
+content-addressed at `787edec7…` (5,777 files, 5,768 byte-identical, nine
+manifest diffs, `66a8e8bd…`), built release / one codegen unit as
+`b17fc131…` in 86.566 s; `cargo tree -e features` carries no
+`test-builtin-memory-growth`; the configuration controls pass with forced
+fresh-process controls and firing falsifiers; the same-epoch forced
+byte-identity spot check reproduces the same key `3aaab11e…` and binary in
+84.477 s; the 55-key real matrix passes with ten native fields, the three
+checked-route Native falsifiers and the baseline producer pause in
+19.823567 s. The copies carry exactly three named overlays each (the runtime
+file `146b…` to disabled `4f98…` / armed `c2d5…`, the additive
+`mutations/mod.rs` `9110…` to `e04c…`, and the added copy worker `abb8…`),
+calibrated against the retained C28 schema `742704b6…`; the disabled arm is
+binary `3734919849…`, tree `a48369e0…`.
+
+**The failure.** `guest::programs()` rejects at
+`fixtures/obligations/guest.rs:1429-1432` with `SourceIdentity` before
+selection, at `--test-threads=8` and `=1`, with zero observation records and
+zero source hits; 110 whole-file guest-route pins differ (55 P0543 + 55
+P0544 in the same file) with canonical mismatches 0 and dependency
+mismatches 0. The first rejecting route belongs to P0544, so it is not
+P0543's catch. Live snapshot 5,777 files, 0 added / 0 changed / 0 deleted,
+manifests, lock and inventories unchanged; zero mutation, structural,
+promotion, settlement, SAME or encoding credit; maintenance not required;
+acceptance unrun; three build blocks 256.517221 s, each under 1,500 s.
+
+**Q2 ruling.** Option 1: the live-file scope grows by exactly
+`fixtures/obligations/guest.rs`, test layer only. `programs()` and every
+ordinary CM3 call site keep their strictness; the new entry point is
+reachable only through a constructor-private authenticated view; the
+authenticator proves baseline seals, exact overlay preimage/postimage,
+non-overlay file equality (apart from the nine lane manifests), copied tree
+and executed binary identity, inventory identity, and — per route — that the
+file the loader validates equals the authenticated postimage, so the guard's
+force is preserved rather than bypassed. The mutation-aware loader reuses
+the existing parsing/phases/observers/validators and invents nothing; the
+receipt binds preimage and postimage; the independent tail check at
+`coverage/bindings.rs:338` stays. Falsifiers, each red on both arms: unlisted
+changed file, wrong preimage, wrong postimage, wrong binary, missing
+overlay, mutated inventory, forged or wrong-arm view, disabled/armed swap,
+and the preserved ordinary-`programs()` rejection in a copied build. The
+disabled arm must be record-exact to the fresh real arm; the armed arm must
+catch P0543's own producer-boundary omission with its own selector armed,
+its actual phase hit, the baseline producer pause, its own `Native` red,
+equal public channels and the full real matrix passing, or the row stays
+`PortBlocked`. Allocation: a fresh twelve-block round plus the three
+consumed diagnostic blocks = fifteen blocks / ≤22,500 s allocated (an
+allocation, not a duration); no reuse assumed (the `guest.rs` addition
+changes the real lane binary); the case count stays 255 / 510; a second
+carrier schema or an exceeded allocation still STOPs. The `guest.rs` edit
+expires retention fingerprints, so maintenance is replayed before
+acceptance. Disclosed: the forced spot check overwrote the initial compiler
+log at the same cache-key path; the initial command log, receipt and binary
+remain and the forced/disabled compiler logs are archived; the next round
+copies the cached compiler log aside before any forced check.
+
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is
+promoted, no encoding key runs; `CHANGELOG.md` and S10 stay blocked. The
+partial tree is the state to continue from.

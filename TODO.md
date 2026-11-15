@@ -269,7 +269,15 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   shared P0543 lane group — the real copy carrying exactly the accepted
   nine-entry manifest diff `66a8e8bd…`, live Cargo files byte-identical —
   with the copied campaign allocation extended to twelve blocks (nine
-  builds, three same-epoch spot checks) ≤18,000 s; then CM5.
+  builds, three same-epoch spot checks) ≤18,000 s. Its second run built and
+  authenticated the fresh lane real arm (binary `b17fc131…`, tree
+  `787edec7…`) and passed the 55-key real matrix, then stopped at the shape
+  gate: the copied disabled arm's ordinary `guest::programs()` rejects
+  `SourceIdentity` before program selection (zero records, zero credit, no
+  live change), and Q2 admits one test-only constructor-private
+  mutation-source entry point in `fixtures/obligations/guest.rs` beside the
+  untouched strict loader, with a fresh twelve-block round (fifteen blocks
+  / ≤22,500 s allocated with the three consumed diagnostics); then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

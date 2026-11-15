@@ -441,3 +441,160 @@ network, git, `unsafe` or new dependency; no settlement, no SAME, no owner
 promotion, no encoding activation, execution or credit; C2 stays Open at
 118 Residual + 0 Lost; `CHANGELOG.md` and S10 stay blocked; the eight
 continuation-69 rulings (Q1–Q8) stand.
+
+## Continuation 2 ruling (director) — the shape STOP is correct; Q2 admits the mutation-source entry point and a fresh twelve-block round (fifteen total with the three consumed diagnostics)
+
+**2026-11-16 — brief 740's second run executed continuation 2 and stopped at
+the shape gate. It built and authenticated the fresh P0543 lane real arm,
+passed the build-graph, configuration and forced byte-identity checks and the
+55-key real matrix, assembled the disabled and armed copies with exactly
+three named overlays each, built the disabled arm, and then hit the loader's
+whole-file guest-route `SourceIdentity` guard before any program selection:
+the copied adapter calls the ordinary `guest::programs()`, which by design
+rejects the intentional source mutation. No mutation was executed, no
+observation or source hit was recorded, and no live file changed. Accepted as
+delivered: the failure is a copied-source admission ordering artifact, not a
+catch, not a regression. Q2 is ruled: option 1 — one test-layer,
+constructor-private mutation-source entry point in
+`fixtures/obligations/guest.rs` beside the untouched strict loader — with a
+fresh twelve-block round (fifteen total including the three consumed
+diagnostic blocks, ≤22,500 s allocated).**
+Run `cdx`, unit `brief-740-cdx-20261116-055723-1520211`, rc 0, peak
+2,600,419,328 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_740.log`, 2,212,189 B, sha256 `d1deb5e4…`; report
+`.temp/brief-740/report.json`, 49,209 B, sha256 `ffda534c…`; 0 recorded
+changes (0 added, 0 modified, 0 deleted), 0 disclosures, 1 question (Q2,
+ruled here); 12 PASS / 1 FAIL / 3 NA; 101 citations verified; the first
+report is preserved byte-for-byte at
+`.temp/brief-740/c1/report-before-ruling.json` (`ee1a1121…`, the
+continuation-1 report); no production, manifest, lock or inventory hash
+changed.
+
+**What the run proved.**
+- The allocation was printed before any build:
+  `CM4 ALLOCATION configurations=3 shared_lane=true canonical_builds=9
+  forced_spot_checks=3 blocks=12 per_block_seconds=1500 total_seconds=18000
+  measured=false`, with the requirement count unchanged (151 own rows +
+  100 held-pair cells + 4 structural controls = 255 per feature mode / 510
+  total; 151 selected own tuples frozen at
+  `.temp/brief-740/c1/selected-own-tuples.json`).
+- The fresh lane real arm: content-addressed copy `787edec7…` (5,777 files,
+  5,768 byte-identical, nine manifest diffs, diff `66a8e8bd…`,
+  `production_changes=0`), release / one codegen unit, binary
+  `b17fc131be5d01781441ea4c01ab277f3f549da75491f6aed522044801b374cc` in
+  86.566 s; `cargo tree -e features` carries no
+  `test-builtin-memory-growth`; the three configuration controls pass with
+  forced fresh-process controls and firing falsifiers; the same-epoch forced
+  byte-identity spot check reproduces the same cache key `3aaab11e…` and the
+  identical binary in 84.477 s; P0543's 55-key real matrix passes at
+  multiplicity one with ten native fields, the three checked-route Native
+  falsifiers and the selected baseline producer pause (19.823567 s).
+- The copied arms: exactly three named overlays each — the runtime
+  `crates/rum-runtime/src/runtime/eval_dispatch/mod.rs` preimage `146b7600…`
+  to disabled `4f9803…` / armed `c2d59f…`, the additive
+  `mutations/mod.rs` `911088…` to `e04c05…`, and the added copy worker
+  `mutations/cm740_copy_worker.rs` `abb89d…` — enumerated in
+  `lane-mutation-copies.json` / `lane-carrier-provenance.json` against the
+  retained C28 schema (`742704b6…`). The disabled arm built as
+  `3734919849e1ba6fa9ee96561c4e27d2264ea44c2e0abd867c163d2c00c428c2`,
+  tree `a48369e0…`.
+- The failure: the copy worker's `guest::programs()` rejects at
+  `fixtures/obligations/guest.rs:1429-1432` (`SourceIdentity`) before any
+  program selection, at eight and one test thread, with zero observation
+  records and zero source hits; 110 whole-file guest-route pins differ
+  (55 P0543 + 55 P0544 in the same file), canonical mismatches 0, dependency
+  mismatches 0, inventory edits 0. The first rejecting route belongs to
+  P0544, so it is correctly not called P0543's catch.
+- `CM4 LIVE SNAPSHOT PASS files=5777 added=0 changed=0 deleted=0`
+  (manifests, lock and inventories unchanged);
+  `CM4 CURRENT CREDIT PASS own_mutants=0 structural_controls=0
+  promotions=0 settlements=0 SAME=0 encoding_runs=0`; `P0543` is
+  `PortBlocked` with missing disabled record-exact parity, armed build, own
+  phase hit and own predicate red; the other 150 rows are `NotAttempted`,
+  never implicitly Equal; the accepted CM3 Equal disposition is untouched;
+  maintenance not required; acceptance unrun. Three build blocks consumed
+  256.517221 s (86.73 + 84.60 + 85.19), each under 1,500 s; the forced-check
+  cost is separate from the 19.82 s real matrix.
+
+**Q2 ruling — option 1, the mutation-source entry point.** The live-file
+scope grows by exactly one file: `fixtures/obligations/guest.rs`, test layer
+only. Option 2 is declined: it would duplicate the admission logic behind a
+new serialization boundary while still needing the same overlay
+authentication, and it cannot re-check the copied build's own route source
+against the authenticated postimage. The following invariants are the bar.
+- **The strict path stays strict.** `programs()`, `load_programs` and every
+  existing CM3 call site keep their current checks and force; the real
+  matrix and the whole CM3 suite keep running through them. The new path is
+  additive and reachable only through a constructor-private authenticated
+  view whose fields are private and which only the authenticator can build;
+  an unauthenticated or wrong-arm view is a compile-time impossibility, not
+  a runtime convention.
+- **Authentication, before any original source byte is supplied.** The
+  authenticator proves: the baseline source equals the accepted CM3 seals
+  (committed inventory, never the copied tree); every overlay preimage
+  equals the baseline file and every postimage equals the copied arm's file;
+  the overlay list is exactly this family's named files and every
+  non-overlay file equals the live tree apart from the nine authorized lane
+  manifest entries; the copied tree hash and the executed binary hash
+  (`current_exe`) equal the arm's independently built receipt; the program
+  table seal, the canonical-source seals and every inventory file still
+  match the baseline; and, per route, the file the loader validates equals
+  the authenticated postimage — the guard's force is preserved, not
+  bypassed.
+- **No reconstruction.** The mutation-aware loader reuses the existing
+  parsing, phase attribution, native observers and validators; it invents no
+  program, setup, answer, phase, route or canonical input; the supplied
+  source identity is the baseline/preimage identity and the receipt binds
+  preimage and postimage separately. The independent tail check at
+  `coverage/bindings.rs:338` stays: the mutated tail is never relabelled as
+  the original.
+- **Falsifiers, each red on both arms:** unlisted changed file; wrong
+  preimage; wrong postimage; wrong binary; missing overlay; mutated
+  inventory; a forged or wrong-arm view (type-private); a disabled/armed
+  swap; and the preserved negative that the ordinary `programs()` in a
+  copied build still rejects `SourceIdentity`. None of these is a semantic
+  catch.
+- **The catch bar is unchanged.** The disabled arm's records must be
+  record-exact to the fresh real arm; the armed arm must catch P0543's own
+  real omission of its unchecked producer's pause-accounting boundary with
+  its own selector armed, its actual phase hit, the baseline producer pause,
+  its own `Native` red, equal public channels and the full real matrix still
+  passing; the typed suspension and `Some` completion are preserved; no
+  fabricated value, failure, default aggregate or unrelated cleanup
+  omission. If any of this cannot be admitted, the row stays `PortBlocked`
+  with the concrete missing evidence.
+- **Nothing else moves.** No inventory re-pin, no production source,
+  manifest, lock, dependency or script change; the copies stay under
+  `.temp/brief-740/`; no settlement, no SAME, no owner promotion, no
+  encoding activation, execution or credit.
+
+**Allocation.** A fresh twelve-block round (nine real/disabled/armed builds
+across the default, no-default and lane configurations, plus three
+same-epoch forced byte-identity spot checks), each block ≤1,500 s. With the
+three consumed diagnostic blocks (256.517221 s) the CM4 copied campaign is
+fifteen blocks / ≤22,500 s allocated — an allocation, not a duration. No
+reuse is assumed: the `guest.rs` addition changes the real lane binary, so
+the fresh round rebuilds it; any reuse must be by authenticated binary
+identity and may not consume an unrun block. The frozen case count stays
+255 / 510; a second carrier schema or a schedule beyond the allocation still
+STOPs.
+
+**Order.** Land the entry point and its falsifiers; rebuild the fresh round
+and finish the P0543 lane admission first; then the rest of the mutation
+schema (the other 150 own rows and the four structural controls) and the
+promotion transaction; run the shape and falsifier gates in both mandated
+arms; only then the complete unsampled campaign and the acceptance suite.
+The `guest.rs` edit expires retention fingerprints, so replay retention and
+ownership maintenance before acceptance and quote every replay verdict.
+
+**Disclosed limitation.** The canonical builder overwrote the initial
+successful real-build compiler log with the forced spot-check log at the same
+cache-key path; the initial command log, the build receipt and the binary
+remain intact and the forced and disabled compiler logs are archived under
+`.temp/brief-740/c1/compiler-logs/`. Before any forced spot check in the
+next round, copy the cached compiler log aside; never let a forced check
+overwrite the only compiler log.
+
+**Unchanged.** C2 stays Open at 118 Residual + 0 Lost; no row settles, no
+owner is promoted, no encoding key runs; `CHANGELOG.md` and S10 stay blocked;
+the eight continuation-69 rulings (Q1–Q8) stand.
