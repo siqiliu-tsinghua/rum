@@ -114907,7 +114907,7 @@ seven adapter sources at their sealed hashes) and the 5,739-file
 workspace equals the seventeenth run's final tree except this commit's
 three docs.**
 Run `cdx`, unit `brief-739-cdx-20261116-031702-1444994`, rc 0, peak
-884,985,856 B, oom 0 / oom_kill 0; log 943,818 B sha256 `433391b2…`;
+884,985,856 B, oom 0 / oom_kill 0; log 943,818 B sha256 `43339391…`;
 report 36,570 B sha256 `aff1f278…`; 0 changes, 6 PASS / 1 FLAGGED / 1
 FAIL, 3 deviations, Q21; 121 citations verified.
 

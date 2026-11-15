@@ -2723,7 +2723,7 @@ driver inside it; I compile-verified that layout in both modes before
 ruling, and the last 60 keys then continue.**
 Run `cdx`, unit `brief-739-cdx-20261116-031702-1444994`, rc 0, peak
 884,985,856 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
-`.temp/logs/cdx_brief_739.log`, 943,818 B, sha256 `433391b2…`; report
+`.temp/logs/cdx_brief_739.log`, 943,818 B, sha256 `43339391…`; report
 `.temp/brief-739/report.json`, 36,570 B, sha256 `aff1f278…`; 0 recorded
 changes (0 added, 0 modified, 0 deleted), 0 disclosures; 6 PASS / 1
 FLAGGED / 1 FAIL (the Q21 layout question), 3 deviations, 1 question; 121
