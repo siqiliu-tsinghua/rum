@@ -148,8 +148,16 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   three-packet owned-guard union (110 = 55 × 2 and 159 = 49 × 3 + 6 × 2
   records over three sealed C19 packets; the importer accepts at most two,
   both attempts zero-credit); Q15 authorizes the full three-packet union with
-  up to three constituent programs under one key receipt, then the remaining
-  51 rows / 2,585 keys under the 1,500 s bound; then CM4-CM5.
+  up to three constituent programs under one key receipt. The thirteenth run
+  executed that union per record (`P0450` and `P0455` each 55 keys, 269
+  constituent programs, multiplicity one) — 100 rows / 6,475 keys over 48
+  families, 11,367 pauses and 17,576 lifecycle observations — then stopped
+  at `P1476`'s 30 keys, whose sealed synchronous `Epoch::events` vectors sit
+  behind a runtime-private epoch (E0599/E0603, own omission 6,6 versus 4,4,
+  zero credit, 750 further keys authenticated only); Q16 authorizes exactly
+  one unconditional `#[doc(hidden)]` read-only `Session` accessor in the
+  Q4/Q9/Q10 audited form, then `P1476`'s 30 keys and the remaining 50 rows /
+  2,555 keys under the 1,500 s bound; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
