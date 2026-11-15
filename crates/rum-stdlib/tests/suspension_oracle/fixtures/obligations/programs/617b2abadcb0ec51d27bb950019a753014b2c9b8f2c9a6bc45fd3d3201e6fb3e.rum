@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c21answer=(Rule[c21rulelhs[Input["finish"],x_],101]);Return[c21answer],{1}]]

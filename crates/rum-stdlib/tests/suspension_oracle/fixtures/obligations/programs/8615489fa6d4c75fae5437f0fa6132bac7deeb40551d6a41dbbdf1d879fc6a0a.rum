@@ -1,0 +1,1 @@
+Do[c28answer=(7+((Input["finish"];Input["finish2"])));Return[c28answer],{1}]

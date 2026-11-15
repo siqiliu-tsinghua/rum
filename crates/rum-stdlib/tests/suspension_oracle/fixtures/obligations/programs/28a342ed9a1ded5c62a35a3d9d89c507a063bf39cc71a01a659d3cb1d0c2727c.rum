@@ -1,0 +1,1 @@
+(Global`c621owner[]:=((seen=False;gate[v_]:=(AppendTo[Global`log,v];If[And[SameQ[v,2],Not[seen]],seen=True;(InputString["p: "];Return[761]),Null];True);Default[f]=2;MatchQ[f[3],f[Optional[x_?gate],3]]);AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])

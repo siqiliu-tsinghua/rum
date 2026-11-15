@@ -1,0 +1,1 @@
+Do[Global`c6result=UpSet[c6f[c6a],(Input["c6rhs"];Input["c6rhs2"])];Global`c6suffix=1;Return[Global`c6result],{1}]

@@ -195,3 +195,57 @@ pub(in crate::runtime) struct EvaluationStackEntry {
     pub(in crate::runtime) expr: Expr,
     pub(in crate::runtime) epoch: u64,
 }
+
+#[doc(hidden)]
+impl Session {
+    pub fn actual_accepted_request_state(&self) -> (bool, bool) {
+        (
+            self.active_accepted_request.is_some(),
+            !self.request_interrupt_control.borrow().is_idle(),
+        )
+    }
+}
+
+#[doc(hidden)]
+impl Session {
+    pub fn actual_evaluation_state(&self) -> (usize, usize) {
+        (self.evaluation_depth.get(), self.evaluation_stack.len())
+    }
+}
+
+#[doc(hidden)]
+impl Session {
+    pub fn c31_fixed_point_equality_events() -> Vec<(String, [u64; 10])> {
+        use crate::runtime::profiling::logical::{epoch, synchronous::EventKey};
+
+        let mut rows = Vec::new();
+        if let Some(epoch) = epoch::existing() {
+            for (key, value) in epoch.events() {
+                if matches!(
+                    key,
+                    EventKey::Runtime {
+                        phase: "evaluate.fixed_point_equal",
+                        ..
+                    }
+                ) {
+                    let mut counts = [0; 10];
+                    counts[..7].copy_from_slice(&value.vector);
+                    counts[7] = value.input_required;
+                    rows.push((format!("C31Synchronous {key:?}"), counts));
+                }
+            }
+        }
+        rows.sort_by(|a, b| a.0.cmp(&b.0));
+        rows
+    }
+}
+
+#[doc(hidden)]
+impl Session {
+    pub fn actual_message_checkpoint_state(&self) -> (bool, bool) {
+        (
+            self.current_message_list_checkpoint.is_some(),
+            self.current_message_list_dirty,
+        )
+    }
+}

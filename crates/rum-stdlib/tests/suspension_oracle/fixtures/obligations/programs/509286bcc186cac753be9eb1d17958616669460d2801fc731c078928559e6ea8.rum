@@ -1,0 +1,1 @@
+Block[{Global`scope=23},Catch[Throw[73,tag],Global`catchPattern]]

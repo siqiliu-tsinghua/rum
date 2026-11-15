@@ -1,0 +1,1 @@
+Hold[71,Evaluate[Normal[LazySelect[Function[x,(Input["finish"];Input["finish2"])],LazyTake[LazyRange[17,1],1]]]],79]

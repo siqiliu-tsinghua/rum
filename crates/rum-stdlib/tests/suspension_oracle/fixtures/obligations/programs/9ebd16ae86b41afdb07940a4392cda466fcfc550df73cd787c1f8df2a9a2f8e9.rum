@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.tail.before"];Global`c621value=((InputString["control caller"];Sequence[1,2]);Catch[Throw[73,tag],Global`catchPattern]);AppendTo[Global`log,"621.tail.after"];Global`c621value)

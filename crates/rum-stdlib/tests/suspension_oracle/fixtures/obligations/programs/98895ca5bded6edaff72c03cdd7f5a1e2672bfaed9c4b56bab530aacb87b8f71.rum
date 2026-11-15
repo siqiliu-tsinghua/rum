@@ -1,0 +1,1 @@
+Do[c18answer=(ReplacePart[{1,2},{i_}:>(((0/;(InputString["first"];True))/;If[i==2,(InputString["later"];True),(Input["finish"];Input["finish2"])])/;If[i==2,True,(AppendTo[log,707];False)])]);Return[c18answer],{1}]

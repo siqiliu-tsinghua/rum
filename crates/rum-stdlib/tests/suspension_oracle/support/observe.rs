@@ -186,3 +186,8 @@ pub fn normalize_profile_durations(out: &mut Observation, paths: &[Vec<usize>], 
         );
     }
 }
+
+/// Reuse the frozen expression rewrite for a host adapter's comparison view.
+pub fn duration_comparison_expression(expr: &Expr, replacements: &[(Expr, Expr)]) -> Expr {
+    rewrite(expr, replacements, false, &mut 0)
+}

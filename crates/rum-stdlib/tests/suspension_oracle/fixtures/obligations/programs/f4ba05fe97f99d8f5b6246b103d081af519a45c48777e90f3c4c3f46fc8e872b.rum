@@ -1,0 +1,1 @@
+Do[c29answer=(InputString["enter-resume"];7+(Input["finish"]));Return[c29answer],{1}]

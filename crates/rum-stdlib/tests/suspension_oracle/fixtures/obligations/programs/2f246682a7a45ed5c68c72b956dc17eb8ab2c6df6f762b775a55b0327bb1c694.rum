@@ -1,0 +1,1 @@
+AppendTo[log,701];c15answer=(DeleteMissing[<|"a":>(Input["finish"];Input["finish2"]),"b"->Missing[]|>,1,1]);AppendTo[log,709];{c15answer,log}

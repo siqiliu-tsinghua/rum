@@ -1,0 +1,1 @@
+Hold[71,Evaluate[DeleteCases[Input["c7target"],_Integer,{1}]],79]

@@ -13,8 +13,19 @@ mod entropy;
 mod file_io;
 #[path = "../../../rum-host/src/model/mod.rs"]
 pub mod model;
-#[path = "../../../rum-host/src/session.rs"]
-mod session;
+mod session {
+    include!("../../../rum-host/src/session.rs");
+
+    impl HostSession {
+        pub(crate) fn actual_message_checkpoint_state(&self) -> (bool, bool) {
+            self.session.actual_message_checkpoint_state()
+        }
+
+        pub(crate) fn actual_owns_eval_timeout(&self) -> bool {
+            self.owns_eval_timeout
+        }
+    }
+}
 pub use config::*;
 pub use entropy::StdEntropySource;
 pub use file_io::StdFileIo;

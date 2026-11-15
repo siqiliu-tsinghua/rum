@@ -1,0 +1,1 @@
+log={};scope=17;Options[c17opts]={a:>Input["finish"],b:>(AppendTo[log,707];97)};

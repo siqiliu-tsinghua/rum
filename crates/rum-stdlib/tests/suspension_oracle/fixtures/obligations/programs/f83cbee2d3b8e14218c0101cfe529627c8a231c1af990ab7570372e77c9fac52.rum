@@ -1,0 +1,1 @@
+InputString["c7prior"];ArrayFilter[Total,{1,2,3,4,5},1]

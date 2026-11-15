@@ -1,0 +1,1 @@
+Hold[71,Evaluate[ReplaceRepeated[17,{(17/;(Input["finish"];Input["finish2"])):>89,89->97},MaxIterations->4]],79]

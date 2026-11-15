@@ -1,0 +1,1 @@
+InputString["prior"];Do[c18answer=(c18up[c18a,23]);Return[c18answer],{1}]

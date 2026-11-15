@@ -1,0 +1,1 @@
+InputString["prior"];SchemaErrors[17,_?Function[x,Input["finish"]]]

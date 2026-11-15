@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c16answer=(Normal[LazyTake[LazyFoldList[Function[{a,x},Input["finish"]],13,LazyRange[17,1]],2]]);Return[c16answer],{1}]]

@@ -1,0 +1,1 @@
+Catch[((AppendTo[log,"before"];InputString["native623.one"];AppendTo[log,"after"];Throw[43,Global`native623tag])),Global`native623tag]

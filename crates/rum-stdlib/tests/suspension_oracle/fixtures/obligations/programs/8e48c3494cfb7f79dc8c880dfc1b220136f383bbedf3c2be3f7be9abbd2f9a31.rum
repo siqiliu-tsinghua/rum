@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c18answer=(c18match[17][23]);AppendTo[log,709];{c18answer,log}

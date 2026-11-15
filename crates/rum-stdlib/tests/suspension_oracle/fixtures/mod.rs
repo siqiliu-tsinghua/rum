@@ -26,6 +26,7 @@ mod evaluation_dispatch;
 mod evaluation_stack;
 mod lazy;
 mod loops;
+pub(crate) mod obligations;
 mod options;
 mod patterns;
 mod rewrite;

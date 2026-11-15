@@ -1,0 +1,1 @@
+log={};scope=17;c17count=0;c17pred[z_]:=(c17count=c17count+1;If[c17count==1,Input["finish"],True]);c17guarded[x_?c17pred]:=97/;(AppendTo[log,707];False);

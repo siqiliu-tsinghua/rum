@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c17answer=(ReplaceRepeated[17,{17:>c17gate[],89->97},MaxIterations->4]);Return[c17answer],{1}]]

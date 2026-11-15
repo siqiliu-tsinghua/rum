@@ -1,0 +1,1 @@
+Block[{scope=23},Count[Input["target"],_Integer,{1},Heads->False]]

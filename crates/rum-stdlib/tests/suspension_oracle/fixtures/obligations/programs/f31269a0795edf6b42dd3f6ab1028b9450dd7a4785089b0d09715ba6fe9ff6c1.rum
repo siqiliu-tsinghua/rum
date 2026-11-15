@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.tail.before"];Global`c621value=((InputString["rules caller"];Hold[Return[743]]);AppendTo[Global`a,5]);AppendTo[Global`log,"621.tail.after"];Global`c621value)

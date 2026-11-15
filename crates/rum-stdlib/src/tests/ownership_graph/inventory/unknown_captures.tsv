@@ -1131,6 +1131,7 @@ UnknownConstruct	crates/rum-runtime/src/runtime/model/requests.rs	310	30	closure
 UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	175	27	closure captures: |scope| (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	176	27	closure captures: |buckets| (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	177	22	closure captures: |bucket| (capture types/modes unresolved)
+UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	238	22	closure captures: |a , b| (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/traversal.rs	40	62	closure captures: |max| (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/traversal.rs	44	29	closure captures: |max_depth| (capture types/modes unresolved)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/traversal.rs	52	50	closure captures: |max| (capture types/modes unresolved)

@@ -1,0 +1,1 @@
+InputString["prior"];Do[c23answer=(Count[{11,{17,19},{23}},_Integer,c23level]);Return[c23answer],{1}]

@@ -1,0 +1,1 @@
+Block[{scope=23},AppendTo[log,701];c31answer=(C8FixedPointStep[Input["c8step1"],1,3]);AppendTo[log,709];{c31answer,log}]

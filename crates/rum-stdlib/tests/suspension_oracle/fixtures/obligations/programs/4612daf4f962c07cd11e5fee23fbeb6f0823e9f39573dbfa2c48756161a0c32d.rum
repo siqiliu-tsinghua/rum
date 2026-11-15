@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.before"];Global`c621value=(Accumulate[{0,Global`a,Global`a,Global`a,Global`a,Global`a}]);AppendTo[Global`log,"621.after"];Global`c621value)

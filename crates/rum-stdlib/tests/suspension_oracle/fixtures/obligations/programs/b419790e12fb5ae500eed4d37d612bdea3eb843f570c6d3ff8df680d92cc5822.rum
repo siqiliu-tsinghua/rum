@@ -1,0 +1,1 @@
+log={};scope=17;c17target={17};c17assoc=<|"a"->17|>;c17f[x_]:=(Input["finish"];Input["finish2"]);

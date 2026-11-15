@@ -1,0 +1,1 @@
+AppendTo[log,701];c19answer=(Catch[Catch[WithCleanup[Throw[71,c19tag[1]],Throw[79,c19tag[1]]],c19tag[x_]/;(Input["finish"])],_]);AppendTo[log,709];{c19answer,log}

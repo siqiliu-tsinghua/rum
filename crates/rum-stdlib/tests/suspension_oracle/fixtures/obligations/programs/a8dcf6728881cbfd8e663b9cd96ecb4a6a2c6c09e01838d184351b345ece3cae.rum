@@ -1,0 +1,1 @@
+InputString["prior"];Hold[71,Evaluate[Cases[{11,{17},{23}},_Integer,c21level]],79]

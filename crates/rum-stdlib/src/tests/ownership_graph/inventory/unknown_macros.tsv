@@ -1036,6 +1036,8 @@ UnknownConstruct	crates/rum-runtime/src/runtime/model/requests.rs	50	17	unexpand
 UnknownConstruct	crates/rum-runtime/src/runtime/model/requests.rs	53	17	unexpanded macro write! (ends at 53:82)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/requests.rs	55	36	unexpanded macro write! (ends at 55:61)
 UnknownConstruct	crates/rum-runtime/src/runtime/model/requests.rs	56	48	unexpanded macro write! (ends at 56:70)
+UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	224	20	unexpanded macro matches! (ends at 230:18)
+UnknownConstruct	crates/rum-runtime/src/runtime/model/session.rs	234	32	unexpanded macro format! (ends at 234:65)
 UnknownConstruct	crates/rum-runtime/src/runtime/namespace_tools/names.rs	129	26	unexpanded macro vec! (ends at 129:39)
 UnknownConstruct	crates/rum-runtime/src/runtime/namespace_tools/names.rs	202	22	unexpanded macro vec! (ends at 202:67)
 UnknownConstruct	crates/rum-runtime/src/runtime/namespace_tools/names.rs	215	24	unexpanded macro format! (ends at 215:68)

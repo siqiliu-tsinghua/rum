@@ -1,0 +1,1 @@
+(Global`c621owner[]:=((Unprotect[Trace];SetOptions[Trace,Heads:>(AppendTo[Global`log,2];(InputString["p: "];Return[761]);False)];Trace[1+2]);AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])

@@ -1,0 +1,1 @@
+InputString["c7prior"];Do[Global`c7result=Trace[73];Global`c7suffix=1;Return[Global`c7result],{1}]

@@ -1,0 +1,1 @@
+log={};scope=17;c17visits=0;c17gate[]:=(c17visits++;If[c17visits==1,Unevaluated[c17gate[]],Input["finish"]]);

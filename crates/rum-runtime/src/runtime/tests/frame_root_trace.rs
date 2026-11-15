@@ -845,8 +845,10 @@ fn declared_type_name(declaration: &str) -> Option<&str> {
 
 // Reviewed mutation fixtures have their own population, never part of the
 // production source scan or its counts/exclusions.
-const FIXTURE_SUSPENSION_SOURCES: &[&str] =
-    &["crates/rum-stdlib/tests/suspension_oracle/mutations/driver.rs"];
+const FIXTURE_SUSPENSION_SOURCES: &[&str] = &[
+    "crates/rum-stdlib/tests/suspension_oracle/fixtures/obligations/native.rs",
+    "crates/rum-stdlib/tests/suspension_oracle/mutations/driver.rs",
+];
 const FIXTURE_SUSPENSION_FRAMES: &[&str] = &["OracleFoldFrame"];
 
 #[test]

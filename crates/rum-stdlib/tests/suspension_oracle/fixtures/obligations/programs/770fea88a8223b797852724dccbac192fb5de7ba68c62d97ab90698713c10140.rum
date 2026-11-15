@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c25answer=(NormalizeRules[c25rules]);Return[c25answer],{1}]]

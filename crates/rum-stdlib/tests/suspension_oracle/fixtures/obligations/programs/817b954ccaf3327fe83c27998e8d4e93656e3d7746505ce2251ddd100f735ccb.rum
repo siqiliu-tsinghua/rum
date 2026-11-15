@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.tail.before"];Global`c621value=((InputString["rewrite caller"];Nothing);Cases[{1,2,3,4,5},List,{1}]);AppendTo[Global`log,"621.tail.after"];Global`c621value)

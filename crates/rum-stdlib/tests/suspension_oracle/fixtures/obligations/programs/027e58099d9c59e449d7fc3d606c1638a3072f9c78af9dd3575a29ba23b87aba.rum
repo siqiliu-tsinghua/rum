@@ -1,0 +1,1 @@
+f[x_]:=(AppendTo[Global`log,"P0259.before"];InputString["625.bind.90.terminal:1"];InputString["625.bind.90.terminal:2"];AppendTo[Global`log,"P0259.after"];Throw[9,lpTag]);

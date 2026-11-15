@@ -1,0 +1,1 @@
+AppendTo[log,701];c34answer=(MemoryConstrained[C34CallbackCharge[Input["finish"]],100000000]);AppendTo[log,709];{c34answer,log}

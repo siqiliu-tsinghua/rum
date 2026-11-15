@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c16answer=(Replace[17,(x:(_?Function[z,Input["finish"]])):>x]);Return[c16answer],{1}]]

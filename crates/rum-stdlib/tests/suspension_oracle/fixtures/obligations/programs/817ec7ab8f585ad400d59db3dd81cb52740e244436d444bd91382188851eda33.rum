@@ -1,0 +1,1 @@
+AppendTo[log,701];c18answer=(Failure["tag",<|"Payload":>Input["finish"]|>]["Payload"]);AppendTo[log,709];{c18answer,log}

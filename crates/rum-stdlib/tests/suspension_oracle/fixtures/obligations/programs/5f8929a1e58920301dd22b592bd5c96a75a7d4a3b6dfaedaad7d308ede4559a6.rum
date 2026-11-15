@@ -1,0 +1,1 @@
+AppendTo[log,701];c16answer=(ConformSchema[17,_?Function[x,(Input["finish"];Input["finish2"])]]);AppendTo[log,709];{c16answer,log}

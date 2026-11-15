@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c15answer=(Trace[1+2,_?c15pred]);AppendTo[log,709];{c15answer,log}

@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c31answer=(C8FixedPointStep[Input["c8step1"],1,3]);Return[c31answer],{1}]]

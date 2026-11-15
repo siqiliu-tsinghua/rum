@@ -1,0 +1,1 @@
+InputString["prior"];Do[c12answer=(Default[c12default]);Return[c12answer],{1}]

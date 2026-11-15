@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c34answer=(MemoryConstrained[C34CallbackCharge[Input["finish"]],100000000]);Return[c34answer],{1}]]

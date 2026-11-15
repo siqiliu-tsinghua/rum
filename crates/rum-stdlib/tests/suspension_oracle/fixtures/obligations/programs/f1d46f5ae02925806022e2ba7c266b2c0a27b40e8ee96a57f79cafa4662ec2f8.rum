@@ -1,0 +1,1 @@
+AppendTo[log,701];c21answer=(Cases[(InputString["target"];{11,{17},{23}}),_Integer,c21level]);AppendTo[log,709];{c21answer,log}

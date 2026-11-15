@@ -1,0 +1,1 @@
+Block[{Global`c7scope=23},Replace[{1,2,3},List->c7h,{1}]]

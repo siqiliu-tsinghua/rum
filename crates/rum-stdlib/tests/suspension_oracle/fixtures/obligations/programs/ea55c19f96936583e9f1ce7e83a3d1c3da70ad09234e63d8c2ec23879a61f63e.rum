@@ -1,0 +1,1 @@
+StringReplace["ab",x_:>("X"/;If[c15once,(c15once=False;Input["finish"]),True])]

@@ -1,0 +1,1 @@
+InputString["c8prior"];Hold[71,Evaluate[C8FixedPointStep[Input["c8step1"],1,3]],79]

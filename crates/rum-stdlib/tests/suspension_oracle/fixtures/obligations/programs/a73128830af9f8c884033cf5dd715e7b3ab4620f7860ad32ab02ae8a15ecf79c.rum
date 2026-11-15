@@ -1,0 +1,1 @@
+Hold[71,Evaluate[StringCases["ab",x_:>If[c15once,(c15once=False;InputString["first"]),(Input["finish"];Input["finish2"])]]],79]

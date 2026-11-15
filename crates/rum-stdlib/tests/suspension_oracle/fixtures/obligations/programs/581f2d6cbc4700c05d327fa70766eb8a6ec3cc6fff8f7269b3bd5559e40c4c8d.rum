@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.tail.before"];Global`c621value=(Catch[Throw[73,tag],Global`catchPattern]);AppendTo[Global`log,"621.tail.after"];Global`c621value)

@@ -1,0 +1,1 @@
+log={};scope=1;Default[x_]:=(InputString["rhs"];InputString["rhs.two"];83);Default[d]:=73/;(InputString["guard"];False)

@@ -1,0 +1,1 @@
+InputString["prior"];Do[c20answer=(MatchQ[c20pair[17,23,29],c20pair[c20build[x_],y_]]);Return[c20answer],{1}]

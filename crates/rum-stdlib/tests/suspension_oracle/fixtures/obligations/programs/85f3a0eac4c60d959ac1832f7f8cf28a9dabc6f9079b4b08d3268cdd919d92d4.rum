@@ -1,0 +1,1 @@
+Do[c23answer=(NormalizeRules[c23rules]);Return[c23answer],{1}]

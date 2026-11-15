@@ -1,0 +1,1 @@
+AppendTo[log,701];c32answer=(C32RetainedPrefix[(Input["finish"];Input["finish2"])]);AppendTo[log,709];{c32answer,log}

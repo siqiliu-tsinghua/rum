@@ -1,0 +1,1 @@
+Block[{scope=23},StringReplace["ab",x_:>If[c15once,(c15once=False;Input["finish"]),"X"]]]

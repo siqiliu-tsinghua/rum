@@ -1,0 +1,1 @@
+Block[{scope=23},DeleteMissing[<|"a":>Input["finish"],"b"->Missing[]|>,1,1]]

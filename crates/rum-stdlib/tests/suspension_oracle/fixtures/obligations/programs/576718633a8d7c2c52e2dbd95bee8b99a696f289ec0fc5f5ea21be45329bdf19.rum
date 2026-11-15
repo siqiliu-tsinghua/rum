@@ -1,0 +1,1 @@
+InputString["prior"];Hold[71,Evaluate[Normal[LazyTake[LazyFoldList[Function[{a,x},Input["finish"]],13,LazyRange[17,1]],2]]],79]

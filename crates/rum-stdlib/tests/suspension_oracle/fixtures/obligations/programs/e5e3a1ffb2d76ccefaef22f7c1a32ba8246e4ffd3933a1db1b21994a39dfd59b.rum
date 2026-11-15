@@ -1,0 +1,1 @@
+InputString["prior"];StringCases["ab",x_:>If[c15once,(c15once=False;Input["finish"]),"X"]]

@@ -1,0 +1,1 @@
+Do[c17answer=(c17result=(c17target[[(Input["finish"];Input["finish2"])]]=89);{c17result,c17target});Return[c17answer],{1}]

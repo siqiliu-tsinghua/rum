@@ -1,0 +1,1 @@
+Do[Global`c7result=ArrayFilter[Total,{1,2,3,4,5},1];Global`c7suffix=1;Return[Global`c7result],{1}]

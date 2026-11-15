@@ -1,0 +1,1 @@
+InputString["prior"];Hold[71,Evaluate[ReplacePart[{11,17,19},2:>(91/;c24guard)]],79]

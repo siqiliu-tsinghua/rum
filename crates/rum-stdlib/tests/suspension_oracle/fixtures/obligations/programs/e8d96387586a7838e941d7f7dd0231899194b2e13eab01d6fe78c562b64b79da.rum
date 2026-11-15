@@ -1,0 +1,1 @@
+Do[c15answer=(Reap[Sow[83,71],_?c15pred]);Return[c15answer],{1}]

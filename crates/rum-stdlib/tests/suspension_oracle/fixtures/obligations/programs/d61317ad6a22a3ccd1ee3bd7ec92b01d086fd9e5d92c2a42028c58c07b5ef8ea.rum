@@ -1,0 +1,1 @@
+Do[c16answer=(Normal[LazySelect[Function[x,(Input["finish"];Input["finish2"])],LazyTake[LazyRange[17,1],1]]]);Return[c16answer],{1}]

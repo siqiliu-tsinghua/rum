@@ -1,0 +1,1 @@
+(Global`c621owner[]:=((Unprotect[TestReport];SetOptions[TestReport,SameTest->v];v:=(AppendTo[Global`log,2];(InputString["p: "];Return[761]);SameQ);TestReport[{TestCreate[1,1]},{}]["TestsSucceededCount"]);AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])

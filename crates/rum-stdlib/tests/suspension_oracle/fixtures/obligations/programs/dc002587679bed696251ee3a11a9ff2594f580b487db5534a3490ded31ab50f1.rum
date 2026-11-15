@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c18answer=(Catch[Input["finish"],_,Function[{value,tag},value]]);AppendTo[log,709];{c18answer,log}

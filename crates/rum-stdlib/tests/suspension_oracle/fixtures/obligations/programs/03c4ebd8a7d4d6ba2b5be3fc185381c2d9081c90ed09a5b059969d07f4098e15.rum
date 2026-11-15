@@ -1,0 +1,1 @@
+Global`log={};Global`c7reads=0;Global`c7scope=17;Global`c7suffix=0;c7f[x_Integer]:=(Input["c7tail"] /; (Input["c7guard"];True));

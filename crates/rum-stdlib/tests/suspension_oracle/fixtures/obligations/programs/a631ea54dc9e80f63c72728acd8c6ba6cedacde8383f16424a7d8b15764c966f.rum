@@ -1,0 +1,1 @@
+log={};scope=17;c20matchn=0;c20test[z_]:=(c20matchn++;If[c20matchn==1,((Input["finish"];Input["finish2"])),True]);

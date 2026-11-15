@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.before"];Global`c621value=(Block[{Global`scope=23},Dot[{{Global`a},{Global`a},{Global`a},{Global`a},{Global`a}},{{2}},{{10}}]]);AppendTo[Global`log,"621.after"];Global`c621value)

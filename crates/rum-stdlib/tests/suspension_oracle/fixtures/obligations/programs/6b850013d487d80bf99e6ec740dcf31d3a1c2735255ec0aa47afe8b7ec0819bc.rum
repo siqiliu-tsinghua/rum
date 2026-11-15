@@ -1,0 +1,1 @@
+Block[{Global`c7scope=23},(AppendTo[Global`log,703];Global`c7result=Depth[c7f[1,2]];AppendTo[Global`log,709];Global`c7suffix=1;Global`c7result)]

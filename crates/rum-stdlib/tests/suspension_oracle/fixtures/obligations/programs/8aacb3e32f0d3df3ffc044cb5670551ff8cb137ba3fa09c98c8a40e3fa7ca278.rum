@@ -1,0 +1,1 @@
+(InputString["c52.handoff"];((native623owner[]:=(Catch[(Block[{scope=97},(AppendTo[log,"before"];InputString["native623.one"];AppendTo[log,"after"];Return[41])]),Global`native623tag];AppendTo[log,"outer tail"];47);native623owner[]);Print["c52.cancel"];Null))

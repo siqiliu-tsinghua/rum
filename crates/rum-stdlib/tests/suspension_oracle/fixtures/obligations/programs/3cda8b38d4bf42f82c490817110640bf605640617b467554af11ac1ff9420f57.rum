@@ -1,0 +1,1 @@
+c18counter=0;c18pred[z_]:=(c18counter=c18counter+1;If[c18counter==1,Input["finish"],True]);log={};scope=17;c18match[x_?c18pred]:=89;

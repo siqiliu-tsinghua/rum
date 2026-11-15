@@ -1,0 +1,1 @@
+log={};scope=1;Default[x_]:=(InputString["rhs"];Unevaluated[83+1]);Default[d]:=73/;(InputString["guard"];False)

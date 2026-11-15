@@ -1,0 +1,1 @@
+Catch[Throw[71,c19tag[1]],c19tag[x_]/;(c19cycle),Function[{v,k},(AppendTo[log,73];v+1)]]

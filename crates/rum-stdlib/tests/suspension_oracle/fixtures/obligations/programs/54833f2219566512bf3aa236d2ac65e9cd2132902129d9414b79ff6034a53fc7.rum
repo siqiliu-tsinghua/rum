@@ -1,0 +1,1 @@
+(AppendTo[Global`log,703];Global`c7result=TestReport[{TestCreate[1,1]},"TestsSucceededCount",{}];AppendTo[Global`log,709];Global`c7suffix=1;Global`c7result)

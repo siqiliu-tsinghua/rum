@@ -1,0 +1,1 @@
+InputString["prior"];Cases[(InputString["target"];{11,{17},{23}}),_Integer,c21level]

@@ -1,0 +1,1 @@
+AppendTo[log,701];c16answer=(Normal[LazyTake[LazyFoldList[Function[{a,x},Input["finish"]],13,LazyRange[17,1]],2]]);AppendTo[log,709];{c16answer,log}

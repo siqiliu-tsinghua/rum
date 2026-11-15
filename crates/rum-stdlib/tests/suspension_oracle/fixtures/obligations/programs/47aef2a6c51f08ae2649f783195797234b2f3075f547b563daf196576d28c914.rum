@@ -1,0 +1,1 @@
+Block[{scope=23},AppendTo[log,701];c17answer=(CatchExceptions[(ThrowException["Exception",<|"a"->17|>]),{(Exception["Exception",p_?Function[x,Input["finish"]]]):>(AppendTo[log,89];p["a"])}]);AppendTo[log,709];{c17answer,log}]

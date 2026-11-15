@@ -1,0 +1,1 @@
+Hold[71,Evaluate[(InputString["control caller"];Catch[Throw[73,tag],Global`catchPattern])],79]

@@ -3057,3 +3057,125 @@ constant/missing/duplicate controls, complete the 9,060-key campaign
 (151 rows), and measure the complete schedule and acceptance under the
 1,500 s bound. The partial tree is the state to continue from; do not
 restart and do not hand-edit a generated cell.
+
+### Continuation 21 — twenty-first run: the final C52 adapter port executes the last 60 keys in both arms and the 9,060-key campaign completes; CM3 is accepted
+
+**2026-11-16 — brief 739's twenty-first run executed continuation 20 and is
+accepted DONE. It authenticated the two sealed witness copies, landed the
+Q21/Q22 adapter facade, executed both 30-key C52 matrices with the sealed
+`Output` direction and all native controls, completed the 9,060-key active
+campaign at 151 rows, and measured the complete schedule under the cap, so
+CM3 is accepted as delivered.**
+Run `cdx`, unit `brief-739-cdx-20261116-040525-1459659`, rc 0, peak
+13,176,016,896 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 3,628,686 B, sha256 `5cbce1ca…`; report
+`.temp/brief-739/report.json`, 421,531 B, sha256 `6aaff600…`; 48 recorded
+changes (37 added, 11 modified, 0 deleted), 0 disclosures, 0 questions;
+16 PASS / 4 FLAGGED; 2,009 citations verified; no production, manifest or
+lock hash changed.
+
+**What the run did.**
+- **Q23 authentication.** Both sealed witness copies
+  `.temp/g15-c2/c52/source-jupyter-segment-cancelled-result-normalization-{real,mutant}/crates/rum-runtime/src/c2_probe.rs`
+  hash `512785d2…` and are listed in the sealed `artifact-hashes.json`
+  (5,879 entries); both are provenance only and the live fixture imports no
+  probe. The `c52.handoff` is read outside the counted epoch
+  (`jupyter_driver.rs:38-47` places it before
+  `Session::logical_profile_test_reset` and `c2_probe::begin`). 80 pins
+  authenticate 60 records; both packets report
+  `frozen_keys=30 real_valid=30 disabled_exact=30 own_valid=30
+  own_native_same=30 own_semantic_different=30 direction=Output
+  encoding=0`.
+- **Adapter facade.** `adapter_facade.rs` (34 lines) includes the unchanged
+  `adapter/mod.rs` and one nested `observed_worker` module that includes the
+  unchanged `worker.rs` a second time and holds the single `observe_segment`
+  driver; the seven adapter sources stay at `b3feb8ef…`, `94df4c10…`,
+  `cbdc0f8d…`, `5ca28f9a…`, `ac5ed850…`, `ca824c5e…`, `69c59a46…` and the
+  host source at `ef78a1de…`; the driver constructs
+  `ExecuteSegment::{Eval,Resume}`, calls `run_segment`, and samples
+  `Session::logical_profile_test_rows()` at the terminal outcome on the
+  executing thread before snapshot/projections/fresh. No production byte,
+  visibility, Cargo graph or lock changes.
+- **The last 60 keys.** P2611 (Eval) and P2612 (Resume) each 30/30 at
+  multiplicity one in both arms: `own_Output=30` per row, `native_controls=90`
+  per row (constant-field, missing and duplicate native rows each rejected
+  as `Native`), `sealed_invalid=0`, `native_fields=10`, actual pauses 49/49,
+  lifecycle 60/98. The C52 own-omission witness shows the sealed mutant's
+  exact direction: the resumed path is `Failure(Cancelled)` and dropping the
+  normalization yields the raw `Success(TerminatedEvaluation["Cancelled"])`
+  with equal native values, so the validator rejects `Output`.
+- **Campaign complete.** 151 rows / 9,060 keys over 68 families executed in
+  both arms; 175 required rows / 10,505 keys; 24 director-excluded rows /
+  1,445 keys remain named; 16,672 pauses and 25,302 lifecycle observations;
+  `campaign_remaining=0`, `encoding=0`, `full_CM_green=false`. Proofs stay
+  749 / 43,390 (151 / 8,255 packet-authenticated, 115 / 6,270
+  current-verified, 36 / 1,985 current-blocked, 598 / 35,135 absent; the
+  five classes Boundary 20/735, Identity 5/185, NoObservableTail 126/7,260,
+  Transferred 594/35,000, Unreachable 4/210). Deferred stays 118 rows /
+  5,595 nonencoding plus 18,840 encoding; 51 owners stay Open; the five
+  prior losses and the two C1 promotions are unchanged; no settlement, no
+  promotion, no SAME, no encoding run.
+- **Preserved failed attempt.** The first live matrix emitted three valid
+  receipts and then rejected the worker's own cross-process Symbol-ID hash
+  assertion (`CM EXECUTION REJECT … predicate=Native`,
+  `execution_tests.rs:408`); the attempt and its output are preserved
+  (`c52-matrix-default.log`, 104.129651 s) and the correction pins the
+  sealed ten-field values (`c52-native-values`, 60 rows; the diagnostic
+  records `live_bags_exact=true sealed_ten_fields_exact=true
+  label_differences=29 current_symbol_id=671 historical_symbol_id=682
+  worker_cross_process_assertion=true production_defect=false`), keeping all
+  18,143 prior provenance rows and the 60 historical native pins intact and
+  comparing the current full bags exactly.
+- **Maintenance and lane.** The retention replay changed 68 fingerprint
+  cells (noncell changes 0, predicates unchanged), the certificate replay 4
+  cells (noncell changes 0, promotions 0), and the ownership replay 6 files /
+  9,006 rows unchanged; the two stale C01 certificate reds were ordering
+  artifacts, green after installation (body rejections 0). The lane is
+  rebuilt content-addressed from the final tree: 5,776 files, 5,767
+  byte-identical, nine manifest edits, tree `5a5f6f4e…`, release with one
+  codegen unit, discriminators passing in the default, no-default and lane
+  contexts.
+- **Acceptance.** `cargo fmt --all --check` exit 0; both workspace runs
+  4,314 passed / 9 failed / 65 ignored top-level with all nine failures the
+  documented loopback EPERM denial reproduced at one thread on the identical
+  workspace binary and zero unexplained reds; the complete
+  `suspension_oracle` 558/0/4 and `typed_slot_census` 10/0/1 in both modes;
+  the switched-LP five tests per arm; the complete schedule 720.01 s /
+  717.20 s runtime with build+run upper bounds 738.69 s / 736.49 s under the
+  1,500 s cap and inside the 900 s steady target (2,874.392889 s cumulative
+  across 41 leaf commands, disclosed).
+
+**Host gate.** The run's audit re-ran green under my invocation with its
+verdict lines intact: `SOURCE SCOPE PASS files=5776 added=37 modified=11
+deleted=0 production_changes=0 manifest_changes=0 lock_changes=0`, the
+immutable tables (749 / 43,390; 5 losses; 51 Open owners), the bindings
+(175 / 10,505 required; 151 / 9,060 bound; 24 / 1,445 excluded; 68
+families; multiplicity 1), the programs (9,060 rows; 9,000 legacy
+preserved; 2,988 assets; 36 added; content-addressed), both C52 rows, the 80
+pins / 2 sealed copies / 0 live probe imports, the adapter reuse line, the
+standing site scope and the credit boundary. I re-ran
+`cm_adapter_receipts_exact` myself in both feature modes (exit 0,
+87.21 s / 87.76 s; the four `CM ADAPTER RECEIPTS PASS` lines reproduced
+exactly, zero warnings); both sealed copies hash `512785d2…` and are listed
+in the sealed map; the 60 blocked→bound flips and 60 added program rows are
+exactly accounted for, the sole changed provenance row is the
+`program-table` pin (9000→9060), and all six shape tests plus the C52 test
+pass in both acceptance arms. I did not re-run the full workspace suite:
+the acceptance logs are from the unchanged final tree (tree `5a5f6f4e…`,
+binary/input hashes captured) and the report's 2,009 citations verify, so
+that gate is reused by hash identity under the brief's rule. The report's
+`--against-git` scope check is inapplicable to this cumulative campaign
+tree; the source scope is the entry/final hash audit above. C2 stays Open at
+118 Residual + 0 Lost; no row settles, no owner is promoted, no guest
+executes, no encoding key runs, and `CHANGELOG.md` and S10 stay blocked.
+
+**CM3 accepted.** The delivered layer is complete: the Execute bag is bound
+and executed at 9,060 keys (with 1,445 named PortBlocked exclusions), the
+Proof bag imported at 749 / 43,390 with every absent packet named, the
+Deferred bag untouched at 118 / 5,595 plus 18,840 encoding, the known-loss
+ledger immutable, and the reconciliation exact at multiplicity one in both
+feature modes. The whole CM3 test layer — the new `coverage/`, `ledger/`,
+`fixtures/obligations/` and `inventory/obligations/` files plus the additive
+interfaces, the ruled production accessors and the maintenance cells —
+lands in this commit. CM4 (mutants and promotions) follows after this gate,
+then CM5 (integration).

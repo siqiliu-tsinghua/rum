@@ -1,0 +1,1 @@
+InputString["c7prior"];Set[c7f[c7a,Input["c7tail"]],Input["c7rhs"]]

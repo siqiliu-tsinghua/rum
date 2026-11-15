@@ -1,0 +1,1 @@
+log={};scope=17;c23levelonce=True;c23level:=If[c23levelonce,(c23levelonce=False;(Input["finish"];Input["finish2"])),{2}];

@@ -1,0 +1,1 @@
+Block[{scope=23},AppendTo[log,701];c20answer=(MatchQ[c20pair[17,23,29],c20pair[c20build[x_],y_]]);AppendTo[log,709];{c20answer,log}]

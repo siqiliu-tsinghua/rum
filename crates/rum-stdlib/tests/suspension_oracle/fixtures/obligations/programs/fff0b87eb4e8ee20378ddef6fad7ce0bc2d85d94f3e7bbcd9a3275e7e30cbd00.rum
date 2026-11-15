@@ -1,0 +1,1 @@
+Catch[((Global`c621owner[]:=((Block[{Global`scope=23},Catch[Catch[WithCleanup[Throw[73,tag],Throw[99,tag]],Global`catchPattern],tag]]);AppendTo[Global`log,"621.answer.tail"];769);Global`c621owner[])),Global`c621tag]

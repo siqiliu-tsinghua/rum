@@ -1,0 +1,1 @@
+log={};scope=17;c25guardonce=True;c25guard:=If[c25guardonce,(c25guardonce=False;Input["finish"]),True];c25owned:=(Return[91]/;c25guard);

@@ -1,0 +1,1 @@
+Do[Global`c6result=TagSet[c6a,c6f[c6a],Input["c6rhs"]];Global`c6suffix=1;Return[Global`c6result],{1}]

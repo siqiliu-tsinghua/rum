@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.tail.before"];Global`c621value=(Block[{Global`scope=23},Cases[{1,2,3,4,5},List,{1}]]);AppendTo[Global`log,"621.tail.after"];Global`c621value)

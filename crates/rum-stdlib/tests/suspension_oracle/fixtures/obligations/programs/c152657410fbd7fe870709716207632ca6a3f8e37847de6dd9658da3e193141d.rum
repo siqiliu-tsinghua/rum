@@ -1,0 +1,1 @@
+Do[c18answer=(CatchExceptions[ThrowException["Exception",<|"a"->17|>],{Exception["Exception",p_?Function[z,(InputString["match"];True)]]:>((AppendTo[log,89];p["a"])/;(Input["finish"]))}]);Return[c18answer],{1}]

@@ -1,0 +1,1 @@
+Catch[(Input["finish"];Input["finish2"]),_,Function[{value,tag},value]]

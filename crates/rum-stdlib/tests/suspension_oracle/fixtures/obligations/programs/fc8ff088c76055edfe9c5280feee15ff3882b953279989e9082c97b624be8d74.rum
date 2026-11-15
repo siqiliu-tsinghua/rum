@@ -1,0 +1,1 @@
+Block[{Global`c6scope=23},(AppendTo[Global`log,701];Global`c6result=UpSet[c6f[c6a],Input["c6rhs"]];AppendTo[Global`log,709];Global`c6suffix=1;Global`c6result)]

@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c24answer=(ReplacePart[{11,17,19},2:>(91/;c24guard)]);AppendTo[log,709];{c24answer,log}

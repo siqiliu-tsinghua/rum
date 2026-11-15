@@ -1,0 +1,1 @@
+Block[{scope=2},Catch[Catch[WithCleanup[Throw[1,tag],Throw[2,tag]],(_/;(x;True))],tag]]

@@ -1,0 +1,1 @@
+Do[Global`c7result=Monitor[73,0];Global`c7suffix=1;Return[Global`c7result],{1}]

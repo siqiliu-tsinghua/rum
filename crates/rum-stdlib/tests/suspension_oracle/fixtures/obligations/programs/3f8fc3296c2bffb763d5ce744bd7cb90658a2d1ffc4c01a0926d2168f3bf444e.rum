@@ -1,0 +1,1 @@
+Do[c14answer=((c14assoc[[Input["selector"],(Input["finish"];Input["finish2"])]]=89;c14assoc));Return[c14answer],{1}]

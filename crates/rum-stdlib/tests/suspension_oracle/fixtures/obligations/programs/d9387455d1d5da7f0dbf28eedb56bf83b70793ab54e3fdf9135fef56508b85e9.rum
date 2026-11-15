@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c17answer=(ReplaceRepeated[17,{17:>c17gate[],89->97},MaxIterations->4]);AppendTo[log,709];{c17answer,log}

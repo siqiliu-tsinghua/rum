@@ -1,0 +1,1 @@
+Hold[71,Evaluate[DeleteMissing[<|"a":>Input["finish"],"b"->Missing[]|>,1,1]],79]

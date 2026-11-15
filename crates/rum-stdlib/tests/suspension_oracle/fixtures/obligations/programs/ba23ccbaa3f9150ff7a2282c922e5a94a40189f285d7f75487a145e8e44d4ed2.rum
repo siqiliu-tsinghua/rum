@@ -1,0 +1,1 @@
+InputString["prior"];Do[c14answer=(MatchQ[c14seq[71,79],c14seq[x__?c14pred,83]]);Return[c14answer],{1}]

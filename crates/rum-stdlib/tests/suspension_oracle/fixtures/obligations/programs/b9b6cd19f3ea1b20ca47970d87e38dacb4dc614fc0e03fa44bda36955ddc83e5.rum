@@ -1,0 +1,1 @@
+Block[{scope=23},ReplaceRepeated[17,{(17/;Input["finish"]):>89,89->97},MaxIterations->4]]

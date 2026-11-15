@@ -1,0 +1,1 @@
+Block[{scope=23},FreeQ[{17},x_?c19test]]

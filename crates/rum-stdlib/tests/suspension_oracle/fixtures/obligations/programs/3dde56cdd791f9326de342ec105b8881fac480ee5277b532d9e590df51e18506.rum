@@ -1,0 +1,1 @@
+(Global`c621owner[]:=((Unprotect[Monitor];SetOptions[Monitor,EvaluationMonitor->v];v:=(AppendTo[Global`log,2];(InputString["p: "];Return[761]);None);Monitor[(AppendTo[Global`log,3];77),0]);AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])

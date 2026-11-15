@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c16answer=(Normal[LazyTake[LazyMap[Function[x,Input["finish"]],LazyRange[17,1]],1]]);Return[c16answer],{1}]]

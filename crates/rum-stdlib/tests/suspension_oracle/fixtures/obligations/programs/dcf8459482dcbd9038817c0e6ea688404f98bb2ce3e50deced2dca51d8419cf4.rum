@@ -1,0 +1,1 @@
+Do[c16answer=(Normal[LazyTake[LazyNestList[Function[x,(Input["finish"];Input["finish2"])],17],1]]);Return[c16answer],{1}]

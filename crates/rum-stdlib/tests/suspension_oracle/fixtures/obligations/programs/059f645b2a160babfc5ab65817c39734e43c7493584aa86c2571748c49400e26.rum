@@ -1,0 +1,1 @@
+InputString["prior"];Hold[71,Evaluate[Differences[{c16x,19,23},2]],79]

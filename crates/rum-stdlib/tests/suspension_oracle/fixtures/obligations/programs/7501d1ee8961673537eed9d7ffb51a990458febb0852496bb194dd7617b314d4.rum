@@ -1,0 +1,1 @@
+log={};scope=17;c15index=0;c15pred[x_]:=(c15index=c15index+1;If[c15index==1,(InputString["first"];True),(Input["finish"];Input["finish2"])]);

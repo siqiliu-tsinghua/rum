@@ -1,0 +1,1 @@
+Block[{scope=23},Position[{11,17,19},x_Integer/;If[x==17,c24guard,False],{1}]]

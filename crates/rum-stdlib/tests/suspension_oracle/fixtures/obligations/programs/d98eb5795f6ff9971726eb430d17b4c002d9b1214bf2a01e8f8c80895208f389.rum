@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c15answer=(Position[{71,73},_?c15pred,{1},Heads->False]);Return[c15answer],{1}]]

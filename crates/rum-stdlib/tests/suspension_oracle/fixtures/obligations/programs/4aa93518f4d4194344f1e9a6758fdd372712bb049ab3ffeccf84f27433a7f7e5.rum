@@ -1,0 +1,1 @@
+Hold[71,Evaluate[(Global`sequence=LazyDrop[LazyTake[LazyNestList[Global`f,1],5],2];Global`before=Global`state;Normal[Global`sequence])],79]

@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c15answer=(Reap[Sow[83,71],_?c15pred]);AppendTo[log,709];{c15answer,log}

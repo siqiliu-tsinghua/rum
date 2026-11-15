@@ -1,0 +1,1 @@
+Do[c32answer=(C32RetainedPrefix[(Input["finish"];Input["finish2"])]);Return[c32answer],{1}]

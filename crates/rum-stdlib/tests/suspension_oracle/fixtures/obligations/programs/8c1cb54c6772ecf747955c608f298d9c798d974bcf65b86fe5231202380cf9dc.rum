@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c16answer=(SchemaErrors[17,_?Function[x,Input["finish"]]]);AppendTo[log,709];{c16answer,log}

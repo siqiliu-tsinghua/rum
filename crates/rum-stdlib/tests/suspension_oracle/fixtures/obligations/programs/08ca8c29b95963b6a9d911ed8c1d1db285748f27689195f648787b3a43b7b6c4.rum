@@ -1,0 +1,1 @@
+Block[{scope=23},Hold[71,Evaluate[Count[{17},x_?c19test]],79]]

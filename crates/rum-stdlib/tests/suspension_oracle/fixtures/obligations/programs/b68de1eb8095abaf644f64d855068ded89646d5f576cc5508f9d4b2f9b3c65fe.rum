@@ -1,0 +1,1 @@
+InputString["prior"];Catch[Input["finish"],_,Function[{value,tag},value]]

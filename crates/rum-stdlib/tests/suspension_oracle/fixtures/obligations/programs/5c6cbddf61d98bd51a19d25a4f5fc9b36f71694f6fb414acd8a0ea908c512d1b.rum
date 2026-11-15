@@ -1,0 +1,1 @@
+Do[c17answer=(ReplaceRepeated[17,{(17/;(Input["finish"];Input["finish2"])):>89,89->97},MaxIterations->4]);Return[c17answer],{1}]

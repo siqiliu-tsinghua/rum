@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c16answer=(Differences[{c16x,19,23},2]);Return[c16answer],{1}]]

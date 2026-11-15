@@ -1,0 +1,1 @@
+Block[{scope=23},AppendTo[log,701];c16answer=(Normal[LazySelect[Function[x,Input["finish"]],LazyTake[LazyRange[17,1],1]]]);AppendTo[log,709];{c16answer,log}]

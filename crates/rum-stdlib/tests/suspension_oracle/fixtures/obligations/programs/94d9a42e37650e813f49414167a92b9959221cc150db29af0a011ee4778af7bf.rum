@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.tail.before"];Global`c621value=((Global`assoc[(AppendTo[Global`log,1];Global`state=1;InputString["association selector:1"];"a";Nothing),(AppendTo[Global`log,2];Global`state=2;InputString["association selector:2"];"b";Nothing)]=9;Throw["completion boom","completion tag"]));AppendTo[Global`log,"621.tail.after"];Global`c621value)

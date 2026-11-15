@@ -1,0 +1,1 @@
+AppendTo[log,1];answer=Default[d];AppendTo[log,3];{answer,log}

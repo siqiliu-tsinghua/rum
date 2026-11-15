@@ -1,0 +1,1 @@
+InputString["prior"];Do[c22answer=(c22up[c22tag,23]);Return[c22answer],{1}]

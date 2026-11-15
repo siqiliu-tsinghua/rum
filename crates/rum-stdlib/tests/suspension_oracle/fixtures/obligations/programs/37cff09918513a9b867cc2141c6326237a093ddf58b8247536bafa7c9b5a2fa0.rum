@@ -1,0 +1,1 @@
+Catch[((Global`c621owner[]:=((n=0;Default[d]:=7/;(n=n+1;AppendTo[Global`log,n];If[n==1,(InputString["p: "];Throw[763,Global`c621tag])];n>=2);Default[d]);AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])),Global`c621tag]

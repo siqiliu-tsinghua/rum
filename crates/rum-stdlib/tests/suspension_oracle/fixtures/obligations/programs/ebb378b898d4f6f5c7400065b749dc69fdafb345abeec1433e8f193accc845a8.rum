@@ -1,0 +1,1 @@
+InputString["prior"];Trace[1+2,_?c15pred]

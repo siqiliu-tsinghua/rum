@@ -1,0 +1,1 @@
+Block[{Global`scope=23},Cases[{1,2,3,4,5},List,{1}]]

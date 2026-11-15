@@ -1,0 +1,1 @@
+Block[{Global`c7scope=23},Do[Global`c7result=MemberQ[c7f[1],c7f,{0,Infinity}];Global`c7suffix=1;Return[Global`c7result],{1}]]

@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.before"];Global`c621value=(InputString["functional caller"];Global`sequence=LazyDrop[LazyTake[LazyNestList[Global`f,1],5],2];Global`before=Global`state;Normal[Global`sequence]);AppendTo[Global`log,"621.after"];Global`c621value)

@@ -1,0 +1,1 @@
+DeleteMissing[<|"a":>Input["finish"],"b"->Missing[]|>,1,1]

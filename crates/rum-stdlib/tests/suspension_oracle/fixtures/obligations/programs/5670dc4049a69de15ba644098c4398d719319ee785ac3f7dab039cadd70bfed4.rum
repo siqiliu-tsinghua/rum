@@ -1,0 +1,1 @@
+Block[{scope=23},AppendTo[log,701];c14answer=((c14assoc[Input["selector"],Input["finish"]]=89;c14assoc));AppendTo[log,709];{c14answer,log}]

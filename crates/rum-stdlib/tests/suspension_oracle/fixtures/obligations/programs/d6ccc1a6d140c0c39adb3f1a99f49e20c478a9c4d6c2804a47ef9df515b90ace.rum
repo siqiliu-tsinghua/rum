@@ -1,0 +1,1 @@
+log={};scope=17;c18cycle:=(Input["finish"];c18cycle);TagSetDelayed[c18a,c18up[c18a,x_],(c18cycle)/;(InputString["match"];True)];

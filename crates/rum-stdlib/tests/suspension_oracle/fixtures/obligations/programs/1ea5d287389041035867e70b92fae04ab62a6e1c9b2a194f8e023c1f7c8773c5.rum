@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c14answer=(MatchQ[c14seq[71,79],c14seq[x__?c14pred,83]]);AppendTo[log,709];{c14answer,log}

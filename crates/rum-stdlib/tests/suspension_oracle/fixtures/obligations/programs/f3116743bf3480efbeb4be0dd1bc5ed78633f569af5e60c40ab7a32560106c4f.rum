@@ -1,0 +1,1 @@
+InputString["prior"];Hold[71,Evaluate[ReplaceRepeated[17,{17:>c17gate[],89->97},MaxIterations->4]],79]

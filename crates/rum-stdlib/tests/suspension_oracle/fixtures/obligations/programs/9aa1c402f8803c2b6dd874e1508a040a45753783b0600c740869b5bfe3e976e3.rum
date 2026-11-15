@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c21answer=(Position[{11,{17},{23}},_Integer,c21level]);Return[c21answer],{1}]]

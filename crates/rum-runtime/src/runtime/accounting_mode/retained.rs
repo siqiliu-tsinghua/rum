@@ -232,3 +232,10 @@ impl<'id, M: RetentionMode> RetainedResult<'id, M> {
         }
     }
 }
+
+#[doc(hidden)]
+impl RetainedValues<'_, AccountingShadow> {
+    pub fn actual_receipt_bytes(&self) -> Option<usize> {
+        AccountingShadow::bytes(&self.receipt)
+    }
+}

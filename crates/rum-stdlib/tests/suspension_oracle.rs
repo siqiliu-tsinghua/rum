@@ -4,6 +4,13 @@
 mod host_facade;
 pub use host_facade::*;
 
+extern crate self as rum_host;
+#[path = "../../rum-jupyter/src/model.rs"]
+mod kernel_model;
+pub use kernel_model::*;
+#[path = "suspension_oracle/adapter_facade.rs"]
+mod adapter_facade;
+
 #[path = "suspension_oracle/mod.rs"]
 mod oracle;
 

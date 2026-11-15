@@ -1,0 +1,1 @@
+Hold[71,Evaluate[DeleteCases[{1,2,3},_Integer,{1}]],79]

@@ -1582,7 +1582,10 @@ pub(super) const PURE_FRAME_ABANDON_TYPES: &[&str] = &[
 ];
 
 // Explicit integration-test population; production inventories stay unchanged.
-pub(super) const FIXTURE_FRAME_ROOT_TRACE_TYPES: &[&str] =
-    &["crates/rum-stdlib/tests/suspension_oracle/mutations/driver.rs:OracleFoldFrame"];
+pub(super) const FIXTURE_FRAME_ROOT_TRACE_TYPES: &[&str] = &[
+    "crates/rum-stdlib/tests/suspension_oracle/fixtures/obligations/native.rs:CallbackFinish",
+    "crates/rum-stdlib/tests/suspension_oracle/fixtures/obligations/native.rs:PrefixFinish",
+    "crates/rum-stdlib/tests/suspension_oracle/mutations/driver.rs:OracleFoldFrame",
+];
 pub(super) const FIXTURE_PURE_FRAME_ABANDON_TYPES: &[&str] =
     &["crates/rum-stdlib/tests/suspension_oracle/mutations/driver.rs:OracleFoldFrame"];

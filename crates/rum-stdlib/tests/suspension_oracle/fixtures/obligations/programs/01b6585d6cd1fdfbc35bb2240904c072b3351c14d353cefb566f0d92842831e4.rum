@@ -1,0 +1,1 @@
+Catch[((Global`c621owner[]:=((a /: Times[-1,a] := (AppendTo[Global`log,2];(Input["p: "];Throw[763,Global`c621tag]));Differences[{1,a,3,4}]);AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])),Global`c621tag]

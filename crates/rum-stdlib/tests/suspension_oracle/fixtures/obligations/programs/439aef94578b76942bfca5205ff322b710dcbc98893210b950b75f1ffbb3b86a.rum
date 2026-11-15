@@ -1,0 +1,1 @@
+InputString["prior"];Hold[71,Evaluate[MatchQ[c20pair[17,23,29],c20pair[c20build[x_],y_]]],79]

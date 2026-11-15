@@ -1,0 +1,1 @@
+InputString["prior"];Hold[71,Evaluate[Normal[LazyTake[LazyNestList[Function[x,Input["finish"]],17],1]]],79]

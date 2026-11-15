@@ -1,0 +1,1 @@
+InputString["c7prior"];Hold[71,Evaluate[Set[c7f[c7a,Input["c7tail"]],Input["c7rhs"]]],79]

@@ -1,0 +1,1 @@
+log={};scope=17;c21levelonce=True;c21targetonce=True;c21level:=If[c21levelonce,(c21levelonce=False;Input["finish"]),{2}];

@@ -1,0 +1,1 @@
+(Global`c621owner[]:=((Block[{Global`scope=73},Global`assoc[(AppendTo[Global`log,1];Global`state=1;InputString["association selector:1"];"a"),(AppendTo[Global`log,2];Global`state=2;(InputString["association selector:2"];Return[761]);"b")]=9]);AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])

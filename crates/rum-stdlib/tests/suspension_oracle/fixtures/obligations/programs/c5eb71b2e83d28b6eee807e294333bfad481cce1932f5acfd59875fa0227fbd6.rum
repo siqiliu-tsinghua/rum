@@ -1,0 +1,1 @@
+Block[{scope=23},AppendTo[log,701];c16answer=(Normal[LazyTake[LazyNestList[Function[x,Input["finish"]],17],1]]);AppendTo[log,709];{c16answer,log}]

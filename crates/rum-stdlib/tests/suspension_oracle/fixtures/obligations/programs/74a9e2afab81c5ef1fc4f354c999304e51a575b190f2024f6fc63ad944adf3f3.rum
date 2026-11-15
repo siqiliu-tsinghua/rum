@@ -1,0 +1,1 @@
+InputString["c7prior"];Do[Global`c7result=DumpSave["/oracle/saved.rum","OracleSaved`"];Global`c7suffix=1;Return[Global`c7result],{1}]

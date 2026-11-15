@@ -1,0 +1,1 @@
+log={};scope=17;c19count=0;c19registered[x_]:=(89/;(InputString["first"];True))/;(If[c19count++==0,((Input["finish"];Input["finish2"])),True]);

@@ -1,0 +1,1 @@
+Hold[71,Evaluate[Count[(Input["target"];Input["target2"]),_Integer,{1},Heads->False]],79]

@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.before"];Global`c621value=(Block[{Global`scope=23},AssociateTo[Global`target[1],6->60]]);AppendTo[Global`log,"621.after"];Global`c621value)

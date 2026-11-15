@@ -1,0 +1,1 @@
+Do[c24answer=(ReplacePart[{11,17,19},2:>(91/;c24guard)]);Return[c24answer],{1}]

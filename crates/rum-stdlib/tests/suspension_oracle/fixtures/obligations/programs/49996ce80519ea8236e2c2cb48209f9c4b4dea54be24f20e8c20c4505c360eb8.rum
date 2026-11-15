@@ -1,0 +1,1 @@
+AppendTo[log,701];c14answer=(FreeQ[(Input["target"];Input["target2"]),_Integer,{1},Heads->False]);AppendTo[log,709];{c14answer,log}

@@ -1,0 +1,1 @@
+InputString["c7prior"];Do[Global`c7result=Replace[{1,2,3},List->c7h,{1}];Global`c7suffix=1;Return[Global`c7result],{1}]

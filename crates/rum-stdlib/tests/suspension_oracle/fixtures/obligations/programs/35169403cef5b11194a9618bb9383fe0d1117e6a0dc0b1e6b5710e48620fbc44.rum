@@ -1,0 +1,1 @@
+Hold[71,Evaluate[Position[{11,17,19},x_Integer/;If[x==17,c24guard,False],{1}]],79]

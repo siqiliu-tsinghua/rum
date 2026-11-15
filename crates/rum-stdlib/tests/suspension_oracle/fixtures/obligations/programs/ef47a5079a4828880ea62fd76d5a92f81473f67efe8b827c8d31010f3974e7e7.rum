@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.before"];Global`c621value=((AppendTo[Global`log,"621.mid.before"];With[{Global`c621answer=InputString["functional caller"]},(AppendTo[Global`log,"621.mid.after"];Global`c621answer)]);ArrayFilter[Total,{1,2,3,4,5},1]);AppendTo[Global`log,"621.after"];Global`c621value)

@@ -1,0 +1,1 @@
+(Global`c621owner[]:=((Block[{Global`scope=23},Operate[Global`f,Global`h[1,2,3,4,5]]]);AppendTo[Global`log,"621.answer.tail"];769);Global`c621owner[])

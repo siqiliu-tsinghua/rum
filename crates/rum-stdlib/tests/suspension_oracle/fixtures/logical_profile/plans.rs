@@ -22,8 +22,13 @@ fn variant(v: &str) -> Variant {
     }
 }
 pub fn plans() -> Vec<Plan> {
+    from_rows(include_str!("plans.tsv"))
+}
+
+/// Reuse the canonical inheritance rules for authenticated CM plan rows.
+pub(crate) fn from_rows(text: &str) -> Vec<Plan> {
     let descriptors = super::super::primary::descriptors();
-    super::super::super::support::logical_profile::rows(include_str!("plans.tsv"), 12)
+    super::super::super::support::logical_profile::rows(text, 12)
         .unwrap()
         .into_iter()
         .map(|r| {

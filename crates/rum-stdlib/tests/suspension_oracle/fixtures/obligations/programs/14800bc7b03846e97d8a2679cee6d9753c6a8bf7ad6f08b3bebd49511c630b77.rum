@@ -1,0 +1,1 @@
+InputString["c7prior"];(AppendTo[Global`log,701];Global`c7result=c7f[c7a,2];AppendTo[Global`log,709];Global`c7suffix=1;Global`c7result)

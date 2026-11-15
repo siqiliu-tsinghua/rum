@@ -1,0 +1,1 @@
+Block[{Global`c7scope=23},Hold[71,Evaluate[Cases[Input["c7target"],List,{1}]],79]]

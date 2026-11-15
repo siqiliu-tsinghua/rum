@@ -1,0 +1,1 @@
+InputString["prior"];Do[c27answer=(7+(Input["finish"]));Return[c27answer],{1}]

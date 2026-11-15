@@ -1,0 +1,1 @@
+InputString["c7prior"];Do[Global`c7result=c7f[c7a,2];Global`c7suffix=1;Return[Global`c7result],{1}]

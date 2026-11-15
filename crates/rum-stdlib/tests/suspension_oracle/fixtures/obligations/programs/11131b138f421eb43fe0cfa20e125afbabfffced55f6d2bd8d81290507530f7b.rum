@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c23answer=(Count[{11,{17,19},{23}},_Integer,c23level]);AppendTo[log,709];{c23answer,log}

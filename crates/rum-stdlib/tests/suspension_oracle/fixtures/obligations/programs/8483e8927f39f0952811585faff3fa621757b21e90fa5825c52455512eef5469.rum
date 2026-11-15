@@ -1,0 +1,1 @@
+((native623owner[]:=(Catch[((AppendTo[log,"before"];InputString["native623.one"];AppendTo[log,"middle"];InputString["native623.two"];AppendTo[log,"after"];Return[41])),Global`native623tag];AppendTo[log,"outer tail"];47);native623owner[]);Print["c52.cancel"];Null)

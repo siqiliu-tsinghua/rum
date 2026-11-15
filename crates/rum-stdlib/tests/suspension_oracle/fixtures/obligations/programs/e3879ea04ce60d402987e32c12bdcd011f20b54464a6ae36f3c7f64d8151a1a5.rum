@@ -1,0 +1,1 @@
+AppendTo[log,701];c17answer=(ReplaceRepeated[17,{(17/;(Input["finish"];Input["finish2"])):>89,89->97},MaxIterations->4]);AppendTo[log,709];{c17answer,log}

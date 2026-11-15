@@ -1,0 +1,1 @@
+InputString["prior"];ReplacePart[{1,2},{i_}:>(((0/;(InputString["first"];True))/;If[i==2,(InputString["later"];True),Input["finish"]])/;If[i==2,True,(AppendTo[log,707];False)])]

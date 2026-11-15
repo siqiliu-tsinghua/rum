@@ -1,0 +1,1 @@
+AppendTo[log,701];c7result=C8FixedPointStep[Input["c8step1"],1,4];AppendTo[log,709];c7result

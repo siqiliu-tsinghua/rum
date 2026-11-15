@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.before"];Global`c621value=(InputString["associations caller"];Default[Global`oracleDefault]);AppendTo[Global`log,"621.after"];Global`c621value)

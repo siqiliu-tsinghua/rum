@@ -1,0 +1,1 @@
+AppendTo[log,701];c12answer=(c12f[Input["rule"]]);AppendTo[log,709];{c12answer,log}

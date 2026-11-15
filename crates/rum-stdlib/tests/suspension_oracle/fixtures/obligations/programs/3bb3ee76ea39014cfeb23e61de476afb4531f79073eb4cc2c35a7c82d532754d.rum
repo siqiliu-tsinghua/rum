@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.tail.before"];Global`c621value=((InputString["functional caller"];Nothing);Accumulate[{0,Global`a,Global`a,Global`a,Global`a,Global`a}]);AppendTo[Global`log,"621.tail.after"];Global`c621value)

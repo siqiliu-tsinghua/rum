@@ -1,0 +1,1 @@
+Normal[LazyTake[LazyNestList[Function[x,(Input["finish"];Input["finish2"])],17],1]]

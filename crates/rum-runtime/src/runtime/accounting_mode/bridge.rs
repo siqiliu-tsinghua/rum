@@ -259,3 +259,10 @@ impl<'id, M: Mode> CallbackFailure<'_, 'id, M> {
         })
     }
 }
+
+#[doc(hidden)]
+impl CallbackValue<'_, '_, AccountingShadow> {
+    pub fn actual_receipt_bytes(&self) -> Option<usize> {
+        AccountingShadow::bytes(&self.receipt)
+    }
+}

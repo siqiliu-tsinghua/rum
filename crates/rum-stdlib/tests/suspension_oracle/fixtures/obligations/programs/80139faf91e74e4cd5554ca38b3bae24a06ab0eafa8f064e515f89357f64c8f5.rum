@@ -1,0 +1,1 @@
+AppendTo[log,701];c19answer=(Count[{17},x_?c19test]);AppendTo[log,709];{c19answer,log}

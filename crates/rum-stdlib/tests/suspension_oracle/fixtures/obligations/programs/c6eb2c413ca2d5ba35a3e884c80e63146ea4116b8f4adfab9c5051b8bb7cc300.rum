@@ -1,0 +1,1 @@
+InputString["prior"];Do[c17answer=(c17rhs);Return[c17answer],{1}]

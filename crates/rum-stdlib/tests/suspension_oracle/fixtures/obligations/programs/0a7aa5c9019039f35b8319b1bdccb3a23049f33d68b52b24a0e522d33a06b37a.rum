@@ -1,0 +1,1 @@
+Block[{scope=23},Cases[(If[c21targetonce,(c21targetonce=False;InputString["target"])];{11,{17},{23}}),_Integer,c21level]]

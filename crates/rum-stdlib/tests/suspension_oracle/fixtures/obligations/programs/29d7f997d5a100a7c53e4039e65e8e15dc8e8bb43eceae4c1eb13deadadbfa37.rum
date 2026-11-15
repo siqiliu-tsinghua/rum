@@ -1,0 +1,1 @@
+log={};scope=17;c26guardonce=True;c26preonce=True;c26guard:=If[c26guardonce,(c26guardonce=False;Input["finish"]),True];c26first:=If[c26preonce,(c26preonce=False;InputString["entry"];False),False];Default[c26d]:=(13/;c26first);Default[c26d,1]:=(Return[91]/;c26guard);

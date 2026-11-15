@@ -1,0 +1,1 @@
+InputString["prior"];Do[c17answer=(CatchExceptions[(InputString["body"];ThrowException["Exception",<|"a"->17|>]),{(Exception["Exception",p_?Function[x,Input["finish"]]]):>(AppendTo[log,89];p["a"])}]);Return[c17answer],{1}]

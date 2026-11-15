@@ -1,0 +1,1 @@
+Block[{scope=23},AppendTo[log,701];c28answer=(7+(Input["finish"]));AppendTo[log,709];{c28answer,log}]

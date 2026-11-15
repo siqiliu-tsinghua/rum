@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c16answer=(Normal[LazyTake[LazyMap[Function[x,Input["finish"]],LazyRange[17,1]],1]]);AppendTo[log,709];{c16answer,log}

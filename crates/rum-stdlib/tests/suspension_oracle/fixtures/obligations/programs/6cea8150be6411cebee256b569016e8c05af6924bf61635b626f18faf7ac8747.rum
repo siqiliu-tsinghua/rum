@@ -1,0 +1,1 @@
+InputString["prior"];Do[c15answer=(DeleteMissing[{<|"a":>Input["finish"],"b"->Missing[]|>,83},2,1]);Return[c15answer],{1}]

@@ -1,0 +1,1 @@
+InputString["c7prior"];DeleteCases[{1,2,3},_Integer,{1}]

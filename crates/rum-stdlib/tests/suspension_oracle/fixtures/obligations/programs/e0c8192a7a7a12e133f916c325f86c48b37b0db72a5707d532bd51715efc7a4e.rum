@@ -1,0 +1,1 @@
+InputString["c6prior"];(AppendTo[Global`log,701];Global`c6result=TagSet[c6a,c6f[c6a],Input["c6rhs"]];AppendTo[Global`log,709];Global`c6suffix=1;Global`c6result)

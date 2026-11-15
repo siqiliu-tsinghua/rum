@@ -1,0 +1,1 @@
+InputString["prior"];Do[c19answer=(Catch[Catch[WithCleanup[Throw[71,c19tag[1]],Throw[79,c19tag[1]]],c19tag[x_]/;(Input["finish"])],_]);Return[c19answer],{1}]

@@ -1,0 +1,1 @@
+InputString["c7prior"];Cases[Input["c7target"],List,{1}]

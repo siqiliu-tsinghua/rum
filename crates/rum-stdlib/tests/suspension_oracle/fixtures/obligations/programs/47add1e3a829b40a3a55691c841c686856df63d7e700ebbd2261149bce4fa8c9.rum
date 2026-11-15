@@ -1,0 +1,1 @@
+(saved={};Do[Clear[native623slot];AppendTo[saved,(Catch[((AppendTo[log,"before"];InputString["native623.one"];AppendTo[log,"after"];13)),Global`native623tag])],{2}];saved)

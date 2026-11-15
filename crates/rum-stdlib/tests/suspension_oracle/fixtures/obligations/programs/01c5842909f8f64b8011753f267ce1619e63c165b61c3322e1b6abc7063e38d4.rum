@@ -1,0 +1,1 @@
+Do[c16answer=(Replace[17,(x:(_?Function[z,(Input["finish"];Input["finish2"])])):>x]);Return[c16answer],{1}]

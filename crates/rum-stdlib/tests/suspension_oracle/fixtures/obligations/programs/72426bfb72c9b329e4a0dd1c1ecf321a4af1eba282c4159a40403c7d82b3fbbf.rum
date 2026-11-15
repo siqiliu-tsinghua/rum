@@ -1,0 +1,1 @@
+AppendTo[log,701];c17answer=(c17result=(c17target[[Input["finish"]]]=89);{c17result,c17target});AppendTo[log,709];{c17answer,log}

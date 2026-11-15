@@ -1,0 +1,1 @@
+Catch[((Global`c621owner[]:=((InputString["control caller"];Catch[Throw[73,tag],Global`catchPattern]);AppendTo[Global`log,"621.answer.tail"];769);Global`c621owner[])),Global`c621tag]

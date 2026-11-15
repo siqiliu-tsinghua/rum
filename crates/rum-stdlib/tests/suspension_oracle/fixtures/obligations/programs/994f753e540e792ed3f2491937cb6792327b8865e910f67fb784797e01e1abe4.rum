@@ -1,0 +1,1 @@
+Do[Global`c7result=Set[c7f[c7a,(Input["c7tail"];Input["c7tail2"])],Input["c7rhs"]];Global`c7suffix=1;Return[Global`c7result],{1}]

@@ -1,0 +1,1 @@
+Block[{Global`c7scope=23},DeleteCases[{1,2,3},_Integer,{1}]]

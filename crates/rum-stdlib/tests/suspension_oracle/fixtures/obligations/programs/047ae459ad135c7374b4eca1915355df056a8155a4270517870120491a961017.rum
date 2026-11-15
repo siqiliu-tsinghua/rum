@@ -1,0 +1,1 @@
+AppendTo[log,701];c24answer=(Position[{11,17,19},x_Integer/;If[x==17,c24guard,False],{1}]);AppendTo[log,709];{c24answer,log}

@@ -1,0 +1,1 @@
+(Global`c621owner[]:=((a /: Times[a,x_] := (AppendTo[Global`log,x];If[Or[SameQ[Length[Global`log],2],SameQ[Length[Global`log],4]],(InputString["p: "];Return[761]),Null];x);Dot[{{a,a},{a,a}},{{1,2},{3,4}},{{3,0},{0,3}}]);AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])

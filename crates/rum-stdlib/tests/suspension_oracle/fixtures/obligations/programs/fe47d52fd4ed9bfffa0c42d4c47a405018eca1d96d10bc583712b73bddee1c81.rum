@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.tail.before"];Global`c621value=((InputString["associations caller"];Sequence[1,2]);KeyMap[Global`keyCallback,Association[Rule[1, 10], Rule[2, 20], Rule[3, 30], Rule[4, 40], Rule[5, 50]]]);AppendTo[Global`log,"621.tail.after"];Global`c621value)

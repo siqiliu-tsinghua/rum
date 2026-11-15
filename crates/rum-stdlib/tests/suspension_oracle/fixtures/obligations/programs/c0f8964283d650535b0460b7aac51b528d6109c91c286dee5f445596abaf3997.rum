@@ -1,0 +1,1 @@
+InputString["prior"];Reap[Sow[83,71],_?c15pred]

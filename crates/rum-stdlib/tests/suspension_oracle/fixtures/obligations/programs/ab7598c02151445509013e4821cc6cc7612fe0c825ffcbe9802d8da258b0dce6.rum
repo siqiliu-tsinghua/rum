@@ -1,0 +1,1 @@
+(Global`c621owner[]:=((n=0;Default[d]:=7/;(n=n+1;AppendTo[Global`log,n];If[n==1,(InputString["p: "];Return[761])];n>=2);Default[d]);AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])

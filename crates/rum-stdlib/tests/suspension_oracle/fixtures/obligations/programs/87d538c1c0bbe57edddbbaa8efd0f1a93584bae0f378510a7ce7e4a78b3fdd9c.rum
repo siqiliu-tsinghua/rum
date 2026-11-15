@@ -1,0 +1,1 @@
+Do[c14answer=(FreeQ[(Input["target"];Input["target2"]),_Integer,{1},Heads->False]);Return[c14answer],{1}]

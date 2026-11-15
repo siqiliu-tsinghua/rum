@@ -1,0 +1,1 @@
+InputString["prior"];Do[c12answer=(c12f[Input["rule"]]);Return[c12answer],{1}]

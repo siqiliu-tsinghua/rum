@@ -1,0 +1,1 @@
+InputString["prior"];Do[c17answer=(c17result=AddTo[c17target[[Input["finish"]]],89];{c17result,c17target});Return[c17answer],{1}]

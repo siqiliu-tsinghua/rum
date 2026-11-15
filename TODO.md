@@ -247,8 +247,20 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   fresh bounded continuation with the two sealed `c2_probe.rs` copies
   (`source-…-{real,mutant}`, both `512785d2…`) as the only inputs and
   the handoff read as outside the counted epoch, then the same
-  continuation carries the two 30-key matrices and the last 60 keys;
-  then CM4-CM5.
+  continuation carries the two 30-key matrices and the last 60 keys. The
+  twenty-first run closed CM3 (accepted 2026-11-16): both sealed witness
+  copies (`512785d2…`) authenticated, the Q21/Q22 facade landed, both
+  30-key matrices passed in both arms (`own_Output=30`, 90 native controls
+  per row), and the campaign completed at 151 rows / 9,060 keys over 68
+  families (175 required rows / 10,505 keys; 24 excluded rows / 1,445 keys;
+  proofs 749 / 43,390 with 36 current-blocked and 598 absent records;
+  deferred 118 / 5,595 plus 18,840 encoding; 51 Open owners; no settlement,
+  promotion, SAME or encoding). The first live matrix's cross-process
+  Symbol-ID assertion is preserved as a failed attempt and was corrected to
+  sealed ten-field value pins with all prior provenance rows and historical
+  native pins intact; maintenance replayed only derived cells; the complete
+  schedule is 738.69 s / 736.49 s per build+run under the 1,500 s cap; the
+  whole CM3 test layer lands in this commit. Then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

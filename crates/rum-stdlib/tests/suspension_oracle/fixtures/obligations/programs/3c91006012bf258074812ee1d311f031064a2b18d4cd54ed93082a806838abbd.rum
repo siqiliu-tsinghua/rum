@@ -1,0 +1,1 @@
+log={};scope=17;c22acceptonce=True;c22rejectonce=True;c22accept[z_]:=If[c22acceptonce,(c22acceptonce=False;(Input["finish"];Input["finish2"])),True];TagSetDelayed[c22tag,c22up[c22tag,x_?c22accept],x+100];c22reject[z_]:=(If[c22rejectonce,(c22rejectonce=False;InputString["reject"])];False);TagSetDelayed[c22tag,c22up[c22tag,x_Integer?c22reject],x+200];

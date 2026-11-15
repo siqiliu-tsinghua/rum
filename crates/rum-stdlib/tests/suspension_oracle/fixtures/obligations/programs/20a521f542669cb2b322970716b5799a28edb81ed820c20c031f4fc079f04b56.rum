@@ -1,0 +1,1 @@
+InputString["prior"];Do[c19answer=(FreeQ[{17},x_?c19test]);Return[c19answer],{1}]

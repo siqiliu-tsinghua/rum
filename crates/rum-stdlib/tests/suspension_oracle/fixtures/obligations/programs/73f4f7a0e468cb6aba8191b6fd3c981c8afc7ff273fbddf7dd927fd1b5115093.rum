@@ -1,0 +1,1 @@
+a/:h[a,x_]/;True:=(AppendTo[Global`log,"P0314.before"];InputString["625.bind.304.terminal:1"];AppendTo[Global`log,"P0314.after"];Return[9]);

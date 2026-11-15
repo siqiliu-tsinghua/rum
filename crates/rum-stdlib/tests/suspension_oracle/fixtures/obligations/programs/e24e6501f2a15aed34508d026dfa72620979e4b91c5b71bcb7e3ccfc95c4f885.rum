@@ -1,0 +1,1 @@
+Global`assoc[(AppendTo[Global`log,1];Global`state=1;InputString["association selector:1"];"a"),(AppendTo[Global`log,2];Global`state=2;InputString["association selector:2"];"b")]=9

@@ -1,0 +1,1 @@
+Catch[((Global`c621owner[]:=((Options[f]={a->9};f[x_,OptionsPattern[]]:=(AppendTo[Global`log,x];(InputString["p: "];Throw[763,Global`c621tag]);OptionValue[a]);{f[2],OptionValue[f,a]});AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])),Global`c621tag]

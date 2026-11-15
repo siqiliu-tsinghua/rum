@@ -1,0 +1,1 @@
+InputString["prior"];MemoryConstrained[C34CallbackCharge[Input["finish"]],100000000]

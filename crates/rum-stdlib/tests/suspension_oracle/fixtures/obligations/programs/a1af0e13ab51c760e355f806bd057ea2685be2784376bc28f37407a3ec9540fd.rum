@@ -1,0 +1,1 @@
+Global`log={};Global`c7reads=0;Global`c7scope=17;Global`c7suffix=0;Global`state=0;Global`scope=17;Global`local=19;Global`other=23;Global`count=0;C7Names`a=1;C7Names`b=2;OracleSaved`value=73;Unprotect[TestReport];SetOptions[TestReport,SameTest->Global`c7optionValue];Global`c7optionValue:=(Global`c7reads++;If[Global`c7reads==1,(AppendTo[Global`log,701];Input["c7option"]),SameQ]);

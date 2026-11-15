@@ -1,0 +1,1 @@
+InputString["prior"];Hold[71,Evaluate[FreeQ[Input["target"],_Integer,{1},Heads->False]],79]

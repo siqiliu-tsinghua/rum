@@ -1,0 +1,1 @@
+log={};scope=17;c24guardonce=True;c24guard:=If[c24guardonce,(c24guardonce=False;(Input["finish"];Input["finish2"])),True];

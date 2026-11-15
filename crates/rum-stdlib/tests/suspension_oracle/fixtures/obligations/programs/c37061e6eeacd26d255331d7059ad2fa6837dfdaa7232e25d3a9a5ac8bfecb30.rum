@@ -1,0 +1,1 @@
+InputString["c7prior"];Hold[71,Evaluate[Replace[{1,2,3},List->c7h,{1}]],79]

@@ -1,0 +1,1 @@
+log={};scope=17;c19firstn=0;c19lastn=0;c19first[]:=(c19firstn++;If[c19firstn==1,InputString["first"],True]);c19last[]:=(c19lastn++;If[c19lastn==1,(Input["finish"]),True]);c19suffix[x_]:=((89/;(c19first[];True))/;c19last[])/;(AppendTo[log,811];True);

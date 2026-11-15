@@ -1,0 +1,1 @@
+(Global`c621owner[]:=((Block[{Global`scope=23},ArrayFilter[Function[x,(Global`calls++;If[Global`calls==3,((AppendTo[Global`log,4];Print[4];Global`state=4;Global`answers+=(Input["ArrayFilter.defaultOption:4"];Return[761]);Total[x]);(AppendTo[Global`log,5];Print[5];Global`state=5;Total[x])),Total[x]])],{1,2,3,4,5},1]]);AppendTo[Global`log,"621.last.tail"];769);Global`c621owner[])

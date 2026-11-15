@@ -1,0 +1,1 @@
+Do[c17answer=(c17guarded[17]);Return[c17answer],{1}]

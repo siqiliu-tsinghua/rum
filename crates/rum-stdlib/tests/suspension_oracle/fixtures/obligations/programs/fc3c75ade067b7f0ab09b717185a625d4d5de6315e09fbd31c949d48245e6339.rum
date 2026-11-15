@@ -1,0 +1,1 @@
+(AppendTo[Global`log,"621.before"];Global`c621value=(InputString["debug caller"];Identity[Global`optionOwner[]]);AppendTo[Global`log,"621.after"];Global`c621value)

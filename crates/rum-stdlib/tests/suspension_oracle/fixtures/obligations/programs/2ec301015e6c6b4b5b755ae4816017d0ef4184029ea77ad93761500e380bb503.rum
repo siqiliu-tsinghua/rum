@@ -1,0 +1,1 @@
+Catch[Throw[71,c19tag[1]],c19tag[x_]/;((Input["finish"];Input["finish2"])),Function[{v,k},(AppendTo[log,73];v+1)]]

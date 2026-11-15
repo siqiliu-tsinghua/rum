@@ -1,0 +1,1 @@
+Block[{scope=23},Do[c18answer=(Catch[Input["finish"],_,Function[{value,tag},value]]);Return[c18answer],{1}]]

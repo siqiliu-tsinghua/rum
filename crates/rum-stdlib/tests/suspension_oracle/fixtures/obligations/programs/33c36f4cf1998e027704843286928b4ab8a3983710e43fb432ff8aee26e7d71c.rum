@@ -1,0 +1,1 @@
+InputString["prior"];Do[c15answer=(Count[{71,73},_?c15pred,{1},Heads->False]);Return[c15answer],{1}]

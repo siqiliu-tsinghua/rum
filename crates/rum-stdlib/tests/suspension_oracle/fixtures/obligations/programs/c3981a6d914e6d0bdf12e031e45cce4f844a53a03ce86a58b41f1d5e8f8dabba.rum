@@ -1,0 +1,1 @@
+Block[{scope=23},AppendTo[log,701];c25answer=(NormalizeRules[c25rules]);AppendTo[log,709];{c25answer,log}]

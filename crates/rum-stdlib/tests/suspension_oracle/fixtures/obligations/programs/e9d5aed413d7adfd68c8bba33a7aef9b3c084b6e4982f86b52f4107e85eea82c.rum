@@ -1,0 +1,1 @@
+AppendTo[log,701];c16answer=(Differences[{c16x,19,23},2]);AppendTo[log,709];{c16answer,log}

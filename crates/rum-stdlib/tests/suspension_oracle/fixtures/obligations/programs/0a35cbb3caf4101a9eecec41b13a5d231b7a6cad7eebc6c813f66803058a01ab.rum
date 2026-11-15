@@ -1,0 +1,1 @@
+Do[(Set[c7f[1],(Input["c10set"];Input["c10set2"])]);Return[c7f[1]],{1}]

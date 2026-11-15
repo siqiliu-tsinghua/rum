@@ -1,0 +1,1 @@
+Block[{Global`c7scope=23},Hold[71,Evaluate[ArrayFilter[Total,{1,2,3,4,5},1]],79]]

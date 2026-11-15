@@ -1,0 +1,1 @@
+InputString["prior"];AppendTo[log,701];c17answer=(OptionValue[c17opts,{a,b}]);AppendTo[log,709];{c17answer,log}

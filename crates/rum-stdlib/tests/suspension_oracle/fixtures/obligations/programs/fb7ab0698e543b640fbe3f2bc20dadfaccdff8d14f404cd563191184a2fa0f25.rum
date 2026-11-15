@@ -1,0 +1,1 @@
+log={};scope=17;c18cycle:=((Input["finish"];Input["finish2"]);c18cycle);c18sub[x_][y_]:=c18cycle;

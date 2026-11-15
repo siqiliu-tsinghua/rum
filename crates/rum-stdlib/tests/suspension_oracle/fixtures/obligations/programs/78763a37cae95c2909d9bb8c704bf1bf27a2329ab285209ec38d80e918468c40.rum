@@ -1,0 +1,1 @@
+log={};scope=17;c25rulesonce=True;c25rules:=If[c25rulesonce,(c25rulesonce=False;Input["finish"]),c25lhs:>(91/;False)];

@@ -1,0 +1,1 @@
+Block[{scope=23},AppendTo[log,701];c15answer=(DeleteMissing[{<|"a":>Input["finish"],"b"->Missing[]|>,83},2,1]);AppendTo[log,709];{c15answer,log}]

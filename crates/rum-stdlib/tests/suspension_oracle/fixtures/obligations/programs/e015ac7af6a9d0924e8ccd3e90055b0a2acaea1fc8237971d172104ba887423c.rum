@@ -1,0 +1,1 @@
+InputString["prior"];Rule[c21rulelhs[Input["finish"],x_],101]

@@ -1,0 +1,1 @@
+AppendTo[log,701];c16answer=(Replace[17,(x:(_?Function[z,(Input["finish"];Input["finish2"])])):>x]);AppendTo[log,709];{c16answer,log}

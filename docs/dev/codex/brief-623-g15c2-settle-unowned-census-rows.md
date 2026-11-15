@@ -115097,3 +115097,63 @@ Complete the C52 authentication with the sealed copies, then the Q21
 nested include and one driver, both 30-key matrices with the per-record
 `Output` direction and the controls, the 9,060-key campaign, and the
 complete schedule and acceptance under the 1,500 s bound.
+
+### Continuation 81 — twenty-first run: the 9,060-key campaign completes and CM3 is accepted; C2 stays Open at 118 Residual + 0 Lost
+
+**2026-11-16 — brief 739's twenty-first run executed continuation 20,
+completed the last 60 C52 keys in both feature modes and closed the
+9,060-key active campaign at 151 rows / 68 families, so CM3 is accepted.
+Nothing in this stage settles a C2 row, promotes an owner or runs an
+encoding key.**
+Run `cdx`, unit `brief-739-cdx-20261116-040525-1459659`, rc 0, peak
+13,176,016,896 B, oom 0 / oom_kill 0; log 3,628,686 B sha256 `5cbce1ca…`;
+report 421,531 B sha256 `6aaff600…`; 48 changes (37 added, 11 modified,
+0 deleted), 0 disclosures; 16 PASS / 4 FLAGGED / 0 FAIL; 5 deviations,
+0 questions; 2,009 citations verified.
+
+**What landed.** Both sealed witness copies (`512785d2…`, listed in the
+5,879-entry sealed `artifact-hashes.json`) were authenticated as provenance
+only, with the `c52.handoff` outside the counted epoch; the Q21/Q22 adapter
+facade includes the unchanged `adapter/mod.rs` and one nested include of the
+unchanged `worker.rs` with the single `observe_segment` driver; both 30-key
+matrices pass in both arms with the per-record sealed `Output` direction and
+the constant/missing/duplicate native controls (`own_Output=30`,
+`native_controls=90` per row, `sealed_invalid=0`, `native_fields=10`). The
+campaign now reads 175 required rows / 10,505 keys, 151 bound+executed rows /
+9,060 keys, 24 director-excluded rows / 1,445 keys named, 16,672 pauses and
+25,302 lifecycle observations, `encoding=0`, `full_CM_green=false`. Proofs
+stay 749 / 43,390 (151 / 8,255 packet-authenticated; 115 / 6,270 verified;
+36 / 1,985 current-blocked; 598 / 35,135 absent), deferred stays 118 rows /
+5,595 nonencoding plus 18,840 encoding, the five prior losses and the two C1
+promotions are unchanged, and 51 owners stay Open. The first live matrix's
+cross-process Symbol-ID assertion is preserved as a failed attempt and was
+corrected to sealed ten-field value pins (`c52-native-values`, 60 rows) with
+all 18,143 prior provenance rows and the 60 historical native pins intact.
+Maintenance replayed only derived cells (68 fingerprints, 4 certificate
+cells, ownership unchanged); the lane is rebuilt from the final tree (5,776
+files, 5,767 byte-identical, nine manifest edits, tree `5a5f6f4e…`); both
+workspace arms show only the nine documented loopback EPERM reds with zero
+unexplained reds, the oracle is 558/0/4 and the typed census 10/0/1 in both
+modes, and the complete schedule is 738.69 s / 736.49 s per build+run under
+the 1,500 s cap.
+
+**Host gate.** The run's audit re-ran green under my invocation (source
+scope 37 added / 11 modified / 0 deleted, 0 production / manifest / lock
+changes; immutable tables 749 / 43,390 / 5 losses / 51 Open owners; bindings
+175 / 10,505 / 151 / 9,060 / 24 / 1,445; programs 9,060 rows / 68 families /
+2,988 content-addressed assets; both C52 rows 30 keys each; 80 pins / 2
+sealed copies / 0 live probe imports; adapter reuse and the credit
+boundary). I re-ran `cm_adapter_receipts_exact` myself in both modes (exit 0,
+87.21 s / 87.76 s) and reproduced all four verdict lines; both sealed copies
+hash `512785d2…`; the 60 blocked→bound flips and 60 added rows are exact;
+`cargo fmt --all --check` is clean; the six shape tests and the C52 test pass
+in both arms. I did not re-run the full workspace suite: the acceptance logs
+are from the unchanged final tree and are reused by hash identity; the report
+cites 2,009 verified lines. C2 stays Open at 118 Residual + 0 Lost, no row
+settles, no owner is promoted, no guest executes, no encoding key runs, and
+`CHANGELOG.md` and S10 stay blocked.
+
+**Continuation 82 — CM4.** Entry state: 151 rows / 9,060 keys executed;
+1,445 named excluded keys; proofs 749 / 43,390; deferred 118 / 5,595 plus
+18,840 encoding. Next is CM4 (mutants and promotions), then CM5
+(integration) — I open the CM4 brief after this gate.
