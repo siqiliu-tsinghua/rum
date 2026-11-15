@@ -2267,3 +2267,209 @@ remaining 150 keys, replay maintenance, rebuild the lane from the final
 tree, and run the complete 9,060-key schedule and acceptance under the
 1,500 s bound. The partial tree is the state to continue from; do not
 restart and do not hand-edit a generated cell.
+
+### Continuation 16 — sixteenth run: Q18's timeout accessor lands exactly and both timeout packets authenticate (60 keys, 83 pins), then P2600's sealed own omission proves Output-only and Q19 rules the per-row sealed direction and the last 210 keys
+
+**2026-11-15 — brief 739's sixteenth run executed continuation 15. Q18's
+additional unconditional test-only read-only accessor landed exactly: one
+method in the same include-based `host_facade::session` module returning
+`self.owns_eval_timeout`; the reused production host source stays
+byte-identical (sha `ef78a1de…`, still unmodified in git), the workspace
+host file unmodified, no production body or field-visibility change, no
+copied logic, no `cfg`, no `unsafe`, no dependency/manifest/lock edit.
+Both timeout packets were reauthenticated against their original seals
+(60 keys / 83 pins; per row `frozen_keys=30 real_valid=30
+real_native_equal=30 real_timeout_zero=30 disabled_exact=30`; every real
+native row `[0;10]` in both arms) with zero binding, receipt, proof or
+execution credit. The sealed own-omission records then showed that
+`P0813`'s 30 records all differ natively (25 sealed-valid; the five
+`return_boundary.loop-store-reset` records are sealed-invalid and not
+caught) while `P2600`'s 30 valid and caught records differ only in
+structured output and keep identical native vectors in every record —
+exactly the dropped `HostStructuredOutput { kind: Result, text: "43" }`
+(first difference at byte 1,993; both native hashes `a43abd89…`; the
+sealed collector's own verdict `C2 C47 HOST COLLECTOR total=1 SAME=0
+DIFF=1 invalid=0`). Q18's own-omission `Native` predicate is therefore
+unsupported for `P2600`; the run stopped at Q19 rather than invent a
+difference, and the STOP is accepted with zero credit. Q19 authorizes
+each row's own sealed direction — `P0813` Native, `P2600` Output — with
+the timeout field itself held under a constant-field Native control,
+then the remaining `P1470`/`P1471` (90) and `P2611`/`P2612` (60) keys
+complete the 9,060-key active campaign (151 rows).**
+Run `cdx`, unit `brief-739-cdx-20261115-215419-1262467`, rc 0, peak
+14,854,934,528 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 1,418,749 B, sha256 `176bf641…`; report
+`.temp/brief-739/report.json`, 2,706,882 B, sha256 `5ec03e77…`; 3
+recorded changes (0 added, 3 modified, 0 deleted); 11 PASS / 6 FLAGGED /
+1 FAIL (the Q19 conflict), 1 disclosure, 3 deviations, Q19; 12,589
+citations verified; no manifest or lock hash changed.
+
+**What landed.** `host_facade.rs` gains exactly one item in the existing
+include-based module: `pub(crate) fn actual_owns_eval_timeout(&self) ->
+bool { self.owns_eval_timeout }`. The included host source is unchanged
+at `ef78a1de…` and the workspace host file is unmodified in git; no
+production source, manifest, lock, dependency, doc or script changed.
+The timeout authentication re-read the original sealed packets (c49 for
+`P0813`, c47 for `P2600`) against their own seals: 30 frozen keys per
+row, the real matrix valid in both arms with the terminal-boundary event
+`C49HostOwnsEvalTimeoutAtTerminalBoundary` / C47 recorded `[0;10]`, the
+disabled arm byte-equal, and zero credit. The own omission was then
+classified from those sealed records: `P0813` 30 records, 25 valid and
+caught, all 30 native-different and 4 semantic-same; `P2600` 30 records,
+all valid and caught, all 30 semantic-different and all 30
+native-identical with the timeout row unchanged. Maintenance replayed
+under the flat rot guard (which hashes `crates/**/*.rs|py|toml`, so the
+test-side source change expires the contracts): 68 fingerprint cells
+regenerated in their own column and mechanically installed, four C01/C02
+certificate cells in two columns; no other column or row changed, the
+18 obligation tables are hash-unchanged from entry, and ownership stayed
+9,006 rows across six inventories with no added, removed or changed row.
+The lane was rebuilt from the final tree: 5,701 files (5,692
+byte-identical + nine feature-removal manifest edits), tree
+`d52d4ea4…`, manifest-diff `5931f199…`, release at one codegen unit,
+build 81.34 s, the discriminator true in both mandated arms and false in
+the lane with its forced control. The lane artifact is byte-identical to
+the previous run's (`84195207…`) because the added accessor is currently
+uncalled and stripped; the next run's observation call changes it.
+The full oracle target inside the workspace acceptance passed 549/0/4 in
+both modes at 623.17 s / 617.58 s with zero filtered tests, typed-slot
+10/0/1 at 58.91 s / 59.51 s, switched LP 5/0/0 in both modes; the
+workspace raws (4,329/11/65) contain the nine documented loopback
+`EPERM` failures plus the two forced-red probe children, reproduced at
+one thread as 0/9/0 `EPERM`; the source tree and all four target
+binaries are sealed in `acceptance-identities.json` under the
+hash-identity reuse ruling.
+
+**The STOP.** Q18 required the own-omission `Native` rejection in each
+row's sealed direction. For `P0813` that holds: all 30 sealed records
+differ natively, 25 of them valid and caught. For `P2600` it does not:
+all 30 records are valid and caught, `semantic_same=false` in all 30 and
+`native_same=true` in all 30, including the timeout row itself (the
+witness removes exactly `HostStructuredOutputKind::Result` with scalar
+`43`, first difference at byte 1,993, native hashes equal
+`a43abd89…`). A sealed no-change native vector cannot supply a Native
+falsifier; the only sealed direction is the structured-output
+comparison, which is the comparison the sealed collector itself reports
+(`SAME=0 DIFF=1`). Changing the named predicate is a director ruling, so
+the run stopped with zero binding/receipt/proof/execution credit and the
+remaining 210 keys unported; no difference was invented and no sealed
+record was touched.
+
+**Q19 ruling — reject each sealed own omission in its own sealed
+direction; then finish the campaign.**
+- Evidence verified independently: the 83 pins and the two packets'
+  seals; the real matrices (30 keys per row, `[0;10]` in both arms at
+  the terminal boundary, disabled byte-equal); the own-omission
+  classification per row; the c47 witness and its native hashes; the
+  c49 five sealed-invalid records; and the `E0599`/`E0616` history that
+  motivated the accessor.
+- Authorized, and nothing more: `P2600`'s own omission rejects as
+  `Output` — the dropped structured result push in the public output —
+  and `P0813`'s rejects as `Native` — its differing native vectors. No
+  row may use a direction its sealed record does not show; a direction
+  not shown by the sealed record is a STOP, never a substrate change.
+- The observed timeout field stays under Native control: a
+  constant-field control that substitutes a nonzero value for
+  `owns_eval_timeout` in the receipt must be rejected as `Native`,
+  together with missing and duplicate controls. The real cells remain
+  `[0;10]` per row, at multiplicity one in both arms, sampled at the
+  sealed boundary (after the host outcome, before
+  snapshot/fresh/projections, from the executing thread); a public
+  phase row, a cached scalar, the snapshot or a constant is not an
+  observation.
+- Build the own-omission control on sealed-valid representative cells;
+  the five sealed-invalid `P0813` records
+  (`return_boundary.loop-store-reset`, raw `valid=false`,
+  `caught=false`) cannot carry the falsifier and must be recorded as
+  sealed-invalid, never skipped silently or turned into passes.
+- Then execute the remaining `P1470`/`P1471` (90) and `P2611`/`P2612`
+  (60) keys through their real routes, completing the 9,060-key active
+  campaign (151 rows), and measure the complete schedule and acceptance
+  under the 1,500 s bound per expanded-oracle build+run, with the
+  cumulative cost disclosed separately (this run: full oracle 623.17 /
+  617.58 s inside the workspace; workspace 1,053.567114 / 919.577240 s;
+  cumulative mode-labelled commands 1,138.589422 / 1,019.704348 s; the
+  complete 9,060-key schedule stays unmeasured while any key is
+  unported).
+- Keep the 36 current-blocked proof records, the 598 absent / 35,135,
+  the 24 named exclusions / 1,445 and the requirement bag 175 / 10,505
+  named; no settlement, no owner promotion, no encoding key; replay
+  maintenance after the fixture change; rebuild the lane
+  content-addressed from the final tree. Any further private access is a
+  STOP and a question, never a substitution.
+- Option 2 is declined: a revised evidence requirement asking for a
+  native-differentiating `P2600` witness would demand a fact the sealed
+  packet does not record; any such witness would have to come from a
+  separately reviewed evidence program, never from a re-pin of this
+  history or an invented difference.
+
+**Host gate.** My own gate on the final tree is green: `cargo fmt
+--check` rc 0; the one-thread retention certificate both arms (1 passed
+/ 0 failed; 35.16 s / 35.00 s); the oracle `cm_` both arms — 43 passed /
+0 failed / 2 ignored (568.67 s / 565.47 s) plus child summaries with the
+exact `CM RECEIPTS PASS calibration=P0001 rows=145 families=64
+bound=8850 executed=8850 multiplicity=1 actual_pauses=16170
+lifecycle=24816 campaign_remaining=210 PortBlocked=1445
+full_CM_green=false`, `CM BINDINGS PASS required=10505 active=9060
+declared_bound=8850 PortBlocked=1655 absent_packets=600
+unresolved_targets=785 repl_placement=60 unported_programs=210
+full_CM_green=false`, `CM CHECKPOINT RECEIPTS PASS row=P1566 … 72/60 …
+pair_false_false=20 pair_false_true=10 …` and `row=P1568 … 72/84 …`,
+`CM P1476 RECEIPTS PASS required=30 bound=30 executed=30 multiplicity=1
+actual_pauses=102 lifecycle=132 native_fields=10 full_CM_green=false`,
+`CM PROOFS PASS imported=749/43390 packet_authenticated=151/8255
+absent=598/35135 current_verified=115/6270 partial=true executions=0
+SAME=0 full_CM_green=false`, `CM P0543 RECEIPTS PASS … 55/55/55 …
+lane=p0543-unchecked …`, `CM BUILD CONFIGURATION PASS lane=mandated
+control=false checked_only_enforcement=true` and its forced control,
+`CM CANONICAL LEGACY PASS plans=796 frozen_fingerprints=796
+executions=0` and `CM LOSSES PASS prior_Lost=5
+immutable_differences=3 C1_promotions=2 missing_original_baselines=2
+encoding_runs=0 fresh_allowed_DIFF=0` lines; the ignored provenance
+audit both arms (`PROVENANCE AUDIT PASS pins=22 diagnostics=4`);
+switched LP 5/5 both arms; and the workspace 4,315 passed / 0 failed /
+65 ignored over 70 suite summaries in both feature modes (the full
+oracle binary itself 549 passed / 0 failed / 4 ignored at 616.69 s /
+615.38 s; typed-slot 10/0/1 at 61.23 s / 58.12 s). My wrapper
+re-verified the lane binary (`84195207…`), the recomputed tree
+(`d52d4ea4…`), the manifest-diff (`5931f199…`), the nine manifest edits
+and all 5,701 copied files before every oracle and workspace invocation.
+My independent audit of the run closed with zero failures: continuity
+with the fifteenth-run final tree (the previous lane copy differs only
+by the nine expected manifest edits, the three committed docs and this
+run's three files); the exact 3-file change set; the host source
+`ef78a1de…` unmodified in git with exactly one added accessor and no
+other item; the timeout authentication reproduced from a copy of the
+worker's script with the same sealed verdicts; the worker's own final
+audit reproduced from a redirected copy with all its verdict lines
+(5,701 files, 3 modified, 0 added/deleted, 145 family receipts, 8,850
+executions, the 549/0/4 and 10/0/1 reuse, LP 5/0/0 and the nine EPERM
+reproductions); the 68 fingerprint cells confined to their column and
+equal to the regenerated file; the four certificate cells confined to
+their two columns; all 18 obligation tables hash-unchanged; the
+inventory exactness (21,010 = 10,505 + 8,850 + 1,655; 145 bound rows /
+64 families; six active rows / 210 keys; proofs 749/43,390; five
+losses; 17,623 provenance rows); and the report's 12,589 citations.
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is
+promoted, no guest executes beyond the receipts, no encoding key runs,
+and `CHANGELOG.md` and S10 stay blocked. The partial tree is the state
+to continue from.
+
+**Continuation 16.** Entry state: 145 rows / 8,850 keys; 6 active rows /
+210 keys (P0813, P1470, P1471, P2600, P2611, P2612); 24 director-
+excluded rows / 1,445; proofs 749/43,390; encoding 0 of 18,840. The
+Q18 accessor is landed but not yet called; both timeout packets are
+authenticated with zero credit; maintenance is replayed; the lane is
+rebuilt at tree `d52d4ea4…`. Land the timeout observation at the sealed
+sampling point and execute both complete 30-key matrices with the
+per-row own-omission direction (`P0813` Native on a sealed-valid
+representative, `P2600` Output), the constant-field Native control and
+the missing/duplicate controls; then execute `P1470`/`P1471` (90) and
+`P2611`/`P2612` (60) through their real routes, completing the
+9,060-key active campaign (151 rows); measure the complete schedule and
+acceptance under the 1,500 s bound; keep the 36 current-blocked proof
+records, the 598 absent / 35,135, the 24 named exclusions / 1,445 and
+the requirement bag 175 / 10,505 named; replay maintenance, rebuild the
+lane content-addressed, and treat any further private access as a STOP
+and a question. The partial tree is the state to continue from; do not
+restart and do not hand-edit a generated cell.

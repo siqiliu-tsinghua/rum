@@ -201,7 +201,18 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   `Native` rejection and a constant-field control, then the remaining
   `P1470`/`P1471` (90) and `P2611`/`P2612` (60) keys, completing the
   9,060-key active campaign (151 rows) and measuring the complete schedule
-  under the 1,500 s bound; then CM4-CM5.
+  under the 1,500 s bound. The sixteenth run landed Q18's accessor exactly
+  (one added test-only method, host source byte-identical `ef78a1de…`, no
+  production change) and reauthenticated both timeout packets (60 keys / 83
+  pins, zero credit), then found `P2600`'s sealed own omission Output-only —
+  all 30 valid records keep identical native vectors and differ only by the
+  dropped `HostStructuredOutput { kind: Result, text: "43" }`, while
+  `P0813`'s 30 records differ natively (25 sealed-valid, five sealed-invalid)
+  — and stopped at Q19 rather than invent a difference; Q19 rules each row's
+  own sealed direction (`P0813` Native, `P2600` Output), with the timeout
+  field under a constant-field Native control and missing/duplicate
+  controls, then the remaining 150 keys complete the 9,060-key campaign;
+  then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

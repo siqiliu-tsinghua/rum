@@ -114642,3 +114642,127 @@ Land the Q18 accessor and the two timeout matrices, execute the remaining
 9,060-key schedule and acceptance under the 1,500 s bound. The partial
 tree is the state to continue from; do not restart and do not hand-edit a
 generated cell.
+
+### Continuation 76 — sixteenth run: Q18's accessor lands exactly and both timeout packets authenticate (60 keys, 83 pins); P2600's sealed own omission is Output-only, so Q19 rules the per-row sealed direction and the last 210 keys continue
+
+**2026-11-15 — brief 739's sixteenth run executed continuation 15 and is
+accepted at its STOP. Q18's additional test-only accessor landed exactly
+(one method in the include-based `host_facade::session` module returning
+`self.owns_eval_timeout`; the reused host source stays byte-identical at
+`ef78a1de…`, the workspace host file unmodified, no production change),
+both timeout packets were reauthenticated against their seals (60 keys,
+83 pins, zero credit), and the sealed own-omission records show that
+`P2600` can only reject as `Output`: all 30 valid records keep identical
+native vectors and differ only by the dropped
+`HostStructuredOutput { kind: Result, text: "43" }`, while `P0813`'s 30
+records all differ natively (25 sealed-valid). The Q19 STOP is accepted
+with zero binding/receipt/proof/execution credit. Q19 authorizes the
+per-row sealed direction — `P0813` Native, `P2600` Output — with the
+timeout field itself held under a constant-field Native control, then
+the remaining `P1470`/`P1471` (90) and `P2611`/`P2612` (60) keys complete
+the 9,060-key active campaign (151 rows).**
+Run `cdx`, unit `brief-739-cdx-20261115-215419-1262467`, rc 0, peak
+14,854,934,528 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 1,418,749 B, sha256 `176bf641…`; report
+`.temp/brief-739/report.json`, 2,706,882 B, sha256 `5ec03e77…`; 3
+recorded changes (0 added, 3 modified, 0 deleted); 11 PASS / 6 FLAGGED /
+1 FAIL (the Q19 conflict), 1 disclosure, 3 deviations, Q19; 12,589
+citations verified.
+
+**What landed.** `host_facade.rs` gains exactly one item: `pub(crate) fn
+actual_owns_eval_timeout(&self) -> bool { self.owns_eval_timeout }` in
+the existing include-based module, with the production host source
+byte-identical and unmodified in git and no other change. Both timeout
+packets were reauthenticated from their original seals: 30 frozen keys
+per row, real matrix valid in both arms, the terminal-boundary event
+`[0;10]`, disabled arm byte-equal, zero credit. Maintenance replayed 68
+fingerprint cells in their own column and four certificate cells in two
+columns under the flat rot guard (the test-side source change expires
+all 68; every other column and row unchanged), ownership stayed 9,006
+rows with no delta, and all 18 obligation tables are hash-unchanged.
+The lane was rebuilt from the final tree (5,701 files, tree `d52d4ea4…`,
+manifest-diff `5931f199…`, one codegen unit, 81.34 s, discriminator both
+ways); the artifact is byte-identical to the previous lane because the
+accessor is not yet called. Full oracle 549/0/4 both modes (623.17 /
+617.58 s, zero filtered), typed-slot 10/0/1, LP 5/0/0, workspace raw
+4,329/11/65 (nine loopback `EPERM` + two forced-red children, one-thread
+0/9/0), all sealed by source and binary identity. No production change.
+
+**The STOP.** Q18 required the own-omission `Native` rejection per row.
+`P0813` satisfies it (30 records native-different, 25 sealed-valid); the
+other five are sealed-invalid (`return_boundary.loop-store-reset`).
+`P2600` cannot: all 30 records are valid and caught, `semantic_same=0`
+and `native_same=30` in every one, with the witness reproducing exactly
+the dropped `HostStructuredOutputKind::Result` (scalar `43`, first
+difference byte 1,993, native hashes equal `a43abd89…`); the sealed
+collector itself reports `SAME=0 DIFF=1`. The run stopped rather than
+invent a Native difference; zero credit, no sealed record touched.
+
+**Q19 ruling.** Authorize the first option: `P2600`'s own omission
+rejects as `Output` and `P0813`'s as `Native` — each row only in the
+direction its sealed record shows; a direction the sealed record does
+not show is a STOP, never a substrate change. The observed timeout field
+stays under Native control: a constant-field control substituting a
+nonzero value for `owns_eval_timeout` must be rejected as `Native`,
+alongside missing and duplicate controls, with the real cells `[0;10]`
+per row at multiplicity one in both arms at the sealed sampling point
+(after the host outcome, before snapshot/fresh/projections, from the
+executing thread). Build the own-omission control on sealed-valid
+representative cells; the five sealed-invalid `P0813` records are
+recorded as sealed-invalid, never skipped silently or turned into
+passes. Then execute the remaining `P1470`/`P1471` (90) and
+`P2611`/`P2612` (60) keys through their real routes, completing the
+9,060-key active campaign (151 rows), and measure the complete schedule
+and acceptance under the 1,500 s bound per expanded-oracle build+run
+with the cumulative cost disclosed separately (this run: full oracle
+623.17 / 617.58 s; workspace 1,053.567114 / 919.577240 s; cumulative
+mode-labelled 1,138.589422 / 1,019.704348 s; the 9,060-key schedule
+unmeasured while any key is unported). Keep the 36 current-blocked proof
+records, the 598 absent / 35,135, the 24 named exclusions / 1,445 and
+the requirement bag 175 / 10,505 named; no settlement, no owner
+promotion, no encoding key; replay maintenance after the fixture change;
+rebuild the lane from the final tree; any further private access is a
+STOP and a question. Option 2 is declined: a native-differentiating
+`P2600` witness would be a fact the sealed packet does not record; it
+would need a separately reviewed evidence program, never a re-pin of
+this history or an invented difference.
+
+**Host gate.** My own gate on the final tree is green: fmt rc 0; the
+one-thread certificate both arms (1/0; 35.16 s / 35.00 s); the oracle
+`cm_` both arms 43/0/2 (568.67 s / 565.47 s) plus child summaries with
+the exact `CM RECEIPTS PASS … rows=145 families=64 bound=8850
+executed=8850 multiplicity=1 actual_pauses=16170 lifecycle=24816
+campaign_remaining=210 PortBlocked=1445 …`, `CM BINDINGS PASS …
+required=10505 active=9060 … unported_programs=210 …`, both checkpoint
+rows (`P1566` 72/60, `P1568` 72/84, pair 20 × `(false,false)` + 10 ×
+`(false,true)`), `CM P1476 RECEIPTS PASS …`, `CM PROOFS PASS …`, `CM
+P0543 RECEIPTS PASS …`, `CM BUILD CONFIGURATION PASS …` with its forced
+control, `CM CANONICAL LEGACY PASS plans=796 …` and `CM LOSSES PASS …`;
+the ignored provenance audit both arms (`pins=22 diagnostics=4`);
+switched LP 5/5 both arms; and the workspace 4,315 passed / 0 failed /
+65 ignored over 70 suite summaries in both modes (the full oracle
+549/0/4 at 616.69 / 615.38 s; typed-slot 10/0/1 at 61.23 / 58.12 s).
+My wrapper re-verified the lane binary, tree, manifest-diff, nine
+manifest edits and all 5,701 copied files before every invocation. My
+independent audit closed with zero failures: continuity on the previous
+lane copy (only the nine expected manifest edits, the three committed
+docs and this run's three files differ); the exact 3-file change set;
+the accessor and the host source `ef78a1de…`; the timeout authentication
+reproduced from a copy; the worker's final audit reproduced from a
+redirected copy; the 68 fingerprints and four certificate cells confined
+to their columns and equal to the replays; all 18 obligation tables
+hash-unchanged; the inventory arithmetic (21,010 = 10,505 + 8,850 +
+1,655; 145 bound rows / 64 families; 210 active; 1,445 excluded; proofs
+749/43,390; 17,623 provenance rows); and the 12,589 citations. C2 stays
+Open at 118 Residual + 0 Lost; no row settles, no owner is promoted, no
+encoding key runs; `CHANGELOG.md` and S10 stay blocked. The partial tree
+is the state to continue from.
+
+**Continuation 16.** Entry state: 145 rows / 8,850 keys; 6 active rows /
+210 keys; 24 excluded / 1,445; proofs 749/43,390; encoding 0 of 18,840.
+Land the timeout observation and both matrices with the per-row sealed
+direction and the constant-field/missing/duplicate controls, execute the
+remaining 150 keys, complete the 9,060-key campaign, and measure the
+complete schedule and acceptance under the 1,500 s bound. The partial
+tree is the state to continue from; do not restart and do not hand-edit
+a generated cell.
