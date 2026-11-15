@@ -115157,3 +115157,100 @@ settles, no owner is promoted, no guest executes, no encoding key runs, and
 1,445 named excluded keys; proofs 749 / 43,390; deferred 118 / 5,595 plus
 18,840 encoding. Next is CM4 (mutants and promotions), then CM5
 (integration) — I open the CM4 brief after this gate.
+
+### Continuation 82 — first run: pre-edit STOP, the CM3 input and the mutation requirement count are frozen, and Q1 admits one shared P0543 lane group
+
+**2026-11-16 — brief 740's first run executed continuation 1 of CM4 and
+stopped pre-edit. It authenticated the accepted CM3 input, froze the
+complete required mutation case count, re-ran the three existing build
+configuration controls at zero credit, and stopped because P0543's own
+source omission needs fresh real/disabled/armed builds in its accepted
+unchecked configuration — a copied-manifest and schedule decision the brief
+reserves for me. Accepted: zero changes, zero mutation/structural/
+promotion/settlement/SAME/encoding credit, no maintenance replay due and no
+acceptance started. Q1 admits one shared third build identity (not two lane
+feature modes): the real lane copy carries exactly the accepted nine-entry
+manifest diff `66a8e8bd…`, the live Cargo files stay byte-identical, and the
+copied campaign allocation grows from eight blocks to twelve (nine builds,
+three same-epoch spot checks), each ≤1,500 s, total ≤18,000 s; a second
+carrier schema or a schedule beyond it still STOPs.**
+Run `cdx`, unit `brief-740-cdx-20261116-053910-1515037`, rc 0, peak
+623,919,104 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_740.log`, 2,046,787 B, sha256 `853a4a89…`; report
+`.temp/brief-740/report.json`, 31,493 B, sha256 `ee1a1121…`; 0 recorded
+changes, 0 disclosures, 1 question; 10 PASS / 1 FAIL / 2 NA; 58 citations
+verified; no production, manifest or lock hash changed.
+
+**What was frozen.** `CM4 REQUIREMENTS FROZEN active_equal_rows=151
+active_real_keys=9060 families=68 required_rows=175 required_keys=10505
+existing_PortBlocked_rows=24 existing_PortBlocked_keys=1445`
+(`preflight.log:1`); `own_rows=151 held_pair_cells=100
+structural_controls=4 logical_cases_per_feature=255
+logical_cases_two_features=510` with `selected_own_tuples=0
+mutant_builds=0 schedule_measured=false` (`:2`); the held pair keeps
+100 nonencoding cases and 40 encoding keys, historical 90 catches plus ten
+armed-without-hit `Error` cells, no generic substitution (`:3`); 51 owners
+stay Open, C2 stays 118 Residual + 0 Lost (`:4`). I recomputed the bags from
+`bindings.tsv` myself (21,010 records: 10,505 required = 9,060 bound + 1,445
+blocked; 175 / 151 / 24 rows), the 68 families and 9,060 rows of
+`programs.tsv`, the frozen pair inventory (`required-tuples.tsv`
+`3c2dcdff…`, 140 tuples / 100 active; per row 50 cells, 50 armed, 45
+caught, 5 armed-no-hit all `Error`, `eligible_Equal=false`) and the 51 Open
+states. The accepted lane is authenticated: binary `bbf1f199…`, tree
+`5a5f6f4e…`, diff file `66a8e8bd…` with nine entries, every live manifest
+equal to its recorded `before`, and the lane snapshot differing from the
+live tree only in the three committed docs plus brief 740 (zero `crates/`
+differences). The three configuration controls are diagnostics only:
+default 0.173112 s, no-default 0.171553 s, accepted lane 0.050218 s; six
+parent/child passes; the checked-only `NonAmplifying` discriminator true in
+both mandated arms and false in the lane, forced true in a fresh-process
+control, falsifier firing. The final audit reads `files=5774 added=0
+changed=0 deleted=0`, `CURRENT CREDIT PASS own_mutants=0 structural_controls=0
+promotions=0 settlements=0 SAME=0 encoding_runs=0`, `ACCEPTANCE UNRUN` and
+`MAINTENANCE NOT REQUIRED`; the run's 32 commands contain no git or network
+call and every write is under `.temp/brief-740/`.
+
+**The STOP.** Correct. `builtin_memory_growth_test_enabled()`
+(`crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:365`) returns true
+before the environment read while `test-builtin-memory-growth` is in the
+build graph, and both mandated modes carry it
+(`crates/rum-stdlib/Cargo.toml:28`), so P0543's unchecked producer
+(`:187`-`:188`) exists only in the continuation-8 lane. Fresh lane
+disabled/armed copies need the copied-manifest exception and an allocation
+the brief did not grant; option 2 (P0543 `PortBlocked`) is declined because
+it would leave an active Equal row without the own-omission evidence the
+brief's first goal requires.
+
+**Q1 ruling.** One shared third identity, not two lane feature modes: both
+mandated arms spawn the same lane worker as CM3's accepted layer does, and
+the lane runs its own configuration control inside its binary. The real
+lane copy is content-addressed under `.temp/brief-740/` and differs from
+the live tree only by the nine pinned manifest entries
+(`test-builtin-memory-growth` removed, `test-continuation-slots` retained);
+the disabled and armed copies additionally carry exactly the named
+mutation-carrier edits, each hashed in its receipt; live `Cargo.toml` and
+`Cargo.lock` stay byte-identical, no new dependency, copies disposable. The
+lane goes through unchanged `scripts/probe-build.py` with an explicitly
+rewritten path adapter, release, one codegen unit. Before any campaign
+case: `cargo tree -e features` carries no `test-builtin-memory-growth`; the
+checked-only discriminator is true in both mandated arms and false in the
+lane with its forced control and firing falsifier; P0543's 55-key real
+matrix passes at multiplicity one with its ten native fields and the three
+checked-route Native falsifiers; the receipts carry the third identity
+bound to the binary sha256, tree, manifest-diff, release and one codegen
+unit; the accepted binary `bbf1f199…` is reference only. The armed copy
+must catch P0543's own real unchecked-producer-tail omission with its own
+selector armed, its actual phase hit, a baseline producer pause, disabled
+parity record-exact to the fresh real copy and the full real matrix still
+passing; an inadmissible carrier is `PortBlocked` with the concrete missing
+evidence. The allocation is twelve blocks for one admitted schema (nine
+real/disabled/armed builds — one group per configuration — plus three
+same-epoch forced byte-identity spot checks), each ≤1,500 s, total ≤18,000 s,
+an allocation and not a duration; a second carrier schema or a schedule
+beyond it STOPs. The frozen case count stays 255 / 510 (the lane adds
+builds, not cases) and is re-frozen with the block plan before the first
+mutant build; then the schema and promotion transaction, the shape stop,
+all falsifiers on both mandated arms, then the complete unsampled campaign
+and the acceptance suite. C2 stays Open at 118 Residual + 0 Lost; no
+settlement, no owner promotion, no SAME, no encoding key; `CHANGELOG.md` and
+S10 stay blocked. The partial tree is the state to continue from.

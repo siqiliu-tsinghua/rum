@@ -262,7 +262,14 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   schedule is 738.69 s / 736.49 s per build+run under the 1,500 s cap; the
   whole CM3 test layer lands in this commit. CM4 is opened as brief 740
   (own-omission receipts and atomic owner promotions; test layer only, copied
-  mutation builds, synthetic promotions), then CM5.
+  mutation builds, synthetic promotions); its first run stopped pre-edit on
+  P0543's third build identity (zero credit, tree unchanged; the CM3 input
+  re-verified at 151 rows / 9,060 keys / 68 families, 175 / 10,505 required,
+  24 / 1,445 blocked, 255 / 510 mutation cases frozen), and Q1 admits one
+  shared P0543 lane group — the real copy carrying exactly the accepted
+  nine-entry manifest diff `66a8e8bd…`, live Cargo files byte-identical —
+  with the copied campaign allocation extended to twelve blocks (nine
+  builds, three same-epoch spot checks) ≤18,000 s; then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

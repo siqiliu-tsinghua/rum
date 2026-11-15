@@ -295,3 +295,149 @@ you stop. Next is CM5 after my gate.
 
 **Dispatch:** `scripts/dispatch-brief.sh 740` (background, `BRIEF_WORKER`
 unset = `cdx`).
+
+## Continuation 1 ruling (director) — the pre-edit STOP is correct; Q1 admits one shared P0543 lane group with a twelve-block allocation, and the campaign starts
+
+**2026-11-16 — brief 740's first run executed continuation 1 and stopped
+pre-edit. It authenticated the accepted CM3 input, froze the complete
+mutation requirement count, re-ran the three existing build-configuration
+controls, and stopped because P0543's own source omission requires fresh
+real/disabled/armed builds in its accepted unchecked configuration, which
+the brief's read-only Cargo scope and eight-block allocation do not settle.
+Accepted as delivered: the tree is unchanged and no mutation,
+structural-control, promotion, settlement, SAME or encoding credit exists.
+Q1 is ruled: option 1, one shared third build identity — not two lane
+feature modes — with the copied trees carrying exactly the accepted
+nine-entry manifest diff and the campaign allocation extended to twelve
+blocks / ≤18,000 s.**
+Run `cdx`, unit `brief-740-cdx-20261116-053910-1515037`, rc 0, peak
+623,919,104 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_740.log`, 2,046,787 B, sha256 `853a4a89…`; report
+`.temp/brief-740/report.json`, 31,493 B, sha256 `ee1a1121…`; 0 recorded
+changes (0 added, 0 modified, 0 deleted), 0 disclosures, 1 question (Q1,
+ruled here); 10 PASS / 1 FAIL / 2 NA; 58 citations verified; no production,
+manifest or lock hash changed.
+
+**What the run froze and verified.**
+- `CM4 REQUIREMENTS FROZEN active_equal_rows=151 active_real_keys=9060
+  families=68 required_rows=175 required_keys=10505
+  existing_PortBlocked_rows=24 existing_PortBlocked_keys=1445`
+  (`preflight.log:1`). I recomputed the bags from the committed
+  `inventory/obligations/bindings.tsv` myself: 21,010 records, `required`
+  10,505 = `bound` 9,060 + `blocked` 1,445, over 175 / 151 / 24 rows, and
+  `programs.tsv` carries 9,060 rows over 68 families.
+- `CM4 MUTATION REQUIREMENT COUNT own_rows=151 held_pair_cells=100
+  structural_controls=4 logical_cases_per_feature=255
+  logical_cases_two_features=510 selected_own_tuples=0 mutant_builds=0
+  schedule_measured=false` (`preflight.log:2`). This is a requirements
+  freeze; the exact selected own tuples and the executable schedule are not
+  yet admitted or measured.
+- `CM4 HELD PAIR INPUT PASS rows=2 nonencoding=100 encoding_retained=40
+  historical_caught=90 historical_armed_no_hit_Error=10 fresh_runs=0
+  generic_catch_substitution=false` (`preflight.log:3`). I re-verified the
+  frozen pair inventory: `.temp/g15-c2/c68/required-tuples.tsv` sha256
+  `3c2dcdff…` carries 140 pair tuples (100 non-`guest_heads`), and
+  `pair-proof-packet.json` records per row `cells=50 armed=50 caught=45
+  armed_no_hit=5`, `eligible_Equal=false`, every uncaught key `Error`.
+- `CM4 OWNER INPUT PASS states=51 Open=51 C2_residual=118 C2_lost=0
+  promotions=0` (`preflight.log:4`).
+- `CM4 ACCEPTED LANE AUTH PASS binary_sha256=bbf1f199…
+  manifest_diffs=9 live_crate_differences=0 historical_only=true
+  current_own_mutant=false` (`preflight.log:5`). I re-verified the binary
+  `bbf1f199…`, the tree `5a5f6f4e…`, the diff file sha256 `66a8e8bd…` with
+  nine entries, that every live manifest still equals its recorded `before`
+  bytes, and that the lane snapshot differs from the live tree only in the
+  three committed docs plus this brief (zero `crates/` differences).
+- The three configuration controls are accepted as diagnostics at zero
+  credit: six parent/child passes in default (0.173112 s), no-default
+  (0.171553 s) and the accepted lane (0.050218 s); the checked-only
+  `NonAmplifying` discriminator reads `true` in both mandated arms, `false`
+  in the lane's unchecked parent, `true` in the lane's forced control, and
+  its falsifier fires (`configuration-*.log`). They are not CM4 mutation
+  receipts and not acceptance.
+- `CM4 SOURCE SNAPSHOT PASS files=5774 added=0 changed=0 deleted=0`
+  (`final-audit.log:1`): no live source, manifest, inventory, history or
+  cache edit; `CM4 CURRENT CREDIT PASS own_mutants=0 structural_controls=0
+  promotions=0 settlements=0 SAME=0 encoding_runs=0` (`final-audit.log:3`);
+  `CM4 ACCEPTANCE UNRUN` and `CM4 MAINTENANCE NOT REQUIRED`
+  (`final-audit.log:2`, `:4`). The run's 32 commands contain no git or
+  network call, and every write is inside `.temp/brief-740/`.
+
+**The STOP.** Correct. `builtin_memory_growth_test_enabled()`
+(`crates/rum-runtime/src/runtime/eval_dispatch/mod.rs:365`) returns `true`
+before reading the environment whenever `test-builtin-memory-growth` is in
+the build graph, and the two mandated modes both carry it
+(`crates/rum-stdlib/Cargo.toml:28`), so P0543's unchecked producer
+(`:187`-`:188`) is reachable only in the accepted continuation-8 lane. The
+brief makes the live Cargo files read-only and its campaign allocation
+eight blocks; fresh real/disabled/armed lane builds are neither. The run
+correctly did not edit, did not build a mutant and did not borrow the
+historical real-only lane binary. Option 2 (retain P0543 as CM4
+`PortBlocked`) is declined: it would leave an active Equal row without the
+own-omission evidence this brief's first goal requires, for a configuration
+the C2 line has already accepted twice.
+
+**Q1 ruling.**
+- **One shared third identity.** The lane is one build configuration, not
+  two lane feature modes. Both mandated arms spawn the same lane worker
+  exactly as CM3's accepted layer does
+  (`coverage/schedule.rs:38`, `coverage/receipts.rs:74`), and the lane runs
+  its own configuration control inside its binary. Do not build the lane in
+  both mandated feature modes.
+- **Copied manifests, exact.** The real lane copy is a content-addressed
+  copy of the current workspace under `.temp/brief-740/` whose only
+  differences are the nine dev-dependency manifest entries pinned by
+  `.temp/brief-739/lane-manifest-diff.json` (sha256 `66a8e8bd…`):
+  `test-builtin-memory-growth` removed, `test-continuation-slots` retained.
+  Every non-manifest file hash-matches the live tree. The disabled and
+  armed copies additionally carry exactly the admitted mutation-carrier
+  edits, each named and hashed in its receipt. Live `Cargo.toml` and
+  `Cargo.lock` stay byte-identical; no new dependency; the copies are
+  disposable and never installed.
+- **Allocation.** Twelve blocks for one admitted carrier schema: per
+  configuration (default, no-default, the P0543 lane) one real, one
+  disabled and one armed build, plus one same-epoch forced byte-identity
+  spot check — nine builds and three spot checks, each block ≤1,500 s,
+  total allocation ≤18,000 s. This remains an allocation, not a measured
+  duration. The expanded oracle's own build+run stays ≤1,500 s with the
+  ≤900 s steady target; the copied-build cost is reported separately. A
+  second carrier schema, or a complete schedule beyond the allocation,
+  still STOPs for my decision.
+- **Lane build proofs, before any campaign case.** The lane copy goes
+  through the unchanged `scripts/probe-build.py` with an explicitly
+  rewritten path adapter on the accepted `.temp/g15-c2/probe_build.py:1`
+  precedent; release, one codegen unit. The fresh real build must show
+  `cargo tree -e features` carrying no `test-builtin-memory-growth`, the
+  checked-only discriminator true in both mandated arms and false in the
+  lane with its forced fresh-process control and firing falsifier, and it
+  must pass P0543's 55-key real matrix at multiplicity one with its ten
+  native fields and the three checked-route Native falsifiers unchanged.
+  Its receipts carry the third identity bound to the binary sha256, tree
+  hash, manifest-diff hash, `profile=release` and one codegen unit. The
+  accepted CM3 binary `bbf1f199…` is a reference only and is never credited
+  as a CM4 receipt; the tree and diff pins are the accepted ones.
+- **P0543's catch.** The armed copy must catch P0543's own real source
+  omission of its unchecked producer tail: its own selector armed, its
+  actual phase hit, a baseline producer pause, the disabled copy
+  record-exact to the fresh real copy, the row's own predicate red, the
+  full real matrix still passing. No in-test reconstruction, no other row's
+  catch, no compile-only rejection; an inadmissible carrier is
+  `PortBlocked` with the concrete missing evidence.
+- **Counts.** The frozen case count stays 255 per feature mode / 510
+  across the two; the lane adds builds, not cases. Re-freeze and print the
+  complete count together with the twelve-block plan before the first
+  mutant build.
+
+**Order.** Resolve the lane group's copied trees and builds first; then
+admit the mutation schema and the promotion transaction; run the shape stop
+(real/disabled/armed for the complete declared family in both mandated
+modes plus the lane group, selectors, phase and source identity, exact
+disabled parity) and all named falsifiers on both mandated arms; only then
+the complete unsampled campaign and the acceptance suite exactly as the
+brief specifies.
+
+**Unchanged.** No live production mutation, no manifest or lock edit, no
+network, git, `unsafe` or new dependency; no settlement, no SAME, no owner
+promotion, no encoding activation, execution or credit; C2 stays Open at
+118 Residual + 0 Lost; `CHANGELOG.md` and S10 stay blocked; the eight
+continuation-69 rulings (Q1–Q8) stand.
