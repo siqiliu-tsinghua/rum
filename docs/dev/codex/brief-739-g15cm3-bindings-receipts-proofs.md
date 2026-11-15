@@ -1344,3 +1344,156 @@ complete schedule and acceptance under the 1,500 s bound. C2 stays Open at
 118 Residual + 0 Lost; no settlement, no promotion, no encoding key;
 `CHANGELOG.md` and S10 stay blocked. The partial tree is the state to
 continue from; do not restart and do not hand-edit a generated cell.
+
+### Continuation 11 — eleventh run: six rows execute (71 rows / 4,995 keys), the pinned extraction lands byte-exact, and the cross-packet union is opened by Q14
+
+**2026-11-15 — brief 739's eleventh run executed continuation 10. The pinned
+canonical-loader extraction was applied byte-exact; the 1,430 option keys and
+`P1155` (100), `P0338` (55) and `P0527` (30) were authenticated, derived and
+executed in both mandated arms, carrying the campaign from 65 rows / 3,380
+keys to 71 rows / 4,995 keys over 37 families, with all 25 named non-source
+route instantiations / 1,370 keys now covered. The run then stopped at
+`P0260` after two zero-evidence importer attempts: the row's 55 keys draw
+their probe records from two sealed C18 packets (49 adopted-accounting + 6
+counter-revisit), and each attempt loaded only one packet. The STOP is
+accepted and Q14 authorizes a bounded continuation with exact per-probe
+lookup across the sealed union; `P0305` has the same 49 + 6 shape.**
+Run `cdx`, unit `brief-739-cdx-20261115-080412-779953`, rc 0, peak
+15,503,634,432 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 4,598,708 B, sha256 `c38d70c6…`; report
+`.temp/brief-739/report.json`, 337,153 B, sha256 `5022af6d…`; 436 recorded
+changes (424 added `.rum` assets, 12 modified test/inventory files, 0
+deleted); report 18 PASS / 6 FLAGGED / 1 FAIL (the FAIL is the campaign
+unfinished), 8 disclosures, 3 deviations, Q14; 641 citations verified — I
+reran `scripts/report.py check 739` myself.
+
+**What landed.**
+- The pinned extraction is byte-exact: `fixtures/logical_profile/plans.rs`
+  carries exactly the five-line addition (`plans()` delegates to a verbatim
+  `pub(crate) from_rows(text)`), patch sha256 `be031ff4…`, no other byte of
+  the file changed; the frozen 796 plans still fingerprint-match in both
+  arms (`CM CANONICAL LEGACY PASS plans=796`).
+- `P1139` 715 + `P1142` 165 + `P1147` 550 = 1,430 option keys, derived from
+  1,415 preserved canonical plan inputs through `from_rows` with zero field
+  differences against the sealed fixture objects (the differences file is an
+  empty list, sha256 `37517e5f…`), 23 route own omissions, executed in both
+  arms at multiplicity one (`CM SELECTED FAMILIES PASS bound=1430
+  executed=1430`). `P1155` (100 keys, Monitor syntax, 50 canonical inputs,
+  one own omission) and `P0338` (55) + `P0527` (30) executed the same way
+  (`bound=100` and `bound=85`, each `executed` equal).
+- Campaign: 71 rows / 4,995 keys over 37 families; 8,163 actual pauses and
+  12,616 lifecycle observations; 80 active rows / 4,065 keys remain; the 24
+  director-excluded rows / 1,445 keys stay named; the 175-row / 10,505-key
+  requirement bag is unchanged; all 25 named non-source route
+  instantiations / 1,370 keys are now covered by `C10`, the 23 option
+  routes and Monitor syntax.
+- Programs: 4,995 rows; 424 new content-addressed `.rum` assets (every
+  filename equals its sha256); the 3,380 legacy program cells and the 3,380
+  previously bound keys are unchanged (I verified every legacy program row
+  byte-identical on its shared columns and every legacy bound key still
+  bound).
+- Proofs untouched: 749/43,390 imported, 151/8,255 packet-authenticated,
+  115/6,270 current-source verified, 36/1,985 current blocked, 598/35,135
+  absent, five known-loss records (3 Lost + 2 Promoted), 51 Open owners.
+  All 15 immutable obligation inventories hash-match, and the 133 new
+  canonical-source pins hash-match their files.
+- Maintenance: the 68 retention fingerprint cells changed only in the
+  fingerprint column and the four certificate cells only in the two
+  certificate columns — I checked both column-wise against the pre-install
+  snapshots.
+- P0543 lane: rebuilt from the final tree — 4,120 files, exactly nine
+  manifest differences (the dev-dependency feature removed,
+  `test-continuation-slots` kept; none of the nine diffs touches anything
+  else), tree `978d7dff…` and artifact `db59252f…` both recomputed by me,
+  release at one codegen unit, canonical build 79.4 s (wrapper 80.78 s);
+  `cargo tree -e features` carries no `test-builtin-memory-growth`; the
+  behavioral discriminator is true in both mandated arms and false in the
+  lane, forced true in the lane's fresh-process control, and its falsifier
+  rejects `NonAmplifying` with the exact panic; every one of the 55 lane
+  receipts carries the third identity (`sha256` / `tree` / `manifest-diff` /
+  profile / codegen-units), 110 identity occurrences per arm, all identical.
+  The lane's run cost is reported separately inside each CM command
+  (12.75 s / 9.20 s) and the build is counted once.
+- No production, repository manifest, lock, dependency or script change;
+  the only new `allow` is `#[allow(dead_code)]` on the test-only included
+  canonical-loader module.
+
+**The STOP.** `P0260`: the counter-revisit full-proof record (55 cells,
+disposition Equal, complete) draws 49 probes from the adopted-accounting
+packet and 6 from the counter-revisit packet; each of the two importer
+attempts loaded only one packet's plan table and failed on the other's probe
+(`KeyError` in both, retained). Zero binding, receipt or proof credit;
+the two-batch zero-evidence stop-loss fired; no third attempt ran. Accepted.
+
+**Q14 ruling — the sealed union, per probe.**
+- Authorized for the next bounded continuation, within the existing
+  test-only CM3 scope, and nothing more:
+  - Load the sealed union of the two C18 packets (plan, fixture, canonical
+    inputs and raw records) and resolve each of `P0260`'s and `P0305`'s 55
+    keys by its own probe id, whose family prefix names exactly one packet.
+    I verified independently: both rows' proof records hold 55 distinct
+    cells split 49 adopted-accounting + 6 counter-revisit, every probe
+    exists in its named packet's plan table, and the key sets are exact.
+  - A probe missing from its named packet, or one that would resolve
+    ambiguously, names its key/row `PortBlocked` with the exact cause;
+    never pick a packet by preference, never invent a record, never drop a
+    key, never add an exclusion.
+  - Both failed attempts stay retained with zero credit.
+  - Then the remaining active bag (78 rows / 3,955 keys after the two union
+    rows) and the remaining families; keep the 36 current-blocked proof
+    records, the 598 absent / 35,135 and the 24 named Execute blockers /
+    1,445 keys named. The seven rows / 365 keys authenticated but not
+    installed this run stay reusable by hash identity, and earn nothing
+    until installed and executed.
+  - Replay retention and ownership maintenance after the source edit and
+    before acceptance; a stale derived-cell red is an ordering artifact.
+  - Rebuild the P0543 lane content-addressed from the final tree whenever
+    the tree changes, with the same nine-manifest audit, build graph plus
+    discriminator both ways with its falsifier, and the third receipt
+    identity; costs stay separate; a missing lane is a hard error, never a
+    skip.
+  - The complete active schedule and the acceptance suite run under the
+    1,500 s bound per expanded-oracle build and run for the two mandated
+    arms; the cumulative validation cost is disclosed separately and is not
+    an aggregate budget claim (this run's 1,658.007 / 1,528.523 s include
+    overlapping mandated suites and the shared lane build; no individual
+    expanded-oracle invocation exceeded 1,500 s, and the complete
+    active schedule remains unmeasured while 4,065 keys are unported).
+  - The two-batch zero-evidence stop-loss stays; any production, Cargo,
+    dependency, manifest or lock change is a STOP.
+- Option 2 is declined: the union is sealed, complete and non-overlapping;
+  the failed attempts were input selection, not missing provenance.
+  Deferring would leave 110 keys unbound for no correctness gain.
+
+**Host gate.** My own gate on the final tree is green: `cargo fmt --check`
+rc 0; the one-thread retention certificate passes in both feature arms
+(35 s / 35 s); the oracle `cm_` suite passes in both arms — 38 passed / 0
+failed / 2 ignored, 342 s / 338 s — with the exact `CM RECEIPTS PASS
+calibration=P0001 rows=71 families=37 bound=4995 executed=4995 multiplicity=1
+actual_pauses=8163 lifecycle=12616 campaign_remaining=4065 PortBlocked=1445
+full_CM_green=false`, `CM PROOFS PASS imported=749/43390
+packet_authenticated=151/8255 absent=598/35135 current_verified=115/6270
+partial=true executions=0 SAME=0 full_CM_green=false`, `CM P0543 RECEIPTS
+PASS required=55 bound=55 executed=55 multiplicity=1 lane=p0543-unchecked
+native_fields=10 full_CM_green=false`, `CM BUILD CONFIGURATION PASS
+lane=mandated control=false checked_only_enforcement=true` and `CM CANONICAL
+LEGACY PASS plans=796 frozen_fingerprints=796 executions=0` lines; the
+ignored provenance audit passes in both arms (`PROVENANCE AUDIT PASS pins=22
+diagnostics=4`); the switched LP targets are 5/5 in both arms; and the
+workspace is 4,310 passed / 0 failed / 65 ignored over 70 binaries in both
+feature modes. The sandbox's nine native ZeroMQ loopback `EPERM` failures do
+not appear on the host — the same nine tests pass here — so that is a sandbox
+boundary, not a tree defect. My oracle log reproduces the worker's raw
+receipt count exactly (5,111 lines = 4,995 bound keys + 116 observer
+duplicates: P0001 +1, P0508 +30, P0543 +55, P1577 +30) and the 37 execution
+falsifiers.
+
+**Continuation 11.** Entry state: 71 rows / 4,995 keys complete; 80 active
+rows / 4,065 keys; 24 director-excluded rows / 1,445 keys; proofs 749/43,390;
+encoding 0 of 18,840. Resolve `P0260` and `P0305` through the sealed union per
+probe, then continue the remaining active bag and families, replay
+maintenance, rebuild the lane from the final tree, and run the complete
+schedule and acceptance under the 1,500 s bound. C2 stays Open at 118
+Residual + 0 Lost; no settlement, no promotion, no encoding key;
+`CHANGELOG.md` and S10 stay blocked. The partial tree is the state to
+continue from; do not restart and do not hand-edit a generated cell.

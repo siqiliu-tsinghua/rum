@@ -134,8 +134,13 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   zero credit) and stopped before editing because that reuse needs `from_rows`
   exposed in `fixtures/logical_profile/plans.rs`, outside the scope; Q13
   authorizes exactly the pinned five-line test-only extraction
-  (`be031ff4…`), and continuation 10 derives through it, executes the option
-  rows, and continues over the remaining bag and routes; then CM4-CM5.
+  (`be031ff4…`), and the eleventh run applied it byte-exact, executed the
+  1,430 option keys plus `P1155` (100), `P0338` (55) and `P0527` (30) — 71
+  rows / 4,995 keys over 37 families with all 25 non-source routes covered —
+  then stopped at `P0260`'s cross-packet union (49 + 6 probes over two sealed
+  C18 packets; both importer attempts zero-credit; `P0305` the same shape);
+  Q14 authorizes exact per-probe lookup across the sealed union, then the
+  remaining 78 rows / 3,955 keys under the 1,500 s bound; then CM4-CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
