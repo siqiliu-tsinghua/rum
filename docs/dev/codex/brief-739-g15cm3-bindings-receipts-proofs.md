@@ -2693,3 +2693,143 @@ fixture change; rebuild the lane content-addressed; and treat any
 further private access as a STOP and a question. The partial tree is
 the state to continue from; do not restart and do not hand-edit a
 generated cell.
+
+### Continuation 18 — eighteenth run: Q20's parent-module driver fails `E0603` in both modes with zero credit and exact restoration, and Q21 places the one observation driver inside a nested worker include (compile-verified)
+
+**2026-11-16 — brief 739's eighteenth run executed continuation 17 and is
+accepted at its STOP. It built Q20's exact layout (the three root shims
+plus an `adapter_facade.rs` that includes `adapter/mod.rs` and appends one
+`observe_segment`) and both feature modes rejected it with exactly three
+`E0603` diagnostics — the two `ExecuteSegment` uses and the `run_segment`
+call — with no unrelated compiler error and no test executed. The cause is
+module privacy, not the include mechanics: a private item is visible only
+inside its defining module and that module's descendants, and Q20's driver
+sat in `worker`'s parent (`adapter`), while the sealed C52 driver was
+`worker`'s own child (`crates/rum-jupyter/src/adapter/worker/c52.rs`,
+`use super::*`, appended as `mod c52` to `worker.rs` at
+`.temp/g15-c2/c52/assemble_jupyter.py:51,53`). My Q20 wording placed the
+driver one module too high; the STOP is correct. It carries zero
+binding/receipt/proof/execution credit and zero retained changes. The
+temporary facade and root shims were restored byte-exactly
+(`suspension_oracle.rs` `adb6aae9…`; the facade absent; all seven adapter
+sources at their sealed hashes `mod.rs` `b3feb8ef…`, `worker.rs`
+`94df4c10…`, `execute.rs` `cbdc0f8d…`, `input_retirement.rs`
+`5ca28f9a…`, `iopub.rs` `ac5ed850…`, `render.rs` `ca824c5e…`, `model.rs`
+`69c59a46…`); the run's own 5,331-file hash scope is entry-identical and
+the full 5,739-file workspace equals the seventeenth run's final tree
+except this commit's three docs. Q21 authorizes exactly one nested
+test-only include of the unchanged `worker.rs` with the single observation
+driver inside it; I compile-verified that layout in both modes before
+ruling, and the last 60 keys then continue.**
+Run `cdx`, unit `brief-739-cdx-20261116-031702-1444994`, rc 0, peak
+884,985,856 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 943,818 B, sha256 `433391b2…`; report
+`.temp/brief-739/report.json`, 36,570 B, sha256 `aff1f278…`; 0 recorded
+changes (0 added, 0 modified, 0 deleted), 0 disclosures; 6 PASS / 1
+FLAGGED / 1 FAIL (the Q21 layout question), 3 deviations, 1 question; 121
+citations verified; no manifest or lock hash changed and no git or network
+command ran.
+
+**What the run did.** Exactly Q20's layout: `suspension_oracle.rs` gained
+the `extern crate self as rum_host;` shim, the `#[path]` `kernel_model`
+re-export of the unchanged `rum-jupyter/src/model.rs`, and the
+`adapter_facade` declaration; `adapter_facade.rs` included the unchanged
+`adapter/mod.rs` and appended one driver calling `worker::ExecuteSegment`
+and `worker::run_segment`. `cargo check -p rum-stdlib --test
+suspension_oracle` failed both arms at 2.631346 s / 1.830262 s with
+exactly the three private-item diagnostics and nothing else; no test ran.
+All four recorded leaf commands total 5.458240 s. No binding, receipt,
+proof, execution or encoding credit; no acceptance suite, no maintenance
+replay (nothing retained), no lane rebuild, and the complete 9,060-key
+schedule stays unmeasured. The run also re-verified the historical pins
+(`jupyter_driver.rs` `3c10ddfb…`, `assemble_jupyter.py` `94881113…`, the
+full-proofs packet `15740744…`) and the sealed placement
+`parent=adapter::worker child=c52`.
+
+**Q21 ruling — the nested worker include, and nothing more.**
+- The layout is authorized exactly as I compile-verified it:
+  `suspension_oracle.rs` gains only those three root items, and the new
+  `crates/rum-stdlib/tests/suspension_oracle/adapter_facade.rs` contains
+  `include!("../../../rum-jupyter/src/adapter/mod.rs");` followed by
+  `pub(crate) mod observed_worker { include!("../../../rum-jupyter/src/adapter/worker.rs");
+  <the one driver> }`. The driver may construct `ExecuteSegment::{Eval,
+  Resume}`, call `run_segment`, and sample
+  `Session::logical_profile_test_rows()` at the terminal outcome on the
+  executing thread, before snapshot/projections/fresh work; the shared
+  fixture supplies the ledger lease/reset (and the probe begin/end the
+  sealed route uses) around it.
+- Compiling `worker.rs` a second time is authorized only inside that one
+  nested module, with the seven source files byte-identical to the hashes
+  above. The driver's only calls into the worker copy are
+  `ExecuteSegment::{Eval,Resume}` construction and `run_segment`; any
+  other private item, a second driver or any other appended item is
+  outside this authorization and a STOP. No production byte, field
+  visibility, Cargo graph or lock change; no copied logic; the receipt
+  constructor unchanged; the temporary reachability probe stays removed;
+  the declaration is recorded; an audit rejection or non-byte-exact reuse
+  is a STOP.
+- My own verification of the layout (director probe, not new evidence
+  from the worker): the exact module shape type-checks with rc 0 in both
+  arms at 1.60 s / 1.66 s under `scripts/memory-scope.sh` 14G at `-j8`
+  offline; a calibration renaming `run_segment` to a nonexistent function
+  fires `E0425`, so the facade is genuinely compiled; the probe was then
+  removed and the tree restored byte-exactly (`suspension_oracle.rs`
+  `adb6aae9…`, facade absent, the 5,739-file snapshot equal to the sealed
+  lane workspace except the three committed docs).
+- Option 2 is declined: making `ExecuteSegment` and `run_segment`
+  `pub(super)` would add permanent production visibility for a test-only
+  need and would alter the production source the sealed evidence was
+  produced from; the nested include keeps production bytes exact and
+  reproduces the sealed driver's own placement.
+- Then both 30-key matrices (`P2611` Eval, `P2612` Resume) at multiplicity
+  one in both arms at the sealed sampling point, each record's own
+  omission in its sealed direction — all 60 sealed records are
+  `valid=true`, `native_same=true`, `semantic_same=false`, so `Output`; a
+  direction the sealed record does not show is a STOP — with the observed
+  boundary row bag under a constant-field Native control plus missing and
+  duplicate controls (any sealed-invalid record is recorded as
+  sealed-invalid at zero credit; none here). Then the last 60 keys
+  complete the 9,060-key active campaign (151 rows), and the complete
+  schedule and acceptance are measured under the 1,500 s bound per
+  expanded-oracle build+run, cumulative cost disclosed separately (this
+  run: compile 2.631346 / 1.830262 s; leaves 5.458240 s; schedule
+  unmeasured).
+- Keep the 36 current-blocked proof records, the 598 absent / 35,135,
+  the 24 named exclusions / 1,445 and the requirement bag 175 / 10,505
+  named; no settlement, no owner promotion, no encoding key; replay
+  maintenance after the fixture change; rebuild the lane
+  content-addressed from the final tree; any further private access is a
+  STOP and a question.
+
+**Host gate.** The run's restoration and diagnostics reproduce: the
+run's own audit (`audit.py`) prints `FINAL TREE IDENTITY PASS files=5331
+added=0 modified=0 deleted=0`, `Q20 DIAGNOSTIC EXACT PASS arm=default
+errors=3 codes=E0603 items=ExecuteSegment::Eval,ExecuteSegment::Resume,run_segment
+unrelated_errors=0 tests_run=0` (same for `no-default`), the unchanged
+`COMMITTED BINDINGS PASS required_rows=175 required_keys=10505 bound_rows=149
+bound_keys=9000 active_rows=2 active_keys=60 excluded_rows=24
+excluded_keys=1445 blocked_total=1505 multiplicity=1`, zero current-run
+credit, the unchanged proof classes and counts (`749/43390`,
+`151/8255`, `598/35135`, `115/6270`, `36/1985`), the unchanged known
+losses, ownership (964 G13 rows / 44 owners / 3,025 keys / 920
+NotYetBound; 51 Open owners), the three historical pins, the sealed
+driver placement, the unchanged maintenance pins and `MAINTENANCE REUSE
+PASS retained_source_changes=0 replay=not_required
+acceptance_started=false stale_derived_cell_failures=0
+inventory_hand_edits=0`. I recomputed the run's 5,331-file hash scope
+myself (equal entry-to-final), compared the full 5,739-file workspace
+with the seventeenth run's sealed lane identity (equal except `TODO.md`
+and the two committed briefs), and verified the seven adapter hashes and
+`adb6aae9…` before and after my probe. The report's 121 citations
+verify. C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner
+is promoted, no guest executes, no encoding key runs, and `CHANGELOG.md`
+and S10 stay blocked. The partial tree is the state to continue from.
+
+**Continuation 18.** Entry state: 149 rows / 9,000 keys; 2 active rows /
+60 keys (`P2611`, `P2612`); 24 director-excluded rows / 1,445; proofs
+749/43,390; encoding 0 of 18,840. Add the Q21 nested include and the one
+driver exactly as ruled, execute both 30-key matrices with the per-record
+`Output` direction and the constant/missing/duplicate controls, complete
+the 9,060-key campaign (151 rows), and measure the complete schedule and
+acceptance under the 1,500 s bound. The partial tree is the state to
+continue from; do not restart and do not hand-edit a generated cell.

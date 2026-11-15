@@ -114887,3 +114887,81 @@ constant/missing/duplicate controls, complete the 9,060-key campaign,
 and measure the complete schedule and acceptance under the 1,500 s
 bound. The partial tree is the state to continue from; do not restart
 and do not hand-edit a generated cell.
+
+### Continuation 78 — eighteenth run: Q20's driver sits one module too high (`E0603` in both modes, zero credit, exact restore), and Q21 authorizes the nested worker include the sealed driver actually used
+
+**2026-11-16 — brief 739's eighteenth run executed continuation 17 and is
+accepted at its STOP. Q20's exact layout — the three root shims, the
+`adapter/mod.rs` include, and one `observe_segment` appended in the
+including module — failed both feature modes with exactly three `E0603`
+diagnostics (the two `ExecuteSegment` uses and `run_segment`), no
+unrelated compiler error and no executed test. A private item is visible
+only in its defining module and that module's descendants; the driver sat
+in `worker`'s parent, while the sealed C52 driver was `worker`'s child
+(`adapter/worker/c52.rs`, `use super::*`, `mod c52` appended to
+`worker.rs` at `assemble_jupyter.py:51,53`). My Q20 wording placed it one
+module too high; the STOP and Q21 are correct and carry zero
+binding/receipt/proof/execution credit. The probe was restored
+byte-exactly (`suspension_oracle.rs` `adb6aae9…`, the facade absent, all
+seven adapter sources at their sealed hashes) and the 5,739-file
+workspace equals the seventeenth run's final tree except this commit's
+three docs.**
+Run `cdx`, unit `brief-739-cdx-20261116-031702-1444994`, rc 0, peak
+884,985,856 B, oom 0 / oom_kill 0; log 943,818 B sha256 `433391b2…`;
+report 36,570 B sha256 `aff1f278…`; 0 changes, 6 PASS / 1 FLAGGED / 1
+FAIL, 3 deviations, Q21; 121 citations verified.
+
+**Q21 ruling.** Authorize exactly one nested test-only module inside the
+included adapter that includes the unchanged `worker.rs` a second time
+and holds the single observation driver beside `ExecuteSegment` and
+`run_segment`; that is the shape I compile-verified (rc 0 both arms at
+1.60 s / 1.66 s; the `E0425` calibration confirms the facade is really
+compiled; the probe removed and the tree restored byte-exactly). The
+driver may construct `ExecuteSegment::{Eval,Resume}`, call `run_segment`,
+and sample `Session::logical_profile_test_rows()` at the terminal outcome
+on the executing thread before snapshot/projections/fresh; the fixture
+supplies the ledger lease/reset around it. Compiling `worker.rs` twice is
+authorized only inside that one module, with the seven sources
+byte-identical (`b3feb8ef…`, `94df4c10…`, `cbdc0f8d…`, `5ca28f9a…`,
+`ac5ed850…`, `ca824c5e…`, `69c59a46…`); the only private calls are
+`ExecuteSegment::{Eval,Resume}` and `run_segment`, and anything else is a
+STOP. No production byte, visibility, Cargo graph or lock change; no
+copied logic; the receipt constructor unchanged; the temporary
+reachability probe stays removed; the declaration recorded. Option 2 is
+declined: `pub(super)` on the two items would add permanent production
+visibility for a test-only need and would alter the production source the
+sealed evidence came from. Then both 30-key matrices (`P2611` Eval,
+`P2612` Resume) at multiplicity one in both arms, each record's own
+omission in its sealed direction (`Output` for all 60; a direction the
+sealed record does not show is a STOP), the observed boundary row bag
+under a constant-field Native control plus missing and duplicate
+controls, and the last 60 keys complete the 9,060-key campaign (151
+rows) with the complete schedule and acceptance measured under the
+1,500 s bound. Keep the 36 current-blocked, 598/35,135, 24 exclusions /
+1,445 and requirement bag 175 / 10,505 named; no settlement, no
+promotion, no encoding; replay maintenance after the fixture change;
+rebuild the lane content-addressed; any further private access is a STOP
+and a question.
+
+**Host gate.** My own checks closed with zero failures: the run's
+5,331-file hash scope recomputed entry-to-final equal; the full
+5,739-file workspace compared with the seventeenth run's sealed lane
+identity (equal except `TODO.md`, briefs 623 and 739); the seven adapter
+hashes and `adb6aae9…` verified before and after my probe; the run's
+audit reproduced (bindings 175/10,505 required, 149/9,000 bound, 2
+active/60, 24 excluded/1,445, blocked 1,505; proofs 749/43,390 with
+151/8,255 and 598/35,135; five known losses; ownership 964 G13 rows /
+44 owners / 3,025 keys / 920 NotYetBound and 51 Open owners; the three
+historical pins; the sealed driver placement; maintenance pins
+unchanged); the 121 citations verify. C2 stays Open at 118 Residual + 0
+Lost; no row settles, no owner is promoted, no encoding key runs;
+`CHANGELOG.md` and S10 stay blocked. The partial tree is the state to
+continue from.
+
+**Continuation 18.** Entry state: 149 rows / 9,000 keys; 2 active rows /
+60 keys; 24 excluded / 1,445; proofs 749/43,390; encoding 0 of 18,840.
+Add the Q21 nested include and the one driver, execute both 30-key
+matrices with the per-record `Output` direction and the
+constant/missing/duplicate controls, complete the 9,060-key campaign,
+and measure the complete schedule and acceptance under the 1,500 s
+bound.
