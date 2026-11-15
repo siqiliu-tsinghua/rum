@@ -1229,3 +1229,118 @@ never a skip. C2 stays Open at 118 Residual + 0 Lost; no settlement, no
 promotion, no encoding key; `CHANGELOG.md` and S10 stay blocked. The partial
 tree is the state to continue from; do not restart and do not hand-edit a
 generated cell.
+
+### Continuation 10 — tenth run: the 1,430 option keys authenticate; the canonical-loader extraction is the next wall, and Q13 authorizes it
+
+**2026-11-15 — brief 739's tenth run executed continuation 9 and stopped
+before any edit. All 1,430 option-row keys authenticated against the original
+seals, the frozen required tuples and the full raw/disabled parity, and 23
+route-specific own omissions passed; but the canonical `logical_profile`
+inheritance body is reachable only by exposing `from_rows` in
+`fixtures/logical_profile/plans.rs`, a path outside the enumerated scope. Q13
+authorizes exactly that five-line extraction, pinned by patch sha256; the run
+credits no binding, receipt or proof.**
+Run `cdx`, unit `brief-739-cdx-20261115-074704-775288`, rc 0, peak
+572,661,760 B (well under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 4,137,960 B, sha256 `f35ac30e…`; report
+`.temp/brief-739/report.json`, 18,344 B, sha256 `d1dbdcce…`; zero recorded
+changes; report 6 PASS / 2 FLAGGED / 1 NA / 1 FAIL (the FAIL is the campaign
+unfinished), 1 disclosure, 2 deviations, Q13; 22 citations verified — I reran
+`python3 scripts/report.py check 739` myself.
+
+**What was authenticated (read-only; zero credit).**
+- `P1139` 715, `P1142` 165, `P1147` 550 keys. For each row the settlement's
+  real-receipt key set exactly equals the frozen `required` tuples in
+  `bindings.tsv` (sorted equality, no duplicates, count equals the row's
+  `required_nonencoding`), and the re-derived sha256 / count / ledger
+  dependency triple equals the frozen `required-keys` provenance row pinned
+  to the settled ledger `73ec2ff5…`.
+- Every receipt's raw real record equals its disabled-arm record, is valid,
+  semantic-same and native-same, resumed equals queued, all ten cells per
+  row, distinct probes; each plan's source/setup/trace and pauses match the
+  sealed fixture object; no `InternalContinuation` source.
+- The 1,415 distinct canonical plan input rows were preserved verbatim
+  (12 columns each) in `c9-option-canonical-input.tsv` for derivation — not
+  resolved by hand, not defaulted here.
+- 23 route-specific own omissions: armed and caught, not survived, exit 0,
+  `C2_ARM`/`C2_MUTANT_HIT` present, the mutant differs, 55 pause receipts
+  per route with distinct probes and the route's pause prompt.
+- 42 historical pins hash-match — the three seal manifests, the
+  settlements/proof/schema JSONs, the six plan/fixture/TSV inputs, the
+  settled ledger and every cited raw log; I re-hashed all 42.
+- Entry and final hash manifests are identical over 3,273 files, and
+  `git status` / `git diff --stat` are exactly the ninth-run tree I gated
+  (9 modified / 11 untracked entries; 125 insertions / 74 deletions) — no
+  source, inventory, binding, receipt, certificate or encoding change.
+
+Credit: zero bindings, zero executions, zero proofs, zero encoding keys. The
+campaign stays 65 rows / 3,380 keys, 86 active rows / 5,680 keys, 24 excluded
+rows / 1,445 keys; proofs stay 749/43,390 (151/8,255; 115/6,270; 36/1,985;
+598/35,135; five known losses); owners stay 51 Open.
+
+**The STOP.** Accepted. The scope enumerates `fixtures/obligations/*` and
+additive interfaces in `fixtures/mod.rs`; `fixtures/logical_profile/plans.rs`
+is not in it. `plans()` hard-wires its own 796-plan `plans.tsv`, none of the
+1,430 keys belongs to that table, and Q12 forbids a parallel resolver. The
+worker prepared an unapplied five-line patch and did not edit — correct.
+
+**Q13 ruling — authorize the pinned extraction, nothing more.**
+- Apply exactly `.temp/brief-739/c9-proposed-canonical-loader.patch`
+  (sha256 `be031ff4…`): `plans()` becomes
+  `from_rows(include_str!("plans.tsv"))`, its inheritance body moves
+  verbatim into `pub(crate) fn from_rows(text: &str) -> Vec<Plan>`, and no
+  other byte of that file changes.
+- Assert `plans()` still yields the same 796 plans, and the switched LP
+  targets stay 5/5 in both arms.
+- Derive the option rows' inherited fields (source, setup, trace, configure,
+  files, projections) by feeding the 1,415 preserved canonical inputs
+  through `from_rows`; every derived value must equal the sealed fixture
+  value the authentication already compared. An underivable field names its
+  key/row `PortBlocked` with the exact cause — never invented, never
+  dropped.
+- Install exactly the 1,430 frozen keys; execute at multiplicity one
+  through the real routes in the two mandated arms with the same observers
+  and channel set; reconcile the receipts. No re-pin, no sampling, no new
+  exclusion.
+- Then the remaining 83 active rows / 4,250 keys and the 24 non-source
+  routes / 1,315 keys, keeping the 36 current-blocked proof records, the
+  598 absent / 35,135 and the 24 named Execute blockers / 1,445 named.
+- Replay the retention and ownership maintenance after the source edit and
+  before acceptance; a stale derived-cell red is an ordering artifact.
+- The P0543 lane is rebuilt content-addressed from the final tree (this
+  edit and every fixture addition change it): the same nine-manifest audit,
+  every non-manifest file hash-identical, the build graph plus the
+  checked-only `NonAmplifying` discriminator both ways with its firing
+  falsifier, and the same third receipt identity; its build and run costs
+  stay separate and inside the acceptance accounting; a missing lane is a
+  hard error, never a skip.
+- The complete active schedule and the acceptance suite run under the
+  1,500 s bound for the two mandated arms; over it, STOP with the measured
+  data and the sharing analysis. The two-batch zero-evidence stop-loss
+  stays. Any production, Cargo, dependency, manifest or lock change is a
+  STOP.
+- Option 2 (a separate director brief for the loader API) is declined: it
+  is the same five-line test-only edit behind an extra round-trip with no
+  behavioral difference, and the narrow pinned extraction is the single
+  implementation Q12 requires.
+
+**Host gate.** None is owed and none was run: the run changed nothing, and
+the tree is byte-identical to the ninth-run tree I gated green (hash
+manifests equal over 3,273 files; git status and diff unchanged). I reran the
+citation check (22 verified) and re-hashed the 42 pins and the 1,430
+frozen-key tuples myself; the three `OPTION PACKET AUTH PASS … frozen_keys_exact=true
+encoding=0` lines, the `OPTION ROUTE AUTH PASS routes=23 own_omissions=23
+new_proofs=0` line and the closing `OPTION AUTHENTICATION PASS keys=1430
+canonical_inputs=1415 historical_pins=42 binding_credit=0 execution_credit=0
+proof_credit=0` are reproduced from the preserved script and its JSON.
+
+**Continuation 10.** Entry state: 65 rows / 3,380 keys complete; 86 active
+rows / 5,680 keys; 24 director-excluded rows / 1,445 keys; proofs 749/43,390;
+encoding 0 of 18,840; the option rows' 1,430 keys authenticated but
+uncredited. Apply the pinned extraction, derive through the canonical
+`from_rows`, install and execute the option rows, then the remaining bag and
+routes, replay maintenance, rebuild the lane from the final tree, and run the
+complete schedule and acceptance under the 1,500 s bound. C2 stays Open at
+118 Residual + 0 Lost; no settlement, no promotion, no encoding key;
+`CHANGELOG.md` and S10 stay blocked. The partial tree is the state to
+continue from; do not restart and do not hand-edit a generated cell.

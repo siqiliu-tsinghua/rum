@@ -113946,3 +113946,81 @@ both feature modes. The sandbox's nine loopback denials do not appear on the
 host. C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is promoted,
 no encoding key runs; `CHANGELOG.md` and S10 stay blocked. The partial tree is
 the state to continue from.
+
+### Continuation 72 — tenth run: the 1,430 option keys authenticate (zero credit), the canonical-loader wall falls to a pinned five-line extraction under Q13
+
+**2026-11-15 — brief 739's tenth run executed continuation 9 and is accepted
+at its pre-edit STOP. All 1,430 option-row keys authenticated against the
+original seals, the frozen required tuples and the full raw/disabled parity,
+and 23 route-specific own omissions passed; reusing the canonical
+`logical_profile` inheritance body then required exposing `from_rows` in
+`fixtures/logical_profile/plans.rs`, outside the enumerated scope. Q13
+authorizes exactly that five-line test-only extraction, pinned by patch
+sha256. No binding, receipt or proof is credited.**
+Run `cdx`, unit `brief-739-cdx-20261115-074704-775288`, rc 0, peak
+572,661,760 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_739.log`, 4,137,960 B, sha256 `f35ac30e…`; report
+`.temp/brief-739/report.json`, 18,344 B, sha256 `d1dbdcce…`; zero recorded
+changes; report 6 PASS / 2 FLAGGED / 1 NA / 1 FAIL, 1 disclosure, 2
+deviations, Q13; 22 citations verified.
+
+**What was authenticated.** `P1139` 715, `P1142` 165, `P1147` 550 keys; for
+each row the settlement's real-receipt key set exactly equals the frozen
+`required` tuples in `bindings.tsv` (I recomputed all 1,430 tuples and their
+digest / count / ledger-dependency triple myself, and re-compared the receipt
+key sets), each plan's source/setup/trace and pauses equal the sealed fixture
+object, every raw real record equals its disabled-arm record and is valid,
+semantic-same and native-same with resumed equal to queued over ten-cell rows,
+and the 42 historical pins hash-match (I re-hashed all 42). The 1,415 distinct
+canonical plan input rows were preserved verbatim (12 columns) for
+derivation, not resolved by hand. The 23 route-specific own omissions are
+armed and caught, not survived, with the mutant differing and 55 distinct
+pause receipts per route. Entry and final hash manifests are identical over
+3,273 files, and the working tree is exactly the ninth-run tree I gated (9
+modified / 11 untracked entries; 125 / 74 lines): no source, inventory,
+binding, receipt, certificate or encoding change. Credit: zero bindings,
+zero executions, zero proofs, zero encoding keys; the campaign stays 65 rows /
+3,380 keys, 86 active rows / 5,680 keys, 24 excluded rows / 1,445 keys; the
+proof bag stays 749/43,390 (151/8,255; 115/6,270; 36/1,985; 598/35,135; five
+known losses); owners stay 51 Open.
+
+**The STOP.** Accepted. The scope enumerates `fixtures/obligations/*` and
+additive interfaces in `fixtures/mod.rs`, not
+`fixtures/logical_profile/plans.rs`; `plans()` hard-wires its own 796-plan
+`plans.tsv`, none of the 1,430 keys belongs to that table, and Q12 forbids a
+parallel resolver. The worker prepared an unapplied five-line patch and did
+not edit. Correct.
+
+**Q13 ruling.** Apply exactly `c9-proposed-canonical-loader.patch`
+(sha256 `be031ff4…`): `plans()` becomes
+`from_rows(include_str!("plans.tsv"))`, its inheritance body moves verbatim
+into `pub(crate) fn from_rows(text: &str) -> Vec<Plan>`, and no other byte of
+that file changes; assert the same 796 plans and keep the switched LP targets
+5/5 in both arms. Derive the option rows' inherited fields from the 1,415
+preserved canonical inputs through `from_rows`, requiring every derived value
+to equal the sealed fixture value; an underivable field names its key/row
+`PortBlocked` with the exact cause, never invented and never dropped. Install
+exactly the 1,430 frozen keys and execute them at multiplicity one through
+the real routes in the two mandated arms with the same observers and channel
+set; no re-pin, no sampling, no new exclusion. Then the remaining 83 active
+rows / 4,250 keys and the 24 non-source routes / 1,315 keys, keeping the 36
+current-blocked proof records, the 598 absent / 35,135 and the 24 named
+Execute blockers / 1,445 named; replay retention and ownership maintenance
+after the source edit and before acceptance. The P0543 lane is rebuilt
+content-addressed from the final tree with the same nine-manifest audit,
+hash-identical non-manifest files, build-graph plus checked-only
+`NonAmplifying` discriminator both ways with its firing falsifier, and the
+same third receipt identity; its costs stay separate, and a missing lane is a
+hard error, never a skip. The complete schedule and acceptance run under the
+1,500 s bound; over it, STOP with the measured data and the sharing analysis.
+The two-batch zero-evidence stop-loss stays; any production, Cargo,
+dependency, manifest or lock change is a STOP. Option 2 is declined: the same
+five-line test-only edit behind an extra round-trip with no behavioral
+difference. My host gate: none is owed and none was run, because the run
+changed nothing and the tree is byte-identical to the ninth-run tree I gated
+green (hash manifests equal over 3,273 files; git status and diff unchanged);
+I reran the citation check (22 verified) and recomputed the 1,430 frozen
+tuples, the receipt key sets and the 42 pins myself. C2 stays Open at 118
+Residual + 0 Lost; no row settles, no owner is promoted, no encoding key runs;
+`CHANGELOG.md` and S10 stay blocked. The partial tree is the state to continue
+from.
