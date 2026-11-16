@@ -116677,3 +116677,37 @@ first-run charge is 159.82 s (94.32 s measured plus 0.5 s bookkeeping, the
 CM4's committed share stays 19,500 s and 743–746 retain 49,500 s. No
 implementation is authorized; Q24/Q23/Q22/Q21/Q20/Q19/Q18/Q17/Q16/Q15/Q14/
 Q13/Q12/Q11/Q10 and every earlier term stand.
+
+### Continuation 103 — brief 747's continuation 1: Q25 adopted (option 2, the four-file extension); the implementation order
+
+Continuation 1 resolved all four frontier classes as option 2: the
+instrumentable surface extends by exactly four raw resume files
+(`debug_tools/trace/resume_frames.rs`, `kernel_data/structure_data/replace/
+guarded/resume_frames.rs`, `strings/patterns/search/guarded/replace/
+resume_frames.rs`, `strings/patterns/search/rules/resume_frames.rs`) from 90
+to 94 paths and 180 to 188 postimages, with all 151 `source_schema` cells
+rebound only after all 151 plans pass. The transport is the owner-qualified
+call handoff: a Weak bind of the actual `Arc<F>` at the existing
+`insert_suspension_frame` allocation (`suspension/core.rs:561`, one
+`Arc::new`, one `push_back`), the raw method's `self: Arc<Self>` read, a
+direct-call grant claimed into a local callee activation before any reentry,
+and a one-use owner predicate at the unchanged pinned omission; the key
+includes the Weak allocation identity; retirement on consumption, every raw
+resume exit including Err/unwind, call-scope exit without claim,
+abandonment/dead Weak, a new episode and run boundaries; no strong owner, no
+lifetime extension, no production Drop change. The scoped-call-only remedy is
+not admitted (a stack guard is not an authenticated Arc identity; a
+nearest-scope token would be the prohibited ambient owner); the 19 control
+families and both cfg arms must execute before admission. P2348's actual
+guard frame and both output paths are specified with frozen events, source
+keys and tails unchanged. The 151-plan bar stands; the 138 subset does not
+ship; zero unknown/normalized; Q24 artifacts inherited by hash. Continuation
+1's charge is 81.45 s (10.95 s measured plus 0.5 s bookkeeping, 5 s short-IO,
+the 60 s reserve and the 5 s report reserve), leaving 1,258.73 s unspent in
+the design envelope; the Q25 ruling closes that envelope and charges the 60 s
+preparation reserve from the implementation envelope of 9,000 s (CM4's
+committed share becomes 28,500 s; 743–746 retain 40,500 s; one 6,000 s
+workspace envelope assigned, the second held for verification, which uses
+brief 742's remaining 1,440 s). The implementation is brief 742 continuation
+16, committed before dispatch; no campaign, epoch, new catch, acceptance or
+CM5 is authorized, and every earlier term stands.

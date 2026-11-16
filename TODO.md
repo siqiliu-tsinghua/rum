@@ -631,6 +631,29 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   falsifiers, a specified minimal surface extension (90→94 rows,
   180→188 postimages, the schema derivation), or a named `PortBlocked`
   with the exact missing fact; no implementation is authorized.
+  Brief 747 continuation 1 is accepted and Q25 is adopted: all four
+  classes select option 2 — exactly four raw resume files
+  (`debug_tools/trace/resume_frames.rs`, `kernel_data/structure_data/
+  replace/guarded/resume_frames.rs`, `strings/patterns/search/guarded/
+  replace/resume_frames.rs`, `strings/patterns/search/rules/
+  resume_frames.rs`) extend the surface from 90 to 94 paths and 180 to
+  188 postimages, all 151 `source_schema` cells rebound only after all
+  151 plans pass. The owner-qualified call handoff (Weak bind at the
+  existing `insert_suspension_frame` allocation, raw `self: Arc<Self>`
+  read, direct-call grant claimed into a local callee activation, one-use
+  omission predicate; key includes the Weak allocation identity) is the
+  candidate transport, admitted only after the executed extracted and
+  emitted controls in both cfg arms; the scoped-call-only remedy is not
+  admitted; P2348's guard frame and both output paths are specified with
+  frozen events, source keys and tails unchanged; 19 control families.
+  Continuation 1 ran 81.45 s (1,258.73 s unspent, envelope closed by the
+  Q25 ruling) with 107 deliverables, 11 PASS / 3 FLAGGED / 1 NA, 2,751
+  live citations, two identical roots, 273 accepted artifacts and 5,400
+  maintained files unchanged. The implementation order is brief 742
+  continuation 16: Drafts A+B in one source-editing pass at 9,000 s
+  focused plus one 6,000 s workspace envelope (CM4's committed share
+  28,500 s; 743–746 retain 40,500 s; the second workspace envelope held
+  for verification, which uses 742's remaining 1,440 s).
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

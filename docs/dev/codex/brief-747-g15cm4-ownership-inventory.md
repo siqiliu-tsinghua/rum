@@ -279,3 +279,86 @@ no network, no git, no campaign, epoch, acceptance, production or inventory
 change; no new production field, accessor, allocation or overlay implemented.
 After its gate I rule Q25 and the implementation funding; nothing in this
 continuation authorizes implementation.
+
+## Continuation 2 ruling (director) — Q25 adopted: option 2, the four-file extension, and the implementation order
+
+Continuation 1 is accepted. It resolved all four frontier classes as option 2
+— a specified extension of the instrumentable surface by exactly four raw
+resume files — and changed no covered source. Run: `cdx` (unit
+`brief-747-cdx-20261117-010058-1864907`, rc 0, peak 386,174,976 B, oom 0 /
+oom_kill 0; log `.temp/logs/cdx_brief_747.log`, 1,190,702 B, sha256
+`fd6f309a…`; report STOP, 107 changes (107 added), 0 disclosures, 0
+deviations, 0 questions, 11 PASS / 3 FLAGGED / 1 NA, 101 citations verified;
+81.45 s charged — 10.95 s measured plus 0.5 s bookkeeping, 5 s conservative
+short-IO, the 60 s preparation/final-reporting reserve and the 5 s
+remaining-report reserve — leaving 1,258.73 s unspent in the design
+envelope). Scope holds: the 23-entry partial CM4 tree and the 273 accepted
+first-run artifacts are byte-identical (changed=0, added=0), the 5,400
+maintained files and `source_schema` are unchanged, `production_changes=0`,
+`git_invoked=false`; the two 11-file design roots are byte-identical (table
+sha256 `a35dd8b1…`); 2,751 live citations authenticated; all 151 rows remain
+classified with zero unknown and zero normalized, the 138 expressible / 13
+blocked status preserved pending implementation proofs. The three FLAGGED
+items are settled as stated: the scoped-call-only remedy is not admitted
+(a stack guard separates invocations but supplies no authenticated join from
+the constructor's Arc identity into a helper receiving a cloned or borrowed
+state; a nearest-scope token would be the ambient ownership answer prohibited
+by Q17/Q19); the extension controls and full-file restoration are specified,
+not executed; and the failed extraction attempt is retained with its
+correction (two classes before, four after; no zero-progress pair).
+
+Q25 is ruled and adopted as option 2 for all four classes. The instrumentable
+surface extends by exactly four raw resume files —
+`crates/rum-runtime/src/runtime/debug_tools/trace/resume_frames.rs` (P0214,
+P0216), `crates/rum-runtime/src/runtime/kernel_data/structure_data/replace/guarded/resume_frames.rs`
+(P1070), `crates/rum-stdlib/src/strings/patterns/search/guarded/replace/resume_frames.rs`
+(P2348, P2354) and `crates/rum-stdlib/src/strings/patterns/search/rules/resume_frames.rs`
+(P2379, P2381, P2385, P2387, P2409, P2411, P2416, P2418) — from 90 to 94
+paths and from 180 to 188 postimages, with all 151 `source_schema` cells
+rebound only after all 151 plans pass. The maintained source files stay
+unchanged; the extension files are instrumented copies in the generated
+overlay, no fifth overlay is authorized, and no 138-row subset may ship. The
+owner-qualified call handoff is the transport: at the existing
+`insert_suspension_frame` allocation (`suspension/core.rs:561`, the one
+`Arc::new(frame)` and the one `push_back`) a weak binding records the actual
+`Arc<F>`'s allocation identity, never a strong clone; each new raw method
+reads the already executing `self: Arc<Self>` and issues a local guard; the
+exact original helper call receives a direct-call grant, claimed into a local
+callee activation before any guest code or reentry; only the local one-use
+owner predicate may answer the unchanged pinned omission, preserving its
+emission, selector, phase, operation, decoder, error/None branches and
+non-target finalizers. The key includes the selected row, opaque actual
+program, pair episode, own activation path, actual producer occurrence,
+concrete frame type and the Weak allocation identity of the actual Arc; type
+names, row names and edge labels never replace it. Eligibility is invalidated
+on consumption, every raw resume exit including `Err` and unwind, an exact
+call-scope exit without claim, abandonment or a dead Weak, a new pair/episode,
+and run boundaries; nested empty entries mask outer entries and may neither
+consume nor clear an outer owner; the helper adds no strong owner, no payload
+lifetime extension and no production `Drop` change. The transport is a
+candidate extension contract, not yet admitted: the implementation must
+execute its per-class extracted-statement controls and emitted-overlay
+controls, in both cfg arms, over the real audited allocation, raw
+clones/borrows/decoders, call and target statements; helper-only simulations
+and stack models are not credited. The 19 control families stand, including
+unrelated 0 / intended 1, nested unarmed, two armed nested owners, direct
+helper reentry, second consumption, retired Weak, wrong key components, wrong
+type/allocation, P2348's guard-immediate and resuspension paths, P1070's loop
+reentry, queued zero and disabled exactness. The P2348 path refinement is
+accepted: the actual guard frame and both output paths are specified with the
+frozen events, source keys and tails unchanged. Q24 option 2 stands for
+P0267/P0312/P0323/P1470/P1471, and the accepted Q24 artifacts are inherited
+by hash (the three original J reds remain 14 passed / 1 failed; the candidate
+fixtures remain 18/18 armed/disabled/admitted); the E rows still need their
+own fixed-point controls.
+
+Budget: this ruling closes the 747 design envelope — its 1,258.73 s unspent
+remainder is charged — and charges the 60 s preparation reserve from the
+implementation envelope. The implementation envelope is 9,000 s focused,
+allocated from the stage's 69,000 s reserve; CM4's committed share becomes
+28,500 s and 743–746 retain 40,500 s. One workspace envelope of 6,000 s is
+assigned to the implementation pass; the second stays held for the
+verification stage, which uses brief 742's remaining 1,440 s focused. The
+implementation is brief 742 continuation 16, committed before dispatch; after
+its gate I rule the result and dispatch the verification. Nothing here
+authorizes a campaign, epoch, new catch, acceptance, CM5 or a bar change.

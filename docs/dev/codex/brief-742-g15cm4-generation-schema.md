@@ -1661,3 +1661,92 @@ CM4's committed share becomes 19,500 s and 743–746 retain 49,500 s.
 
 All other Q23, Q22, Q21, Q20, Q19, Q18, Q17, Q16, Q15, Q14, Q13, Q12,
 Q11, Q10 and brief terms stand.
+
+## Continuation 16 ruling (director) — Q25 adopted: implement Drafts A and B in one pass (the complete 151-plan generator and the 94-row schema)
+
+Q25 is adopted as option 2 for all four frontier classes. The instrumentable
+surface extends by exactly four raw resume files —
+`crates/rum-runtime/src/runtime/debug_tools/trace/resume_frames.rs`,
+`crates/rum-runtime/src/runtime/kernel_data/structure_data/replace/guarded/resume_frames.rs`,
+`crates/rum-stdlib/src/strings/patterns/search/guarded/replace/resume_frames.rs`
+and `crates/rum-stdlib/src/strings/patterns/search/rules/resume_frames.rs` —
+from 90 to 94 paths and from 180 to 188 postimages. The maintained source
+files stay unchanged; the extension files are instrumented copies in the
+generated overlay; no fifth overlay, no new production field, accessor or
+allocation, and no 138-row subset is admissible. The owner-qualified call
+handoff specified in `.temp/brief-747/continuation-1/Q25.md` and
+`frontier.json` is the candidate transport, not yet admitted: its per-class
+extracted-statement controls and emitted-overlay controls must execute in
+both cfg arms over the real allocation, raw clones/borrows/decoders, call
+and target statements before any class is credited. The scoped-call-only
+remedy stays rejected.
+
+Design of record (read-only authority; authenticate against
+`verified-final-a/manifest.json` before use): `.temp/brief-747/continuation-1/`
+with `Q25.md`, `DRAFT-A-GENERATOR.md`, `DRAFT-B-SCHEMA.md`,
+`DRAFT-COMMON.md`, `DRAFT-C-REPLAY-GATE.md`, `GENERATOR-PLAN.md`, and
+`verified-final-a/{frontier.json,schema-plan.json,controls.json,scoped-call-decision.json,inventory.json,inventory.tsv,generated-file-set.tsv,composition.json,citations.json}`;
+`verified-final-b` is the byte-identical control root. The accepted first-run
+artifacts under `.temp/brief-747/` (273 files, `inventory.tsv` sha256
+`86912a3d…`) and the accepted Q24 artifacts are inherited by hash and are not
+re-derived, re-earned or hand-edited.
+
+Goal. Implement Drafts A and B consolidated into one source-editing pass: one
+deterministic declarative plan for each of the 151 frozen own rows, with every
+immediate/resumed/returned-request edge and actual owner identity, then
+render both complete overlay arms for the 94-path set and independently
+audit all preserved nodes; then mechanically emit and authenticate the
+six-column 94-row overlay table, rebind all and only the 151 `source_schema`
+cells, and print the new digest computed from the exact table bytes only
+after all 151 plans pass. Two fresh roots must be byte-identical. No semantic
+catch, campaign packet or acceptance result is claimed.
+
+Scope. May modify only: the eleven generation files enumerated in
+`GENERATOR-PLAN.md` under `crates/rum-stdlib/tests/suspension_oracle/mutations/generation/`;
+`mutations/mod.rs` and `mutations/schema.rs` for generation binding;
+`mutations/source_auth/{mod,schema,tests}.rs`; the mechanically emitted
+`mutations/source_auth/overlays.tsv`; only the 151 `source_schema` cells in
+`inventory/obligations/mutants.tsv`; and `obligations/mod.rs` solely for a
+necessary crate-private discovery export. The standing mechanical maintenance
+from `DRAFT-COMMON.md` may import only instrument-produced cells. Do not
+modify live production, `source_worker.rs`, runner/observer/predicate bodies,
+retained overlay bytes, CM3 selection, coverage or any unrelated inventory;
+do not add a fifth overlay, a production accessor/allocation, a placeholder
+schema digest, or a hand-edited derived cell.
+
+The bar. 151 plans, zero unknown edges, ten classes and 79 subtypes; the 94
+targets and 188 postimages; the 13 frontier rows' per-class extracted and
+emitted controls over the real statements in both cfg arms; the 19 control
+families (unrelated 0 / intended 1, nested unarmed, two armed nested owners,
+direct helper reentry, second consumption, retired Weak, wrong key
+components, wrong type/allocation, P2348 guard-immediate and resuspension
+paths, P1070 loop reentry, queued zero, disabled exactness, static
+duplicate/tail/drop rejection); the inherited Q24 reds and greens by hash;
+the 22 historical signatures authenticated; whole-file erasure and full-file
+AST restoration in both arms; the pinned omission AST and preserved nodes
+separately audited; the new schema digest independently re-hashed and all
+non-schema table cells byte-identical. After the last covered edit, run the
+standing replay in order — fingerprints, both production-acceptance
+certificate modes, ownership exactness, rejection census, LP01 and typed
+slots — then `cargo fmt --check`, then both workspace modes with the exact
+seven exclusions in `DRAFT-COMMON.md`, with the switched checks on the same
+binaries; full unfiltered suspension_oracle and typed_slot_census require
+failed=0 and filtered=0. Derived-cell-only reds are ordering artifacts and
+are replayed, never hand-edited; a semantic red is reproduced at one thread;
+failures are retained and quoted.
+
+Budget and stop rules. This continuation's implementation envelope is 9,000 s
+focused, allocated from the stage's 69,000 s reserve (CM4's committed share
+becomes 28,500 s; 743–746 retain 40,500 s); the Q25 ruling's 60 s preparation
+charge comes from it, leaving 8,940 s at dispatch, and the run charges its
+measured serial seconds plus 0.5 s bookkeeping against that balance. One
+workspace envelope of 6,000 s is assigned here; the second stays held for the
+verification stage. One cargo command at a time, offline and locked, jobs 8,
+inside the 16G scope, every long command through `scripts/run-bounded.py`.
+Stop-loss keyed on progress: two consecutive compiled attempts with no new
+plan or proof stop and report the remaining set. Stop before exceeding the
+envelope; checkpoint done/next/tree/budget after each milestone. No campaign,
+epoch, new catch, acceptance, CM5 or bar change. No network, no git, no
+`unsafe`, no dependency or lockfile change; leave the authorized candidate
+uncommitted for the director's gate; report in `rum-report/1` and return only
+its validated summary.
