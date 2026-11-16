@@ -116952,3 +116952,34 @@ paired rows P0001/P0002/P1566/P1805, the 151-plan generator, the double 94/188
 generation, the audits, the bound 94-row schema with 151 cells and the new
 digest, the replay, fmt and both workspace modes; second workspace held (742's
 1,440 s); CM4 28,500 s, 743–746 40,500 s; every earlier term stands.
+
+### Continuation 110 — brief 742 continuation 22: the typed-adapter abandonment finding is admitted and Q30 retires the typed permission at actual abandonment; continuation 23 implements the corrected teardown and the full bar
+
+Continuation 22 (`cdx`, unit `brief-742-cdx-20261117-061533-1949553`, rc 0,
+peak 444,588,032 B, oom 0/0; log 1,423,844 B sha256 `e13d3a73…`; report STOP,
+3,338 changes all in `.temp`, 0 disclosures, 1 accepted deviation, 0 questions,
+11 PASS / 2 FAIL / 2 NA, 300 citations; 89.676839 s charged leaving 7,961.143161 s
+focused; workspace 0 of 6,000) is accepted as a compliant Q28 stop. Scope holds:
+the 23-entry partial CM4 test layer is unchanged, `production_changes=0`,
+`source_schema` still `f9604852…` with `new_source_schema` null, all 94 admitted
+paths `not_emitted` with two stopped partials and both inside the set, and the
+two modified files are `.temp` only. The executed finding
+`PortBlocked::TypedAdapterAbandonmentWithRetainedArc` is admitted on the
+director's own six-form reproduction at one thread: armed hash and armed no-hash
+16/1 with `retired_hits=1` against required 0 and the real store suppressed
+(`List[5]` stays), disabled and live 17/0 with store parity (`List[6]` →
+`List[7]` retained, `List[5]` → `List[6]` no-alias); the live
+`FrameAbandon for TypedAdapter` is the same delegating text and `Entry` is
+`Clone`, so an abandoned adapter can survive through a strong reference. Q30
+retires the typed transport's permission at the adapter's actual abandonment
+before delegation, with drop as the backstop; Q29's token, sites, five original
+controls, fifteen inherited controls, 50-row map and insertion-route duty stand;
+the fix is one registered edit inside the 94 with erasure and whole-file AST
+restoration, and no control may be edited to pass. Continuation 23 resumes under
+7,961.143161 s plus the 6,000 s workspace: the corrected teardown re-executed in
+all six forms, then every typed row's own executed controls and insertion-route
+proofs, the four complex paired rows P0001/P0002/P1566/P1805, the 151-plan
+generator, the double 94/188 generation, the audits, the bound 94-row schema with
+151 cells and the new digest, the replay, fmt and both workspace modes; the
+1,440 s verification envelope and the second workspace stay held; CM4 28,500 s,
+743–746 40,500 s; every earlier term stands.

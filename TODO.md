@@ -804,14 +804,26 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   not a receipt: only P0396 has executed evidence. Run: 4,143 scratch
   changes, 16 PASS / 1 FLAGGED / 3 NA, 988 citations, 231.89 s charged
   of 1,500 (1,268.11 s returned; 8,050.82 s focused for the
-  implementation, workspace 0/6,000). Continuation 22 implements: every
+  implementation, workspace 0/6,000). Continuation 22 then stopped
+  under Q28 on an executed candidate-contract finding:
+  `PortBlocked::TypedAdapterAbandonmentWithRetainedArc` — an actually
+  abandoned P0396 typed frame with a retained adapter Arc still claims
+  its operation and suppresses the real store (`retired_hits=1` vs
+  required 0; the disabled/live baseline stores `List[6]` → `List[7]`);
+  the director reproduced all six forms at one thread (armed 16/1 ×2,
+  disabled/live 17/0 ×4). Q30 retires the typed permission at the
+  adapter's actual abandonment, not at Drop; Q29 stands. Run: 3,338
+  scratch changes, 11 PASS / 2 FAIL / 2 NA, 300 citations, 89.68 s
+  charged (7,961.14 s focused left; workspace 0/6,000). Continuation 23
+  implements: the corrected teardown re-executed in all six forms, every
   typed row's own executed controls and insertion-route proof (typed
-  adapter drop retires; a raw insertion route takes the Q26 discipline;
-  a route whose only instrumentable file is outside the 94 is a STOP),
-  the four complex paired rows P0001/P0002/P1566/P1805, the 151-plan
-  generator, the double 94/188 generation, the audits, the bound 94-row
-  schema with all 151 cells and the new digest, the replay, `cargo fmt
-  --check` and both workspace modes.
+  adapter abandonment retires, drop is the backstop; a raw insertion
+  route takes the Q26 discipline; a route whose only instrumentable file
+  is outside the 94 is a STOP), the four complex paired rows
+  P0001/P0002/P1566/P1805, the 151-plan generator, the double 94/188
+  generation, the audits, the bound 94-row schema with all 151 cells and
+  the new digest, the replay, `cargo fmt --check` and both workspace
+  modes.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

@@ -2261,3 +2261,100 @@ brief 742's remaining 1,440 s; CM4's committed share stays 28,500 s and 743–74
 retain 40,500 s. The stop-loss is the Q28 counter. No fifth overlay, no 138-row
 subset, no placeholder digest, no hand-edited derived cell, no weakened control,
 no git, no network, no `unsafe`, no dependency or lockfile change.
+
+## Continuation 23 ruling (director) — Q30: the typed transport's permission is retired at the frame's actual abandonment, not deferred to the adapter's drop; continuation 23 implements the corrected teardown and runs to the full bar
+
+Continuation 22 ran `cdx` (unit `brief-742-cdx-20261117-061533-1949553`, rc 0,
+peak 444,588,032 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`,
+1,423,844 B, sha256 `e13d3a73…`; report STOP, 3,338 changes (3,336 added, 2
+modified, 0 deleted — all in `.temp`), 0 disclosures, 1 deviation, 0 questions,
+11 PASS / 2 FAIL / 2 NA, 300 citations verified; 89.676839 s charged — 16.176839 s
+measured serial over 27 runs plus 13.5 s of per-receipt 0.5 s and the 60 s
+preparation/reporting reserve — leaving 7,961.143161 s of the 8,050.82 s focused
+envelope; workspace 0 of the assigned 6,000 s; the 1,440 s verification envelope
+and the second 6,000 s workspace stay held). The deviation is accepted: the
+complete generator and the mechanical 94-row schema are absent because the Q28
+stop fired before any maintained edit, and no subset, weakened control or
+placeholder schema was substituted. Scope holds: the director found the working
+tree at the same 23-entry partial CM4 test layer as entry with no maintained
+change, `production_changes=0`, `source_schema` still `f9604852…` with
+`new_source_schema` null, the 94 admitted paths all enumerated `not_emitted`
+(90 retained + 4 proposed-extension) with two stopped partials and both inside
+the admitted set, and the three document drifts are the director's own gate
+commits.
+
+The finding is `PortBlocked::TypedAdapterAbandonmentWithRetainedArc` for P0396,
+and it is admitted as an executed candidate-contract finding, not a production
+regression or a new catch. The director reproduced all six forms at one thread:
+armed hash and armed no-hash each 16 passed / 1 failed with `retired_hits=1`
+against the required 0 and `live_hits=1`; disabled and live, hash and no-hash,
+each 17 passed / 0 failed, with the semantic baseline recorded — with the alias
+retained, the abandoned frame's store executes and the target moves
+`List[6]` → `List[7]`; without it, `List[5]` → `List[6]`. In the armed form the
+abandoned frame's real store is suppressed (`List[5]` stays), so the defect is
+semantic, not a counter artifact. The control is exact: it runs the actual
+P0396 producer, construction, typed insertion, adapter allocation and actual
+`abandon` (returning `Discard`), retains the adapter alias, then resumes that
+alias and measures the omission; an independent live allocation in the same run
+measures its own one hit. The fixture's copied abandonment is the production
+text `self.inner.clone().abandon(context)`, and the live source has the same
+shape (`suspension/typed/adapter.rs:27-31`), reached from the driver through
+`Session::abandon_frames` → `Entry::abandon` → `TypedAdapter::abandon`
+(`core/abandon.rs:92`, `typed/entry.rs:30-39`), and `Entry` is `Clone`, so an
+abandoned adapter can remain alive through another strong reference. The
+fixture's only erasure is the registered `Drop`, so an abandoned-and-retained
+adapter keeps its operation binding and can claim it. The inherited fifteen
+controls and their source functions are byte-identical to continuation 21's
+fixture (the whole diff is one added control function and two added tests), and
+the five original controls still pass.
+
+Q30 rules that the typed transport's permission is retired at the frame's
+actual abandonment, not deferred to the adapter's Drop. The retained-alias
+falsifier is the same one Q26/Q27 impose on the raw transport, and the typed
+transport must satisfy it: after an actual `abandon`, a retained adapter alias
+can neither claim the operation nor have its store omitted, in both cfg arms,
+while an independent live allocation keeps exactly its one hit and an ordinary
+Arc alias drop retires nothing. The retirement happens at the adapter's actual
+`FrameAbandon` implementation before it delegates to the inner frame; the drop
+erasure remains the backstop for allocations that never reach abandonment. This
+refines Q29 rather than reopening it: the operation-owned one-use token, the
+mint/claim/carry/consume sites, the unchanged pinned omission, the five original
+controls, the fifteen inherited controls, the admitted 50-row map and the
+per-row insertion-route duty all stand unchanged. The fix is one registered
+instrumentation edit inside the admitted 94 (`suspension/typed/adapter.rs`),
+declared against entry-pinned source with its erasure rule and whole-file AST
+restoration in both cfg arms; no production source, runner hook, predicate or
+phase changes, and no control or expectation may be edited to pass.
+
+Continuation 23 resumes the implementation and runs to the full bar under the
+remaining 7,961.143161 s focused plus the untouched 6,000 s workspace envelope.
+First the corrected teardown: the abandonment-site retirement, its registered
+edit and erasure audit, then all seventeen controls in armed, disabled and live
+each crossed with hash and no-hash at eight and at one thread — the two new
+controls at their fixed required values, the retired store executing exactly as
+its disabled/live counterpart, and no other control moving. Then the duty
+continuation 22 did not reach: every typed row's own executed controls at full
+strength in both cfg arms and the disabled and live forms, with each row's
+insertion route proved (a typed frame entering through the typed adapter is
+retired at its abandonment and its drop remains the backstop; a frame type that
+can also be inserted as a raw frame takes the Q26 discipline in that route; a
+route whose only instrumentable file lies outside the admitted 94 paths is a
+STOP, not a fifth path); every declared ownership transport including the four
+complex paired rows P0001/P0002/P1566/P1805; the complete 151-plan generator
+with zero unknown edges over the 94-path set; the double generation producing 94
+targets and 188 postimages; whole-file AST restoration and the separate
+pinned-omission audit in both cfg arms; the mechanically emitted and
+authenticated 94-row schema with all 151 `source_schema` cells and the new
+digest from the exact table bytes; the ordered standing replay; `cargo fmt
+--check`; and both workspace modes with the seven exclusions, the switched
+checks on the same binaries and the full unfiltered `suspension_oracle` and
+`typed_slot_census` at failed=0, filtered=0. The second workspace envelope stays
+held for the verification stage, which uses brief 742's remaining 1,440 s;
+CM4's committed share stays 28,500 s and 743–746 retain 40,500 s. The stop-loss
+is the Q28 counter: a compile attempt retiring at least one outstanding distinct
+error counts as progress; removing or weakening a control is a contract change
+that stops; a rejected copied production source or instrumentation edit is a
+finding that stops; two consecutive non-reducing attempts stop; the envelope
+stays the hard bound. No fifth overlay, no 138-row subset, no placeholder
+digest, no hand-edited derived cell, no weakened control, no git, no network,
+no `unsafe`, no dependency or lockfile change.
