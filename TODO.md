@@ -778,6 +778,40 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   workspace 0/6,000). Continuation 21 is the design (`Scope: NONE`,
   1,500 s carved, leaving 6,782.71 s); continuation 22 is the
   implementation to the full 151/94/188 bar.
+  Continuation 21 delivers and executes the Q29 protocol: an
+  operation-owned one-use capability minted under the actual
+  Part-selector `InputRequired` branch from the constructed frame's own
+  operation/target/`SharedArgs` data pointers (a projection at the
+  adapter's actual `Arc<F>` creation, pointer comparisons only, no
+  strong reference), claimed by the copied callee's first statement
+  against the current frame token, and moved once through the three
+  actual direct calls as keyed tickets claimed at callee entry before
+  any callback, the original call expressions preserved in `FnOnce`
+  wrappers; the copied store consumes it at the unchanged pinned
+  omission; nested operations have no ticket, run their real store and
+  record zero hits; adapter drop erases the binding. Executed: 15/0/0
+  in armed, disabled and live each crossed with hash and no-hash
+  (director reproduced all six at one thread), six weakened-helper
+  variants each reject at one thread, thirty static corruptions and the
+  overlap/missing/duplicate declaration controls reject, fourteen
+  edits erase to byte- and AST-identical files, the two roots are
+  byte-identical and armed differs from disabled only in `ENABLED`,
+  and the five original controls plus the original `exercise` body are
+  byte-identical to continuation 20. The typed inventory (50 rows, zero
+  unknown dispositions and entry routes; 24 shared; 12 DirectCall / 32
+  DirectFrame / 2 LoopOperation / 4 ProjectedOperation; 8
+  ordinary-bypass / 10 typed-entry-only / 32 explicit-frame) is a map,
+  not a receipt: only P0396 has executed evidence. Run: 4,143 scratch
+  changes, 16 PASS / 1 FLAGGED / 3 NA, 988 citations, 231.89 s charged
+  of 1,500 (1,268.11 s returned; 8,050.82 s focused for the
+  implementation, workspace 0/6,000). Continuation 22 implements: every
+  typed row's own executed controls and insertion-route proof (typed
+  adapter drop retires; a raw insertion route takes the Q26 discipline;
+  a route whose only instrumentable file is outside the 94 is a STOP),
+  the four complex paired rows P0001/P0002/P1566/P1805, the 151-plan
+  generator, the double 94/188 generation, the audits, the bound 94-row
+  schema with all 151 cells and the new digest, the replay, `cargo fmt
+  --check` and both workspace modes.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

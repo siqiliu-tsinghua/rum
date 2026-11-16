@@ -2176,3 +2176,88 @@ brief 742's remaining 1,440 s; CM4's committed share stays 28,500 s and 743–74
 retain 40,500 s. No fifth overlay, no 138-row subset, no placeholder digest, no
 hand-edited derived cell, no git, no network, no `unsafe`, no dependency or
 lockfile change.
+
+## Continuation 22 ruling (director) — the Q29 protocol is admitted on executed evidence, with a per-row insertion-route and executed-control duty, and continuation 22 is the implementation
+
+Continuation 21 ran `cdx` (unit `brief-742-cdx-20261117-053232-1937059`, rc 0,
+peak 723,222,528 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`,
+2,015,824 B, sha256 `6db8482b…`; report DONE, 4,143 changes (4,141 added, 2
+modified, 0 deleted — all in `.temp`), 0 disclosures, 0 deviations, 0 questions,
+16 PASS / 1 FLAGGED / 3 NA, 988 citations verified; 231.89 s charged — 0.60 s of
+it reporting and every receipt carrying its 0.5 s, with parent and child
+wrappers conservatively double-charged — leaving 1,268.11 s of the 1,500 s
+design envelope, which merges back into the implementation remainder: 6,782.71 s
+plus 1,268.11 s is 8,050.82 s focused, with the assigned 6,000 s workspace
+envelope and the second held for verification). The FLAGGED item is settled and
+is not a red: a fixture-only `E0282` Arc-slice inference error, retired by an
+explicit `Arc<[i32]>` annotation, both attempts retained, all fifteen controls
+passing afterwards and no copied production or instrumentation rejection.
+Scope holds: the director re-hashed the 5,400 maintained and 380 design files
+against the entry record with no change (the 23-entry partial CM4 tree
+included), `production_changes=0`, `source_schema` stays `f9604852…` with all
+151 cells byte-identical, the 94 declared paths are enumerated as not emitted,
+the three document drifts are this director's own gate commits, and the design's
+three replaced paths (`runtime/lib.rs`, `definitions/definition_updates.rs`,
+`suspension/typed/adapter.rs`) are all inside the retained ninety-path set.
+
+The Q29 protocol is admitted on executed evidence, and the director reproduced
+the load-bearing binaries at one thread: all fifteen controls pass 15/0/0 in
+armed, disabled and live each crossed with hash and no-hash, and six weakened
+helper variants each reject at one thread (the ambient activation-scope token,
+the operation-key components for operator, target, allocation and length, a
+repeated claim, a second consumption, a wrong occurrence and a wrong
+activation). The protocol is the one Q29 required: the operation's capability is
+minted under the actual Part-selector `InputRequired` branch, bound to the
+existing constructed frame's own `operation`, `target` and `SharedArgs`
+allocation data pointers, and never recovered from an enclosing activation; a
+projection installed at the adapter's actual `Arc<F>` creation reads those
+private fields through the parent module, holds no frame, `Expr` or `SharedArgs`
+strong reference and compares pointer values only; the first statement of the
+copied callee claims by those values AND the current frame token, so a second
+resume cannot claim it; the permit then moves once through the three actual
+direct calls, each call creating a keyed ticket that the callee claims at entry
+before any callback, with the original call expression preserved inside the
+`FnOnce` wrapper; the copied store consumes its local capability at the
+unchanged pinned omission, after the write-protection guard and before the
+target match, with the original `HeldUpdateReturn` expression, selector and
+phase pinned separately; and a nested operation of any operator, target or
+callee has no incoming ticket, executes its real store and records zero hits.
+Adapter drop erases the operation binding before address reuse, a new
+run or episode clears the transport, and ordinary Arc alias drop does not retire
+a live owner. Fourteen edits are declared against entry-pinned source, the
+renderer rejects overlap, a missing anchor and a duplicate anchor, the erasure
+audit restores both whole source files byte-for-byte with the independent
+omission pin, and the AST audit restores all three files. The two design roots
+are byte-identical and armed differs from disabled only in the `ENABLED`
+constant. The five original controls and the entire original `exercise` body
+are byte-identical to continuation 20's fixture; the ten added controls are
+additions. The typed inventory is admitted as a map, not as a receipt: 50 rows
+and 50 forms with zero unknown dispositions and zero unknown entry routes (24
+shared, 12 `DirectCall`, 32 `DirectFrame`, 2 `LoopOperation`, 4
+`ProjectedOperation`; 8 ordinary-bypass, 10 typed-entry-only, 32
+explicit-frame), and only P0396 has executed ownership evidence.
+
+Continuation 22 is the implementation and runs to the full bar under the merged
+8,050.82 s focused plus the 6,000 s workspace envelope. It extends the admitted
+protocol with per-row executed evidence: every typed row the inventory names
+carries its own controls at full strength in both cfg arms and the disabled and
+live forms, and for each row the frame's insertion route is proved — a typed
+frame that enters through the typed adapter is retired by the adapter's drop,
+which erases the binding before address reuse; a frame type that can also be
+inserted as a raw frame takes the Q26 discipline in that route, and a route
+whose only instrumentable file lies outside the admitted 94 paths is a STOP,
+not a fifth path. The same pass completes every declared ownership transport,
+including the four complex paired rows P0001/P0002/P1566/P1805 outside the
+partial paired renderer, then the complete 151-plan generator with zero unknown
+edges over the 94-path set, the double generation producing 94 targets and 188
+postimages, whole-file AST restoration and the separate pinned-omission audit
+in both cfg arms, the mechanically emitted and authenticated 94-row schema with
+all 151 `source_schema` cells and the new digest from the exact table bytes, the
+ordered standing replay, `cargo fmt --check`, and both workspace modes with the
+seven exclusions, the switched checks on the same binaries and the full
+unfiltered `suspension_oracle` and `typed_slot_census` at failed=0, filtered=0.
+The second workspace envelope stays held for the verification stage, which uses
+brief 742's remaining 1,440 s; CM4's committed share stays 28,500 s and 743–746
+retain 40,500 s. The stop-loss is the Q28 counter. No fifth overlay, no 138-row
+subset, no placeholder digest, no hand-edited derived cell, no weakened control,
+no git, no network, no `unsafe`, no dependency or lockfile change.

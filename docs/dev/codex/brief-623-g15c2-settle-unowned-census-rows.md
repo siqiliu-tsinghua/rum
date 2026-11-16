@@ -116910,3 +116910,45 @@ unknown; otherwise a named PortBlocked). Continuation 21 is the design
 full 151/94/188 bar under that remainder and the 6,000 s workspace envelope; the
 second workspace stays held for verification (742's 1,440 s); CM4 28,500 s,
 743–746 40,500 s; every earlier term stands.
+
+### Continuation 109 — brief 742 continuation 21: the Q29 operation-owned protocol is admitted on executed evidence; continuation 22 is the implementation
+
+Continuation 21 (`cdx`, unit `brief-742-cdx-20261117-053232-1937059`, rc 0,
+peak 723,222,528 B, oom 0/0; log 2,015,824 B sha256 `6db8482b…`; report DONE,
+4,143 changes all in `.temp`, 0 disclosures/deviations/questions, 16 PASS / 1
+FLAGGED / 3 NA, 988 citations; 231.89 s charged of the 1,500 s design envelope,
+1,268.11 s returned, merging to 8,050.82 s focused for the implementation;
+workspace 0 of 6,000) is accepted. The FLAGGED `E0282` fixture inference error is
+settled by an explicit `Arc<[i32]>` annotation with both attempts retained and no
+copied-production or instrumentation rejection. The Q29 protocol is admitted on
+executed evidence, and the director reproduced the load-bearing binaries at one
+thread: 15/0/0 in armed, disabled and live each crossed with hash and no-hash,
+and six weakened-helper variants each reject at one thread (ambient activation
+token; operator, target, allocation and length key components; repeated claim;
+second consumption; wrong occurrence; wrong activation). Protocol: the
+capability is minted under the actual Part-selector `InputRequired` branch, bound
+to the constructed frame's own operation/target/`SharedArgs` data pointers
+through a projection at the adapter's actual `Arc<F>` creation (no strong
+reference, pointer comparisons only), claimed by the first statement of the
+copied callee against the current frame token, and moved once through the three
+actual direct calls as keyed one-use tickets claimed at callee entry before any
+callback, with the original call expressions preserved in `FnOnce` wrappers; the
+copied store consumes it at the unchanged pinned omission with the original
+return expression, selector and phase pinned separately; nested operations have
+no ticket, execute their real store and record zero hits; adapter drop erases the
+binding. Fourteen declared edits render from entry-pinned preimages, reject
+overlap/missing/duplicate anchors, and erase to byte- and AST-identical files;
+the two roots are byte-identical and armed differs from disabled only in
+`ENABLED`; the five original controls and the original `exercise` body are
+byte-identical to continuation 20's fixture. The typed inventory (50 rows, zero
+unknown dispositions and entry routes; 24 shared; 12 DirectCall / 32 DirectFrame
+/ 2 LoopOperation / 4 ProjectedOperation; 8 ordinary-bypass / 10 typed-entry-only
+/ 32 explicit-frame) is admitted as a map, not a receipt: only P0396 has executed
+evidence. Continuation 22 is the implementation under 8,050.82 s + 6,000 s
+workspace: per-typed-row executed controls and insertion-route proofs (typed
+adapter drop retires; a raw insertion route takes the Q26 discipline; a route
+whose only instrumentable file is outside the 94 is a STOP), the four complex
+paired rows P0001/P0002/P1566/P1805, the 151-plan generator, the double 94/188
+generation, the audits, the bound 94-row schema with 151 cells and the new
+digest, the replay, fmt and both workspace modes; second workspace held (742's
+1,440 s); CM4 28,500 s, 743–746 40,500 s; every earlier term stands.
