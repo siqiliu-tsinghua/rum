@@ -295,7 +295,24 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   never imported and full wrong-row/fault/earlier-guard falsifiers, and a
   completely fresh twelve-block round (nineteen blocks consumed at
   completion / ≤28,500 s allocated; the eight unspent blocks of the old
-  schema are voided). C2 stays Open at 118 Residual + 0 Lost. Then CM5.
+  schema are voided). Its fourth run executed continuation 3 and landed the
+  C10 observer beside the untouched ordinary runner: P0543 (lane) and C10
+  (default and no-default) each produced a fresh 55-key real matrix at
+  multiplicity one, 165 record-exact disabled records, one source hit and
+  baseline producer pause, and the own `Native` red with equal public
+  output; my rerun passes 8 observer/source controls in each mode (eight
+  observer-predicate negatives, ten source-auth negatives per arm,
+  `E0451`/`E0308` type probes, route postimage reds), and the ordinary
+  armed run still hits the quiescence assertion (preserved negative, exit
+  101 at `snapshot.rs:30`). The twelve fresh blocks were all consumed
+  (nineteen total, 1,665.418358 s), so it stopped at the second-schema
+  rule: the remaining 149 own rows need another authenticated build round.
+  Q4 admits one consolidated fresh twelve-block round after every
+  remaining carrier, held-pair cell, structural control, promotion path
+  and maintenance has landed — 31 blocks consumed at completion /
+  ≤46,500 s allocated, no evidence reused except by authenticated
+  identity, and no further schema expansion after it. C2 stays Open at 118
+  Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

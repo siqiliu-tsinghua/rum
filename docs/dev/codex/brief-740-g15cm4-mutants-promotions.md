@@ -766,3 +766,133 @@ build, mutation or semantic credit.
 **Unchanged.** C2 stays Open at 118 Residual + 0 Lost; no row settles, no
 owner is promoted, no encoding key runs; `CHANGELOG.md` and S10 stay
 blocked; the eight continuation-69 rulings (Q1–Q8) stand.
+
+## Continuation 4 ruling (director) — the C10 observer and both-mode packets are accepted; Q4 admits one consolidated fresh twelve-block round for the remaining 149 own rows, 100 held-pair cells and four structural controls (31 blocks consumed at completion, ≤46,500 s allocated)
+
+**2026-11-16 — brief 740's fourth run executed continuation 3 and landed
+the admitted C10 observer without weakening the ordinary guard: P0543 (lane)
+and C10 (default and no-default) each have a fresh 55-key real matrix at
+multiplicity one, 165 record-exact disabled records, one source hit and
+baseline producer pause, and the own `Native` red with equal public output;
+the ordinary armed run still hits the quiescence assertion (preserved
+negative, exit 101 at `snapshot.rs:30`). The twelve fresh blocks were all
+consumed (nineteen total, 1,665.418358 s), so the run stopped exactly at the
+brief's second-schema rule: the remaining 149 own rows need another
+authenticated build round. Q4 is ruled: one consolidated fresh twelve-block
+round after every remaining carrier, control, promotion path and maintenance
+has landed, with 31 blocks consumed at completion and ≤46,500 s allocated.**
+
+Run `cdx`, unit `brief-740-cdx-20261116-074957-1554636`, rc 0, peak
+3,469,606,912 B (under the 16 GiB unit), oom 0 / oom_kill 0; log
+`.temp/logs/cdx_brief_740.log`, 3,875,351 B, sha256 `f7c92d81…` (the
+continuation-3 log is archived at
+`.temp/logs/cdx_brief_740.log.prev-20261116-074948`); report
+`.temp/brief-740/report-continuation-3.json`, 193,191 B, sha256
+`9852e18a…`; 12 changes (3 added, 9 modified, 0 deleted), 0 disclosures,
+3 deviations, 1 question (Q4, ruled here); 10 PASS / 2 FLAGGED / 1 FAIL /
+1 NA; 623 citations verified; the continuation-2 report is preserved at
+`.temp/brief-740/c3/report-before-ruling.json` (`5bfef9b2…`).
+
+**What the run proved.**
+- The observer path is exactly the admitted one. `run` delegates to
+  `run_observed(program, queued, None)` and keeps
+  `logical_profile_test_assert_quiescent()` at its present position;
+  `run_with_mutation_observer` takes an authenticator-private
+  `MutationObserver`, re-checks the row and selector at use time and
+  re-validates the program against the authenticated loader before any
+  observation; the capture happens at the ordinary capture point before
+  quiescence and continues the same runner body; `run_adapter`, `programs()`
+  and every existing call site keep their force; no env variable switches
+  the shared guard off. The historical conditional deletion is not
+  imported.
+- My rerun of the observer and source controls passes 8 tests in each
+  mandated mode, with eight observer-predicate negatives (wrong row,
+  unarmed selector, absent source hit, wrong phase, absent producer pause,
+  absent native difference, quiescence-only equal native, fault from
+  another row), ten source-auth negatives per arm, `E0451`/`E0308` forged
+  and wrong-arm type probes including the observer capability, and the
+  route-postimage checks; `cargo fmt --check` exits zero.
+- Three fresh packets, each with its own independently built real /
+  disabled / armed binaries and forced spot check: P0543 lane real
+  `32be0e7c…` / tree `6255d9dd…`, disabled `f7e23a8c…`, armed `23cf50b6…`;
+  C10 default real `b50d0c0e…` / tree `fa6c21e3…`, disabled `94701eee…`,
+  armed `ba811194…` / tree `72105b79…`; C10 no-default real `fbb2f4d3…`,
+  disabled `90ff0256…`, armed `e83a5aa8…`. Every packet: 55/55 real keys
+  at multiplicity one, 165 record-exact disabled records, one source hit,
+  one baseline producer pause, own `Native` predicate, equal public output.
+  I verified the packet fields, the binary hashes on disk, the
+  real-vs-disabled 110 observation/lifecycle lines byte-identical for C10
+  in both modes and for lane P0543, and the armed resumed/queued/public
+  comparison (`Err(Native)` versus the real `Ok(())`). The four exact
+  overlays are P0543's `eval_dispatch/mod.rs` plus C10's
+  `eval_core/call.rs`, `logical/mod.rs` and `logical/segments.rs`; live
+  production, manifests and lock are unchanged.
+- The preserved negative fires: with the ordinary path forced on the armed
+  arm, the run still asserts and panics at
+  `runtime/profiling/logical/epoch/snapshot.rs:30` with the logical-teardown
+  message (exit 101). The quiescence fault is never the row's predicate.
+- Maintenance replayed 68 last-column fingerprints and four generated
+  certificate cells over two rows, with the initial stale-certificate reds
+  preserved as ordering artifacts; the six ownership inventories, the
+  rejection counts and every covered source site are unmoved. Live scope:
+  5,787 files, 3 added, 9 modified, 0 deleted, `production_changes=0`,
+  manifests and lock unchanged. 163 recorded commands, 0 git, 0 network;
+  51 Open owners; C2 at 118 Residual + 0 Lost; no settlement, promotion,
+  SAME or encoding credit.
+
+**The STOP is correct.** The twelve fresh blocks were consumed by the
+required preliminary P0543/C10 admission; the frozen two-row schema has no
+C3 selector, and adding the remaining carriers changes the source,
+authenticator and worker bytes, which needs another authenticated build
+round. The report's `--against-git` flag on
+`mutations/source_auth/files.rs` and `manifests.rs` is the cumulative
+uncommitted tree, not a scope violation: both are byte-identical to
+continuation 2's after hashes (`bd535ff5…`, `e8740d51…`) and this run did
+not touch them.
+
+**Q4 ruling — option 1, the consolidated final round.** Authorize one
+consolidated fresh twelve-block round, and require the following.
+- **Land everything first.** Before the round, implement the remaining 149
+  own-row carriers over the 68 families, the 100 held-pair cells, the four
+  structural controls, the promotion transaction, the standing committed
+  receipt inventories (`mutants.tsv`, `mutant-coverage.tsv`,
+  `promotions.tsv`), every schema row/selector/observer entry and the
+  maintenance. One final schema epoch covers the whole campaign.
+- **The schema is the authority.** It enumerates every carrier's exact
+  preimage/postimage and overlay set; the authenticator authenticates
+  exactly those overlays, the baseline seals, inventories, tree and
+  `current_exe`. A row without an admissible carried catch stays
+  `PortBlocked` with named missing evidence — never silently Equal and
+  never carried by another row's catch.
+- **The consolidated round.** Twelve fresh blocks: nine canonical
+  real/disabled/armed builds across the three configurations plus three
+  same-epoch forced byte-identity spot checks, each ≤1,500 s. No build,
+  spot check or receipt from the nineteen consumed blocks is reusable;
+  evidence reuses only by authenticated identity. Consumed allocation at
+  completion: 31 blocks / ≤46,500 s (an allocation, not a duration; the
+  nineteen consumed blocks measured 1,665.418358 s).
+- **Final-schema evidence.** Re-run P0543 and C10 on the final schema; their
+  preliminary packets remain immutable evidence of their own epochs and are
+  never relabelled. The campaign is complete and unsampled: every active
+  own row, every held-pair cell including the five armed-without-hit
+  `Error` cells per row, the four structural controls and the full 510-case
+  schedule on the final schema; no sampling, no extra builds, no dropped
+  rows; the expanded oracle stays ≤1,500 s with the ≤900 s steady target.
+- **Gates and order.** Shape and falsifier gates in both mandated arms
+  before the campaign, then the complete acceptance suite; retention is
+  replayed before acceptance and every verdict quoted. The Q3 observer
+  constraints stay in force, a needed runtime accessor is a STOP, and no
+  production, manifest, lock, dependency or inventory-predicate change is
+  allowed; no settlement, SAME, owner promotion or encoding execution.
+- **No further expansion.** After this consolidated round, a further
+  carrier schema or an exceeded allocation STOPs for my ruling. This is
+  the last planned allocation expansion.
+
+**Accepted as delivered.** The two-row schema and its four overlays, the
+row-specific observer capability, the ordinary-run falsifier, the fresh
+mirror maintenance and the preserved administrative glob-count failure.
+None carries campaign, settlement, promotion, SAME or encoding credit.
+
+**Unchanged.** C2 stays Open at 118 Residual + 0 Lost; no row settles, no
+owner is promoted, no encoding key runs; `CHANGELOG.md` and S10 stay
+blocked; the eight continuation-69 rulings (Q1–Q8) stand.

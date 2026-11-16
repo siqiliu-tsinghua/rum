@@ -115465,3 +115465,104 @@ acceptance and quotes every verdict.
 C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is
 promoted, no encoding key runs; `CHANGELOG.md` and S10 stay blocked. The
 partial tree is the state to continue from.
+
+### Continuation 82 — fourth run: the C10 observer lands without weakening the ordinary guard, three fresh packets pass, and Q4 admits the consolidated final twelve-block round
+
+**2026-11-16 — brief 740's fourth run executed continuation 3 and landed
+the admitted C10 observer beside the untouched ordinary runner: P0543
+(lane) and C10 (default and no-default) each produced a fresh 55-key real
+matrix at multiplicity one, 165 record-exact disabled records, one source
+hit and baseline producer pause, and the own `Native` red with equal
+public output; the ordinary armed run still hits the quiescence assertion
+(preserved negative, exit 101 at `snapshot.rs:30`). I reran the observer
+and source controls myself: 8 tests pass in each mandated mode, with eight
+observer-predicate negatives, ten source-auth negatives per arm, the
+forged/wrong-arm type probes and the route-postimage checks. The twelve
+fresh blocks were all consumed (nineteen total, 1,665.418358 s), so the
+run stopped at the brief's second-schema rule: the remaining 149 own rows
+need another authenticated build round. Q4 admits option 1: one
+consolidated fresh twelve-block round after every remaining carrier,
+control, promotion path and maintenance has landed — 31 blocks consumed
+at completion, ≤46,500 s allocated, no evidence reused except by
+authenticated identity.**
+Run `cdx`, unit `brief-740-cdx-20261116-074957-1554636`, rc 0, peak
+3,469,606,912 B, oom 0 / oom_kill 0; log 3,875,351 B sha256 `f7c92d81…`
+(the continuation-3 log archived at `.temp/logs/cdx_brief_740.log.prev-…`);
+report 193,191 B sha256 `9852e18a…`; 12 changes (3 added, 9 modified);
+10 PASS / 2 FLAGGED / 1 FAIL / 1 NA; 3 deviations; 1 question; 623
+citations verified; the continuation-2 report preserved at
+`.temp/brief-740/c3/report-before-ruling.json` (`5bfef9b2…`).
+
+**What passed.** The ordinary runner still asserts at its original capture
+point; `run_with_mutation_observer` takes only an authenticator-private
+capability, re-checks the row and selector at use time and re-validates
+the program against the authenticated loader before any observation; the
+historical conditional deletion is not imported and no env variable
+switches the shared guard off. My rerun: 8/8 in both modes (observer
+predicate negatives: wrong row, unarmed selector, absent source hit, wrong
+phase, absent producer pause, absent native difference, quiescence-only
+equal native, fault from another row; source-auth negatives 10 per arm;
+`E0451`/`E0308` type probes; route postimage and unlisted-path reds);
+`fmt --check` zero. Fresh packets: P0543 lane real `32be0e7c…` / tree
+`6255d9dd…`, disabled `f7e23a8c…`, armed `23cf50b6…`; C10 default real
+`b50d0c0e…` / tree `fa6c21e3…`, disabled `94701eee…`, armed `ba811194…` /
+tree `72105b79…`; C10 no-default real `fbb2f4d3…`, disabled `90ff0256…`,
+armed `e83a5aa8…`. Every packet: 55/55 at multiplicity one, 165 exact
+disabled records, one source hit, one baseline producer pause, own
+`Native`, equal public output; I verified the packet fields, the binary
+hashes on disk, the real-vs-disabled 110-line record identity in both C10
+modes and lane P0543, and the armed-vs-real resumed/queued comparison. The
+four exact overlays are P0543's `eval_dispatch/mod.rs` plus C10's
+`eval_core/call.rs`, `logical/mod.rs` and `logical/segments.rs`; live
+production, manifests and lock unchanged. The ordinary-run falsifier
+panics at `epoch/snapshot.rs:30` with the logical-teardown assertion (exit
+101). Maintenance replayed 68 last-column fingerprints and four
+certificate cells; the six ownership inventories, rejection counts and
+covered source sites are unmoved. Live scope 5,787 files / 3 added / 9
+modified / 0 deleted, `production_changes=0`; 163 commands, 0 git, 0
+network; 51 Open owners; C2 118 Residual + 0 Lost; no settlement,
+promotion, SAME or encoding credit.
+
+**The STOP.** All twelve fresh blocks were consumed by the required
+P0543/C10 preliminary admission; the frozen two-row schema has no C3
+selector and the remaining 149 own rows, 100 held-pair cells and four
+structural controls need carriers plus another authenticated build round.
+The `--against-git` flag on `source_auth/files.rs` and `manifests.rs` is
+the cumulative uncommitted tree: both are byte-identical to continuation
+2's after hashes (`bd535ff5…`, `e8740d51…`) and this run did not touch
+them.
+
+**Q4 ruling.** Option 1: one consolidated fresh twelve-block round after
+everything else lands — the remaining 149 own-row carriers over the 68
+families, the 100 held-pair cells, the four structural controls, the
+promotion transaction, the standing committed receipt inventories
+(`mutants.tsv`, `mutant-coverage.tsv`, `promotions.tsv`), every schema
+row/selector/observer entry and the maintenance — so one final schema
+epoch covers the whole campaign. The schema enumerates every carrier's
+exact preimage/postimage and overlay set; the authenticator authenticates
+exactly those; a row without an admissible carried catch stays
+`PortBlocked` with named missing evidence, never silently Equal and never
+carried by another row's catch. The round is nine canonical
+real/disabled/armed builds plus three same-epoch forced spot checks, each
+≤1,500 s; no build, spot check or receipt from the nineteen consumed
+blocks is reusable; evidence reuses only by authenticated identity;
+consumed allocation at completion is 31 blocks / ≤46,500 s (an allocation,
+not a duration; the nineteen consumed blocks measured 1,665.418358 s).
+P0543 and C10 are re-run on the final schema; their preliminary packets
+stay immutable evidence of their own epochs and are never relabelled. The
+campaign is complete and unsampled: every active own row, every held-pair
+cell including the five armed-without-hit `Error` cells per row, the four
+structural controls and the full 510-case schedule on the final schema;
+no sampling, no extra builds, no dropped rows; the expanded oracle stays
+≤1,500 s with the ≤900 s steady target. Shape/falsifier gates in both
+mandated arms precede the campaign, then the complete acceptance suite;
+retention replays before acceptance and every verdict is quoted. The Q3
+observer constraints stay, a needed runtime accessor is a STOP, and no
+production, manifest, lock, dependency or inventory-predicate change is
+allowed. After this consolidated round, a further carrier schema or an
+exceeded allocation STOPs for my ruling; this is the last planned
+allocation expansion.
+
+C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is
+promoted, no encoding key runs; `CHANGELOG.md` and S10 stay blocked. The
+partial tree is the state to continue from.
