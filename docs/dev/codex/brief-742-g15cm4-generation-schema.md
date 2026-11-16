@@ -2092,3 +2092,87 @@ share stays 28,500 s and 743–746 retain 40,500 s. No production, runner,
 observer, predicate, selector or phase change, no fifth overlay, no 138-row
 subset, no placeholder digest, no hand-edited derived cell, no git, no network,
 no `unsafe`, no dependency or lockfile change.
+
+## Continuation 21 ruling (director) — Q29: the typed transport's owner is the actual operation, not the activation; a design continuation resolves P0396's nested-operation leak under fixed controls
+
+Continuation 20 ran `cdx` (unit `brief-742-cdx-20261117-051403-1932192`, rc 0,
+peak 390,582,272 B, oom 0 / oom_kill 0; report STOP, 3,329 changes (3,327
+added, 2 modified, 0 deleted — all in `.temp`), 0 disclosures, 1 deviation, 0
+questions, 11 PASS / 1 FLAGGED / 2 FAIL / 2 NA, 176 citations verified; 89.34 s
+charged by the director's own re-derivation — 14.84 s measured serial over 29
+runs plus 14.5 s bookkeeping and the 60 s preparation/final-reporting reserve —
+leaving 8,282.71 s focused; workspace 0 of the assigned 6,000 s). The deviation
+is accepted: the complete generator and schema are absent because the executed
+P0396 control failed under Q28. The FLAGGED launch error is settled and is not a
+red: the first execution set `RUM_CM740_TARGET` instead of the helper's existing
+`RUM_CM740_OMIT`, selected no row and returned 2 passed / 3 failed with zero
+arms; the corrected environment on the same binary gives the load-bearing
+result, and no source, expectation or binary was changed for the correction.
+Scope holds: the director re-hashed the 5,400 maintained and 380 design files
+against the entry record with no change (the 23-entry partial CM4 tree
+included), the 31,311 earlier artifacts are unchanged, `production_changes=0`,
+`source_schema` stays `f9604852…` with all 151 cells byte-identical, the 94
+declared paths are enumerated as not emitted, and the three document drifts are
+this director's own gate commits. The fixture work is exactly the Q28 repair:
+the fixture-only stub's second parameter became `&Expr` and the fixture's empty
+pending-suspension construction moved behind `Pending::empty()` in the module
+that owns the element trait; five lines changed, no control or expectation
+moved, and the compiler error set retired under Q28 rather than stopping.
+
+The executed finding is admitted as a candidate-contract finding and a named
+`PortBlocked::TypedResumeScopeReentryLeak` for P0396: the director reproduced
+both armed cfg forms at one thread at 4 passed / 1 failed and both disabled and
+both live forms at 5/0. The unrelated non-suspending symbol update records
+`nested_hits=1`, `total_hits=2` against the unchanged requirement 0 and 1, and
+its store is omitted — `b` stays 40 where the disabled and live forms store 41
+— so the leak both miscounts and suppresses real work; the intended outer store
+then records the second hit on the same activation and the same producer
+occurrence. The mechanism is the one the finding names: the typed adapter
+restores the producer activation for the entire call to `F::resume`, and the
+helper's `eligible` accepts the resume token for any omission executed during
+that call, so a nested held update that never executes the selected producer
+and never constructs the selected frame still claims the token.
+
+Q29. The typed transport's owner is the actual operation the producer suspended
+for, not the activation in which it happens to execute. The token must be
+minted at the producer's actual branch from identities that operation carries
+and checked at the unchanged pinned omission against the operation actually
+being completed, so that a nested operation in the same activation can neither
+claim it nor be omitted by it, and an operation that never executes the
+selected producer is neither counted nor suppressed. The named omission site
+(`store_held_update`) and the accepted matrix's `Q18-Q19-TypedFrame` form do
+not move; the five existing P0396 controls and their expectations are fixed and
+may not be edited to pass. The design must be established by executed extracted
+controls in both cfg arms and the disabled and live forms, with the existing
+five and these rejecting controls: a nested operation with the same operator
+and the same target as the suspended operation, a nested operation reached
+through a different callee of the same activation, repeated resume, second
+consumption, a wrong occurrence, a wrong activation, and disabled/live parity
+of every record. Any new instrumentation edit takes the standing discipline: it
+is registered with its erasure rule and the whole-file AST restoration of both
+cfg arms, and no production source, runner hook, predicate or phase may change.
+The design also inventories every typed-transport row with a shared omission
+site and whether a nested operation can reach it, with zero unknown rows; a row
+the mechanism cannot serve is a named PortBlocked, never a weakened control.
+
+Continuation 21 is that design: `Scope: NONE`, 1,500 s focused carved from the
+implementation envelope (leaving 6,782.71 s for the resumption), with no
+workspace command; it delivers the operation-ownership protocol, the evidence
+that each of its checks has been watched to fail where it must, the typed-row
+inventory, and the drafts of the implementation brief. Continuation 22 is the
+resumed implementation and runs to the full bar under the remainder: the
+operation-ownership protocol executed for P0396 and every typed row the
+inventory names, then every declared ownership transport including the four
+complex paired rows P0001/P0002/P1566/P1805, the complete 151-plan generator
+with zero unknown edges over the 94-path set, the double 94-path/188-postimage
+generation, whole-file AST restoration and the separate pinned-omission audit
+in both cfg arms, the mechanically emitted and authenticated 94-row schema with
+all 151 `source_schema` cells and the new digest from the exact table bytes, the
+ordered standing replay, `cargo fmt --check`, and both workspace modes with the
+seven exclusions, the switched checks on the same binaries and the full
+unfiltered `suspension_oracle` and `typed_slot_census` at failed=0, filtered=0.
+The second workspace envelope stays held for the verification stage, which uses
+brief 742's remaining 1,440 s; CM4's committed share stays 28,500 s and 743–746
+retain 40,500 s. No fifth overlay, no 138-row subset, no placeholder digest, no
+hand-edited derived cell, no git, no network, no `unsafe`, no dependency or
+lockfile change.

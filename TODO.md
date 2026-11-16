@@ -751,6 +751,33 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   pinned-omission audits, the bound 94-row schema with all 151 cells
   and the new digest, the replay, `cargo fmt --check` and both
   workspace modes.
+  Continuation 20 completes the Q28 scaffold repair in five lines
+  (stub `&Expr`, `Pending::empty()` in the owning module) and its
+  compiler error set retires instead of stopping. It then executes the
+  P0396 typed control and admits a genuine candidate-contract finding,
+  `PortBlocked::TypedResumeScopeReentryLeak`: both armed cfg forms at 4
+  passed / 1 failed at 8 and at one thread (director reproduced both),
+  both disabled and both live forms at 5/0/0, `nested_hits=1` and
+  `total_hits=2` against the required 0 and 1, and the unrelated store
+  actually omitted (`b` stays 40 where disabled/live store 41), so the
+  leak miscounts and suppresses real work; the typed adapter restores
+  the producer activation for the whole `F::resume` call and the
+  helper's `eligible` accepts the token for any omission in that call.
+  The FLAGGED launch error (wrong selection variable) is settled by the
+  corrected environment on the same binary, no source changed. Q29
+  rules the typed owner is the actual operation, not the activation:
+  the token is minted at the producer's actual branch and checked at
+  the unchanged pinned omission against the operation being completed,
+  with the five controls fixed and rejecting controls added for a
+  same-operator same-target nested operation, a different-callee nested
+  operation, repeated resume, second consumption, wrong occurrence and
+  wrong activation, plus disabled/live parity, and an inventory of every
+  typed row with a shared omission site (zero unknown, else a named
+  PortBlocked). Run: 3,329 scratch changes, 11 PASS / 1 FLAGGED / 2
+  FAIL / 2 NA, 176 citations, 89.34 s charged (8,282.71 s left,
+  workspace 0/6,000). Continuation 21 is the design (`Scope: NONE`,
+  1,500 s carved, leaving 6,782.71 s); continuation 22 is the
+  implementation to the full 151/94/188 bar.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

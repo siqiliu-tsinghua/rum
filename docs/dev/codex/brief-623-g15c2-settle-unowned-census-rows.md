@@ -116869,3 +116869,44 @@ fmt --check` and both workspace modes with the seven exclusions, under the
 remaining 8,372.05 s focused and the 6,000 s workspace envelope; no production
 change, no fifth overlay, no 138 subset, no placeholder digest, no hand-edited
 derived cell, and every earlier term stands.
+
+### Continuation 108 — brief 742 continuation 20: `PortBlocked::TypedResumeScopeReentryLeak` is admitted; Q29 puts typed ownership on the actual operation and orders the design continuation
+
+Continuation 20 (`cdx`, unit `brief-742-cdx-20261117-051403-1932192`, rc 0,
+peak 390,582,272 B, oom 0/0; report STOP, 3,329 changes all in `.temp`, 0
+disclosures, 1 deviation, 0 questions, 11 PASS / 1 FLAGGED / 2 FAIL / 2 NA, 176
+citations; 89.34 s charged by the director's re-derivation — 14.84 s measured
+over 29 runs + 14.5 s bookkeeping + the 60 s reserve — leaving 8,282.71 s
+focused; workspace 0 of 6,000) is accepted. The Q28 fixture repair is exactly
+the two scaffold fixes (the stub's `&Expr`, `Pending::empty()` inside the owning
+module; five lines, no control moved), and the compiler error set retired under
+Q28 instead of stopping. The executed finding is admitted:
+`PortBlocked::TypedResumeScopeReentryLeak` for P0396 — both armed cfg forms at
+4 passed / 1 failed at 8 and at one thread (director reproduced both), both
+disabled and both live forms at 5/0/0, `nested_hits=1` and `total_hits=2`
+against the required 0 and 1, and the unrelated store actually omitted (`b`
+stays 40 where disabled and live store 41), so the leak miscounts and suppresses
+real work; the intended outer store records the second hit on the same
+activation and producer occurrence. Mechanism: the typed adapter restores the
+producer activation for the whole `F::resume` call and `eligible` accepts the
+resume token for any omission in that call. The FLAGGED launch error (wrong
+selection variable, 2/3 with zero arms) is settled by the corrected environment
+on the same binary with no source change. Scope: 5,400 maintained and 380
+design files re-hashed by the director with no change, 31,311 earlier artifacts
+unchanged, `production_changes=0`, `source_schema` `f9604852…` with all 151
+cells byte-identical, 94 paths enumerated as not emitted, three director
+document drifts. Q29 rules the typed owner is the actual operation, not the
+activation: the token is minted at the producer's actual branch from the
+operation's identities and checked at the unchanged pinned omission against the
+operation being completed, so a nested operation cannot claim it or be omitted
+by it; the omission site and the `Q18-Q19-TypedFrame` form do not move, the five
+controls are fixed, rejecting controls must include a same-operator same-target
+nested operation, a different-callee nested operation, repeated resume, second
+consumption, wrong occurrence and wrong activation, with disabled/live parity,
+and the design inventories every typed row with a shared omission site (zero
+unknown; otherwise a named PortBlocked). Continuation 21 is the design
+(`Scope: NONE`, 1,500 s carved from the implementation envelope, leaving
+6,782.71 s, no workspace command); continuation 22 is the implementation to the
+full 151/94/188 bar under that remainder and the 6,000 s workspace envelope; the
+second workspace stays held for verification (742's 1,440 s); CM4 28,500 s,
+743–746 40,500 s; every earlier term stands.
