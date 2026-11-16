@@ -504,7 +504,25 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   own silent token copy, so P0508's one-arm/two-hit pin stands with no
   resume scope and no new arming line; the per-row proof now maps every
   pinned arm and hit to its own episode through its actual return edge or
-  constructed frame.
+  constructed frame. Its twelfth run implemented Q20 (P0508's guard spans
+  the actual producer call, `input_return` reads the actual `Result`,
+  returns the token silently; 114 helper and 9 extracted-statement
+  controls; P0492 intact) and stopped with
+  `PortBlocked::QueuedCallerReturnTransport` at P1562/P1563, whose pinned
+  one-arm/one-hit is the queued-side terminal tail: the request producer
+  converts its actual `EvalError::InputRequired` into
+  `SessionRequestFailure { error: SessionRequestError::InputRequired }`,
+  the unqueued resumption bypasses that tail, the caller constructs no
+  suspension frame (the interior `EvalInputSuspensionFrame` belongs to
+  the descendant `eval_input`), and the queued occurrence constructs none
+  because `drive_input_request` returns the queued answer directly. Q21
+  crosses the Q18 pair with the unqueued occurrence's verified return
+  proofs: a queued-side `ordinary` site is eligible only on a
+  pair-issued token of its own episode at its own activation path (frame
+  construction or request/eval return kind, named per pinned hit), the
+  transport is silent (no arming line, no `returned` event), the
+  descendant frame is not attributed to the caller, and any extra arm,
+  hit or changed phase is a STOP.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

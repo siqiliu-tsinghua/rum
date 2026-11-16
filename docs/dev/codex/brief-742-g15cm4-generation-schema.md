@@ -1124,3 +1124,129 @@ suspension has two actual edges; inheritance travels along both:
 
 All other Q19, Q18, Q17, Q16, Q15, Q14, Q13, Q12, Q11, Q10 and brief
 terms stand.
+
+## Continuation 12 ruling (director) — Q21: a queued-side terminal tail is owned through the Q18 pair's actual request-level suspension return; the pair carries the unqueued occurrence's verified return proofs to its queued occurrence's matching activation, and no descendant frame is attributed to the request caller
+
+The twelfth run executed Q20. P0508's generated guard spans the actual
+`evaluate_inner_unstable(expr)` call and the pinned initial omission;
+`Guard::input_return` borrows the actual `Result`, consumes only that
+activation's pending proof, qualifies only its own unqueued
+`InputRequired`, transfers the token silently to the enclosing activation
+when the actual edge returns, and records no second arming event. The
+independent source audit uses the entry-pinned live source and the
+retained omission, not the renderer's assertion: one producer invocation,
+the exact original result and error, the exact selector, phase and
+early-return operation, unchanged depth, stack, shadow-stack destructor
+and non-target finalizers, and erasing the declared instrumentation
+restores the whole live AST; two roots emit byte-identical partial files.
+Nine source anchors and 20 source controls pass (fabricated `None`/error,
+duplicated producer, wrong owner, missing edge, shifted destructor, extra
+arm, resumed-scope substitutions). The generated helper passes 114
+controls (70 inherited, 44 return-edge), and nine further controls
+execute the actual statement extracted from the audited generated P0508
+source against a pure recursive producer: one arm and two own initial
+hits, one and one, unarmed/disabled/queued zero, and a swallowed
+suspension leaving the outer tail unqualified. Q19's controls re-run
+intact (nested 15, ingress 15, adapter 8, prepared 13, lazy cursor 15,
+retained source 5; P0492 keeps one arm and two frame hits); no field,
+allocation count, runtime interface, witness, guard, phase or selector
+changed; both historical P0508 mode signatures authenticate and are not
+re-earned.
+
+The stage then stopped at P1562/P1563 with
+`PortBlocked::QueuedCallerReturnTransport`. Both retained omissions are
+the queued-side `ordinary(row)` terminal tail — `return result` before
+`finish_accepted_value_request` — in `eval_request_admitted` and
+`eval_expr_request_admitted`. Their producer
+`eval_expr_request_from_checkpoint` returns
+`Result<SessionEvalResponse, SessionRequestFailure>`; its actual
+`EvalError::InputRequired` is converted by
+`finish_input_required_request` into
+`SessionRequestFailure { error: SessionRequestError::InputRequired { request }, .. }`
+and returned to that caller, while the unqueued resumption goes through
+`resume_eval_request_with_input`/`resume_eval_request_from_checkpoint`
+and never re-enters the initial caller's tail. The caller bodies contain
+no direct suspension-frame construction; the real interior frame is the
+`EvalInputSuspensionFrame` that the descendant `eval_input` constructs in
+the unqueued occurrence, and the queued occurrence constructs no frame at
+all, because `drive_input_request` consumes the queued answer and returns
+without suspending. The pin in both modes is one arm
+(`producer-InputRequired`, prompt `"finish"`) and one queued hit
+(`OmitAcceptedRequestTerminalRetirement`), predicate `Err(Native)` with
+the public output exact, and the current helper's queued eligibility
+requires an own constructed-frame token at the activation path, which the
+request caller never has: widening the caller guard, a stronger pure
+return control, or an unbound descendant frame each yield zero queued
+hits while the pin requires one, and an explicit owned-frame helper
+counterpart passes only as a synthetic control.
+
+Q21 rules that the Q18 pair is one attempt spanning two actual executions,
+and that the episode's ownership evidence crosses the pair boundary at
+exactly one point, the queued `begin`, carrying the unqueued occurrence's
+verified return proofs together with its constructed-frame tokens:
+
+1. **Return evidence at the request boundary.** The request producer's
+   suspension-flavored return is `SessionRequestFailure` whose `error` is
+   `SessionRequestError::InputRequired { request }` — the exact value
+   `finish_input_required_request` constructs and returns. An activation
+   whose own producer call actually returned that value holds a return
+   proof, exactly as Q20's `EvalError::InputRequired` return proof is held
+   at the eval boundary. The proof is read from the actual returned value
+   (the variant itself), never from a boolean, a flag, the
+   pending-request slot or the renderer's assumption; a success or any
+   other error yields no proof.
+2. **Pair transport.** The unqueued occurrence's return proofs, like its
+   constructed-frame tokens, are retained on the pair and joined to the
+   queued occurrence at `begin(queued=true)` for the same Q18 identity. A
+   proof is issued to the activation whose own source path recorded it and
+   to no other; the queued occurrence's matching activation is that
+   same-path activation under the established activation identity. The
+   transport is silent — no arming line, no `returned` event, no second
+   pause — so the pinned arm stays the unqueued occurrence's actual
+   producer pause and the pinned hit stays the queued occurrence's
+   declared omission.
+3. **Queued-side eligibility.** A queued-side (`ordinary`) site is
+   eligible only when its own activation in this queued occurrence holds a
+   pair-issued token from the same episode — a constructed-frame token at
+   its own path, as before, or a return proof at its own path — and the
+   site is the row's declared omission. The token's kind is part of the
+   proof: the per-row audit must name, for every pinned queued hit, which
+   actual edge from the unqueued occurrence owns it, and a row may not
+   silently switch kinds. A queued activation with no token, or a token
+   from another path, another episode, another row or another pair, is
+   ineligible.
+4. **What is not authorized.** Attributing the interior
+   `EvalInputSuspensionFrame` or any other descendant frame of the
+   unqueued occurrence to the request caller's activation is a false
+   ownership edge: the queued occurrence constructs no frame, and Q19
+   already rejects a hit attributed to a frame the activation did not
+   construct. Widening the caller guard, allocating a descendant frame
+   without a construction binding, a producer-wide constructor scope, or a
+   return token made globally sufficient for queued `ordinary` are not
+   substitutes and stay rejected. The pair transport is one-directional
+   (unqueued to queued), never re-arms, and never makes `frame`
+   (resume-scope) eligibility true; Q20's "the queued side never
+   qualifies" remains in force for in-run return-edge inheritance and is
+   not reversed here.
+5. **Falsifiers.** A queued run with no unqueued predecessor yields zero;
+   an unqueued producer that returned `Ok` or another error (a swallowed
+   or consumed suspension) yields no proof and zero; a wrong program
+   identity, row or episode yields zero; a second queued run for one
+   unqueued occurrence yields zero; a proof at a descendant or sibling
+   path used for the caller rejects; a fabricated boolean, flag or
+   renderer-supplied value in place of the actual returned value rejects;
+   the pinned one-arm/one-hit signatures of P1562 and P1563 must reproduce
+   in both modes, and any extra arm, extra hit, changed phase or changed
+   predicate is a STOP.
+6. **Scope and stage.** No production, protected
+   runner/observer/predicate, inventory, manifest or dependency change;
+   `session_requests.rs` stays one of the 90 retained overlays, the helper
+   remains generated test-only output, and erasing the declared
+   instrumentation restores the live AST in both arms. No new allocation.
+   P1562/P1563 proceed only after the return-proof pair transport is
+   source-bound and audited; the remaining rows and the 151-plan bar
+   continue from the same partial tree; a row whose pinned hit cannot be
+   mapped to an actual edge is named and stopped, never normalized.
+
+All other Q20, Q19, Q18, Q17, Q16, Q15, Q14, Q13, Q12, Q11, Q10 and brief
+terms stand.

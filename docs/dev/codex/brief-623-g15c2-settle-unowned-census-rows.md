@@ -116296,3 +116296,72 @@ fabricated second suspension/stale/retired/misattributed reject. The
 138.27 s charge is accepted; 3,279.22 s focused remain (envelope 2 at
 279.22 s). All other Q19/Q18/Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms
 stand.
+
+### Continuation 98 — brief 742's twelfth run: queued caller transport and P1562/P1563 (Q21)
+
+Brief 742's twelfth run (`cdx`, unit
+`brief-742-cdx-20261116-214714-1806930`, rc 0, peak 1,370,193,920 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 992,730 B,
+sha256 `4f2a0693…`; report `.temp/brief-742/report.json`, STOP, 248
+changes (246 scratch added, 2 modified, 0 deleted), 3 disclosures, 2
+deviations, 1 question (Q21), 8 PASS / 2 FAIL / 1 NA, 207 citations
+verified) implemented Q20 in scratch: P0508's generated guard spans the
+actual `evaluate_inner_unstable(expr)` call and the pinned initial
+omission; `Guard::input_return` borrows the actual `Result`, consumes
+only that activation's pending proof, qualifies only its own unqueued
+`InputRequired`, transfers the token silently to the enclosing
+activation, and adds no arming event. The entry-pinned source audit
+preserves one producer invocation, the exact result/error, selector,
+phase, early-return operation, depth, stack, shadow-stack destructor and
+non-target finalizers, erases the declared instrumentation back to the
+whole live AST, and two roots emit byte-identical partial fragments
+(nine source anchors, 20 source controls). The generated helper passes
+114 controls (70 inherited, 44 return-edge) plus nine controls executing
+the extracted audited P0508 statement against a pure recursive producer
+(one arm + two own initial hits; one and one; unarmed/disabled/queued
+zero; swallowed outer unqualified); Q19's controls re-run intact
+(nested 15, ingress 15, adapter 8, prepared 13, lazy cursor 15, retained
+source 5; P0492 one arm + two frame hits); no field, allocation count,
+interface, witness, guard, phase or selector changed, and both
+historical P0508 mode signatures authenticate without re-earning. It
+then stopped at `PortBlocked::QueuedCallerReturnTransport` for
+P1562/P1563: both retained omissions are the queued-side
+`ordinary(row)` terminal tail before `finish_accepted_value_request`,
+the producer `eval_expr_request_from_checkpoint` converts its actual
+`EvalError::InputRequired` through `finish_input_required_request` into
+`SessionRequestFailure { error: SessionRequestError::InputRequired {..} }`,
+the unqueued resumption bypasses the initial caller's tail, the caller
+bodies construct no suspension frame (the interior
+`EvalInputSuspensionFrame` belongs to the descendant `eval_input` of the
+unqueued occurrence, and `drive_input_request` returns the queued answer
+without suspending), and the current helper's frame-only queued
+eligibility yields zero hits while the pin requires one. All 151 source
+joins, 90/180 pins and 5,399 files authenticate; `production_changes=0`;
+`source_schema` stays `f9604852…`; ten partial targets render
+byte-identically from two roots; no complete plan or schema was emitted.
+
+Q21 ruling (this commit): the Q18 pair is one attempt spanning two actual
+executions, and the episode's ownership evidence crosses the pair
+boundary at exactly one point, the queued `begin`. An activation whose
+own producer actually returned the request-level
+`SessionRequestFailure { error: SessionRequestError::InputRequired }`
+holds a return proof read from the returned value itself; the queued
+occurrence's same-path activation receives that proof at the pair join,
+exactly as it already receives constructed-frame tokens. A queued-side
+`ordinary` site is eligible only on a pair-issued token of its own
+episode at its own activation path, and the per-row audit names for every
+pinned queued hit which actual edge of the unqueued occurrence owns it
+(frame construction or request/eval return). The transport is silent —
+no arming line, no `returned` event — so P1562/P1563's one-arm/one-hit
+signatures stand. Attributing the descendant `EvalInputSuspensionFrame`
+to the request caller is a false ownership edge and stays rejected, as
+do guard widening, an unbound descendant frame, a producer-wide
+constructor scope and a globally sufficient return token; the transport
+is one-directional and never makes resume-scope eligibility true, so
+Q20's in-run "the queued side never qualifies" is not reversed.
+Falsifiers: no predecessor, swallowed or other-error return, wrong
+identity/row/episode, a second queued run, a descendant/sibling-path
+proof, and a fabricated boolean or renderer value all reject; any extra
+arm, hit or changed phase is a STOP. The 138.78 s charge is accepted
+(3,140.44 s focused remain, envelope 2 at 140.44 s). All other
+Q20/Q19/Q18/Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.
