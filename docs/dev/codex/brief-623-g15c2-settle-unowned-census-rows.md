@@ -115665,3 +115665,46 @@ or encoding credit; the 51 owners, five source duties and C2 (118
 Residual + 0 Lost) stay Open; `CHANGELOG.md` and S10 stay blocked and CM5
 is not authorized. The full detail is the Continuation 6 ruling appended
 to brief 740.
+
+### Continuation 84 — seventh run: the Q6 repair path stops pre-edit on two findings against my Q6 text, and Q7 admits the corrected option 1
+
+The seventh run of brief 740 stopped before any source or inventory edit,
+before any schema freeze and before any build. It upheld two findings
+against the literal Q6 bar: P0813's actual dispatch omission changes
+`Success(13)` to an uncaught `Throw[13, native623tag]`, so the "own
+`Native` difference with public output equal" sentence cannot hold there;
+and P2593's frozen `Error` cell throws at its predicate before any resumed
+`Ok(Some)` decode, so the repaired carrier can never fire in that cell.
+Both checks are findings against my ruling, not against the code: the
+enforced split in `mutants.tsv` / `verify_own_omission` /
+`observer_receipts.rs` applies the equal-output clause only to the
+non-Strict classes (`NativeEqual`, `StrictNativeEqual`; 54 rows), while the
+97 `Strict` rows — including P0813 and P2593 — are caught by their own
+allowed predicate class (`Err(Output)`, `Err(Projection)`, `Err(Native)`,
+prefix/pending/queue/fresh), with at least one own rejection, no
+out-of-class predicate, no identity survivor, the baseline producer pause,
+disabled record-exact parity and the complete real matrix. Q7 admits
+option 1 with the bar stated exactly: keep both source-local carrier
+repairs (P0813 armed at the actual producer pause of the resumed catch
+body and omitted at the actual `resume_catch_after_body` dispatch on that
+resumed path; P2593 omitted at the decoded `Some(value)` in
+`FirstLazyCompletionFrame::complete` as well as the immediate `Ok(Some)`),
+replace only P2593's selected case with the already-bound
+`CM739.c4.P2593.5a421e33ca0e973cebc2` (`Middle` / `prefix_and_tail.log`,
+same setup, pause, route and family; already in both modes' 50-key real
+matrices, its `List[5]` output proves the `Some(value)` tail), keep the
+frozen `Error` / `held_and_splice.tail-hold` case in the complete real
+matrix as an armed no-hit negative control, re-freeze and print the
+complete 510-case schedule (unchanged count, no dropped row or key, no
+sampling), and then run the twelve-block epoch (nine canonical builds plus
+three same-epoch forced spot checks, each ≤1,500 s; 55 blocks / ≤82,500 s
+at completion) with everything else in Q6 unchanged — the pair stays
+`(45, 5, false)` and Open, no settlement/SAME/promotion/encoding, no
+production/manifest/lock/dependency/inventory-predicate change, and a
+second two-family stop ends the one-off repair path for a carrier-design
+review. No credit: zero edits, zero builds, zero cases; the 43 consumed
+blocks stay consumed and the twelve authorized blocks stay unspent. Scope
+was the source review only, `production_changes=0`, no git or network
+command; the 51 owners, five source duties and C2 (118 Residual + 0 Lost)
+stay Open. The full detail is the Continuation 7 ruling appended to brief
+740.

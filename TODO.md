@@ -356,7 +356,22 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   allocated, no old binary or receipt relabelled, then the complete
   unsampled 510-case schedule and acceptance in both modes, the pair
   staying Open at zero receipts; a second two-family stop ends the
-  one-off repair path for a carrier-design review. C2 stays Open at 118
+  one-off repair path for a carrier-design review. Its seventh run
+  stopped pre-edit with zero source edits, zero builds and zero cases:
+  the literal Q6 bar ("own `Native` difference with public output equal")
+  cannot hold for P0813's actual dispatch omission (`Success(13)` becomes
+  an uncaught `Throw[13, native623tag]`), and P2593's frozen `Error` cell
+  throws before any resumed `Ok(Some)` decode — both findings against my
+  Q6 text, since the enforced clause applies only to the 54 non-Strict
+  rows while the 97 `Strict` rows (including both) are caught by their
+  own allowed predicate class. Q7 admits the corrected option 1: keep
+  both source-local carrier repairs, replace only P2593's selected case
+  with the already-bound `CM739.c4.P2593.5a421e33ca0e973cebc2` (`Middle`
+  / `prefix_and_tail.log`, same setup, pause and route; already in both
+  modes' 50-key real matrices), keep the frozen `Error` case as an armed
+  no-hit negative, re-freeze the complete 510-case schedule (count
+  unchanged, nothing sampled), then run the final twelve-block epoch with
+  every Q6 condition unchanged. C2 stays Open at 118
   Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

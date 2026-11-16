@@ -1176,3 +1176,107 @@ measurement is not credit.
 **Unchanged.** C2 stays Open at 118 Residual + 0 Lost; the 51 owners and
 five source duties stay Open; `CHANGELOG.md` and S10 stay blocked; CM5
 is not authorized; the eight continuation-69 rulings (Q1–Q8) stand.
+
+## Continuation 7 ruling (director) — Q7 admits option 1, corrected: the Strict rows keep the code's own predicate class, P2593's selected case moves to the already-bound Middle program, and the twelve-block epoch proceeds on a re-frozen schedule
+
+**What the seventh run established.** It stopped before any source or
+inventory edit, before any schema freeze and before any build, on two
+findings that are upheld. The literal Q6 bar ("an own `Native` difference
+with public output equal") cannot hold for P0813's actual dispatch
+omission on the frozen `Middle` cell, and P2593's frozen `Error` cell
+throws at its predicate before any resumed `Ok(Some)` decode. Both
+failure checks are findings against my Q6 text, not against the code. The
+retained-fact and calibration records reproduce: P0813 `Middle` baseline
+`Success(13)` with one producer pause and counterfactual
+`uncaught_Throw_13`, `semantic_same=false`; P2593 `Error` baseline
+`uncaught_predicate_throw` with prints 1–5; P0492's comparison view not
+implemented. Zero source edits, zero builds, zero cases; the 43 consumed
+blocks stay consumed and the twelve authorized blocks stay unspent.
+
+**The bar, stated exactly.** Q6's equal-output clause belongs to the
+non-Strict observer classes only. The enforced split (`mutants.tsv`,
+`verify_own_omission`, `observer_receipts.rs`) is: a `Strict` row (97 of
+151, including P0813 and P2593) is caught by its own allowed predicate
+class — `Err(Output)`, `Err(Projection)`, `Err(Native)` or a
+prefix/pending/queue/fresh rejection — with at least one own rejection,
+no predicate outside the class (an earlier guard stays `EarlierGuard`),
+no identity survivor, the real baseline producer pause, disabled
+record-exact parity and the complete real matrix; a `NativeEqual` or
+`StrictNativeEqual` row (54 rows, including P0543, C10 and P0492) keeps
+`Err(Native)` with a native difference and `public_output_exact` on every
+predicate. No predicate, test-layer check or observer receipt may be
+weakened; a Strict row that appears to enforce the equal-output clause is
+a discrepancy to report, never to patch. Four falsifiers ship: a Strict
+changed-output catch admitted only through the row's own validator and
+selected tuple; a non-Strict publicly visible difference still rejected;
+an out-of-class predicate still `EarlierGuard`; an identity survivor
+still rejected.
+
+**Q7 ruling — option 1.**
+- **P0813.** Keep the frozen `Middle` / `phase_observation.trace` cell
+  and the source-local repair: arm at the actual producer pause of the
+  resumed catch body — the point where the body's own evaluation suspends
+  and the catch frame is created — and apply the hit and the omission at
+  the actual `resume_catch_after_body` dispatch on that same resumed path
+  (`ResumeCatchBodySuspensionFrame::resume` and its typed siblings in
+  `nonlocal.rs`), not at the initial `eval_catch` match. The ordinary
+  guard keeps its position and behaviour; the hit must not be supplied by
+  the quiescence assertion or an earlier guard. The expected own
+  predicate for this cell is `Err(Output)` (the forwarded throw becomes
+  uncaught: `Throw[13, native623tag]` against the real `Success(13)`);
+  any other predicate leaves the row `PortBlocked`.
+- **P2593.** Keep the source-local repair: the omission applies at the
+  actual resumed optional realization — the decoded `Some(value)` in
+  `FirstLazyCompletionFrame::complete`
+  (`structure_ops/surface/lazy_completion.rs:32`) — as well as at the
+  immediate `Ok(Some)` in `eval_first`. Replace only this row's selected
+  case with the already-bound `CM739.c4.P2593.5a421e33ca0e973cebc2`
+  (`programs.tsv:6488`: `Middle` / `prefix_and_tail.log`, the same setup
+  `9b7661fe…`, the same pause key `Input:First.lazyConsumer:2:32`, the
+  same route `surface.rs:75:::eval_first@83`, descriptor
+  `First.lazyConsumer`, family `cm3-optional`); its real records are
+  already in both modes' 50-key matrices and its `List[5]` output can only
+  come from the `Some(value)` tail. The frozen `Error` /
+  `held_and_splice.tail-hold` case stays in the complete real matrix and
+  becomes an armed no-hit negative control: armed through its producer
+  pause, it must not hit and must not produce an own rejection; a hit
+  there, or a suppressed throw, is a red negative and the row stays
+  `PortBlocked` pending my ruling. No other row's selected case changes.
+- **Schedule re-freeze.** Before the epoch's first block, re-derive and
+  print the complete schedule — 151 own selected cases, 100 held-pair
+  cells and four structural controls, 255 per mode and 510 total — with
+  its digest. The count does not change; no real matrix row, key, tuple
+  or coverage bar drops; the pair rows keep their five armed-without-hit
+  `Error` cells each; nothing is sampled.
+- **Everything else in Q6 stands.** The twelve-block epoch (nine canonical
+  builds over the three configurations plus three same-epoch forced spot
+  checks, each ≤1,500 s; 55 blocks / ≤82,500 s at completion), no old
+  binary or receipt reused or relabelled, the pair assertion
+  `(45, 5, false)` and the Open pair with zero admitted receipts, the
+  boundaries (no production/manifest/lock/dependency/inventory-predicate
+  change; only the mechanical `source_schema` column), no
+  settlement/SAME/promotion/encoding, the Q3 observer constraints, a
+  runtime accessor is a STOP, the complete unsampled schedule and
+  acceptance in both modes with retention replayed before acceptance, and
+  the escalation: a second two-family stop ends the one-off repair path
+  for a carrier-design review.
+
+**Accepted as delivered.** The pre-edit source review (the re-authenticated
+frozen selections, six prior binaries and trees and retained records, the
+re-frozen 510-case count), the two upheld shape findings, the candidate
+identification (`director-candidate.json`, no selection applied) and the
+preserved administrative attempts (the inherited-documentation comparison,
+the empty queued-pause extraction and the duplicate citation anchor). No
+credit of any kind; the twelve blocks remain unspent.
+
+Run: `cdx` (unit `brief-740-cdx-20261116-132331-1667527`, rc 0, peak
+395,722,752 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_740.log`,
+901,810 B, sha256 `eefb1594…`; report
+`.temp/brief-740/report-continuation-6.json` and `report.json` identical,
+34,681 B, sha256 `341451c2…`, STOP, 0 changes (0 added, 0 modified, 0
+deleted), 0 disclosures, 2 deviations, 1 question (Q7), 7 PASS / 2 FAIL /
+3 NA, one measurement PASS, 66 citations verified; zero files under
+`crates/`, `scripts/` or `docs/` were written after the run start; the
+continuation-5 report remains at
+`.temp/brief-740/report-continuation-5.json` (`b288c95e…`); no
+production, manifest, lock or inventory-predicate change).
