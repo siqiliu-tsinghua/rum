@@ -116711,3 +116711,36 @@ workspace envelope assigned, the second held for verification, which uses
 brief 742's remaining 1,440 s). The implementation is brief 742 continuation
 16, committed before dispatch; no campaign, epoch, new catch, acceptance or
 CM5 is authorized, and every earlier term stands.
+
+### Continuation 104 — brief 742 continuation 16 stops at `RawAbandonmentWithRetainedArc`; Q26 rules the abandonment observation
+
+Continuation 16 (`cdx`, unit `brief-742-cdx-20261117-012829-1871047`, rc 0,
+peak 1,188,102,144 B, oom 0/0; log 4,644,841 B sha256 `cbff9c95…`; report
+STOP, 8,784 changes all in `.temp`, 0 disclosures, 2 deviations, 0 questions,
+15 PASS / 2 FAIL / 2 NA, 660 citations; 142.92 s charged — 114.92 s measured
++ 28.0 s bookkeeping — leaving 8,797.08 s focused; workspace 0 of 6,000 s)
+is accepted as a STOP. The candidate transport cannot observe an actual
+`FrameAbandon::abandon` (`Discard`, Arc consumed, one strong alias retained):
+the abandoned allocation still hits once where Q25 requires zero while the
+independent live allocation correctly hits once, in both armed cfg forms at
+one thread (13 passed / 13 failed each), both disabled forms 26/0; the
+director reproduced all four binaries. P0214/P0216 carry the whole producer/
+constructor path; the other eleven rows' synthetic seams are corroboration
+only and earn no class credit. No assertion was weakened, no global clearing
+was substituted, no maintained file or schema cell changed, and
+`source_schema` stays `f9604852…`. Q26: the missing observation is the actual
+abandonment implementation of every token-holding frame type; inside the four
+admitted raw files the copied postimage replaces the `PureFrameAbandon`
+derive with an explicit `impl FrameAbandon` that retires the one-use token
+before returning exactly the derive's `Discard` (equivalence quoted from
+`rum-derive/src/lib.rs:123-159`; the same-file precedent is the manual
+`EvalStructuredTraceCaptureExprSuspensionFrame` impl at
+`debug_tools/trace/resume_frames.rs:41-49`), registered as two erasable
+instrumentation edits with whole-file AST restoration in both cfg arms; a
+token-holding frame type outside the four files is a STOP, not a fifth path.
+The control keeps its full strength and all other Q25 control families stand.
+Continuation 17 is design plus executed extracted controls (`Scope: NONE`,
+1,500 s focused carved from the implementation envelope, leaving 7,297.08 s
+for the resumed implementation; the 6,000 s workspace envelope stays with the
+implementation, the second stays held); no campaign, epoch, new catch,
+acceptance or CM5 is authorized, and every earlier term stands.

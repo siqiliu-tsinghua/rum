@@ -1750,3 +1750,86 @@ epoch, new catch, acceptance, CM5 or bar change. No network, no git, no
 `unsafe`, no dependency or lockfile change; leave the authorized candidate
 uncommitted for the director's gate; report in `rum-report/1` and return only
 its validated summary.
+
+## Continuation 17 ruling (director) — Q26: abandonment is observed at the actual `FrameAbandon` implementation of every token-holding frame type, inside the four admitted raw files; the derive is replaced in the copy, never in production
+
+Continuation 16 is accepted as a STOP. Run: `cdx` (unit
+`brief-742-cdx-20261117-012829-1871047`, rc 0, peak 1,188,102,144 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 4,644,841 B,
+sha256 `cbff9c95…`; report STOP, 8,784 changes (8,782 added, 2 modified,
+0 deleted — both modified in `.temp`), 0 disclosures, 2 deviations,
+0 questions, 15 PASS / 2 FAIL / 2 NA, 660 citations verified; 142.92 s
+charged — 114.92 s measured serial plus 28.0 s bookkeeping at 0.5 s per
+command — leaving 8,797.08 s focused in the implementation envelope;
+workspace spent 0 of the assigned 6,000 s). Both deviations are accepted: the
+complete generator and 94-row schema are absent because the mandatory
+retirement control fails, and the early per-command remaining cells
+under-charged bookkeeping until the ledger was normalized with every original
+receipt preserved. Scope holds: `git status` is the same 23-entry partial CM4
+tree, 5,400 maintained files and the 380 accepted design files are unchanged,
+`production_changes=0`, no schema cell changed, `source_schema` stays
+`f9604852…`.
+
+The finding is accepted as a candidate-contract finding, not an impossibility
+claim and not a production regression: `PortBlocked::RawAbandonmentWithRet-
+ainedArc`. The specified Weak bind, raw resume read and direct-call handoff
+cannot distinguish an allocation whose actual `FrameAbandon::abandon` already
+ran (`Discard`, its `Arc` consumed, one strong alias retained) from an
+ordinary live allocation; the retired control therefore hits once where Q25
+requires zero, while the independent live allocation correctly hits once, in
+both armed cfg forms at one thread (13 passed / 13 failed each) and both
+disabled forms pass 26/0. The director reproduced all four binaries under
+`.temp/director/gate-742c16/`: the armed forms fail exactly the thirteen
+`*_actual_abandon` controls and the disabled forms pass every row. The worker
+did not change the expected retired hit to one, did not clear every token
+(global clearing would break the live-owner control), and did not credit the
+eleven synthetic producer seams as class evidence. The earlier 96 fragment
+records per arm are parity evidence only.
+
+Q26. The missing observation is the actual abandonment implementation of each
+frame type a frontier row's token can bind. In each of the four admitted raw
+files, and only where the token-holding frame type's declaration and its
+`FrameAbandon` implementation already live in that file, the copied postimage
+replaces the `PureFrameAbandon` derive with an explicit `impl FrameAbandon`
+that invokes the one-use retirement for that allocation before returning
+exactly the derive's `FrameAbandonAction::Discard`. The retirement runs
+before the lifetime-ending move, extends no lifetime, adds no strong owner,
+clears no unrelated token and changes no production `Drop`. The derive's
+expansion is fixed and is quoted from `crates/rum-derive/src/lib.rs:123-159`
+(an unconditional `Discard`), so equivalence is proven against the macro
+source, not assumed, and the same-file precedent for a side-effecting manual
+abandonment implementation is `EvalStructuredTraceCaptureExprSuspensionFrame`
+at `crates/rum-runtime/src/runtime/debug_tools/trace/resume_frames.rs:41-49`
+(`context.restore_trace_capture(self.prior_enabled)` then `Discard`). A
+manual (non-derive) abandonment implementation on a token-holding frame type
+receives the same retirement statement in its own actual implementation.
+
+The replacement is registered instrumentation: the attribute-list edit and
+the inserted impl item are two registered source edits with their own erasure
+rule, whole-file AST restoration must reproduce the live file exactly in both
+cfg arms, and the pinned-omission audit stays separate. If any token-holding
+frame type's declaration or abandonment implementation lies outside the four
+files, that is a class finding and a STOP — no fifth path is added without a
+ruling. The control stays at full strength: `abandon_and_weak_retirement`
+requires zero hits for the abandoned allocation with a retained Arc and one
+for an independent live allocation, in both cfg arms and the disabled form;
+the other eighteen Q25 control families and the inherited Q24 artifacts are
+unchanged. The eleven remaining rows' whole producer/constructor paths must
+be extracted and executed per row before any class admission; synthetic
+seams are corroboration only.
+
+This continuation is design plus executed extracted controls, `Scope: NONE`
+— no maintained source, table, inventory or schema change; no 151-plan
+bundle, no 94-path/188-postimage emission, no schema digest; output under
+`.temp/brief-742/continuation-17/`, with the 23-entry partial CM4 tree and
+every accepted artifact byte-identical; no git, no network, no `unsafe`, no
+dependency or lockfile change. Budget: 1,500 s focused carved from the
+implementation envelope's remaining 8,797.08 s, leaving 7,297.08 s for the
+resumed implementation; the assigned 6,000 s workspace envelope stays with
+the implementation and the second stays held for verification; no workspace
+command runs here. Stop-loss keyed on progress: two consecutive compiled
+attempts that certify no new control or path stop and report the remainder.
+The next step is this continuation's gate and then the resumed implementation
+of the complete 151-plan generator and the 94-row schema. Q25's four-file
+extension, the 94/188 surface, the owner-qualified handoff, Q24, the 151-plan
+bar and the non-shipment of the 138 subset all stand.

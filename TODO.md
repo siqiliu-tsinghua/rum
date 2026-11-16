@@ -654,6 +654,31 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   focused plus one 6,000 s workspace envelope (CM4's committed share
   28,500 s; 743–746 retain 40,500 s; the second workspace envelope held
   for verification, which uses 742's remaining 1,440 s).
+  Brief 742 continuation 16 (the Drafts A+B implementation pass) stops
+  pre-edit with `PortBlocked::RawAbandonmentWithRetainedArc`: the
+  specified Weak bind, raw resume read and direct-call handoff cannot
+  distinguish an allocation whose actual `FrameAbandon::abandon`
+  returned `Discard` with one strong alias retained (the abandoned
+  allocation hits once where Q25 requires zero; the independent live
+  allocation hits once) in both armed cfg forms at one thread — 13
+  passed / 13 failed each, both disabled forms 26/0 — with 151 source
+  joins, 90/180 pins, 22 signatures and the inherited Q24 evidence
+  authenticated, two 11-file partial roots restored whole-file, 16
+  static falsifiers rejected and both crate type checks green; 8,784
+  scratch files, 0 disclosures, 2 deviations, 15 PASS / 2 FAIL / 2 NA,
+  660 citations, 142.92 s charged (8,797.08 s left, workspace 0/6,000),
+  5,400 maintained files and the 23-entry tree unchanged, schema still
+  `f9604852…`. Q26 rules the missing observation: in the four admitted
+  raw files, each token-holding frame type's copied postimage replaces
+  the `PureFrameAbandon` derive with an explicit `impl FrameAbandon`
+  that retires the token before returning exactly `Discard` (derive
+  expansion quoted; the same-file manual `restore_trace_capture` impl
+  is the precedent), registered as two erasable edits with whole-file
+  AST restoration in both cfg arms; a token-holding type outside the
+  four files is a STOP. Continuation 17 is design plus executed
+  extracted controls (`Scope: NONE`, 1,500 s carved from the
+  implementation envelope, leaving 7,297.08 s for the resumed
+  implementation; the 6,000 s workspace envelope stays assigned).
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
