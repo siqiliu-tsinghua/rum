@@ -349,3 +349,105 @@ authority, the caught/stop-row signature pins, 151 plans, ten classes, 79
 subtypes, deterministic double generation, the exact emitted file set,
 the mechanical `source_schema` transition, all focused controls and both
 workspace modes after the ordered replay.
+
+## Continuation 3 ruling (director) — Q12: the closed-implementation protocol is the third declaration-authority form; the fourteen `DefinitionResumeRoute` rows, `DownValueScan` and `ExceptionResumeRoute` close, the census protocols that do not close stay stopped
+
+The STOP is correct under Q10 rule 4 and Q11 rule 3 and earns no credit:
+the fourteen rows have neither a frozen concrete route binding nor a
+per-row generic-gap entry, all 151 source/tail/destructor joins and the
+90 preimages / 180 postimages authenticate, `source_schema` is unchanged
+at `f9604852…`, no repository file was written, and no plan or schema was
+emitted. The 417.92 s conservative charge is accepted; 742's remaining
+focused budget is 4,382.08 s and both workspace envelopes are untouched.
+
+The authority the fourteen rows need is not another inventory entry.
+`DefinitionResumeRoute` is declared `pub(in crate::runtime)`
+(`application/mod.rs:151`), so the compiler admits implementations only
+inside the runtime module; the source contains exactly two, and they are
+precisely the initial and resumed shapes: `()` with `Error = EvalError`,
+identity `failure` and `witness.suspend(...)` (`:165`), and
+`ContinueToken<'_, F>` with `Error = ResumeStop<F::Output>`,
+`ResumeStop::failure` and `Err(self.suspend(...))` (`:182`). The trait's
+own documentation states the contract: the same driver is entered both
+initially and by its own typed frame, and only a resumed instantiation
+can consume a token. A sealed trait with a finite, statically assertable
+implementation set whose members are determined from in-source call sites
+is a declaration authority of the same rank as a frozen route and
+stronger than a route string: the closure is compiler-enforced, not
+recorded.
+
+Q12 admitted, as the third evidence form for Q10 rule 1:
+
+1. **Closed-implementation authority.** A generic successor may be
+   summarized without a per-row frozen declaration when (a) the trait is
+   sealed by visibility, (b) its complete implementation set is finite and
+   asserted exactly by the generator, and (c) every instantiation that can
+   enter the row's graph is determined from in-source evidence. The audit
+   records the trait declaration anchor, the exact implementation set and
+   each implementation's method anchors. Any added, removed or moved
+   implementation, any changed signature, associated type or body, and any
+   visibility widening stops every row bound to that protocol until
+   re-ruled.
+2. **The three verified protocols.** `DefinitionResumeRoute`
+   (`application/mod.rs:151`; `()` at `:165`, `ContinueToken<'_, F>` at
+   `:182`) covers P0256, P0259, P0260, P0266, P0281, P0284, P0304, P0305,
+   P0311, P0455, P0459, P0470, P0558 and P1615. `DownValueScan`
+   (`model/definitions/down_value_dispatch.rs:25`; `LinearDownValueScan`
+   at `:278`, `IndexedDownValueScan` at `:294`, selected by
+   `start_indexed_down_value_scan` at `:236` under the ground-count
+   threshold at `:8` and branched at `down_values.rs:155`) covers P0256,
+   P0259, P0260, P0266 and P0267. `ExceptionResumeRoute`
+   (`kernel_data/control_data/exceptions/resume_frames.rs:5`; `()` at
+   `:15`, `ContinueToken<'_, F>` at `:29`) covers P0769 and P0773. Each
+   row's summary records the trait anchor, the exact implementation set,
+   each implementation's anchors and its error/ownership shape; the
+   summary is declarative plan data shared by every bound row.
+3. **Per-edge instantiation; both shapes required.** The route is a
+   property of the edge, not of the row. Every call edge into a
+   `Route`-generic function carries exactly one declared instantiation,
+   proved from its own argument: a literal `()` is the initial route, the
+   frame's `ContinueToken` is the resumed route, and a forwarded parameter
+   inherits its caller's proof, with the fixpoint over call sites
+   terminating. A plan that models only the initial or only the resumed
+   instantiation is incomplete — the P0813/P2593 defect generalized — and
+   must contain the initial `suspend` edge and the resumed frame-to-`finish`
+   edge. Where the choice is made at runtime, as with `DownValueScan`'s
+   ground-count branch, the plan carries the discriminating condition and
+   both branches, each with its own anchors; it may not silently pick one.
+4. **Error and ownership preservation.** The initial implementation
+   converts the actual `EvalError` through identity
+   (`DefinitionResumeRoute`) or `ResumeStop::failure`
+   (`ExceptionResumeRoute`) and returns what the witness produces; the
+   token implementation moves itself into `ResumeStop<F::Output>` and
+   returns `Err`. The rendered carriers preserve both branch shapes: no
+   unified error, no dropped token, no re-entry of the immediate tail
+   through the resumed path, no invented successful value.
+5. **Falsifiers.** Each protocol ships static falsifiers that fire: a
+   third or out-of-module implementation fails the closure assertion; a
+   changed `Error`, `failure` or `suspend` body fails its anchor; an edge
+   with an unproved or wrong instantiation fails; a graph missing the
+   initial `suspend` edge or the resumed `finish` edge fails; a swapped
+   pair fails; a runtime-branched protocol with only one arm fails; the
+   valid complete counterparts pass.
+6. **No widening beyond the verified set.** `CallBuiltinSpec`
+   (`eval_dispatch/mod.rs:321`) is a metadata bound with no continuation
+   method and is not admitted; it may only be reported as an edge if a
+   row's relevance analysis proves one. P1577's erased-driver dispatch
+   (`suspension/core.rs:639`; `core/driver.rs:75/101/110/150`) is not
+   admitted: an `Expr` decoder binding does not enumerate the queue's
+   frame kinds. If that frame-kind set is finite and specifiable from
+   source, the generator may prove it under rule 1 and report it at the
+   gate as a new closure; otherwise the row stops. Any other protocol
+   found later returns for a ruling.
+7. **Inventory and budget.** `GENERIC_GAPS` stays the exact five entries
+   and `validate` keeps asserting the set; P0403's entry remains its own
+   and is neither borrowed nor duplicated; no route or inventory file is
+   edited. No new allocation: 4,382.08 s focused remain and both
+   workspace envelopes are untouched.
+
+All other Q10, Q11 and brief terms stand: the 90-file starting set and
+pre-edit pin authority, the caught/stop-row signature pins, 151 plans,
+ten classes, 79 subtypes, zero unknown edges, deterministic byte-identical
+double generation, the exact emitted file set, the mechanical
+`source_schema` transition, all focused controls and both workspace modes
+after the ordered replay.

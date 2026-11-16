@@ -418,7 +418,18 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   program-authenticated declarations (the selected program fixes the mode
   via the entry API and names the continuation in
   `failure.suspend(|| ...)`, with unique-source proof and static
-  falsifiers), no new allocation. C2 stays Open at 118
+  falsifiers), no new allocation. Its third run proved both Q11 bindings
+  (22 anchors, eight controls) and stopped at fourteen rows generic over
+  `Route: DefinitionResumeRoute<...>` with no frozen concrete binding;
+  Q12 makes the closed-implementation protocol the third
+  declaration-authority form — a visibility-sealed trait with an exact,
+  asserted impl set and per-call-edge instantiations — covering the
+  fourteen `DefinitionResumeRoute` rows, `DownValueScan`
+  (P0256/P0259/P0260/P0266/P0267, both ground-count arms) and
+  `ExceptionResumeRoute` (P0769/P0773), with both the initial `suspend`
+  and resumed frame-to-`finish` edges required, `CallBuiltinSpec` and the
+  erased-driver dispatch excluded, `GENERIC_GAPS` unchanged and no new
+  allocation. C2 stays Open at 118
   Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

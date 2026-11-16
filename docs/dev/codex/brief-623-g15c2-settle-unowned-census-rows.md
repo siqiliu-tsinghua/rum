@@ -115875,3 +115875,51 @@ continuation, another program's candidate, a missing impl or an ambiguous
 second pair. Undeclared gaps without such a proof still stop, P0508's gap
 stays its own, and no new allocation is granted. All other Q10/742 terms
 stand.
+
+### Continuation 89 — brief 742's third run: Q11 bindings proved, the DefinitionResumeRoute declaration STOP (Q12)
+
+Brief 742's third run (`cdx`, unit
+`brief-742-cdx-20261116-165425-1728666`, rc 0, peak 1,161,625,600 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,228,290 B,
+sha256 `9c951d29…`; report `.temp/brief-742/report.json`, STOP, 85
+changes (83 scratch added, 2 modified, 0 deleted), 3 disclosures, 4
+deviations, 1 question (Q12), 9 PASS / 2 FAIL / 3 NA, 189 citations
+verified) resolved Q11: one shared source-anchored retention protocol
+proves both native bindings — P0001 `AccountingShadow`/`CallbackFinish`
+through `callback_charge`, P0002 `Unarmed`/`PrefixFinish` through
+`retained_prefix` — with 22 row/anchor entries records and eight final
+controls that reject swapped modes, continuations and programs, another
+module, missing or mismatched impls, a changed entry bound, a second
+matching pair, a missing raw resume, a changed frame constructor and a
+changed actual-pause guard. The Q10 option suite was freshly rebuilt and
+rerun (6/6). It then stopped at the next generic boundary: fourteen rows
+(P0256, P0259, P0260, P0266, P0281, P0284, P0304, P0305, P0311, P0455,
+P0459, P0470, P0558, P1615) are generic over
+`Route: DefinitionResumeRoute<...>`, no frozen route names a concrete
+binding, and only P0403 has a `GENERIC_GAPS` entry, so the source
+candidates `()` and `ContinueToken` were disclosed but not adopted. All
+151 source joins and the 90/180 pins authenticate; the 29-enclosure
+generic census is preserved with DownValueScan, ExceptionResumeRoute,
+CallBuiltinSpec and the erased-driver dispatch named for later review;
+`source_schema` stays `f9604852…`; no repository file changed.
+
+Q12 ruling (this commit): make the closed-implementation protocol the
+third declaration-authority form. `DefinitionResumeRoute` is
+`pub(in crate::runtime)` with exactly two impls — `()` with
+`Error = EvalError`, identity `failure` and `witness.suspend(...)`, and
+`ContinueToken<'_, F>` with `Error = ResumeStop<F::Output>`,
+`ResumeStop::failure` and `Err(self.suspend(...))` — so the compiler
+enforces the closure and the source fixes which instantiation enters
+where. Three protocols qualify today: `DefinitionResumeRoute` for the
+fourteen rows, `DownValueScan` for P0256/P0259/P0260/P0266/P0267
+(`LinearDownValueScan`/`IndexedDownValueScan` under the ground-count
+branch), and `ExceptionResumeRoute` for P0769/P0773. The route is a
+property of the edge, not the row: every call edge carries a proved
+instantiation, the initial `suspend` edge and the resumed frame-to-`finish`
+edge are both required, a runtime-branched protocol carries both arms,
+and both error/ownership shapes are preserved. Falsifiers cover a third
+impl, changed bodies, unproved or swapped instantiation, a missing edge
+and a one-armed branch. `CallBuiltinSpec` and the erased-driver dispatch
+are not admitted, `GENERIC_GAPS` stays the exact five with P0403's entry
+its own, and no new allocation is granted. All other Q10/Q11/742 terms
+stand.
