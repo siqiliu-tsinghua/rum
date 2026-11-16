@@ -1044,3 +1044,83 @@ Q19 resolves the boundary; the pin stands unchanged:
 
 All other Q18, Q17, Q16, Q15, Q14, Q13, Q12, Q11, Q10 and brief terms
 stand.
+
+## Continuation 11 ruling (director) — Q20: an initial-return tail is owned through the actual returned `InputRequired`, with the episode token travelling along the actual return edges; P0508's one-arm/two-hit pin stands and no resume scope is required
+
+The STOP is upheld and earns no credit. The Q19 work before it is
+accepted as delivered: the P0492 producer Guard now encloses its actual
+`InputRequired` branch and the unchanged witness/frame constructor, each
+actual frame's own activation receives the token at construction, the
+audit erases the new instrumentation to the live AST and compares the
+omission method to its pin, and 13 placement/preservation controls pass
+with eight anchors. The frozen `Return[Accumulate[Input["b724tuple"]]]`
+trace yields one arm and two hits on two activations; a single-frame
+chain yields one; an unarmed two-frame chain and the disabled arm yield
+zero; swallowed, missing, retired or stale bindings, wrong-frame
+attribution and both retained aliasing counterexamples reject; the
+shared-token variant still fails isolation; and the 15 nested controls
+pass against the latest helper. The four lazy callback rows
+P2132/P2133/P2134/P2135 are resolved through the existing
+`Box<AwaitCursor>` allocation without a new field, allocation change,
+witness, error, phase or selector change, with 27 anchors and 15
+controls; the latest helper has 70 controls. All 151 source joins, the
+90 preimages / 180 postimages and the 5,399 maintained files
+authenticate; `production_changes=0`; `source_schema` is unchanged at
+`f9604852…`; nine partial targets render byte-identically from two roots
+and two helper versions are disclosed separately; no complete plan or
+schema was emitted. The 138.27 s conservative charge is accepted; 742's
+remaining focused budget is 3,279.22 s (envelope 2 has 279.22 s),
+focused envelopes 3 and 4 and both workspace envelopes are untouched.
+
+P0508's frozen source `7+(Input["finish"])` executes two
+`evaluate_once_in_accounting_mode` levels, each with the producer `enter`
+around `evaluate_inner_unstable` and the omission immediately after an
+actual `Err(InputRequired)` return, before `leave_level`, the entry pop
+and the shadow-stack drop; the pin is one arm and two same-phase hits
+with `Err(Native)` and exact public output. The site is an initial-unwind
+tail, not a resume method, and the frames the suspension constructs
+appear only at the callers' suspension branches, after the tail has
+executed. A resume-scope lookup therefore cannot reproduce the pin — and
+the superseded shared bit could only by answering from ambient state.
+
+Q20 resolves it. The episode belongs to the suspension (Q19), and the
+suspension has two actual edges; inheritance travels along both:
+
+1. **Return-edge inheritance.** An activation whose own producer call
+   actually returned `InputRequired` inside the armed episode inherits
+   the episode. Eligibility at an initial-return tail is owned by that
+   activation: the generated site checks its actual returned result and
+   the current activation's own inherited token. No resume scope and no
+   frame-resume fiction.
+2. **Propagation.** The token travels from the armed activation along
+   the actual return edges: each enclosing activation whose producer
+   returns the propagated `InputRequired` receives its own copy at that
+   edge, so each initial-return hit is attributed to the activation that
+   executed its own tail. The propagation is silent — no arming line and
+   no `returned` event — so P0508's one-arm/two-hit pin stands unchanged.
+3. **Not leakage.** Eligibility requires the armed episode in this run,
+   the site's actual `InputRequired` return, the unqueued side and a
+   token received along an actual return or construction edge. No
+   ambient, shared, static or per-session state; a swallowed or consumed
+   suspension never qualifies an enclosing activation that does not
+   itself return `InputRequired`; the queued side never qualifies; a new
+   episode clears stale tokens; the transport retires with the
+   activation; and a hit attributed to another activation rejects.
+4. **Both edges together.** Q19's frame-construction inheritance remains
+   for resumed executions and this rule covers initial tails. A row may
+   use either or both, and Q17 rule 5's per-row proof now reads: every
+   pinned arm and hit maps to the row's own episode through its actual
+   return edge or its actual constructed frame, with no dependence on an
+   activation outside the chain.
+5. **Controls.** A two-level chain yields one arm and two hits; a
+   one-level chain one and one; unarmed or disabled yields zero; the
+   queued side yields zero; a swallowed suspension leaves the outer
+   activation ineligible; a fabricated second suspension, a stale
+   episode, a retired activation and a misattributed hit reject. The
+   P0508 trace becomes the positive control and the P0492 controls stay.
+6. **Stage.** No new allocation. P0508 proceeds only after the
+   return-edge transport is audited, and the remaining rows and the
+   151-plan bar continue from the same partial tree.
+
+All other Q19, Q18, Q17, Q16, Q15, Q14, Q13, Q12, Q11, Q10 and brief
+terms stand.

@@ -116242,3 +116242,57 @@ constructed; a row that cannot is named and stopped, never normalized.
 The 130.89 s charge is accepted; 3,417.49 s focused remain (envelope 2
 at 417.49 s). All other Q18/Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms
 stand.
+
+### Continuation 97 — brief 742's eleventh run: return-edge inheritance and P0508 (Q20)
+
+Brief 742's eleventh run (`cdx`, unit
+`brief-742-cdx-20261116-204541-1791083`, rc 0, peak 1,379,749,888 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,944,817 B,
+sha256 `467b735c…`; report `.temp/brief-742/report.json`, STOP, 246
+changes (244 scratch added, 2 modified, 0 deleted), 3 disclosures, 2
+deviations, 1 question (Q20), 9 PASS / 1 FAIL / 1 NA, 200 citations
+verified) implemented Q19 in scratch: the P0492 producer Guard now
+encloses its actual `InputRequired` branch and the unchanged frame
+constructor, each frame's own activation receives the token at
+construction, the audit erases to the live AST (13 controls, 8 anchors),
+and the frozen P0492 trace gives one arm and two own-frame hits (single
+frame → one; unarmed/disabled → zero; swallowed/stale/misattributed and
+both aliasing counterexamples reject; shared-token variant fails). The
+four lazy callback rows P2132-P2135 are resolved through the existing
+`Box<AwaitCursor>` without a new field or allocation change (27 anchors,
+15 controls); the latest helper has 70 controls and the earlier
+lexical-only checker is retained as intermediate evidence. It then
+stopped at `PortBlocked::InitialReturnActivationTransport` for P0508:
+the pinned one-arm/two-hit signature is an initial-unwind tail (two
+`evaluate_once_in_accounting_mode` levels, each omitting the retirement
+right after an actual `Err(InputRequired)` return), while the current
+frame lookup requires an active resume scope and yields zero hits even
+with two constructed bindings. All 151 source joins, 90/180 pins and
+5,399 files authenticate; `production_changes=0`; `source_schema` stays
+`f9604852…`; nine partial targets render byte-identically from two
+roots; no complete plan or schema was emitted.
+
+Q20 ruling (this commit): the suspension has two actual edges and the
+episode inherits along both. An activation whose own producer call
+actually returned `InputRequired` inside the armed episode inherits the
+episode; the generated site checks its actual returned result and the
+current activation's own inherited token, with no resume scope. The
+token propagates from the armed activation along the actual return edges,
+each enclosing activation receiving its own copy, so every initial-return
+hit is attributed to the activation that executed its own tail; the
+propagation is silent — no arming line, no `returned` event — so P0508's
+one-arm/two-hit pin stands. Eligibility requires the armed episode, the
+site's actual `InputRequired` return, the unqueued side and a token
+received along an actual return or construction edge; no ambient/shared
+state, a swallowed suspension never qualifies an enclosing activation
+that does not return `InputRequired`, the queued side never qualifies, a
+new episode clears stale tokens, a retired activation and a
+misattributed hit reject. Q19's frame-construction inheritance remains
+for resumed executions, and the per-row proof now maps every pinned arm
+and hit to its own episode through its actual return edge or constructed
+frame. Controls: two-level → one arm + two hits, one-level → one and
+one, unarmed/disabled and queued → zero, swallowed → outer ineligible,
+fabricated second suspension/stale/retired/misattributed reject. The
+138.27 s charge is accepted; 3,279.22 s focused remain (envelope 2 at
+279.22 s). All other Q19/Q18/Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms
+stand.

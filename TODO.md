@@ -493,7 +493,18 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   activation, so the single pause stays the only arm event and P0492's
   one-arm/two-hit pin stands; the counterexamples move to activations
   that did not suspend, and Q17 rule 5 becomes a per-row map from every
-  pinned arm and hit to its own episode and constructed frames.
+  pinned arm and hit to its own episode and constructed frames. Its
+  eleventh run implemented Q19 (P0492 one arm and two own-frame hits;
+  the four lazy callback rows resolved through the existing
+  `Box<AwaitCursor>` with no new field) and stopped at P0508's
+  initial-unwind tail, which executes before the suspension's frames are
+  constructed and yields zero hits under a resume-scope lookup; Q20 adds
+  return-edge inheritance — the episode travels along the actual
+  `InputRequired` return edges, each enclosing activation receives its
+  own silent token copy, so P0508's one-arm/two-hit pin stands with no
+  resume scope and no new arming line; the per-row proof now maps every
+  pinned arm and hit to its own episode through its actual return edge or
+  constructed frame.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
