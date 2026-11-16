@@ -116097,3 +116097,49 @@ other Q13 conditions stand, P1577 remains the guarded counterpart, and
 the reentrant counterpart plus its shared-token falsifier join the
 controls. No new allocation (3,798.52 s focused remain, envelope 2 at
 798.52 s). All other Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.
+
+### Continuation 94 — brief 742's eighth run: Q16 applied, the unbound paired activation identity (Q17)
+
+Brief 742's eighth run (`cdx`, unit
+`brief-742-cdx-20261116-190917-1764919`, rc 0, peak 1,138,614,272 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,341,255 B,
+sha256 `6aa0d52c…`; report `.temp/brief-742/report.json`, STOP, 85
+changes (83 scratch added, 2 modified, 0 deleted), 3 disclosures, 3
+deviations, 0 questions, 8 PASS / 2 FAIL / 3 NA, 81 citations verified)
+applied Q16: 42 authenticated caller-topology anchors resolve both arms,
+the producer's real success / `InputRequired` / other-error branches and
+the recursion as recurrence of the same site set; P1577 stays green with
+its 17 anchors and two real guard anchors, and removing its guard still
+rejects; the public `BuiltinFn` interior stays opaque; and the typed
+handoff (`args_for_resume`, `resume_call_after_head`, the `PhantomData`
+`ContinueToken`) is recorded without inflating it into a runtime key. The
+run then stopped at `PortBlocked::UnboundPairedActivationIdentity`: the
+retained `cm740_probe` has one thread-local `ARMED` bit, `ordinary` and
+`frame` read it globally, and `pause` arms whenever any enclosing entered
+row matches, so two calibrated counterexamples fire — an outer pause arms
+an unpaused nested activation, and a nested pause arms the outer
+activation. The 17-control scoped-token model passes, but its identities
+are supplied to it; the mapping from the producer's actual activation
+into the paired occurrence is not implemented. All 151 source joins and
+90/180 pins authenticate; `source_schema` stays `f9604852…`; no
+repository file changed; no plan or schema was emitted.
+
+Q17 ruling (this commit): uphold the stop and admit the activation
+transport. The retained helper is the "one boolean across the pair"
+weakness the accepted design already names, and it is not a preserved
+node — the module exists only in the mutated builds, absent from
+production, and its text is generator output — so replacing it is in
+scope with the `lib.rs` overlay's byte delta disclosed per file; the
+18 caught / 4 stop pins bind the omission site, preserved nodes, arming
+event, hit phase, selector and predicate, not the helper's storage. The
+transport must answer every arm, lookup, hit and frame check from the
+activation's own `enter`/`Guard` entry; carry the episode token (row,
+root program, constituent, run episode, producer occurrence, activation
+identity) from the actual execution, never from the plan or a synthetic
+model; match the resumed activation to its arming episode and clear it at
+a new independent episode; re-run the 17 model controls against the
+rendered helper; add no production surface, accessor, dependency or
+`unsafe`; and prove per retained row that its omission predicate is
+satisfied by its own activation with no cross-activation leakage. The
+126.11 s charge is accepted; 3,672.41 s focused remain (envelope 2 at
+672.41 s). All other Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.

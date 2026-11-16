@@ -457,7 +457,19 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   with activation scoping — nested activations are the same site set one
   level down, every branch reaching the tail is enumerated and marked,
   and the arm/episode/occurrence/hit identities must be per-activation,
-  with the open builtin payload kept as one opaque node.
+  with the open builtin payload kept as one opaque node. Its eighth run
+  proved the Q16 topology (42 anchors, both arms, P1577 still green) and
+  stopped with `UnboundPairedActivationIdentity`: the retained helper's
+  single `ARMED` bit lets an outer pause arm an unpaused nested
+  activation and a nested pause arm the outer one, while the
+  scoped-token model's identities are only supplied to it; Q17 admits
+  the activation transport — every arm/lookup/hit/frame check answered
+  by the activation's own guard entry, the episode token carried from
+  the actual execution (row, root program, constituent, run episode,
+  occurrence) and matched to its resumed activation, the retained helper
+  replaced as generator output with the `lib.rs` byte delta disclosed,
+  the model controls re-run against the rendered helper, and each
+  retained row proved independent of cross-activation leakage.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

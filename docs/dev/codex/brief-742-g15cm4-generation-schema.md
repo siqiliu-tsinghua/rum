@@ -788,3 +788,94 @@ pins, 151 plans, ten classes, 79 subtypes, zero unknown edges,
 deterministic byte-identical double generation, the exact emitted file
 set, the mechanical `source_schema` transition, all focused controls and
 both workspace modes after the ordered replay.
+
+## Continuation 8 ruling (director) — Q17: the activation transport is instrumentation-owned and source-anchored; the retained shared-bit helper is replaced as generated output under the existing pins, and the episode identities must be carried from the actual execution
+
+The STOP is upheld and earns no credit. The Q16 work before it is
+accepted as delivered: 42 authenticated caller-topology anchors covering
+both arms, the producer's real success / `InputRequired` / other-error
+branches and the recursion recorded as recurrence of the same site set;
+the public `BuiltinFn` interior kept opaque; P1577 still green with its
+17 anchors and two real guard anchors, and removing its guard still
+rejects; the 17-control scoped-token model; the two calibrated
+counterexamples against the retained helper bytes; and the three
+typed-handoff anchors (`EvaluateCallSuspensionFrame` stores
+`args_for_resume`, resumes through
+`session.resume_call_after_head(value, args_for_resume)`, and its
+`ContinueToken` is an invariant `PhantomData` proof, not a stored runtime
+key). All 151 source/tail/destructor joins, the 90 preimages / 180
+postimages and the 5,399 maintained files authenticate;
+`production_changes=0`; `source_schema` is unchanged at `f9604852…`; no
+plan or schema was emitted. The 126.11 s conservative charge is accepted;
+742's remaining focused budget is 3,672.41 s (envelope 2 has 672.41 s),
+focused envelopes 3 and 4 and both workspace envelopes are untouched.
+
+The retained `cm740_probe` — one thread-local `ARMED` bit, `ordinary` and
+`frame` reading it globally, and `pause` arming whenever any enclosing
+entered row matches — is exactly the "one boolean across the pair"
+weakness the accepted design already names (`.temp/brief-741/PLAN.md:42`,
+citing the armed `rum-runtime/src/lib.rs:39`). The two counterexamples
+demonstrate it: an outer pause arms an unpaused nested activation, and a
+nested pause arms the outer activation. That shape cannot satisfy Q16
+rule 3. It is also not a preserved node: the module exists only in the
+mutated builds (`// Copied mutation attribution, absent from every live
+runtime build.`, `#[doc(hidden)] pub mod cm740_probe`), is absent from
+production, and its text is generator output the stage must render from
+recipes. The 18 caught / 4 stop pins bind the omission site, the
+preserved nodes, the arming event, the hit phase, the selector and the
+predicate — not the helper's internal storage — so replacing the helper
+is in scope, with the `lib.rs` overlay's byte delta disclosed per file.
+
+Q17 admits the activation transport under these conditions:
+
+1. **Scope by the activation's own guard.** The instrumented source's
+   `enter`/`Guard` placement is the activation boundary. An arm, a
+   lookup, a hit or a frame check is answered by the entry that owns that
+   activation: for `pause`, the innermost enclosing entry whose row is
+   the selected row; for `ordinary`, `frame` and `hit`, the current
+   activation's own entry. No process-global, per-session,
+   per-row-unscoped or ambient-stack-wide flag may answer for another
+   activation. The two retained counterexamples are rejection controls on
+   the rendered helper: the same nested sequences must yield the isolated
+   answers (an ordinary lookup in an unpaused nested activation is false;
+   a nested pause does not arm the outer activation), and a regenerated
+   shared-bit variant must fail.
+2. **Episode transport from the actual execution.** The token carries the
+   row, root program, constituent, run episode, producer occurrence and
+   the activation's own identity. Program, constituent, run episode and
+   occurrence come from the actual run — the runner's existing
+   attempt/program/constituent identity and the actual producer
+   occurrence — never from the plan, the renderer or a synthetic model
+   value, and never from a prompt string. The resumed activation is
+   matched to the episode that armed it using only those identities and
+   the declared resumed-then-queued order, and the episode is cleared at
+   a new independent episode. Falsifiers: a source-row string alone, a
+   boolean, a renderer-supplied constant or synthetic identity, a token
+   matched by position without an identity, a cross-program or
+   cross-constituent match, a stale episode consumed twice, and two
+   occurrences collapsing into one.
+3. **The model is not the proof.** The 17 model controls must be re-run
+   against the rendered helper and its source-bound binding; a
+   model-only pass is not evidence for the transport. The rendered
+   helper's control set includes the two retained cases, the Q16 rule 3
+   set and the typed-handoff inheritance above.
+4. **No production surface.** The helper stays test-only and
+   mutated-build-only; the single compile-time enable constant remains
+   the only disabled/armed difference; no production call site, runtime
+   accessor, predicate, permission, dependency, inventory entry or
+   `unsafe` is added, and the disabled arm's complete record sequence
+   keeps equalling real.
+5. **Retained-row non-dependence.** For each retained caught/stop row the
+   plan must show from the rendered source that the omission predicate is
+   satisfied by that row's own activation, with no cross-activation
+   leakage. A retained row that cannot satisfy this stops and returns
+   with its name. The final-epoch re-earn and its STOP on signature drift
+   are unchanged.
+6. **Stage.** C3 proceeds only after the transport is source-bound and
+   audited, and the remaining all-row generator work continues from the
+   same partial tree. No new allocation. The 151-plan bar, the 90-file
+   starting set, the mechanical `source_schema` transition,
+   deterministic double generation, the focused controls and both
+   workspace gates stand.
+
+All other Q16, Q15, Q14, Q13, Q12, Q11, Q10 and brief terms stand.
