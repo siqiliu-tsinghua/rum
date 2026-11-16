@@ -116817,3 +116817,55 @@ the separate pinned-omission audit, the ordered standing replay, `cargo fmt
 --check` and both workspace modes with the seven exclusions; no production
 change, no fifth overlay, no 138 subset, no placeholder digest, no hand-edited
 derived cell, and every earlier term stands.
+
+### Continuation 107 — brief 742 continuation 19: the Q27 retirement surface is admitted on executed evidence; Q28 lets the progress stop-loss count converging instrument construction
+
+Continuation 19 (`cdx`, unit `brief-742-cdx-20261117-034546-1909079`, rc 0,
+peak 1,392,050,176 B, oom 0/0; log 3,363,952 B sha256 `acc55323…`; report
+STOP, 10,322 changes all in `.temp`, 0 disclosures, 1 deviation, 0 questions,
+20 PASS / 2 FAIL / 2 NA, 363 citations; 217.34 s charged — 114.84 s measured +
+42.5 s bookkeeping + the 60 s reserve — leaving 8,372.05 s focused; workspace 0
+of 6,000) is accepted. The Q27 surface is admitted on executed evidence: the
+census covers all 25 raw rows, 23 frame types and 14 declaration files, and the
+director verified all 14 files lie inside the retained ninety-path set plus the
+four Q25 files (`outside_rows=0`); 23 derive-list edits and 23 actual
+retirement impls per root expand to the unconditional `Discard` with the
+generic bounds preserved; eleven retirement and twelve path rejecting controls
+each reject, including the parse-valid `None` substitution that whole-file
+restoration refuses; the two 14-file retirement roots and the two 16-file
+raw-path roots are byte-identical by recursive diff and one root file differs
+from live by exactly the substitution; whole-file erasure restores all 14 live
+files, and the path audit matches 16 whole files, twelve producer rows, twelve
+pinned omissions, three exact handoffs and three local claims with the original
+errors and drops unchanged; the twelve rows run their actual
+producer/constructor/resume paths at 48/0/0 in each of six forms (armed,
+disabled and live crossed with hash and no-hash), actual abandonment with a
+retained Arc zero and an independent live allocation one, with the 48 records
+per cfg matching live exactly; the director reproduced 48/0 armed-hash, 48/0
+disabled-hash, 224/0 whole and 20/0 helper at one thread; both copied real-crate
+type modes pass; `production_changes=0` and `source_schema` stays `f9604852…`,
+with the director re-hashing the 5,400 maintained and 380 design files. The
+partial generator work (151 source joins, 1,032 anchors to 286 nodes in 92
+files, 81 lexical shapes, the paired-EvalReturn helper at 21 rows in ten files,
+the P0396 typed selector at two files) is unadmitted. The STOP is mechanical: the
+typed fixture compiled with nine scaffold errors and then one fixture-only stub
+signature mismatch (`Expr` against `&Expr`), both logs and both sources retained
+and nothing repaired after the stop. Q28 rules the counter was written in
+evidence units and instrument construction has none before its fixture runs: a
+compile attempt is a progress unit when its retained verdict retires at least
+one previously outstanding distinct error and reintroduces none previously
+retired (error code plus normalized message, deduplicated), with the repair
+confined to fixture-only scaffolding or the registered instrumentation edits; a
+declared control removed or weakened is a contract change that stops; a
+compiler rejection of the copied production source text or of an instrumentation
+edit is a finding that stops; two consecutive non-reducing attempts still stop
+and the envelope stays the hard bound. Continuation 20 resumes the stopped
+fixture, completes every declared ownership transport including the four
+complex paired rows P0001/P0002/P1566/P1805, and then runs the complete
+151-plan generator, the double 94-path/188-postimage generation, whole-file AST
+restoration and the separate pinned-omission audit, the mechanically bound
+94-row schema with all 151 cells and the new digest, the ordered replay, `cargo
+fmt --check` and both workspace modes with the seven exclusions, under the
+remaining 8,372.05 s focused and the 6,000 s workspace envelope; no production
+change, no fifth overlay, no 138 subset, no placeholder digest, no hand-edited
+derived cell, and every earlier term stands.

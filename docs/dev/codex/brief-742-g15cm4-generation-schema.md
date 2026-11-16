@@ -2002,3 +2002,93 @@ the envelope is the hard bound. No production, runner, observer, predicate,
 selector or phase change, no fifth overlay, no 138-row subset, no placeholder
 digest, no hand-edited derived cell, no git, no network, no `unsafe`, no
 dependency or lockfile change.
+
+## Continuation 20 ruling (director) — Q28: the progress stop-loss counts converging instrument construction, and continuation 20 resumes the stopped fixture and runs the implementation to the full bar
+
+Continuation 19 ran `cdx` (unit `brief-742-cdx-20261117-034546-1909079`, rc 0,
+peak 1,392,050,176 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`,
+3,363,952 B, sha256 `acc55323…`; report STOP, 10,322 changes (10,320 added,
+2 modified, 0 deleted — all in `.temp`), 0 disclosures, 1 deviation, 0
+questions, 20 PASS / 2 FAIL / 2 NA, 363 citations verified; 217.34 s charged —
+114.84 s measured serial plus 42.5 s bookkeeping and the 60 s
+preparation/final-reporting reserve — leaving 8,372.05 s focused; workspace 0 of
+the assigned 6,000 s). The deviation is accepted: the complete generator and
+schema are absent because the progress STOP fired, and neither the 138-row
+subset nor a provisional schema was substituted. Scope holds: the director
+re-hashed the 5,400 maintained and 380 design files against the entry record and
+found no change (the 23-entry partial CM4 tree included), the 20,992 earlier
+artifacts are unchanged, `production_changes=0`, `source_schema` stays
+`f9604852…`; the three document drifts are this director's own gate commit and
+were disclosed at entry.
+
+The Q27 work is admitted on executed evidence, and the director reproduced the
+load-bearing binaries at one thread: the twelve new rows pass 48/0/0 in armed
+hash and in disabled hash, the inherited whole suite passes 224/0/0 and the
+helper controls 20/0. The census covers all 25 `Q747-RawFrame` rows, 23 frame
+types and 14 declaration files, and the director verified against the retained
+ninety-path set plus the four Q25 files that all 14 files lie inside the
+admitted 94 (`outside_rows=0`). Each root carries 23 derive-list edits and 23
+actual retirement impls whose expansion is the unconditional `Discard` with the
+generic bounds preserved; the eleven retirement rejecting controls and the
+twelve path rejecting controls each reject, including the parse-valid `None`
+substitution that whole-file restoration refuses. The two 14-file retirement
+roots and the two 16-file raw-path roots are byte-identical (verified by
+recursive diff), one root file differs from its live source by exactly the
+substitution, whole-file erasure restores all 14 live files, and the raw path
+audit matches 16 whole files, twelve producer rows, twelve pinned omissions,
+three exact owner-qualified handoffs and three local claims with the original
+errors and drops unchanged. The twelve rows execute their actual
+producer/constructor/resume paths — actual abandonment with a retained Arc is
+zero, an independent live allocation is one, the ordinary-Arc-drop positive
+control hits, queued and unarmed are zero — and all 48 records per cfg match
+the live source exactly. Both copied real-crate type modes pass. The partial
+work toward the generator is real but unadmitted: 151 source/tail/destructor
+joins, 1,032 declared graph anchors resolving to 286 nodes in 92 files, 81
+lexical producer shapes with zero unknown grammar, a paired-EvalReturn helper
+at 16 armed controls with 21 rows in ten whole files, and the P0396 typed
+selector at two whole copied files; none is a complete plan, graph or class.
+
+Q28. The progress stop-loss is written in evidence units — a completed audit
+stage, a certified control or path, or a closed row — and instrument
+construction has no such unit before its fixture runs. It has now stopped two
+converging mechanical repairs: continuation 17's audit comparator, and this
+run's typed fixture, where the second compile retired nine of ten distinct
+errors and left one fixture-only stub signature mismatch (`Expr` where the call
+passes `&Expr`), retained both logs and both fixture sources, and was not
+repaired after the stop. For an instrument under construction — a fixture or
+scaffold that has not yet produced a runnable binary — a compile attempt is a
+progress unit when its retained compiler verdict retires at least one
+previously outstanding distinct error and reintroduces none previously retired
+(canonical form: the error code plus the normalized message, deduplicated), with
+the repair confined to fixture-only scaffolding or to the copied instrumentation
+through its registered edits; removing or weakening a declared control is never
+a repair but a contract change that stops. Two consecutive compiled attempts
+without such a reduction still stop, and the envelope is still the hard bound. A
+compiler rejection of the copied production source text, or of an
+instrumentation edit applied to it, is not a mechanical repair: it is a finding
+to report, and it stops. Nothing else in the counter changes: a fixture that
+compiles but whose control fails against a candidate contract is still a STOP
+carrying the finding, and the evidence bar still requires executed controls.
+
+Continuation 20 resumes the stopped work and runs to the full bar: repair the
+fixture-only scaffold stub the compiler rejected and execute the five P0396
+source-path controls with their existing expectations, reproducing any genuine
+semantic failure at one thread before any class conclusion (the nested
+held-symbol-update reentry remains an unexecuted hypothesis and is not credited
+either way); complete every declared ownership transport, including the four
+complex paired rows P0001/P0002/P1566/P1805 that lie outside the partial paired
+renderer; then the complete 151-plan generator with zero unknown edges over the
+94-path set, the double generation producing 94 targets and 188 postimages,
+whole-file AST restoration and the separate pinned-omission audit in both cfg
+arms, the mechanically emitted and authenticated 94-row schema with all 151
+`source_schema` cells and the new digest from the exact table bytes, the ordered
+standing replay, `cargo fmt --check`, and both workspace modes with the seven
+exclusions in `DRAFT-COMMON.md`, the switched checks on the same binaries, and
+the full unfiltered `suspension_oracle` and `typed_slot_census` at failed=0,
+filtered=0. Budget: the 8,372.05 s focused remainder with the assigned 6,000 s
+workspace envelope; the second workspace envelope stays held for the
+verification stage, which uses brief 742's remaining 1,440 s; CM4's committed
+share stays 28,500 s and 743–746 retain 40,500 s. No production, runner,
+observer, predicate, selector or phase change, no fifth overlay, no 138-row
+subset, no placeholder digest, no hand-edited derived cell, no git, no network,
+no `unsafe`, no dependency or lockfile change.

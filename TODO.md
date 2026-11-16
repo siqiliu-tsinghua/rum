@@ -721,6 +721,36 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   3 FAIL / 2 NA, 1,542 citations, 139.05 s charged (8,589.39 s left,
   workspace 0/6,000). Continuation 19 completes the implementation
   under that remainder plus the 6,000 s workspace envelope.
+  Continuation 19 admits the Q27 surface on executed evidence: the
+  census covers all 25 raw rows, 23 frame types and 14 declaration
+  files, all inside the retained ninety-path set plus the four Q25
+  files; 23 derive-list edits and 23 retirement impls per root expand
+  to the unconditional `Discard`; eleven retirement and twelve path
+  rejecting controls reject, including the parse-valid `None`
+  substitution the whole-file restoration refuses; the two 14-file and
+  two 16-file partial roots are byte-identical and erase to live; the
+  twelve rows run their actual producer/constructor/resume paths at
+  48/0/0 in each of six forms, retained-Arc abandonment zero and an
+  independent live allocation one, 48 records per cfg matching live;
+  both copied real-crate type modes pass (director reproduced 48/0
+  twice, 224/0 and 20/0 at one thread). It then stops on a mechanical
+  fixture-scaffold compile (nine errors, then one `Expr` vs `&Expr`
+  stub mismatch; both retained, nothing repaired after the stop). Q28
+  lets the progress counter count converging instrument construction: a
+  compile attempt is progress when its retained verdict retires an
+  outstanding distinct error and reintroduces none, repairs confined to
+  fixture scaffolding or registered instrumentation edits; a declared
+  control removed or weakened is a contract change that stops, and a
+  compiler rejection of copied production source is a finding that
+  stops. Run: 10,322 scratch changes, 20 PASS / 2 FAIL / 2 NA, 363
+  citations, 217.34 s charged (8,372.05 s left, workspace 0/6,000).
+  Continuation 20 resumes the fixture, completes every declared
+  ownership transport (including the four complex paired rows
+  P0001/P0002/P1566/P1805) and then runs the complete 151-plan
+  generator, the double 94/188 generation, the whole-file and
+  pinned-omission audits, the bound 94-row schema with all 151 cells
+  and the new digest, the replay, `cargo fmt --check` and both
+  workspace modes.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
