@@ -815,15 +815,33 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   adapter's actual abandonment, not at Drop; Q29 stands. Run: 3,338
   scratch changes, 11 PASS / 2 FAIL / 2 NA, 300 citations, 89.68 s
   charged (7,961.14 s focused left; workspace 0/6,000). Continuation 23
-  implements: the corrected teardown re-executed in all six forms, every
-  typed row's own executed controls and insertion-route proof (typed
-  adapter abandonment retires, drop is the backstop; a raw insertion
-  route takes the Q26 discipline; a route whose only instrumentable file
-  is outside the 94 is a STOP), the four complex paired rows
-  P0001/P0002/P1566/P1805, the 151-plan generator, the double 94/188
-  generation, the audits, the bound 94-row schema with all 151 cells and
-  the new digest, the replay, `cargo fmt --check` and both workspace
-  modes.
+  then implemented Q30 and admitted it (15 registered edits, both whole
+  files byte-restored and three AST-restored in both cfg arms; director
+  reproduced 17/0/0 in all six forms with the retained-alias control at
+  0/1 and the abandoned store executing `List[6]`), but stopped under
+  Q28 on `PortBlocked::TypedResumeProducerScopeLeak`: a paused operand
+  inside a resumed P0396 evaluation is armed by the resume-restored
+  activation (`initial_arms=1`, `after_resume_arms=2` vs required 1 in
+  armed and disabled; live 19/0; hits/value/result correct), and the
+  earlier extra control expecting one hit at the distinct
+  `store_suspended_held_update` was invalid, withdrawn with artifacts
+  retained and no credit. Run: 3,887 scratch changes, 14 PASS / 2
+  FLAGGED / 2 FAIL / 2 NA, 1,986 citations, 220.76 s charged
+  (7,740.38 s focused left; workspace 0/6,000). Q31 scopes arming to
+  the actual producer entry (`enter_selected`), never the
+  resume-restored activation; inherited constructions stay silent
+  (Q19) and the producer's own `InputRequired` arms exactly once; the
+  arm-scope control is fixed at 1/1 (0/0 live). Continuation 24
+  implements: the arming-scope fix and its registered edit/erasure,
+  all 18 valid controls plus the fixed arm-scope control in six forms
+  at 8 and 1 threads, every typed row's own executed controls and
+  insertion-route proof (typed adapter abandonment retires, drop is
+  the backstop; a raw insertion route takes the Q26 discipline; a
+  route whose only instrumentable file is outside the 94 is a STOP),
+  the four complex paired rows P0001/P0002/P1566/P1805, the 151-plan
+  generator, the double 94/188 generation, the audits, the bound
+  94-row schema with all 151 cells and the new digest, the replay,
+  `cargo fmt --check` and both workspace modes.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

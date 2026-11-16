@@ -116983,3 +116983,41 @@ generator, the double 94/188 generation, the audits, the bound 94-row schema wit
 151 cells and the new digest, the replay, fmt and both workspace modes; the
 1,440 s verification envelope and the second workspace stay held; CM4 28,500 s,
 743–746 40,500 s; every earlier term stands.
+
+### Continuation 111 — brief 742 continuation 23: Q31 scopes arming to the actual producer entry; continuation 24 implements it
+
+Continuation 23 (`cdx`, unit `brief-742-cdx-20261117-063532-1956045`, rc 0,
+peak 742,801,408 B, oom 0/0; log 2,432,504 B sha256 `21c3e0c6…`; report STOP,
+3,887 changes all in `.temp`, 0 disclosures, 1 accepted deviation, 0 questions,
+14 PASS / 2 FLAGGED / 2 FAIL / 2 NA, 1,986 citations; 220.760382 s charged
+leaving 7,740.382779 s focused; workspace 0 of 6,000) is accepted as a compliant
+Q28 stop. Q30's abandonment retirement is implemented and admitted: fifteen
+registered edits (the fourteen inherited plus the abandonment-site retirement),
+both whole files byte-restored and all three AST-restored in both cfg arms, and
+the director reproduced 17/0/0 in all six forms with the retained-alias control
+at retired 0 / live 1 and the abandoned store actually executing `List[6]`. The
+earlier extra control with `required_final_hits=1` at the distinct
+`store_suspended_held_update` was invalid; it is withdrawn with every artifact
+retained and earns no credit. The new finding
+`PortBlocked::TypedResumeProducerScopeLeak` is admitted on the director's
+six-form reproduction: armed and disabled 18/1 with `initial_arms=1`,
+`after_resume_arms=2` against required 1, live 19/0/0, and hits/value/result
+correct in every form; the resume scope's restored activation is what lets
+`arm` claim the operand's genuine pause, increment the occurrence, overwrite
+the pending token and pause the join. Q31: arming is scoped to the actual
+producer entry (`enter_selected` at the branch), never the resume-restored
+activation; an inherited episode's later constructions are silent (Q19), the
+producer's own `InputRequired` arms exactly once, and a blanket "no arm during
+resume" is not admissible — a genuine producer entry inside a resumed
+evaluation still arms, shown by an executed route or recorded as a named
+limitation. The arm-scope control is fixed at 1/1 (0/0 live), hits 0,
+`List[6]`, result 6, in both cfg arms at eight and one threads. Continuation 24
+resumes under 7,740.382779 s plus the 6,000 s workspace: the arming-scope fix
+with its registered edit and erasure, all eighteen valid controls plus the
+fixed arm-scope control re-executed in six forms at both thread counts, then
+every typed row's own controls and insertion-route proofs, the four complex
+paired rows P0001/P0002/P1566/P1805, the 151-plan generator, the double 94/188
+generation, the audits, the bound 94-row schema with 151 cells and the new
+digest, the replay, fmt and both workspace modes; the 1,440 s verification
+envelope and the second workspace stay held; CM4 28,500 s, 743–746 40,500 s;
+every earlier term stands.

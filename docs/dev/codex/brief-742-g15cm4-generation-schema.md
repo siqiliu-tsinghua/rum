@@ -2358,3 +2358,115 @@ finding that stops; two consecutive non-reducing attempts stop; the envelope
 stays the hard bound. No fifth overlay, no 138-row subset, no placeholder
 digest, no hand-edited derived cell, no weakened control, no git, no network,
 no `unsafe`, no dependency or lockfile change.
+
+## Continuation 24 ruling (director) — Q31: arming is scoped to the actual producer entry, so a pause under a resume-restored activation neither arms nor advances the occurrence; continuation 24 implements it and runs to the full bar
+
+Continuation 23 ran `cdx` (unit `brief-742-cdx-20261117-063532-1956045`, rc 0,
+peak 742,801,408 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`,
+2,432,504 B, sha256 `21c3e0c6…`; report STOP, 3,887 changes (3,885 added, 2
+modified, 0 deleted — all in `.temp`), 0 disclosures, 1 deviation, 0 questions,
+14 PASS / 2 FLAGGED / 2 FAIL / 2 NA, 1,986 citations verified; 220.760382 s
+charged — 69.260382 s measured serial over 183 runs plus 91.5 s of per-receipt
+0.5 s and the 60 s preparation/reporting reserve — leaving 7,740.382779 s of the
+7,961.143161 s focused envelope; workspace 0 of the assigned 6,000 s; the
+1,440 s verification envelope and the second 6,000 s workspace stay held). The
+deviation is accepted: the complete generator and the mechanical schema are
+absent because the Q28 stop fired before any maintained edit, and no subset,
+weakened control or placeholder schema was substituted. Scope holds: the
+working tree is the same 23-entry partial CM4 test layer as entry, zero
+non-`.temp` change paths, no `.temp/brief-747` artifact touched,
+`production_changes=0`, `source_schema` still `f9604852…` with
+`new_source_schema` null, all 94 admitted paths enumerated as complete output
+not emitted, the ten intermediate roots' 44 outputs enumerated with 52
+current-pin byte comparisons, and the three document drifts are the director's
+own gate commits.
+
+Q30 is implemented and admitted. The director reproduced all six base forms at
+one thread: 17/0/0 in armed, disabled and live each crossed with hash and
+no-hash, with the retained-alias control at `retired_hits=0` and `live_hits=1`,
+the abandoned frame's store actually executing (`List[6]`), the live selected
+operation's store omitted, and exact disabled/live record parity. Fifteen
+registered edits (the fourteen inherited Q29 edits plus the abandonment-site
+retirement) render from entry-pinned preimages; both whole source files restore
+byte-for-byte and all three restore as ASTs in both cfg arms; two roots each
+hold three paths/six postimages byte-identical with only the `ENABLED` constant
+differing; the eighteen controls are exact and an added active-resume
+retirement check passes; the one fixture-only `E0603` visibility error was
+repaired inside fixture scaffolding with both attempts retained. The shared
+partial instruments the actual P0394 outer call and P0396 selector call in the
+same copied file and both rows' eighteen controls pass all six forms, which is
+partial path evidence, not row admission.
+
+The finding is `PortBlocked::TypedResumeProducerScopeLeak` for P0396, and it is
+admitted as an executed candidate-instrument failure, not a production
+regression and not a new own catch. The director reproduced all six forms at
+one thread: armed and disabled, hash and no-hash, each 18 passed / 1 failed
+with `initial_arms=1`, `after_resume_arms=2`, required 1; live 19/0/0 with
+`initial_arms=0`, `after_resume_arms=0`; and in every form `final_hits=0`,
+`final_value=List[6]`, `result=6`. The route is authenticated by the worker's
+own source audit (the second store is distinct, it never reaches the pinned
+omission, and the resume stack is used by `arm`): the actual producer branch in
+`current_held_update_value` enters `enter_selected("P0396")` around the
+selector evaluation and its actual `InputRequired` constructs the typed frame;
+on resume the copied adapter's `resume_frame` pushes the saved token owner into
+the ledger stack; the resumed evaluation of the held update then reaches its
+own operand `Input[]`, which genuinely pauses; `pause()` calls `arm()`, whose
+`owner()` finds the resume-restored activation, increments `next_occurrence`,
+overwrites the pending token and calls `join_paused`. The second frame is
+`FinishHeldUpdateSuspensionFrame` and its `store_suspended_held_update` is a
+distinct body that never reaches the pinned omission, so its zero hits and
+`List[6]` are correct. The earlier extra control `actual_operation_resuspends`
+with `required_final_hits=1` at that distinct store was invalid; its four armed
+reds are instrument errors, it is withdrawn with every artifact retained, and
+it earns no credit.
+
+Q31 rules that Deliverable 3 and Q19 already fix the contract: an episode is
+armed only by the actual `InputRequired` belonging to the producer scope, and
+an inherited episode's later constructions are silent, so the single pause
+stays the only arm event. A pause executed under a resume-restored activation
+therefore neither arms nor advances the occurrence counter for the selected
+row, and the frame constructed there inherits silently; the actual producer
+entry still arms exactly once. The arming scope is the actual producer entry
+(the `enter_selected` guard at the branch), never the resume-restored
+activation. The mechanism may not be a blanket suppression of arming for the
+whole resume: a genuine producer entry executed inside a resumed evaluation
+still arms, and the implementation states the executed route that shows it, or
+records the absence of such a route as a named limitation — an unexecuted
+generality is credited neither way. Q29 and Q30 stand unchanged: the
+operation-owned one-use capability, the unchanged pinned omission, the
+abandonment retirement at the adapter's actual `FrameAbandon`, the drop
+backstop, the fifteen registered edits and their erasure, and the seventeen
+fixed controls with their six-form results. The arm-scope control is fixed at
+`initial_arms=1`, `after_resume_arms=1` in armed and disabled, 0/0 in live,
+`final_hits=0`, `final_value=List[6]`, `result=6`, in both cfg arms at eight and
+one threads. The withdrawn extra control stays withdrawn and is never credited,
+and no control or expectation may be edited to pass.
+
+Continuation 24 resumes the implementation under the remaining 7,740.382779 s
+plus the untouched 6,000 s workspace envelope: the arming-scope fix, its
+registered edit and erasure audit, then all eighteen valid controls plus the
+fixed arm-scope control re-executed in six forms at eight and one threads; then
+every typed row's own executed controls at full strength in both cfg arms and
+the disabled and live forms with each row's insertion route proved (a typed
+frame entering through the typed adapter is retired at its abandonment and its
+drop is the backstop; a frame type that can also be inserted as a raw frame
+takes the Q26 discipline in that route; a route whose only instrumentable file
+lies outside the admitted 94 paths is a STOP, not a fifth path); then every
+declared ownership transport including the four complex paired rows
+P0001/P0002/P1566/P1805, the complete 151-plan generator with zero unknown
+edges over the 94-path set, the double generation producing 94 targets and 188
+postimages, whole-file AST restoration and the separate pinned-omission audit
+in both cfg arms, the mechanically emitted and authenticated 94-row schema with
+all 151 `source_schema` cells and the new digest from the exact table bytes, the
+ordered standing replay, `cargo fmt --check`, and both workspace modes with the
+seven exclusions, the switched checks on the same binaries and the full
+unfiltered `suspension_oracle` and `typed_slot_census` at failed=0, filtered=0.
+The second workspace envelope stays held for the verification stage, which uses
+brief 742's remaining 1,440 s; CM4's committed share stays 28,500 s and 743–746
+retain 40,500 s. The stop-loss is the Q28 counter: a compile attempt retiring at
+least one outstanding distinct error counts as progress; removing or weakening
+a control is a contract change that stops; a rejected copied production source
+or instrumentation edit is a finding that stops; two consecutive non-reducing
+attempts stop; the envelope stays the hard bound. No fifth overlay, no 138-row
+subset, no placeholder digest, no hand-edited derived cell, no weakened control,
+no git, no network, no `unsafe`, no dependency or lockfile change.
