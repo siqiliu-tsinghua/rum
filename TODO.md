@@ -405,8 +405,14 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   keys / 9,511 constituents per mode) and five staged briefs — and Q9
   accepts it with four pinning conditions and a stage-owned 28-envelope /
   69,000 s allocation (no transfer from the exhausted 82,500 s). Brief
-  742 (generation and schema) is authorized first at 18,000 s. C2 stays
-  Open at 118 Residual + 0 Lost. Then CM5.
+  742 (generation and schema) is authorized first at 18,000 s. Its first
+  run stopped pre-edit on the option-reader generic continuation
+  (P1139/P1142/P1147/P1155, seven zero-target successor anchors); Q10
+  upholds the stop and authorizes a class-wide declared
+  generic-continuation summary bound by the frozen routes /
+  `GENERIC_GAPS`, shared by every bound row and audited against the
+  Working/Frozen impls, with no new allocation. C2 stays Open at 118
+  Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8

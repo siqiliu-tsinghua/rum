@@ -115806,3 +115806,38 @@ No credit: the pair stays Open at zero admissions, C2 stays Open at 118
 Residual + 0 Lost, the 51 owners and five source duties stay Open,
 encoding stays G13-owned, `CHANGELOG.md` and S10 stay blocked, CM5 is
 unauthorized.
+
+### Continuation 87 — brief 742's first run: pre-edit generic-continuation STOP (Q10)
+
+Brief 742's first run (unit `brief-742-cdx-20261116-155307-1713573`,
+rc 0, peak 1,127,751,680 B, oom 0 / oom_kill 0; log 1,822,366 B, sha256
+`3b978d28…`; report `.temp/brief-742/report.json`, 151,302 B, STOP, 288
+scratch files (288 added, 0 modified, 0 deleted), 0 disclosures, 4
+deviations, 0 questions, 5 PASS / 2 FAIL / 3 NA, 67 citations verified)
+stopped before any repository edit: all 151 source/tail/destructor joins
+and the 90 preimages / 180 postimages authenticate, `source_schema` stays
+`f9604852…`, and seven successor anchors in the option-reader family
+(P1139/P1142/P1147/P1155) return zero concrete targets because the four
+producers are generic over `OptionReadContinuation<V>` and
+`FrozenOptionReadContinuation<D::Value>`. No plan or schema was emitted;
+the 1,200 s conservative charge to focused envelope 1 is accepted. The
+first `report-check` failed on the assembler's expected prefix and passed
+on the retry; all attempts are preserved.
+
+Q10 ruling (this commit): the finding is upheld and the stage continues
+under a class-wide declared generic-continuation summary. The frozen
+routes already name the concrete bindings
+(`DeleteCasesOptionWorking.ordinary`, `ArrayFilterOptionWorking`,
+`NamesOptionWorking.IgnoreCase`, `MonitorOptionWorking.Syntax`) and
+`obligations/routes.rs:32` freezes the five generic gaps (P0403
+`DefinitionResumeRoute`, P0508 `AccountingMode`, P1147/P1155
+`OptionReadContinuation<...>`, P2604 `HostSession::guard<T>`), with
+`validate` asserting that exact set; a declared generic frame shape is
+not unknown dispatch. The summary must be declarative plan data (trait
+anchors, `C::Frozen`, `D::Value`, immediate and resumed `finish`,
+`freeze`, frame resume, error bypass, the Working/Frozen pair), shared by
+every bound row and audited against the impls (`type Frozen`, both
+`finish` bodies, the frame bound), with static falsifiers for a dropped
+resumed edge, an immediate-finish substitution, a mismatched `V` or a
+missing Frozen impl; no declaration means the family stops, and no new
+allocation is granted. All other 742 terms stand.

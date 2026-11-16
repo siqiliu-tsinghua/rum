@@ -225,3 +225,70 @@ every byte delta from the current pins, including any additional file;
 state no new own catches, pair zero/Open and owners unchanged. Validate
 with `python3 -B scripts/report.py check 742` (no `--against-git`); the
 final message is only `python3 -B scripts/report.py summary 742`.
+
+## Continuation 1 ruling (director) — Q10: the option-reader generic-continuation finding is upheld; the stage continues under a declared generic-continuation summary
+
+The STOP is correct and earns no credit: the 151 source/tail/destructor
+joins and the 90 preimages / 180 postimages authenticate, `source_schema`
+is unchanged at `f9604852…`, no repository file was written, and the four
+option rows' seven successor anchors return zero concrete targets because
+the producers are generic over `OptionReadContinuation<V>` and
+`FrozenOptionReadContinuation<D::Value>`. No schema or plan was emitted.
+The 1,200 s conservative charge to focused envelope 1 is accepted; 742's
+remaining focused budget is 4,800 s (the rest of envelope 1 plus three
+envelopes), and both workspace envelopes are untouched.
+
+The missing piece is not unknown. The frozen inventory already declares
+each binding: `consumer_route`
+`C6.OptionReadContinuation.DeleteCasesOptionWorking.ordinary` (P1139),
+`...ArrayFilterOptionWorking` (P1142), `...NamesOptionWorking.IgnoreCase`
+(P1147) and `...MonitorOptionWorking.Syntax` (P1155); the source has
+`impl OptionReadContinuation<bool> for DeleteCasesOptionWorking` with
+`type Frozen = DeleteCasesOptionRead` and the paired
+`FrozenOptionReadContinuation<bool> for DeleteCasesOptionRead`, and the
+same Working/Frozen pattern for the other three (bool / Option<Expr> /
+Option<Expr> / Expr). `obligations/routes.rs:32` freezes the five generic
+gaps — P0403 `DefinitionResumeRoute`, P0508 `AccountingMode`, P1147 and
+P1155 `OptionReadContinuation<...>`, P2604 `HostSession::guard<T>` — and
+`validate` asserts that exact set. A generic call whose frozen
+declaration names its concrete binding is a known frame shape, not
+unknown dispatch; the resolver's zero targets are an instrument gap.
+
+The stage may continue, and only under this class-wide rule:
+
+1. **Declaration is the authority.** A generic successor may be
+   summarized only when the row's frozen declaration names the concrete
+   binding (the `consumer_route` concrete type, or a `GENERIC_GAPS`
+   entry plus the row's route). No declaration -> the family stops
+   PortBlocked; never invent a binding.
+2. **Summary record.** Each protocol summary is declarative plan data, not
+   a per-row code patch and not a row-name conditional: the trait
+   declaration anchors and associated types (`C::Frozen`, `D::Value`),
+   the immediate `finish` anchors, the `freeze` anchor, the frame
+   construction/resume anchors, the resumed `finish` anchor, the error
+   bypass, and the concrete Working/Frozen pair with `type Frozen` and
+   both `finish` bodies. Every row bound to the protocol shares the one
+   summary.
+3. **Audit.** The concrete type must implement the trait for the row's
+   declared `V`; `Working::freeze` must return the named Frozen type;
+   `FrozenOptionReadContinuation<V>` must be implemented for it; the
+   resumed `finish` must be the Frozen impl's method and the immediate
+   `finish` the Working impl's; the frame bound
+   `F: FrozenOptionReadContinuation<D::Value>` must match. A same-spelled
+   method cannot substitute. Static falsifiers: a dropped resumed edge, an
+   immediate-finish substitution, a mismatched `V` or a missing Frozen
+   impl fails; the four option rows must resolve through one shared
+   summary.
+4. **No widening.** Any generic anchor without a frozen declaration stops
+   its family and returns for a ruling. Any additional declaration found
+   later is reported at the gate as a new binding, never added silently.
+   The summary is not permission to omit the resumed path, to treat the
+   first call wrapper as complete, or to change a predicate.
+
+All other terms stand: the 90-file set is the starting set and the
+pre-edit pin is the audit authority; the 18 caught and four stop rows
+keep their signatures; the generator must still deliver 151 plans, ten
+classes, 79 subtypes, byte-identical double generation, the exact emitted
+file set, the mechanical `source_schema` transition, all focused controls
+and both workspace modes after the ordered replay. No new allocation; a
+required extra group stops for a ruling.
