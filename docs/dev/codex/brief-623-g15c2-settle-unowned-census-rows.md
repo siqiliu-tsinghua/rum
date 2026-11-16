@@ -116744,3 +116744,38 @@ Continuation 17 is design plus executed extracted controls (`Scope: NONE`,
 for the resumed implementation; the 6,000 s workspace envelope stays with the
 implementation, the second stays held); no campaign, epoch, new catch,
 acceptance or CM5 is authorized, and every earlier term stands.
+
+### Continuation 105 — brief 742 continuation 17 stops on its own comparator; the stop-loss is refined and the resumed implementation is ordered
+
+Continuation 17 (`cdx`, unit `brief-742-cdx-20261117-025547-1892929`, rc 0,
+peak 330,010,624 B, oom 0/0; log 681,155 B sha256 `c37aedf3…`; report STOP,
+3,312 changes all in `.temp`, 0 disclosures, 1 deviation, 0 questions,
+8 PASS / 1 FAIL / 3 NA, 66 citations; 68.64 s charged leaving 1,431.36 s of
+the 1,500 s Q26 sub-envelope; workspace 0) is accepted as a compliant STOP:
+both compiled audit attempts exited 101 on the auditor's own expected values
+(attempt 1: whitespace-sensitive derive-token comparison; attempt 2: the
+trailing comma `ToTokens` preserves but the expected `parse_quote!` signature
+omits), no assertion was weakened, both attempts are retained, and the
+maintained tree, the 380 design files and `source_schema` `f9604852…` are
+unchanged with the three entry drifts correctly attributed to the director's
+gate commit. The scratch design is real but unadmitted: eleven token frame
+types in the four admitted raw files, two byte-identical 11-file partial
+roots, four files differing from Q25 by the derive removal and the explicit
+retirement impl only, and a helper design recording `TypeId` plus Weak
+identity in an instrumentation-only retired set consulted by every extant
+owner; no retirement control has executed. The stop is an instrument
+comparator stop, so the progress stop-loss is refined: forward progress is a
+completed audit stage, a certified control or path, or a closed row; two
+consecutive compiled attempts with none stop. Continuation 18 is the resumed
+implementation under one 8,728.44 s focused envelope (the 1,431.36 s Q26
+remainder merged with the 7,297.08 s implementation reserve) plus the
+assigned 6,000 s workspace envelope: correct the expected signature, complete
+whole-file erasure in both roots and both cfg arms, re-derive the frame set
+from the authenticated annotations, add the rejecting controls, execute the
+eleven remaining rows' whole producer/constructor paths and the full Q25
+control set, then the complete 151-plan generator, the 94-row schema with all
+151 cells and the new digest, whole-file AST restoration, the standing
+replay, `cargo fmt --check` and both workspace modes with the seven
+exclusions; no production change, no fifth overlay, no 138 subset, no
+placeholder digest, no hand-edited derived cell, and every earlier term
+stands.

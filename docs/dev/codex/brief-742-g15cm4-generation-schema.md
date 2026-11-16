@@ -1833,3 +1833,86 @@ The next step is this continuation's gate and then the resumed implementation
 of the complete 151-plan generator and the 94-row schema. Q25's four-file
 extension, the 94/188 surface, the owner-qualified handoff, Q24, the 151-plan
 bar and the non-shipment of the 138 subset all stand.
+
+## Continuation 18 ruling (director) — the Q26 comparator is corrected and the resumed implementation runs to the full bar; the progress stop-loss counts completed audit stages, certified controls and closed rows
+
+Continuation 17 is accepted as a compliant STOP under the rule it was given.
+Run: `cdx` (unit `brief-742-cdx-20261117-025547-1892929`, rc 0, peak
+330,010,624 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`,
+681,155 B, sha256 `c37aedf3…`; report STOP, 3,312 changes (3,310 added,
+2 modified, 0 deleted — all in `.temp`), 0 disclosures, 1 deviation,
+0 questions, 8 PASS / 1 FAIL / 3 NA, 66 citations verified; 68.64 s charged —
+4.64 s measured serial plus 4.0 s bookkeeping and the 60 s
+preparation/final-reporting reserve — leaving 1,431.36 s of the 1,500 s Q26
+sub-envelope; workspace 0). The deviation is accepted: the Q26 erasure,
+source-path execution and retirement controls are incomplete because the
+stop-loss fired, and nothing was substituted. Scope holds: the 23-entry
+partial CM4 tree, the 5,400 maintained files and the 380 accepted design
+files are unchanged, `production_changes=0`, `source_schema` stays
+`f9604852…`, and the three entry drifts are this director's own gate commit,
+correctly disclosed as predating the run.
+
+The stop is an instrument-comparator stop, not a design or ownership fact.
+Both compiled audit attempts exited 101 on the auditor's own expected-value
+construction: attempt 1 compared the derive expansion with a
+whitespace-sensitive token substring and rejected `quote!`'s joint
+punctuation; attempt 2 passed that stage and rejected the emitted impl on the
+trailing comma `ToTokens` preserves in the parameter list, which the expected
+`parse_quote!` signature omits. Two compiled attempts were made and neither
+certified a new stage; the assertion was not weakened, the second mismatch was
+not edited after the stop, and both attempts and binaries are retained. The
+scratch design it delivered is real: eleven token frame types declared in the
+four admitted raw files (one trace, two guarded, four guarded-replace, four
+rules), two byte-identical 11-file partial roots, exactly four files differing
+from Q25 by the derive removal and the explicit retirement impl (no path
+beyond the four), and a retirement design in which the helper removes the
+allocation's pending binding and records its `TypeId` and Weak identity in an
+instrumentation-only retired set that every extant owner also consults, so a
+token already transferred into a call or flow is covered without a strong
+reference or a global clear. None of it is admitted: no retirement control
+has executed for any row.
+
+The stop-loss is refined for the resumed implementation, because counting only
+a certified control fired on a converging mechanical repair — the class this
+project already ruled must not stop a converging instrument. Forward progress
+is any of: a completed audit stage, a certified control or path, or a closed
+extracted row. Two consecutive compiled attempts with none of those stop and
+report the remainder; the envelope stays the hard bound.
+
+Continuation 18 is the resumed implementation and runs to the full bar.
+First close Q26: correct the expected signature to the exact emitted tokens
+(trailing comma included), keep the rejected attempts as artifacts, complete
+whole-file erasure of the Q26 edits in both partial roots and both cfg arms
+and re-derive the live source from whole files, derive the token frame set
+independently from the authenticated raw-resume annotations and compare it
+exactly with the eleven-frame declaration, and add the rejecting controls —
+changed derive, extra impl, missing, wrong and late retirement, changed
+`Discard`, overlap, non-target drift. Then extract and execute all eleven
+remaining rows' whole producer and constructor paths (P1070, P2348, P2354,
+P2379, P2381, P2385, P2387, P2409, P2411, P2416, P2418) in addition to the
+inherited P0214/P0216 paths, with no synthetic seam credited, and execute the
+full control set: `abandon_and_weak_retirement` with zero hits for the
+abandoned allocation carrying a retained Arc and one for an independent live
+allocation, the other eighteen Q25 families at full strength (including
+P2348's immediate and resuspension paths and P1070's loop reentry), and the
+inherited Q24 reds and greens by hash. Only then implement the complete
+151-plan generator over the 94-path set, mechanically emit and authenticate
+the 94-row schema with all 151 `source_schema` cells and the new digest from
+the exact table bytes, prove whole-file AST restoration and the separate
+pinned-omission audit in both cfg arms, run the standing replay in order,
+`cargo fmt --check`, and both workspace modes with the seven exclusions in
+`DRAFT-COMMON.md`, with the switched checks on the same binaries and the full
+unfiltered `suspension_oracle` and `typed_slot_census` at failed=0,
+filtered=0.
+
+Budget: the Q26 sub-envelope's remaining 1,431.36 s merges with the
+implementation reserve of 7,297.08 s into one 8,728.44 s focused envelope,
+with the assigned 6,000 s workspace envelope; the second workspace envelope
+stays held for the verification stage, which uses brief 742's remaining
+1,440 s. CM4's committed share stays 28,500 s and 743–746 retain 40,500 s.
+Entries, files and the 23-entry partial tree are the authorized test-layer
+surface; no production, runner, observer, predicate, selector or phase
+change, no fifth overlay, no 138-row subset, no placeholder digest and no
+hand-edited derived cell. No git, no network, no `unsafe`, no dependency or
+lockfile change; the run ends with the tree left for the director's gate and
+a `rum-report/1` report whose validated summary is the only returned text.

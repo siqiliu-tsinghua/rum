@@ -679,6 +679,26 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   extracted controls (`Scope: NONE`, 1,500 s carved from the
   implementation envelope, leaving 7,297.08 s for the resumed
   implementation; the 6,000 s workspace envelope stays assigned).
+  Continuation 17 stops on its own comparator: both compiled audit
+  attempts exited 101 on expected-value construction (whitespace-
+  sensitive derive tokens; then the trailing comma `ToTokens` keeps and
+  `parse_quote!` drops), the assertion was not weakened, both attempts
+  retained; 3,312 scratch changes, 8 PASS / 1 FAIL / 3 NA, 66
+  citations, 68.64 s charged leaving 1,431.36 s, workspace 0,
+  maintained tree and `source_schema` unchanged. The scratch design
+  names eleven token frame types in the four admitted raw files, two
+  byte-identical 11-file roots and a `TypeId`+Weak retired set
+  consulted by every extant owner; no control executed, nothing
+  admitted. The stop-loss is refined (progress = completed audit stage,
+  certified control/path or closed row) and continuation 18 is the
+  resumed implementation under one 8,728.44 s focused envelope plus
+  the 6,000 s workspace envelope: fix the expected signature, complete
+  erasure in both roots and cfg arms, re-derive the frame set, add the
+  rejecting controls, execute the eleven rows' whole producer/
+  constructor paths and the full Q25 control set with the retired
+  control at zero/one, then the 151-plan generator, the 94-row schema
+  with all 151 cells and the new digest, the replay, `cargo fmt
+  --check` and both workspace modes.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
