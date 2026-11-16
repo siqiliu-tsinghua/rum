@@ -116365,3 +116365,84 @@ proof, and a fabricated boolean or renderer value all reject; any extra
 arm, hit or changed phase is a STOP. The 138.78 s charge is accepted
 (3,140.44 s focused remain, envelope 2 at 140.44 s). All other
 Q20/Q19/Q18/Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.
+
+### Continuation 99 — brief 742's thirteenth run: the C10 profile-guard frontier (Q22)
+
+Brief 742's thirteenth run (`cdx`, unit
+`brief-742-cdx-20261116-221746-1816088`, rc 0, peak 1,436,028,928 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,450,302 B,
+sha256 `eef067d6…`; report `.temp/brief-742/report.json`, STOP, 320
+changes (318 scratch added, 2 modified, 0 deleted), 3 disclosures, 2
+deviations, 1 question (Q22), 8 PASS / 2 FAIL / 1 NA, 233 citations
+verified; 364 pure test executions) implemented Q21 in scratch: each
+request row has one source recipe (the guard encloses the exact original
+result statement, the borrowed actual `SessionRequestFailure` return and
+the pinned omission), the helper keeps request-return proofs in a
+separate pair map, only a source-bound `ordinary_request` omission can
+use that kind, `ordinary`/`frame` still require a constructed-frame
+token, and a queued success preserves its predecessor's proof. The
+entry-pinned audit checks the live source and retained omission (26
+anchors, 28 controls; exact producer once, actual errors/results, exact
+phase/selector, unchanged finalizer/destructor boundary, full-file AST
+restoration, two roots byte-identical), the helper passes 170 controls,
+and 12 controls per request row execute the extracted audited statements
+(one producer arm, one queued hit, disabled records equal to the live
+statements). The inherited bindings replay (15 ingress, 8 adapter, 13
+prepared, 15 cursor, 5 retained source, 20 P0508 source, 9 P0508
+extracted, 15 P0492 nested). It then stopped at
+`PortBlocked::ProfileGuardReturnTransport` for
+`C10.prepared.profiled_consumer`: the pinned omission is
+`Segment::pause_admitted`'s `ExplicitlyFinished` early return, the pin is
+two arm lines (`producer-InputRequired` prompt `"finish"` and
+`profiled-consumer-InputRequired` after the producer returns
+`Err(EvalError::InputRequired)`) and one `completed-generation-inert-pause`
+hit with `Err(Native)`; skipping the early return falls into the
+active-stack block and faults on `stack.top != Some(self.index)`. The
+typed frame and its queue owner retire before `M::pause(&profile_context)`
+runs on the surviving `Option<ContextGuard>`, whose private
+`segment: Option<Segment>` is the omitted object, already
+`ExplicitlyFinished` because `segments::finish_active` removed its active
+frame and set the state on the shared completion; the retained
+`CM740_C10_ARMED` bit is consumed by whichever explicitly-finished
+segment pauses first, and the two-segment control shows the unrelated
+segment taking it (intended segment zero). `driver.rs`, `profile_mode.rs`
+and `context.rs` are outside the 90-file overlay set; `segments.rs`,
+`profile_queue.rs` and `call.rs` are inside. All 151 source joins,
+90/180 pins and 5,399 files authenticate; `production_changes=0`;
+`source_schema` stays `f9604852…`; eleven partial targets render
+byte-identically from two roots; no complete plan or schema was emitted.
+
+Q22 ruling (this commit): the owner is the `Mode::Guard` instance of the
+resumption step, and the carrier is the `Segment` object that guard
+constructed. The owner identity is the segment's own construction
+identity — epoch id, active-stack index and the unique `SegmentId` — and
+its completion; a duplicated `Segment` value for the same identity (the
+`finish_active` token) is not a second owner. The token is issued only
+when the profiled consumer's own producer actually returned
+`Err(EvalError::InputRequired)` (the pinned second arm) and only to the
+segment constructed by the `Mode::resume` of that same step, whose actual
+source edge is the guard-construction call
+(`ProfileQueue::enter_front`/`enter_front_with_control`, the sole
+production caller of `Mode::resume`); the binding must work whether or
+not the segment is still in the active stack at the producer's return,
+since the completion may already have run. Only `pause_admitted` on that
+exact identity, in its `ExplicitlyFinished` branch, may consume it, at
+most once; an unused token is cleared at the next guard construction and
+never survives its step. Rejected: the armed bit, the typed
+frame/adapter, the new suspension frames, a first-completed-segment or
+most-recent-pause rule, the guard's `Context`, any ambient state, and any
+unchecked `path.state.active` proxy; no field, accessor, new overlay or
+allocation change, and `driver.rs`/`profile_mode.rs`/`context.rs` stay
+uninstrumented. Falsifiers: an unrelated finished segment takes the live
+early return with no hit while the intended one records one; a second
+pause records one; `Ok`/other-error and fabricated boolean/flag/slot
+values issue no token; an `enter_control` step inherits nothing; the
+abandon path supplies no resume token; nested/foreign/new-frame/other-
+epoch or thread tokens reject; identity reuse is impossible and
+asserted; a token surviving into the next step is dropped. Both modes
+keep two arms, one hit, phase, selector, `Err(Native)` and the exact
+public output; the queued run stays zero. The 200.44 s charge is
+accepted (envelope 2 closed at its 140.44 s remainder plus the 60 s
+envelope-3 reserve; 2,940 s focused remain, envelope 3 at 1,440 s,
+envelope 4 at 1,500 s, both workspace envelopes untouched). All other
+Q21/Q20/Q19/Q18/Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.

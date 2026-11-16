@@ -1250,3 +1250,128 @@ verified return proofs together with its constructed-frame tokens:
 
 All other Q20, Q19, Q18, Q17, Q16, Q15, Q14, Q13, Q12, Q11, Q10 and brief
 terms stand.
+
+## Continuation 13 ruling (director) — Q22: C10's completed-generation pause is owned by the `Mode::Guard`'s own `Segment` object; the token is bound at that segment's construction, proven by the frame's actual returned `InputRequired`, and consumed only by the same segment identity — the shared bit, the typed frame and the new suspension frames are all rejected carriers
+
+The thirteenth run executed Q21. Each request row now has one source
+recipe: the guard encloses the exact original result statement, the
+borrowed actual `SessionRequestFailure` return and the pinned terminal
+omission; the helper keeps request-return proofs in a separate pair map,
+only a source-bound `ordinary_request` omission can use that kind, and
+`ordinary`/`frame` still require a constructed-frame token. A queued
+success preserves its predecessor's proof; a new episode, another source
+path, program, row or constituent, a success/other-error predecessor, a
+swallowed request or a second queued run cannot qualify, and no
+descendant frame is attributed to the caller. The entry-pinned audit
+checks the live source and the retained omission (26 anchors, 28
+controls; exact producer once, actual errors/results, exact
+phase/selector, unchanged finalizer and destructor boundary, full-file
+AST restoration after instrumentation erasure), two roots emit identical
+partial `session_requests.rs`, and the generated helper passes 170
+controls; 12 controls per request row execute the extracted audited
+statements and each yields one producer arm and one queued hit, with the
+disabled fragment records equal to the live statements. The inherited
+bindings replay (15 ingress, 8 typed adapter, 13 prepared, 15 boxed
+cursor, 5 retained source, 20 P0508 source, 9 P0508 extracted-statement,
+15 P0492 nested; P0492 keeps one pause and two own-frame hits, P0508 one
+pause and two initial-return hits). All 151 source/tail/destructor
+joins, 90 preimages/180 postimages and 5,399 maintained files
+authenticate; `production_changes=0`; `source_schema` stays
+`f9604852…`; eleven partial targets render byte-identically from two
+roots; no complete plan or schema was emitted.
+
+The stage then stopped at `C10.prepared.profiled_consumer` with
+`PortBlocked::ProfileGuardReturnTransport`. The retained C10 omission is
+`Segment::pause_admitted`'s `ExplicitlyFinished` early return
+(`profiling/logical/segments.rs:563`), the pinned signature is two arm
+lines (the actual producer pause `producer-InputRequired` prompt
+`"finish"`, and `profiled-consumer-InputRequired` emitted right after
+`ProfiledPreparedDispatchFrame::resume`'s producer returns
+`Err(EvalError::InputRequired)`, `eval_core/call.rs:816`), one hit
+(`completed-generation-inert-pause`) and `Err(Native)` with the public
+output exact. When the early return is skipped, `pause_admitted` falls
+into the active-stack block and faults on
+`stack.top != Some(self.index)`, which is the native difference the
+predicate observes. The actual lifetime order is: `drive_frames` calls
+`M::resume` at the top of the iteration and creates the guard
+(`profile_mode::Profiled` → `ProfileQueue::enter_front_with_control` →
+`Context::enter_with_control` → `segments::restore_admitted` →
+`install`); the typed frame resumes, `TypedAction::complete(result)`s,
+and is dropped with its queue owner before `M::pause(&profile_context)`
+runs on the surviving guard; `ContextGuard { segment: Option<Segment> }`
+is a private field and `ContextGuard::pause` calls that segment's
+`pause`. The hit's segment is `ExplicitlyFinished` because
+`segments::finish_active` removed its active frame and set the state on
+the shared completion; the retained carrier's thread-local
+`CM740_C10_ARMED` bit is consumed by whichever explicitly-finished
+segment pauses first, and the two-completed-segment control shows the
+unrelated segment consuming it and the intended one seeing zero.
+
+Q22 rules that the owner is the `Mode::Guard` instance of the resumption
+step, and the carrier is the `Segment` object that guard constructed:
+
+1. **Owner object.** The row's operation executes on the `Segment` the
+   `Mode::Guard` owns. The owner identity is the segment's own
+   construction identity — the epoch id, the active-stack index and the
+   unique `SegmentId` (`SegmentId(epoch::next_id())`, never reused) — and
+   its completion, never a name, a counter, a variant, the guard's
+   `Context` (an `Arc` shared with the queue cell) or the executing
+   frame. A `Segment` value duplicated for the same identity (the
+   `finish_active` token) is not a second owner and its retirement must
+   not consume or retire the guard's token.
+2. **Evidence.** The token is issued only when the profiled consumer's
+   own producer actually returned `Err(EvalError::InputRequired)` — the
+   exact predicate that emits the pinned second arm line — and it is
+   issued to the segment constructed by the `Mode::resume` of that same
+   resumption step. The guard-construction call
+   (`ProfileQueue::enter_front`/`enter_front_with_control`) is the actual
+   source edge from the closing `Mode` protocol to the segment, and
+   `Mode::resume` is its only production caller; the binding must work
+   whether or not the segment is still present in the active stack at
+   the producer's return, because the completion that marks it
+   `ExplicitlyFinished` may already have run. An identity recovered only
+   from the active-stack top at the producer's return is therefore not
+   the rule.
+3. **Consumption.** Only `Segment::pause_admitted` on that exact identity
+   may consume the token, only in its `ExplicitlyFinished` branch, and at
+   most once. A step's unused token is cleared at the next
+   `Mode::resume`/`Mode::abandon` construction on that thread; a token
+   never survives its step.
+4. **Rejected carriers and rules.** The thread-local armed bit (its
+   isolation counterexample is the failure this rule exists to
+   prevent); the typed frame or adapter (they retire before the pause and
+   carry no guard identity); the new suspension frames (different
+   objects and records, Q19's); a "first completed segment" or "most
+   recent pause" rule; the guard's `Context`; any ambient, shared or
+   static state; any use of `path.state.active` as a proxy without the
+   object identity check. No field, accessor, production surface or
+   allocation change is authorized, `driver.rs`, `profile_mode.rs` and
+   `context.rs` stay outside the exact 90-file overlay set and
+   uninstrumented, no new overlay file is authorized, and the binding
+   must be built from `segments.rs`'s construction/finish/end/pause
+   sites, `profile_queue.rs`'s guard-construction call and `call.rs`'s
+   producer-return check.
+5. **Falsifiers.** An unrelated explicitly-finished segment paused first
+   takes the live early return and records no hit, and the intended
+   segment still records its one; the same segment paused twice records
+   one hit; a producer that returned `Ok` or another error issues no
+   token, and a fabricated `true`, a boolean, a flag or the pending slot
+   in place of the actual returned value rejects; a resumption step whose
+   guard has no segment (`enter_control`) inherits nothing from a
+   previous step; the abandon path's guard supplies no resume token; a
+   token bound to a nested `Call` segment, to a newly constructed
+   suspension frame, to another epoch or another thread rejects; an
+   identity reused after retirement (impossible by `SegmentId`, and
+   asserted) still records no hit; a token that survives into the next
+   step is dropped and unusable. Both historical modes must reproduce
+   two arms, one hit, the phase, the selector, `Err(Native)` and the
+   exact public output, and the queued run must stay at zero arms and
+   zero hits; any extra arm, extra hit or changed line is a STOP.
+6. **Stage.** No new allocation. C10 proceeds only after this
+   guard-segment identity transport is source-bound and audited in both
+   modes; the remaining rows and the 151-plan bar continue from the same
+   partial tree, and a row whose pinned hit cannot be mapped to an actual
+   object identity is named and stopped, never normalized.
+
+All other Q21, Q20, Q19, Q18, Q17, Q16, Q15, Q14, Q13, Q12, Q11, Q10
+and brief terms stand.

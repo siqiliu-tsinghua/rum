@@ -522,7 +522,30 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   construction or request/eval return kind, named per pinned hit), the
   transport is silent (no arming line, no `returned` event), the
   descendant frame is not attributed to the caller, and any extra arm,
-  hit or changed phase is a STOP.
+  hit or changed phase is a STOP. Its thirteenth run implemented Q21
+  (one source recipe per request row, a separate request-return pair map,
+  `ordinary_request` only, 26 anchors/28 controls, 170 helper controls,
+  12+12 extracted-statement controls, both rows one arm and one queued
+  hit) and stopped with `PortBlocked::ProfileGuardReturnTransport` at
+  `C10.prepared.profiled_consumer`: the pinned omission is
+  `Segment::pause_admitted`'s `ExplicitlyFinished` early return, the typed
+  frame and its queue owner retire before `M::pause` runs on the
+  surviving `Option<ContextGuard>`, whose private `segment` is already
+  explicitly finished, and the retained thread-local `CM740_C10_ARMED`
+  bit is consumed by whichever finished segment pauses first (the
+  two-segment control takes it with the unrelated one). Q22 makes the
+  `Mode::Guard`'s own `Segment` object the owner: the token is issued
+  only on the profiled consumer's actual `Err(EvalError::InputRequired)`
+  return to the segment the same step's `Mode::resume` constructed
+  (identity = epoch id + index + unique `SegmentId` + completion, never
+  the frame, the new suspension frames, the guard's shared `Context` or a
+  bit), consumed at most once by that identity's `ExplicitlyFinished`
+  pause, cleared at the next guard construction, and valid whether or not
+  the segment is still in the active stack at the return; an unrelated
+  finished segment takes the live early return with no hit. No field,
+  accessor, new overlay or allocation change; `driver.rs`,
+  `profile_mode.rs` and `context.rs` stay uninstrumented, and every extra
+  arm or hit is a STOP.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
