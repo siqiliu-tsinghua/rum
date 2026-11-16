@@ -699,6 +699,28 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   control at zero/one, then the 151-plan generator, the 94-row schema
   with all 151 cells and the new digest, the replay, `cargo fmt
   --check` and both workspace modes.
+  Continuation 18 admits the Q26 frontier contract on executed
+  evidence: 224/0 controls with filtered=0 in each of armed/disabled ×
+  hash/no-hash, helper 20/0 per arm, two byte-identical 11-file roots,
+  the exact emitted signature, an independently derived eleven-frame
+  set, eleven derive-list edits and eleven retirement impls per root,
+  erasure to the Q25 AST plus the Q25 whole-file restore with five
+  pinned omission sites, nine rejecting controls, 47 extracted whole
+  functions with thirteen producer calls, 80/0 parity in four forms,
+  both real crate type modes, and the P2593 counterexample at
+  retired=1/required 0 with live 1, disabled 2/0 (director reproduced
+  224/0, 20/0 and the counterexample). It then stops on a scope finding:
+  twelve further `Q747-RawFrame` owners (P0145, P0936, P1037, P1038,
+  P1132, P1193, P1708, P2299, P2544, P2547, P2591, P2593) in ten
+  already-retained paths need the same actual abandonment observation.
+  Q27 rules the observation belongs to the raw-frame transport: the
+  same substitution in those ten postimages, no new path and no count
+  change (94/188 stand), the census re-derived over all 25 raw-frame
+  rows, and each row's retained-Arc control at zero/one in both cfg
+  arms and the disabled form. Run: 8,898 scratch changes, 15 PASS /
+  3 FAIL / 2 NA, 1,542 citations, 139.05 s charged (8,589.39 s left,
+  workspace 0/6,000). Continuation 19 completes the implementation
+  under that remainder plus the 6,000 s workspace envelope.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

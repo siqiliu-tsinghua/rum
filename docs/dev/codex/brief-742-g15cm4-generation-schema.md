@@ -1916,3 +1916,89 @@ change, no fifth overlay, no 138-row subset, no placeholder digest and no
 hand-edited derived cell. No git, no network, no `unsafe`, no dependency or
 lockfile change; the run ends with the tree left for the director's gate and
 a `rum-report/1` report whose validated summary is the only returned text.
+
+## Continuation 19 ruling (director) — Q27: the retirement observation belongs to the raw-frame transport, so it covers all twenty-five raw-owner rows inside the already-admitted 94-path set; the Q26 frontier contract is admitted on executed evidence and the implementation runs to completion
+
+Continuation 18 is accepted. Run: `cdx` (unit
+`brief-742-cdx-20261117-030757-1896462`, rc 0, peak 1,066,164,224 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 2,109,978 B,
+sha256 `1722708f…`; report STOP, 8,898 changes (8,896 added, 2 modified,
+0 deleted — all in `.temp`), 0 disclosures, 1 deviation, 0 questions,
+15 PASS / 3 FAIL / 2 NA, 1,542 citations verified; 139.05 s charged —
+48.55 s measured serial plus 30.5 s bookkeeping and the 60 s
+preparation/final-reporting reserve — leaving 8,589.39 s focused in the
+merged envelope; workspace 0 of the assigned 6,000 s). The deviation is
+accepted: the complete generator and schema are absent because the scope STOP
+fired, and neither the four-file permission was silently widened nor the
+138-row subset shipped. Scope holds: the 23-entry partial CM4 tree, the 5,400
+maintained files, the 380 accepted design files and the 12,094 earlier
+artifacts are unchanged, `production_changes=0`, `source_schema` stays
+`f9604852…`.
+
+The Q26 frontier contract is now admitted on executed evidence, and the
+director reproduced the load-bearing binaries at one thread: the expanded
+suite passes 224/0 with filtered=0 in each of armed and disabled crossed with
+hash and no-hash, the helper controls pass 20/0 per enable arm, the two
+11-file partial roots are byte-identical, and the P2593 counterexample
+reproduces retired_hits=1 against the required 0 with the independent live
+allocation at 1 and the disabled forms at 2/0. The audit chain is complete:
+the exact emitted signature (trailing comma included), the unconditional
+`Discard` expansion, an independently derived eleven-frame set, eleven
+derive-list edits and eleven actual retirement impls per root, erasure to the
+Q25 AST (token respacing is not a byte claim; whole-file AST restoration is
+the bar, and the byte diff between the erased root and the Q25 partial is
+only resyntaxed attributes and trailing blank lines), the Q25 eraser's
+whole-file restore of the eleven live files with the five pinned omission
+sites, nine rejecting controls (changed derive, extra impl, missing, wrong and
+late retirement, changed `Discard`, overlap, changed macro, non-target drift),
+47 extracted whole functions with thirteen producer calls and eleven actual
+retirement impls, eighty fragment traces and final values per form matching
+the disabled fixture in all four forms, and both real crate type modes. All
+thirteen frontier rows now execute whole producer and constructor paths; no
+synthetic seam remains and none was credited.
+
+Q27. The retirement observation is a property of the raw-frame transport, not
+of the four added files: the twelve further raw owners in ten already-retained
+paths (P0145, P0936, P1037, P1038, P1132, P1193, P1708, P2299, P2544, P2547,
+P2591, P2593, in `debug_tools/reap/sow.rs`,
+`kernel_data/rewrite_data/cases/pattern_resolution/continuation.rs`,
+`kernel_data/rewrite_data/replace/repeated.rs`, `options/builtins.rs`,
+`pattern_matching/core/resume_frames.rs`,
+`associations/basic/lazy_completion.rs`, `schema/continuation.rs`,
+`structure_ops/list_plumbing.rs`,
+`structure_ops/sequence/take_drop/lazy_completion.rs` and
+`structure_ops/surface/lazy_completion.rs` — the director verified all ten are
+inside the retained ninety-path set) receive the same Q26 substitution in their
+copied postimages: `PureFrameAbandon` replaced by an explicit
+`impl FrameAbandon` that retires that allocation before returning exactly
+`Discard`, with the same exactness, erasure and rejecting controls. This adds
+no path and changes no count — 94 paths and 188 postimages stand, these ten
+postimages change content, and the `source_schema` digest is still computed
+only after all 151 plans pass. The census must be re-derived independently from
+the authenticated inventory and raw annotations and must cover all twenty-five
+`Q747-RawFrame` rows; a token-holding frame type whose declaration or
+abandonment implementation lies outside the admitted 94 paths remains a STOP.
+For each of the twelve rows the control is the same and stays at full strength:
+the actual abandonment with a retained Arc yields zero, an independent live
+allocation yields one, both cfg arms and the disabled form, with the
+ordinary-Arc-drop positive control; the P2593 helper counterexample is
+corroboration only and is not a whole-path or class receipt.
+
+Continuation 19 completes the implementation under the remaining envelope:
+admit the twelve rows' retirement substitution and controls; then the complete
+151-plan generator over the 94-path set, the mechanically emitted and
+authenticated 94-row schema with all 151 `source_schema` cells and the new
+digest from the exact table bytes, whole-file AST restoration and the separate
+pinned-omission audit in both cfg arms, the ordered standing replay,
+`cargo fmt --check`, and both workspace modes with the seven exclusions in
+`DRAFT-COMMON.md`, the switched checks on the same binaries, and the full
+unfiltered `suspension_oracle` and `typed_slot_census` at failed=0,
+filtered=0. Budget: the 8,589.39 s focused remainder with the assigned
+6,000 s workspace envelope; the second workspace envelope stays held for the
+verification stage, which uses brief 742's remaining 1,440 s. Stop-loss: the
+refined progress counter — a completed audit stage, a certified control or
+path, or a closed row; two consecutive compiled attempts with none stop, and
+the envelope is the hard bound. No production, runner, observer, predicate,
+selector or phase change, no fifth overlay, no 138-row subset, no placeholder
+digest, no hand-edited derived cell, no git, no network, no `unsafe`, no
+dependency or lockfile change.

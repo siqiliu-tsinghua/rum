@@ -116779,3 +116779,41 @@ replay, `cargo fmt --check` and both workspace modes with the seven
 exclusions; no production change, no fifth overlay, no 138 subset, no
 placeholder digest, no hand-edited derived cell, and every earlier term
 stands.
+
+### Continuation 106 — brief 742 continuation 18: the Q26 frontier contract is admitted; Q27 extends the retirement observation to all twenty-five raw owners
+
+Continuation 18 (`cdx`, unit `brief-742-cdx-20261117-030757-1896462`, rc 0,
+peak 1,066,164,224 B, oom 0/0; log 2,109,978 B sha256 `1722708f…`; report
+STOP, 8,898 changes all in `.temp`, 0 disclosures, 1 deviation, 0 questions,
+15 PASS / 3 FAIL / 2 NA, 1,542 citations; 139.05 s charged — 48.55 s measured
++ 30.5 s bookkeeping + the 60 s reserve — leaving 8,589.39 s focused;
+workspace 0 of 6,000) is accepted. The Q26 frontier contract is admitted on
+executed evidence: 224/0 controls with filtered=0 in each of armed/disabled ×
+hash/no-hash, helper 20/0 per arm, the two 11-file partial roots byte-identical,
+the P2593 counterexample reproducing retired=1 against the required 0 with the
+live allocation at 1 and disabled at 2/0, the exact emitted signature with
+the trailing comma, an independently derived eleven-frame set, eleven
+derive-list edits and eleven retirement impls per root, erasure to the Q25 AST
+with the Q25 eraser's whole-file restore of the eleven live files and five
+pinned omission sites, nine rejecting controls, 47 extracted whole functions
+with thirteen producer calls and eleven retirement impls, 80/0 parity in four
+forms, and both real crate type modes; the director reproduced the 224/0,
+20/0 and the counterexample at one thread. The STOP is a scope finding: twelve
+further `Q747-RawFrame` owners (P0145, P0936, P1037, P1038, P1132, P1193,
+P1708, P2299, P2544, P2547, P2591, P2593) in ten already-retained paths
+require the same actual abandonment observation, their unchanged
+`PureFrameAbandon` derives returning only `Discard`. Q27 rules the retirement
+observation belongs to the raw-frame transport, not the four added files: the
+same substitution applies in those ten postimages, adding no path and changing
+no count (94/188 stand; the digest still follows all 151 plans), with the
+census independently re-derived over all twenty-five raw-frame rows, a
+token-holding type outside the admitted 94 paths still a STOP, and each of the
+twelve rows' retained-Arc control at zero/one in both cfg arms and the
+disabled form. Continuation 19 completes the implementation under the
+remaining 8,589.39 s focused and the 6,000 s workspace envelope: the twelve
+rows' retirement and controls, the complete 151-plan generator, the 94-row
+schema with all 151 cells and the new digest, whole-file AST restoration and
+the separate pinned-omission audit, the ordered standing replay, `cargo fmt
+--check` and both workspace modes with the seven exclusions; no production
+change, no fifth overlay, no 138 subset, no placeholder digest, no hand-edited
+derived cell, and every earlier term stands.
