@@ -451,3 +451,90 @@ ten classes, 79 subtypes, zero unknown edges, deterministic byte-identical
 double generation, the exact emitted file set, the mechanical
 `source_schema` transition, all focused controls and both workspace modes
 after the ordered replay.
+
+## Continuation 4 ruling (director) — Q13: the continuation graph is scoped by the declared tail; a caller-side post-call omission whose tail lies strictly after an unmodified producer call does not need the producer's interior, and P1577 proceeds under that topology
+
+The STOP is correct under Q12 rule 6 as written and earns no credit. The
+Q12 work before it is accepted as delivered: three shared protocols with
+their exact six implementations authenticated against independent
+pre-edit AST pins, 100 initial/resumed route edges expanded with zero
+unknown edges inside that restricted graph, 54 shared typed-frame path
+anchors (initial suspension, resumed completion, constructors and the
+guard-completion helper), both `DownValueScan` branches recorded, the
+bound-row join, 21 protocol controls and seven closure controls. All 151
+source/tail/destructor joins and the 90/180 pins authenticate;
+`source_schema` is unchanged at `f9604852…`; no repository file was
+written; no plan or schema was emitted. The 206.65 s conservative charge
+is accepted; 742's remaining focused budget is 4,175.43 s (envelope 2 has
+1,175.43 s), focused envelopes 3 and 4 and both workspace envelopes are
+untouched.
+
+The ruling that P1577's family stops unless the whole erased frame-kind
+set closes was scoped to a tail inside or beyond an open dispatch. P1577's
+declared tail is neither. Its producer call is
+`self.drive_resuming_frames::<O>(outcome)` at
+`crates/rum-runtime/src/runtime/suspension/core.rs:690`, and its declared
+tail is `self.replace_accounted_evaluation_stack(saved_stack);` at
+`:696` — strictly after the call, in the same caller
+(`resume_suspended_slot`, from `:609`), together with the following
+`self.evaluation_depth = saved_depth;`. The retained pin has exactly this
+shape: the arm site wraps the call as
+`{ let _cm740_producer = crate::cm740_probe::enter("P1577"); self.drive_resuming_frames::<O>(outcome) }`
+so the producer runs in full, and the tail site guards only the two
+restoration statements. Every path from the call to the tail is the
+call's typed return plus the caller's own branches; a frame's `resume`
+cannot jump into the caller's later lines except by returning, and the
+caller's own entry guard (`debug_assert!` plus
+`take_accounted_pending_suspension_for_resume().expect(...)`) makes a
+nested invocation a fault rather than a path. The open payload protocols
+therefore block nothing here: they are opened interior, not an
+unenumerated continuation to the tail.
+
+Q13 admitted, as the scoping rule for step 2's continuation graph:
+
+1. **Tail scope.** Step 2 enumerates the successors that can reach the
+   declared tail. When the declared tail lies strictly after the producer
+   call in the caller and the call itself is unmodified, the call's
+   interior successors cannot reach the tail except through its return.
+   The interior is recorded as one opaque node with the call's full
+   signature and return type and is explicitly not claimed closed; no
+   other row may borrow the interior.
+2. **Conditions.** (a) The producer call executes in full in both arms
+   with unchanged arguments and exactly one evaluation. (b) The plan
+   enumerates the call's complete typed return variants and every caller
+   branch and site from the call to the tail, with anchors. (c) Nothing
+   between the arm and the tail is omitted, duplicated or reordered
+   beyond the declared omission. (d) The plan cites the caller's entry
+   guard as the reason no nested invocation can reach the tail while the
+   producer runs. (e) The carrier preserves the producer's own credited
+   pauses (P1577: the `InputString:enter-resume` and `Input:finish`
+   episode), the nested `Result`, the guest-form restoration, the fault
+   path and the `finish_completed_resumption` branches.
+3. **No interior claim.** The plan must not assert which frames or
+   finalizers are queued or resumed, must not substitute the three
+   `EntryRef` variants (`suspension/typed/entry.rs:15`), the `Expr`
+   decoder binding or the AST candidate census for a frame set, and must
+   record the four driver dispatch sites
+   (`crates/rum-runtime/src/runtime/suspension/core/driver.rs:75`, `:101`,
+   `:110`, `:150`) as opened and not enumerated. The erased protocol stays
+   open; this ruling closes nothing.
+4. **Falsifiers.** A tail inside the producer; an arm that alters the
+   call, its arguments or its evaluation count; a missing return variant
+   or caller branch; an extra dropped or reordered statement between the
+   call and the tail; a claimed interior set without a Q12 closure; a
+   re-entrancy argument without its guard anchor; a disabled/armed
+   nondifference — all reject; the valid caller-side counterpart passes.
+5. **Scope.** This form applies only to a caller-side post-call tail. Any
+   row whose declared tail is inside or beyond an open dispatch still
+   stops under Q12 rule 6. `CallBuiltinSpec` remains unadmitted and
+   P0543/P0544 are unaffected.
+6. **Stage.** No new allocation. P1577's plan proceeds under this
+   topology and the 151-plan bar stands; if it fails any falsifier the
+   family returns with its named block.
+
+All other Q12, Q11, Q10 and brief terms stand: the 90-file starting set and
+pre-edit pin authority, the caught/stop-row signature pins, 151 plans, ten
+classes, 79 subtypes, zero unknown edges, deterministic byte-identical
+double generation, the exact emitted file set, the mechanical
+`source_schema` transition, all focused controls and both workspace modes
+after the ordered replay.

@@ -115923,3 +115923,51 @@ and a one-armed branch. `CallBuiltinSpec` and the erased-driver dispatch
 are not admitted, `GENERIC_GAPS` stays the exact five with P0403's entry
 its own, and no new allocation is granted. All other Q10/Q11/742 terms
 stand.
+
+### Continuation 90 — brief 742's fourth run: the three closed protocols land, P1577's open payload STOP (Q13)
+
+Brief 742's fourth run (`cdx`, unit
+`brief-742-cdx-20261116-172704-1736993`, rc 0, peak 3,175,444,480 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,245,859 B,
+sha256 `83c4e6e0…`; report `.temp/brief-742/report.json`, STOP, 97
+changes (95 scratch added, 2 modified, 0 deleted), 3 disclosures, 1
+question (Q13), 9 PASS / 2 FAIL / 4 NA, 189 citations verified) executed
+Q12: the three shared protocols and their exact six implementations
+authenticate against independent pre-edit AST pins, the call-site fixpoint
+expands 100 initial/resumed route edges with zero unknown edges inside
+that graph, the shared typed-frame path table adds 54 anchors (initial
+suspension, resumed completion, constructors, guard-completion helper),
+both `DownValueScan` branches are recorded, 21 protocol controls and
+seven closure controls pass, and the fourteen `DefinitionResumeRoute`,
+five `DownValueScan` and two `ExceptionResumeRoute` rows join their
+frozen identities. It then stopped at P1577: the producer is
+`drive_resuming_frames::<O>`, whose interior dispatches over public,
+unsealed `SuspensionFrame`/`TypedFrame`/`PureFrameFinalizer`/`SlotFinalizer`
+payloads; the AST census (481 + 106 + 56 + 7 candidates) is not a
+compiler-enforced set, so `PortBlocked::OpenFrameProtocol` stopped the
+family under Q12 rule 6. All 151 source joins and 90/180 pins
+authenticate; `source_schema` stays `f9604852…`; no repository file
+changed; no plan or schema was emitted.
+
+Q13 ruling (this commit): scope the continuation graph by the declared
+tail. P1577's tail is `self.replace_accounted_evaluation_stack(saved_stack);`
+at `core.rs:696`, strictly after the producer call at `:690` in the same
+caller, and the retained pin already has the caller-side shape (the arm
+wraps the call with `enter`, the tail guards only the two restoration
+statements). Every path from the call to the tail is the call's typed
+return plus the caller's branches, and the caller's entry guard makes a
+nested invocation a fault, so the open interior cannot reach the tail and
+is recorded as one opaque node. Conditions: the call runs in full with
+unchanged arguments and one evaluation; every return variant and caller
+branch to the tail is anchored; nothing else between arm and tail is
+changed; the entry-guard argument is cited; the credited producer pauses
+and the nested Result/guest-form/fault/finish branches are preserved. The
+plan may not claim an interior frame set, substitute the `EntryRef`
+variants, the decoder or the census, or treat the opened driver sites as
+enumerated. Falsifiers cover a tail inside the producer, an altered call,
+a missing branch, an extra changed statement, a claimed interior, a
+missing guard anchor and a disabled/armed nondifference. The form applies
+only to caller-side post-call tails; `CallBuiltinSpec` stays unadmitted;
+no new allocation (4,175.43 s focused remain, envelope 2 at 1,175.43 s,
+envelopes 3/4 and both workspace envelopes untouched). All other
+Q12/Q11/Q10/742 terms stand.
