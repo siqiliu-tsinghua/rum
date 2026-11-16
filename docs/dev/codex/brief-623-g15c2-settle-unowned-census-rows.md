@@ -115618,3 +115618,50 @@ stay blocked and CM5 is not authorized. The final epoch also removes the
 six inherited dead-code warnings in `source_auth/c10.rs` (or shows they
 are pin-required), and no further carrier schema or allocation expansion
 is planned after this one.
+
+### Continuation 83 — sixth run: the pair bar holds at (45, 5, false); the campaign stops at the two-family rule (P0813 Unarmed, P2593 NoHit, P0492 DisabledDifference); Q6 admits the three reviewed repairs and one final twelve-block epoch
+
+**2026-11-16 — brief 740's sixth run executed continuation 5: the repaired
+`arguments.rs` copy keeps the earlier level append and omits only the
+append following the loop's next-argument pause, so P0325/P0326 measure
+exactly `(45, 5, false)` in both modes (five armed-without-hit Error
+cells, zero identity-with-hit survivors) with the four structural
+controls green; the twelve canonical blocks are warning-free, the six
+inherited `c10.rs` dead-code items are removed, the three forced
+same-epoch rebuilds are byte-identical, and maintenance replayed 68
+fingerprint cells plus four certificate cells. The campaign then hit the
+required two-family no-evidence stop after `cm3-optional` (P2593
+`NoHit`) and `cm3-prepared` (P0492 `DisabledDifference`), with P0813
+`Unarmed` earlier; 15 of 151 own rows authenticate per mode, 136 stay
+`PortBlocked`, 244/510 logical cases ran and acceptance is unrun. My
+rerun activates the matching copied tree (probe cache hit) and
+reproduces in both modes the pair bar, the four controls and the 15/136
+own gate at eight and one threads; the live tree differs from the
+continuation-4 real tree in exactly the five declared files. Q6 admits
+option 1: the source-local P0813 carrier arming at the actual producer
+pause of the resumed catch body and hitting at the actual guarded
+dispatch, the source-local P2593 omission applied to the actual resumed
+optional realization, and a test-layer comparison-only record encoding
+for P0492 that reuses the existing `declared_duration` /
+`host_duration_comparison` view, masks only the fixture's declared
+duration leaves, keeps raw records byte-exact and applies only to the
+disabled-vs-real parity; then one final consolidated twelve-block epoch
+(55 blocks consumed at completion / ≤82,500 s allocated), the complete
+unsampled 510-case schedule and acceptance in both modes, retention
+replayed before acceptance, the pair open at zero admitted receipts, and
+a second two-family stop ending the one-off repair path for a design
+review.**
+
+Run `cdx`, unit `brief-740-cdx-20261116-120545-1639123`, rc 0, peak
+3,695,890,432 B, oom 0 / oom_kill 0; log 2,174,586 B sha256
+`a2a7889c…`; report 939,814 B sha256 `b288c95e…`, STOP, 5 changes (0
+added, 5 modified, 0 deleted), 0 disclosures, 5 deviations, 1 question,
+4,685 citations verified; the five files are the repaired overlay, the
+mechanical `source_schema` column, the `c10.rs` cleanup and the two
+retention replay inventories. Scope: test layer plus generated retention
+inventory only, `production_changes=0`, no manifest/lock change, 5,801
+files audited, no git or network command. No settlement, promotion, SAME
+or encoding credit; the 51 owners, five source duties and C2 (118
+Residual + 0 Lost) stay Open; `CHANGELOG.md` and S10 stay blocked and CM5
+is not authorized. The full detail is the Continuation 6 ruling appended
+to brief 740.

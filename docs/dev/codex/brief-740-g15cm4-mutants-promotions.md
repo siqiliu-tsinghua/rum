@@ -1045,3 +1045,134 @@ not credit.
 **Unchanged.** C2 stays Open at 118 Residual + 0 Lost; the 51 owners and
 five source duties stay Open; `CHANGELOG.md` and S10 stay blocked; CM5
 is not authorized; the eight continuation-69 rulings (Q1–Q8) stand.
+
+## Continuation 6 ruling (director) — the pair bar holds at (45, 5, false); the campaign's two-family no-evidence stop is accepted, and Q6 admits the three reviewed repairs plus one final twelve-block epoch (55 blocks consumed at completion, ≤82,500 s allocated)
+
+**2026-11-16 — brief 740's sixth run executed continuation 5. The repaired
+`arguments.rs` overlay keeps the earlier level append and omits only the
+append that follows the loop's next-argument pause; both P0325 and P0326
+now measure exactly (45, 5, false) in both modes, with five
+armed-without-hit `Error` cells per row and zero identity-with-hit
+survivors, and the four structural controls pass in both modes. The
+twelve canonical blocks are warning-free, the six inherited dead-code
+items in `source_auth/c10.rs` are removed, all three forced same-epoch
+rebuilds are byte-identical, and the maintenance replay changed only 68
+fingerprint cells and four certificate cells. The campaign then reached
+the required two-family stop: P0813 `Unarmed`, P2593 `NoHit` and P0492
+`DisabledDifference`; 15 of 151 own rows authenticate in each mode, 136
+stay `PortBlocked`, 244 of 510 logical cases ran, and acceptance is
+unrun. Q6 is ruled: option 1, the three reviewed repairs plus one final
+consolidated twelve-block epoch.**
+
+Run `cdx` (unit `brief-740-cdx-20261116-120545-1639123`, rc 0, peak
+3,695,890,432 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_740.log`,
+2,174,586 B, sha256 `a2a7889c…`; report
+`.temp/brief-740/report-continuation-5.json`, 939,814 B, sha256
+`b288c95e…`, STOP; 5 changes (0 added, 5 modified, 0 deleted); 0
+disclosures; 5 deviations; 1 question (Q6, ruled here); 4,685 citations
+verified). The five changed files are exactly the Q5 scope: the repaired
+`arguments.rs` overlay, the mechanical `source_schema` column in
+`mutants.tsv`, the `c10.rs` dead-code removal, and the 68 fingerprint /
+four certificate replay cells in the two retention inventories. My
+rerun activates the matching copied source tree (`probe_build.py` cache
+hit, no compile), then reproduces in both modes the pair bar
+`(45, 5, false)` and the four structural controls; the standing own gate
+reproduces at eight and one test thread with 15 caught / 136
+`PortBlocked` and the named P0813 `Unarmed`, P2593 `NoHit` and P0492
+`DisabledDifference`; a full-tree comparison against the continuation-4
+real tree shows exactly those five files.
+
+**The STOP and the three defects.**
+- P0813 (`nonlocal.rs:80:Session::eval_catch@104`,
+  `ForwardActualCatchBodyBeforeDispatch`): the carrier's guard sits on
+  the initial `eval_catch` body match, before the guarded
+  `resume_catch_after_body` call, so the selected resumed cell never
+  reaches it; the selector stays unarmed and no source hit is emitted.
+- P2593 (`surface.rs:75:::eval_first@83`,
+  `ActualOptionalSuccessBeforeConcreteTail`): the omission handles only
+  the immediate `Ok(Some)` result of `realize_at_most`; the selected
+  held/splice cell resumes instead, so the resumed realization never
+  hits.
+- P0492 (`call.rs:92:Session::resume_call_with_dispatch_plan@130`): the
+  disabled arm differs from the real arm only at the declared duration
+  leaf `[0]` of the `E1.2079`/`E1T.2079` fixtures, whose output carries a
+  separately measured rational; the standing disabled-vs-real record
+  comparison is byte-exact, so it rejects a comparison the fixture
+  already declares nondeterministic.
+
+**Q6 ruling — option 1.** Authorize the three reviewed repairs and one
+final consolidated fresh twelve-block epoch, under these conditions.
+- **P0813 repair.** In the copied runtime overlay only, arm the selector
+  at the actual producer pause of the resumed catch body and apply the
+  omission at the actual guarded dispatch on that same resumed path. The
+  ordinary guard keeps its present position and the ordinary run keeps
+  its present behaviour; the hit must not be reached through, or be
+  supplied by, the quiescence assertion or an earlier guard. The selected
+  cell must show its own source hit at the declared phase, the real
+  baseline producer pause, an own `Native` difference with public output
+  equal, and disabled record parity; otherwise the row stays
+  `PortBlocked`.
+- **P2593 repair.** In the copied stdlib overlay only, apply the omission
+  to the actual resumed optional realization (the `Ok(Some)` that follows
+  the held/splice suspension), not only to the immediate result; the
+  ordinary path is unchanged. Same per-row evidence bar as P0813.
+- **P0492 admission.** Admit a test-layer, comparison-only record
+  encoding for P0492 that reuses the existing `declared_duration`
+  declaration and `host_duration_comparison` view: the only masked leaves
+  are the fixture's declared duration paths, the raw records stay in the
+  receipts byte-exact, every other record byte and event stays exact, and
+  the encoding applies only to the disabled-vs-real parity of this row.
+  It is not an own catch, not a settlement and not credit. A falsifier
+  shows a non-duration difference in the same record still rejects, a
+  non-declared path still rejects, and the raw artifacts retain the
+  unmasked values. The ordinary runner and the pair assertion stay
+  byte-identical; the `guest.rs` no-edit sentence of the Q5 ruling is
+  lifted only for this admitted comparison view.
+- **The bar.** The pair assertion stays `(45, 5, false)`; the pair stays
+  Open with zero admitted pair receipts. Every row's own predicate,
+  observer, selector, phases and the complete real matrix stay as they
+  are; no predicate is relaxed, no survivor relabelled, no substitute
+  catch, no sampled schedule. The five armed-without-hit `Error` cells
+  per pair row and the four structural controls stay.
+- **The epoch.** The repaired carriers change the copied source and the
+  schema hash; no binary, spot check or receipt from the 43 consumed
+  blocks is reusable, and the old packets stay immutable evidence of
+  their own epoch, never relabelled. Nine canonical real/disabled/armed
+  builds over the three configurations plus three same-epoch forced
+  byte-identity spot checks, each ≤1,500 s. Consumed allocation at
+  completion: 55 blocks / ≤82,500 s (an allocation, not a duration).
+  This is the last allocation expansion; the Q5 sentence is superseded
+  only by this explicit grant.
+- **The schedule.** Run the complete unsampled 510-case schedule on the
+  final epoch in both modes: all 151 own rows (including the three
+  repaired rows and the 15 re-run rows), the 100 held-pair cells, and
+  the four structural controls. Shape and falsifier gates first, then
+  P0543 and C10 in both modes/lane, then the complete schedule, then the
+  complete acceptance suite; retention replays before acceptance and
+  every verdict is quoted.
+- **Escalation.** If the final epoch hits the two-family no-evidence stop
+  again, the one-off single-row repair path ends and CM4 returns for a
+  design review of the carrier-generation method; no further single-row
+  schema will be granted. A further carrier schema or an exceeded
+  allocation STOPs.
+- **Boundaries.** No production, manifest, lock, dependency or
+  inventory-predicate change; only the mechanical `source_schema` column
+  may update with the new overlay digest, with all source keys, tails,
+  phases, selectors, observers, predicates and coverage bars unchanged.
+  No settlement, SAME, owner promotion or encoding execution. The Q3
+  observer constraints stay. A needed runtime accessor is a STOP.
+
+**Accepted as delivered.** The Q5 pair repair (both rows `(45, 5,
+false)` in both modes), the four structural controls, the twelve
+warning-free canonical blocks with three forced identities, the
+six-item `c10.rs` cleanup, the maintenance replay and the preserved
+administrative attempts (the CSV field-size limit, the broad-glob
+wrapper, the one-thread progress prefix and the report-assembler
+failure). The 15 admitted own receipts are evidence of their epoch, not
+final credit, and are re-run on the final epoch. None of this carries
+campaign, settlement, promotion, SAME or encoding credit, and the pair
+measurement is not credit.
+
+**Unchanged.** C2 stays Open at 118 Residual + 0 Lost; the 51 owners and
+five source duties stay Open; `CHANGELOG.md` and S10 stay blocked; CM5
+is not authorized; the eight continuation-69 rulings (Q1–Q8) stand.

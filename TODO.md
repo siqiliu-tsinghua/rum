@@ -333,7 +333,30 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   43 blocks consumed at completion / ≤64,500 s allocated, no old binary or
   receipt relabelled, then the full evidence, the remaining 149 rows, the
   510-case campaign and complete acceptance in both modes; the pair stays
-  Open at zero admitted receipts. C2 stays Open at 118
+  Open at zero admitted receipts. Its sixth run executed continuation 5 on
+  that epoch: the repaired `arguments.rs` overlay keeps the earlier level
+  append and omits only the append following the loop's next-argument
+  pause, so P0325/P0326 measure exactly `(45, 5, false)` in both modes
+  (five armed-without-hit `Error` cells per row, zero identity-with-hit
+  survivors) and the four structural controls pass; the twelve canonical
+  blocks are warning-free, the six inherited `c10.rs` dead-code items were
+  removed, the three forced same-epoch rebuilds are byte-identical, and
+  maintenance replayed 68 fingerprint cells plus four certificate cells.
+  My rerun reproduces the pair bars and controls in both modes, and the
+  own gate at 8 and 1 threads (15 caught / 136 `PortBlocked`); the live
+  tree differs from the continuation-4 real tree in exactly the five
+  declared files. The campaign then hit the required two-family stop —
+  P0813 `Unarmed` (guard before the guarded call), P2593 `NoHit`
+  (immediate `Ok(Some)` only) and P0492 `DisabledDifference` (declared
+  duration leaf) — with 244/510 logical cases attempted and acceptance
+  unrun. Q6 admits the three reviewed repairs (source-local carrier
+  placement for P0813/P2593 and a test-layer, comparison-only
+  declared-duration record view for P0492) plus one final consolidated
+  twelve-block epoch — 55 blocks consumed at completion / ≤82,500 s
+  allocated, no old binary or receipt relabelled, then the complete
+  unsampled 510-case schedule and acceptance in both modes, the pair
+  staying Open at zero receipts; a second two-family stop ends the
+  one-off repair path for a carrier-design review. C2 stays Open at 118
   Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
