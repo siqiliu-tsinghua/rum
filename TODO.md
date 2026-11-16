@@ -371,7 +371,32 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   modes' 50-key real matrices), keep the frozen `Error` case as an armed
   no-hit negative, re-freeze the complete 510-case schedule (count
   unchanged, nothing sampled), then run the final twelve-block epoch with
-  every Q6 condition unchanged. C2 stays Open at 118
+  every Q6 condition unchanged. Its eighth run implemented the three Q7
+  repairs in that epoch: twelve warning-free builds with three same-epoch
+  forced identities, pair bars `(45,5,false)` in both modes, the four
+  structural controls, the promotion transaction and both negative suites,
+  the four Q7 falsifiers, the re-frozen 510-case schedule (digest
+  `d89799fe…`) and the maintenance replay (68 fingerprints, four
+  certificate cells) all pass; the three repaired rows are caught (P0813
+  `Err(Output)` at `ForwardActualCatchBodyBeforeDispatch`, P2593
+  `Err(Output)` on the `Middle` program at
+  `ActualOptionalSuccessBeforeConcreteTail`, P0492 `Err(Native)` with equal
+  public output), giving 18 caught / 133 `PortBlocked` per mode (129 never
+  attempted, four `MissingRealTuple`), 252/510 cases, 55 blocks and
+  4,998.055882 s measured of the 82,500 s allocated. The campaign then hit
+  the repeated two-family no-evidence stop at `cm3-repaired` (P0267,
+  P0312, P0323) and `cm3-set-rhs` (P0410): each armed and hit, then the
+  armed worker panicked at the logical-quiescence assertion
+  (`snapshot.rs:30`) — the C10-class observation gap reaching a second row
+  class. Q8 admits option 1: the one-off single-row repair path ends and
+  CM4 returns for the carrier-generation design review as brief 741
+  (design only, `Scope: NONE`), whose inputs are this epoch's 18 caught
+  packets, the four quiescence-panic packets, the 129 never-attempted rows
+  and the Q3 observer precedent; it must deliver the row-class taxonomy,
+  the mechanical generation rule, the class-level observation-mode policy,
+  the attempt plan for the remaining 133 rows with a new explicit
+  allocation request, the replacement stop rules and the staged
+  implementation briefs. C2 stays Open at 118
   Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

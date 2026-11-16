@@ -115708,3 +115708,53 @@ was the source review only, `production_changes=0`, no git or network
 command; the 51 owners, five source duties and C2 (118 Residual + 0 Lost)
 stay Open. The full detail is the Continuation 7 ruling appended to brief
 740.
+
+### Continuation 85 — eighth run: the Q7 repairs land and are caught, the repeated two-family stop fires on a second row class, and Q8 opens the carrier-generation design review (brief 741)
+
+The eighth run of brief 740 implemented the three Q7 repairs in one fresh
+twelve-block epoch. All twelve canonical builds are warning-free with the
+three same-epoch forced identities (`11284fc5…`, `9d4327f8…`, `bd6df0ac…`);
+the pair bars are `(45,5,false)` in both modes with five armed-without-hit
+`Error` cells per row and zero admitted pair receipts; the four structural
+controls, the promotion transaction and both negative suites, and the four
+Q7 falsifiers pass; the complete 510-case schedule was re-frozen before
+the first block (digest `d89799fe…`); maintenance replayed exactly 68
+fingerprints and four certificate cells; the epoch cost 1,076.662402 s
+fresh (55 blocks at completion, 4,998.055882 s measured, 82,500 s
+allocated). The three repaired rows are caught: P0813 arms at
+`owned-returned-InputRequired`, hits `ForwardActualCatchBodyBeforeDispatch`
+and yields `Err(Output)`; P2593 arms at `producer-InputRequired`, hits
+`ActualOptionalSuccessBeforeConcreteTail` on the Q7 `Middle` program and
+yields `Err(Output)`; P0492's comparison-only view yields `Err(Native)`
+with equal public output and a native difference. The own gate reports 18
+caught and 133 `PortBlocked` per mode (129 `RawArtifact` never attempted,
+four `MissingRealTuple`).
+
+The campaign then hit the repeated two-family no-evidence stop:
+`cm3-repaired` (`P0267`, `P0312`, `P0323`) and `cm3-set-rhs` (`P0410`), in
+both modes. Each armed at its producer pause and emitted its source hit,
+then the armed worker panicked at
+`crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs:30`
+("logical teardown: pending children, retained terminal parents, open
+records, context leases, faults"), reproduced at one thread — the
+C10-class observation gap reaching a second row class, since the ordinary
+runner asserts quiescence before returning the observation and the Q3
+observer admission covers C10 only. Under Q6/Q7 the repeated two-family
+stop ends the one-off single-row repair path. Q8 admits option 1: CM4
+returns for the carrier-generation design review, dispatched as brief 741
+(design only, `Scope: NONE`), with this epoch's 18 caught packets, the
+four armed-hit-then-quiescence-panic packets, the 129 never-attempted rows,
+the two stop families, the Q3 observer precedent and the Q6/Q7 findings as
+inputs. The design must deliver the row-class taxonomy, the mechanical
+generation rule, the class-level observation-mode policy for the
+quiescence-broken rows, the attempt plan for the remaining 133 rows with an
+explicit new allocation request (the previous grant is fully consumed),
+the replacement stop rules (an armed-and-hit-but-unobservable family is a
+class finding), and the staged implementation briefs. No credit: the 18
+caught rows are epoch evidence, no settlement/SAME/promotion/encoding, the
+pair stays Open, the 51 owners, five source duties and C2 (118 Residual +
+0 Lost) stay Open; `CHANGELOG.md` and S10 stay blocked and CM5 is not
+authorized. Scope was the test layer plus the generated retention
+inventory only, `production_changes=0`, no manifest/lock change, 12
+changed files (2 added, 10 modified), no git or network command. The full
+detail is the Continuation 8 ruling appended to brief 740.

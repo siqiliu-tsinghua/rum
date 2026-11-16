@@ -1280,3 +1280,76 @@ deleted), 0 disclosures, 2 deviations, 1 question (Q7), 7 PASS / 2 FAIL /
 continuation-5 report remains at
 `.temp/brief-740/report-continuation-5.json` (`b288c95e…`); no
 production, manifest, lock or inventory-predicate change).
+
+## Continuation 8 ruling (director) — Q8 admits option 1: the repeated two-family stop ends the one-off repair path, and CM4 returns for the carrier-generation design review as brief 741
+
+**What the eighth run delivered.** It implemented the three Q7 repairs in
+one fresh twelve-block epoch and they verify. P0813 arms when the catch
+body suspends (`owned-returned-InputRequired`) and omits at
+`ResumeCatchBodySuspensionFrame::resume` by forwarding the compatible
+outcome; its hit is `ForwardActualCatchBodyBeforeDispatch` and its own
+predicate is `Err(Output)` with `public_output_exact=false` — the Strict
+class as ruled. P2593 arms at `producer-InputRequired`, omits at the
+decoded `Some(value)` in `complete` as well as at the immediate
+`Ok(Some)`; its hit is `ActualOptionalSuccessBeforeConcreteTail` and it
+is caught on the Q7 `Middle` / `prefix_and_tail.log` program with
+`Err(Output)`. P0492's comparison-only view yields the required
+`Err(Native)` with `public_output_exact=true` and
+`native_difference=true`. All twelve canonical builds are warning-free
+with the three same-epoch forced identities (`11284fc5…`, `9d4327f8…`,
+`bd6df0ac…`); the pair bars are `(45,5,false)` in both modes; the four
+structural controls pass; the promotion transaction and both negative
+suites pass; the four Q7 falsifiers pass; the schedule was re-frozen
+before the first block (510 cases, digest `d89799fe…`); maintenance
+replayed exactly 68 fingerprints and four certificate cells. The epoch
+cost 1,076.662402 s fresh (55 blocks at completion, 4,998.055882 s
+measured, 82,500 s allocated). The own gate reports 18 caught and 133
+`PortBlocked` per mode (129 `RawArtifact`, never attempted; four
+`MissingRealTuple`).
+
+**The stop is correct and is the second one.** `cm3-repaired` (`P0267`,
+`P0312`, `P0323`) and `cm3-set-rhs` (`P0410`) supplied no evidence in
+either mode: each armed at its producer pause and emitted its source hit,
+then the armed worker panicked at
+`crates/rum-runtime/src/runtime/profiling/logical/epoch/snapshot.rs:30`
+("logical teardown: pending children, retained terminal parents, open
+records, context leases, faults"), reproduced at one thread. That is the
+C10-class observation gap reaching a second row class: the ordinary runner
+asserts quiescence before it returns the observation, so an omission that
+leaves the logical epoch un-quiesced cannot be observed through the
+ordinary path, and the Q3 observer admission covers C10 only. Under Q6/Q7
+the repeated two-family stop ends the one-off single-row repair path.
+
+**Q8 ruling — option 1, the carrier-generation design review.** CM4
+returns for a design review of the carrier-generation method, dispatched
+as brief 741 (design only, `Scope: NONE`). Its inputs are this epoch's
+evidence: the 18 caught packets, the four armed-hit-then-quiescence-panic
+packets, the 129 never-attempted rows, the two stop families, the Q3
+observer precedent, the Q6/Q7 findings, the 90-row schema and the
+twelve-build epoch. The design must deliver the row-class taxonomy, the
+mechanical generation rule (producer pause → arming, tail → omission,
+phase → hit, disabled parity, authentication), the observation-mode
+policy for the quiescence-broken class (class-level admission, shared
+falsifiers, no per-row schema), the attempt plan for the remaining 133
+rows with an explicit new allocation request (the previous grant is fully
+consumed), the replacement stop rules (an armed-and-hit-but-unobservable
+family is a class finding, not a no-evidence family), and the staged
+implementation briefs. No source, test, inventory or documentation edit,
+no build, no campaign and no acceptance is authorized by this ruling.
+
+**No credit.** The 18 caught rows are epoch evidence, not final CM4
+credit; the 133 `PortBlocked` rows keep their named missing evidence; no
+settlement, SAME, owner promotion or encoding credit; the pair stays
+`(45,5,false)` and Open; C2 stays Open at 118 Residual + 0 Lost; the 51
+owners and five source duties stay Open; `CHANGELOG.md` and S10 stay
+blocked; CM5 is not authorized. The uncommitted CM4 test layer stays as
+the design's primary input and is not committed before CM4 acceptance.
+
+Run: `cdx` (unit `brief-740-cdx-20261116-134705-1673911`, rc 0, peak
+4,790,214,656 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_740.log`,
+2,628,760 B, sha256 `c7f6efa2…`; report
+`.temp/brief-740/report-continuation-7.json` identical to `report.json`,
+971,633 B, sha256 `117f7b8d…`, STOP, 12 changes (2 added, 10 modified, 0
+deleted), 0 disclosures, 5 deviations, 1 question (Q8), 11 PASS / 1 FAIL /
+1 FLAGGED / 1 NA, one measurement PASS, 4,420 citations verified; no
+production, manifest, lock or inventory-predicate change).
