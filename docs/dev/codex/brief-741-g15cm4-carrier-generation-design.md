@@ -165,3 +165,73 @@ A plan I can review and rewrite, in this order:
 - C2 stays Open at 118 Residual + 0 Lost; the 51 owners and five source
   duties stay Open; `CHANGELOG.md` and S10 stay blocked; CM5 is not
   authorized.
+
+## Director ruling (design gate) — Q9 admitted: the method, the observation classes and the 69,000-second staged allocation, with four pinning conditions
+
+Accepted as delivered, and the design task is complete. The taxonomy
+covers all 151 rows in ten generation classes (R34 F30 T73 J3 E2 G1 N4 U1
+H1 A2), keeps the 79 carrier subtypes (45 singletons) as plan parameters
+and separates the observer predicate (97 Strict / 28 NativeEqual / 26
+StrictNativeEqual) from the observation transport; the five-step
+generation rule derives arming from the actual producer episode, traces
+every immediate and resumed successor, renders disabled/armed from one
+compile-time constant, and audits the emitted bytes against the pre-edit
+pins rather than the renderer; the P0813 and P2593 construction proofs
+make both Q7 defects static generator failures. The observation policy
+keeps the 28 NativeEqual rows, adds the three deferred-publication rows
+and seven profile-return rows (38 observer-mode rows, 113 ordinary),
+requires every member's own packet in both modes and never changes a
+predicate. The attempt plan is the complete 510-case schedule (20
+admission + 244 shakedown + 246 campaign; 9,060 real keys and 9,511
+constituents per mode; 161 own constituents), with the 51 remaining
+families ordered and P1470/P1471 first. The replacement stop rule
+(all-armed/all-hit but unobservable = immediate class finding, one-thread
+reproduction, stop for design) is the Q8 rule.
+
+Q9 admitted. New allocation granted, stage-owned, with no transfer from
+the exhausted 55-block/82,500 s grant and no refresh at a stage
+boundary: twelve final-epoch build/run blocks x 1,500 s = 18,000 s
+(owned by 743, shared through 745); eight source-stage focused/maintenance
+envelopes x 1,500 s = 12,000 s (four each in 742 and 743); six workspace
+envelopes x 6,000 s = 36,000 s (two each in 742, 743 and 746); two final
+switched/reproduction envelopes x 1,500 s = 3,000 s (746). Total 28
+envelopes / 69,000 s. Each envelope is a ceiling, charged serially; a
+bound failure, an extra required build or a post-freeze schema change
+stops without spending another envelope. Brief 742 is authorized now for
+its 18,000 s (four focused/maintenance + two workspace envelopes);
+743-746 are authorized only by their own entry gates, each drawing from
+its own group.
+
+Four pinning conditions:
+
+1. **Pin authority.** The 90-file overlay set is the starting set. For
+   every retained carrier the independent audit must prove the same
+   omission site and preserved nodes as the current pre-edit pin; a
+   byte-level delta in an existing file is disclosed per file with its
+   structural justification at 742's gate, never silently normalized, and
+   the pin — not the renderer — is the authority. The generator may not
+   use a historical full-file postimage as its logic.
+2. **Signature pins.** The 18 caught rows and the four stop rows keep
+   their exact arming, hit, phase and predicate signatures; the generated
+   carriers are re-earned in the final epoch, and any signature drift
+   stops rather than being absorbed as a new expectation. C10's packet is
+   reused only under identical epoch identity.
+3. **Class admission is all-or-nothing.** All ten members must yield a
+   valid packet in both modes; a failing member is a named PortBlocked
+   with a class finding and blocks the class. No member substitution, no
+   cherry-picking, no admission by historical evidence: P0515's
+   faults=950 log is a calibration hypothesis, never an in-epoch packet.
+   The four failed rows keep the importer reason `MissingRealTuple` and
+   add `ObservationUnavailable/LogicalQuiescence` as diagnosis; neither is
+   rewritten as missing CM3 coverage or as Equal.
+4. **No row repair.** No new single-row repair path is authorized. A class
+   failure returns for design; an ordinary unobservable family stops
+   immediately; an unsupported topology blocks its family.
+
+All other terms stand: test-layer only, no production, ordinary-runner,
+predicate or receipt-acceptance change, no new runtime accessor, no
+manifest permission beyond the existing nine-entry P0543 lane
+(`66a8e8bd…`); the pair `(45,5,false)` stays Open with zero admissions,
+C2 stays Open at 118 Residual + 0 Lost, the 51 owners and five source
+duties stay Open, encoding stays G13-owned, `CHANGELOG.md` and S10 stay
+blocked, and CM5 is unauthorized.

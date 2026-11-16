@@ -115758,3 +115758,51 @@ authorized. Scope was the test layer plus the generated retention
 inventory only, `production_changes=0`, no manifest/lock change, 12
 changed files (2 added, 10 modified), no git or network command. The full
 detail is the Continuation 8 ruling appended to brief 740.
+
+### Continuation 86 — brief 741 design accepted (Q9)
+
+Brief 741 (design only, `Scope: NONE`) completed: cdx unit
+`brief-741-cdx-20261116-145801-1700079`, rc 0, peak 330,649,600 B, oom 0 /
+oom_kill 0; log `.temp/logs/cdx_brief_741.log`, 2,482,926 B, sha256
+`a9886b7d…`; report `.temp/brief-741/report.json`, 129,347 B, DONE, 210
+scratch files (210 added, 0 modified, 0 deleted), 0 disclosures, 1
+deviation (exploratory output streamed rather than fully archived; no
+verdict fabricated), 1 question (Q9, allocation), 12 PASS / 2 NA, 37
+citations verified; no repo mutation — `git status` is identical to the
+pre-dispatch partial tree and every reported change is under
+`.temp/brief-741/`.
+
+Delivered: the 151-row taxonomy in ten generation classes (R34 F30 T73 J3
+E2 G1 N4 U1 H1 A2; 79 carrier subtypes, 45 singletons; 66 selected
+families) with per-row source/tail/producer/pause/phase/selector/observer
+evidence; the five-step mechanical generation rule (resolve and
+authenticate, finite continuation graph, arming from the actual producer
+episode, render only the operation, authenticate the disabled arm by
+observation) with per-class arm/omission/falsifier contracts and explicit
+P0813/P2593 construction proofs; the observation-mode policy (28 existing
+NativeEqual + 3 deferred-publication + 7 profile-return = 38 observer rows,
+113 ordinary) over unchanged predicates; the complete 510-case attempt
+plan (20 class admission + 244 shakedown + 246 campaign; 9,060 real keys
+and 9,511 constituents per mode; 161 own constituents; 51 remaining
+families, P1470/P1471 first); the replacement stop rules; and five staged
+drafts (742 generation/schema, 743 observation policy + final epoch, 744
+shakedown, 745 campaign, 746 acceptance) under one shared contract.
+
+Q9 ruling (this commit): accepted as delivered, with four pinning
+conditions — (1) the 90-file overlay set is the starting set and the
+pre-edit pin, not the renderer, is the audit authority; a byte-level delta
+in an existing file is disclosed per file with structural justification;
+(2) the 18 caught and four stop rows keep their exact
+arming/hit/phase/predicate signatures and are re-earned in the final
+epoch, with C10's packet reused only under identical identity; (3) class
+admission is all-or-nothing, with P0515 a calibration hypothesis only and
+the four failed rows keeping `MissingRealTuple` plus
+`ObservationUnavailable/LogicalQuiescence`; (4) no new single-row repair
+path. The 69,000 s allocation is granted in 28 stage-owned envelopes
+(12 × 1,500 final-epoch blocks; 8 × 1,500 focused/maintenance; 6 × 6,000
+workspace; 2 × 1,500 final switched/reproduction), with no transfer from
+the exhausted 82,500 s grant; brief 742 is authorized first at 18,000 s.
+No credit: the pair stays Open at zero admissions, C2 stays Open at 118
+Residual + 0 Lost, the 51 owners and five source duties stay Open,
+encoding stays G13-owned, `CHANGELOG.md` and S10 stay blocked, CM5 is
+unauthorized.

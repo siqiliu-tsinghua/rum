@@ -396,8 +396,17 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   the mechanical generation rule, the class-level observation-mode policy,
   the attempt plan for the remaining 133 rows with a new explicit
   allocation request, the replacement stop rules and the staged
-  implementation briefs. C2 stays Open at 118
-  Residual + 0 Lost. Then CM5.
+  implementation briefs. Brief 741 (design only) then delivered the
+  carrier-generation design — ten generation classes over all 151 rows,
+  the five-step mechanical generation rule with P0813/P2593 construction
+  proofs, a class-level observation policy (28 NativeEqual + 3
+  deferred-publication + 7 profile-return = 38 observer rows; 113
+  ordinary), the complete 510-case attempt plan (20 + 244 + 246; 9,060
+  keys / 9,511 constituents per mode) and five staged briefs — and Q9
+  accepts it with four pinning conditions and a stage-owned 28-envelope /
+  69,000 s allocation (no transfer from the exhausted 82,500 s). Brief
+  742 (generation and schema) is authorized first at 18,000 s. C2 stays
+  Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
