@@ -411,7 +411,14 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   upholds the stop and authorizes a class-wide declared
   generic-continuation summary bound by the frozen routes /
   `GENERIC_GAPS`, shared by every bound row and audited against the
-  Working/Frozen impls, with no new allocation. C2 stays Open at 118
+  Working/Frozen impls, with no new allocation. Its second run resolved
+  the option summary (all four declared pairs, six protocol controls,
+  four declaration controls) and stopped at P0001/P0002's
+  `RetentionContinuation`/`Mode` bindings; Q11 admits them as
+  program-authenticated declarations (the selected program fixes the mode
+  via the entry API and names the continuation in
+  `failure.suspend(|| ...)`, with unique-source proof and static
+  falsifiers), no new allocation. C2 stays Open at 118
   Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

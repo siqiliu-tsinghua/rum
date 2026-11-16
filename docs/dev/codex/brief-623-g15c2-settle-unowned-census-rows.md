@@ -115841,3 +115841,37 @@ every bound row and audited against the impls (`type Frozen`, both
 resumed edge, an immediate-finish substitution, a mismatched `V` or a
 missing Frozen impl; no declaration means the family stops, and no new
 allocation is granted. All other 742 terms stand.
+
+### Continuation 88 — brief 742's second run: option summary resolves, retention binding STOP (Q11)
+
+Brief 742's second run (unit `brief-742-cdx-20261116-162326-1720824`,
+rc 0, peak 1,162,911,744 B, oom 0 / oom_kill 0; log 2,127,627 B, sha256
+`a5c869dc…`; report `.temp/brief-742/report.json`, STOP, 61 changes (59
+scratch added, the three pre-existing document drifts disclosed at entry),
+3 deviations, 1 question (Q11), 7 PASS / 2 FAIL / 3 NA, 111 citations
+verified) resolved Q10: the option protocol summary joins all four declared
+pairs, records 44 row/anchor entries, and passes six protocol controls plus
+four declaration controls — a missing resumed edge, an immediate-finish
+substitution, a mismatched `V` including Monitor's same-named alternative,
+a missing Frozen impl, a wrong associated type, a changed frame bound and
+an error-to-success substitution are rejected. It then stopped at the next
+generic boundary: P0001/P0002's `RetentionContinuation`/`Mode` bindings are
+not named by their frozen routes and neither row has a `GENERIC_GAPS`
+entry, so the source candidates `AccountingShadow`/`CallbackFinish` and
+`Unarmed`/`PrefixFinish` were disclosed but not adopted. All 151 source
+joins and 90/180 pins authenticate; `source_schema` stays `f9604852…`; no
+plan or schema was emitted; no repository file changed.
+
+Q11 ruling (this commit): admit the two bindings as program-authenticated
+declarations. P0001's selected program runs `callback_charge`, whose
+`with_retention` entry API fixes `M = AccountingShadow` and whose
+`failure.suspend(|| CallbackFinish)` names a `RetentionContinuation` impl;
+P0002's runs `retained_prefix`, whose `with_unarmed_retention` fixes
+`M = Unarmed` and whose `failure.suspend(|| PrefixFinish)` names its impl.
+The clause requires the row's own selected program to fix the binding
+uniquely — entry API/mode, suspension/type, impl/`resume` and frame
+anchors in the summary — with static falsifiers for a wrong mode, a wrong
+continuation, another program's candidate, a missing impl or an ambiguous
+second pair. Undeclared gaps without such a proof still stop, P0508's gap
+stays its own, and no new allocation is granted. All other Q10/742 terms
+stand.

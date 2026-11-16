@@ -292,3 +292,60 @@ classes, 79 subtypes, byte-identical double generation, the exact emitted
 file set, the mechanical `source_schema` transition, all focused controls
 and both workspace modes after the ordered replay. No new allocation; a
 required extra group stops for a ruling.
+
+## Continuation 2 ruling (director) — Q11: the P0001/P0002 retention bindings are admitted as program-authenticated declarations
+
+The STOP is correct under Q10 and earns no credit: the option-reader
+summary now resolves all four declared pairs (six protocol tests and four
+declaration controls pass), all 151 source joins and the 90/180 pins
+authenticate, `source_schema` is unchanged, no repository file was
+written, and no plan or schema was emitted. The reported changes are 59
+scratch files plus the three pre-existing document drifts disclosed at
+entry (the Q10 commit); no tracked file moved.
+
+The missing authority is supplied by the selected program's own source,
+not by a route string. P0001's selected program runs `callback_charge`
+(`native.rs:132`), whose `with_retention` entry API fixes
+`M = AccountingShadow` (`retained.rs:127`) and whose suspension expression
+is `failure.suspend(|| CallbackFinish)`; `CallbackFinish` implements
+`RetentionContinuation` at `native.rs:111`. P0002's selected program runs
+`retained_prefix` (`native.rs:174`), whose `with_unarmed_retention` entry
+API fixes `M = Unarmed` (`retained.rs:109`) and whose suspension
+expression is `failure.suspend(|| PrefixFinish)`; `PrefixFinish`
+implements `RetentionContinuation` at `native.rs:157`. The generic
+producer `RetentionContext<'_, 'id, M>::evaluate` and the frame
+`RetentionFrame<C>::resume` then bind exactly those types. This is the
+exact program the row's own packet executes, so it is stronger evidence
+than a generic route, not a weakening of the declaration rule.
+
+Q11 admitted, as one class-wide clause added to Q10 rule 1:
+
+1. **Program-authenticated binding.** A generic successor may also be
+   summarized when the row's selected program uniquely fixes the binding
+   in its own source: the entry API signature fixes the mode `M`, the
+   suspension expression names the concrete continuation type in the same
+   program, that type implements the trait with the exact `resume`
+   signature, and the frame construction binds `C` to it. The binding
+   must be unique: no other mode/continuation pair in that program, and no
+   same-named type from another module, is admissible.
+2. **Audit and falsifiers.** The summary records the entry API anchor and
+   its mode bound, the suspension expression anchor and its type, the
+   trait impl and `resume` body, the frame construction and raw resume
+   anchors. Static falsifiers: the wrong mode (Unarmed for P0001), the
+   wrong continuation (PrefixFinish for P0001), a candidate from another
+   program, a missing or mismatched impl, or a changed entry-API bound
+   fails. A second matching pair rejects as ambiguous.
+3. **No widening beyond this shape.** Any generic anchor with neither a
+   frozen declaration nor a unique selected-program source binding still
+   stops its family. P0508's `AccountingMode` gap remains its own and does
+   not authorize these rows. The summary is declarative plan data shared
+   by every row whose selected program carries the same proof, never a
+   per-row patch.
+4. **No new allocation.** The 4,800 s focused budget and both workspace
+   envelopes remain; the stage continues to the full 151-plan resolution.
+
+All other Q10 and brief terms stand: the 90-file set and pre-edit pin
+authority, the caught/stop-row signature pins, 151 plans, ten classes, 79
+subtypes, deterministic double generation, the exact emitted file set,
+the mechanical `source_schema` transition, all focused controls and both
+workspace modes after the ordered replay.
