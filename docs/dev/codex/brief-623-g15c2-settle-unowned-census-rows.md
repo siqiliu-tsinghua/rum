@@ -116193,3 +116193,52 @@ stays exact, the protected bodies and observer policy stay unchanged,
 and all Q17 conditions stand. The 124.03 s charge is accepted;
 3,548.38 s focused remain (envelope 2 at 548.38 s). All other
 Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.
+
+### Continuation 96 — brief 742's tenth run: frame inheritance and the P0492 pin (Q19)
+
+Brief 742's tenth run (`cdx`, unit
+`brief-742-cdx-20261116-200636-1780280`, rc 0, peak 1,235,308,544 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,433,199 B,
+sha256 `982bb34d…`; report `.temp/brief-742/report.json`, STOP, 148
+changes (146 scratch added, 2 modified, 0 deleted), 3 disclosures, 2
+deviations, 1 question (Q19), 7 PASS / 1 FLAGGED / 1 FAIL / 1 NA, 147
+citations verified) implemented Q18 in scratch: four own-runner hooks
+with `begin(queued, &program.id)`, the structural hook with `plan.id`,
+a rendered activation-ledger helper (activation-owned tokens, opaque
+program identities, Q18 pair occurrences), the typed-adapter binding
+with no added field and unchanged allocation counts. Fifteen ingress,
+52 helper, 8 frame-binding, 5 source-premise and 8 nested controls pass;
+two roots render the five partial targets byte-identically; the
+retained shared-token variant still fails isolation. It then stopped at
+`PortBlocked::RetainedNestedActivationHitDependency` for P0492:
+`Return[Accumulate[Input["b724tuple"]]]` has one pause and two prepared
+frames, and the retained signature is one arm with two phase hits; the
+strict innermost-only reading yields one hit, while an explicit second
+`returned` arm would add an arming line. All 151 source joins, 90/180
+pins and 5,399 files authenticate; `production_changes=0`;
+`source_schema` stays `f9604852…`; no complete plan or schema was
+emitted.
+
+Q19 ruling (this commit): the episode belongs to the suspension, not to
+one activation. Every suspension frame the episode actually constructs
+inherits a copy of its token at that frame's construction site, keyed to
+the frame's own activation; the arm event stays the single producer
+pause and no `returned` arm is authorized; each resumed frame records
+its own hit, so P0492's one-arm/two-hit signature stands unchanged (as
+does the first constituent's one-arm/one-hit). Inheritance travels only
+at the actual construction site — no ambient/shared/static state, an
+activation that did not suspend never answers true, the queued run
+inherits only through its own frames, a new episode clears stale copies,
+the binding retires at frame erasure, and a hit attributed to another
+activation still rejects. The generated arm scope must cover the
+construction site so the frame's activation is alive; the naive erasure
+capture is a placement error. The counterexamples are re-expressed on
+the chain (no-suspension activation, swallowed suspension, queued-side
+activation without its own frame, shared/static token, stale episode,
+misattributed hit), the P0492 trace becomes the positive control, and an
+unarmed two-frame chain yields zero hits. Q17 rule 5 now requires every
+pinned arm and hit to map to the row's own episode and the frames it
+constructed; a row that cannot is named and stopped, never normalized.
+The 130.89 s charge is accepted; 3,417.49 s focused remain (envelope 2
+at 417.49 s). All other Q18/Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms
+stand.

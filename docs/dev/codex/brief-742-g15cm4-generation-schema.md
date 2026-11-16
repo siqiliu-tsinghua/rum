@@ -953,3 +953,94 @@ Q18 resolves the ingress under these conditions:
    all-row generator work continues from the same partial tree.
 
 All other Q17, Q16, Q15, Q14, Q13, Q12, Q11, Q10 and brief terms stand.
+
+## Continuation 10 ruling (director) — Q19: an episode is inherited by every suspension frame it actually constructs; P0492's one-arm/two-hit pin stands, the single producer pause remains the only arm event, and a second `returned` arm is not authorized
+
+The STOP is upheld and earns no credit. The Q18 work before it is
+accepted as delivered: the four own-runner hooks now carry
+`begin(queued, &program.id)` and the structural hook `plan.id`; the
+rendered helper core has activation-owned tokens, opaque program
+identities and the Q18 pair-occurrence rule; producer occurrence is
+counted at actual `pause`/`returned` calls; two roots produce identical
+bytes and disabled/armed differ only in the compile-time constant; the
+17 former model obligations plus nine new controls execute the generated
+helper bytes (52 tests), and the retained aliasing counterexamples still
+reject a deliberately shared-token variant; the typed-adapter binding
+adds no field and keeps both allocation counts; 15 ingress, 8
+frame-binding, 5 source-premise and 8 nested controls pass. The two
+initial scratch failures and their corrections are retained and are
+correctly classified as instrumentation errors, not source or inventory
+regressions. All 151 source joins, the 90 preimages / 180 postimages and
+the 5,399 maintained files authenticate; `production_changes=0`;
+`source_schema` is unchanged at `f9604852…`; two-root partial generation
+is byte-identical over the five partial targets; no complete plan or
+schema was emitted. The 130.89 s conservative charge is accepted; 742's
+remaining focused budget is 3,417.49 s (envelope 2 has 417.49 s),
+focused envelopes 3 and 4 and both workspace envelopes are untouched.
+
+The P0492 trace is verified: the second constituent is
+`Return[Accumulate[Input["b724tuple"]]]`, both `Return` and `Accumulate`
+are ordinary catalog entries without a hold attribute, so Return's
+preparation activation encloses Accumulate's while Input requests the
+answer; the single pause arms once, and each of the two prepared frames
+resumes once through `resume_prepared_call_dispatch_frame::<true>`,
+whose omission site the carrier changes. The retained signature — one
+`CM740_SELECTOR_ARMED … phase=producer-InputRequired` and two
+`CM740_SOURCE_HIT … phase=OmitEnabledPreparedStageCompletion`, with
+`Err(Native)` and equal public output — is therefore the signature of one
+suspension that constructs two frames. The strict innermost-only reading
+suppresses the outer frame's genuine execution of the same omitted line
+in the same episode; it makes the mutant's fidelity depend on the
+helper's arming rather than on the declared operation. The shared bit is
+still rejected, and no second arming event may be invented.
+
+Q19 resolves the boundary; the pin stands unchanged:
+
+1. **Frame inheritance.** An episode is created by the actual producer
+   pause and belongs to the suspension, not to one activation. Every
+   suspension frame the episode actually constructs inherits a copy of
+   its token at that frame's construction site, keyed to the frame's own
+   activation identity. The arm event remains the single actual pause; no
+   `returned` arming event is added for P0492 and no retained signature
+   may gain an arming line.
+2. **Several frames per episode.** One episode may construct several
+   frames; each inherits its own copy, and each resumed frame that
+   executes the omission records a hit attributed to its own activation.
+   P0492's one-arm/two-hit signature is exactly this and stands; the
+   first constituent's one-arm/one-hit signature stands as well.
+3. **Inheritance is not leakage.** The copy travels only at the actual
+   frame-construction site inside the armed episode. No ambient, shared,
+   static or per-session state; an activation that did not suspend in the
+   episode never answers true; the queued paired run inherits only
+   through its own frames; a new episode clears stale copies; the binding
+   is retired when the frame is erased. A hit attributed to an activation
+   other than the frame that executed the omission still rejects.
+4. **Placement.** The generated arm scope must cover the actual
+   frame-construction site so the frame is constructed with its own
+   activation alive; the naive capture at frame erasure captures the
+   dropped Guard's parent and is a placement error, not a semantics
+   choice. Erasing only the declared instrumentation must still restore
+   the live AST, and the omission site, preserved nodes, phase, selector
+   and predicate are unchanged.
+5. **Counterexamples re-expressed.** The forbidden cases are: an
+   activation that did not suspend answering from the episode (no frame
+   constructed from it, including a swallowed suspension and a queued-side
+   activation without its own paired frame); a shared or static token; a
+   nested activation's episode hitting an activation that did not suspend
+   in it; a stale episode surviving into a new pair; a hit attributed to
+   an activation other than the frame that executed the omission. The
+   retained pure controls are updated to model the chain, the P0492
+   one-arm/two-hit trace becomes the positive control, and an unarmed
+   two-frame chain must yield zero hits.
+6. **Per-row proof.** Q17 rule 5 now reads: for each retained row, every
+   pinned arm and hit must map to that row's own episode and to the
+   frame(s) that episode actually constructed, with no dependence on an
+   activation outside the chain. A retained row whose pin cannot be
+   reproduced this way stops with its name; it is not normalized and is
+   not given a second arm event.
+7. **Stage.** No new allocation. C3 and the remaining rows proceed only
+   after the frame-inheritance transport is audited, and the 151-plan bar
+   stands.
+
+All other Q18, Q17, Q16, Q15, Q14, Q13, Q12, Q11, Q10 and brief terms
+stand.

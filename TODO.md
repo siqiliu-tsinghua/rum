@@ -481,6 +481,19 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   producer occurrence counted at the actual `pause`/`returned` sites,
   the attempt dimension carried by the per-process/thread ledger, no new
   file and no worker hook, all five files already in the 90-overlay set.
+  Its tenth run implemented Q18 in scratch (four hooks with
+  `program.id`, the structural hook with `plan.id`, a rendered
+  activation ledger, the typed-adapter binding with no added field) and
+  stopped at P0492: `Return[Accumulate[Input["b724tuple"]]]` constructs
+  two frames from one pause, and the pinned signature is one arm with two
+  hits; the strict innermost-only reading yields one hit and a second
+  `returned` arm would add an arming line. Q19 makes the episode belong
+  to the suspension: every frame the episode actually constructs inherits
+  a copy of its token at that construction site, keyed to the frame's own
+  activation, so the single pause stays the only arm event and P0492's
+  one-arm/two-hit pin stands; the counterexamples move to activations
+  that did not suspend, and Q17 rule 5 becomes a per-row map from every
+  pinned arm and hit to its own episode and constructed frames.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
