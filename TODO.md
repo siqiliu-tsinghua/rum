@@ -545,7 +545,41 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   finished segment takes the live early return with no hit. No field,
   accessor, new overlay or allocation change; `driver.rs`,
   `profile_mode.rs` and `context.rs` stay uninstrumented, and every extra
-  arm or hit is a STOP.
+  arm or hit is a STOP. Its fourteenth run implemented Q22 (the
+  guard-Segment token bound at that segment's construction, proven by the
+  producer's actual returned `InputRequired`, consumed once by the
+  `ExplicitlyFinished` pause; 47 anchors/29 controls, 170 inherited plus
+  70 profile helper controls, 10 extracted-source controls per arm, both
+  armed traces two arms/one hit, both historical NativeEqual signatures
+  authenticate without re-earning, 501 pure executions) and stopped with
+  `PortBlocked::DeferredJoinOwnerTransport` for the entire J class
+  (`P0267`/`P0312`/`P0323`): the pinned recipe is one `c7tail` arm, one
+  `OwnDeferredDefinitionPublicationAtActualProfileQueueJoin` hit and the
+  existing quiescence stop, the actual path runs `complete_work` →
+  driver `InputRequired` branch → `nested.append(&mut suffix)` →
+  `SuspendedEvaluation::append` → `FrameStorage::append_profiled` →
+  `ProfileQueue::append` → `publish_deferred_definitions_before_join`,
+  the selected frame and its `ResumeGuard` retire before the join, and
+  the retained row-only `OWN_JOIN` latch lets an unrelated queue consume
+  the omission while the intended queue loses its hit. Q23 makes the
+  nested `SuspendedEvaluation` the driver actually appends the owner,
+  identified by its existing `SuspensionGeneration` (assigned by
+  `SuspensionSlot::install`, never reused): the token `(row, generation)`
+  is obtained only from the actual install in `begin_input_suspension`
+  (whose existing return value is today discarded), the
+  `producer-InputRequired` arm line stays at the pause call after it,
+  the token is confirmed only by the producer's actual returned
+  `Action::Complete(Err(EvalError::InputRequired))` at `complete_work`,
+  and it is consumed only by `publish_deferred_definitions_before_join`
+  running inside `SuspendedEvaluation::append`'s scope for that same
+  `self.generation`, once, invalidated at the next install, on abandon,
+  at the scope's end and at run boundaries. Rejected: the row-only
+  latch, the `Action`/`ResumeStop` value or address, the frame/adapter/
+  new suspension frames, the descendant resume scope, the queue's `Box`
+  address, string or `Debug` identities, any new field/accessor/
+  allocation/overlay, and instrumenting `driver.rs`, `storage.rs` or
+  `completion.rs`; both modes keep one `c7tail` arm, one hit and the
+  quiescence stop, and any extra arm or hit is a STOP.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

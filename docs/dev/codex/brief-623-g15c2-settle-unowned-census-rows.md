@@ -116446,3 +116446,138 @@ accepted (envelope 2 closed at its 140.44 s remainder plus the 60 s
 envelope-3 reserve; 2,940 s focused remain, envelope 3 at 1,440 s,
 envelope 4 at 1,500 s, both workspace envelopes untouched). All other
 Q21/Q20/Q19/Q18/Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.
+
+### Continuation 100 — brief 742's fourteenth run: the class J deferred-join frontier (Q23)
+
+Brief 742's fourteenth run (`cdx`, unit
+`brief-742-cdx-20261116-225133-1826924`, rc 0, peak 1,504,755,712 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,631,243 B,
+sha256 `09478875…`; report `.temp/brief-742/report.json`, STOP, 480
+changes (478 scratch added, 2 modified, 0 deleted), 3 disclosures, 2
+deviations, 1 question (Q23), 8 PASS / 2 FAIL / 1 NA, 378 citations
+verified) implemented Q22 in scratch: the guard-Segment transport records
+the exact epoch, active-stack index, `SegmentId`, completion and thread
+at the successful `Segment` construction under `ProfileQueue`'s resume
+guard construction, the producer `Guard` captures the step id at entry,
+only the borrowed actual `Err(EvalError::InputRequired)` with that
+activation's pause proof issues the token, `pause_admitted` consumes it
+once in its `ExplicitlyFinished` branch, the temporary `finish_active`
+duplicate shares the identity without retiring the guard's token, and
+the guard end/drop, the next construction and a new run retire it. The
+entry-pinned audit has 47 anchors and 29 controls; the helper passes 170
+inherited and 70 profile controls; 10 extracted-source controls per arm
+execute the audited construction, producer, finish, retirement and pause
+statements; both cfg branches compile; both armed traces reproduce two
+arm lines and one hit; the unrelated completed segment keeps the live
+early return; both historical default and no-default NativeEqual
+signatures authenticate without re-earning; the final pure control set
+passes 501 executions. No production field, accessor, allocation or file
+was introduced; `source_schema` stays `f9604852…`; thirteen distinct
+partial targets render byte-identically from two roots; no complete plan
+or schema was emitted.
+
+It then stopped at `PortBlocked::DeferredJoinOwnerTransport` for the
+entire J class, `P0267`/`P0312`/`P0323`. The pinned recipe is one
+`c7tail` arm, one `OwnDeferredDefinitionPublicationAtActualProfileQueueJoin`
+hit and the existing quiescence stop in both modes; the sealed fixture
+path is
+`down-value-guard>Input.c7guard>TryApplyDownValuesFromSymbolSuspensionFrame::resume>finish_suspended_down_value_application>Input.c7tail;tail=TypedAction::complete_work`
+with the analogous sub-value and up-value paths. The actual path is
+`complete_work` returning `Action::Complete(Err(EvalError::InputRequired))`,
+the adapter return, the driver's `Action::Complete` arm, the executing
+frame's removal and drop, the driver's actual `InputRequired` branch
+taking `pending_suspension` as `nested` and `resuming_suspension` as
+`suffix`, `nested.append(&mut suffix)` (`driver.rs:171`),
+`SuspendedEvaluation::append` (`suspension/core.rs:213`),
+`FrameStorage::append_profiled` and `a.append(b)`
+(`suspension/core/storage.rs:240-281`), `ProfileQueue::append`
+(`suspension/core/profile_queue.rs:654`), and
+`publish_deferred_definitions_before_join` with the retained omission as
+its first statement (`suspension/core/profile_queue.rs:610-612`). The
+retained helper's `actual_join_stop` stores only the row in `OWN_JOIN`;
+`omit_own_join()` takes no arguments, so any queue reaching the method
+first consumes the omission — the isolation control shows an unrelated
+queue taking it and the intended queue losing its hit. Frontier facts:
+the selected frame and its `ResumeGuard` retire before the join; the new
+nested frames do not execute the method; `Action::Complete(Result<Slot,
+EvalError>)` carries no queue identity; `ResumeStop` is owned by value
+and its address does not survive the moves; guard widening, a stronger
+pure return control and an unbound descendant frame give zero; the
+frontier has 23 anchors and 12 controls, and the retained-latch/latest
+helper controls execute eight cases per row. `driver.rs`,
+`suspension/core/storage.rs` and `profiling/logical/completion.rs` are
+outside the 90-file overlay set; `suspension/core.rs`,
+`suspension/core/profile_queue.rs`, `builtins_input.rs`,
+`suspension/typed/action.rs` and the three producer files are inside.
+
+Q23 ruling (this commit): the owner is the nested suspension the driver
+actually appends, identified by its own `SuspensionGeneration`. The
+publication executes on the queue that is the `frames` storage of the
+`SuspendedEvaluation` the armed input suspension installed during the
+row's producer execution, which the driver takes as `nested` and passes
+to `SuspendedEvaluation::append`; the identity is the existing
+`generation` field (`suspension/core.rs:34-41`), a `Copy + Eq` wrapper
+over a `u64` that `SuspensionSlot::install` assigns monotonically with
+`checked_add` and never reuses while asserting the slot is empty
+(`suspension/core.rs:269-281`) — not the frame, its `ResumeGuard`, the
+adapter, the `Action`/`ResumeStop` value or address, the queue's `Box`
+address, a `CellId`, the row label, any string or `Debug` rendering, or
+any ambient/shared/static store. The token is `(row, generation)`,
+obtained only from the actual install: `begin_input_suspension`'s
+`self.suspension_access().install(request, active_stack)` is the sole
+install path and already returns the generation (discarded today,
+`suspension/core.rs:519`); the existing `pause(&request.prompt)`
+statement in `builtins_input.rs`'s `drive_input_request` remains the only
+site that may emit the pinned `producer-InputRequired` arm line; the
+token is confirmed only by the producer's actual returned
+`Action::Complete(Err(EvalError::InputRequired { .. }))` at
+`complete_work` under the row's `JoinOwner` scope. The carry is the
+object itself — the pending suspension is taken and appended by the
+driver — so nothing is written into the action, frame, adapter or queue.
+Consumption is only at `publish_deferred_definitions_before_join`
+running inside `SuspendedEvaluation::append`'s scope for the suspension
+whose own `generation` equals the token's; the scope is entered for
+exactly `self.frames.append(&mut suffix.frames)`, its value comes from
+that same `self.generation`, a publish outside any scope or inside
+another suspension's or for another generation is ineligible, and the
+receiver is that suspension's own queue because the only production path
+to the method is `SuspendedEvaluation::append → FrameStorage::append →
+append_profiled → ProfileQueue::append → self.publish…` with no other
+call site. The armed install profiles the pending storage and registers
+its `(root, epoch)` against the actual control, so the armed path's
+receiver is the queue constructed at that install; the audit must pin
+that registration and the early-return, deprofile and arena-absent
+conditions, and a storage not profiled at install is dropped unused, not
+normalized. Consumption is at most once; the token is invalidated at the
+next install, on abandon instead of join, when the append scope ends
+unconsumed, and at run begin/end. Rejected: the row-only latch
+`OWN_JOIN`/`omit_own_join` (its isolation failure is the defect), the
+`Action`/`ResumeStop` value or address, the typed frame/`ResumeGuard`/
+adapter/new suspension frames, the descendant frame's resume scope, a
+first-completed or most-recent-publish rule, the queue's `Box` address,
+string or derived-`Debug` identities, any new production field, accessor,
+allocation or overlay path, and any instrumented `driver.rs`,
+`core/storage.rs` or `completion.rs`. Falsifiers: an unrelated queue's
+publish inside another suspension's append scope records no hit while
+the intended queue records its one; a publish outside any scope records
+none; a second suspension appended first does not match; abandon and
+swallow issue nothing and leave no usable token; a fabricated generation
+or a non-append scope is rejected by the audit, which pins the extraction
+to `self.generation` in the pinned append and to the install's return;
+two appends of the same suspension yield one hit; stale tokens across
+steps or runs are dropped; the queued run stays zero. Both modes keep
+exactly one `c7tail` arm, one hit, the phase, the selector, the public
+output and the existing quiescence stop; any extra arm, extra hit or
+changed line is a STOP. The three rows' 23-anchor tree is extended, not
+relaxed, with the install, append-scope and consume anchors and their
+controls, entry-pinned from live sources, with two-root byte identity and
+full-file AST restoration after instrumentation erasure.
+
+The run charge is accepted: 165.31 s (105.387 s measured plus the 0.5 s
+bookkeeping and 60 s preparation/final-reporting reserve), leaving
+2,774.69 s focused (envelope 3 at 1,274.69 s, envelope 4 at 1,500 s,
+both workspace envelopes untouched). The ruling's 1,334.69 s charge is
+accepted (envelope 3 closed at its 1,274.69 s remainder plus the 60 s
+envelope-4 reserve), leaving 1,440 s focused (envelope 4 at 1,440 s,
+both workspace envelopes untouched). All other
+Q22/Q21/Q20/Q19/Q18/Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.

@@ -1375,3 +1375,192 @@ step, and the carrier is the `Segment` object that guard constructed:
 
 All other Q21, Q20, Q19, Q18, Q17, Q16, Q15, Q14, Q13, Q12, Q11, Q10
 and brief terms stand.
+
+## Continuation 14 ruling (director) — Q23: the J class's deferred publication belongs to the nested suspension the driver actually appends; its `SuspensionGeneration` — assigned by the install, read from the object at its own `append` — carries the token, and only that suspension's append scope may own the publication
+
+The fourteenth run executed Q22. The guard-Segment transport is now
+source-bound: the token records the exact epoch, active-stack index,
+`SegmentId`, completion and thread at the successful `Segment`
+construction under `ProfileQueue`'s resume guard construction, the
+producer `Guard` captures the step id at entry so a later step cannot
+receive an earlier producer's proof, only the borrowed actual
+`Err(EvalError::InputRequired)` from that activation issues the token,
+`Segment::pause_admitted` consumes it once in its `ExplicitlyFinished`
+branch, the temporary `finish_active` `Segment` shares the identity
+without retiring the guard's token, and the guard end/drop, the next
+resume/abandon construction and a new run retire it. The pre-edit AST
+audit has 47 anchors and 29 controls; the rendered helper passes 170
+inherited controls and 70 profile controls; 10 extracted-source
+controls per arm execute the audited construction, producer, finish,
+retirement and pause statements; both cfg branches compile and both
+armed traces reproduce the historical two arm lines and one hit; the
+unrelated completed segment keeps the live early return; both
+historical default and no-default NativeEqual signatures authenticate
+without re-earning. No production field, accessor, allocation or file
+was introduced. All 151 source/tail/destructor joins, 90 preimages and
+180 postimages and the 5,399 maintained files authenticate;
+`production_changes=0`; `source_schema` stays `f9604852…`; thirteen
+distinct partial targets render byte-identically from two roots; no
+complete plan or schema was emitted.
+
+The stage then stopped at `P0267`, `P0312` and `P0323` — the entire J
+class — with `PortBlocked::DeferredJoinOwnerTransport`. The pinned
+recipe is one `c7tail` arm, one
+`OwnDeferredDefinitionPublicationAtActualProfileQueueJoin` hit and the
+existing quiescence stop, in both modes, with the sealed fixture path
+`down-value-guard>Input.c7guard>TryApplyDownValuesFromSymbolSuspensionFrame::resume>finish_suspended_down_value_application>Input.c7tail;tail=TypedAction::complete_work`
+(and the analogous sub-value and up-value paths). The actual path is:
+`complete_work` returns `Action::Complete(Err(EvalError::InputRequired))`
+from the producer; the adapter returns the action; the driver removes
+and drops the executing frame and its queue owner, then matches
+`Action::Complete(next_outcome)` into `outcome`; the driver's actual
+`InputRequired` branch takes `pending_suspension` into `nested` and
+`resuming_suspension` into `suffix` and calls
+`nested.append(&mut suffix)` (`driver.rs:171`); `SuspendedEvaluation::
+append` calls `self.frames.append(&mut suffix.frames)`
+(`suspension/core.rs:213`); `FrameStorage::append` routes to
+`append_profiled` and then `a.append(b)` (`core/storage.rs:240-281`);
+`ProfileQueue::append` (`core/profile_queue.rs:654`) reaches
+`self.publish_deferred_definitions_before_join()`
+(`core/profile_queue.rs:686`), whose retained first statement is the
+omission (`core/profile_queue.rs:612`). The retained helper's
+`actual_join_stop` stores only the row in `OWN_JOIN`, and
+`omit_own_join()` takes no arguments, so any queue that reaches the
+method first consumes the omission: the isolation control shows an
+unrelated queue taking it while the intended queue loses its hit. The
+frontier facts are that the selected frame and its `ResumeGuard` have
+retired before the join, that the new nested frames do not execute the
+method, that `Action::Complete(Result<Slot, EvalError>)` carries no
+queue identity, and that `ResumeStop` is owned by value and its address
+does not survive the moves; guard widening, a stronger pure return
+control and an unbound descendant frame all yield zero, and assigning
+the publication to a descendant frame is a false ownership edge.
+
+What those facts do not establish is that the receiver is anonymous.
+The nested object the driver appends is the pending
+`SuspendedEvaluation` that the armed input suspension installed, and
+its `frames` storage is the queued `ProfileQueue` that publishes. The
+missing piece is an identity for that object, not a value on the
+action and not a new production structure.
+
+Q23 rules that the owner is the nested suspension the driver actually
+appends, identified by its own `SuspensionGeneration`:
+
+1. **Owner object.** The J row's deferred-definition publication
+   executes on the queue that is the `frames` storage of the nested
+   suspension the driver appends — the `SuspendedEvaluation` that the
+   actual input suspension installed during the row's producer
+   execution, which the driver takes as `nested` and passes to
+   `SuspendedEvaluation::append`. The suspension's construction
+   identity is `SuspendedEvaluation.generation: SuspensionGeneration`,
+   an existing field (`suspension/core.rs:34-41`): a `Copy + PartialEq +
+   Eq` wrapper over a `u64` that `SuspensionSlot::install` assigns
+   monotonically with `checked_add` and never reuses, asserting the
+   slot is empty before replacing (`suspension/core.rs:269-281`). It is
+   not the typed frame, its `ResumeGuard`, the adapter, the `Action` or
+   `ResumeStop` value or its address, the queue's `Box` address (which
+   moves), a `CellId`, the row label, any string or `Debug` rendering,
+   or any ambient, shared or static store.
+2. **Issue.** The token is the pair (row, generation) and may be
+   obtained only from the actual install. `Session::
+   begin_input_suspension`'s `self.suspension_access().install(request,
+   active_stack)` is the sole install path and already returns the
+   `SuspensionGeneration` (discarded today, `suspension/core.rs:519`);
+   the existing `pause(&request.prompt)` statement in
+   `builtins_input.rs`'s `drive_input_request` — immediately after that
+   install — remains the only site that may emit the pinned
+   `producer-InputRequired` arm line. The token is confirmed only by the
+   producer's actual returned
+   `Action::Complete(Err(EvalError::InputRequired { .. }))` at
+   `complete_work` under the row's `JoinOwner` scope
+   (`suspension/typed/action.rs:65-73`). A suspension the producer
+   swallows, a success, another error, or a fabricated boolean,
+   generation or renderer value issues no token. Reading the generation
+   anywhere other than the installed object's own install site, or
+   emitting the arm line anywhere other than that pause site, is not
+   the token.
+3. **Carry.** The transport is the object itself: the pending
+   `SuspendedEvaluation` with generation G is taken by the driver at the
+   actual `InputRequired` branch and appended, so the suspension's own
+   identity reaches the join without any value written into the action,
+   the frame, the adapter, the queue or any production structure. The
+   helper carries only `(row, G)`. The binding does not depend on the
+   frame, its activation or any resume scope, which is exactly why it
+   survives the frame's retirement.
+4. **Consume.** The only consumption site is
+   `ProfileQueue::publish_deferred_definitions_before_join`'s retained
+   omission when it runs inside `SuspendedEvaluation::append`'s scope
+   for the suspension whose own `generation` equals the token's. The
+   scope is entered for exactly the duration of
+   `self.frames.append(&mut suffix.frames)`, and its value must be read
+   from that same `self.generation` (the module that owns the private
+   `u64` is `suspension/core.rs`, which is instrumentable). A publish
+   outside any append scope, inside another suspension's append scope,
+   or for a different generation is ineligible. The receiver is that
+   suspension's own queue by construction: the only production path to
+   the method is `SuspendedEvaluation::append → FrameStorage::append →
+   append_profiled → ProfileQueue::append → self.publish…`, there is no
+   other call site of either method, and no other queue's publish is
+   reachable inside the scope. The armed install itself profiles the
+   pending storage (`begin_input_suspension` calls
+   `enable_pending_profile` under `resume_profile_configured()` and then
+   `register_profile_owner` with the actual request control), which is
+   what makes the publish reachable at all and registers this queue's
+   `(root, epoch)` against the actual control; the audit must pin that
+   registration and require that the queue which publishes is the queue
+   constructed at that install (`enable_execution_context` early-returns
+   for a profiled queue with a valid epoch, and the deprofile and
+   arena-absent paths do not reach the publish; a storage not profiled
+   at the install is not the armed object and is dropped unused rather
+   than normalized). Consumption is at most once; the token is
+   invalidated at the next install, when the armed suspension is taken
+   for abandon instead of joined, when the append scope ends without
+   consumption, and at run begin and end; it never survives its step or
+   its run.
+5. **Rejected carriers and rules.** The row-only latch (`OWN_JOIN`) and
+   its zero-argument `omit_own_join`, because its isolation
+   counterexample — an unrelated queue consuming the omission while the
+   intended queue loses its hit — is the defect this rule removes; the
+   `Action`/`ResumeStop` value or address; the typed frame, its
+   `ResumeGuard`, the adapter or any new suspension frame; the
+   descendant frame's resume scope; a first-completed or
+   most-recent-publish rule; the queue's `Box` address; string or
+   derived-`Debug` identities; any new production field, accessor or
+   allocation; any new overlay path; and any instrumented `driver.rs`,
+   `core/storage.rs` or `profiling/logical/completion.rs`. Only
+   `suspension/core.rs`, `builtins_input.rs`,
+   `suspension/core/profile_queue.rs` and the already-instrumented
+   `suspension/typed/action.rs` and producer files may carry the new
+   calls, and the live statements and lifetimes must remain
+   byte-identical.
+6. **Falsifiers.** The helper and the extracted-statement controls must
+   show: an unrelated queue's publish inside another suspension's append
+   scope records no hit while the intended queue still records its one;
+   a publish outside any append scope records none; a second suspension
+   (different generation) appended first does not match; the armed
+   suspension abandoned or swallowed issues no hit and leaves no usable
+   token; a fabricated generation, or a scope injected at a non-append
+   site, is rejected by the pre-edit audit, which pins the extraction to
+   `self.generation` in the pinned `SuspendedEvaluation::append` and to
+   the install's return value; two appends of the same suspension yield
+   one hit; a stale token across steps or runs is dropped; the queued
+   run stays at zero arms and zero hits. Both historical modes keep
+   exactly one `c7tail` arm, one
+   `OwnDeferredDefinitionPublicationAtActualProfileQueueJoin` hit, the
+   phase, the selector, the public output and the existing quiescence
+   stop; any extra arm, extra hit or changed line is a STOP. The three
+   rows' source frontier (23 anchors, 12 controls) is extended, not
+   relaxed, with the install, append-scope and consume anchors and
+   their controls, entry-pinned from live sources, with two-root byte
+   identity and full-file AST restoration after instrumentation erasure.
+7. **Stage.** No new allocation or production surface. Class J proceeds
+   only after this pending-suspension identity transport is source-bound
+   and audited per row, with extracted-statement controls that execute
+   the audited install, append-scope and consume statements rather than
+   only helper simulations; the remaining rows and the 151-plan bar
+   continue from the same partial tree, and a row whose pinned hit
+   cannot be mapped to its own actual object identity is named and
+   stopped, never normalized.
+
+All other Q22, Q21, Q20, Q19, Q18, Q17, Q16, Q15, Q14, Q13, Q12, Q11,
+Q10 and brief terms stand.
