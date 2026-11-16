@@ -116057,3 +116057,43 @@ still returns for a ruling. Erased frame protocols stay open,
 `CallBuiltinSpec` stays unadmitted, no inventory entry is added, and no
 new allocation is granted (3,925.56 s focused remain, envelope 2 at
 925.56 s). All other Q14/Q13/Q12/Q11/Q10/742 terms stand.
+
+### Continuation 93 — brief 742's seventh run: Q15 lands, the reentrant caller-side tail (Q16)
+
+Brief 742's seventh run (`cdx`, unit
+`brief-742-cdx-20261116-184807-1758579`, rc 0, peak 1,168,183,296 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,025,484 B,
+sha256 `b0f10e9a…`; report `.temp/brief-742/report.json`, STOP, 87
+changes (85 scratch added, 2 modified, 0 deleted), 3 disclosures, 3
+deviations, 1 question (Q16), 9 PASS / 2 FAIL / 3 NA, 81 citations
+verified) executed Q15: the exact `Ordinary`/`Profiled` implementation set
+with distinct `Guard` types, both runtime selection branches, the actual
+`InputRequired` arming and the complete `Mode::pause` callee chain
+authenticate; 24 anchors, 24 controls, and both retained C10 carriers
+preserve their producer and non-target nodes. It then stopped at
+`C3.evaluate_call.unstable_head`: `Session::evaluate_call` has no entry
+guard against re-entry, nested evaluation re-enters it through the
+fixed-point driver and the `Expr::Call` branch, and the producer interior
+reaches the public `BuiltinFn` payload, so Q13 condition 2(d) failed with
+`PortBlocked::ReentrantOpaqueTailWithoutGuard`. All 151 source joins and
+90/180 pins authenticate; `source_schema` stays `f9604852…`; no
+repository file changed; no plan or schema was emitted.
+
+Q16 ruling (this commit): replace Q13 condition 2(d)'s guard requirement
+with activation scoping. The tail at `call.rs:188` is reached by the
+`StableSymbol`/`Atom` arm's `resume_call_after_head` and by the declared
+producer `evaluate_unstable_call_head` (`:179`); re-entry creates further
+activations of the same site set, not a path that bypasses the producer
+inside an activation. The plan must enumerate every branch that reaches
+the tail and mark which pass through the producer; non-producer branches
+run the tail unarmed and may not consume an episode; and the arm, episode,
+occurrence and hit identities must be per-activation, with proofs and
+falsifiers for a shared token, a nested hit attributed to the outer
+activation, an outer episode lost after nesting and a sibling tail
+consuming an episode. The producer interior, including `run_builtin_handler`
+and the public `BuiltinFn`, stays one opaque node with no handler set,
+whitelist, fabricated guard, runtime accessor or inventory entry. All
+other Q13 conditions stand, P1577 remains the guarded counterpart, and
+the reentrant counterpart plus its shared-token falsifier join the
+controls. No new allocation (3,798.52 s focused remain, envelope 2 at
+798.52 s). All other Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.

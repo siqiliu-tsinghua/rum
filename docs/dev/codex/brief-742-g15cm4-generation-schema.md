@@ -705,3 +705,86 @@ pins, 151 plans, ten classes, 79 subtypes, zero unknown edges,
 deterministic byte-identical double generation, the exact emitted file
 set, the mechanical `source_schema` transition, all focused controls and
 both workspace modes after the ordered replay.
+
+## Continuation 7 ruling (director) — Q16: a caller-side post-call tail needs activation scoping, not a non-reentrancy guard; reentrant activations and sibling branches that reach the same tail are admitted under per-activation episode identity
+
+The STOP is correct under Q13 condition 2(d) as written and earns no
+credit. The Q15 work before it is accepted as delivered: the exact
+`Ordinary`/`Profiled` implementation set with distinct `Guard` types, both
+runtime selection branches, actual `InputRequired` arming and the complete
+`Mode::pause` -> `ContextGuard::pause` -> `Segment::pause` ->
+`pause_admitted` chain, 24 path anchors, 24 controls, and both retained
+C10 carriers preserving their producer and non-target nodes. All 151
+source joins, the 90 preimages / 180 postimages and the 5,399 maintained
+files authenticate; `source_schema` is unchanged at `f9604852…`; no
+repository file was written; no plan or schema was emitted. The 127.04 s
+conservative charge is accepted; 742's remaining focused budget is
+3,798.52 s (envelope 2 has 798.52 s), focused envelopes 3 and 4 and both
+workspace envelopes are untouched.
+
+The guard requirement in Q13 condition 2(d) was a sufficient condition,
+not a necessary one. For C3 the tail at `eval_core/call.rs:188` is
+reached in two ways inside `Session::evaluate_call` (`:157`): the
+`StableSymbol`/`Atom` arm calls `resume_call_after_head`, the
+`UnstableSymbol`/`Call` arm calls the declared producer
+`evaluate_unstable_call_head` (`:179`), and both converge on the
+total-profile tail after the match. Re-entry through `evaluate`
+(`resolution.rs:325`), the unstable pass (`:378`), the accounting-mode
+selection (`eval_core/mod.rs:23`/`:25`) and the `Expr::Call` branch
+(`:152`) creates further activations of that same site set; it does not
+create a path to the tail that bypasses the producer call inside an
+activation. What re-entry does break is episode identity: a nested
+activation's tail could see an outer activation's arm. That is a scoping
+requirement, and it is checkable, whereas a non-reentrancy guard does not
+exist in this caller and may not be fabricated.
+
+Q16 admitted, superseding Q13 condition 2(d) with an activation-scoping
+rule:
+
+1. **Activation scoping.** A caller-side post-call tail does not require
+   an entry guard against re-entry. A nested activation is the same
+   enumerated site set one level down, not a new edge. The plan records
+   the recursion explicitly and proves that, within every activation, the
+   tail is reached only through that activation's producer call or a
+   declared sibling branch.
+2. **Sibling branches.** Every branch that reaches the tail is
+   enumerated and marked with whether it passes through the producer call.
+   A non-producer branch executes the tail unarmed, as the ordinary
+   statement, and may neither consume nor clear an episode.
+3. **Per-activation episode identity.** The arm, episode, occurrence and
+   hit identities are keyed to the activation's own stored or frame
+   identity, never to a global, static or per-session flag. The plan must
+   prove: an outer armed episode is not cleared or consumed by a nested
+   activation; a nested activation's episode neither arms nor hits the
+   outer tail; after the nested activation returns, the outer episode
+   still hits its own tail; and two nested episodes are attributed
+   separately. Falsifiers: a shared token, a nested hit attributed to the
+   outer activation, an outer episode lost after nesting, and a
+   sibling-branch tail consuming an episode all reject.
+4. **Open payload stays opaque.** The producer interior — here
+   `run_builtin_handler` (`eval_dispatch/mod.rs:317`) and the public
+   `BuiltinFn` (`metadata.rs:332`, `register_builtin` at
+   `session_api.rs:349`/`:365`) — is one opaque node with its signature.
+   No handler target set, whitelist, fabricated guard, production guard,
+   runtime accessor or inventory entry is added. Re-entry through it is
+   recursion of the enumerated caller, not a new edge.
+5. **All other Q13 conditions stand.** The producer call runs in full with
+   unchanged arguments and exactly one evaluation; every return variant
+   and caller branch to the tail is anchored; nothing between arm and
+   tail is changed beyond the declared omission; the credited producer
+   pauses and the real error/`None` branches are preserved; no interior
+   claim is made.
+6. **Falsifiers.** The fourteen controls plus the per-activation set
+   above. P1577 remains the guarded counterpart and must still pass;
+   removing its guard must still reject. The reentrant counterpart must
+   pass with per-activation identities, and a shared-token variant of it
+   must reject.
+7. **Stage.** No new allocation. C3 proceeds under this rule and the
+   151-plan bar stands; a failure returns with the named block.
+
+All other Q15, Q14, Q13, Q12, Q11, Q10 and brief terms stand: the 90-file
+starting set and pre-edit pin authority, the caught/stop-row signature
+pins, 151 plans, ten classes, 79 subtypes, zero unknown edges,
+deterministic byte-identical double generation, the exact emitted file
+set, the mechanical `source_schema` transition, all focused controls and
+both workspace modes after the ordered replay.

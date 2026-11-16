@@ -451,7 +451,13 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   branch carried in both arms, the guard and InputRequired-only pause
   edges recorded, the `ExplicitlyFinished` callee chain anchored in full,
   and Q12 rule 6 amended into a standing closure admission for protocols
-  that satisfy the same mechanical form.
+  that satisfy the same mechanical form. Its seventh run proved Q15 (24
+  anchors, 24 controls) and stopped at C3's reentrant caller-side tail
+  (`evaluate_call.unstable_head`); Q16 replaces Q13's guard requirement
+  with activation scoping — nested activations are the same site set one
+  level down, every branch reaching the tail is enumerated and marked,
+  and the arm/episode/occurrence/hit identities must be per-activation,
+  with the open builtin payload kept as one opaque node.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
