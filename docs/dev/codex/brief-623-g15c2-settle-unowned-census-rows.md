@@ -116645,3 +116645,35 @@ preparation/final-reporting reserve), and the ruling's 1,136.41 s charge
 reserve) leaves 1,440 s focused in 742 (envelope 4 at 1,440 s), both
 workspace envelopes untouched. All other Q23/Q22/Q21/Q20/Q19/Q18/Q17/
 Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.
+
+### Continuation 102 — brief 747's first run: the complete 151-row ownership inventory, Q24 option 2, and the 13-row frontier (Q25)
+
+The inventory (747) classified all 151 frozen own rows: 138 expressible, 13
+named `PortBlocked` (P0214/P0216 `RawTraceFrameIdentity`; P1070
+`ClonedGuardedSelectionFrameIdentity`; P2348/P2354
+`FrozenStringOutputFrameIdentity`; P2379/P2381/P2385/P2387/P2409/P2411/
+P2416/P2418 `FrozenStringRuleFrameIdentity`), zero unknown, zero normalized,
+over ten classes and 79 subtypes, with the 151 source/tail/destructor joins,
+90 preimages, 180 postimages, 22 historical signature rows and
+`source_schema` `f9604852…` authenticated, 5,400 maintained files
+byte-identical, `production_changes=0`, 1,767 live citations verified and two
+byte-identical roots (11 files). Q24: option 2 accepted — the existing
+registered owner namespace (queue root, epoch and request-control Arcs; the
+live lookup by `Arc::ptr_eq(root)`/`Arc::ptr_eq(epoch)` at
+`profile_queue.rs:619-627`, the control at `:626` passed to
+`take_deferred_definition_boundary` at `:631-634`) with the slot-local
+generation only as a component; the original red is retained (14/1 per J row),
+the candidate extracted fixture passes 18/18 armed/disabled/admitted with
+unrelated 0 / intended 1 as extracted-statement evidence only; no new
+production field/accessor/allocation/overlay. Q25: the 13 blocks are not a
+final disposition — the 151-plan bar stands and continuation 1 (design-only,
+the remaining 1,340.18 s of the 747 envelope) must resolve the four classes by
+an in-surface recipe (including a newly specified transport form with its
+reentrancy/second-consumption falsifiers), a specified minimal surface
+extension (the four raw resume files, 90→94 rows, 180→188 postimages, the
+schema derivation), or a named `PortBlocked` with the exact missing fact. The
+first-run charge is 159.82 s (94.32 s measured plus 0.5 s bookkeeping, the
+60 s reserve and 5 s conservative short-IO); 1,340.18 s remain in the envelope;
+CM4's committed share stays 19,500 s and 743–746 retain 49,500 s. No
+implementation is authorized; Q24/Q23/Q22/Q21/Q20/Q19/Q18/Q17/Q16/Q15/Q14/
+Q13/Q12/Q11/Q10 and every earlier term stand.

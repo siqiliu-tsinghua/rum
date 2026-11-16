@@ -610,6 +610,27 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   rows statement, and 742's remaining implementation waits on it; this
   adopts the 2026-11-16 user ruling that Codex's probing/design strength
   is used up front (see memory `codex-probing-design-strength`).
+  Brief 747's first run is accepted: all 151 rows classified (138
+  expressible, 13 named `PortBlocked`, zero unknown, zero normalized)
+  over ten classes and 79 subtypes, with the 151 joins, 90 preimages,
+  180 postimages, 22 historical signature rows and `source_schema`
+  `f9604852…` authenticated, all 5,400 maintained files byte-identical
+  and `production_changes=0`; 273 scratch deliverables, 1,767 live
+  citations, two byte-identical roots (11 files); 159.82 s charged,
+  1,340.18 s left in the 747 envelope. Q24 accepts option 2 (the
+  existing registered owner namespace: queue root/epoch/request-control
+  Arcs, the live lookup at `profile_queue.rs:619-627` and the control
+  at `:626` → `take_deferred_definition_boundary` at `:631-634`), the
+  slot-local generation a component only, the original 14/1 red
+  retained, the 18/18 candidate fixture extracted-statement evidence
+  only, no new production surface. Q25 opens the 13-row frontier (four
+  missing-identity classes whose frame allocation is in scope only in
+  four raw resume files outside the 90-file set): the 151-plan bar
+  stands and brief 747 continuation 1 (design-only, the remaining
+  1,340.18 s) must resolve each class by an in-surface recipe with its
+  falsifiers, a specified minimal surface extension (90→94 rows,
+  180→188 postimages, the schema derivation), or a named `PortBlocked`
+  with the exact missing fact; no implementation is authorized.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

@@ -166,3 +166,116 @@ Design-only, so the evidence is the deliverable and its reproducibility:
 - No new `unsafe` anywhere you touch.
 - Minimal footprint: no drive-by edits, no reformatting, nothing outside
   `.temp/brief-747/`.
+
+## Continuation 1 ruling (director) — the first run accepted; Q24 option 2; the 13-row frontier (Q25)
+
+The first run is accepted as the complete ownership inventory. It classified
+all 151 frozen own rows in `inventory.tsv`/`inventory.json` — 138 expressible
+recipes, 13 named `PortBlocked`, 0 unknown, 0 normalized — over ten classes
+(A 2, E 2, F 30, G 1, H 1, J 3, N 4, R 34, T 73, U 1) and 79 operation
+subtypes; it authenticated the 151 source/tail/destructor joins, the 90 live
+preimages and 180 exact postimages, the 22 historical signature rows, and
+`source_schema` `f9604852…` unchanged; it left all 5,400 maintained files and
+the 23-entry partial CM4 test layer byte-identical (`production_changes=0`,
+`git_invoked=false`, hash evidence in `entry-hashes.json`, `entry-state.json`
+and `immutable.log`), produced 273 scratch deliverables under
+`.temp/brief-747/` with 1,767 live citations verified and two byte-identical
+roots (11 files), and stopped with no schema emitted. Run: `cdx` (unit
+`brief-747-cdx-20261117-000409-1850502`, rc 0, peak 1,214,103,552 B, oom 0 /
+oom_kill 0; log `.temp/logs/cdx_brief_747.log`, 3,170,095 B, sha256
+`c0ae9e15…`; report STOP, 273 changes (273 added), 0 disclosures, 2
+deviations, 0 questions, 10 PASS / 4 FLAGGED / 1 NA, 175 citations verified;
+159.82 s charged — 94.32 s measured plus 0.5 s bookkeeping, the 60 s
+preparation/final-reporting reserve and 5 s conservative short-IO — leaving
+1,340.18 s focused in this envelope). Both deviations are accepted: no git is
+invoked because the standing rules forbid it and the maintained-file hashes
+carry the byte-identity evidence; no new schema digest is emitted because a
+complete 151-plan renderer does not exist and prefilling a digest would be a
+fabrication. The four FLAGGED items are settled as stated: the 13 named
+binding blocks are the stop; the original Q23 identity red (14 passed / 1
+failed per J row) is the retained falsifier; the namespace fixture is
+extracted-statement design evidence only, not a runtime or E acceptance; and
+the failed instruments (function lookup, matrix TypeError, empty
+boundary-site assertion, the resumed audit's 5→13 blocks) are retained, not
+relabelled.
+
+Q24 is accepted as option 2 — the existing registered owner namespace. The J
+class keeps the slot-local generation only as a component and never claims
+global uniqueness; the namespace is the actual queue's existing root, epoch
+and request-control Arc allocation identities, already on the installation
+and publication paths (`register_owner` at `profile_queue.rs:744`; the
+publication lookup by `Arc::ptr_eq(root)` and `Arc::ptr_eq(epoch)` at
+`:619-627`; the control taken at `:626` and passed to
+`take_deferred_definition_boundary` at `:631-634`; retirement at `:792`,
+`:807`, `:847`). The instrumentation key is `(row, opaque-program,
+pair-episode, own-path, occurrence, generation, root-identity, epoch-identity,
+control-identity)`. The capture is the actual installed suspension's
+generation inside its actual install/registration scope; the annotation is
+inside the actual `ProfileQueue::append` scope for that queue
+(`profile_queue.rs:654`, the publication and its retained omission first at
+`:610`); the consumption is only a full-key match at that publication, at
+most once, invalidated at registry clear, control replacement/unregister,
+root unregister/drop, the next install, abandonment, and the owning
+append/run boundary. No new production field, accessor, allocation, overlay
+path or production surface is authorized for it, and the helper stores
+identity, not a new strong owner. The retained falsifiers stand: the original
+same-generation collision remains a red artifact (14/1 per row), the candidate
+extracted fixture passes 18/18 in armed, disabled and admitted forms with
+unrelated 0 / intended 1, wrong generation, next install, abandon, unprofiled
+install, swallowed/other error, publication outside append, second
+consumption, queued zero, registry clear and owner retirement. The fixture is
+not credited as runtime evidence; the implementation must reproduce the
+red/green pair in the emitted overlay, and the E rows P1470/P1471 need their
+own extracted and emitted controls through the fixed-point
+return/publication path (`suspend_evaluation_return` /
+`insert_evaluation_return` → `publish_evaluation_pass_after_return`), not
+J's `complete_work`/append confirmation.
+
+Q25 — the 13-row frontier. The first run's stop (13 named `PortBlocked`) is
+not accepted as a final disposition and the 151-plan bar is not reduced. The
+blocks are four classes of missing identity evidence, each with the actual
+frame allocation in scope only inside a raw resume file outside the retained
+90-file surface (`runtime/debug_tools/trace/resume_frames.rs`;
+`runtime/kernel_data/structure_data/replace/guarded/resume_frames.rs`;
+`strings/patterns/search/guarded/replace/resume_frames.rs`;
+`strings/patterns/search/rules/resume_frames.rs`), where the raw resume
+clones or borrows state into the hit helper and the allocation identity does
+not cross. This continuation must resolve each class with entry-pinned
+evidence, choosing exactly one of:
+
+1. an in-surface recipe — including a newly specified transport form with the
+   same form as Q10–Q23 (issue site, carry, consume site, invalidation) and
+   the retained `unrelated 0 / intended 1` falsifier, proven by an
+   extracted-statement fixture that executes the live statements and includes
+   the reentrancy/nesting and second-consumption controls;
+2. a minimal instrumentable-surface extension, specified exactly — which of
+   the four raw resume files, the exact added statements at
+   construction/arm/resume/hit, the schema and table consequences (90→94
+   rows, 180→188 postimages, the `source_schema` derivation and the 151
+   `source_schema` cells), entry-pinned preimages, full-file AST restoration,
+   both cfg arms and the retained falsifiers — specified only, not
+   implemented;
+3. a named `PortBlocked::<name>` with the exact missing fact and
+   `universal_impossibility_claim: false`.
+
+The continuation must also decide whether a newly specified transport form
+(for example a scoped-call token with a stack-discipline guard over the exact
+helper call) is admissible under the standing no-ambient-state rule; if
+admissible, prove it with the extracted fixture including nested/reentrant
+calls; if not, name the reason. The Q24 option-2 decision stands; no pinned
+arm, hit, phase, selector, observer, coverage, source key or tail changes; no
+row is normalized or dropped; the 138-row subset is not shipped.
+
+Continuation 1 is design-only (`Scope: NONE`), under
+`.temp/brief-747/continuation-1/`, with its report at
+`.temp/brief-747/continuation-1/report.json`; every existing artifact under
+`.temp/brief-747/` stays byte-identical and the accepted first-run report is
+not overwritten. Budget: the remaining 1,340.18 s of this brief's 1,500 s
+focused envelope; no workspace envelope; one cargo command at a time,
+offline/locked at `-j8`, inside the 16G scope through
+`scripts/run-bounded.py`; stop-loss keyed on progress (two consecutive
+attempts that resolve no new class stop and report the four class results);
+no network, no git, no campaign, epoch, acceptance, production or inventory
+change; no new production field, accessor, allocation or overlay implemented.
+After its gate I rule Q25 and the implementation funding; nothing in this
+continuation authorizes implementation.
