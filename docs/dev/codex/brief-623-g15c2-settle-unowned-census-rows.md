@@ -116143,3 +116143,53 @@ rendered helper; add no production surface, accessor, dependency or
 satisfied by its own activation with no cross-activation leakage. The
 126.11 s charge is accepted; 3,672.41 s focused remain (envelope 2 at
 672.41 s). All other Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.
+
+### Continuation 95 — brief 742's ninth run: the protected runner identity ingress (Q18)
+
+Brief 742's ninth run (`cdx`, unit
+`brief-742-cdx-20261116-194205-1773872`, rc 0, peak 1,150,058,496 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,037,773 B,
+sha256 `265e50a0…`; report `.temp/brief-742/report.json`, STOP, 67
+changes (65 scratch added, 2 modified, 0 deleted), 3 disclosures, 3
+deviations, 1 question (Q18), 9 PASS / 2 FAIL / 3 NA, 80 citations
+verified) accepted Q17's permission to replace the helper and stopped
+before emitting one, at `PortBlocked::ProtectedRunnerIdentityIngress`:
+all five copied `begin` sites transmit only `queued`, while the actual
+root/constituent/ordinal bindings live in `source_worker.rs`, which the
+original Scope protects. The audit authenticated 22 AST anchors: the
+worker's root `p` from the authenticated program collection
+(`:85`), the constituent loop shadowing it (`:102`), the printed
+identity and ordinal (`:103`), `run(false)` then `run(true)`
+(`:112–113`), and the paired follow and ordinal increment (`:160–161`);
+no attempt name is exported by the external runner, and two historical
+P0267 attempts share one authentication receipt. The 12 inspection
+controls and the inherited 36 controls pass; the historical records were
+read, not re-executed. All 151 source joins, 90/180 pins and 5,399 files
+authenticate; `production_changes=0`; `source_schema` stays
+`f9604852…`; no repository file changed; no plan or schema was emitted.
+
+Q18 ruling (this commit): the identity enters through the existing
+copied runner hooks, not through a worker hook. The four own-row hooks
+(`guest::run_observed`, `guest::run_adapter`,
+`native::run_accepted_request`, `native::run_resuming_driver`) all take
+the actual `program: &Program`, and `Program.id` is built by
+`paired_program` as `{primary.id}:paired:{constituent id}`, so one opaque
+value carries the root/constituent join; the fifth site is
+`semantic_controls::run`, whose own `Plan` has an `id`. All five files
+are already among the 90 overlays, and erasing the hooks restores the
+live runner AST in both arms, so no new file and no `source_worker.rs`
+change is authorized. The run episode is the actual pair occurrence at
+that boundary: an unqueued `begin` for a (row, identity) opens an
+episode, the following queued `begin` with the same identity is its
+pair, a further unqueued `begin` clears the unpaired one; the attempt
+dimension is the process/thread in which the ledger starts empty, and
+the generator must stop if one process can carry two attempts for one
+row. Producer occurrence is counted at the actual `pause`/`returned`
+sites. Falsifiers: `begin(queued)` alone, a literal or renderer-supplied
+identity, row/prompt strings, two pairs of one program sharing an
+episode, a queued run with no predecessor, cross-program/constituent
+consumption, a stale episode surviving into a new pair. The 90-file set
+stays exact, the protected bodies and observer policy stay unchanged,
+and all Q17 conditions stand. The 124.03 s charge is accepted;
+3,548.38 s focused remain (envelope 2 at 548.38 s). All other
+Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.

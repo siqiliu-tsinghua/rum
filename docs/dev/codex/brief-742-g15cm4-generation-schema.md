@@ -879,3 +879,77 @@ Q17 admits the activation transport under these conditions:
    workspace gates stand.
 
 All other Q16, Q15, Q14, Q13, Q12, Q11, Q10 and brief terms stand.
+
+## Continuation 9 ruling (director) — Q18: the actual execution identity enters through the existing copied runner hooks, and the run episode is the actual pair occurrence at that boundary; no worker hook and no attempt-name channel
+
+The STOP is upheld and earns no credit. The Q17 work before it is
+accepted as delivered: the scope interpretation is correct — Q17 admits
+the generated helper's internal storage but not an unadmitted hook in a
+protected body — and the audit is right that all five copied `begin`
+sites transmit only `queued`. The 22-anchor ingress audit and its 12
+controls pass, the inherited 36 controls pass, and the finding honestly
+labels its own evidence limits: no rendered source-bound helper was
+produced, the 17 model controls were not re-run against one, and no
+all-row zero-unknown-edge verdict is claimed. All 151 source joins, the
+90 preimages / 180 postimages and the 5,399 maintained files
+authenticate; `production_changes=0`; `source_schema` is unchanged at
+`f9604852…`; no plan or schema was emitted. The 124.03 s conservative
+charge is accepted; 742's remaining focused budget is 3,548.38 s
+(envelope 2 has 548.38 s), focused envelopes 3 and 4 and both workspace
+envelopes are untouched.
+
+The identity must come from the runner, and the runner already has it at
+the exact boundary where the helper must be keyed. The four own-row
+hooks all take the actual program: `guest::run_observed` (`program:
+&Program`), `guest::run_adapter`, `native::run_accepted_request` and
+`native::run_resuming_driver`; the fifth, `semantic_controls::run`, has
+its own `Plan` with an `id`. `Program.id` is constructed by
+`paired_program` as `{primary.id}:paired:{constituent id}` and keeps the
+root prefix, so one opaque value carries the root/constituent join. All
+five files are already among the 90 retained overlays, and erasing the
+hook calls restores the live runner AST in both arms. No new file, no
+`source_worker.rs` change and no attempt-name ingress is needed, and none
+is authorized.
+
+Q18 resolves the ingress under these conditions:
+
+1. **Ingress.** `begin` carries the actual identity the runner is
+   executing: `program.id` at the four own-row hooks and `plan.id` at the
+   structural control, passed as opaque runtime values. A literal, a
+   renderer- or plan-supplied constant, a row or prompt string, the
+   selected-row environment value or the build receipt may not stand in
+   for it. The helper may not parse the identity into narrower fields;
+   it keys on the whole value.
+2. **Episode.** The independent run episode is the actual pair occurrence
+   at the same boundary: each unqueued `begin` for a (selected row,
+   identity) opens an episode, the following queued `begin` with the same
+   identity is its pair, and a further unqueued `begin` with that
+   identity opens a new episode and clears any unpaired one. The
+   derivation is an execution fact of the runner's own sequence, not a
+   global position, a timer, or a plan value; it must be stated as an
+   equivalence rule and controlled. The attempt dimension is carried by
+   the process/thread in which the helper's ledger starts empty; if the
+   generator can show one process carrying two attempts for one row, it
+   stops and says so.
+3. **Producer occurrence.** Counted at the actual `pause`/`returned`
+   sites inside the episode, not from the plan or the pause tuple.
+4. **Falsifiers.** `begin(queued)` alone must fail the source-binding
+   checker; a literal, renderer-supplied, row or prompt identity must
+   fail; two independent pairs of the same program must keep their
+   episodes distinct, with the second queued run unable to consume the
+   first pair's arm; a queued run with no unqueued predecessor must not
+   hit; interleaved different programs and a constituent chain must not
+   cross-consume; an unpaired or stale episode must not survive into a
+   new pair; the disabled arm stays record-exact.
+5. **Scope.** The 90-file set stays exact. `source_worker.rs`, observer
+   policy, `records.rs`, `observer_receipts.rs`, `receipts.rs` and the
+   semantic acceptance/control bodies stay unchanged; the new identity is
+   generated instrumentation inside files already in the set. Q17's
+   helper replacement, guard-owned activation identity, rendered-helper
+   control re-run, no-production-surface and retained-row
+   non-dependence conditions stand unchanged.
+6. **Stage.** No new allocation. C3 proceeds only after the transport is
+   source-bound and audited under Q17 and this rule, and the remaining
+   all-row generator work continues from the same partial tree.
+
+All other Q17, Q16, Q15, Q14, Q13, Q12, Q11, Q10 and brief terms stand.

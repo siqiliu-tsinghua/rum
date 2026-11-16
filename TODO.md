@@ -469,7 +469,18 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   occurrence) and matched to its resumed activation, the retained helper
   replaced as generator output with the `lib.rs` byte delta disclosed,
   the model controls re-run against the rendered helper, and each
-  retained row proved independent of cross-activation leakage.
+  retained row proved independent of cross-activation leakage. Its ninth
+  run accepted Q17 and stopped with `ProtectedRunnerIdentityIngress`:
+  the five copied `begin` sites carry only `queued`, while the actual
+  root/constituent bindings live in the protected `source_worker.rs`;
+  Q18 admits the ingress through the existing copied runner hooks
+  instead — `program.id` at the four own-row hooks and `plan.id` at the
+  structural control, with the run episode the actual pair occurrence at
+  that boundary (an unqueued begin opens, the next queued begin with the
+  same identity pairs, a new unqueued begin clears the unpaired one),
+  producer occurrence counted at the actual `pause`/`returned` sites,
+  the attempt dimension carried by the per-process/thread ledger, no new
+  file and no worker hook, all five files already in the 90-overlay set.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
