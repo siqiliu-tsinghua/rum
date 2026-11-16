@@ -623,3 +623,85 @@ plans, ten classes, 79 subtypes, zero unknown edges, deterministic
 byte-identical double generation, the exact emitted file set, the
 mechanical `source_schema` transition, all focused controls and both
 workspace modes after the ordered replay.
+
+## Continuation 6 ruling (director) — Q15: `profile_mode::Mode` is admitted as the fourth closed protocol for C10, and the closure form is delegated to the generator under mechanical conditions and mandatory gate reporting
+
+The STOP is correct under Q12 rule 6 and earns no credit. The Q14 work
+before it is accepted as delivered: four argument-position bindings
+resolved across two call sites, six capture-source anchors, 26 total
+anchors, the success / actual `InputRequired` / error-bypass / resumed
+typed-completion branches recorded, and 20 controls passing; the retained
+P0543/P0544 carriers reduce to the original caller, helper, constructors
+and typed frame after removing only their declared producer scopes and
+omission guards. All 151 source joins, the 90 preimages / 180 postimages
+and the 5,399 maintained files authenticate; `source_schema` is unchanged
+at `f9604852…`; no repository file was written; no plan or schema was
+emitted. The 123.39 s conservative charge is accepted; 742's remaining
+focused budget is 3,925.56 s (envelope 2 has 925.56 s), focused envelopes
+3 and 4 and both workspace envelopes are untouched.
+
+`profile_mode::Mode` is the Q12 form exactly: `pub(super) trait Mode`
+(`suspension/core/profile_mode.rs:8`), sealed to its module, with exactly
+two implementations — `Ordinary` (`:15`; `Guard = ()`, no-op `resume`,
+`abandon` and `pause`) and `Profiled` (`:25`; `Guard = Option<ContextGuard>`,
+`resume`/`abandon` installing the profile, `pause` forwarding a present
+guard). The driver selects the instantiation at runtime:
+`drive_resuming_frames` (`core/driver.rs:5`) chooses
+`drive_frames::<O, profile_mode::Profiled>` when `frames.is_profiled()`
+and `::<O, profile_mode::Ordinary>` otherwise (`:15`/`:17`);
+`M::resume` provides the guard at `:25` and `M::pause(&profile_context)` is
+called only in the actual `Err(InputRequired)` branch at `:156`. The
+omission the retained C10 carrier makes is inside that callee chain, not
+after an unmodified producer call, so Q13's opaque-node exception does not
+apply: `M::pause` -> `ContextGuard::pause`
+(`profiling/logical/context.rs:390`) -> `Segment::pause`
+(`segments.rs:536`) -> `pause_admitted` (`:554`) -> the
+`ExplicitlyFinished` early return (`:563`) is anchored in full.
+
+Q15 admitted:
+
+1. **Closure.** The generator asserts the trait's declared visibility and
+   the exact two-implementation set with each implementation's `Guard`
+   type and `resume`/`abandon`/`pause` bodies. A third implementation, a
+   visibility widening, or any changed body, associated type or signature
+   stops C10 and every row bound to the protocol.
+2. **Runtime branch.** The plan carries both mode arms with the
+   discriminating condition (`frames.is_profiled()`), each with its own
+   anchors; this row's frozen route fixes the profiled arm
+   (`C10.ProfiledPreparedDispatchFrame.true`), and the ordinary arm is
+   recorded but not claimed executed. Neither arm may be dropped.
+3. **Guard and pause edges.** `M::resume`'s guard and the
+   `Err(InputRequired)`-only `M::pause` call are both recorded; the
+   callee chain to the `ExplicitlyFinished` return is anchored in full and
+   may not be replaced by an opaque node.
+4. **Both shapes preserved.** The distinct `Guard` types, the no-op
+   ordinary hooks and the profiled guard forwarding stay distinct; no
+   unified guard, no fabricated guard, no skipped real pause.
+5. **Falsifiers.** Changed visibility, implementation set, `Guard`,
+   `pause` body or mode instantiation; a missing runtime branch or generic
+   edge; a wrong tail; a fabricated error; missing actual-pause arming; a
+   disabled/armed nondifference; an unearned erased-frame closure — all
+   reject; the valid source and retained-carrier counterparts pass.
+6. **Standing closure admission (amends Q12 rule 6).** A protocol found
+   later may be admitted by the generator without a further director
+   ruling only when it satisfies Q12 rules 1-5 identically: visibility no
+   wider than `pub(in crate::runtime)` / `pub(super)` / private within the
+   runtime, an exactly asserted implementation set, every instantiation
+   proved per call edge (or as an explicit runtime branch with both arms),
+   all falsifier controls firing, and a gate report that names the
+   closure, its anchors and its verdict lines. Anything that does not fit
+   this form — a different binding shape, an open or dynamic payload, a
+   tail inside or beyond an open dispatch, an instantiation not provable
+   per edge, or a trait visible outside the crate's runtime — still stops
+   the family and returns for a ruling. Erased frame protocols remain
+   open, `CallBuiltinSpec` remains unadmitted, and no inventory entry is
+   added.
+7. **Stage.** No new allocation. C10 proceeds and the 151-plan bar stands;
+   a failure returns with the named block.
+
+All other Q14, Q13, Q12, Q11, Q10 and brief terms stand: the 90-file
+starting set and pre-edit pin authority, the caught/stop-row signature
+pins, 151 plans, ten classes, 79 subtypes, zero unknown edges,
+deterministic byte-identical double generation, the exact emitted file
+set, the mechanical `source_schema` transition, all focused controls and
+both workspace modes after the ordered replay.

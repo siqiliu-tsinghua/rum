@@ -116013,3 +116013,47 @@ trait-generic, erased or caller-generic dispatch, and the eleven existing
 controls as the minimum falsifier set. No new allocation (4,048.95 s
 focused remain, envelope 2 at 1,048.95 s, envelopes 3/4 and both workspace
 envelopes untouched). All other Q13/Q12/Q11/Q10/742 terms stand.
+
+### Continuation 92 — brief 742's sixth run: Q14 lands, the C10 driver-mode boundary (Q15)
+
+Brief 742's sixth run (`cdx`, unit
+`brief-742-cdx-20261116-182808-1752765`, rc 0, peak 1,165,144,064 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,169,736 B,
+sha256 `25466d9e…`; report `.temp/brief-742/report.json`, STOP, 74
+changes (72 scratch added, 2 modified, 0 deleted), 3 disclosures, 3
+deviations, 1 question (Q15), 9 PASS / 2 FAIL / 3 NA, 82 citations
+verified) executed Q14: the shared callable summary resolves two call
+sites, four argument-position bindings, six capture-source anchors and 26
+total anchors, with success, actual `InputRequired`, error bypass and
+resumed typed completion recorded; 20 controls pass and the retained
+P0543/P0544 carriers reduce to the original caller, helper, constructors
+and typed frame after removing only their declared producer scopes and
+omission guards. It then stopped at C10's
+`PortBlocked::UnadmittedClosedProtocol(profile_mode::Mode)` — C10's
+retained inert-pause omission lies inside the generic pause successor, so
+neither Q13's caller-side exception nor Q14's lexical-callable authority
+applies, and Q12 rule 6 returns a new protocol for a ruling. All 151
+source joins and 90/180 pins authenticate; `source_schema` stays
+`f9604852…`; no repository file changed; no plan or schema was emitted.
+
+Q15 ruling (this commit): admit `profile_mode::Mode` — `pub(super)` at
+`profile_mode.rs:8`, exactly `Ordinary` (`:15`, `Guard = ()`, no-op hooks)
+and `Profiled` (`:25`, `Guard = Option<ContextGuard>`, guard-forwarding
+`pause`), with the driver's runtime branch at `core/driver.rs:5`
+(`is_profiled()` → `Profiled` else `Ordinary`), `M::resume` at `:25` and
+the `Err(InputRequired)`-only `M::pause` at `:156`; the callee chain
+`context.rs:390` → `segments.rs:536` → `pause_admitted` `:554` → the
+`ExplicitlyFinished` return `:563` must be anchored in full with no opaque
+node. Conditions: exact closure assertion, both mode arms carried with the
+discriminating condition (the frozen route fixes the profiled arm), guard
+and pause edges recorded, both `Guard` shapes preserved, the ten existing
+controls as the minimum falsifiers. It also amends Q12 rule 6 into a
+standing closure admission: a later protocol may be admitted by the
+generator only when it satisfies Q12 rules 1-5 identically (runtime-scoped
+visibility, exact impl set, per-edge or explicit-branch instantiations,
+all falsifiers firing, gate report naming the closure) — any other shape,
+an open payload, a tail inside an open dispatch or a crate-visible trait
+still returns for a ruling. Erased frame protocols stay open,
+`CallBuiltinSpec` stays unadmitted, no inventory entry is added, and no
+new allocation is granted (3,925.56 s focused remain, envelope 2 at
+925.56 s). All other Q14/Q13/Q12/Q11/Q10/742 terms stand.

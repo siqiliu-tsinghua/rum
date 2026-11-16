@@ -443,7 +443,15 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   lexical callable the fourth declaration-authority form — anonymous
   type, one argument position, full in-source body, with invocation/branch
   enumeration, capture integrity, preserved error/None branches, no
-  escaping callable and the eleven controls as minimum falsifiers.
+  escaping callable and the eleven controls as minimum falsifiers. Its
+  sixth run proved Q14 (four bindings, six capture sources, 26 anchors,
+  20 controls) and stopped at C10's `profile_mode::Mode` (Ordinary /
+  Profiled) whose omission sits inside the generic pause successor; Q15
+  admits it as the fourth closed protocol, with the driver's runtime
+  branch carried in both arms, the guard and InputRequired-only pause
+  edges recorded, the `ExplicitlyFinished` callee chain anchored in full,
+  and Q12 rule 6 amended into a standing closure admission for protocols
+  that satisfy the same mechanical form.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
