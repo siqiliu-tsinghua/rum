@@ -116581,3 +116581,67 @@ accepted (envelope 3 closed at its 1,274.69 s remainder plus the 60 s
 envelope-4 reserve), leaving 1,440 s focused (envelope 4 at 1,440 s,
 both workspace envelopes untouched). All other
 Q22/Q21/Q20/Q19/Q18/Q17/Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.
+
+### Continuation 101 — brief 742's fifteenth run: the suspension-generation owner-domain stop (Q24), and the shift to an inventory-first procedure
+
+Brief 742's fifteenth run (`cdx`, unit
+`brief-742-cdx-20261116-233152-1838955`, rc 0, peak 1,654,226,944 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,251,250 B,
+sha256 `94e4fb5c…`; report `.temp/brief-742/report.json`, STOP, 623
+changes (621 scratch added, 2 modified, 0 deleted), 3 disclosures, 1
+deviation, 1 question (Q24), 7 PASS / 1 FLAGGED / 2 FAIL / 1 NA, 549
+citations verified) implemented Q23 locally: the shared J recipe captures
+the actual `SuspensionAccess::install` return inside
+`Session::begin_input_suspension`, requires the installed storage's valid
+profile after the unchanged request-control registration, keeps the
+existing `pause(&request.prompt)` site, borrows the actual
+`Action::Complete` result under the row's `JoinOwner`, and consumes only
+inside the scope around `self.frames.append(&mut suffix.frames)` keyed by
+that same `self.generation`; success, other errors, abandonment, the next
+install, scope exit and run boundaries leave no usable token. 38 anchors
+(all 23 inherited), 32 audit controls, seven partial source recipes, two
+roots byte-identical for seven paths, 52 helper controls per J row, and
+extracted-source controls executing the actual
+`SuspensionSlot::empty`/`install`, access-install, input install/pause,
+typed completion, append-scope and omission statements; one `c7tail` arm
+and one pinned hit in both cfg shapes, queued zero, both historical
+quiescence signatures authenticate without re-earning. No production
+field, accessor, allocation, overlay path or lifetime change.
+
+The class then failed Q23's own isolation falsifier with
+`PortBlocked::SuspensionGenerationOwnerDomain`: the counter is slot-local
+(`SuspensionSlot::empty` zero, `install` `checked_add`,
+`suspension/core.rs:242/269`; `Session::empty` builds a fresh slot per
+session, `model/session.rs:115`), so two distinct slots both install
+generation 1; in the extracted-source fixture the unrelated slot's real
+append scope consumes the token and the intended append loses its hit for
+all three rows at one thread (`unrelated_hits=1 intended_hits=0`). The
+different-generation counterpart and all 15 disabled controls per row
+pass; the earlier 13-control sets are disclosed as having omitted the
+alias case; four failing attempts are preserved; no generation was
+fabricated at any site, no expectation weakened, no production
+regression, and no impossibility claim. The report also records the
+relevant restrictions without admitting them as proof: one lexical
+`HostSession` binding in `guest::run_observed`, and `drive_frames`
+taking `nested`/`suffix` from its own session.
+
+Q24 ruling: the Q23 carrier is not accepted as a class-level transport
+yet; the identity domain is a cross-row design question decided in a
+`Scope: NONE` full ownership inventory — either authenticate a
+single-slot execution domain from the actual runner sources and rule the
+cross-slot control outside it with the falsifier retained, or bind a
+source-bound owner namespace from existing objects on existing paths
+(for example the request-interrupt control already registered by
+`begin_input_suspension` and looked up by the publication) with no new
+field, accessor, allocation, overlay or production surface, with the
+cross-slot falsifier passing; if neither is authenticated, the J class
+and every dependent row stay `PortBlocked` by name and the bar is not
+lowered. The inventory brief is 747, granted one fresh 1,500 s focused
+envelope from the stage's 69,000 s (CM4's committed share becomes
+19,500 s; 743–746 retain 49,500 s). This run's 198.28 s charge is
+accepted (138.22 s measured plus 0.5 s bookkeeping and 60 s
+preparation/final-reporting reserve), and the ruling's 1,136.41 s charge
+(envelope 3 closed at its 1,076.41 s remainder plus the 60 s envelope-4
+reserve) leaves 1,440 s focused in 742 (envelope 4 at 1,440 s), both
+workspace envelopes untouched. All other Q23/Q22/Q21/Q20/Q19/Q18/Q17/
+Q16/Q15/Q14/Q13/Q12/Q11/Q10/742 terms stand.

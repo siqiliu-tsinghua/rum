@@ -1564,3 +1564,100 @@ appends, identified by its own `SuspensionGeneration`:
 
 All other Q22, Q21, Q20, Q19, Q18, Q17, Q16, Q15, Q14, Q13, Q12, Q11,
 Q10 and brief terms stand.
+
+## Continuation 15 ruling (director) — Q24: the Q23 suspension identity fails its own cross-slot falsifier; the stage moves to a complete ownership inventory, and the identity domain is decided there for every dependent row at once
+
+The fifteenth run implemented Q23 locally and correctly. The shared J
+recipe is source-bound in scratch: it captures the actual
+`SuspensionAccess::install` return inside `Session::begin_input_suspension`,
+requires the installed storage's valid profile after the unchanged
+request-control registration, keeps the existing `pause(&request.prompt)`
+site, borrows the actual `Action::Complete` result under the row's
+`JoinOwner`, and consumes only inside the scope around
+`self.frames.append(&mut suffix.frames)` whose key is that same
+`self.generation`; success, other errors, abandonment, the next install,
+append-scope exit and run boundaries leave no usable token. The audit has
+38 anchors (all 23 inherited) and 32 controls; the inherited 12 frontier
+controls still pass; two roots emit identical partial source for seven
+paths; the helper passes 52 controls per J row; extracted-source controls
+execute the actual `SuspensionSlot::empty`/`install`, access-install,
+input install/pause, typed completion, append scope and omission
+statements; the ordinary valid-owner traces keep exactly one `c7tail` arm
+and one pinned hit in both compiled cfg shapes, the queued traces keep
+neither, and both historical default/no-default quiescence signatures
+authenticate without re-earning. No production field, accessor,
+allocation, overlay path or lifetime change was introduced.
+
+The J class then failed the falsifier Q23 rule 6 requires. `SuspensionSlot::
+empty` sets `next_generation` to zero (`suspension/core.rs:242`),
+`install` increments it with `checked_add` (`:269`), `Session::empty`
+builds that slot independently for each session
+(`session/session_state.rs:691`) and `Session` owns it by value
+(`model/session.rs:115`). The counter is therefore monotonic within one
+slot, not a construction identity across slots: two distinct slots both
+install generation 1. In the extracted-source fixture the unrelated
+slot's real append scope at generation 1 consumes the token and the
+intended append executes the live publication with no hit — for all three
+rows at one test thread (`unrelated_hits=1 intended_hits=0`); the
+different-generation counterpart omits only the intended publication and
+all 15 disabled controls per row pass with exact fragment records. No
+generation is fabricated at any instrumentation site, the earlier
+13-control sets are disclosed as having omitted the alias case, the four
+failing attempts are preserved, and no expectation was weakened. This is
+a generator/extracted-control finding, not a production regression, and
+the worker made no universal impossibility claim.
+
+Q24 rules that the Q23 carrier is not accepted as a class-level transport
+yet, and that its identity domain is a cross-row design question rather
+than a patch: every row that would use the suspension identity shares the
+slot-local aliasing, and the answer decides how those rows are generated.
+Under the standing discipline adopted this day (a `Scope: NONE` complete
+inventory before any implementation pass), the decision is made in the
+full ownership inventory brief for this stage, with entry-pinned evidence,
+and must select exactly one of:
+
+1. **An authenticated single-slot domain.** Prove from the actual runner
+   sources that a selected run has one live slot — one `HostSession`
+   binding, the driver taking `nested` and `suffix` from its own session,
+   no second live pending slot within a run or thread episode — and
+   explicitly rule the equal-generation cross-slot control outside that
+   domain, with the domain proof entry-pinned and the falsifier retained
+   in its original form.
+2. **A source-bound owner namespace.** Disambiguate actual slots or
+   suspensions with an existing object on an existing path — for example
+   the request-interrupt control that `begin_input_suspension` already
+   registers against the queue (`suspension/core.rs:525-530`,
+   `core/storage.rs:66-73`, `core/profile_queue.rs:744`), read at both the
+   arm and the publication under the same owner lookup — with no new
+   field, accessor, allocation, overlay path or production surface, and
+   with the cross-slot falsifier passing (unrelated zero, intended one).
+3. **A named stop.** If neither can be authenticated, the J class and
+   every dependent row stay `PortBlocked` by name; the bar is not
+   lowered, the counter is not called a global identity, and the
+   required falsifier is not replaced.
+
+The inventory must retain both the same-generation and the
+different-generation evidence, keep the pinned arm and hit signatures and
+the queued-zero rule, and treat any unproved claim of global uniqueness
+as a STOP. Brief 747 is that inventory: it takes the Q10–Q23 recipe
+ladder as its candidate set, answers Q24 for all dependent rows at once,
+and produces the complete per-row ownership matrix — actual object, actual
+source edge, transport recipe, isolation falsifier, preserved nodes,
+shared-file composition (including `call.rs`'s prepared and profile
+forms) and a named `PortBlocked` class where a binding cannot be
+expressed — with a zero-unknown-rows statement. Brief 742's remaining
+implementation waits on it; this ruling does not authorize another
+single-frontier implementation run.
+
+Budget: the run's 198.28 s charge is accepted (138.22 s measured plus the
+0.5 s bookkeeping and 60 s preparation/final-reporting reserve), leaving
+2,576.41 s focused in 742 (envelope 3 at 1,076.41 s, envelope 4 at
+1,500 s, both workspace envelopes untouched). This ruling charges
+1,136.41 s (envelope 3 closed at its 1,076.41 s remainder plus the 60 s
+envelope-4 reserve), leaving 1,440 s focused in 742 (envelope 4 at
+1,440 s, both workspace envelopes untouched); brief 747 is granted one
+fresh 1,500 s focused envelope from the stage's 69,000 s allocation, so
+CM4's committed share becomes 19,500 s and 743–746 retain 49,500 s.
+
+All other Q23, Q22, Q21, Q20, Q19, Q18, Q17, Q16, Q15, Q14, Q13, Q12,
+Q11, Q10 and brief terms stand.

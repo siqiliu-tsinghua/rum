@@ -579,7 +579,37 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   address, string or `Debug` identities, any new field/accessor/
   allocation/overlay, and instrumenting `driver.rs`, `storage.rs` or
   `completion.rs`; both modes keep one `c7tail` arm, one hit and the
-  quiescence stop, and any extra arm or hit is a STOP.
+  quiescence stop, and any extra arm or hit is a STOP. Its fifteenth run
+  implemented Q23 locally (38 anchors, 32 audit controls, seven partial
+  source recipes, 52 helper controls per J row, extracted-source controls
+  over the actual install/append/omission statements, one arm and one hit
+  in both cfg shapes, queued zero) and then failed Q23's own isolation
+  falsifier with `PortBlocked::SuspensionGenerationOwnerDomain`: the
+  counter is slot-local (`SuspensionSlot::empty` zero, `install`
+  `checked_add`, fresh slot per `Session`), so two slots both install
+  generation 1, and the unrelated append scope consumes the token while
+  the intended append loses its hit (all three rows, one thread); the
+  different-generation counterpart and all disabled controls pass, the
+  alias-less earlier control sets are disclosed, the failing attempts are
+  preserved, and no expectation was weakened. Q24 rules the Q23 carrier
+  is not yet a class-level transport and the identity domain is a
+  cross-row decision: the stage moves to a complete ownership inventory
+  (brief 747, one fresh 1,500 s focused envelope from the stage's
+  69,000 s; CM4's share becomes 19,500 s and 743–746 retain 49,500 s)
+  that must either authenticate a single-slot execution domain from the
+  actual runner sources (with the cross-slot control ruled outside it and
+  the falsifier retained), or bind a source-bound owner namespace from
+  existing objects on existing paths (e.g. the request-interrupt control
+  the install already registers) with no new field/accessor/allocation/
+  overlay, or keep the J class and every dependent row named
+  `PortBlocked`; no global uniqueness is claimed from a per-slot counter
+  and no falsifier is replaced. The inventory must produce the complete
+  per-row ownership matrix (actual object, source edge, recipe, isolation
+  falsifier, preserved nodes, shared-file composition including
+  `call.rs` prepared+profile, PortBlocked classes) with a zero-unknown-
+  rows statement, and 742's remaining implementation waits on it; this
+  adopts the 2026-11-16 user ruling that Codex's probing/design strength
+  is used up front (see memory `codex-probing-design-strength`).
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact

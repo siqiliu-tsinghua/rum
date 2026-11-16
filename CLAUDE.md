@@ -17,16 +17,15 @@ memory `suspension-continuation-branch.md`.
   a time, self-verified to green and reported with verbatim evidence. They do
   not commit, branch or push; they leave the tree for my gate.
 - **Plan-first is the default** (user ruling 2026-07-29) for any non-trivial
-  or cross-cutting task:
-  1. A design-only brief (`Scope: NONE`). The worker plans step by step with
-     `path:line` evidence (call-site inventory, invariants, gate tests, risks,
-     open questions) and drafts the implementation briefs in `TEMPLATE.md`
-     shape.
-  2. I review the plan, decide its open questions, and correct or cut what is
-     wrong or over-scoped.
-  3. I write my own brief from the draft. Mine is what gets committed and
-     dispatched, one gated step at a time.
-
+  or cross-cutting task: a design-only brief (`Scope: NONE`) plans step by
+  step with `path:line` evidence (call-site inventory, invariants, gate
+  tests, risks, open questions) and drafts the implementation briefs in
+  `TEMPLATE.md` shape; I review the plan, decide its open questions and cut
+  what is wrong or over-scoped; then I write my own brief, which is what
+  gets committed and dispatched, one gated step at a time. Proof-carrying
+  work gets the complete inventory first — every case's actual object,
+  source edge, recipe and isolation falsifier, with a zero-unknown-cases
+  statement (user ruling 2026-11-16; brief 742's fourteen one-class STOPs).
   Trivial mechanical jobs may go straight to an implementation brief.
 - Briefs live in `docs/dev/codex/`, in the shape of `TEMPLATE.md`. Commit the
   brief first, then dispatch it with `scripts/dispatch-brief.sh NNN` through
