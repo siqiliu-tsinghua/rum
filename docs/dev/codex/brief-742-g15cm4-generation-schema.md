@@ -538,3 +538,88 @@ classes, 79 subtypes, zero unknown edges, deterministic byte-identical
 double generation, the exact emitted file set, the mechanical
 `source_schema` transition, all focused controls and both workspace modes
 after the ordered replay.
+
+## Continuation 5 ruling (director) — Q14: the argument-position lexical callable is the fourth declaration-authority form; `finish_builtin_dispatch`'s four function-item/closure bindings cover P0543/P0544
+
+The STOP is correct under Q10 rule 4, Q11 rule 3 and Q12 rule 6 and earns
+no credit. The Q13 work before it is accepted as delivered: P1577 now
+passes with 17 caller-path anchors and 20 controls, the producer recorded
+opaque with its full nested `Result` signature, the driver interior left
+open at the four recorded sites, both retained arms reducing to the
+original caller AST after removing only the declared producer scope and
+restoration guard, and every Q13 falsifier firing. All 151 source joins,
+the 90 preimages / 180 postimages and the 5,399 maintained files
+authenticate; `source_schema` is unchanged at `f9604852…`; no repository
+file was written; no plan or schema was emitted. The 126.48 s conservative
+charge is accepted; 742's remaining focused budget is 4,048.95 s
+(envelope 2 has 1,048.95 s), focused envelopes 3 and 4 and both workspace
+envelopes are untouched.
+
+The authority P0543/P0544 need is neither a route nor a trait
+implementation. `impl FnOnce` parameters have anonymous, unnameable types;
+each value is supplied at exactly one argument position of an in-source
+call, and its body is fully visible there. `finish_builtin_dispatch`
+(`eval_dispatch/mod.rs:223`, private, exactly two call sites at `:188`
+and `:198`) takes `freeze: impl FnOnce() -> RunCallDispatchStageSuspensionFrame`
+(`:229`) and
+`finish: impl FnOnce(&mut Self, Result<Expr, EvalError>) -> Result<Option<Expr>, EvalError>`
+(`:230`), and invokes them inside `resume_typed_or_suspend!` at `:233`-`:237`
+as `ok(value) => finish(self, Ok(value))` and `suspend => freeze()`, with
+`Err(error) => Err(error)` bypassing both. The four bound callables are
+the function item `RunCallDispatchStageSuspensionFrame::unchecked_builtin`
+(`:442`) and the closure `|_, result| result.map(Some)` in the unchecked
+arm, and, in the checked arm, the frame-constructing closure calling
+`::builtin` (`:451`) with `spec`/`args`/`projection_count_before` captured
+and the validating closure calling `validate_builtin_memory_growth_slow`
+and mapping the actual `result`. Each type has one definition site and
+cannot be implemented anywhere else; the source literally shows the code
+that runs. That is declaration authority of the strongest kind.
+
+Q14 admitted, as the fourth evidence form:
+
+1. **Argument-position binding.** A generic parameter whose type is
+   unnameable or anonymous and whose value is supplied at exactly one
+   argument position of an in-source call is declared by that argument.
+   The summary records the callee and its signature anchors, the parameter
+   position and type, the call site, and for a function item its
+   definition anchor and body; for a closure its body operations and its
+   exact capture set with the source binding of each capture.
+2. **Invocation and branch enumeration.** Every invocation of each
+   callable inside the callee is enumerated with its call anchor and the
+   branch that reaches it. For `finish_builtin_dispatch` that is the
+   macro's three arms: success invoking `finish(self, Ok(value))`,
+   `InputRequired` constructing the frame through the actual witness via
+   `freeze()`, and every other error bypassing both callables. A callable
+   that escapes the callee — stored, returned, passed onward or
+   type-erased — stops the family.
+3. **Capture integrity.** The audit proves each captured value is the
+   actual producer's binding (here `spec`, `args`, `projection_count_before`
+   from the enclosing dispatch), not a reset, default or fabricated value,
+   and that the function item resolves to the named definition.
+4. **Preservation.** The row's carriers keep the real error/`None`
+   branches: other errors bypass both callbacks, the `InputRequired`
+   branch constructs the concrete frame, the `Some` conversion is the
+   actual `result.map(Some)`, and no callable is duplicated or evaluated
+   twice. P0543's unchecked bypass and P0544's statement guard are
+   recorded as preserved carrier proof, not as an opening of
+   `run_builtin_handler`'s interior.
+5. **No widening.** This form covers only positionally bound, in-source
+   callables. It does not admit `CallBuiltinSpec` metadata, trait-generic
+   dispatch, erased or dynamic dispatch, a callable received from a
+   generic caller, or any callable whose invocation set is not fully
+   enumerated.
+6. **Falsifiers.** A dropped `freeze` or resumed path; swapped
+   checked/unchecked bindings; a fabricated `None`; a changed constructor,
+   signature or typed output; a missing immediate invocation; an
+   unrecorded capture; an escaping callable; a second binding site; a
+   disabled/armed nondifference — all reject; the valid counterparts pass.
+   The eleven existing controls are the minimum set.
+7. **Stage.** No new allocation. P0543/P0544 proceed under this form and
+   the 151-plan bar stands; a failure returns with the named block.
+
+All other Q13, Q12, Q11, Q10 and brief terms stand: the 90-file starting
+set and pre-edit pin authority, the caught/stop-row signature pins, 151
+plans, ten classes, 79 subtypes, zero unknown edges, deterministic
+byte-identical double generation, the exact emitted file set, the
+mechanical `source_schema` transition, all focused controls and both
+workspace modes after the ordered replay.

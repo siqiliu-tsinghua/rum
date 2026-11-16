@@ -115971,3 +115971,45 @@ only to caller-side post-call tails; `CallBuiltinSpec` stays unadmitted;
 no new allocation (4,175.43 s focused remain, envelope 2 at 1,175.43 s,
 envelopes 3/4 and both workspace envelopes untouched). All other
 Q12/Q11/Q10/742 terms stand.
+
+### Continuation 91 — brief 742's fifth run: Q13 resolves P1577, the lexical-callable boundary at finish_builtin_dispatch (Q14)
+
+Brief 742's fifth run (`cdx`, unit
+`brief-742-cdx-20261116-180021-1745241`, rc 0, peak 1,177,763,840 B,
+oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_742.log`, 1,266,671 B,
+sha256 `c20ab312…`; report `.temp/brief-742/report.json`, STOP, 84
+changes (82 scratch added, 2 modified, 0 deleted), 3 disclosures, 4
+deviations, 1 question (Q14), 8 PASS / 2 FAIL / 3 NA, 89 citations
+verified) executed Q13: P1577's caller-side topology passes with 17
+caller-path anchors and 20 controls — the producer recorded opaque with
+its nested `Result` signature, two entry guards, the fault/guest-form
+statements, both restoration statements, four caller return arms and the
+four opened driver sites anchored; both retained arms reduce to the
+original caller AST after removing only the declared producer scope and
+restoration guard; every Q13 falsifier fires. It then stopped at
+P0543/P0544: `finish_builtin_dispatch` is generic over two `impl FnOnce`
+callables with four lexically visible arguments, and neither an own
+frozen binding nor a Q11/Q12 authority supplies them, so
+`PortBlocked::UndeclaredGenericContinuation(finish_builtin_dispatch::FnOnce)`
+stopped the family. `CallBuiltinSpec` metadata is not the finding. All 151
+source joins and 90/180 pins authenticate; `source_schema` stays
+`f9604852…`; no repository file changed; no plan or schema was emitted.
+
+Q14 ruling (this commit): the argument-position lexical callable is the
+fourth declaration-authority form. An `impl FnOnce` parameter's type is
+anonymous and unnameable, its value is supplied at exactly one argument
+position in source, and the source shows the code that runs. The helper is
+private with exactly two call sites (`eval_dispatch/mod.rs:223`, `:188`,
+`:198`); its `freeze`/`finish` parameters (`:229`/`:230`) are invoked in
+the macro's three arms (success → `finish(self, Ok(value))`, InputRequired
+→ `freeze()` with the actual witness, other errors → bypass both), and the
+four callables are the `unchecked_builtin` function item (`:442`), the
+`|_, result| result.map(Some)` closure, and the checked arm's
+frame-constructing closure (`::builtin`, `:451`) and validating closure
+with their exact captures. Conditions: invocation and branch enumeration,
+capture integrity against the actual producer bindings, real error/None
+branches preserved, no escaping callable, no widening to metadata,
+trait-generic, erased or caller-generic dispatch, and the eleven existing
+controls as the minimum falsifier set. No new allocation (4,048.95 s
+focused remain, envelope 2 at 1,048.95 s, envelopes 3/4 and both workspace
+envelopes untouched). All other Q13/Q12/Q11/Q10/742 terms stand.

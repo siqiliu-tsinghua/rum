@@ -436,7 +436,14 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   post-call omission whose tail is strictly after an unmodified producer
   call records that interior as one opaque node, with the call running in
   full, every return branch and caller path anchored, and the entry-guard
-  argument cited — so P1577 proceeds and the 151-plan bar stands.
+  argument cited — so P1577 proceeds and the 151-plan bar stands. Its
+  fifth run proved P1577 (17 caller-path anchors, 20 controls) and
+  stopped at `finish_builtin_dispatch`'s two `impl FnOnce` callables
+  (P0543/P0544, four lexical arguments); Q14 makes the argument-position
+  lexical callable the fourth declaration-authority form — anonymous
+  type, one argument position, full in-source body, with invocation/branch
+  enumeration, capture integrity, preserved error/None branches, no
+  escaping callable and the eleven controls as minimum falsifiers.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
