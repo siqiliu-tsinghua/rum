@@ -896,3 +896,152 @@ None carries campaign, settlement, promotion, SAME or encoding credit.
 **Unchanged.** C2 stays Open at 118 Residual + 0 Lost; no row settles, no
 owner is promoted, no encoding key runs; `CHANGELOG.md` and S10 stay
 blocked; the eight continuation-69 rulings (Q1–Q8) stand.
+
+## Continuation 5 ruling (director) — the pair carrier arms the earlier level append; Q5 admits the source-local repair and one fresh twelve-block consolidated epoch (43 blocks consumed at completion, ≤64,500 s allocated)
+
+**2026-11-16 — brief 740's fifth run executed continuation 4 and landed
+the consolidated 151-row / 89-overlay schema, the authenticated receipt
+import and artifact re-authentication, the four structural controls and
+the atomic synthetic promotion transaction. All twelve fresh canonical
+blocks compiled and all three forced same-epoch identity checks passed
+(31 cumulative, 2,807.464971 s total build); P0543 and C10 have
+current-epoch packets; the four structural controls pass in both modes;
+the retention maintenance replay passes in both modes. The run then
+stopped exactly at the continuation-4 no-further-expansion rule: both
+P0325/P0326 carriers arm the earlier level request and omit its append,
+so each row/mode shows 45 raw differences and five Error identity
+survivors with a hit, zero armed-without-hit, against the required five
+armed-without-hit Error cells. Q5 is ruled: option 1, the source-local
+repair plus one fresh consolidated round.**
+
+Run `cdx`, unit `brief-740-cdx-20261116-084712-1575325`, rc 0, peak
+3,268,689,920 B, oom 0 / oom_kill 0; log `.temp/logs/cdx_brief_740.log`,
+16,928,903 B, sha256 `bac3e127…` (the continuation-3 log archived at
+`.temp/logs/cdx_brief_740.log.prev-20261116-084709`); report
+`.temp/brief-740/report-continuation-4.json`, 965,049 B, sha256
+`71fa498d…`, 10 PASS / 3 FAIL / 3 FLAGGED / 1 NA; 26 changes (14 added,
+12 modified, 0 deleted), 0 disclosures, 6 deviations, 1 question (Q5,
+ruled here); 5,842 citations verified; the continuation-3 report is
+preserved at `.temp/brief-740/c4/report-before-ruling.json` (`9852e18a…`).
+
+**What the run proved.**
+- The consolidated schema is the authority. The 89-overlay
+  `source_auth/overlays.tsv` (sha256 `ebea7f03…`, the frozen
+  `source_schema`) enumerates each carrier's exact preimage, disabled and
+  armed postimages and hashes; `file_postimage` verifies the preimage,
+  decodes the exact postimage text and verifies its hash, and
+  `artifacts::artifact` re-authenticates the retained baseline, copied
+  tree, binary and receipt before any raw record is admitted (lane
+  manifests by pin, everything else byte-identical).
+- Twelve fresh canonical builds (default/no-default/lane real, disabled,
+  armed) plus three forced same-epoch spot checks, each under 1,500 s and
+  all exit 0; the forced real hashes match the receipt binaries
+  (`70abc70a…`, `e19f2230…`, `fedc859d…`); compiler logs were archived
+  before any force. This round's build cost 1,142.046613 s; 31 blocks
+  consumed, 2,807.464971 s measured (the 46,500 s was an allocation, not
+  a duration).
+- P0543 and C10 packets are current: P0543 lane real `fedc859d…` / tree
+  `a6ab38a4…`, disabled `afce0606…`, armed `04fc06ff…`; C10 default real
+  `70abc70a…` / tree `f595175e…`, disabled `7c6e3926…`, armed
+  `ed515b86…`; C10 no-default real `e19f2230…`, disabled `e2381107…`,
+  armed `04c4b937…`. Every receipt: 55/55 real keys at multiplicity one,
+  165 record-exact disabled records, one source hit, own `Native` red at
+  equal public output; the cited raw artifact hashes verify on disk. My
+  rerun of the own-import gate reproduces, in both modes, the two receipt
+  passes and the 149 named `PortBlocked` rows, with the frozen gate still
+  red.
+- The four structural controls (`Some`, `G15A`, `G15B`, `C1`) pass
+  independently in both modes; my rerun of the compiled importer shows
+  them admitted before the pair failure.
+- Maintenance replayed 68 last-column fingerprints and four generated
+  certificate cells over two rows (the baseline diff shows only the last
+  column and the two certificate columns changed); the six ownership
+  inventories, the rejection census and every covered source site are
+  unmoved; the stale-certificate reds are preserved ordering artifacts;
+  my rerun of `local_production_acceptance` passes in both modes.
+- Owner data unchanged: 51 Open owners, five source duties, C2 at 118
+  Residual + 0 Lost, no settlement, promotion, SAME or encoding credit.
+- Scope: 26 live files (14 added, 12 modified), all under
+  `crates/rum-stdlib/tests/suspension_oracle/` plus the generated
+  retention inventory; no production, manifest, lock, dependency or
+  inventory-predicate change; the 26 declared after-hashes verify on
+  disk; no git or network command.
+
+**The STOP and the defect.** The compiled pair import fails at P0325
+before P0326 in both modes and at both thread counts; the untouched
+assertion is `(45, 5, false)`, and the measured tuple is
+`(45, 0, false)`. The raw armed logs explain it exactly: every cell
+pauses at `level` and `finish`; the 40 non-Error cells have two source
+hits, five Error cells have two hits (caught), and five Error cells have
+one hit — at the first resume, which is the earlier level append. The
+current carrier instruments the entry evaluations and applies
+`OmitActualResumedArgumentAppend` at the top of
+`resume_suspended_argument_resolution`, so the first resumed append is
+omitted. The retained C22 source argument
+(`.temp/g15-c2/c22/prepare_argument_routes.py:57`) requires the real
+earlier level to remain in the accumulator and permits omitting only the
+actual resumed next-argument append. The five one-hit Error cells must
+therefore become armed-without-hit (their next-argument evaluation
+resumes as an error and never appends), while the 40 non-Error cells and
+the five two-hit Error cells stay caught. The campaign did not start:
+212 of 510 logical calibration cases ran, the 149 remaining own rows are
+named `PortBlocked`, acceptance is unrun.
+
+**Q5 ruling — option 1.** Authorize the source-local repair and one
+consolidated fresh twelve-block epoch, under these conditions.
+- **The repair.** In the copied runtime overlay
+  `crates/rum-runtime/src/runtime/definitions/definition_catalog/arguments.rs`
+  only: keep the owned/shared origin tracking and the selector's initial
+  first-pause arming, preserve the earlier level append, and apply the
+  omission only to the append of the actual resumed next-argument
+  evaluation (the resume that follows the loop's next-argument pause).
+  No change to `frame`, `pause`, `hit`, the `early_hit` rule, the
+  per-cell predicate, the 50-cell matrix, the five-armed-without-hit bar
+  or any inventory.
+- **The bar.** The assertion stays `(45, 5, false)`; the pair remains
+  Open with zero admitted pair receipts. If the repair yields anything
+  else in either mode — catches below 45, an Error cell not armed, or an
+  Error cell caught — STOP with the evidence; no predicate edit, no
+  survivor relabelled, no substitute catch, no extra block.
+- **New epoch.** The repair changes the copied source and the schema
+  hash; no binary, spot check or receipt from the 12 consumed blocks is
+  reusable, and the P0543/C10 packets of this epoch stay immutable
+  evidence of their own epoch, never relabelled.
+- **The round.** Nine canonical real/disabled/armed builds over the
+  three configurations plus three same-epoch forced byte-identity spot
+  checks, each ≤1,500 s. Consumed allocation at completion: 43 blocks /
+  ≤64,500 s (an allocation, not a duration; the 31 consumed blocks
+  measured 2,807.464971 s). This is the last planned allocation
+  expansion; a further carrier schema or an exceeded allocation STOPs.
+- **Evidence on the new epoch.** Shape and falsifier gates in both
+  mandated arms first, including the pair `(45,5,false)` gate, the four
+  structural controls, the observer/source controls and the ordinary-run
+  falsifier; then P0543 and C10 in both modes/lane (55/55, multiplicity
+  one, exact disabled records, own `Native` red, equal public output);
+  then the remaining 149 own rows, the complete unsampled 510-case
+  schedule with the 100 held-pair cells and four controls; then the
+  complete acceptance suite in both modes. Retention replays before
+  acceptance and every verdict is quoted; the expanded oracle stays
+  ≤1,500 s with the ≤900 s steady target.
+- **Shape.** The final epoch's test target compiles without warnings in
+  both modes: remove the six inherited dead-code items in
+  `source_auth/c10.rs` (four unused constants, two unused functions) or
+  show they are required by an external pin; keep new modules under the
+  size bar; `guest.rs` receives no edit beyond the inherited admission
+  comments. No production, manifest, lock, dependency or
+  inventory-predicate change; no settlement, SAME, owner promotion or
+  encoding execution; the Q3 observer constraints stay; a needed runtime
+  accessor is a STOP.
+
+**Accepted as delivered.** The consolidated schema table and its exact
+preimage/postimage authority, the authenticated receipt import, the four
+structural controls, the promotion transaction with its 39 rejected
+proposals, the fresh-mirror maintenance and the preserved administrative
+attempts (the glob-count wrapper failure, the zero-test filter and the
+pre-build parser/compile attempts). None carries campaign, settlement,
+promotion, SAME or encoding credit, and the 45/50 pair measurement is
+not credit.
+
+**Unchanged.** C2 stays Open at 118 Residual + 0 Lost; the 51 owners and
+five source duties stay Open; `CHANGELOG.md` and S10 stay blocked; CM5
+is not authorized; the eight continuation-69 rulings (Q1–Q8) stand.

@@ -115566,3 +115566,55 @@ allocation expansion.
 C2 stays Open at 118 Residual + 0 Lost; no row settles, no owner is
 promoted, no encoding key runs; `CHANGELOG.md` and S10 stay blocked. The
 partial tree is the state to continue from.
+
+### Continuation 82 — fifth run: the consolidated 151-row schema, receipt import and synthetic promotions land; both pair carriers arm the earlier level append, so Q5 authorizes the source-local repair and one fresh twelve-block epoch
+
+**2026-11-16 — brief 740's fifth run executed continuation 4: the
+89-overlay source schema became the single authority (exact preimage and
+both postimages per carrier, re-authenticated before any raw record), the
+authenticated receipt import and artifact module landed, the four
+structural controls pass in both modes, the promotion transaction passes
+with 39 rejected proposals, and all twelve fresh canonical blocks
+compiled with three forced same-epoch identity checks (31 cumulative,
+2,807.464971 s measured; 1,142.046613 s this round). P0543 and C10 have
+current-epoch packets (55/55 at multiplicity one, 165 record-exact
+disabled records, one source hit, own `Native` red at equal public
+output), which my rerun of the own-import gate reproduces in both modes
+beside 149 named `PortBlocked` rows; my rerun of the four structural
+controls and of `local_production_acceptance` also passes in both modes.
+The run then stopped exactly at Q4's no-further-expansion rule: the pair
+carrier arms the earlier level request and omits its append, so each
+P0325/P0326 row/mode measures 45 raw differences plus five Error
+identity survivors with a hit instead of five armed-without-hit Error
+cells; the untouched assertion `(45, 5, false)` reproduces at eight and
+one threads in both modes. The raw logs show the split precisely: 40
+non-Error cells with two hits, five Error cells with two hits (caught)
+and five Error cells with one hit at the first resume. Q5 admits option
+1: the source-local repair (keep owned/shared origin tracking and the
+initial first-pause arming, preserve the earlier level append, omit only
+the actual resumed next-argument append) plus one consolidated fresh
+twelve-block epoch, 43 blocks consumed at completion / ≤64,500 s
+allocated, no old binary or receipt relabelled, then all evidence, the
+remaining 149 own rows, the full 510-case campaign and complete
+acceptance in both modes; the pair stays Open at zero admitted receipts.**
+
+Run `cdx`, unit `brief-740-cdx-20261116-084712-1575325`, rc 0, peak
+3,268,689,920 B, oom 0 / oom_kill 0; log 16,928,903 B sha256 `bac3e127…`
+(continuation-3 log archived at `.temp/logs/cdx_brief_740.log.prev-…`);
+report 965,049 B sha256 `71fa498d…`, 10 PASS / 3 FAIL / 3 FLAGGED / 1
+NA, 0 disclosures, 6 deviations, 1 question; 5,842 citations verified;
+26 changes (14 added, 12 modified, 0 deleted); the continuation-3 report
+preserved at `.temp/brief-740/c4/report-before-ruling.json`
+(`9852e18a…`). Scope: test layer and generated retention inventory only,
+`production_changes=0`, manifests and lock unchanged; the 26 declared
+after-hashes verify on disk; no git or network command. The three FAILs
+are the five-cell pair bar, the 149 missing own packets and the unstarted
+campaign; the three FLAGGED items are the preserved stale-certificate
+ordering artifacts, the glob-count wrapper failure and the zero-test
+filter, none of which moved a predicate or inventory. The 51 owners, the
+five source duties and C2 (118 Residual + 0 Lost) stay Open; no
+settlement, promotion, SAME or encoding credit; `CHANGELOG.md` and S10
+stay blocked and CM5 is not authorized. The final epoch also removes the
+six inherited dead-code warnings in `source_auth/c10.rs` (or shows they
+are pin-required), and no further carrier schema or allocation expansion
+is planned after this one.

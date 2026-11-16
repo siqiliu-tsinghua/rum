@@ -311,7 +311,29 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   remaining carrier, held-pair cell, structural control, promotion path
   and maintenance has landed — 31 blocks consumed at completion /
   ≤46,500 s allocated, no evidence reused except by authenticated
-  identity, and no further schema expansion after it. C2 stays Open at 118
+  identity, and no further schema expansion after it. Its fifth run executed
+  continuation 4 and landed the consolidated 151-row / 89-overlay schema
+  (exact preimage and both postimages per carrier, re-authenticated before
+  any raw record), the authenticated receipt import, the four structural
+  controls and the promotion transaction; all twelve fresh blocks compiled
+  (31 cumulative, 2,807.464971 s measured; the forced same-epoch spot
+  checks match `70abc70a…` / `e19f2230…` / `fedc859d…`), P0543 and C10 have
+  current-epoch packets (55/55, 165 record-exact disabled records, one
+  source hit, own `Native` red, equal public output), which my rerun of the
+  own-import gate reproduces in both modes beside 149 named `PortBlocked`
+  rows, and my reruns of the four structural controls, the promotion
+  controls and `local_production_acceptance` pass in both modes. It stopped
+  at the pair bar: both carriers arm the earlier level append and omit it,
+  so each row/mode measures 45 raw differences plus five Error identity
+  survivors with a hit (0 armed-without-hit) against the untouched
+  `(45, 5, false)` assertion, reproduced at 8 and 1 threads. Q5 admits the
+  source-local repair (keep owned/shared origin and the initial first-pause
+  arming, preserve the earlier level append, omit only the actual resumed
+  next-argument append) plus one consolidated fresh twelve-block epoch —
+  43 blocks consumed at completion / ≤64,500 s allocated, no old binary or
+  receipt relabelled, then the full evidence, the remaining 149 rows, the
+  510-case campaign and complete acceptance in both modes; the pair stays
+  Open at zero admitted receipts. C2 stays Open at 118
   Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
