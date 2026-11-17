@@ -1029,8 +1029,20 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   Q35's owner-keyed design is accepted (nominal keys, actual-scope
   lookup, vacant-only insertion, independent retirement, legacy
   JoinState and the named single slots corrected) and the c32 draft
-  is adopted with that budget remainder. Continuation 32 implements
-  Q35 across every reachable carrier and resumes the full bar.
+  is adopted with that budget remainder. Continuation 32 stops
+  compliantly on the first compiled added nested-E control: Q35
+  passes J20 720 / J54 1,944 / interleaved 756 (`arms=2`, each
+  owner one omission) / E22 528 / weak 18/2 on exactly the two
+  identity controls, and the new inner preparation takes the P1471
+  witness route while P1470 is selected (22/3 at 8 and 1; the same
+  frozen binary passes 25/0 under P1471).
+  `PortBlocked::NestedEvaluationFixtureRouteMismatch` is admitted as
+  a fixture-contract error; 826+826 frozen files exact, no repair,
+  production/maintained changes 0. Run: 2,558 `.temp` changes,
+  20 PASS / 2 FLAGGED / 2 FAIL / 2 NA, 231.3229064380048 s charged,
+  4,540.691416336026 s focused remainder, workspace 0/6,000.
+  Continuation 33 corrects the fixture route with an explicit route
+  assertion and resumes the full bar.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
