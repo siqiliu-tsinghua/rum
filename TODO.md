@@ -922,6 +922,41 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   only by executed corrected-successor, corrupted-parent and
   corrupted-successor receipts. Continuation 27 implements it and
   runs the full bar under 7,172.596280580081 s + 6,000 s.
+  Continuation 27: compliant Q28 STOP on
+  `PortBlocked::PairedBridgeNestedFixtureRouteAssertion`. Q33 is
+  implemented in scratch — 11 registered helper edits with inverse
+  erasure, absent-vs-invalid-present state distinction, parent proof
+  authentication before inheritance, an independent successor record,
+  binding neither arm nor occurrence — and the fixed successor
+  passes: P0239 armed 1/1 arms, bindings 1, proofs 2, hits 1, body 0,
+  Some42; P0245 1/2, 1, 2, 1, 0, Some42; disabled 1/2 with hits 0;
+  live 0/0/0. The 20 context controls pass 20/0 in all 24 forms,
+  including corrupted parent/successor, nested barrier, fresh-empty,
+  abandon-during-resume and alias-versus-final-drop; the four
+  weaknesses are red against their named controls. All 50 typed rows
+  pass their six-form matrices: 600 runs, 822×12 = 9,864 passed,
+  zero failed; P0396's 20, P0278/P0281's 14 and P0001's 15 are green;
+  erasure, omission pins, the 3-path/6-postimage double generation,
+  the 911-instance AST audit, 770 outputs over 34 admitted paths with
+  892 pin comparisons and the unchanged `f9604852…` schema pass. The
+  finding is a fixture-contract error, not a production regression:
+  the `actual()` wrapper demands a globally empty route at a nested
+  boundary while the copied `RetentionContext::evaluate` retains the
+  outer prefix (`bridge.rs:103,116`) and production states the
+  contract includes "every outer bridge in a nested callback chain"
+  (`bridge.rs:98`); live fails identically (14/1), all six forms
+  reproduce it, the 157-file freeze is byte-identical and the two
+  nested hits are not established. Run: 4,016 `.temp` changes, 14
+  PASS / 3 FLAGGED / 2 FAIL / 2 NA, 16,224 citations, 2 accepted
+  deviations (the generator's absence and a 300 s conservative charge
+  for one unbounded read-only probe), 1,525.2452842445637 s charged,
+  5,647.350996335517 s focused remainder, workspace 0/6,000.
+  Continuation 28 corrects the fixture without weakening (assert the
+  actual route invariant and root cleanup, keep the panic/unwind
+  assertion, require route-leak/nested-crossing/skipped-inner-store/
+  prefix-restoration falsifiers, freeze intact), promotes the
+  successor `bindings`/`proofs` to assertions, reuses the green
+  evidence by hash identity, and resumes the remaining bar.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
