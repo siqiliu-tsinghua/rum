@@ -1070,7 +1070,24 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   111.55689399799485 s charged, 4,276.316098010036 s focused
   remainder, workspace 0/6,000. Continuation 35 derives the nested
   expectations row-wise, calibrates them and resumes the full bar.
-  C2 stays Open at 118 Residual + 0 Lost. Then CM5.
+  Continuation 35 is a compliant Q28 STOP: the Q36 correction is
+  accepted and closed (24 fresh E22 runs at 528/0; the nested candidate
+  is the E22 candidate plus 81 additive lines with the per-row prepared
+  route, a recorded row/form baseline re-executed on the same helper,
+  and inner/outer windows equal to their own baselines; 24 nested runs
+  / 600 controls green, 16 calibration runs / 48 rejections on exactly
+  the named assertions, J replay 3,420, E22 528), and
+  `PortBlocked::IndependentEpisodeBeginContractConflict` is admitted as
+  the worker's generated-instrument implementation error — a new
+  `SecondLiveRun` guard at begin rejects Q18's required replacement of
+  a stale unpaired episode, so the unchanged 170-control suite fails
+  168/2 at 8 and 1 on one hash binary. Q18 and Q35 both stand. Run:
+  1,746 `.temp` changes, 14 PASS / 2 FAIL / 2 NA, 277.98761521700726 s
+  charged, 3,998.3284827930283 s focused remainder, workspace 0/6,000.
+  Continuation 36 repairs the guard at the insertion sites, calibrates
+  every retained assertion, reruns the 170 controls in both cfgs and
+  resumes the full bar. C2 stays Open at 118 Residual + 0 Lost. Then
+  CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
   real/disabled parity, caller frame back to base, native-stack 8/0 at 8
