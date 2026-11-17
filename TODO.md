@@ -1177,7 +1177,33 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   fresh pool (CM4's share extended to 36,500 s; 743–746 retain
   40,500 s). Run: 1,286 `.temp` changes, 12 PASS / 1 FLAGGED / 2 FAIL /
   2 NA, 306.0892920769911 s charged, 17.82422975296049 s carry,
-  workspace 0/6,000. C2 stays Open at 118 Residual
+  workspace 0/6,000. Continuation 41 is a compliant Q28 STOP with the
+  pending Q38 plan fully delivered: all 800 remaining changed-input
+  runs match their original cfg/form/selector/eight-one-thread
+  commands exactly (profile calibration 8, retained guards 44,
+  C35/Q36 nested 16, E/J/Q36 156, typed-remaining48 576; 15,288
+  passed / 132 exact rejections, zero unexpected, zero candidate
+  failures), the combined 920-run plan is 29,244/232 and the 124
+  unchanged references authenticate at 6,056/124/700 filtered; the
+  next initial-return lifecycle control exposes
+  `PortBlocked::InitialReturnTransportRevivesInvalidatedReturn` — the
+  fabricated second `InputRequired`, the success and the other error
+  invalidate the first initial return only in the transported
+  `Run.returning` map while the immutable Q34 `return_records` keep
+  the authority, so restoring the transport turns `(false,1,0)` into
+  `(true,1,1)` with a hit on the same 227/3 binary at 8/1, the fixed
+  222 and the valid/disabled counterparts green, frozen 2,241 files
+  without repair; Q39 rules the independent current-initial-return
+  carrier checked at `initial`/`initial_token` and `hit`, and
+  continuation 42 classifies every one of the 133 carriers/26 groups
+  and 134 boundaries by invalidation mechanism (zero unknowns),
+  implements Q39 plus any further transport-only carrier the
+  inventory proves, reruns every affected matrix and finishes the
+  bar. Run: 5,542 `.temp` changes, 11 PASS / 1 FLAGGED / 2 FAIL /
+  2 NA, 867.794151364993 s charged, 7,150.0300783879675 s carry
+  (CM4's share stands at 36,500 s with 7,132.205848635007 s unspent;
+  743–746 retain 40,500 s), workspace 0/6,000.
+  C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
