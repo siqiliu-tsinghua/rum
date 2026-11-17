@@ -1254,6 +1254,41 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   `.temp` changes, 12 PASS / 1 FLAGGED / 2 FAIL / 2 NA,
   1,735.2236641410127 s charged, 10,221.403497958907 s carry (no
   extension; CM4's share stays 44,500 s with 34,296.42073179405 s
+  committed; 743–746 retain 40,500 s), workspace 0/6,000. Continuation 44 is a
+  compliant calibration-declaration STOP with Q41 delivered: the
+  independent actual-object source identity for the raw Producer (six
+  registered edits, `df110194…` → `937bbd9f…`, forward and inverse
+  byte-exact, 63 controls green in armed and disabled at hash/nohash
+  and 8/1, the weak variant `23844c29…` 60/3 with exactly the three
+  `another_live_source_index_cannot_*` names) and for the paired
+  Producer/Permit (thirteen registered edits at two copies,
+  `9a6dfb43…` → `bf259b97…` forward and inverse exact, 48 added
+  controls over six writers × four actors, 110/0 in both cfgs at 8/1,
+  the weak variant `8942316a…` 102/8 with six armed cross-live writers
+  and the disabled return/operation writers, both AST auditors passing
+  on approved literal nodes); the inventory is zero-unknown (133
+  carriers / 26 groups / 134 boundaries / 4,422 obligations; four
+  declared mechanisms; 308+12, 51+12 and 62 fixed controls preserved),
+  all 27 affected sources in 38 copies render both ways byte-exactly,
+  the matrices are 4,368/80, 6,056/124/700, 360/0, 1,344/0 and
+  3,336/24 (fresh 194 at 15,464/228/0/700, 192 exact; the 228 =
+  224 declared + four additional weak-2 rejections), the 1,044 reused
+  runs authenticate across 3,144 files at 55,324/560/0/0 with no
+  fresh credit, and the final-core fixture composes 320 fixed + 16
+  loop controls into 336 green runs. The stop is a worker
+  complete-fixture calibration integration error: the weak-2
+  declaration came from a `guard_only+guard_2` build that excluded the
+  `guard_3`-gated veto controls, so the complete fixture reports 332/4
+  against a declared 334/2 — the two extra names are forced by the
+  unchanged bodies, no expectation or control was edited, 10 of 168
+  runs executed and 852 files are frozen. The ruling: every variant's
+  complete-fixture expected set is re-derived from the 336 participants
+  and the registered omission, recorded with causal anchors in a new
+  frozen plan, and continuation 45 executes all 168 runs against it
+  and then finishes the complete bar.
+  Run: 1,912 `.temp` changes, 12 PASS / 1 FLAGGED / 2 FAIL / 2 NA,
+  594.8012415540143 s charged, 9,626.602256404893 s carry (no
+  extension; CM4's share stays 44,500 s with 34,891.22197334806 s
   committed; 743–746 retain 40,500 s), workspace 0/6,000.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
