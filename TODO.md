@@ -1014,9 +1014,23 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   of its owner (or insertion-enforced single-owner), consumers take
   only their own keyed record and authenticate it under Q34, and
   every independently live queue retains exactly its own omission.
-  Continuation 31 is the `Scope: NONE` transported-carrier
-  cardinality inventory at 1,200 s (unused returned);
-  continuation 32 implements Q35 and resumes the bar.
+  Continuation 31: the `Scope: NONE` transported-carrier
+  cardinality inventory is accepted — 133 carriers in 26 groups with
+  zero unknown, all fields filled, 12,679 declaration instances /
+  719 source instances / 327 bodies / 177,273 references over 11,777
+  sources, 10,570 classified exclusions, 26 named controls, and the
+  151/152/14/94/134/4,422 structure preserved; 54 hash-identical
+  replays at 1,152 passed / 6 failed (exactly the three rows'
+  interleaved instances at 8 and 1), live/disabled 504 and E 528
+  green; both frozen trees exact; schema unchanged, no generator.
+  Run: 218 `.temp` changes, 14 PASS / 2 FLAGGED / 3 NA,
+  193.43143260599663 s charged, 1,006.5685673940034 s returned,
+  4,772.014322774031 s focused remainder, workspace 0/6,000.
+  Q35's owner-keyed design is accepted (nominal keys, actual-scope
+  lookup, vacant-only insertion, independent retirement, legacy
+  JoinState and the named single slots corrected) and the c32 draft
+  is adopted with that budget remainder. Continuation 32 implements
+  Q35 across every reachable carrier and resumes the full bar.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
