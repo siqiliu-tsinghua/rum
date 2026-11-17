@@ -1202,6 +1202,31 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   bar. Run: 5,542 `.temp` changes, 11 PASS / 1 FLAGGED / 2 FAIL /
   2 NA, 867.794151364993 s charged, 7,150.0300783879675 s carry
   (CM4's share stands at 36,500 s with 7,132.205848635007 s unspent;
+  743–746 retain 40,500 s), workspace 0/6,000. Continuation 42 is a compliant Q28 STOP with the
+  class-wide repair delivered: Q39 implements the independent
+  current-initial-return carrier (six registered edits and the inverse
+  byte-exact, 230/0 in hash and nohash at 8/1, the omission variant
+  227/3 with exactly the three armed invalidated-return names); the
+  zero-unknown invalidation inventory v6 classifies 133 carriers /
+  26 groups / 134 boundaries / 4,422 obligations (57 durable, 48
+  transport-only, 20 superseded, 4 immutable, 4 boundary-guarded) and
+  its 13 required repairs are implemented with named controls,
+  omission calibrations, byte inverses and independent AST audits; the
+  920-run family replay is 29,244/232, the 124 remaining runs are
+  fresh at 6,056/124/700, and 2,236 executions total 99,072/1,084/700.
+  The final additive Guard control then exposes
+  `PortBlocked::ProducerGuardTransportImpersonatesLiveSourceEntry` —
+  the received tuple is authenticated against the live entry but not
+  tied to the actual outer Guard object, so substituting another live
+  entry's tuple makes the actual outer issue one frame, one evaluation
+  return with permission and a hit, and one request return for that
+  entry (314/6 on the same binary at 8/1, fixed 308 and the
+  valid/ordinary/unknown controls green, 9,391 files frozen without
+  repair); Q40 rules the independent actual-source Guard identity, and
+  continuation 43 implements it, reruns every affected matrix and
+  finishes the bar. Run: 24,765 `.temp` changes, 13 PASS / 1 FLAGGED /
+  2 FAIL / 2 NA, 3,193.402916288047 s charged,
+  3,956.6271620999205 s carry (CM4's share extended to 44,500 s;
   743–746 retain 40,500 s), workspace 0/6,000.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
