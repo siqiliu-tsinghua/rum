@@ -2527,3 +2527,243 @@ Q34 rules the consumer contract. Every consumer boundary that confers an effect 
 Because this is another finding in the identity-and-inheritance class and the remaining transports are consumer boundaries of the same shape, continuation 29 is a `Scope: NONE` transported-identity consumer inventory at 1,200 s of the focused remainder, with unused time returned and no workspace command. Over the 94 admitted paths and every declared transport it enumerates every consumer that confers an effect from a transported token — the direct-frame claim, the deferred Box/type-edge transport, the operation-owned one-use protocol, abandonment retirement, producer-entry arming, inherited construction binding, the join confirmation and publication omission, the evaluation-queue publication, and every other consumer those paths make reachable — with, for each, the actual object, the source edge, the independent record available at that boundary, whether the consumer compares the complete identity, the executed corrupted-transport falsifier or a named limitation, and its composition order, with zero unknown consumers. A consumer the mechanism cannot serve is a named PortBlocked. The design states which independent record each consumer will use, why the transported copy cannot be its own evidence, and drafts continuation 30's implementation brief. No maintained edit and no workspace command.
 
 Continuation 30 then implements Q34's consumers and resumes the remaining bar. The frozen `join-queue-stop/` tree (235 files) is immutable; the corrected consumer is a separate render with its own hashes, and the stopped candidate is never repaired. The fixed J controls stay: P0267's actual installed-owner control publishes once, its two full-identity controls require zero omissions, and the original eighteen controls per row stay unchanged. The corrected render's expanded 20-control matrices must pass for P0267, P0312 and P0323 in all six forms at eight and one thread, and a deliberately weakened consumer that does not compare the full identity must fail exactly the two full-identity controls while the legitimate render stays green. The E/J composition is replayed after the J consumer change, because E was tested before the J extension. The remaining bar resumes: all other declared transports, the complete 151-plan generator with zero unknown edges, the 94/188 double generation, restoration and omission audits, the mechanically emitted 94-row schema with all 151 cells and the exact-byte digest, the ordered replay, `cargo fmt --check`, and both workspace modes at failed=0, filtered=0. The maintained edit surface and immutable set are unchanged; a consumer-boundary edit that cannot be expressed in the declared surface is a STOP. The stop-loss is the Q28 counter: one retired distinct compile error is progress; removing or weakening a control stops; a rejected copied production source or instrumentation edit is a finding that stops; two consecutive non-reducing attempts stop; the envelope is the hard bound. No new allocation, no fifth overlay, no subset, no placeholder digest, no hand-edited derived cell, no weakened control, no git, no network, no `unsafe`, no dependency or lockfile change. Budget: 5,304.579927531027 s focused remainder plus the untouched 6,000 s workspace; the 1,440 s verification envelope and its second 6,000 s workspace stay held; CM4's committed share stays 28,500 s and 743–746 retain 40,500 s. The director pauses after this gate for a host reboot and dispatches continuation 29 after it. No campaign, epoch, new catch, acceptance or CM5 is authorized. Pair `(45,5,false)` Open with zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open; `CHANGELOG.md` and S10 blocked.
+## Continuation 29 ruling (director) — the `Scope: NONE` transported-identity consumer inventory is accepted: 151 rows, 152 forms, 14 transports, 94 paths, 134 boundaries, 4,422 obligations and zero unknown consumers, with 56 hash-identical replays at 1,088 passed and the four expected J failures; the Q34 design and the continuation-30 draft are adopted (amended only in the postimage arithmetic), and continuation 30 implements the corrected consumers and resumes the bar under 5,173.269646620027 s
+
+Continuation 29 is accepted as DONE. The inventory is gated on its own artifacts: 151 frozen rows and 152 forms (P2593 has both) across 14 declared transport families and 94 admitted paths; 134 consumer boundaries in 29 groups, each with a source/hash anchor, actual object, available independent record, current full-identity comparison, proposed record, named limitation and composition order, with no empty field; 4,422 form/boundary obligations with source edges, actual object, target record and named limit in every cell and zero unknown classifications; 142 helper functions re-derive from the four canonical helper sources (97 core, 25 raw, 16 paired, 4 loop); 15 explicit exclusions; 1,992 partial-helper instances with exactly two distinct non-canonical bodies (E's pre-J `installing` and `retire`, J's `paused`/`confirmed` cleanup) and no combined-execution claim; 989 rooted call sites over 49 rooted names; 316 source files parsed into 272,392 syntax nodes with the parser unchanged; all 94 admitted paths `not_emitted` with zero byte delta; the 235-file frozen J tree exact; the schema `f9604852…` unchanged with 151 cells and `new_schema=null`; 5,400 maintained, 590 design and 9,336 accepted files rehash clean, the only differences being the three director document drifts committed in `60c25ad4`. The 56 replayed existing-binary runs are hash-identical to their pins and re-derive at 1,088 passed, 4 failed, 0 ignored and 0 filtered: 24 E runs at 22/0, 24 corrected successor runs at 10/0, and the four failures are exactly P0267 armed/hash's two full-identity controls at eight and one thread (18/2 each); no other J row or form is inferred. The FLAGGED items are settled, not reds: the inherited J failures are the admitted finding, and the replay collector's env-form assumption plus the root census's missing derived empty `Permit` default are instrument repairs with both attempts retained, as is the later addition of the 27 accepted raw-source copies and the exact namespace/impl-qualified root matching, with no source or test contract weakened. The inventory names three open PortBlocked classes for implementation — `RawTransportFullIdentityAuthentication` over 23 boundaries, `JoinConfirmationFullIdentityAuthentication` over 8 and `HostConsumerFullIdentityNotImplemented` over 5 — while every other cell carries an executed receipt or its named limitation, and no cell is relabelled as executed.
+
+The Q34 design is accepted: distinct immutable proof records with a private authenticated constructor, appended only by source-bound writers; transported values carry a proof id and identity; authentication requires complete identity equality plus the exact proof kind and source edge, the actual object or operation key, the current episode and side, and the lifetime or claim state; a wrong id with otherwise plausible fields rejects; consumers may read, claim or revoke but never replace a record; the writer/read pairs are fixed per record kind; construction preserves Q33's absent/invalid/barrier rules and Q32's claim comparison, and producer provenance keeps Q31.
+
+Continuation 30 is ordered with the continuation-29 draft adopted as its brief, amended only in the postimage arithmetic: two fresh roots with exactly 94 targets each and exactly 188 postimages in total (one per target per root), never 188 per root. It corrects J in a separate render first while the frozen `join-queue-stop/` tree stays immutable, writing the independent install, pause and queue-pause records and comparing the whole received identity at both `join_result` and `omit_join`, checking the append's own generation and registered namespace, keeping the one arm, the one legitimate hit, queued zero and the existing quiescence predicate, and passing the twenty fixed controls for P0267/P0312/P0323 in all six forms at eight and one thread (36 runs, 720 control executions) with both corruptions at zero omissions, the eighteen originals exact, a deliberately weakened consumer red on exactly those two controls in each armed cfg and row, and the disabled and live records exact; corruption is extended to origin, episode, frame kind, generation, namespace and proof id with the independent fields fixed. It then composes E and J, reruns E's 22-control matrices (24 runs, 528 executions) and the interleaved-owner, same-generation-foreign, wrong-namespace, second-claim and retirement controls, keeping the E and J proof kinds distinct; applies the complete 134-boundary consumer table rather than only the reproduced join defect; re-executes every affected per-row matrix (all fifty typed rows, the twenty-five raw owner rows and every declared transport, including P0001/P0002/P1566/P1805) with hash-identity reuse only for unchanged evidence; composes the complete 151-plan deterministic generator with zero unknown edges, rejecting overlapping, duplicate or unknown anchors; generates the two roots, proves byte identity, restores registered instrumentation to whole-file bytes and AST in both cfg arms and proves the pinned omission separately; mechanically emits the six-column 94-row schema, hashes its exact bytes, binds all and only the 151 `source_schema` cells and independently compares every other inventory field; then runs the ordered standing replay, `cargo fmt --check`, and both workspace modes with the seven skips, `RUST_TEST_THREADS=8` and the full unfiltered `suspension_oracle` and `typed_slot_census` at failed=0 and filtered=0. The fixed controls stand unchanged: P0239 armed at 1/1 arms, bindings 1, proofs 2, hits 1, body 0 and Some42; P0245 at 1/2 with the same other values; disabled at 1/2 with hits 0, body 1 and Some43; live at 0/0; the wrong-identity controls at hits 0, body 1 and Some43; P0396's twenty, P0278/P0281's fourteen, P0001/P0002's fifteen and P1566/P1805's seventeen. No expectation is edited. Budget: 5,173.269646620027 s focused plus the untouched 6,000 s workspace envelope; the 1,440 s verification envelope and second 6,000 s workspace stay held; CM4's committed share stays 28,500 s and 743–746 retain 40,500 s. The stop-loss is the Q28 counter: one retired distinct compile error is progress; a rejected copied production or registered instrumentation edit, a failing compiled candidate control, a removed or weakened control, an out-of-scope proof need or an exhausted envelope stops. No new catch, no new allocation, no fifth overlay, no subset, no placeholder schema, no provisional digest, no hand-edited cell, no git, no network, no `unsafe`, no dependency or lockfile change. No campaign, epoch, acceptance or CM5. Pair `(45,5,false)` Open with zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open; `CHANGELOG.md` and S10 blocked.
+## Continuation 30 brief (adopted from the continuation-29 draft; director amendment: 94 targets per root and 188 postimages in total)
+
+The director adopts this draft as the continuation-30 brief. It is read with the continuation-29 ruling above, whose fixed controls, budget, stop-loss and report rules are authoritative. The only amendment is the postimage arithmetic, corrected here.
+
+# Draft continuation 30 — independent identity at every consumer
+
+Director-review draft, not a dispatch or new allocation. Implements Q34 and
+resumes the remaining CM4 bar. Incorporates the current brief's Q10–Q34 rules,
+`Q34-DESIGN.md`, `consumers.json`, `consumer-instances.json`, `row-forms.json`,
+`admitted-paths.json` and the accepted Q25 design. The director rewrites/adopts
+this draft before implementation. No existing finding or expectation is changed.
+
+## Goal
+
+Every effect-conferring transported-token consumer authenticates complete
+identity against an independent record written at the actual source event.
+Deliver all 151 plans, zero unknown edges, ten classes/79 subtypes, the exact
+94-path/188-postimage deterministic double generation, independent restoration
+and omission audits, mechanically emitted schema and all 151 source_schema
+cells, ordered standing replay and both workspace modes. No new catch or epoch.
+
+## Context and inputs
+
+- `docs/dev/codex/brief-742-g15cm4-generation-schema.md`, final Q34 ruling;
+  AGENTS.md, TEMPLATE.md, testing policy and canonical organization guide.
+- Immutable accepted Q25 inputs under `.temp/brief-747/continuation-1/`,
+  authenticated against verified-final-a/manifest.json and identical root B.
+- C29 `entry-hashes.json`, `source-authentication.json`, `consumers.tsv`,
+  `consumer-instances.json`, `row-forms.json`, `source-calls.json`,
+  `helper-variants.json`, `evidence-by-group.json` and `replays.json`.
+- Frozen `.temp/brief-742/continuation-28/join-queue-stop/manifest.json`,
+  235 exact files. The stop tree is never repaired. New render has a new path
+  and hashes. The same applies to all earlier accepted/frozen evidence.
+- C28 full 20-control J fixture and fixed successor/P0002 controls; C27 full
+  fifty-row typed matrices; C19 raw retirement source and source controls.
+
+## Scope
+
+Production scope NONE. Maintained changes are restricted to generation/{mod,
+plan,resolve,graph,transport,render,compose,audit,tests}.rs and recipes.tsv,
+paths.tsv; mutations/mod.rs and schema.rs for generation binding;
+source_auth/{mod,schema,tests}.rs; mechanical source_auth/overlays.tsv;
+only source_schema in the 151 mutants.tsv rows; obligations/mod.rs only if
+a crate-private discovery export is necessary. These are under
+crates/rum-stdlib/tests/suspension_oracle/. Mechanical standing maintenance
+may import only instrument-produced cells as already authorized.
+
+Copied instrumentation may target only the exact 94 admitted paths. New record
+types and private proof APIs live only in the generated cm740_probe helper.
+Use existing source-bound hooks where possible; any added hook is a registered
+edit with inverse erasure and a producer/return/construction anchor already
+inside the admitted set. No fifth overlay or new production interface.
+
+Immutable: live production, external projected resume files, source_worker,
+runner/observer/predicate/control bodies, ordinary guard, exact omission,
+selectors, phases, source_key/tail_digest, coverage/promotions, manifest, lock,
+dependencies, and every frozen artifact. No git or network. No hand-edited
+inventory, placeholder schema, subset or weak control.
+
+## Target shape and staged implementation
+
+1. Pin entry and all inherited artifacts without git. Import C29's inventory
+   as declarations, not execution receipts. Resolve all source edges from the
+   current preimages; unknown binding or unavailable proof is a named
+   PortBlocked. Keep named limitations and do not relabel cells as executed.
+
+2. Implement the `Identity`, `ProofRecord`, `Transported` and private
+   `Authenticated` shape in Q34-DESIGN.md. Records have exact identity and
+   actual object/edge keys. Issuance factories are restricted to begin/entry,
+   actual pause, actual return and allocation/install hooks. Readers cannot
+   replace records. Separate consumed/retired flags from immutable identity.
+   An absent or unauthenticated value yields no permission. Do not create
+   proof by copying the received value in a consumer. A ProofId alone is not
+   sufficient. Preserve origin across owner rebasing; exact None frame kind
+   is distinct from actual allocation/type. Maintain Weak liveness for raw
+   owners without strong ownership or lifetime extension.
+
+3. Correct J in a separate render first. At actual install/registration keep
+   InstalledRecord's independent owner/source path and namespace/generation.
+   At the existing actual producer pause, append PauseRecord with occurrence,
+   then QueuePauseRecord joins that source record to InstalledRecord before
+   the producer retires. `paused` and `confirmed` are transported copies.
+   Both join_result and omit_join compare the entire received identity to
+   these records and its authenticated producer/construction lineage. The
+   actual append must match own generation and registered namespace. Do not
+   require a legitimately dropped executing frame to stay live at queue
+   publication; do not attribute a descendant frame to the request caller.
+   Keep one arm, one own legitimate hit, queued zero and existing quiescence
+   predicate. Preserve source order and all error/None/constructor/drop nodes.
+
+4. Run corrected J's twenty controls for each P0267/P0312/P0323 in armed,
+   disabled and live, each hash/nohash, at eight and one thread (36 runs,
+   720 control executions). The actual owner publishes once; both transported
+   source-path/occurrence corruptions publish zero; eighteen original controls
+   remain exact. A deliberately weakened full-identity consumer must fail
+   exactly those two controls in each armed cfg/row while the legitimate
+   render passes. Keep disabled/live records exact. Extend corruption to
+   origin/episode/frame-kind/generation/namespace/ProofId as additions, with
+   independently recorded fields fixed; no original control is replaced.
+
+5. Compose E and J in the same helper/source transform, then rerun E's full
+   22-control matrices for P1470/P1471 in all six forms at eight/one (24 runs,
+   528 controls). Keep E and J proof kinds distinct. Test interleaved owners,
+   same-generation foreign queues, E scope during J setup and J cleanup
+   during E scope, wrong namespace, second claim and independent retirement.
+   E's prior pre-J receipts do not pay this gate. Assert full combined-source
+   erasure and independent omission pins; no added publication or reordered
+   push/return is permitted.
+
+6. Apply the complete consumer table, not just the reproduced join defect.
+   Authenticate resume before restoring provenance; retain Q32 claim checks.
+   Preserve Q33 absent/invalid/barrier distinctions and actual successor proof.
+   Authenticate operation bind and keep immutable operation records after
+   claim so each call ticket, callee claim, walker step, omit and hit can check
+   independently. Raw resume/grant/Flow/return-to-successor receive independent
+   full construction identity; raw and paired origins are no longer discarded.
+   Return/request/pair-issued and profile proofs use the exact writer/read
+   pairs in the design. The host output and adapter paths get their declared
+   source-bound return/pair/call proofs within the existing copied paths.
+   Immediate-only P2593 and initial-only P0813 remain static failures.
+
+7. Re-execute every affected per-row source-bound matrix after changes to its
+   shared helper: all fifty typed rows, all twenty-five raw owner rows and
+   every other declared transport, including P0001/P0002/P1566/P1805. Inherit
+   unchanged evidence only by exact source/helper/control/binary hashes.
+   Typed route proofs still show actual adapter abandonment before delegation
+   and final-drop backstop; raw insertion still takes Q26/Q27. No raw route
+   is invented for the typed census. If an actual route needs a fifth path,
+   stop with its named class rather than reaching into production.
+
+8. Compose one complete deterministic generator from live preimages and frozen
+   declarations. Merge annotations on the same call before rewriting once;
+   reject overlap/duplicate/unknown anchors. Only after all 151 plans and
+   paths authenticate, generate two fresh roots with exactly 94 targets each
+   and exactly 188 postimages in total (one per target per root). Prove byte identity. Erase registered instrumentation
+   to whole-file bytes/AST in both cfg arms; separately prove the exact pinned
+   omission and preserved nodes. Enumerate every emitted path and every byte
+   delta versus current pins, including the four admitted raw files.
+
+9. Mechanically emit the six-column 94-row schema. Hash its exact bytes, bind
+   all and only 151 source_schema cells, and independently compare every other
+   inventory field. No new digest before the complete bundle passes. Run the
+   ordered standing maintenance before the first acceptance suite, then fmt
+   and both workspace modes as specified below. Preserve all attempted runs.
+
+## Fixed controls and calibration duty
+
+Do not edit any existing asserted result. P0239 armed successor stays arms1/1,
+bindings1/proofs2/hits1/body0/Some42; P0245 arms1/2 with the same other values.
+Disabled keeps bindings1/proofs2/hits0/body1/Some43; live bindings0/proofs0.
+Wrong occurrence and wrong activation stay hits0/body1/Some43. P0396's fixed
+twenty controls, P0278/P0281's fourteen, P0001/P0002's fifteen and P1566/P1805's
+seventeen remain. P0002 nested boundary carries exactly the outer prefix;
+root cleanup is asserted after the outer call. Its four calibrated weaknesses
+remain, as do actual abandonment, ordinary alias drop and nested producer arms.
+
+For every consumer listed by C29, inject corruption only into the transported
+copy after its writer, keeping the independent record unchanged. Challenge
+each applicable identity component, actual object/type, source edge and proof
+kind/ProofId; recheck after each handoff. Reject before writing a successor
+proof or granting a capability. Keep valid, nested, two-independent-owner,
+second-consumption, retired and disabled/live counterparts. Deliberate
+self-authentication, empty-scope veto, ambient inheritance and blanket resume
+suppression must be red on their named controls and valid variants green.
+Record a named limitation where no source route exists, never a generic green.
+An ordinary Rust assert does not prove a disabled complete-record equality.
+
+## Mandatory standing replay and workspace gates
+
+Use the exact DRAFT-COMMON.md commands and script mirror procedure; import
+only instrument-produced cells. Ordered replay: fingerprint regeneration;
+local_production_acceptance in default/no-default, certificate import and
+revalidation in both; ownership discovery/exactness; rejection census; LP01
+both modes; full typed-slot census both modes. Quote every verdict. A red
+caused only by stale fingerprints/certificates/positions is an ordering
+artifact: replay, do not hand-edit or weaken. Existing identity/status/
+disposition change, UnknownHostPayload, changed LP01 statement or moved
+rejection census is STOP.
+
+Then bounded `cargo fmt --check` and serial offline/locked `cargo test -j8
+--workspace --no-fail-fast`, with default and --no-default-features, using
+RUST_TEST_THREADS=8 and exactly these seven --skip arguments:
+
+```
+lp03_adopted_phases_are_exact_in_completed_and_resumed_runs
+lp04_adopted_definition_rows_are_exact_in_completed_and_resumed_runs
+lp05_adopted_assignment_rows_are_exact_in_completed_and_resumed_runs
+lp658_host_eval_reset
+lp658_host_resume_reset
+lp655_root_context_falsifier
+lp656_public_root_context_falsifier
+```
+
+Run the same lp03_phase_rows/lp04_definition_rows/lp05_assignment_rows binaries
+for each mode with RUM_PROFILE_LEXICAL_SUBSTITUTION=1; verify their hashes before
+and after. Clear all other profile/CM inherited environment as DRAFT-COMMON
+requires. Full suspension_oracle and typed_slot_census must be unfiltered in
+both modes, failed=0 and filtered=0. Eight observer, ten source-auth and four
+Q7 predicate controls remain unchanged. No live hot-path change is authorized.
+
+## Budget, concurrency, STOP and checkpoint
+
+Focused budget is exactly C29 budget.json's implementation remainder after
+return (starting parent remainder 5304.579927531027 seconds minus C29's actual
+charge). The assigned workspace envelope is one cumulative 6000 seconds for
+this continuation; bound each serial command by its remaining balance. The
+1440-second verification envelope and second 6000-second workspace remain
+held. No new allocation; CM4 committed28500 and 743–746 retain40500. One cargo
+at a time, jobs8, tests8, inherited16G/no-swap scope, offline/locked. Every
+long command/child tree uses run-bounded. Reproduce a genuine red on the same
+binary at one thread. A scope OOM gets the standing one-job retry only.
+
+Q28 stop-loss: one retired distinct compile error is progress for fixture-only
+construction; two nonreducing attempts stop. Rejected copied production or
+registered instrumentation, failing compiled candidate control, removed or
+weakened control, out-of-scope proof need or exhausted envelope is STOP.
+Keep failures and candidate hashes; do not repair a frozen finding after STOP.
+Record every command, source change, replay, hash, file delta, done/next/tree
+and remaining budget to continuation30 scratch and PROGRESS.md. A pass is the
+complete bar, never a 138-row subset or provisional schema.
+
+## Hard rules and report
+
+No git/network/unsafe/new dependency/lock/manifest change. No campaign, mutant
+epoch, acceptance packet, catch, settlement/SAME/promotion, encoding execution
+or CM5. Pair(45,5,false) zero/Open; four structural controls and five
+armed-without-hit Error cells per row unchanged; C2 118 Residual + 0 Lost;
+51 owners/five duties Open; ordinary guard, CHANGELOG and S10 remain fixed.
+
+Write rum-report/1 with all changed paths, exact old/new schema digests,
+enumerated94 outputs/byte deltas and generator/audit/replay/workspace verdicts.
+Validate via python3 -B scripts/report.py check 742 without --against-git.
+Final response is only the output of python3 -B scripts/report.py summary 742.

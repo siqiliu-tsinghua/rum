@@ -981,6 +981,24 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   transported-identity consumer inventory at 1,200 s (unused
   returned); continuation 30 implements the corrected consumers and
   resumes the bar.
+  Continuation 29: the `Scope: NONE` transported-identity consumer
+  inventory is accepted — 151 rows / 152 forms across 14 transports
+  and 94 paths, 134 consumer boundaries in 29 groups with complete
+  rows, 4,422 obligations with zero unknown, 142 helper functions,
+  15 exclusions, 1,992 partial instances, 989 rooted calls over 49
+  names, 316 parsed files / 272,392 nodes; all 94 paths not_emitted
+  with zero delta, the 235-file frozen tree exact, the `f9604852…`
+  schema unchanged, 5,400/590/9,336 files rehash clean (only the
+  three director drifts in `60c25ad4`); 56 hash-identical replays at
+  1,088 passed / 4 failed (exactly P0267 armed/hash at 8 and 1), no
+  other J row inferred; three named PortBlocks (raw 23, join 8, host
+  5). Run: 198 `.temp` changes, 11 PASS / 2 FLAGGED / 3 NA,
+  131.310280911 s charged, 1,068.689719089 s returned,
+  5,173.269646620027 s focused remainder, workspace 0/6,000. Q34's
+  design is accepted and the c30 draft is adopted with one
+  amendment (94 targets per root, 188 postimages in total).
+  Continuation 30 implements the corrected consumers and resumes
+  the bar.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
