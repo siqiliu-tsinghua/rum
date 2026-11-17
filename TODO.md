@@ -1122,7 +1122,26 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   remainder, workspace 0/6,000. Continuation 38 corrects the guard to
   distinguish a propagated child proof from a repeated actual parent
   pause, reruns P1566 with P1805/P0001/P0002 and the new paired
-  falsifiers, and resumes the full bar. C2 stays Open at 118 Residual
+  falsifiers, and resumes the full bar. Continuation 38 is a compliant
+  Q28 STOP: the c37 guard correction is accepted and closed (the single
+  registered guard replacement checks canonical actual-owner source
+  records instead of the pending slot, the fourteen registered edits
+  and the inverse to C28 exact, the fixed 42/62 bodies byte-identical,
+  the candidate matrix 248/0 in four runs, six weakened variants over
+  24 runs at 64 exact rejections and 0 unexpected, the paired-source
+  matrix 48 runs / 768 controls green in every form and cfg at 8/1),
+  and `PortBlocked::PairedReturnTransportRevivesInvalidatedReturn` is
+  admitted as a genuine candidate-contract lifecycle finding — the
+  accepted c27 retirement is carried only by the absence of the token
+  in the transported `EvalPair.proofs` map while the immutable Q34
+  `sources`/`returns` records keep it, so restoring the transport token
+  recreates the queued issue; Q37 rules the invalidation recorded in an
+  independent owner-keyed current-return carrier checked at issuance
+  and eligibility, and continuation 39 implements and calibrates it,
+  reruns the lifecycle and P1566/P1805/P0001/P0002 matrices and
+  resumes the bar. Run: 847 `.temp` changes, 11 PASS / 0 FLAGGED /
+  2 FAIL / 2 NA, 227.87622452697906 s charged, 596.3096664039977 s
+  focused remainder, workspace 0/6,000. C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
