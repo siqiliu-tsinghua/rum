@@ -1286,35 +1286,56 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   and the registered omission, recorded with causal anchors in a new
   frozen plan, and continuation 45 executes all 168 runs against it
   and then finishes the complete bar.
-  Run: 1,389 `.temp` changes, 10 PASS / 2 FLAGGED / 2 FAIL / 2 NA,
-  676.6896332529868 s charged, 8,949.912623151906 s carry (no
-  extension; CM4's share stays 44,500 s with 35,567.9116066010468 s
+  Run: 314 `.temp` changes, 10 PASS / 1 FLAGGED / 2 FAIL / 2 NA,
+  320.208300333019 s charged, 8,629.704322818887 s carry (no
+  extension; CM4's share stays 44,500 s with 35,888.1199069340658 s
   committed; 743–746 retain 40,500 s), workspace 0/6,000.
-  Continuation 45 delivered the complete 42-variant / 168-run
-  calibration exactly (56,076 passed / 372 deliberate rejections;
-  14,112 participation cells, 93 forced, zero unknown, frozen before
-  execution; the valid 336-control candidate 1,344/0 in four runs;
-  the four non-firing variants guard weak-6, operation-record,
-  operation-call and operation-ticket recorded as masked limits with
-  no falsifier credit) and then stopped on the InstallGuard
-  actual-object source identity: `queue::InstallGuard::generation`
-  authenticates only the received scope number, so the actual outer
-  guard carrying the live inner scope id writes `Some(7)` into the
-  inner installation entry with every independent record fixed
-  (6/2 at 8/1 on the same binary `ae0fc97e…`; source `6dff3001…`);
-  no nohash or other form ran and 671 files are frozen without
-  repair. Q42 corrects the consumer classification: a boundary is a
-  consumer only when no writer writes installation/owner/source/
-  queue/proof authority under a mutable received value, and every
-  installation writer (installing, generation, drop, registered and
-  every related declared scope writer) needs an independent
-  installation identity minted at the source entry, carried by the
-  actual guard and authenticated by pointer identity plus full
-  binding before any write. Continuation 46 re-opens the consumer
-  classifications with zero unknowns, implements Q42 class-wide,
-  re-renders and re-derives the 42-variant calibration on the new
-  complete control set, executes every run exactly and finishes the
-  complete bar.
+  Continuation 46 reclassified all 134 boundaries / 4,422
+  obligations / 133 carriers with zero unknown labels (23 read-only
+  consumers, 55 actual-object writers, 56 conservative source/proof
+  writers; the c43/c44 inventories stay frozen; no execution credit)
+  and implemented Q42 at the installation component: eight registered
+  edit roles at two copies mint a fresh `Rc<InstallationIdentity>` at
+  `installing()`, store it on the entry, carry it in the actual guard
+  and authenticate by `Rc::ptr_eq` plus full binding before every
+  generation, registration and completion write, with `registered`
+  moved to the authenticated guard and teardown retirement. The
+  forward render and inverse are byte-exact (`6dff3001…` →
+  `ac2ff1e1…`; complete candidate `705b1c49…`), both AST audits
+  pass, the P0267 component is 38/0/0/336 in hash and nohash at 8/1
+  (152 passed) and the pointer-omission variant 30/8/0/336 with
+  exactly the eight declared cross-live names; I rebuilt both
+  binaries byte-identically and reproduced the runs. The complete
+  374-control fixture under the inherited C3 selector then reports
+  366/8/0/0 at 8/1 on the same binary: the eight unchanged c45
+  controls fail the fixed distinct-owner setup assertion with
+  owners None/None because the frozen scene enters P0267 while
+  `installing` resolves through `producer_owner` against the selected
+  C3 episode row, before the injection and any write; the 129-file
+  tree is frozen without repair. Q43 rules that every added control
+  scene derives its row from the fixture's own selection, no added
+  control may enter a hardcoded row, a component-scoped set cannot
+  compose with the complete fixture and its red is not a
+  candidate-contract finding, the frozen modules stay frozen, and an
+  adapted set (identical actors/boundaries/assertions/injections/test
+  bodies, differing only in the row derivation, AST-audited) replaces
+  them in the new complete fixture (336 + 8 + 30 = 374), green under
+  C3 in both cfg arms at 8/1 with the omission variant red on exactly
+  its cross-live controls, while the five declared InstallGuard forms
+  (P0267, P0312, P0323, P1470, P1471) run under each form's selector
+  (valid 38/0; omission 30/8 with the cross-live names per run). The
+  four masked limits stand with no credit (38 firing + 4 masked).
+  Continuation 47: Q42 class-wide over the 22 remaining scope
+  mechanisms and the source-route registration caller migration; the
+  re-rendered 42 variants and the new complete participation
+  (42 × 374 = 15,708 cells, zero unknown, frozen before execution,
+  all 168 runs exact); then the complete bar (134/4,422 including
+  the five forms, 133 carrier duties, the 151-plan generator with
+  rejection, two 94-target/188-postimage roots, the audits, the
+  six-column 94-row schema with 151 `source_schema` cells, the
+  ordered standing replay, fmt, both workspace modes with the seven
+  skips and the unfiltered oracle/census), reusing only by exact hash
+  identity.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
