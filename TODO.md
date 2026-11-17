@@ -1056,7 +1056,20 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   changes, 16 PASS / 3 FLAGGED / 2 FAIL / 3 NA, 152.81842432799567 s
   charged, 4,387.87299200803 s focused remainder, workspace 0/6,000.
   Continuation 34 corrects the two publication assertions and
-  resumes the full bar.
+  resumes the full bar. Continuation 34 is a compliant Q36 STOP and
+  a director order error: the ordered `1 + usize::from(armed()==0)`
+  publication formula was derived from P1470's two-insertion window
+  and contradicts P1471's accepted fixed scene (one insertion; zero
+  armed / one disabled-live publication; the five-event window
+  without `boundary-taken`). The worker refused to encode an
+  expectation Q36 forbids; the fresh unchanged E22 baselines pass
+  528/0 over 24 runs (six forms, both rows, 8 and 1), no expectation
+  or fixed scene was changed, and the 344-file snapshot is exact.
+  Q36 stands and the contract is the per-row, per-form fixed-scene
+  baseline. Run: 763 `.temp` changes, 10 PASS / 2 FAIL / 3 NA,
+  111.55689399799485 s charged, 4,276.316098010036 s focused
+  remainder, workspace 0/6,000. Continuation 35 derives the nested
+  expectations row-wise, calibrates them and resumes the full bar.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
