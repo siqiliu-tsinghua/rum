@@ -957,6 +957,30 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   prefix-restoration falsifiers, freeze intact), promotes the
   successor `bindings`/`proofs` to assertions, reuses the green
   evidence by hash identity, and resumes the remaining bar.
+  Continuation 28: compliant Q28 STOP on
+  `PortBlocked::JoinConfirmationFullIdentityAuthentication`. The
+  P0002 correction and successor promotion are accepted — 15/0 in
+  six forms, the four falsifiers red at their named assertions
+  ((0,1) vs (0,2); [] vs [7,8]; root cleanup), successor
+  `bindings`/`proofs` asserted (armed 1/2, disabled 1/2, live 0/0),
+  P1566/P1805 17-control matrices, E 528 and J base 648, 1,008
+  executions. The finding: P0267's join consumer checks the installed
+  queue record, generation/namespace and episode row/program/pair but
+  never the transported owner path or producer occurrence against an
+  independent record; two controls changing only `confirmed.token`
+  after the actual completion still publish the omission once where
+  zero is required, reproduced at 8 and 1 threads (18/2, installed
+  owner unchanged), 235 files frozen, no repair. Run: 1,246 `.temp`
+  changes, 14 PASS / 2 FLAGGED / 2 FAIL / 2 NA, 1 accepted deviation,
+  342.7710688044899 s charged, 5,304.579927531027 s focused
+  remainder, workspace 0/6,000. Q34 rules that every consumer of a
+  transported token authenticates its complete identity against an
+  independent record at the actual producer, pause or construction,
+  never the carried copy; a mismatch yields no effect with
+  disabled/live parity. Continuation 29 is the `Scope: NONE`
+  transported-identity consumer inventory at 1,200 s (unused
+  returned); continuation 30 implements the corrected consumers and
+  resumes the bar.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
