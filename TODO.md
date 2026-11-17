@@ -1161,6 +1161,22 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   calibrates it, reruns every affected matrix and resumes the bar. Run:
   1,278 `.temp` changes, 14 PASS / 1 FLAGGED / 2 FAIL / 2 NA,
   272.39614457404605 s charged, 323.9135218299516 s focused remainder,
+  workspace 0/6,000. Continuation 40 is a compliant allocation STOP:
+  Q38 is implemented and accepted (the independent
+  current-request-return carrier is revoked only by its owner and
+  authenticated at the `request_token` permission, the hit lookup and
+  the request-return propagation with the immutable Q34 records;
+  seven registered edits and the inverse byte-exact, the fixed 214/8
+  bodies unchanged, the 222-control lifecycle green in four runs, the
+  carrier-omitting variant red on exactly the three invalidated
+  controls, all 95 affected sources byte/AST exact, 120 changed-input
+  runs and 124 hash-identical reuse at zero candidate failures), while
+  the exhausted focused carry stopped before the remaining 800 runs
+  and the complete generator/schema/replay/workspace bar; continuation
+  41 resumes the exact pending plan under an 8,017.82422975296049 s
+  fresh pool (CM4's share extended to 36,500 s; 743–746 retain
+  40,500 s). Run: 1,286 `.temp` changes, 12 PASS / 1 FLAGGED / 2 FAIL /
+  2 NA, 306.0892920769911 s charged, 17.82422975296049 s carry,
   workspace 0/6,000. C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
