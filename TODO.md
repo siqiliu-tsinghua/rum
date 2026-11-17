@@ -1086,6 +1086,25 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   charged, 3,998.3284827930283 s focused remainder, workspace 0/6,000.
   Continuation 36 repairs the guard at the insertion sites, calibrates
   every retained assertion, reruns the 170 controls in both cfgs and
+  resumes the full bar. Continuation 36 is a compliant Q28 STOP: the
+  c35 begin correction is accepted and closed (only `SecondLiveRun`
+  removed, `LiveScopeAtBegin` retained, the other nine edits exact, all
+  ten guards calibrated with 80 valid controls and 76 expected
+  rejections and the live-scope control now firing, the inherited 170
+  controls 680/0 in hash and nohash at 8/1, the fifty typed rows at
+  600 runs / 9,864 and the raw and profile-keyed matrices green), and
+  `PortBlocked::ProfileControlLedgerResetReusesSourceEntry` is admitted
+  as the worker's new-control setup error — the 14 added profile
+  controls repeat `start()` on one thread, which resets only the
+  `Ledger` while the independent `identity_proofs::RECORDS` keeps the
+  previous entry, so the accepted `DuplicateSourceEntry` guard fires
+  and three armed and two disabled added controls fail at 79/5 on the
+  same binary while all 70 fixed controls pass unchanged. Run: 6,346
+  `.temp` changes, 14 PASS / 2 FLAGGED / 2 FAIL / 3 NA,
+  1,102.8004990080371 s charged, 2,895.527983784991 s focused
+  remainder, workspace 0/6,000. Continuation 37 corrects the added
+  controls' repeated-case setup without weakening the guard, delivers
+  the profile-new calibration and reruns the profile matrix, then
   resumes the full bar. C2 stays Open at 118 Residual + 0 Lost. Then
   CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
