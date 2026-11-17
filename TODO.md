@@ -997,8 +997,26 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   5,173.269646620027 s focused remainder, workspace 0/6,000. Q34's
   design is accepted and the c30 draft is adopted with one
   amendment (94 targets per root, 188 postimages in total).
-  Continuation 30 implements the corrected consumers and resumes
-  the bar.
+  Continuation 30: compliant Q28 STOP on
+  `PortBlocked::JoinInterleavedOwnerTransportOverwritten` — the
+  generated transport's confirmation is a single slot
+  (`State.confirmed`), so a second independently live queue's
+  confirmation replaces and consumes the first and the first queue
+  then publishes where it must omit. Fixed J20 720, expanded J54
+  1,944, E22 528 and 504 live/disabled baselines pass; the weakened
+  consumer is red on exactly the two identity controls; two actual
+  owners reproduce 20/1 at 8 and 1 threads for P0267 (and, confirmed
+  by the director, P0312/P0323), 235+574 frozen files exact, no
+  repair. Run: 1,407 `.temp` changes, 19 PASS / 2 FAIL / 2 NA,
+  207.82389123999883 s charged, 4,965.445755380028 s focused
+  remainder, workspace 0/6,000. Q35 rules that every transported
+  carrier used to confer an effect is keyed by the complete identity
+  of its owner (or insertion-enforced single-owner), consumers take
+  only their own keyed record and authenticate it under Q34, and
+  every independently live queue retains exactly its own omission.
+  Continuation 31 is the `Scope: NONE` transported-carrier
+  cardinality inventory at 1,200 s (unused returned);
+  continuation 32 implements Q35 and resumes the bar.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
