@@ -842,6 +842,28 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   generator, the double 94/188 generation, the audits, the bound
   94-row schema with all 151 cells and the new digest, the replay,
   `cargo fmt --check` and both workspace modes.
+  Continuation 24: Q31 is implemented and admitted — ten helper
+  edits, the 16 registered edits unchanged, 19 fixed controls at
+  19/0/0 in six forms at 8 and 1 with the arm-scope control at 1/1
+  (0/0 live), hits 0, `List[6]`, result 6; the three weakened helpers
+  each reject exactly their named control; a genuine producer inside
+  a resumed call still arms (`initial_arms=1`, `nested_arms=2`,
+  occurrences `[0,0,1]`, one nested hit); 170/70 inherited/profile
+  controls; both partial roots 3 paths/6 postimages with whole-file
+  byte and AST restoration. Run: 3,735 scratch changes, 12 PASS /
+  1 FLAGGED / 2 FAIL / 2 NA, 1,333 citations, 182.68 s charged
+  (7,557.70 s focused left; workspace 0/6,000). The executed finding
+  `PortBlocked::TypedDirectFrameIdentitySelfAuthentication` (P0239/
+  P0245) is admitted: changing only the transported occurrence or
+  activation makes the direct-frame claim accept the restored token
+  against its own map, never the independent pair construction proof,
+  so the real RHS is suppressed (armed 7/2 in all four armed forms at
+  8 and 1; disabled and live 9/0/0 with exact records). Q32 requires
+  a second, independent construction record or a claim-time
+  re-derivation from the frame's own operation/target data; the
+  wrong-identity controls are fixed at 0 hits / 1 body call / result
+  43 and the actual control keeps its single claim. Continuation 25
+  implements it and runs the full bar under 7,557.702523 s + 6,000 s.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
