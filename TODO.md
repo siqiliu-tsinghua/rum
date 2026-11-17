@@ -1227,7 +1227,34 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   finishes the bar. Run: 24,765 `.temp` changes, 13 PASS / 1 FLAGGED /
   2 FAIL / 2 NA, 3,193.402916288047 s charged,
   3,956.6271620999205 s carry (CM4's share extended to 44,500 s;
-  743–746 retain 40,500 s), workspace 0/6,000.
+  743–746 retain 40,500 s), workspace 0/6,000. Continuation 43 is a
+  compliant Q28 STOP with the ordered actual-object inventory and the
+  Q40 implementation delivered: the independent actual-source Guard
+  identity (thirteen registered edits at two copies, forward
+  `b8ff4c04…` byte-exact from the frozen `964e8355…` and the inverse
+  exact, 320 controls green in hash and nohash at 8/1, and the
+  identity-neutered variant red on exactly the six cross-live-entry
+  controls); the inventory authenticates 133 carriers / 26 groups /
+  134 boundaries / 4,422 obligations with zero unknowns and the ten
+  core Guard writers bound; all 106 affected sources in 150 copies
+  render both ways byte-exactly; the 920 family replay is 29,244/232,
+  host 1,032/56, adapter 1,280/80, integrated 24,128/192, guard-current
+  2,536/24, and the 124 unchanged runs reuse at 6,056/124/700 by hash
+  identity only. The final additive raw Producer control then exposes
+  `PortBlocked::RawProducerTransportImpersonatesLiveSourceEntry` — the
+  indexed `Producer` authenticates its received index as the live top
+  entry with no independent actual-object source identity, so
+  substituting the outer's index with the inner's makes the actual
+  outer issue construction, Result-return and EvalError-return
+  authority with permission and a hit (60/3 on the same binary at 8/1,
+  51 fixed and the nine valid/ordinary/unknown controls green, 3,573
+  files frozen without repair); Q41 rules the independent actual-object
+  source identity class-wide, and continuation 44 implements it,
+  reruns every affected matrix and finishes the bar. Run: 7,792
+  `.temp` changes, 12 PASS / 1 FLAGGED / 2 FAIL / 2 NA,
+  1,735.2236641410127 s charged, 10,221.403497958907 s carry (no
+  extension; CM4's share stays 44,500 s with 34,296.42073179405 s
+  committed; 743–746 retain 40,500 s), workspace 0/6,000.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
