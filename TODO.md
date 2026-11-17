@@ -864,6 +864,36 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   wrong-identity controls are fixed at 0 hits / 1 body call / result
   43 and the actual control keeps its single claim. Continuation 25
   implements it and runs the full bar under 7,557.702523 s + 6,000 s.
+  Continuation 25: Q32 is implemented and admitted — one new
+  registered helper edit makes `claim_typed_frame` check the
+  transported token's full identity against the `run.pair.tokens`
+  construction record (resume can read but not replace it) plus the
+  actual allocation and type; 134 of 135 functions stay exact; all 24
+  default runs are 9/0/0 in six forms at 8 and 1 with the two
+  wrong-identity controls at 0 hits / 1 body call / result 43, the
+  weakened helper rejects exactly those two, and the erasure, double
+  generation, omission pins and AST restoration pass. The inherited
+  P0396 twenty controls are 20/0/0 and the P0278/P0281 replacement
+  transports 14/0/0 in all six forms at 8 and 1. Run: 3,816 scratch
+  changes, 15 PASS / 1 FLAGGED / 2 FAIL / 2 NA, 1,872 citations,
+  227.43 s charged (7,330.27 s focused left; workspace 0/6,000). The
+  executed finding `PortBlocked::TypedResuspensionInheritanceShadowed`
+  (P0239) is admitted: after a rejecting guard outcome the actual
+  `ContinueToken::suspend` successor inherits its episode silently and
+  must reach the same pinned omission once, but `enter_selected` at
+  the resumed non-selected site returns `Guard(None,None)` and
+  `bind_frame`'s explicit branch skips the inherited token — armed
+  9/1 in all four armed forms at 8 and 1 with 1/1 arms, 0 bindings,
+  0 hits vs required 1, body 1, result 43; P0245 is 10/0 with 2 arms,
+  1 binding, 1 hit, result 42; disabled/live 10/0. Q33 rules that a
+  tokenless construction under an inherited evaluation inherits
+  silently and is bound, that the proof may not shadow inheritance,
+  and fixes the successor control at 1/1 arms, bindings 1, proofs 2,
+  hits 1, body 0, result 42. Continuation 26 is the `Scope: NONE`
+  construction-context inventory at 1,200 s (unused time returned;
+  6,130.267849942131 s remains) over the 94 paths and fifty typed
+  rows, zero unknown contexts; continuation 27 implements it and
+  resumes the full bar.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
