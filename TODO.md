@@ -894,6 +894,34 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   6,130.267849942131 s remains) over the 94 paths and fifty typed
   rows, zero unknown contexts; continuation 27 implements it and
   resumes the full bar.
+  Continuation 26: the `Scope: NONE` construction-context inventory
+  is accepted — 50 typed rows over 45 concrete frame types, 99
+  construction/factory sites (94 in the admitted paths, five
+  read-only outside), 57 typed sites, 312 references, and the
+  18-context cross-product of 900 cells with zero unknown
+  classifications (232 cells quote executed receipts; 719 name their
+  limits; finite-inventory classification is not claimed as dynamic
+  closure). All 94 admitted paths are byte-identical and
+  `not_emitted`; 5,400 maintained + 590 design + 3,813 c25 files
+  rehash clean; the 24 fixture binaries match their sha256 and the
+  84 replays are exactly four P0239 armed reds and eighty green; the
+  P0239 red and P0245 green are reproduced at one thread. Run: 270
+  scratch changes, 7 PASS / 2 FLAGGED / 1 NA, 1,656 citations,
+  157.67 s charged, 1,042.33 s returned (7,172.596280580081 s
+  focused remainder; workspace 0/6,000). Q33 is implemented as the
+  absent-vs-invalid-present resolution: an absent token may inherit
+  the immediately enclosing authenticated evaluation (no arm, no
+  occurrence advance) and is bound once with the new frame's own
+  identity, an independent successor record and a separate
+  transported map, the parent authenticated against its own proof
+  before inheritance; an invalid present token rejects; an unbound
+  resume boundary is not an empty producer scope; child-owner
+  rebasing only at its proven edge with its own control; the typed
+  deferred path is not invented from the box helper receipts;
+  `PortBlocked::InheritedConstructionIdentityNotExecuted` closes
+  only by executed corrected-successor, corrupted-parent and
+  corrupted-successor receipts. Continuation 27 implements it and
+  runs the full bar under 7,172.596280580081 s + 6,000 s.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
