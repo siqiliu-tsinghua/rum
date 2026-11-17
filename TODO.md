@@ -1042,7 +1042,21 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   20 PASS / 2 FLAGGED / 2 FAIL / 2 NA, 231.3229064380048 s charged,
   4,540.691416336026 s focused remainder, workspace 0/6,000.
   Continuation 33 corrects the fixture route with an explicit route
-  assertion and resumes the full bar.
+  assertion and resumes the full bar. Continuation 33 accepts that
+  correction (per-row route, explicit assertion passes, inner hit 1
+  and total 2), then stops on a second control-authoring error:
+  `PortBlocked::NestedEvaluationPublicationCount` requires zero
+  inner publications where the accepted fixed-scene baseline of the
+  same form has exactly one (two return insertions; the selected
+  witness omits, the non-selected resumed witness publishes), with
+  the same binary printing the fixed scene's own twelve-event window
+  and hits=1. Q36 rules that composition-control expectations are
+  derived from the accepted fixed-scene baseline and its nested
+  window must reproduce that scene's event shape. Run: 953 `.temp`
+  changes, 16 PASS / 3 FLAGGED / 2 FAIL / 3 NA, 152.81842432799567 s
+  charged, 4,387.87299200803 s focused remainder, workspace 0/6,000.
+  Continuation 34 corrects the two publication assertions and
+  resumes the full bar.
   C2 stays Open at 118 Residual + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
