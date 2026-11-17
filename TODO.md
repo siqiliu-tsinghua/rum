@@ -1117,7 +1117,7 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   parent `EvalEntry.pending` slot, while the fixed
   `two_nested_producers_keep_own_proofs` control is byte-identical to
   its accepted c28 body (553 B, 17/0 there). Run: 11,991 `.temp`
-  changes, 14 PASS / 2 FLAGGED / 2 FAIL / 2 NA,
+  changes, 16 PASS / 2 FLAGGED / 2 FAIL / 3 NA,
   2,071.3420928540145 s charged, 824.1858909309767 s focused
   remainder, workspace 0/6,000. Continuation 38 corrects the guard to
   distinguish a propagated child proof from a repeated actual parent
