@@ -1141,7 +1141,27 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   reruns the lifecycle and P1566/P1805/P0001/P0002 matrices and
   resumes the bar. Run: 847 `.temp` changes, 11 PASS / 0 FLAGGED /
   2 FAIL / 2 NA, 227.87622452697906 s charged, 596.3096664039977 s
-  focused remainder, workspace 0/6,000. C2 stays Open at 118 Residual
+  focused remainder, workspace 0/6,000. Continuation 39 is a compliant
+  Q28 STOP: Q37 is implemented and accepted (the independent
+  owner-keyed current-return carrier authenticates the queued issue,
+  `valid` and every consumer, and an actual return revokes only its
+  owner's matching keys; twenty-one registered edits with the inverse
+  to C28 exact, the fixed 42/62 bodies byte-identical, the lifecycle
+  280, the fixed-62 matrix 248, the consumers 320 and the paired-source
+  768 green, the calibrations 24/16/64 exact), and
+  `PortBlocked::RequestReturnTransportRevivesInvalidatedReturn` is
+  admitted as a genuine candidate-contract lifecycle finding — the
+  request-return invalidation is carried only by removing the token
+  from the transported `Pair.request_returns` map while the immutable
+  `request_records`/`return_records` keep it, so restoring the
+  transport revives the armed `ordinary_request` permission; Q38 rules
+  the invalidation recorded in an independent current-request-return
+  carrier checked at the request-return boundaries, and continuation 40
+  inventories every affected helper and fixture, implements and
+  calibrates it, reruns every affected matrix and resumes the bar. Run:
+  1,278 `.temp` changes, 14 PASS / 1 FLAGGED / 2 FAIL / 2 NA,
+  272.39614457404605 s charged, 323.9135218299516 s focused remainder,
+  workspace 0/6,000. C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
   three witnesses, 8/8 recipes and 36/36 frozen bindings SAME with exact
