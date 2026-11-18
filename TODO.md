@@ -2268,6 +2268,92 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   remainder; no campaign, epoch, acceptance or CM5; pair (45,5,false) Open,
   C2 118 Residual + 0 Lost, 51 owners and five source duties Open,
   `CHANGELOG.md` and S10 blocked.
+  Continuation 62 is gated (Q28 registered runtime projection type STOP).
+  The Q61 publication receiver authentication is repaired:
+  omit_evaluation_pass takes a PublicationReceiver { queue, registered,
+  proposed }; publication_receiver captures the physical queue's typed
+  address and kind; the consumer requires Some(registered) == proposed and
+  identity_proofs::receiver_installation(queue,
+  proof.installed.generation, registered.key()) ==
+  Some(proof.installed.proof) before it authenticates the proof, claims it
+  and skips ordinary publication; the physical site resolves a unique live
+  owner for the root and epoch, and every earlier return falls through to
+  the ordinary boundary-taken and cell-boundary publication. All 64
+  publication draws match (32 configurations: 16 counterparts at
+  [6,0,0,23], 16 eligible_registration at [1,0,0,28]); the c61 red is green
+  in my replay at eight and one (row=P1470 change=EligibleRegistration
+  generation=2 actual_foreign=true registry_exact=true returned=true
+  hits_before=0 hits_after=0 expected_hits_after=0
+  new_events=["boundary-taken", "cell-boundary"]). The zero-unknown
+  publication inventory covers 437 files, 54,228 bound lexical sites, 324
+  source shapes, 43 declarations, 7 cases, 32 configurations, 64 draws and
+  224 individual cases with unknown=0. Every prior draw is re-earned:
+  172/172 calibration draws (258 child commands, 268.632845 s), 2/2
+  runtime placements at 1433/0/5/2 with same_binary=true, the frozen
+  assertion audit 974/974 with zero waivers (reproduced with my own
+  auditor copy), 86/86 calibration source audits over 43 sources and 86
+  copies, the fixed bodies 578/598/496/53/31/210/374, and the matrices
+  lookup 160, retirement 144, carrier 80, append 96, handoff 96,
+  append-namespace 96, install-forms 40, confirmed-carrier 96, main 848
+  (route-family 1,078 children, 541.353378 s), J 72, components 48, scope
+  640, runtime 8 commands and placement 8 commands; the 15 static
+  falsifiers and the 7 independent publication falsifiers are rejected at
+  exit 101. The additional nested E carrier group (carriers=2, forms=2,
+  roles=2, arms=2, modes=2, classes=3, 96 draws, 25 fixed tests plus 1
+  added) is frozen at 01:44:59.957 and declared at 01:45:00.005 before its
+  01:45:06.857+ builds; its 8 witness draws pass at [26,0,0,0] and its
+  live group passes 8 draws with 25 tests each, and then its first runtime
+  build (runtime/armed/hash) is rejected with E0308: at line 3984
+  join_result::<()>(&_join, ...) expects &JoinOwner, but _join comes from
+  the registered redirect R02277 (join_owner( -> source_join_owner()
+  returning Option<JoinOwner>). No binary is emitted; 8/96 draws executed
+  and 88 NOT_RUN (24 valid, 32 payload-collapse, 32 scope-collapse);
+  candidate_repair=false and expectation_repair=false; the provenance
+  checks pass (frozen_role_edit_exact, preceding_runtime_body_exact,
+  observation_did_not_edit_control, matching_registered_runtime_sources=5,
+  compiled_rejections=1). I reproduced the rejection from a director copy
+  and extended it: all five registered runtime bases (083, 098, 099, 100,
+  101) fail with exactly one E0308 each while all five witness bases
+  compile at exit 0. The ruling
+  (Q62-registered-runtime-projection-type-identity): a registered runtime
+  redirect is valid only if it is type-identical at every projected call
+  site (same result type, borrow shape and generic arity); a type-changing
+  redirect is an invalid projection and stops, and the repair must live in
+  the probe entry or the registered edit set, never in the frozen control
+  body, its assertions or a deleted draw; this is an instrument-validity
+  defect under Q28, not a scratch consumer defect and not a production
+  regression. Continuation 63 must repair R02277 type-identically and
+  prove all five registered runtime sources build, re-run the complete E
+  carrier schedule (96 draws: 8 executed, 88 outstanding) plus the 8 live
+  draws and the E AST audits, keep the 974/974 assertions, the
+  578/598/496/53/31/210/374 bodies, the 64 publication draws, the 172
+  calibration draws, both runtime placements and the 40/96 install-form
+  and confirmed-carrier draws exact, re-run every matrix on the final
+  source, and then continue the bar from 407/4,422 qualified obligations,
+  31/134 actors, 2/133 fields and 26 named carrier groups through
+  134/4,422/133, the 151 plans, the 94 paths, the 188 postimages and the
+  151-cell schema. Allocation: continuation 62 charged 5,128.340808627938
+  s (3,249.340808627938 s measured over 3,238 receipts + 200.0 s
+  inspections/setup + 1,619.0 s bookkeeping + 60 s reserve) of
+  6,589.274375287914 s, leaving 1,460.9335666599763 s; CM4 stood at
+  81,910.72562471208 of 88,500 s and now stands at 87,039.06643334002 s.
+  This gate allocates a fresh 12,000 s focused envelope from the project
+  stage reserve: continuation 63 runs under 13,460.9335666599763 s, CM4's
+  share becomes 100,500 s, the stage reserve 93,000 s, and 743-746 keep
+  their 40,500 s unchanged. The 6,000 s workspace stays at 0/6,000, and
+  the 1,440 s verification and second 6,000 s workspace stay held. The
+  stopped scene is 22,107 files / 11,543,417,952 bytes with all 22,107
+  frozen pairs rehashed zero missing and zero bad; the c61 tree (21,464
+  files) authenticates exact at entry, the 405 director transients are
+  unchanged and the two freeze-stop.log drifts (stages 32/33) are
+  unrepaired. Entry authenticates 5,400 maintained / 590 design / 546,605
+  accepted files with inherited_document_drifts=3 (my three committed
+  documents at HEAD 714ba022) and production_changes=0. Continuation 63
+  repairs the registered runtime projection under the type-identity
+  contract, re-earns the E schedule and the matrices, and continues the
+  bar; no campaign, epoch, acceptance or CM5; pair (45,5,false) Open, C2
+  118 Residual + 0 Lost, 51 owners and five source duties Open,
+  `CHANGELOG.md` and S10 blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the

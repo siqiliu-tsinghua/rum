@@ -6529,3 +6529,206 @@ rebuilt; the three documents are committed and pushed; `clean-temp.py`
 runs dry-run then apply (expected to refuse on the dirty `.temp` layer);
 the dispatch log is archived; memory is updated; and continuation 62 is
 dispatched on `gpt-6.2-astra` at effort `max`.
+
+## Continuation 62 ruling (director) — the Q61 publication receiver authentication is repaired, all 64 publication draws match, every prior draw and matrix is re-earned and the 974/974 frozen assertions hold with zero waivers — and then the new nested E carrier group's first runtime build is rejected with E0308: the registered redirect R02277 replaces `join_owner` (returns `JoinOwner`) with `source_join_owner` (returns `Option<JoinOwner>`) while the unchanged `join_result` requires `&JoinOwner`; all five registered runtime bases fail the same way and 88 of 96 E draws are NOT_RUN. The ruling is `Q62-registered-runtime-projection-type-identity` (an instrument-validity defect under Q28, not a scratch consumer defect and not a production regression); the publication receiver repair, the inventory, the 64 draws, the calibration, both placements and the matrices earn focused scratch credit while the E carrier claim and the complete bar earn nothing, and this gate allocates a fresh 12,000 s envelope so continuation 63 runs under 13,460.9335666599763 s.
+
+## Run record
+
+Continuation 62 ran `cdx` as unit `brief-742-cdx-20261119-005209-205450`:
+rc 0, peak 5,644,967,936 B, oom 0 / oom_kill 0. The log is 3,347,442 B,
+sha256 `47c58dd6d27addcef9cb02bba65e68749559ec1bd7184e8af5141c1d35fe91fa`;
+the worker header reads `model: gpt-6.2-astra`, `reasoning effort: max`,
+sandbox `workspace-write`. The report is a STOP: 44,234 changes (44,232
+added, 2 modified `PROGRESS.md`/`report.json`, 0 deleted, every path under
+`.temp/brief-742`), 37 PASS / 1 FLAGGED / 2 FAIL / 8 NA, 5,347 citations,
+0 questions, 2 deviations, 0 disclosures, no git or network command and no
+`.git-attempts`.
+
+## Delivered and accepted with focused scratch credit
+
+**The Q61 repair is delivered.** `omit_evaluation_pass` now takes a
+`PublicationReceiver { queue, registered, proposed }` instead of a bare
+namespace: `publication_receiver` captures the physical queue's typed
+address and kind, and the consumer requires `Some(registered) == proposed`
+and `identity_proofs::receiver_installation(queue,
+proof.installed.generation, registered.key()) == Some(proof.installed.proof)`
+before it authenticates the proof, claims it and skips ordinary
+publication. The physical site resolves a unique live owner for the queue's
+root and epoch — two registered owners on the same root/epoch return `None`
+— and every earlier return falls through to the ordinary boundary-taken and
+cell-boundary publication. The `From<Option<Namespace>>` path preserves the
+logical receiver kind.
+
+**All 64 publication draws match.** 32 declared configurations (16
+counterparts at `[6,0,0,23]`, 16 `eligible_registration` at `[1,0,0,28]`)
+at eight and one threads, 8 builds, 224 individual cases. The c61 red is
+green in my replay at eight and one on the same fixture and binary class:
+`CM742C60 PUBLICATION RECEIVER row=P1470 change=EligibleRegistration
+generation=2 actual_foreign=true registry_exact=true returned=true
+hits_before=0 hits_after=0 expected_hits_after=0
+new_events=["boundary-taken", "cell-boundary"]` — the foreign same-generation
+queue keeps its own ordinary publication and records no omission hit. All
+six counterpart substitutions (Original, Identical, Absent, OtherRoot,
+UnknownEpoch, OtherControl) also keep zero hits and both boundary events.
+The acceptance is the c61 frozen plan (`d63507e1…`, unchanged), re-frozen at
+01:05:20 before the 01:05:33 builds.
+
+**The zero-unknown publication inventory is complete.** 437 source files,
+54,228 bound lexical sites, 324 source shapes, 43 declarations, 2 forms,
+2 roles, 2 arms, 2 modes, 7 cases, 32 configurations, 64 draws, 224
+individual cases, `unknown=0`; the survey isolates 428 sources plus 10
+runtime sources and authenticates 23 observed terms.
+
+**Every prior draw and matrix is re-earned.** 172/172 calibration draws
+(258 child commands, 268.632845 s), 2/2 runtime placements (`1433/0/5/2`,
+`same_binary=true`), the frozen assertion audit **974/974** with zero
+waivers (I reproduced it with my own auditor copy against the accepted c61
+calibration source and the c62 candidate), the 86/86 calibration source
+audits over 43 sources and 86 copies, the fixed bodies
+578/598/496/53/31/210/374, and the matrices: lookup 160, retirement 144,
+carrier 80, append 96, handoff 96, append-namespace 96, install-forms 40,
+confirmed-carrier 96, main 848 (route-family 1,078 children, 541.353378 s),
+J 72 (84 children, 32.513951 s), components 48 (72 children,
+57.442368 s), scope 640 (202.437010 s), runtime driver 8 commands,
+placement runtime 8 commands. The publication AST audits pass in every
+copy and site, the 15 one-node static falsifiers and the 7 independent
+publication falsifiers are rejected at exit 101, and the receiver
+calibration rejects 15 against the positive `a6d8214a…` with
+`frozen_assertions_changed=0`.
+
+The FLAGGED `examiner_setup` row is settled: the initial physical-receiver
+mutation matched two identical address expressions, the locator was
+narrowed before compilation, and all seven predeclared falsifiers then
+completed. This is a retained construction note with no evidence change.
+
+## The stop
+
+The additional nested E carrier group is declared with `carriers=2 forms=2
+roles=2 arms=2 modes=2 classes=3 draws=96 fixed_tests=25 added=1
+independent_actual_session_views=true both_registered_sources_required=true
+pre_execution=true`, frozen at 01:44:59.957 and declared at 01:45:00.005
+before its 01:45:06.857+ builds; its 8 witness draws pass at `[26,0,0,0]`
+and its separate live group passes 8 draws with 25 tests each. Its first
+runtime build (`evaluation-carriers-fixture-005`, runtime / armed / hash)
+is rejected with E0308: at line 3984
+`join_result::<()>(&_join, &Err(EvalError::Other))` expects `&JoinOwner`,
+but `_join` comes from the registered redirect R02277
+(`join_owner(` → `source_join_owner(`) whose replacement returns
+`Option<JoinOwner>`. No binary is emitted; `candidate_repair=false`,
+`expectation_repair=false`; 8/96 draws executed and 88 are NOT_RUN
+(24 valid, 32 payload-collapse, 32 scope-collapse). The provenance checks
+pass: `frozen_role_edit_exact=true preceding_runtime_body_exact=true
+observation_did_not_edit_control=true matching_registered_runtime_sources=5
+compiled_rejections=1`. I reproduced the rejection from a director copy at
+line 3984 with exit 1, and I extended it: **all five registered runtime
+bases (083, 098, 099, 100, 101) contain the same redirect and each fails
+with exactly one E0308, while all five witness bases compile at exit 0.**
+The projection set, not just this fixture, is unbuildable at this site.
+
+## Ruling: `Q62-registered-runtime-projection-type-identity`
+
+A registered runtime redirect is valid only if it is type-identical at
+every projected call site: the replacement must have the same callable
+shape, result type, borrow shape and generic arity as the call it replaces,
+so that the unchanged control compiles and runs under both renders. A
+redirect that changes the type of a local binding or a call result is not a
+render of the unchanged control — it is an invalid projection and it stops.
+The repair must live in the probe entry or the registered edit set (a
+type-preserving replacement whose absence path maps to the production call's
+existing representation); it may not edit the frozen control body before its
+declared edits, weaken or move an assertion, or delete or reclassify a draw.
+This is an instrument-validity defect under Q28, not a defect of the scratch
+consumer model, not a production regression and not a reclassification.
+
+The publication receiver repair, the inventory, the 64 draws, the
+calibration, both runtime placements, the 974/974 frozen assertions and the
+matrices keep their focused scratch credit. The E carrier claim and the
+complete bar earn nothing.
+
+## Ordered continuation 63
+
+1. Repair R02277's projection type-identically, and prove every one of the
+   five registered runtime sources (083, 098, 099, 100, 101) builds — the
+   bar is a build per source, not a single fixture — while the witness
+   renders stay byte-exact and the edit records stay byte-invertible.
+2. Re-run the complete E carrier schedule: 96 draws (8 executed, 88
+   outstanding) plus the 8 live draws and the E AST audits.
+3. Keep the frozen assertion audit 974/974 with zero waivers, the byte-exact
+   bodies 578/598/496/53/31/210/374, the 64 publication draws, the 172
+   calibration draws (86/86 source audits), both runtime placements and the
+   install-forms 40 and confirmed-carrier 96 draws exact; re-run every
+   matrix (160 lookup, 144 retirement, 80 carrier, 96 append, 96 handoff,
+   96 append-namespace, 848 main, 72 J, 48 components, 640 scope) on the
+   final source.
+4. Then continue the bar from 407/4,422 qualified source obligations,
+   31/134 actors, 2/133 fields and 26 named carrier groups: complete
+   134/4,422/133, the 151 plans, the 94 paths, the 188 postimages and the
+   151-cell schema, then the audits, the ordered standing replay,
+   `cargo fmt --check`, both workspace modes and the switched checks. Stop
+   before any group that cannot fit and report the exact remainder.
+
+## Not delivered
+
+The E carrier group has 88/96 draws NOT_RUN and its runtime and collapse
+classes are unbuilt. The complete bar is unexecuted: 407/4,422 source
+obligations qualified, 31/134 actors observed, 2/133 fields separately
+calibrated, 26 named carrier groups, 4,015 obligations outside the named
+union; plans 0/151, emitted paths 0/94, postimages 0/188; the schema is
+unchanged (`f9604852…`, 90 preimages, 180 postimages, 151 immutable rows);
+typed construction draws, weak-store receipts and complete-class credit are
+all zero; the standing replay and the workspace are NOT_RUN (0/6,000).
+
+## Allocation
+
+Continuation 62 charged 5,128.340808627938 s — 3,249.340808627938 s measured
+over 3,238 receipts (3,216 command markers and 22 driver records, zero
+problems) + 200.0 s conservative inspections/setup + 1,619.0 s bookkeeping
++ the fixed 60 s reserve — of 6,589.274375287914 s, leaving
+1,460.9335666599763 s; CM4 stood at 81,910.72562471208 of 88,500 s and now
+stands at 87,039.06643334002 s.
+
+The remaining 1,460.9335666599763 s cannot cover the five-source projection
+repair, the 96-draw E schedule, the re-earned matrices and the bar. This
+gate allocates a fresh 12,000 s focused envelope from the project's stage
+reserve: continuation 63 runs under 13,460.9335666599763 s, CM4's share
+becomes 100,500 s, the stage reserve 93,000 s, and 743–746 keep their
+40,500 s unchanged. The assigned 6,000 s workspace is untouched (0/6,000),
+and the 1,440 s verification and second 6,000 s workspace stay held.
+
+## Freeze
+
+The stopped scene is 22,107 files / 11,543,417,952 bytes;
+`originals_and_copies_exact=true`. I rehashed all 22,107 manifest entries
+on both sides with zero missing and zero bad. The c61 tree (21,464 files)
+authenticates exact against its own manifest at entry (`original_drifts=0`),
+the 405 director-replay transients are unchanged with `unexplained=0`, and
+the two `freeze-stop.log` drifts (stages 32/33) are unrepaired.
+
+## Entry
+
+Entry authenticates 5,400 maintained / 590 design / 546,605 accepted files
+with `inherited_document_drifts=3` — my three committed documents
+(`TODO.md`, brief-623, brief-742) at HEAD `714ba022` — and
+`production_changes=0`. The authentication pins 90 preimages, 180
+postimages, 151 immutable rows and the unchanged schema `f9604852…`.
+
+## What I verified
+
+I verified all 3,238 ledger receipts against their logs (3,216 command
+markers with exit and elapsed exact, 22 driver records, zero problems;
+measured sum exactly 3,249.340808627938 s); the plain `check` (OK, 5,347
+citations); every declared draw count against its matrix log; the 974/974
+audit with my own auditor copy outside the scene; the P1470 green replay
+from a director copy at eight and one; the E0308 rejection from a copy and
+the five runtime / five witness base builds; all 22,107 frozen pairs; the
+c61 tree; entry; and the budget arithmetic exactly.
+
+## Process
+
+`.temp/director/ruling-c62.md`; brief-742 appended (`## Continuation 62
+ruling (director)`), brief-623 appended (`### Continuation 150`), TODO's
+G15-CM4 block extended; state.md rebuilt from bullet 75 + 74 + 73 +
+compacted 72; commit with `git add` and `git commit` in separate calls,
+ending `Co-Authored-By: Claude Code <noreply@anthropic.com>`; push; clean-temp
+dry-run then `--apply`; the dispatch log archived; memory updated; then
+continuation 63 dispatched.
