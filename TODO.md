@@ -2114,6 +2114,81 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   epoch, acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0
   Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10
   blocked.
+  Continuation 60 is gated (Q28 frozen-assertion identity STOP).
+  The Q59 append receiver namespace authentication is repaired: an
+  AppendReceiver identity (Queue { address, kind } or
+  Logical(namespace)) is recorded on the installation record and resolved
+  from the captured queue observations; join_queue resolves a proposed
+  namespace only through the receiver's independently registered
+  installation and requires the state.reverse alias to equal that same
+  install; retire_append selects only the actual install's queue-at
+  record; retire_append_confirmation requires the scope's own install and
+  the authenticated confirmed_append lookup; replayed events carry no
+  receiver and acquire no retirement authority. The zero-unknown receiver
+  inventory covers 423 files, 228,746 function spans, 135,339 bound
+  sites, 156 receiver bodies, 15,941 complete definitions, 277
+  declarations, 3 forms, 7 cases, 2 roles, 2 arms, 2 modes, threads 8
+  and 1 and 336 source cells with unknown=0. All 96 append-namespace
+  draws are exact (48 counterparts at [6,0,0,44], 48 ForeignRegistration
+  at [1,0,0,49]); the c59 P0267/form-1 red is green with hits=1
+  expected_hits=1 and the outer installation's registration, source,
+  index, payload and confirmation preserved, reproduced from a director
+  copy at eight and one. The receiver AST audits pass for the witness and
+  runtime renders (fixed_tests=50 each) and both calibration copies
+  (fixed_tests=374) with independent_registration, actual_receiving_queue,
+  nonce_before_reverse, retirement_by_nonce, unbound_supplies_no_authority,
+  original_guards_exact and entire_prior_AST_restored; the namespace
+  fixture preserves 43 fixed test bodies with 7 added; 15 static
+  falsifiers are rejected at exit 101. Every matrix is re-earned: lookup
+  160, retirement 144, carrier 80, append 96, handoff 96,
+  append-namespace 96, main 848 (route-family 1,078 children,
+  524.278469 s), J 72, components 48 and 640 scope forms. All six
+  declaration groups are frozen at 22:54:40-22:54:42 before their
+  22:54:54-22:57:40 builds. The frozen literal auditor then rejects the
+  candidate calibration source (839a283f... -> 2e537299...): 972 of 974
+  assertion-and-owner entries are byte-exact, and entries 154 and 641 are
+  the installation insertion assertion, whose owner moved from
+  source_install to install_receiver and whose record literal gained a
+  receiver field. The same binary reproduces the rejection at eight and
+  one (exit 101), the accepted source's self-comparison passes 974 of 974
+  with assertion_waivers=0, nothing is repaired (candidate_repair=false,
+  expectation_repair=false), the calibration's 172 draws and both runtime
+  placements do not run (0/172, 0/2), and the scene freezes at 23:23:55
+  with candidate_failure=true. The ruling
+  (Q60-frozen-assertion-identity-under-repair) holds that a repair may
+  not satisfy its contract by changing a frozen assertion, including an
+  inline production invariant inside the calibration source; the receiver
+  binding must be carried outside the frozen insertion path so the
+  source_install assertion and owner stay byte-identical with zero
+  waivers. The repair, the inventory, the 96 draws, the audits and the
+  matrices earn focused scratch credit; the calibration, both runtime
+  placements and the complete bar earn nothing. Continuation 61 must
+  re-express the receiver authentication so every frozen assertion byte,
+  owner and order stay identical in both calibration copies (974/974,
+  zero waivers) while the 96 append-namespace draws stay exact, re-run
+  the literal audit, the 15 falsifiers, the receiver/namespace AST audits
+  and the 578/598/496/53/31/210/374 bodies, complete the 172 calibration
+  draws and both runtime placements with their 86 audits, re-run every
+  matrix on the final source, and then complete the bar. Allocation:
+  continuation 60 charged 3,918.651331628076 s (2,311.151331628076 s
+  measured + 200.0 s inspections/setup + 1,347.5 s bookkeeping + 60 s
+  reserve) of 15,631.120352672991 s, leaving 11,712.469021044915 s; CM4
+  stood at 72,868.879647327 of 88,500 s and now stands at
+  76,787.53097895508 s. **No new allocation**: continuation 61 runs under
+  the remaining 11,712.469021044915 s. The 6,000 s workspace stays at 0 of
+  6,000, and the 1,440 s verification and second 6,000 s workspace stay
+  held. Entry authenticates 5,400 maintained / 590 design / 489,094
+  accepted files with inherited_document_drifts=3 and
+  production_changes=0; the only maintained deltas are my three committed
+  documents at HEAD a583d155 (same 23 porcelain). Continuation 61
+  re-expresses the receiver authentication under the frozen assertion
+  contract, completes the calibration and the bar under
+  11,712.469021044915 s and the assigned 6,000 s workspace, repairing no
+  frozen tree, production or maintained source and stopping before any
+  group that cannot fit and reporting the exact remainder; no campaign,
+  epoch, acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0
+  Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10
+  blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the

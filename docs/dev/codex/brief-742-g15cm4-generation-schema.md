@@ -6112,3 +6112,214 @@ rebuilt; the three documents are committed and pushed; `clean-temp.py` runs
 dry-run then apply (expected to refuse on the dirty `.temp` layer); the
 dispatch log is archived; memory is updated; and continuation 60 is dispatched
 on `gpt-6.2-astra` at effort `max`.
+
+## Continuation 60 ruling (director) — the Q59 append receiver namespace authentication is repaired and all 96 declared append-namespace draws pass (48 counterparts at [6,0,0,44] and 48 ForeignRegistration draws at [1,0,0,49] over both roles, both arms, both modes and eight and one; the former P0267 red is green with hits=1 expected_hits=1 and the outer installation preserved), every prior matrix is re-earned (160 lookup, 144 retirement, 80 carrier, 96 append, 96 handoff, the 848 main, the 72 J, the 48 component and the 640 scope-form draws), the receiver and namespace AST audits pass and 15 static falsifiers are rejected — and then the frozen literal auditor rejects the candidate calibration source: 972 of 974 assertion-and-owner entries are byte-exact and the two changed entries are the `source_install` insertion assertion, whose owner moved to `install_receiver` and whose record literal gained a `receiver` field. The same binary reproduces the rejection at eight and one (exit 101), the accepted source's self-comparison passes 974 of 974, nothing is repaired (`candidate_repair=false`, `expectation_repair=false`), the calibration's 172 draws and both runtime placements do not run, and the scene freezes at 23:23:55 with `candidate_failure=true`. The ruling is `Q60-frozen-assertion-identity-under-repair`: a repair may not satisfy its contract by changing a frozen assertion, even an inline production invariant inside the calibration source; the receiver binding must be carried outside the frozen insertion path so the assertion bytes and owner stay identical. The repair, the inventory, the 96 draws, the audits and the matrices earn focused scratch credit; the calibration, both runtime placements and the complete bar earn nothing, and this gate makes no new allocation: continuation 61 runs under the remaining 11,712.469021044915 s.
+
+## Run record
+
+Continuation 60 ran `cdx` as unit `brief-742-cdx-20261118-224108-3816447`:
+rc 0, peak 1,757,835,264 B, oom 0 / oom_kill 0. The log is 2,943,257 B,
+sha256 `74b09fd4a69c05cafd2a8695ce7c4c6359cdc85b0f546b371fc200b1e7bb9240`;
+the worker header reads `model: gpt-6.2-astra`, `reasoning effort: max`,
+sandbox `workspace-write`. The report is a STOP: 13,663 changes (13,661
+added, 2 modified `PROGRESS.md`/`report.json`, 0 deleted, every path under
+`.temp/brief-742`), 37 PASS / 1 FLAGGED / 3 FAIL / 9 NA, 4,325 citations,
+0 questions, 2 deviations, 0 disclosures, no git or network command and no
+`.git-attempts`.
+
+## Delivered and accepted with focused scratch credit
+
+**The Q59 append-receiver namespace authentication is repaired.** The
+registered source deltas are 435 with 117 corrected bases and 234 paired
+renders over the 94 admitted paths and 180 pins, all exact (the probe diff
+is 9,301 B). The repair introduces an `AppendReceiver` identity
+(`Queue { address, kind }` or `Logical(namespace)`), records it on the
+installation record, and resolves the append receiver from the captured
+queue observations (`registered_receiver`) at the actual installation
+edge. `join_queue` now resolves the proposed namespace only through the
+receiver's independently registered installation
+(`receiver_installation(receiver, generation, namespace)`) **and** requires
+the `state.reverse` alias to equal that same install; an absent, foreign,
+mixed or unknown receiver supplies no authority. `retire_append` selects
+only the actual install's queue-at record, `retire_append_confirmation`
+requires the scope's own `install` and retires through the authenticated
+`confirmed_append` lookup, and replayed events carry no receiver so they
+acquire no retirement authority.
+
+**The zero-unknown receiver inventory is complete**: 423 input files,
+228,746 function spans, 135,339 bound sites, 156 receiver bodies, 15,941
+complete definitions, 277 declarations, 3 forms, 7 cases, 2 roles, 2 arms,
+2 modes, threads 8 and 1, 336 source cells, `State.confirming` recorded
+absent, `unknown=0`.
+
+**All 96 append-namespace draws are exact** — 48 counterparts at
+`[6,0,0,44]` and 48 `ForeignRegistration` draws at `[1,0,0,49]`, the 48
+declared configurations matching their declared counts exactly
+(`changed_expectations=0`, `pre_execution=true`). The c59 P0267/form-1 red
+is green: in my own replay from a director copy at eight and one the
+observation is `hits=1 expected_hits=1` with
+`outer_after(...)=Some((true, true, true, true, true, false, false, false))`
+— registration, reverse source, index, payload and confirmation all
+preserved, nothing retired.
+
+**The audits and matrices are re-earned.** The receiver AST audits pass
+for the witness and runtime renders (`fixed_tests=50` each) and for both
+calibration copies (`fixed_tests=374`), with
+`independent_registration=true`, `actual_receiving_queue=true`,
+`nonce_before_reverse=true`, `retirement_by_nonce=true`,
+`unbound_supplies_no_authority=true`, `original_guards_exact=true` and
+`entire_prior_AST_restored=true`. The namespace fixture AST preserves its
+43 fixed test bodies (7 added) with `ordinary_body_bytes_exact=true`. All
+15 one-node static falsifiers of the repair are rejected with exit 101 at
+the declared obligation against the positive `73948151…`. Every matrix is
+re-earned: lookup 160/160, retirement 144, carrier 80, append 96, handoff
+96, append-namespace 96, main 848 (route-family driver 1,078 children,
+524.278469 s), J 72, components 48 and the 640 scope-form runs. All six
+declaration groups are frozen at 22:54:40–22:54:42, before their
+22:54:54–22:57:40 builds.
+
+## The stop
+
+The frozen literal auditor (`audit-all-literals`, sha256 `d416f07d…`,
+the same binary as c59) rejects the candidate calibration source
+(`839a283f…` → `2e537299…`, 480,007 → 486,403 B): 972 of 974
+assertion-and-owner entries are byte-exact and entries 154 (armed) and 641
+(disabled) changed. Both are the installation insertion assertion, whose
+owner moved from `source_install` to `install_receiver` and whose record
+literal gained a `receiver` field:
+
+```
+prior     assert!(records.installed.insert(id, InstalledRecord {
+              owner: owner.clone(), generation, namespace, entry }).is_none())
+candidate assert!(records.installed.insert(id, InstalledRecord {
+              owner: owner.clone(), generation, namespace, entry, receiver }).is_none())
+```
+
+The same binary reproduced the rejection at eight and one threads
+(exit 101); the accepted source's self-comparison passes 974/974
+(`whole_order_and_owner_byte_exact=true`, `assertion_waivers=0`). Neither
+the candidate nor any expectation was repaired: `candidate_repair=false`,
+`expectation_repair=false`; the calibration's 172 draws and both runtime
+placements did not run (0/172, 0/2), and the scene froze at 23:23:55 with
+`candidate_failure=true candidate_repair=false`.
+
+The two changed entries still check that the insertion found no previous
+value. The contract at issue is not the control assertions — the 374
+controls' fixed bodies are byte-exact and the receiver calibration reports
+`frozen_assertions_changed=0` — but the broader zero-waiver rule this
+campaign adopted in c57: every frozen assertion, its owning function and
+its order must match byte for byte in both calibration copies. The
+candidate satisfied its semantic contract by editing a frozen assertion,
+which is precisely the move the rule exists to reject.
+
+## Ruling: `Q60-frozen-assertion-identity-under-repair`
+
+A repair may not satisfy its contract by changing a frozen assertion —
+including an inline production invariant embedded in the calibration
+source. The Q59 repair's semantics are right, but its expression is
+inadmissible: the receiver binding must be carried outside the frozen
+insertion path so that the `source_install` insertion assertion and its
+owner stay byte-identical, with zero waivers. This is a candidate-contract
+violation under Q28, not a production regression and not a
+reclassification; the frozen auditor is working as designed and caught the
+change on its first run. The append-namespace repair, the inventory, the
+96 draws, the audits and the matrices earn focused scratch credit; the
+calibration claim, both runtime placements and the complete bar earn
+nothing.
+
+## Ordered continuation 61
+
+1. Re-express the append-receiver authentication so every frozen assertion
+   byte, owner and order stay identical in both calibration copies
+   (974/974, zero waivers) — in particular the `source_install` insertion
+   assertion — while all 96 append-namespace draws stay exact and the
+   former P0267 red stays green.
+2. Re-run the frozen literal audit, the 15 static falsifiers, the receiver
+   and namespace AST audits (witness, runtime, both calibration copies,
+   `fixed_tests=374`) and the body audits (578/598/496/53/31/210/374).
+3. Complete the frozen calibration: all 172 draws and both runtime
+   placements, with its 86 audits; repair no expectation, control or
+   candidate.
+4. Re-run every matrix on the final source: lookup 160, retirement 144,
+   carrier 80, append 96, handoff 96, append-namespace 96, main 848, J 72,
+   components 48, scope 640, whole-consumers and the route-family/join-run
+   families.
+5. Complete the bar under the envelope: the 134/4,422/133 execution
+   closure, 151 plans, the two 94-path/188-postimage roots, schema emission
+   with 151 cells, the complete-overlay audits, the ordered standing
+   replay, `cargo fmt --check`, both workspace modes with the seven skips
+   and the unfiltered gates, and the switched same-binary checks. Stop
+   before any group that cannot fit and report the exact remainder; repair
+   no frozen tree, production or maintained source.
+
+## Not delivered
+
+The calibration is 0/172 with both runtime placements at 0/2; the complete
+bar stays unexecuted (closure indexed only, plans 0/151, emitted 0/94,
+postimages 0/188, schema unchanged `f9604852…` with 90 preimages, 180
+postimages and 151 immutable rows, standing replay NOT_RUN, workspace
+NOT_RUN at 0/6,000 s).
+
+## Allocation
+
+Continuation 60 charged 3,918.651331628076 s — 2,311.151331628076 s
+measured from 2,695 receipts (14 driver records and 2,646 embedded child
+runs, zero problems, elapsed sum exactly 2,311.151331628076) + 200.0 s
+conservative inspections/setup + 1,347.5 s bookkeeping (0.5 s per receipt)
++ the fixed 60 s reporting reserve — of the 15,631.120352672991 s
+envelope, leaving 11,712.469021044915 s. CM4 stood at 72,868.879647327 of
+88,500 s and now stands at 76,787.53097895508 s.
+
+**No new allocation.** Continuation 61 runs under the remaining
+11,712.469021044915 s. The assigned 6,000 s workspace is untouched
+(0/6,000), and the 1,440 s verification and second 6,000 s workspace stay
+held.
+
+## Freeze
+
+The stopped scene is 6,820 files / 4,363,161,895 bytes in
+`continuation-stop/`; I rehashed all 6,820 frozen copies against the
+manifest with zero missing and zero bad. The c59 tree (20,984 files) is
+authenticated exact at entry with `original_drifts=0`; the known
+director-replay transients (405) are unchanged with `unexplained=0`, and
+the two `freeze-stop.log` drifts (stages 32/33) are unrepaired.
+
+## Entry
+
+Entry authenticates 5,400 maintained / 590 design / 489,094 accepted
+files, with `inherited_document_drifts=3` (my three committed documents at
+HEAD `a583d155`) and `production_changes=0`; the authentication pins 90
+preimages, 180 postimages, 151 immutable rows and the unchanged schema
+`f9604852…`. Entry took 429.467858 s.
+
+## What I verified
+
+- All 2,695 ledger receipts against their logs: 2,681 command markers
+  with exit and elapsed exactly equal and 14 driver records, zero
+  problems; the measured sum is exactly 2,311.151331628076 s and the
+  charged arithmetic is exact.
+- The 48 declared append-namespace configurations against the observed
+  matrix lines: every form, role, arm, mode, class and count tuple equal;
+  `changed_expectations=0`.
+- The red from a director copy outside the scene at eight and one: exit
+  101, the same assertion-owner panic, and the prior-versus-prior
+  self-comparison green at 974/974.
+- The former P0267 `ForeignRegistration` red replayed from a director copy
+  at eight and one: exit 0, `hits=1 expected_hits=1`, the outer
+  installation's registration, source, index, payload and confirmation all
+  preserved.
+- All 6,820 frozen copies rehashed (0 missing, 0 bad) and the entry
+  authentication lines (5,400/590/489,094; 90/180/151; no production
+  change).
+- The declaration order: every group's freeze precedes its first build;
+  the stop and freeze timestamps (23:17:41 rejection, 23:21:31 stop,
+  23:23:55 freeze).
+
+## Process
+
+The ruling is written here; the continuation-60 sections are appended to
+brief-742 and brief-623 and the G15-CM4 block in TODO.md; `state.md` is
+rebuilt; the three documents are committed and pushed; `clean-temp.py`
+runs dry-run then apply (expected to refuse on the dirty `.temp` layer);
+the dispatch log is archived; memory is updated; and continuation 61 is
+dispatched on `gpt-6.2-astra` at effort `max`.
