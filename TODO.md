@@ -1695,6 +1695,77 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   cannot fit and reporting the exact remainder; no campaign, epoch,
   acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0 Lost,
   51 owners and five source duties Open, `CHANGELOG.md` and S10 blocked.
+  Continuation 55 is gated (Q28 actual-completion whole-ticket STOP).
+  The zero-unknown ticket inventory is delivered and accepted: 237
+  inputs over 117 sources / 173 copies and the helper, boundary and
+  controls fixture rows, 93,315 classified sites, 79,728 assertion
+  anchors, zero unknown and zero ambiguous, 351 captures and 351 each
+  of the five consumer writers, classified against the c54 witness
+  classification by exact digest. The ticket binding records the
+  producer as a Weak<GuardSource> at the lexical enter, carries a
+  CapturedEntry on SourceScope and checks it at mint, result, drop,
+  confirmation and revocation; the fixture holds 508 fixed + 70
+  additive = 578 controls over seven ticket classes x five consumers x
+  two copies, green in both modes at eight and one (578/0/0/0 x4,
+  all six c54 failures green, the 508/496/12 bodies byte-exact), with
+  702 independent pair audits (117 x 3 x 2) all exit 0. The
+  848/72/48/640 draws are re-earned exact (26,964/232; 2,280;
+  5,384/168; 68,480/7,600/0/236,640), the 400 raw draws reuse only by
+  exact identity (5,400/600/0/25,200), the 172 calibrations are
+  63,956/372/0/0, and both runtime placements reproduce 1433/0/5/2 in
+  both modes at eight and one. I verified all 1,854 recorded runs
+  against their logs and the ledger (0 problems, 372 binaries
+  hash-exact) and reran the signatures and six samples. The declared
+  handoff class group (48 draws) is all green at 14/0/0/39. The first
+  whole-issued-ticket item (P0267/form-1 witness, armed, hash) then
+  reproduced 0/2/0/51 at eight and one on one binary against a
+  declared 2/0/0/51: substituting the other live producer's fully
+  issued ticket at the actual return to complete_work lets the inner
+  InputRequired confirm, and a swallowed inner result revoke, the
+  other producer's pending return, while both producer allocations and
+  queue records stay unchanged at the seam. `join_owner(source)`
+  receives only the ticket and its mint check compares the ticket's
+  capture with itself, so a fully issued foreign ticket passes; the
+  same stored capture is reused at result, drop, confirmation and
+  revocation. The stop is compliant: the declaration preceded the
+  build, no candidate, expectation or fixed control was repaired, the
+  remaining 46 handoff draws are NOT_RUN, and the scene is frozen. The
+  ruling (`Q55-actual-completion-issuer-authentication`) is a genuine
+  design-level defect of the scratch consumer model at the
+  actual-object level, not a production regression; the delivered work
+  earns focused witness/source-route credit, the whole-ticket consumer
+  claim and the complete bar earn nothing, and continuation 56 must
+  carry the actual producer identity from the lexical enter to the
+  completion seam independently of the ticket, check it at mint and
+  through result, drop, confirmation and revocation, make the two
+  frozen whole-ticket controls the acceptance while the 578 controls
+  and the 48 declared-class draws stay exact, re-run the 96 handoff
+  draws and every matrix, and complete the 134/4,422/133 closure, the
+  151-plan generator, the two 94/188 roots, the schema cells, the
+  audits, the standing replay, fmt, both workspace modes and the
+  switched checks. Allocation: no new allocation; 2,273 receipts
+  charge 3,655.268483201973 s of 8,826.28290035392 s, leaving
+  5,171.014417151946 s; CM4 stands at 55,328.98558284805 of 60,500 s,
+  the workspace at 0 of 6,000 s, and the 1,440 s verification and
+  second 6,000 s workspace stay held. The stopped scene is 19,455
+  files / 10,352,524,268 bytes in `actual-handoff-stop/`; all pairs
+  were exact before my replays, which then regenerated 119
+  director-replay transients (108 missing, 11 rewritten; frozen copies
+  exact), recorded and unrepaired. Entry authenticates 5,400
+  maintained / 590 design / 284,990 accepted files; I rehashed all 590
+  design and all 284,990 accepted files (143,104,969,028 B) with zero
+  missing and zero bad; the only maintained deltas are my three
+  committed documents at HEAD `41af6ad0` (same 23 porcelain); the 26
+  prior trees hold 132,627 entries with the c54 scene (21,025) and its
+  114 transients recorded, the 116 inherited and 56 c53 transients
+  unchanged and the two `freeze-stop.log` drifts unrepaired.
+  Continuation 56 repairs the issuer authentication and completes the
+  bar under 5,171.014417151946 s and the assigned 6,000 s workspace,
+  repairing no frozen tree, production or maintained source and
+  stopping before any group that cannot fit and reporting the exact
+  remainder; no campaign, epoch, acceptance or CM5; pair (45,5,false)
+  Open, C2 118 Residual + 0 Lost, 51 owners and five source duties
+  Open, `CHANGELOG.md` and S10 blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the

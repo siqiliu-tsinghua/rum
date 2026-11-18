@@ -4834,3 +4834,226 @@ workspace:
    No campaign, epoch, acceptance or CM5; pair `(45,5,false)` Open, C2 118
    Residual + 0 Lost, 51 owners and five source duties Open, `CHANGELOG.md` and
    S10 blocked.
+
+## Continuation 55 ruling (director) — the zero-unknown ticket inventory (237 inputs, 93,315 sites, 79,728 assertion anchors), the ticket binding for seven single-component classes with 578 controls green in both feature modes at eight and one (all six prior failures green), the 702 pair audits, the re-earned 848/72/48/640 draws (the 400 raw draws only by exact identity), the 172 calibrations and both runtime placements at 1433/0/5/2 are delivered and accepted with focused witness/source-route credit. The actual-completion whole-issued-ticket challenge then fails 0/2/0/51 in both thread counts on one binary (`9f88930f…`): the inner InputRequired confirms and a swallowed inner result revokes the other live producer's pending return, because `join_owner` receives no independent actual producer identity and the ticket authenticates only against its own embedded capture. The ruling is `Q55-actual-completion-issuer-authentication` (genuine scratch-consumer design defect, not a production regression); the complete bar stays unexecuted and continuation 56 is ordered under the remaining 5,171.014417151946 s.
+
+## 1. Run record
+
+- `cdx` unit `brief-742-cdx-20261118-164205-2132002`, rc 0, peak
+  5,294,469,120 B, oom 0 / oom_kill 0; log 2,552,335 B, sha256
+  `d989a9a62a5726d5ccfbe2af598e0e7bf400321b1803e79e32b62cbb539cf73d`;
+  worker model `gpt-6.2-astra`, reasoning effort `max` (first run on the
+  updated Codex default).
+- Report STOP: 39,503 changes = 39,501 added + 2 modified (`PROGRESS.md`,
+  `report.json`), 0 deleted, every path under `.temp/brief-742`; 35 PASS /
+  1 FLAGGED / 2 FAIL / 10 NA; 3,701 citations verified; 0 questions, 1
+  deviation (the incomplete bar), 0 disclosures; no `.git-attempts`, no git
+  or network command in any of the 2,273 ledger receipts.
+- `check --against-git`: 39,535 problems = 39,503 `.temp`-ignored change
+  entries + the 32 pre-existing tracked-tree entries (the same 23 porcelain
+  entries expanded); HEAD stands at `41af6ad0`.
+
+## 2. Delivered and accepted (focused witness/source-route credit)
+
+### 2.1 Zero-unknown ticket inventory
+
+`ticket-inventory.json` classifies 237 inputs (234 witness/runtime renders =
+117 sources x 2 roles, 56 of the sources carrying two copies, plus the helper,
+the boundary fixture and the controls fixture rows, representing five physical
+copies) into 93,315 sites and 79,728 assertion anchors with
+`unknown=[]` and `ambiguous=[]`; `classification_sha256` is the byte digest
+of the accepted c54 `witness-classification.json`. The state census reports
+351 captures and 351 each of join-owner mints, join-result consumers, drop
+consumers, confirm writers and revoke writers, all role sources anchored and
+the fixture writes retained. I recomputed all 237 output hashes and the
+classification link: exact, 93,315 sites and 79,728 anchors as declared.
+
+### 2.2 The binding design and its controls
+
+The helper records the producer at the lexical enter
+(`EntryRecord.producer: Weak<GuardSource>`, `source_entry(&Rc<GuardSource>)`),
+builds a `CapturedEntry { entry, producer: Rc<GuardSource> }` at the capture
+point, carries it on `SourceScope`, and checks it at mint, result, drop,
+confirmation and revocation. The fixture holds 508 fixed + 70 additive = 578
+controls covering 7 ticket classes (Valid, OtherEntry, OtherOwner, Both,
+UnknownEntry, UnknownOwner, OtherIssuer) x 5 consumers (Mint, Result,
+DropOwner, Confirm, Revoke) x 2 copies. The six c54 failures are green in
+both copies; the fixture is 578/0/0/0 in both modes at eight and one on four
+draws (I reran all four). The independent audit reports 508 fixed tests
+byte-exact, 70 additive tests, whole-AST restoration and 11 registered items
+per copy; the helper audit reports 210 fixed tests byte-exact; the boundary
+fixture still carries its 496 fixed tests byte-exact and runs 496/0/0/0 in
+both modes at eight and one (I reran all four). The c54+12 control bodies
+and the 496 boundary bodies are untouched: every removed line in both fixture
+diffs is helper-internal.
+
+### 2.3 Pairs, matrices and runtime arms
+
+- 117 sources / 173 copies / 234 witness-runtime renders, 702 independent
+  audits (117 sources x 3 kinds x 2 roles), every audit exit 0 and PASS; the
+  audit results' source and candidate hashes reconcile with the frozen scene.
+- Main 848 draws = 26,964/232/0/0 over 230 builds; J 72 = 2,280/0/0/0;
+  components 48 = 5,384/168/0/0; scope fresh 640 = 68,480/7,600/0/236,640;
+  the 400 raw draws = 5,400/600/0/25,200 reused only by exact source and
+  binary identity; calibrations 172 = 63,956/372/0/0 (42 variants, 374
+  controls, 15,708 cells, 93 forced, 4 masked, 38 firing, 0 unknown); runtime
+  and placement 4 draws each at 1,433/0/5/2 in both modes at eight and one.
+- I verified every recorded run from its log against the ledger: 1,854 runs,
+  0 problems, 372 distinct binaries rehashed exact. My own reruns reproduced
+  the signatures: source-ticket 578/0 x4, boundary 496/0 x4, P0558 128/0 over
+  eight, runtime and placement 1,433/0/5/2 x8, and samples of main (84, 230),
+  J (20), components (494), scope (120/0/0/374) and calibration (374).
+
+### 2.4 The declared handoff classes
+
+The handoff plan declares 96 draws over 3 forms (P0267, P0312, P0323) x 2
+roles x 2 arms x 2 modes x 2 thread counts, frozen at 17:30:00.7, built at
+17:30:03.3, executed after. The 48 declared-class draws all PASS at
+14/0/0/39, and the witness and runtime renders audit at 21 fixed tests
+byte-exact, 32 additive tests, 3 actual resume sites, read-only snapshots and
+`complete_work` unmodified.
+
+## 3. The stop
+
+The first whole-issued-ticket item (P0267/form-1, witness, armed, hash) was
+declared `[2,0,0,51]` and reproduced `[0,2,0,51]` at eight and one threads on
+the one binary `9f88930f…` (source `05f90276…`), with
+`otherissuedticket_input_required` and `otherissuedticket_swallowed_return`.
+I reproduced both from a director copy: same binary, same two names, same
+counts at t8 and t1. The failure: the inner `InputRequired` confirms the
+other live producer's pending return (`confirmed_at` present, confirmed,
+not revoked) and a swallowed inner result revokes it — `outer_after` goes
+`(false,false,true,true,false)` and `(false,false,false,false,true)` while
+the outer pending return was `Some(true)`; both producer GuardSource
+allocations and queue records are unchanged at the seam, only the transported
+ticket differs. No candidate, expectation or fixed control was repaired; the
+remaining 46 handoff draws are NOT_RUN; the scene was frozen at 17:32; the
+candidate source is unchanged since the declaration (only reporting scripts
+and logs move after 17:30:21).
+
+Mechanism, from the code: `join_owner(source: Option<SourceScope>)` receives
+only the ticket. Its mint check `ticket.authentic(&ticket.capture)` compares
+the ticket's capture against itself (`Rc::ptr_eq` and entry/owner equality are
+trivially true), so the only real checks are `recorded()` against the records
+and the ledger's current-run predicate. A fully issued ticket from another
+live producer is internally consistent and passes; `JoinOwner` then stores
+that capture and result/drop/confirm/revoke all reuse it. The actual producer
+identity is never supplied at the completion seam, so the design's own claim
+that authority is the original checked Guard is not enforced.
+
+## 4. Ruling: `Q55-actual-completion-issuer-authentication`
+
+The finding is genuine: a design-level defect of the scratch instrument's
+source-ticket consumer model at the actual-object level — the same class as
+Q54 one layer deeper. It is not a production regression, not a
+reclassification, and it re-pins nothing; the 134/4,422/133 structural index
+stands. The stop is compliant under Q28 (declared expectation, same-binary
+reproduction at eight and one, no repair, scene frozen, remaining draws
+unexecuted).
+
+Credit: the inventory, the binding for the seven single-component classes,
+the 578-control fixture, the 702 audits, the re-earned matrices, the reused
+raw draws and the runtime/placement arms earn focused witness/source-route
+credit; the whole-ticket consumer claim earns nothing until repaired; the
+complete bar earns nothing.
+
+Continuation 56 is ordered to:
+
+1. Carry the actual producer identity from the lexical enter to the actual
+   completion seam independently of the ticket argument — the actual
+   `Guard`/`GuardSource` allocation, not any field of the transported ticket
+   — and validate the ticket against it at mint.
+2. Carry the actual capture through result, drop, confirmation and
+   revocation; no consumer may select a state key from the transported ticket
+   alone, and every consumer must repeat the actual-identity check before any
+   confirmation or retirement effect.
+3. Make the two frozen whole-ticket controls the acceptance (both green in
+   every affected render), keep the 578 controls and the 496 fixed / 12 c54
+   additive bodies byte-exact, and keep the 48 declared-class draws green.
+4. Re-run the full 96 handoff draws (both roles, arms, modes, thread counts),
+   the 578 controls, boundary, P0558, the 848/72/48/640 draws (the 400 raw
+   draws only by exact identity), the 172 calibrations and both runtime
+   placements, and re-audit every affected render.
+5. Then complete the bar: the 134/4,422/133 execution closure, the 151-plan
+   generator with rejection, the two 94-target/188-postimage roots, the
+   six-column 94-row schema with 151 cells, the byte/AST/omission and
+   disabled-parity audits, the ordered standing replay, `cargo fmt --check`,
+   both workspace modes with the seven skips and the unfiltered
+   `suspension_oracle`/`typed_slot_census`, and the switched same-binary
+   checks.
+
+Under the remaining 5,171.014417151946 s and the assigned 6,000 s workspace,
+repairing no frozen tree, production or maintained source, and stopping
+before starting any group that cannot fit and reporting the exact remainder.
+
+## 5. Not delivered
+
+The complete bar earns nothing: the full 134/4,422/133 closure is a
+structural index only (152 forms, 3 selected J handoff forms); complete plans
+0/151; the two 94-target/188-postimage roots have 0 postimages; the schema is
+unchanged (`f9604852…`, `new_source_schema=null`, `complete_plan_hash=null`)
+with all 94 admitted paths `not_emitted`; the complete-overlay audits, the
+ordered standing replay, `cargo fmt --check`, both workspace modes and the
+switched checks are unexecuted; standing replay and workspace are NOT_RUN,
+workspace 0/6,000. The 90/180/151 cells authenticate.
+
+## 6. Allocation
+
+No new allocation. 2,273 focused receipts charge 3,655.268483201973 s
+(2,258.768483201973 s measured + 200.0 s conservatively charged
+inspections/setup + 1,136.5 s bookkeeping + the fixed 60 s reserve) of the
+8,826.28290035392 s envelope, leaving **5,171.014417151946 s**. CM4's share
+stands at 55,328.98558284805 of 60,500 s; the assigned 6,000 s workspace is
+untouched (0/6,000); the 1,440 s verification and the second 6,000 s
+workspace stay held; no extension or held envelope was borrowed.
+`candidate_failure=true`, `allocation_stop=false`.
+
+## 7. Freeze
+
+The stopped scene is 19,455 files / 10,352,524,268 bytes in
+`actual-handoff-stop/`; I rehashed all 19,455 pairs before my replays with
+zero bad. My own replay of the frozen runtime and placement binaries then
+regenerated 119 director-replay transients: 108 originals missing and 11
+rewritten, 117 under the two roots' `.temp/brief-579/compile-controls` and 2
+`target/brief-538/compile-proof/library-build.stderr`, all under
+`placement-runtime` and `runtime-disabled`; the frozen copies of all 119 are
+byte-exact. Recorded and unrepaired — the known director-replay transient
+class. The 26 prior trees hold 132,627 entries with the c54 scene (21,025)
+and its 114 recorded transients, the 116 inherited and 56 c53 transients
+unchanged, and the two `freeze-stop.log` drifts (stages 32 and 33) still
+open.
+
+## 8. Entry
+
+Entry authenticates 5,400 maintained / 590 design / 284,990 accepted files
+(hashes taken at 16:46, before this continuation's outputs). I rehashed all
+590 design files (278,559,491 B) and all 284,990 accepted files
+(143,104,969,028 B) with zero missing and zero bad; the 42,125 accepted new
+against the c54 entry are every continuation-54 output and none under
+continuation-55. The only three maintained deltas are my own committed
+documents (`TODO.md`, brief-623, brief-742) whose working-tree hashes equal
+the HEAD `41af6ad0` blobs; the pre-existing layer is the same 23 porcelain
+entries; no worker edit touched a maintained or production file.
+
+## 9. What I verified and what stays open
+
+Verified by me: the red (same binary, t8 and t1, same two names and counts),
+the 578/496/P0558/runtime/placement signatures, six matrix samples, all 1,854
+recorded runs against logs and ledger (0 problems, 372 binaries exact), the
+237 inventory outputs and classification link, the 702 audits, the full
+freeze, the full design and accepted entry hashes and the budget arithmetic.
+The two retired v1 attempts are construction failures preserved as evidence
+(the syn `visit-mut` feature and the close-evidence parser), not evidence
+changes. The one FLAGGED check is the receipt-provenance note: the runtime
+logs carry a nested one-test harness (1,438 outer tests plus two one-test
+sub-runs), and the declared counts are the outer totals.
+
+Open: everything in section 5, plus the Q55 repair itself. Continuation 56
+carries both.
+
+## 10. Process
+
+Ruling written here; appended to brief-742 and brief-623 (Continuation 143),
+TODO.md extended, `state.md` rebuilt, committed and pushed; clean-temp run;
+dispatch log archived; memory updated; continuation 56 dispatched on
+`gpt-6.2-astra` at effort max.
