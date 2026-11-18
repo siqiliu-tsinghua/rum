@@ -5057,3 +5057,266 @@ Ruling written here; appended to brief-742 and brief-623 (Continuation 143),
 TODO.md extended, `state.md` rebuilt, committed and pushed; clean-temp run;
 dispatch log archived; memory updated; continuation 56 dispatched on
 `gpt-6.2-astra` at effort max.
+
+## Continuation 56 ruling (director) — the Q55 issuer repair (the actual capture held in a separate `CompletionIssuer` at the lexical enter, the ticket authenticated against it at the two-argument mint and carried through result, drop, confirmation and revocation) is delivered and accepted: both frozen whole-ticket controls are green in every affected render (96/96 handoff draws exact, 48 declared_classes at 14/0/0/39 and 48 issued_substitution at 2/0/0/51), the 598-control whole-consumers fixture (578 fixed + 20 additive) is green 598/0/0/0 in both modes at eight and one, the 578 and 496 fixtures stay byte-exact, seven issuer falsifiers are rejected by an independent AST auditor, and every matrix is re-earned (848/72/48/640, 400 raw by exact identity, 172 calibrations, P0558, both runtime placements at 1433/0/5/2) with 1,954 runs verified and 382 binaries hash-exact. The new append class then stops under Q28 on its first foreign-index control: P0267/form-1 (witness, armed, hash) was declared [1,0,0,30] and reproduced [0,1,0,30] at eight and one on one binary (`308aa8d9…`), because `JoinAppend::drop` removes the record the confirmation index points at without checking that the key belongs to the append registration or that the proof is bound to the actual source — the other live queue's confirmed payload disappears while its index and proof status survive and the ordered stream equals ordinary execution. The ruling is `Q56-append-confirmation-key-authentication` (genuine scratch-consumer design defect, not a production regression); the complete bar stays unexecuted, and this gate allocates a fresh 8,000 s envelope so continuation 57 runs under 9,187.649237259971 s.
+
+Continuation 56 completed the ordered Q55 issuer repair, re-earned every
+matrix and audit, and then stopped under Q28 on the first control of the new
+append class: at P0267/form-1 (witness, armed, hash) `JoinAppend::drop`
+removed the other live queue's confirmed payload through a corrupted
+confirmation index, while that queue kept its index and proof status and the
+ordered stream equalled ordinary execution. The stop is compliant and the
+scene is frozen. This gate accepts the issuer repair and the re-earned
+matrices with focused scratch credit, rules the finding
+`Q56-append-confirmation-key-authentication`, and allocates a fresh focused
+envelope for continuation 57.
+
+## 1. Run record
+
+`cdx` ran as unit `brief-742-cdx-20261118-175949-2481216`, rc 0, peak
+2,501,341,184 B, oom 0 / oom_kill 0; log 2,336,954 B, sha256
+`79dbd6f47f0dc048b511a2f7758b603c3cb278417e7804778f8ffad30336b78c`; the
+worker model is `gpt-6.2-astra` at effort `max`. The report
+(`report-continuation-56.json`, 15,779,597 B, sha256 `ccb7df84…`) is STOP:
+39,664 changes (39,662 added, 2 modified — `PROGRESS.md` and `report.json` —
+0 deleted, all under `.temp/brief-742`), 47 PASS / 4 FLAGGED / 2 FAIL / 9 NA,
+3,940 citations verified, 0 questions, 1 deviation (the complete bar), 0
+disclosures. The stop rule is Q28 with reason P0267/form-1 witness armed/hash
+and the finding `PortBlocked::AppendRetirementConsumesForeignConfirmation`.
+No git or network command ran and no `.git-attempts` exists. HEAD stayed
+`d4b45685` with the same 23 porcelain entries.
+
+## 2. Delivered and accepted (focused scratch credit)
+
+### 2.1 The Q55 issuer repair
+
+The helper (`cm740_probe.rs`, 240,648 → 242,342 B; six hunks, 96 diff lines)
+implements the ordered design exactly. The lexical enter now mints both
+parts of an issuance: `fn source_scope(guard: &Guard) -> Option<IssuedSource>`
+returns `IssuedSource { capture: CapturedEntry, ticket: SourceScope }`, and
+only this site can construct it. `CompletionIssuer(Option<CapturedEntry>)`
+consumes the issuance with `retain`, keeps the actual capture and returns the
+transported ticket. The completion seam takes the issuer by value:
+`pub fn source_join_owner_at(issuer: CompletionIssuer, source:
+Option<SourceScope>) -> Option<JoinOwner>`, and `join_owner_at` asserts
+`ticket.authentic(actual)` — the ticket is authenticated against the issuer's
+retained actual capture, never against itself. The old single-argument
+`source_join_owner` now takes `Option<Infallible>`, so a transported ticket
+cannot even be passed to it. `JoinOwner` keeps the actual capture
+(`JoinOwner(ScopeId, Object, Option<CapturedEntry>)`) and result, drop,
+confirmation and revocation reuse it.
+
+### 2.2 The Q55 acceptance
+
+Both frozen whole-ticket controls — `otherissuedticket_input_required` and
+`otherissuedticket_swallowed_return` — are green in every affected render.
+The handoff fixture's 96 draws are all exact: 48 `declared_classes` at
+14/0/0/39 each and 48 `issued_substitution` at 2/0/0/51 each, over three
+forms × two roles × two arms × two feature commands × thread counts eight and
+one. The nested inner mint is refused with `PortBlocked::ActualSourceTicketMint`,
+and the outer pending return survives `(indexed=true, present=true,
+confirmed=false, revoked=false)`; neither the inner InputRequired nor a
+swallowed inner result touches the other live producer.
+
+### 2.3 The controls, fixtures and audits
+
+The new whole-consumers fixture adds two modules and 20 additive tests (five
+consumers × `Valid` / `OtherIssuedTicket` × two copies) on top of the 578
+fixed controls and is green at **598/0/0/0** in hash and nohash at eight and
+one. The 578 source-ticket fixture (four draws, 2,312/0/0/0) and the 496
+boundary fixture (four draws, 1,984/0/0/0) are green; the c54 six failures
+are green in both copies; the 578 source-ticket bodies, the 496 boundary and
+12 c54 additive bodies stay byte-exact, and the AST audits report
+`fixed_test_bodies_exact` =
+578 / 496 / 210 with the whole prior AST restored. Seven isolated
+one-node mutations of the positive witness (self-authenticated mint,
+ticket-as-issuer, result/drop/confirmation/retirement using the ticket,
+altered completion) are each rejected by the independent AST auditor with
+exit 101; the positive witness and runtime audits PASS with
+`separate_mint_arguments=true`, `consumer_checks_before_keys=true`, three
+lexical sites and 53 fixed test bodies. I reran the append, whole-consumer,
+witness-issuer and runtime-issuer audits myself and reproduced every PASS
+line.
+
+### 2.4 Re-earned matrices
+
+main 848 = 26,964/232/0/0 over 230 builds; J 72 = 2,280; components 48 =
+5,384/168; scope fresh 640 = 68,480/7,600/0/236,640; the 400 raw draws
+reused only by exact identity (two raw sources and eight raw binaries; all
+ten distinct paths and all 400 logs hash-exact); calibrations 172 =
+63,956/372 (42 variants / 374 controls / 15,708 cells / 93 forced / 4
+masked / 38 firing / 0 unknown) with 86 calibration audits; P0558 128/0 over
+eight; both runtime placements 1433/0/5/2 in both modes at eight and one,
+each placement's two feature commands selecting one binary; 702 independent
+pair audits (117 sources × 3 kinds × 2 roles, all exit 0). The 117 sources /
+173 copies / 234 renders are re-audited whole-AST-restored.
+
+## 3. The stop
+
+The append class is a new scratch fixture (`c56_append_controls`): 31 tests
+per copy (21 fixed + 10 additive), three registered carriers
+(`queue_transport::JoinAppend.0`, `State.appending`, `State.confirmed`), four
+source boundaries and 12 source-form obligations. The plan declares 48 items
+and 96 draws (three forms × two roles × two arms × two modes; per item 48
+`counterparts` at 4/0/0/27 and 48 `foreign_index` at 1/0/0/30). The plan and
+freeze are at 18:48:11.512/.540, the declaration at 18:48:11.630, the first
+build at 18:48:14.207 and the first run at 18:48:14.396 — frozen before
+execution. All 48 counterpart draws pass at 4/0/0/27. The first foreign-index
+draw (P0267/form-1, witness, armed, hash; source `75523205…`, binary
+`308aa8d9…`) was declared `[1,0,0,30]` and reproduced `[0,1,0,30]` at
+18:48:32 at eight and one thread on that one binary; the driver froze the
+scene at 18:49 with the remaining 46 foreign-index draws NOT_RUN.
+`candidate_repair=false`, `expectation_repair=false`; no candidate,
+expectation, control or frozen tree was repaired. I reproduced the red from a
+director copy at both thread counts with an observation line byte-identical
+to the worker's.
+
+The mechanism is in `JoinAppend::drop`:
+
+```rust
+if let Some(id) = scope.install {
+    if let Some(key) = state.confirmed_at.remove(&id) { state.confirmed.remove(&key); }
+}
+```
+
+The drop removes whatever record the confirmation index points at, without
+checking that the key's own install is `id` or that the proof at that key is
+bound to the actual append's source. `ForeignIndex` rewrites
+`confirmed_at[inner_install]` to the other live queue's key, so the inner
+append's retirement removes the outer queue's confirmed payload. The
+independent authority records stay unchanged — the outer keeps `indexed=true`,
+`confirmed=true`, but `present=false` — and the ordered stream equals
+ordinary execution. The four counterpart changes (`Valid`, `IdenticalIndex`,
+`UnknownIndex`, `ForeignProof`) all pass, so the fixture is non-vacuous and
+the failure is specific to the unauthenticated index. This is a genuine
+design-level defect of the scratch consumer model — retirement by an
+unauthenticated state selector, the same discipline class as Q54/Q55 one
+layer deeper — not a production regression and not a reclassification.
+
+## 4. Ruling: `Q56-append-confirmation-key-authentication`
+
+No consumer may select, confirm, retire or remove any record through a state
+index or any other transported or indirect selector without authenticating
+the record's own registration identity and its independently bound source
+against the actual append registration and the actual bound source. A
+mismatch must leave every record untouched.
+
+Continuation 57 is ordered to:
+
+1. Inventory every state-key selection and record removal in the append path
+   with zero unknown — `JoinAppend.0`, `State.appending`, `State.confirmed`,
+   `State.confirmed_at`, `InstallId`, `QueueKey`, `PassProof` — each with its
+   actual object, selector source, state effect, consumer (`join_append`,
+   `join_queue`, `observe`, `finish_append_call`, `Drop`, `omit_join`,
+   `retire`) and isolation falsifier.
+2. Repair `JoinAppend::drop` so that the confirmation key is validated
+   against the append's actual registration (`key.install` equals the
+   append's own install) and its proof against the independently bound
+   actual source before any payload is removed; a failing record leaves both
+   the index and the payload untouched.
+3. Add the falsifier: an independent AST mutation auditor that rejects the
+   unauthenticated removal and its sibling mutations, and make the frozen
+   foreign-index control the acceptance (green in every affected render),
+   while the 96-draw append fixture (21 fixed + 10 additive per copy), the
+   578/598/496 bodies and the 96 handoff draws stay exact.
+4. Re-run the full 96 append draws, the 96 handoff draws, the 578/598/496
+   fixtures, P0558, the 848/72/48/640 draws (the 400 raw draws only by exact
+   identity), the 172 calibrations and both runtime placements, and re-audit
+   every affected render.
+5. Then complete the bar: the 134/4,422/133 execution closure, the 151-plan
+   generator with rejection, the two 94-target/188-postimage roots, the
+   six-column 94-row schema with 151 cells, the byte/AST/omission and
+   disabled-parity audits, the ordered standing replay, `cargo fmt --check`,
+   both workspace modes with the seven skips and the unfiltered
+   `suspension_oracle`/`typed_slot_census`, and the switched same-binary
+   checks.
+
+Under the remaining envelope and the assigned 6,000 s workspace, repairing no
+frozen tree, production or maintained source, and stopping before starting
+any group that cannot fit and reporting the exact remainder.
+
+## 5. Not delivered
+
+The append consumer claim and the complete bar earn nothing. The 134/4,422/133
+closure is a structural index only (152 forms), complete plans 0/151, the two
+94-target/188-postimage roots have 0 postimages, the schema is unchanged
+(`f9604852…`, `new_source_schema=null`, `complete_plan_hash=null`) with all 94
+admitted paths `not_emitted`; the complete-overlay audits, the ordered
+standing replay, `cargo fmt --check`, both workspace modes and the switched
+checks are unexecuted; standing replay and workspace are NOT_RUN, workspace
+0/6,000; the 90/180/151 cells authenticate.
+
+## 6. Allocation
+
+Continuation 56 charged 3,983.3651798919745 s (2,524.3651798919745 s measured
++ 200.0 s conservative inspections/setup + 1,199.0 s bookkeeping + the fixed
+60 s reserve) of the 5,171.014417151946 s carry, leaving
+**1,187.6492372599714 s**; CM4's share stands at 59,312.350762740025 of
+60,500 s, the assigned 6,000 s workspace is untouched (0/6,000), and the
+1,440 s verification and second 6,000 s workspace stay held.
+`candidate_failure=true`, `allocation_stop=false`.
+
+This gate allocates a fresh 8,000 s focused envelope from the project's
+reserve: continuation 57 runs under **9,187.649237259971 s**, CM4's share
+becomes 68,500 s, the stage reserve 109,000 s, and 743–746 keep their
+40,500 s unchanged. The extension is an allocation from the project's
+reserve, not a bar change: the bar, the stop-loss and the authorization
+limits are unchanged.
+
+## 7. Freeze
+
+The stopped scene is 19,533 files / 10,394,003,758 bytes in
+`continuation-stop/`. I rehashed all 19,533 pairs myself with zero bad. The
+27 prior trees hold 152,082 entries with the c55 scene (19,455) and its 119
+recorded transients — 108 originals missing and 11 rewritten, every frozen
+copy exact; I rehashed all 119 records, the 11 present originals exact to
+their recorded hashes and all 119 frozen copies exact; the 286 inherited
+transients are unchanged and the two `freeze-stop.log` drifts (stages 32 and
+33) stay open and unrepaired. Nothing was repaired. My own runs this gate
+were the red and the signature greens from copies outside the scene, so the
+scene was untouched by the gate (the re-verification after them stayed 0
+bad).
+
+## 8. Entry
+
+Entry authenticates 5,400 maintained / 590 design / 324,490 accepted files
+(hashes taken at 18:05, before this continuation's outputs). I rehashed all
+590 design files (278,559,491 B) and all 324,490 accepted files
+(163,846,610,573 B) with zero missing and zero bad. The 39,500 accepted new
+against the c55 entry are the c55 continuation outputs. The only three
+maintained deltas are my own committed documents (`TODO.md`, brief-623,
+brief-742) whose working-tree hashes equal the HEAD `d4b45685` blobs; the
+pre-existing layer is the same 23 porcelain entries; the worker changed no
+maintained or production file (maintained_changes=0, production_changes=0,
+new_own_catches=0).
+
+## 9. What I verified and what stays open
+
+Verified by me: the red (same binary, eight and one threads, byte-identical
+observation), 1,954 recorded runs against their logs and the 2,398-receipt
+ledger with zero problems and 382 binaries hash-exact, the group totals
+(848/72/48/640, 400 raw, 172, 578, 598, 496, 128, 5,732 ×2, 768 handoff, 192
+append), the four AST audit reruns, the signature greens (598/0, 578/0, the
+append counterparts 4/0/0/27), all 702 pair audits and 86 calibration audits
+exit 0, the plan and freeze timestamps, both c55 controls green in witness
+and runtime, armed and disabled, hash and nohash, the raw-reuse identity, the
+full freeze, the full design and accepted entry hashes and the budget
+arithmetic. The four FLAGGED items are retained construction failures with
+no evidence change: the first append-declaration script assertion, the 45 s
+live-discovery timeout (72,711 calls; the same executable finished under
+120 s), the first installed auditor's generic-caller rejection (the corrected
+comparator passed the same nine sources), and the first J declaration's
+shared-destructor match (retained separately and rebound). The `drift_label`
+FLAGGED is a wording error — the 119 transients are c55 director-replay
+transients, not "continuation54 entry" ones — with their paths, hashes and
+count authenticated at entry and close.
+
+Open: everything in section 5, plus the Q56 repair. Continuation 57 carries
+both.
+
+## 10. Process
+
+Ruling written here; appended to brief-742 and brief-623 (Continuation 144),
+TODO.md extended, `state.md` rebuilt, committed and pushed; clean-temp run;
+dispatch log archived; memory updated; continuation 57 dispatched on
+`gpt-6.2-astra` at effort max.

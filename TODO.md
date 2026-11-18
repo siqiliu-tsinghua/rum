@@ -1766,6 +1766,86 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   remainder; no campaign, epoch, acceptance or CM5; pair (45,5,false)
   Open, C2 118 Residual + 0 Lost, 51 owners and five source duties
   Open, `CHANGELOG.md` and S10 blocked.
+  Continuation 56 is gated (Q28 append confirmation-key STOP).
+  The Q55 issuer repair is delivered and accepted: the lexical enter
+  mints an IssuedSource { capture, ticket }, a CompletionIssuer keeps
+  the actual capture, the completion seam takes the issuer by value and
+  validates the ticket against the retained actual capture, the old
+  one-argument path accepts only Option<Infallible>, and JoinOwner
+  carries the actual capture through result, drop, confirmation and
+  revocation. Both frozen whole-ticket controls are green in every
+  affected render: the handoff fixture's 96 draws are all exact (48
+  declared_classes at 14/0/0/39 and 48 issued_substitution at 2/0/0/51
+  over three forms x two roles x two arms x two modes x eight and one
+  threads), the nested inner mint is refused with
+  PortBlocked::ActualSourceTicketMint and the outer pending return
+  survives. The new 598-control whole-consumers fixture (578 fixed +
+  20 additive over five consumers x Valid/OtherIssuedTicket x two
+  copies) is green 598/0/0/0 in hash and nohash at eight and one; the
+  578 and 496 fixtures are green with their test bodies byte-exact and
+  the whole prior AST restored; seven one-node issuer mutations are
+  each rejected by an independent AST auditor. The 848/72/48/640 draws
+  are re-earned exact (26,964/232; 2,280; 5,384/168;
+  68,480/7,600/0/236,640), the 400 raw draws reuse only by exact
+  identity (5,400/600/0/25,200; two sources and eight binaries, all
+  distinct paths and all 400 logs hash-exact), the 172 calibrations
+  are 63,956/372/0/0, P0558 is 128/0 over eight, both runtime
+  placements reproduce 1433/0/5/2 in both modes at eight and one, and
+  all 702 pair audits and 86 calibration audits exit 0. I verified all
+  1,954 recorded runs against their logs and the 2,398-receipt ledger
+  (0 problems, 382 binaries hash-exact) and reran the four AST audits
+  and the signature greens. The new append class (21 fixed + 10
+  additive tests per copy, three carriers, 48 items / 96 draws) was
+  frozen at 18:48:11.5 before its 18:48:14.2 build; all 48 counterpart
+  draws pass at 4/0/0/27, and then the first foreign-index item
+  (P0267/form-1 witness armed hash) was declared [1,0,0,30] and
+  reproduced [0,1,0,30] at eight and one on one binary:
+  JoinAppend::drop removes the confirmation record the state index
+  points at without checking that the key's install is its own or that
+  the proof is bound to the actual source, so the other live queue's
+  confirmed payload is removed while its index and proof status
+  survive and the ordered stream equals ordinary execution. The stop
+  is compliant under Q28: no candidate, expectation, control or frozen
+  tree was repaired, the remaining 46 foreign-index draws are NOT_RUN
+  and the scene is frozen. The ruling
+  (Q56-append-confirmation-key-authentication) is a genuine
+  design-level defect of the scratch consumer model (retirement by an
+  unauthenticated state selector, the same class as Q54/Q55 one layer
+  deeper), not a production regression; the issuer repair earns
+  focused scratch credit while the append consumer claim and the
+  complete bar earn nothing, and continuation 57 must inventory every
+  state-key selection and record removal in the append path with zero
+  unknown, validate the key's install and the proof's actual-source
+  binding before any removal, add the independent AST falsifier, make
+  the frozen foreign-index control the acceptance while the 96-draw
+  append fixture, the 578/598/496 bodies and the 96 handoff draws stay
+  exact, re-run every matrix, and then complete the 134/4,422/133
+  closure, the 151-plan generator, the two 94/188 roots, the schema
+  cells, the audits, the standing replay, fmt, both workspace modes
+  and the switched checks. Allocation: continuation 56 charged
+  3,983.3651798919745 s of 5,171.014417151946 s, leaving
+  1,187.6492372599714 s, and this gate allocates a fresh 8,000 s
+  envelope from the project's reserve, so continuation 57 runs under
+  9,187.649237259971 s; CM4's share becomes 68,500 s, the stage
+  reserve 109,000 s, 743–746 keep 40,500 s, the workspace stays at 0 of
+  6,000 s, and the 1,440 s verification and second 6,000 s workspace
+  stay held. The stopped scene is 19,533 files / 10,394,003,758 bytes
+  in `continuation-stop/`; I rehashed all 19,533 pairs with zero bad,
+  and the 27 prior trees hold 152,082 entries with the c55 scene
+  (19,455) and its 119 recorded transients (108 missing, 11 rewritten;
+  frozen copies exact), the 286 inherited transients unchanged and the
+  two `freeze-stop.log` drifts unrepaired. Entry authenticates 5,400
+  maintained / 590 design / 324,490 accepted files; I rehashed all 590
+  design (278,559,491 B) and all 324,490 accepted (163,846,610,573 B)
+  files with zero missing and zero bad; the only maintained deltas are
+  my committed documents at HEAD `d4b45685` (same 23 porcelain).
+  Continuation 57 repairs the append confirmation-key authentication
+  and completes the bar under 9,187.649237259971 s and the assigned
+  6,000 s workspace, repairing no frozen tree, production or maintained
+  source and stopping before any group that cannot fit and reporting
+  the exact remainder; no campaign, epoch, acceptance or CM5; pair
+  (45,5,false) Open, C2 118 Residual + 0 Lost, 51 owners and five
+  source duties Open, `CHANGELOG.md` and S10 blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
