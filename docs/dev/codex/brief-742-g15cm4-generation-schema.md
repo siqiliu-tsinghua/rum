@@ -4245,3 +4245,303 @@ mechanism is chosen by call path, not by visibility.
    maintained source, and stopping before starting any required group that
    cannot fit and reporting the exact remainder. No campaign, epoch,
    acceptance or CM5.
+
+## Continuation 53 ruling (director) — the call-path census closes the c52 gap (144 items, 2,078 fixture anchors in both fixture copies, 1,024 assertion anchors, 42 runtime anchors, zero unknown), the 13 new public boundaries and four leading returns hold the accepted 450-control fixture byte-exact at 496/0/0/0 in both feature modes at eight and one, and the runtime render reaches 1433/0/5/2 at eight and one; the propagation then stops statically because the P0558 extracted source's frozen disabled assertions require the producer's `enter_selected` recording while the redirect returns `Guard(None, None, None)` before state — and the 13 new privacies would also make the witness calls fail to compile (E0603). The ruling separates a witness render (recording seam retained, never installed) from the runtime render (privacies and redirects installed), re-opens the four leading returns against the union of frozen fixtures, and orders continuation 54 to complete the witness classification and the bar under the remaining 12,856.178777779012 s.
+
+Continuation 53 completed the call-path census (closing the c52 fixture-anchor
+gap), installed the 13 new public boundaries and four leading disabled returns
+for the 17 runtime-called items, and held the accepted matrix at 496/0/0/0 in
+both modes at eight and one while the disabled full-runtime arm stayed at
+1433/0/5/2. It then stopped — before rendering or executing any propagation
+candidate — on a static ambiguity that my c53 order did not cover: the P0558
+extracted source's frozen disabled assertions require the producer's
+`enter_selected` recording, while the runtime redirect returns
+`Guard(None, None, None)` before state. The stop is compliant: no candidate was
+rendered, no deliberately red classifier ran, no expectation or fixed control
+changed. The finding is real, and the classification in it is incomplete in the
+direction that matters — the 450-control fixture is not the only frozen
+authority; the 114 extracted sources are frozen witnesses too, and their
+disabled contracts were never consulted. I also found a second, mechanical
+blocker the worker did not name: the 13 new privacies make the extracted
+fixtures' own primitive calls fail to compile (E0603), because those calls sit
+outside the probe module. The ruling below resolves both with one principle: a
+source has a **witness render** and a **runtime render**, and each frozen
+fixture's own assertions choose what its render must do. The census, the 17
+corrections as 450-control evidence, and the runtime render are accepted with
+focused scratch credit; the four leading returns are reopened against the
+witness family; the propagation, the draws and the complete bar earn nothing.
+
+## 1. Run record
+
+`cdx` ran as unit `brief-742-cdx-20261118-125833-1725633`, rc 0, peak
+2,573,783,040 B, oom 0 / oom_kill 0; log 2,193,182 B, sha256
+`13f87851a0bd8052b7b106b7500d256cb2dc4498f695243eeabf6ba0be08e2b6`; no
+`.git-attempts` file. The report is STOP: 13,906 changes (13,904 added, 2
+modified — `.temp/brief-742/PROGRESS.md` and `.temp/brief-742/report.json` — 0
+deleted), all under `.temp/brief-742`; 29 checks (24 PASS, 1 FLAGGED, 2 FAIL, 2
+NA), 172 citations verified, 1 question (`Q53-source-fixture-boundary`), 1
+deviation, 0 disclosures. I ran `check --against-git` myself: 13,906 of the
+13,938 scope problems are the `.temp`-ignored artifact ("in changes but
+unchanged in the tree"), and the remaining 32 are the pre-existing tracked
+modifications (the 23 porcelain entries, expanded through the untracked
+directories) — no new tracked change, HEAD still `b39d7f8f`. The two FAILs are
+the worker's own honest verdicts (`propagation_contract`: the static
+ambiguity; `complete_bar`: NOT_RUN after the stop); the FLAGGED item is the
+tooling-construction disclosure. The expanded run set is 50 receipts.
+
+## 2. Accepted: the completed call-path census
+
+`public-call-classification.json` re-enumerates the 144 explicit public items
+over the copied tree and the **entire 450-control fixture** (both the `armed`
+and the `disabled` copy): 2,078 fixture call anchors, 1,024 assertion anchors
+and 42 runtime call anchors, unknown 0, with every item carrying its definition
+anchor, its call anchors, its declaration and obligation count, and for each
+fixture call the surrounding controls and assertions. `pause` now carries 134
+fixture anchors in both copies (171 `armed` / 171 `disabled` control
+references) and one runtime anchor (`builtins_input.rs:248`); `enter_selected`
+carries 14 fixture and five runtime anchors. The mechanism counts close to 144:
+31 non-callable declarations, 42 fixture-only items, 4 accepted leading
+returns, 13 new public boundaries, 42 internal, 2 stateless constructors, 6
+existing boundaries and 4 leading returns. This closes the c52 gap (the empty
+`fixture_call_anchors` for `pause`) and is accepted as the surface
+classification it declares itself to be. Its scope is the 450-control fixture,
+not the extracted-source family; the stop shows why that distinction decides
+the repair.
+
+## 3. Accepted with limits: the 17 corrections and the 496 matrix
+
+The c53 helper differs from the accepted c52 helper by exactly the declared
+edits: 13 `pub fn` → `fn` privacies, 13 public boundaries (`source_pause`,
+`source_enter_selected`, `source_installing`, `source_evaluation_owner`,
+`source_pause_installed`, `source_observe_registration`,
+`source_observe_join_result`, `source_join_owner`, `source_generation`,
+`source_expect_registration`, `source_finish_registration`,
+`source_expect_result`, `source_finish_result`), four leading
+`if !ENABLED { return …; }` statements (`queue_transport::source_scope`,
+`retire_root`, `retire_control`, `clear_registry`), and the additive
+`#[cfg(any())]` control modules — no other change. The fixture render differs
+from the c52 450-control fixture by the same edits in both copies: a byte diff
+shows only the 26 visibility substitutions and the declared insertions, and
+every fixed control body is untouched. The matrix is 450 fixed controls plus 23
+additive held-borrow controls per copy (46 total, 496): **496/0/0/0, exit 0, in
+hash and nohash at eight and one**, and I rebuilt the fixture myself and
+reproduced all four draws. The independent syn auditor passes on the helper
+(1 copy) and the fixture (2 copies): each boundary's first statement is the
+disabled return, erasure restores the whole AST, primitive bodies and
+attributes are exact, and all 450 fixed controls are token-identical.
+
+The limit is decisive: the 450-control fixture is one authority, not the
+authority. The 23 additive controls prove inertness on the paths that fixture
+exercises; they do not prove that the 114 extracted sources' frozen disabled
+assertions survive the same corrections. The stop is exactly a counterexample
+in that second family. The 13 boundaries keep every primitive body byte-exact —
+the c50 pattern proper — and are accepted as the runtime render's correction.
+The four leading returns are **reopened**: a leading return changes the
+primitive's body, so if any frozen witness requires that item's disabled
+recording, the item must take the boundary/private-core split instead, and the
+450-control matrix alone cannot choose between them.
+
+## 4. Accepted with limits: the runtime render
+
+The copied runtime render changes 10 files (nine copied sources plus the helper
+copy) with 27 registered edits: function redirects (`pause`,
+`enter_selected`, `evaluation_owner`, `installing`, `observe_join_result`,
+`join_owner`, `pause_installed`), method redirects on `InstallGuard` and
+`JoinOwner`, and compile-time `ENABLED` argument gates that keep the added
+argument computation (locks, `Arc::as_ptr`) out of the disabled path. Nine
+independent AST audits pass with whole-AST restoration, ordinary nodes exact,
+fixed bodies and attributes exact, and the redirects counted per family; the
+helper has its own boundary AST audit. The disabled full-runtime arm reproduces
+**1433/0/5/2 at eight and one** on the one binary `a2fe2a83…` — I reran both
+receipts at both thread counts myself and reproduced every count — with the
+frozen 1,440-name set, the five ignored and the seven skips. One honest limit:
+the "nohash" cargo command passes `--no-default-features`, but `rum-runtime`'s
+default feature set is empty, so cargo legitimately reuses the same artifact
+(the worker disclosed `runtime_same_artifact_both_cargo_modes=true`); the
+nohash draw is a rerun, not an independent feature mode, and the independent
+mode coverage lives in the fixture matrix. The worker's first driver failed on
+a `fresh=false` demand for exactly this reason and was retired with a
+nohash-only driver that authenticated the artifact; that is a construction
+failure, retained and settled, not a candidate failure.
+
+## 5. The stop: P0558's frozen disabled contract versus the redirect
+
+The stopped source is `.temp/brief-742/continuation-51/append-propagation/022.rs`
+(sha256 `fc4fc19a…`), a c37/51 extracted copy of the association-selector
+operation. Its producer `resume_suspended_association_set_lvalue` (line 526)
+calls `crate::cm740_probe::enter_selected("P0558")` at line 550; its fixture
+leaf `evaluate` (line 34) calls `cm740_probe::pause("association-selector")` at
+line 38 when `arm` is set; and the frozen test
+`actual_continue_route_constructs_new_selected_occurrence` (lines 3099–3103)
+pins `initial == usize::from(!cfg!(live))`, `after == 2 * usize::from(!cfg!(live))`,
+`bindings == usize::from(!cfg!(live))` and `proofs == 2 * usize::from(!cfg!(live))`
+— i.e. in the `disabled` build, one arm after `ready`, two after the resumed
+episode, one construction binding and two proofs. The four frozen disabled
+draws declare `16/0/0/0` (`operation-affected-P0558-disabled-{hash,nohash}-t{8,1}`,
+c37). I read the mechanism through: `enter_selected` → `selected(row)` is true
+under `RUM_CM740_OMIT=P0558` → `enter(row)` mints the activation and pushes it
+on `arming_scopes`; `pause` arms for the `SELECTED` row and `arm`'s
+`producer_owner` finds that activation and increments `next_occurrence`;
+`count_arms` reads it. If the producer call is redirected to
+`source_enter_selected`, `ENABLED=false` returns `Guard(None, None, None)`
+before any state, no activation is pushed, `producer_owner` returns `None`,
+`arm` returns before recording, and the frozen counts fall to 0 — the exact
+contradiction the worker reported. The stop is static: no candidate was
+rendered, no deliberately red classifier ran, and no expectation, control or
+frozen tree was touched. The deviation (the complete ordered bar not
+delivered) is the honest consequence.
+
+## 6. The second blocker: the privacies break the witness calls
+
+The 13 privacies are correct for the runtime render and invisible to the
+450-control fixture, whose tests are children of the probe module. They are not
+invisible to the extracted sources: there the probe is `pub mod cm740_probe`
+at the crate root and the fixture leaves and runtime functions call it from
+sibling modules. I confirmed the language rule with a synthetic two-module
+check (E0603 on a sibling call to a private `fn`), and the propagation preflight
+enumerates 148 external calls to the 13 privatized names across the 58 sources
+(61 `pause` in 53 sources, 62 `enter_selected` in 28, 25 more across
+`installing`, `evaluation_owner`, `observe_registration` and `join_owner`). A
+witness render that simply inherits the privacies cannot compile, let alone
+pass. So the render pair is not a stylistic choice; without it the family is
+unbuildable.
+
+## 7. Ruling on `Q53-source-fixture-boundary`
+
+The extracted-source fixture at a dual-use call path is a **core-protocol
+witness**. Its frozen assertions define the recording contract, and the
+recording primitive keeps its exact name, body and attributes for it. The
+runtime entry is separately bound by the boundary. The two are not the same
+authority and must not be collapsed:
+
+1. **Two renders, one source.** Each affected source is rendered twice as a
+   declared pair: the **witness render** (compiled with `--test` for the
+   848-family draws) and the **runtime render** (the installed copied-crate
+   source). The witness render keeps every witnessed call on the recording
+   primitive and keeps that primitive reachable to the frozen fixture with its
+   exact body; the runtime render keeps the primitive private and applies
+   every registered redirect to the boundary. The installed artifact is the
+   runtime render; the witness render is never installed.
+2. **The union of frozen fixtures chooses the mechanism.** An item takes the
+   c50 boundary/private-core split whenever **any** frozen witness requires its
+   disabled recording — not only the 450-control fixture. A leading disabled
+   return is allowed only when no frozen witness observes that item's disabled
+   recording. The four leading returns in this continuation are re-decided
+   under this rule, and the 450 fixed controls stay byte-exact either way.
+3. **P0558 is the declared dual-use site.** The witness render keeps
+   `enter_selected("P0558")` at the producer; the frozen suite stays
+   `16/0/0/0` and the counts stay 1/2/1/2. The runtime render redirects the
+   same call site to `source_enter_selected`, whose first statement returns
+   before any state. No assertion, control or declaration changes.
+4. **The render pair is audited, not asserted.** For every pair: primitive
+   bodies and attributes token-identical; fixed assertions byte-exact; the
+   delta between the two renders exactly the registered visibility and
+   redirect edits; the witness render never installed; the runtime render's
+   redirects enumerated with zero unknown callers.
+5. **Credit is split honestly.** The 848/72/48/640 source draws credit the
+   **recording** contract in the witness render. The corrected entries'
+   **inertness** is credited by the 496-control matrix, the nine runtime AST
+   audits, the redirect census with zero unknown, and the 1433/0/5/2 arm. No
+   single render is claimed to witness both, and every closure row must state
+   which render its evidence came from.
+
+This is a repair of the classification, not a reclassification of any item:
+the primitives keep their names and bodies, the declaration (152 obligations)
+and the frozen P0558 row stand, and no fixed expectation moves. It is also not
+a weakening: the witness render is the only render that can hold the frozen
+disabled contracts, and the runtime render is the only one that is inert.
+
+## 8. Not delivered
+
+Nothing beyond the census, the 17 corrections as 450-control evidence, and the
+runtime render is delivered, and nothing else earns anything: the witness
+classification, the re-decided mechanisms, the propagation to 114 sources /
+170 copies and the three J routes with their independent audits, the affected
+848/72/48/640 draws and the 400 raw draws (no reuse claim), the
+134-boundary/4,422-obligation/133-carrier closure with the per-form matrices
+and every moved-duty caller, the 151-plan generator with
+duplicate/overlap/unknown-anchor rejection, the two 94-target/188-postimage
+roots, the six-column 94-row schema with all 151 `source_schema` cells, the
+byte/AST/omission and disabled-parity audits, the ordered standing replay,
+`cargo fmt --check`, both workspace modes with the seven skips and the
+unfiltered `suspension_oracle`/`typed_slot_census`, and the switched
+same-binary checks are all open. Standing replay and workspace are NOT_RUN;
+workspace 0 of 6,000; complete plans 0 of 151; complete calibration runs 0 of
+172; emitted overlay paths 0; the schema is unchanged (`f9604852…`,
+`new_source_schema=null`, `complete_plan_hash=null`), all 94 admitted paths are
+`not_emitted`, and the 90 preimages / 180 postimages / 151 cells authenticate.
+
+## 9. Allocation
+
+No new allocation is made. 50 receipts charge 572.9375008309726 s measured
+plus 65.0 s conservatively charged inspections (10 s entry + 55 s closing) plus
+25.0 s bookkeeping (50 × 0.5) and the fixed 60 s reserve, so
+**722.9375008309726 s charged** of the 13,579.116278609985 s envelope, leaving
+**12,856.178777779012 s**; CM4's share stands at 47,643.821222220984 of 60,500
+s, the assigned 6,000 s workspace is untouched, and the 1,440 s verification
+and the second 6,000 s workspace stay held. The stop is a classification stop,
+not an allocation stop (`allocation_stop=false`, `candidate_failure=false`).
+
+## 10. Freeze and entry
+
+The stopped scene is 6,944 files / 2,747,144,034 bytes in
+`propagation-classification-stop/`, frozen at 13:39 with the helper, the
+450-control fixture, the auditors, the binaries, the plans, the edits, the
+census, the preflight and the stop declaration. Every frozen copy is
+byte-exact (I rehashed all 6,944). My own rerun of the frozen runtime binaries
+regenerated 56 transient compile-control/incremental originals under
+`runtime-disabled` (54 deleted, two rewritten: `private-pass.stderr` and
+`target/brief-538/compile-proof/library-build.stderr`) — the same
+director-replay transient class declared at continuation 49; the frozen copies
+preserve every byte and nothing is repaired. The entry authenticates 5,400
+maintained, 590 design and 228,962 accepted files (`+291` = every file of the
+c52 stage); I rehashed all 5,400 maintained, all 590 design and the 291 new
+accepted hashes with zero bad, and every carried accepted hash is unchanged by
+construction. The 24 prior trees hold 104,658 entries: I rehashed the whole
+c52 scene (135 entries, both sides) and 400-entry samples of the c50 and c49
+manifests with zero bad; the two known open `freeze-stop.log` drifts stand
+unrepaired and the 116 director transients are unchanged. The pre-existing
+layer is unchanged at HEAD `b39d7f8f` (23 porcelain entries); the inherited
+`unused_must_use` at `cm740_probe.rs:1319` remains scratch.
+
+## 11. Continuation 54 ordered
+
+The rule is the one above: the extracted source is a witness; the runtime entry
+is bound by the boundary; each has its own render; every frozen fixture's own
+assertions choose what its render must do.
+
+1. **Complete the witness classification with zero unknown.** For every
+   external probe reference in the 58 sources (and any source the preflight
+   missed), in every copy, record path, function, line, callee, the enclosing
+   frozen test(s), the assertion anchor(s) and the disabled-arm value they pin,
+   and the render role. Report any ambiguous site; do not guess and do not use
+   a deliberately red candidate as the classifier.
+2. **Re-decide the 17 mechanisms against the union of frozen fixtures.** Any
+   item whose disabled recording a frozen witness requires takes the c50
+   boundary/private-core split (primitive name, body and attributes exact;
+   public boundary returns before any state; runtime callers redirected).
+   A leading disabled return is allowed only when no frozen witness observes
+   that item's disabled recording; revisit the four leading returns under this
+   rule. The 450 fixed controls stay byte-exact and green in both modes at
+   eight and one; only additive controls may be added.
+3. **Render and audit the pair.** Witness render and runtime render per source,
+   with the delta exactly the registered visibility and redirect edits;
+   primitive bodies token-identical; fixed assertions byte-exact; the witness
+   render never installed; every redirect's callers enumerated.
+4. **P0558 first.** The witness keeps `enter_selected("P0558")` and the frozen
+   `16/0/0/0` with counts 1/2/1/2; the runtime redirects the same site to
+   `source_enter_selected`; both renders audited. No expectation change.
+5. **Then the ordered bar.** Propagate to the 114 sources / 170 copies and the
+   three J routes with independent per-render audits and a disclosure of every
+   copied-source delta; re-run the affected 848/72/48/640 draws after
+   establishing by exact hash identity which sources changed (the 400 raw
+   draws only by identity); complete the 151-plan generator with rejection,
+   the two 94-target/188-postimage roots, the six-column 94-row schema with 151
+   cells, the byte/AST/omission and disabled-parity audits, the ordered
+   standing replay, `cargo fmt --check`, both workspace modes with the seven
+   skips and the unfiltered gates, and the switched same-binary checks, with
+   the full 134/4,422/133-carrier closure and every moved-duty caller.
+6. **Under the remaining 12,856.178777779012 s and the assigned 6,000 s
+   workspace**, repairing no frozen tree, production or maintained source, and
+   stopping before starting any required group that cannot fit and reporting
+   the exact remainder. No campaign, epoch, acceptance or CM5.

@@ -1514,6 +1514,125 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   completes the bar under the remaining 13,579.116278609985 s and the
   assigned 6,000 s workspace, repairing no frozen tree, production or
   maintained source and stopping before any group that cannot fit.
+- G15-CM4 continuation 53 (gated 2026-11-18): the call-path census is
+  complete with zero unknown, the 17 runtime-called corrections hold the
+  450-control fixture byte-exact at 496/0/0/0 in both modes at eight and
+  one, the runtime render reaches 1433/0/5/2, and the propagation stops
+  statically on the P0558 extracted source's frozen disabled contract; the
+  ruling separates a witness render from the runtime render and re-opens
+  the four leading returns against the union of frozen fixtures. The
+  census covers the entire 450-control fixture in both its `armed` and
+  `disabled` copies: 2,078 fixture call anchors, 1,024 assertion anchors,
+  42 runtime call anchors, unknown 0; `pause` now carries 134 fixture
+  anchors and one runtime anchor (`builtins_input.rs:248`), and
+  `enter_selected` 14 and five, closing the c52 gap. All 144 explicit
+  public items are classified: 31 non-callable declarations, 42
+  fixture-only, four accepted leading returns, 13 new public boundaries,
+  42 internal, two stateless constructors, six existing boundaries and
+  four leading returns. The 17 corrections are 13 `pub fn` → `fn`
+  privacies, 13 public boundaries (`source_pause`, `source_enter_selected`,
+  `source_installing`, `source_evaluation_owner`, `source_pause_installed`,
+  `source_observe_registration`, `source_observe_join_result`,
+  `source_join_owner`, `source_generation`, `source_expect_registration`,
+  `source_finish_registration`, `source_expect_result`,
+  `source_finish_result`), four leading `if !ENABLED` returns
+  (`queue_transport::source_scope`, `retire_root`, `retire_control`,
+  `clear_registry`), and 23 additive held-borrow controls per fixture copy
+  (46 total). The helper and fixture diffs contain nothing else; the
+  independent syn auditor passes on 1 helper copy and 2 fixture copies
+  with whole-AST restoration, fixed bodies and attributes exact, and the
+  matrix is 496/0/0/0, exit 0, in hash and nohash at eight and one, which
+  I rebuilt and reproduced in all four draws. The runtime render changes
+  10 files (nine copied sources plus the helper copy) with 27 registered
+  edits (function redirects, method redirects
+  and compile-time argument gates keeping added argument computation out
+  of the disabled path), nine AST audits restore the whole files, and the
+  disabled full-runtime arm reproduces 1433/0/5/2 at eight and one on the
+  one binary `a2fe2a83…`, which I reran in all four draws; the
+  `--no-default-features` nohash command legitimately reuses the same
+  artifact because `rum-runtime`'s default feature set is empty, so that
+  draw is a rerun and the independent mode coverage is the fixture
+  matrix's. The propagation then stops statically before rendering or
+  executing anything: the P0558 extracted source
+  (`continuation-51/append-propagation/022.rs`, `fc4fc19a…`) pins one arm
+  after `ready`, two after the resumed episode, one construction binding
+  and two proofs in its disabled build (`16/0/0/0`, four frozen c37
+  draws), and the producer's `enter_selected("P0558")` at line 550 is the
+  activation `pause` arms within through `producer_owner`; redirecting it
+  to `source_enter_selected` returns `Guard(None, None, None)` before any
+  state, so no activation exists, `arm` returns early and the frozen
+  counts fall to zero. No candidate was rendered or executed, no
+  deliberately red classifier ran and no expectation, control or frozen
+  tree was touched; the one deviation is the honest consequence. I
+  confirmed a second mechanical blocker the worker did not name: the 13
+  new privacies make the extracted fixtures' own primitive calls a
+  sibling-module E0603 (148 external calls to the privatized names across
+  the 58 preflight sources: 61 `pause` in 53 sources, 62 `enter_selected`
+  in 28, and 25 more), verified with a synthetic two-module check. The
+  ruling on `Q53-source-fixture-boundary`: the extracted-source fixture is
+  a core-protocol witness; each source gets a declared witness render
+  (every witnessed call stays on the recording primitive, the primitive
+  stays reachable with its exact body, fixed assertions byte-exact, never
+  installed) and a runtime render (primitives private, every runtime
+  caller redirected to the boundary, installed); the union of frozen
+  fixtures — not the 450-control fixture alone — chooses each item's
+  mechanism, so any item whose disabled recording a witness requires
+  takes the c50 boundary/private-core split and the four leading returns
+  are re-opened; P0558 keeps `enter_selected("P0558")` in the witness
+  render and redirects it in the runtime render with no expectation
+  change. Credit is split: the 848/72/48/640 draws credit the recording
+  contract in the witness render, while inertness is credited by the
+  496-control matrix, the nine runtime AST audits, the redirect census
+  with zero unknown and the 1433/0/5/2 arm; no single render is claimed
+  to witness both. Nothing else is delivered and nothing else earns
+  credit: the witness classification, the re-decided mechanisms, the
+  114/170 and three J propagations, the affected 848/72/48/640 draws and
+  the 400 raw draws (no reuse claim), the 134/4,422/133 closure, the
+  151-plan generator with rejection, the two 94-target/188-postimage
+  roots, the six-column 94-row schema with 151 `source_schema` cells, the
+  byte/AST/omission and disabled-parity audits, the ordered standing
+  replay, `cargo fmt --check`, both workspace modes with the seven skips
+  and the unfiltered `suspension_oracle`/`typed_slot_census`, and the
+  switched same-binary checks are all open; standing replay and workspace
+  are NOT_RUN, workspace 0/6,000, complete plans 0/151, complete
+  calibration runs 0/172, emitted overlay paths 0; the schema is
+  unchanged (`f9604852…`, new_source_schema=null, complete_plan_hash=null),
+  all 94 admitted paths are `not_emitted`, and the 90 preimages / 180
+  postimages / 151 cells authenticate. The stop is not an allocation
+  limit: 50 receipts charge 722.9375008309726 s (572.9375008309726 s
+  measured + 65.0 s conservatively charged inspections + 25.0 s
+  bookkeeping + the fixed 60 s reserve) of 13,579.116278609985 s, leaving
+  12,856.178777779012 s; CM4 stands at 47,643.821222220984 of 60,500 s,
+  the workspace at 0 of 6,000 s, and the 1,440 s verification and second
+  6,000 s workspace stay held; no extension or held envelope was borrowed
+  and no new allocation is made. The stopped scene is 6,944 files /
+  2,747,144,034 bytes in `propagation-classification-stop/`; every frozen
+  copy is byte-exact (all 6,944 rehashed), while my own rerun of the
+  frozen runtime binaries regenerated 56 transient
+  compile-control/incremental originals under `runtime-disabled` (54
+  deleted, two rewritten: `private-pass.stderr` and
+  `target/brief-538/compile-proof/library-build.stderr`), the known
+  director-replay transient class, recorded and unrepaired. Entry
+  authenticates 5,400 maintained / 590 design / 228,962 accepted files
+  (+291 = every file of the c52 stage; all 5,400 maintained, 590 design
+  and the 291 new accepted hashes rehashed by me, zero bad); the 24 prior
+  trees / 104,658 entries hold with the c52 scene (135 entries) fully
+  rehashed both sides, 400-entry c50 and c49 samples exact, the 116
+  director transients unchanged, and the two known `freeze-stop.log`
+  drifts unrepaired; HEAD `b39d7f8f` with the same 23 porcelain entries.
+  Continuation 54 completes the witness classification at every external
+  probe reference in the 58 sources and all copies with the enclosing
+  frozen assertion and disabled-arm value with zero unknown, re-decides
+  the 17 mechanisms against the union of frozen fixtures (an item whose
+  disabled recording any witness requires takes the c50 split; a leading
+  return only when no witness observes it), renders and audits the
+  witness/runtime pair per source with P0558 first, then propagates the
+  114/170 and the three J routes, re-runs the affected 848/72/48/640
+  draws after exact-hash-identity change detection (the 400 raw draws
+  only by identity), and completes the bar under the remaining
+  12,856.178777779012 s and the assigned 6,000 s workspace, repairing no
+  frozen tree, production or maintained source and stopping before any
+  group that cannot fit.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
