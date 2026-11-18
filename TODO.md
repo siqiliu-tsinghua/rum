@@ -1286,48 +1286,56 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   and the registered omission, recorded with causal anchors in a new
   frozen plan, and continuation 45 executes all 168 runs against it
   and then finishes the complete bar.
-  Run: 56,021 `.temp` changes, 12 PASS / 2 FLAGGED / 3 FAIL / 2 NA,
-  6,350.574759540948 s charged, 1,838.2350947419345 s carry (CM4's
-  share is 42,679.58913501102 of 44,500 s, leaving the binding
-  1,820.41086498898 s; no extension; 743–746 retain 40,500 s),
-  workspace 0/6,000. Continuation 48 is a worker execution-protocol
-  STOP: five cargo commands set CARGO_TARGET_DIR against the adopted
-  DRAFT-COMMON rule, so they and every dependent run earn no cargo,
-  parity, workspace, generator or fixture credit, and the
-  27,451-file scene is frozen without repair; the optional
-  full-runtime baseline also misdeclares 1440/0/0/0 against the same
-  live binary's 1430/5/5 at 8/1 (three missing copied runners and
-  two known exclusions), with no expected set or fixture repaired.
-  The corrected host declaration is accepted (a new separately
-  frozen 64-entry plan with four forced conversion/output names,
-  sixty not-forced actors and the two masked call names, frozen at
-  06:49:17 before the first build; valid 64/0 and weak 60/4 in both
-  cfg arms at 8/1), with the eight-variant host family (34/0 and
-  32/2), the full scope AST/omission audits (core/queue 10 objects ×
-  two copies, raw 3 × one, host 3 × two), the source-route migration
-  static evidence (337 stage audits over 114 sources, 150 files and
-  1,762 calls with zero unknown, a 46-site order audit rejecting 250
-  corrupted inputs, 48 registration and 72 join runs, and the
-  70-actor 444-control fixture at 444/0 in four draws — no cargo
-  credit), the matrices (920 family records at 29,244/232 and 124
-  raw/paired records at 6,056/124/0/700) and the complete
-  calibration (42 × 374 = 15,708 cells, 93 forced and 15,615
-  not-forced with zero unknown, 1,596 installation cells, the
-  13a22a04… manifest frozen at 08:36:27 before any build, all 172
-  draws exact at 63,956/372/0/0, 38 firing variants plus four
-  masked limits and the masked host-call pair, Q42 firing names
-  core/queue 24, raw 3, host conversion/output 4), plus the
-  scope-form matrix at 1,040 exact runs (73,880/8,200/0/261,840).
-  The complete bar is not executed and earns nothing: the
-  134/4,422/133-carrier closure, the 151-plan generator with
-  rejection, two 94-target/188-postimage roots, the six-column
-  94-row schema with 151 cells, the ordered standing replay, fmt,
-  both workspace modes with the seven skips and the unfiltered
-  gates, and the switched checks all remain open. Continuation 49
-  redoes the five excluded cargo checks in the prescribed
-  environment without CARGO_TARGET_DIR, then finishes the bar under
-  the binding 1,820.41086498898 s, reusing only by exact hash
-  identity.
+  Run: 48,533 `.temp` changes, 11 PASS / 3 FAIL / 2 NA,
+  618.8492898940021 s charged, CM4 at 43,298.43842490502 of 44,500 s,
+  leaving the binding 1,201.5615750949778 s (no extension; 743–746
+  retain 40,500 s), workspace 0/6,000. Continuation 49 re-earns the
+  five excluded cargo checks in the prescribed environment: two
+  source typechecks and three runtime-route builds at
+  offline/locked/-j8 with the copied roots' own default target
+  directories under `.temp`, no CARGO_TARGET_DIR in any of the 30
+  receipts, 16 G/no-swap, scripts mirrored, prior evidence not
+  reused; all exit 0, six selected route draws 35/0 each at 8/1,
+  and I reproduced both typechecks clean-target (11.51 s / 2.41 s)
+  and the fresh disabled build (28.55 s) plus all six draws. Then a
+  compliant Q28 STOP on the optional full-runtime baseline: the
+  frozen declaration expects 1433/0/5/2 for both arms, the live
+  copy delivers it at 8/1, and the fresh disabled binary
+  `6476f56d…` delivers 1430/3/5/2 on exactly
+  `logical_queued_frames_have_one_owner_in_both_modes`
+  (`MissingActualAppendQueueSource`: the unchanged test calls
+  `FrameStorage::append` directly, bypassing the instrumented
+  `SuspendedEvaluation::append`), `suspension_protocol_repository_invariants_hold`
+  (helper `.frames.insert(` text in the copied `src/lib.rs`) and
+  `kernel_crates_do_not_write_stdout_outside_tests_and_bins`
+  (fixture stdout text in the same file); the worker reproduced at
+  one thread on the same binary, claimed no production regression,
+  ordering artifact or repair, and froze 24,244 files /
+  6,362,142,797 bytes, and I reproduced both arms and the names.
+  The ruling holds that the append-route probe must be inert when
+  `ENABLED=false` (early return at every entry point and call site,
+  no Rc, no TLS, no assertion) and the disabled arm must deliver
+  1433/0/5/2 at 8/1; that every direct `FrameStorage::append`
+  caller is classified with zero unknown (the unchanged test is a
+  declared bypass; production's only caller is the instrumented
+  wrapper; no maintained test is edited); and that the two
+  unchanged source gates stay green on the corrected copied tree by
+  placing the probe/control text under a path both scanners skip,
+  with no scanner weakened. The five checks are accepted as focused
+  source-route validation only; the complete bar is not delivered
+  (134/4,422/133-carrier closure, 151-plan generator with
+  rejection, two 94-target/188-postimage roots, six-column
+  94-row schema with 151 cells, byte/AST/omission and
+  disabled-parity audits, ordered standing replay, fmt, both
+  workspace modes with the seven skips and the unfiltered gates,
+  switched checks) and earns nothing; schema `f9604852…` unchanged,
+  94 admitted paths `not_emitted`, 90/180 pre/postimages and 151
+  cells exact; entry 139,586 files / 71.86 GiB zero-bad and the
+  23-entry pre-existing layer unchanged. Continuation 50 makes the
+  disabled instrument inert, classifies the direct append callers,
+  keeps both source gates green, then finishes the bar under the
+  binding 1,201.5615750949778 s, reusing only by exact hash identity
+  and repairing no frozen tree, production or maintained source.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the

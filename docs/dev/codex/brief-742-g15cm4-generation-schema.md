@@ -3336,3 +3336,197 @@ acceptance or settlement.
 
 Next: continuation 49 completes the bar; then the verification stage
 (1,440 s + held second 6,000 s workspace), 743–746 and CM5.
+
+## Continuation 49 ruling (director) — continuation 49 re-earns the five excluded cargo checks in the prescribed environment and then stops under Q28 on the fresh disabled full-runtime arm, where three ordinary runtime tests fail that the live copy passes; the stop is compliant, the five checks are accepted as focused source-route validation only, both failure classes are ruled scratch-instrument and scene-construction defects rather than production regressions, and the complete bar remains unexecuted.
+
+Continuation 49 redid the five checks that continuation 48 excluded from credit,
+then ran the optional full-runtime baseline it had declared, and stopped under
+Q28 when the fresh disabled copy failed three ordinary runtime tests that the
+live copy passes. The five checks are re-earned in the prescribed environment
+and are accepted with focused source-route credit only. The stop is compliant
+and its cost stands. Both failure classes are ruled instrument/scene
+construction defects in scratch, not production regressions: the append-route
+probe is not inert when `ENABLED=false`, and the probe/control module's text
+sits in a copied `src/lib.rs` that two unchanged maintained source gates scan.
+The complete bar is not delivered and earns nothing. Continuation 50 must make
+the disabled instrument inert at every entry point, classify the direct
+`FrameStorage::append` callers with zero unknown, keep both source gates
+unchanged and green on the copied tree, and then finish the complete bar and
+the full closure under the CM4 share's remaining 1,201.5615750949778 s.
+
+### 1. Run record
+
+`cdx` ran as unit `brief-742-cdx-20261118-095208-1204692`, rc 0, peak
+2,685,403,136 B, oom 0 / oom_kill 0; log 1,374,354 B, sha256
+`6f6ae18eb29e63c07e3981e6d62609014eef2d9ac3e9ecc50a291b67219a3376`. The
+report is STOP: 48,533 changes (48,531 added, 2 modified — `PROGRESS.md` and
+`report.json` — 0 deleted), all under `.temp/brief-742`; 16 checks (11 PASS, 3
+FAIL, 2 NA), 174 citations verified, 0 questions, 1 deviation, 0 disclosures.
+No git command ran (0 executed git calls, no `.git-attempts`), no network. I
+rehashed every entry hash — 139,586 files, 71.86 GiB — with zero differences,
+and the working tree shows exactly the same 23 porcelain entries / 32 expanded
+instances at HEAD `f49a96c6`.
+
+### 2. Accepted: the five excluded checks re-earned
+
+The two source typechecks and three runtime test builds ran in the prescribed
+environment: `cargo check/test --offline --locked -j8` with the c49 roots'
+own default target directories under `.temp`, no `CARGO_TARGET_DIR` in any of
+the 30 run receipts (cmd or env), 16 G/no-swap scope inherited, scripts
+mirrored, and no prior cargo evidence reused. Exit 0 throughout; the six
+selected route unit draws are 35/0 each (210 passed) at eight and one thread
+on the same binary per arm. The plan and freeze were written at 09:57:14
+before the first check at 09:57:37.
+
+I reproduced them myself: clean-target replays of both typechecks (11.51 s /
+2.41 s, exit 0) and of the fresh disabled build (28.55 s, exit 0, test binary
+produced) in director copies under `.temp/director/gate-c49/`, and all six
+route draws 35/0 from the frozen binaries. Credit is limited to focused
+source-route validation: this is not workspace credit, not complete-record
+parity, and not a complete overlay.
+
+### 3. Admitted: the Q28 STOP is compliant
+
+The runtime-full plan and freeze were written at 09:59:51, before the first
+run at 10:00:06, and declare 1433/0/5/2 for both arms (five ignored names
+resolved from source attributes, all seven brief skips supplied, two matching
+runtime names, `lp655`/`lp656` filtered, no observed execution used as
+authority). The live arm — a byte-exact copy of the maintained source, 4,716
+source files compared with zero mismatches — is 1433/0/5/2 at eight and one.
+The fresh disabled arm, binary `6476f56d…`, is 1430/3/5/2 at both thread
+counts with exactly
+`runtime::profiling::tests::queue_boundaries::logical_queued_frames_have_one_owner_in_both_modes`,
+`runtime::tests::frame_root_trace::suspension_protocol_repository_invariants_hold`
+and
+`runtime::tests::hygiene::kernel_crates_do_not_write_stdout_outside_tests_and_bins`.
+The worker reproduced at one thread on the same binary, claimed no production
+regression, no ordering artifact and no repair, and froze 24,244 files /
+6,362,142,797 bytes. I reran both arms at eight and one myself and reproduced
+1433/0/5/2 and 1430/3/5/2 with the same three names. The stop is compliant
+and no unexecuted work is credited.
+
+### 4. Ruled: the disabled instrument is not inert (`disabled-runtime-contract`)
+
+The failure is a scratch-instrument defect, not a candidate-contract finding
+and not a production regression:
+
+- The unchanged test calls `session.pending_suspension.frames.append(...)`
+  directly (`crates/rum-runtime/src/runtime/profiling/tests/queue_boundaries.rs:253–258`).
+  The generated actual-object hooks exist only in the wrapper
+  `SuspendedEvaluation::append` (copied `core.rs:213–219`), which mints the
+  `JoinAppend`, calls `begin_append_call`, binds the profiled queue and calls
+  `finish_append_call` around `self.frames.append`. The direct storage caller
+  bypasses all of it, while `ProfileQueue::append` still calls
+  `observe_append_queue`, so the observation resolves a registered namespace
+  with no bound actual and asserts at copied `lib.rs:2626`
+  (`PortBlocked::MissingActualAppendQueueSource`).
+- The append-route public entry points (`begin_append_call`,
+  `bind_append_queue`, `observe_append_queue`, `finish_append_call`, copied
+  `lib.rs:2677–2679`) do not have the `if !ENABLED { return }` early return
+  that the other probe entry points already use (and `ENABLED` is `false` at
+  copied `lib.rs:30`). The call sites also mint the `Rc` unconditionally, so
+  the disabled build pays a per-append allocation and TLS work and can assert
+  on ordinary execution. That is both the observed behavioral failure and a
+  default-path cost the standing rule forbids.
+
+The direct-caller inventory is zero-unknown: a whitespace-compacted scan of
+`crates/rum-runtime/src`, `crates/rum-core/src` and `crates/rum-stdlib/src`
+for the six queue-mutation needles finds exactly one maintained-tree direct
+`FrameStorage::append` caller — the unchanged test above — while the other
+hits are `core.rs` (the instrumented wrapper and the queue API) and the
+scanner's own needle text in `frame_root_trace.rs`. Production's only
+`FrameStorage::append` caller is the instrumented wrapper; `driver.rs:171`
+appends through `SuspendedEvaluation`, and `core/queue.rs:232–244` appends
+container vectors, not frame storage.
+
+Ruling: when `ENABLED=false`, every probe entry point returns before any
+state — no minted `Rc`, no TLS, no bookkeeping, no assertion — and the
+disabled full-runtime arm must reproduce exactly 1433/0/5/2 at eight and one.
+The direct `FrameStorage::append` callers must be enumerated and classified
+with zero unknown in the enabled declaration (the maintained test is a
+declared bypass, not something to edit), no maintained test may be edited,
+and the enabled invariant is stated over production routes only.
+
+### 5. Ruled: the two source-gate collisions are scene construction (`copied-source-guards`)
+
+Both failing tests are unchanged maintained source scanners:
+
+- `hygiene.rs:30–95` walks `crates/rum-{core,runtime,stdlib}/src` and rejects
+  `println!`/`print!`/`io::stdout`/`stdout()` in any `.rs` whose path does not
+  contain `/tests/` or `/bin/`.
+- `frame_root_trace.rs:713–723, 190–206` walks the `.rs` files of
+  `crates/rum-runtime/src` and `crates/rum-stdlib/src` skipping `/tests/`,
+  and asserts no `.frames.insert(` and the other queue mutations anywhere
+  outside `core.rs`.
+
+The copied root's `src/lib.rs` carries the probe and control module: retained
+`#[cfg(any())]` fixture bodies with stdout macros, and the helper ledger's
+`.frames.insert(` at `lib.rs:782`. The maintained tree keeps both gates green
+and neither gate was edited. These failures are source-scanner collisions
+with scratch text in a scanned path, not proof of a live queue mutation and
+not a stale-fingerprint/certificate/position ordering artifact. Ruling: the
+corrected copied tree must keep both gates unchanged and green — the probe
+and control module text is placed under a path both scanners skip (or the
+tree is otherwise arranged so the unchanged scanners see the maintained
+text) — and no scanner may be weakened, edited or skipped.
+
+### 6. Not delivered: the complete bar
+
+The 151-plan generator with duplicate/overlap/unknown-anchor rejection, two
+fresh 94-target/188-postimage roots, the six-column 94-row schema with all
+151 `source_schema` cells, the byte/AST/omission audits, the ordered standing
+replay, `cargo fmt --check`, both workspace modes with the seven skips and
+the unfiltered `suspension_oracle`/`typed_slot_census` at failed=0 and
+filtered=0, the switched same-binary checks, and the full 134-boundary /
+4,422-obligation / 133-carrier execution closure with the affected-source
+per-form matrices and every moved-duty caller listed: none ran and none is
+credited. Standing replay and workspace gates are NOT_RUN; workspace spent 0
+of 6,000 s. The schema is unchanged (`f9604852…`, `new_source_schema=null`,
+`complete_plan_hash=null`), all 94 admitted paths are `not_emitted` with zero
+postimages, and the 90 preimages / 180 postimages / 151 cells authenticate.
+
+### 7. Budget, freeze and entry
+
+Charged 618.8492898940021 s: 544.3492898940021 s over 29 receipts (every log
+hash exact), 14.5 s bookkeeping, the fixed 60 s reserve; two closing receipts
+fall inside the reserve. CM4 now stands at 43,298.43842490502 of 44,500 s,
+leaving **1,201.5615750949778 s** as the binding limit — no extension; the
+1,440 s verification envelope, the second 6,000 s workspace, 743–746's
+40,500 s and workspace 0/6,000 stay held.
+
+The new scene is 24,244 files / 6,362,142,797 bytes with the freeze log and
+its pending receipt excluded; all 24,244 frozen copies are byte-exact to the
+manifest. My own full-suite replay regenerated 116 transient compile-control
+and incremental files in the two copied roots' nested `.temp/brief-579` and
+`target/brief-538` (originals only, mtimes 10:16–10:19; frozen copies exact);
+that drift is the director's replay side effect and is recorded, not
+repaired. No candidate, control, source, expectation, predicate or observer
+changed: the 30 copied-source rows are exact against the accepted c48 sources
+(11 unique content diffs, `candidate_edits=0`, `maintained_edits=0`). Entry
+5,400 maintained / 590 design / 133,596 accepted authenticate with zero
+differences, the three inherited document drifts (TODO.md, brief-623,
+brief-742) are at their committed entry hashes (verified against HEAD blobs),
+and the pre-existing change layer is unchanged.
+
+### 8. Continuation 50 is ordered
+
+1. Make the disabled instrument inert: every append-route entry point returns
+   before any state when `ENABLED=false`, including the call-site mint, and
+   the disabled full-runtime arm reproduces exactly 1433/0/5/2 at eight and
+   one thread on one binary. Classify every direct `FrameStorage::append`
+   caller with zero unknown (the maintained test is a declared bypass; no
+   maintained test is edited). Keep both unchanged source gates green on the
+   copied tree without weakening them.
+2. Then finish the complete bar and the full closure: the 151-plan generator
+   with rejection, two fresh 94-target/188-postimage roots, the six-column
+   94-row schema with 151 cells, the byte/AST/omission and disabled-parity
+   audits, the ordered standing replay, `cargo fmt --check`, both workspace
+   modes with the seven skips and the unfiltered oracle/census, the switched
+   same-binary checks, and the 134/4,422/133-carrier execution closure with
+   the affected-source per-form matrices and every moved-duty caller listed.
+
+Under the binding 1,201.5615750949778 s, reusing only by exact hash identity
+and repairing no frozen tree, production or maintained source. No campaign,
+epoch, acceptance or CM5; pair `(45,5,false)` Open with zero admitted
+receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
+`CHANGELOG.md` and S10 blocked.
