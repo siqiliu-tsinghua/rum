@@ -1919,6 +1919,102 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   reporting the exact remainder; no campaign, epoch, acceptance or CM5;
   pair (45,5,false) Open, C2 118 Residual + 0 Lost, 51 owners and five
   source duties Open, `CHANGELOG.md` and S10 blocked.
+  Continuation 58 is gated (Q28 evaluation-source alias STOP).
+  The Q57 registry-retirement root authentication is repaired: a new
+  identity_proofs::Retirement and retire_registered(matches_object,
+  cleanup) select from the immutable registration table, skip
+  already-retired registrations and carry each registration's install,
+  owner, generation, namespace, entry and independently recorded
+  queue-source records to the cleanup; State::retire(registration)
+  rebuilds the expected Installed from that registration and returns
+  without removing anything if the transported slot differs, then removes
+  reverse, unpaused, sources, paused, paused_at, confirmed and
+  confirmed_at only where each alias points at that install and the
+  payload proof matches the independently recorded queue-at source, edge
+  and proof id; retire_root, retire_control and clear_registry route
+  through the same independent selector. All 144 retirement draws are
+  exact (48 counterparts at 4/0/0/39, 48 foreign_root and 48
+  other_registration at 1/0/0/42 over three forms x two roles x two arms
+  x two modes x eight and one), so the c57 stop is gone; I reproduced the
+  foreign_root control from a director copy at eight and one on binary
+  6baa1b5e... (exit 0, registration/reverse/indexed/payload all true).
+  The declared carrier calibration executes all 80 full unfiltered draws:
+  40 valid, 40 collapse rejected by the named control
+  q35_second_live_install_preserves_first (14 named-only, six also firing
+  the pre-declared armed J interleaved publication check), 0 unrelated
+  failures. The 96 append draws (4/0/0/27, 1/0/0/30) and the 96 handoff
+  draws (14/0/0/39, 2/0/0/51) stay exact, and every matrix is re-earned
+  (source-ticket 2,312; boundary 1,984; P0558 128; main 26,964/232; J
+  2,280; components 5,384/168; scope 68,480/7,600/0/236,640; 400 raw by
+  exact identity; calibrations 63,956/372; whole-consumers 2,392; both
+  runtime placements 5,732/0/20/8; 702 pair and 86 calibration audits).
+  The registry inventory resolves 405 files / 53,765 bound functions /
+  150 consumers / 164 bodies / 360 selector sites with unknown=0, the
+  candidate inventory 415 files / 61,155 bound functions / 163 consumers
+  / 206 bodies / 473 selector sites with unknown=0; ten registry AST
+  audits pass and seventeen one-node static falsifiers are rejected at
+  exit 101. The 94 admitted paths are compared (548 pairs: 166 equal, 382
+  differing, every differing byte disclosed; 0 complete generated files).
+  The new source-lookup class (two consumers, five forms, two groups, 160
+  declared draws) is then declared with pre_execution=true at
+  21:09:57.677 and built at 21:11; the first E-family foreign draw stops
+  under Q28: P1470/form-1 (witness, armed, hash; source 9fa6c927...,
+  binary 89baddae...) was declared [1,0,0,25] and reproduced [0,1,0,25]
+  at eight and one on that one binary, because evaluation_owner removes
+  unpaused[token.owner] and inserts the source alias into State.sources
+  before source_proof authenticates the installed owner, so an unrelated
+  live outer installation gains the inner producer's reusable source key
+  (foreign_aliases_before=1 foreign_aliases_after=2; both installations
+  survive). The remaining 30 of 160 declared draws are NOT_RUN,
+  candidate_repair=false and expectation_repair=false, and the scene froze
+  at 21:12:46 with candidate_failure=true candidate_repair=false. I
+  verified all 2,840 receipts against their logs (2,824 markers, 16
+  driver records, zero problems; elapsed sum exactly
+  2,896.095556478016 s) and 94 binaries, reproduced the red from a
+  director copy at eight and one with the observation line
+  byte-identical, rehashed the whole 20,642-file / 11,002,709,004-byte
+  scene with zero bad, and rehashed the 590 design and 40,705 new
+  accepted files (21,432,529,908 B) with zero missing and zero bad while
+  the 364,151 carried accepted files stay hash-identical. The complete
+  bar stays unexecuted: the 134/4,422/133 closure is indexed only, plans
+  are 0/151, the two 94-path roots have 0 postimages of 188, the schema
+  is unchanged (f9604852...), and the audits, standing replay, cargo fmt
+  --check, both workspace modes and the switched checks are open
+  (workspace 0/6,000). The ruling
+  (Q58-evaluation-source-alias-authentication) is a genuine design-level
+  defect of the scratch consumer model, the same class as Q54-Q57 one
+  layer deeper, not a production regression; the retirement repair, the
+  carrier calibration, the inventories, the audits and the matrices earn
+  focused scratch credit while the lookup claim and the complete bar earn
+  nothing, and continuation 59 must inventory every producer-to-install
+  source lookup and transport publication with zero unknown, authenticate
+  the candidate installation against the actual producer, source
+  occurrence, registered object and issued edge before publishing the
+  reusable alias or consuming a transport, execute the carrier
+  calibration, add the independent AST falsifier, make the frozen
+  foreign-root control the acceptance with all 160 lookup draws (130
+  executed, 30 outstanding) while the 144 retirement, 96 append, 96
+  handoff draws and the 578/598/496/53/31/210/374 bodies stay exact,
+  re-run every matrix, and then complete the bar. Allocation:
+  continuation 58 charged 4,576.095556478016 s (2,896.095556478016 s
+  measured + 200.0 s inspections/setup + 1,420.0 s bookkeeping + 60 s
+  reserve) of 12,993.017385754993 s, leaving 8,416.921829276976 s; CM4
+  stood at 63,506.982614245004 of 76,500 s and now stands at
+  68,083.07817072302 s, and this gate allocates a fresh 12,000 s
+  envelope from the project's reserve, so continuation 59 runs under
+  20,416.921829276976 s; CM4's share becomes 88,500 s, the stage reserve
+  105,000 s, 743-746 keep 40,500 s, the workspace stays at 0 of 6,000 s,
+  and the 1,440 s verification and second 6,000 s workspace stay held.
+  Entry authenticates 5,400 maintained / 590 design / 404,856 accepted
+  files; the only maintained deltas are my three committed documents at
+  HEAD 5e91d611 (same 23 porcelain). Continuation 59 repairs the
+  evaluation-source alias authentication and completes the bar under
+  20,416.921829276976 s and the assigned 6,000 s workspace, repairing no
+  frozen tree, production or maintained source and stopping before any
+  group that cannot fit and reporting the exact remainder; no campaign,
+  epoch, acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0
+  Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10
+  blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the

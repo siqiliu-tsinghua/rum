@@ -5625,3 +5625,279 @@ Ruling written here; appended to brief-742 and brief-623 (Continuation
 145), TODO.md extended, `state.md` rebuilt, committed and pushed;
 clean-temp run; dispatch log archived; memory updated; continuation 58
 dispatched on `gpt-6.2-astra` at effort max.
+
+## Continuation 58 ruling (director) — the Q57 registry-retirement root authentication is repaired and every declared retirement draw is exact (144/144: 48 counterparts at 4/0/0/39, 48 foreign_root and 48 other_registration at 1/0/0/42, so the c57 stop is gone in both roles, both arms and both modes at eight and one), the declared carrier calibration executes (80 full unfiltered draws across five forms: 40 valid, 40 collapse rejected by the named control, 0 unrelated failures, 40 named rejections), the 96 append draws and 96 handoff draws stay exact, every matrix is re-earned, ten registry AST audits pass and seventeen static falsifiers are rejected by name. The new source-lookup class is then declared with zero unknown and frozen at 21:09:57.677 before its 21:11 builds, and its first E-family foreign draw stops under Q28: P1470/form-1 (witness, armed, hash; source `9fa6c927…`, binary `89baddae…`) was declared [1,0,0,25] and reproduced [0,1,0,25] at eight and one on that one binary, because `evaluation_owner` removes `unpaused[token.owner]` and inserts the source alias into `State.sources` before `source_proof` authenticates the installed owner, so an unrelated live outer installation gains the inner producer's reusable source key (`foreign_aliases_before=1 foreign_aliases_after=2`, both installations survive); 30 of 160 declared draws are NOT_RUN and nothing was repaired. The ruling is `Q58-evaluation-source-alias-authentication` (a genuine scratch-consumer design defect, the same class as Q54–Q57 one layer deeper, not a production regression and not a reclassification); the retirement repair, the carrier calibration, the inventories, the audits and the matrices earn focused scratch credit while the lookup claim and the complete bar earn nothing, and this gate allocates a fresh 12,000 s envelope so continuation 59 runs under 20,416.921829276976 s.
+
+## Run record
+
+Continuation 58 ran `cdx` as unit `brief-742-cdx-20261118-202437-3143164`: rc 0,
+peak 2,586,988,544 B, oom 0 / oom_kill 0. The log is 2,743,253 B, sha256
+`7e962fdc3ac7eb0e550870a98f02283d3fc7e3ee4ea3541df2ae1f448f785537`; the worker
+header reads `model: gpt-6.2-astra`, `reasoning effort: max`. The report is
+17,668,647 B, sha256
+`cd62c93bb7151037d6e13f8733913836ff1423520f1daeb68fbe251d46b8d6c3`, verdict
+STOP: 41,779 changes (41,777 added, 2 modified `PROGRESS.md`/`report.json`,
+0 deleted, every path under `.temp/brief-742`), 40 PASS / 2 FAIL / 8 NA,
+4,608 citations, 0 questions, 1 deviation, 0 disclosures. No git or network
+command ran and no `.git-attempts` exists.
+
+## Delivered and accepted
+
+**The Q57 registry-retirement root authentication is repaired and every
+declared retirement draw is exact.** The helper differs from the accepted c57
+helper by 100 diff lines (90 changed): a new `identity_proofs::Retirement` and
+`retire_registered(matches_object, cleanup)` select from the immutable
+registration table (skipping already-retired registrations) and carry each
+registration's install, owner, generation, namespace, entry and independently
+recorded queue-source records to the cleanup; `State::retire(registration)`
+rebuilds the expected `Installed` from that registration and returns without
+removing anything if the transported slot differs, then removes `reverse`,
+`unpaused`, `sources`, `paused`, `paused_at`, `confirmed` and `confirmed_at`
+only where each alias points at that install and the payload proof matches the
+independently recorded queue-at source, edge and proof id; `retire_root`,
+`retire_control` and `clear_registry` all route through `retire_registered`
+with their object predicates. All 144 retirement draws pass — 48 counterparts
+at 4/0/0/39, 48 foreign_root at 1/0/0/42 and 48 other_registration at 1/0/0/42
+over three forms x two roles x two arms x two modes x eight and one — so the
+c57 stop (P0267/form-1 at 0/1/0/42) is gone in witness and runtime, armed and
+disabled, hash and nohash. I reproduced the foreign_root control from a
+director copy at eight and one on binary `6baa1b5e…`: exit 0, and the
+observation is now `registration=true, reverse=true, indexed=true,
+payload=true, registered_source=true, confirmed_source=(true,false,false,false)`.
+
+**The declared carrier calibration executed.** All 80 full unfiltered draws
+across the five E/J forms match their declarations: 40 valid draws at
+22/0/0/0 or 23/0/0/0, 40 collapse draws rejected by the named control
+`q35_second_live_install_preserves_first` (14 with the named failure alone,
+six also firing the pre-declared armed J interleaved publication check that
+depends on this carrier), and 0 unrelated failures. The collapse changed only
+`State.installed` at the second insertion; the actual installations and their
+reverse aliases were retained.
+
+**Every prior matrix is re-earned exact.** Main 848 = 26,964/232/0/0; J 72 =
+2,280; components 48 = 5,384/168; scope fresh 640 = 68,480/7,600/0/236,640;
+the 400 raw draws reused only by exact identity (5,400/600/0/25,200; two
+sources and eight binaries, all 400 logs hash-exact); calibrations 172 =
+63,956/372/0/0; source-ticket 4 = 2,312/0/0/0; boundary 4 = 1,984/0/0/0;
+P0558 8 = 128/0/0/0; both runtime placements 4 draws each = 5,732/0/20/8
+(1,433/0/5/2 per draw, one binary); whole-consumers 4 = 2,392. The 96 append
+draws are exact (48 counterparts at 4/0/0/27, 48 foreign-index at 1/0/0/30)
+and the 96 handoff draws are exact (48 declared_classes at 14/0/0/39, 48
+issued_substitution at 2/0/0/51). The 702 pair audits and 86 calibration
+audits all exit 0; the closure account authenticates 17 groups, 117 source
+pairs, 173 copies, 373 scope-actor obligations and 4,422 indexed obligations.
+
+**The registries are inventoried with zero unknown.** The registry inventory
+resolves 405 files, 53,765 bound functions, 150 consumers, 164 bodies, 360
+selector sites and 221 carrier members against 125 prior selectors with
+`embedded_helper_exact=true` and `unknown=0`; the wider candidate-registry
+inventory resolves 415 files, 61,155 bound functions, 163 consumers, 206
+bodies and 473 selector sites against 405 prior render paths with
+`embedded_payload_exact=true` and `unknown=0`. Both macro placements are
+verified by byte identity.
+
+**The independent audits hold.** Ten projections pass the registry AST audit
+(copies 1 or 2, fixed tests 210/43/43/31/31/53/53/578/598/496,
+`independent_object_selector=true`, `registration_bound_aliases=true`,
+`foreign_slot_preserved=true`, `original_guards_exact=true`,
+`entire_prior_AST_restored=true`) and the fixed-body audit restores every one
+of them (`projections=10`, `entire_prior_bodies_exact=true`). Seventeen
+one-node static falsifiers of the repair — transported-root, control-uses-root,
+clear-ignores-registry, all-objects, retired-registration, foreign-source,
+proof-as-install, unchecked-slot, remove-before-check, reverse-other-value,
+unpaused-other-value, source-other-value, wrong-edge, foreign-payload,
+wrong-entry, foreign-confirmation, remove-all-slots — are each rejected with
+exit 101 at the declared obligation, calibrated against the positive source
+`99229c57…`.
+
+**The admitted-source comparison completed its first half.** All 94 admitted
+paths are compared (548 path/role pairs: 166 equal, 382 differing, every
+differing byte disclosed), with `complete_generated_files=0` and
+`additional_generated_paths=0`.
+
+## The stop
+
+The new independent source-lookup class is declared with zero unknown and
+frozen before execution: the declaration (`consumers=2`, `actual_source_forms=5`,
+`roles=2`, `arms=2`, `modes=2`, `threads=8,1`, `groups=2`, `draws=160`,
+`positive_identical_missing_foreign=true`, `fixed_bodies_untouched=true`,
+`pre_execution=true`) is written at 21:09:57.677, the first lookup build starts
+at 21:11, the matrix runs at 21:11:44, and the scene freezes at 21:12:46 with
+`candidate_failure=true candidate_repair=false`. The first E-family foreign
+draw fails: P1470/form-1, witness, armed, hash (source `9fa6c927…`, 194,904 B;
+binary `89baddae3c45da940ce1956ccb6003066b4a40a28022810de27d9f97a5352cb4`)
+was declared `[1,0,0,25]` and reproduced `[0,1,0,25]` at eight and one on that
+one binary. The remaining 30 of 160 declared draws are NOT_RUN,
+`candidate_repair=false` and `expectation_repair=false`.
+
+The observation is `CM742C58 ACTUAL_INSTALL_LOOKUP change=Foreign
+recorded_own=false recorded_foreign=false source_is_actual=false
+source_is_foreign=true foreign_aliases_before=1 foreign_aliases_after=2
+registrations_preserved=true` and the assertion is
+`Q35_FOREIGN_INSTALLATION_CANNOT_ACQUIRE_ANOTHER_PRODUCERS_SOURCE_ALIAS`. The
+input substitution changes only `unpaused[inner owner]`; the immutable records
+issue no `EvaluationReturn` proof for either installation and both
+installations survive. The outer installation nevertheless gains the inner
+producer's reusable `State.sources` key. The mechanism is in `evaluation_owner`:
+
+```rust
+let source = SourceKey::pause(&token);
+let id = if let Some(id) = state.sources.get(&source) { *id }
+    else {
+        let id = state.unpaused.remove(&token.owner)?;
+        insert(&mut state.sources, source, id);
+        id
+    };
+source_proof(&state, token, id, SourceEdge::EvaluationReturn)
+```
+
+The alias is removed from `unpaused` and inserted into `sources` **before**
+`source_proof` authenticates the installed owner, so a producer's pause can
+select an unrelated live installation's source alias. The four declared
+counterparts and the whole J family pass, so the fixture is non-vacuous and
+the failure is specific to the unauthenticated publication.
+
+## Ruling: `Q58-evaluation-source-alias-authentication`
+
+The finding is a genuine design-level defect of the scratch consumer model,
+the same class as Q54–Q57 one layer deeper: the producer-to-install source
+lookup publishes a reusable alias from mutable transported state before the
+actual installation is authenticated. Q35's accepted rule — a producer's
+`SourceKey` can select only its authenticated installation, and all unrelated
+live registrations and source aliases stay exact — has not been carried into
+this seam. It is not a production regression and not a reclassification, and
+it claims no incorrect publication or new semantic catch. The delivered
+retirement repair, the carrier calibration, the inventories, the audits and
+the matrices earn focused scratch credit; the lookup consumer claim and the
+complete bar earn nothing.
+
+## Ordered continuation 59
+
+1. Complete the zero-unknown inventory of every producer-to-install source
+   lookup and transport publication: `evaluation_owner`, `pause`,
+   `source_scope`/`source_capture_scope`, `current_pending`,
+   `SourceKey::pause`, `source_proof`, `insert(&mut state.sources, ...)`,
+   `state.unpaused`, and every consumer of `State.sources`,
+   `State.evaluation_sources`, `State.evaluation`, `State.unpaused`,
+   `QueueKey`, `PassProof` and `SourceEdge`, in both witness and runtime
+   renders, both feature modes and both arms, over the E and J families and
+   the four ticket classes. Reuse the c58 registry inventories (415 files /
+   61,155 bound functions / 163 consumers / 206 bodies / 473 selector sites,
+   `unknown=0`) and extend them to the publication seam with the same
+   zero-unknown rows.
+2. Authenticate the actual producer and its installation before publishing:
+   the candidate installation must equal the independent registration of the
+   actual producer at the source occurrence, bound to the registered object
+   and the issued edge; a foreign, missing or altered slot supplies no
+   authority over another installation's aliases; unrelated live
+   registrations, sources, pauses, confirmations and proofs stay exact.
+   Execute the declared carrier calibration and add the independent AST
+   falsifier.
+3. Make the frozen foreign-root control the acceptance: all 160 lookup draws
+   (130 executed in c58, 30 outstanding) in both families, both roles, both
+   arms, both modes and both thread counts; the 144 retirement draws
+   (including the c57 foreign_root at 1/0/0/42), the 96 append draws, the 96
+   handoff draws and the 578/598/496/53/31/210/374 bodies stay exact.
+4. Re-run every matrix: source-ticket, boundary, P0558, main, J, components,
+   scope fresh and reused, calibrations, both runtime placements,
+   whole-consumers.
+5. Complete the bar under the envelope: the 134/4,422/133 execution closure,
+   151 plans with rejection, the two 94-path/188-postimage roots, schema
+   emission with 151 cells, the complete-overlay audits, the ordered standing
+   replay, `cargo fmt --check`, both workspace modes with the seven skips and
+   the unfiltered gates, and the switched same-binary checks. Stop before any
+   group that cannot fit and report the exact remainder; repair no frozen
+   tree, production or maintained source.
+
+## Not delivered
+
+The complete bar stays unexecuted. The 134/4,422/133 closure is indexed only
+(`complete_source_execution=false`); plans are 0/151; the two 94-path roots
+have 0 postimages of 188; the schema is unchanged
+(`f9604852…`, `new_source_schema=null`, `complete_plan_hash=null`) with
+`original_preimages=90`, `original_postimages=180`, 151 immutable rows and 0
+emitted overlay paths; the standing replay is NOT_RUN with
+`covered_maintained_edits=0 acceptance_suites=0`; the workspace is NOT_RUN
+(`fmt=false hash=false nohash=false unfiltered_suspension_oracle=false
+unfiltered_typed_slot_census=false switched_same_binary=false`,
+`workspace_seconds=0`); the Q58 repair and 30 lookup draws are open; the
+generator reports `complete_plans=0 required_plans=151 full134 false
+full133_carriers false double94_roots false postimages188 false
+schema_emission=false`.
+
+## Allocation
+
+Continuation 58 charged 4,576.095556478016 s — 2,896.095556478016 s measured
+from 2,840 receipts (plus 16 driver-style records, zero problems, elapsed sum
+exactly 2,896.095556478016) + 200.0 s conservative inspections/setup +
+1,420.0 s bookkeeping (each serial command carries 0.5 s) + the fixed 60 s
+reporting reserve — of the 12,993.017385754993 s envelope, leaving
+8,416.921829276976 s; CM4 stood at 63,506.982614245004 of 76,500 s and now
+stands at 68,083.07817072302 s. The stop is a candidate failure, not an
+allocation limit.
+
+This gate allocates a fresh 12,000 s focused envelope from the project's
+reserve so the Q58 repair and the complete bar can run in one continuation:
+continuation 59 runs under **20,416.921829276976 s**, CM4's share becomes
+88,500 s, the stage reserve 105,000 s, and 743–746 keep their 40,500 s
+unchanged. The assigned 6,000 s workspace is untouched (0/6,000), and the
+1,440 s verification and second 6,000 s workspace stay held.
+
+## Freeze
+
+The stopped scene is 20,642 files / 11,002,709,004 bytes in
+`continuation-stop/`; I rehashed all 20,642 frozen copies against the manifest
+with zero missing and zero bad. The 29 prior trees hold 191,959 entries — the
+c57 scene (20,344) is exact, the known director-replay transients (405) are
+unchanged with `unexplained=0`, and the two `freeze-stop.log` drifts (stages
+32/33) are unrepaired.
+
+## Entry
+
+Entry authenticates 5,400 maintained / 590 design / 404,856 accepted files. I
+rehashed all 590 design and the 40,705 accepted files new against the c57
+entry (21,432,529,908 B together) with zero missing and zero bad; the 364,151
+carried accepted files are hash-identical to the c57 entry (zero changed, zero
+removed). The only maintained deltas are my three committed documents at HEAD
+`5e91d611` (TODO.md, brief-623, brief-742), recorded in `entry-drift.json`,
+with the same 23 porcelain entries.
+
+## What I verified
+
+- All 2,840 receipts against their logs (2,824 command markers, 16
+  driver-style records without their own marker, zero problems; elapsed sum
+  exactly 2,896.095556478016 s) and 94 binaries hashed.
+- The red from a director copy outside the scene at eight and one: exit 101,
+  the same observation line and assertion; the only log differences are the
+  ASLR pointer values, the elapsed line and the appended receipt.
+- The retirement foreign_root control from a copy at eight and one: exit 0,
+  the same observation with registration/reverse/indexed/payload all true.
+- The retirement matrix totals from the logs: 72 passing configurations,
+  counts 4/0/0/39, 1/0/0/42 and 1/0/0/42, driver `draws=144 builds=8`.
+- The carrier matrix: 40 configurations, 20 valid and 20 collapse, the named
+  control in every collapse and no unrelated failure; driver `full_draws=80
+  builds=16`.
+- The append and handoff logs: 48 configurations each, counts 4/0/0/27 and
+  1/0/0/30; 14/0/0/39 and 2/0/0/51; drivers `draws=96 builds=8`.
+- The lookup matrix: 64 passing configurations (E 16, J 48), one failing
+  configuration, driver `planned_draws=160 executed_draws=130 builds=16`, and
+  `no_repair=true`.
+- The declaration, freeze, build and first-execution timestamps for every
+  family (plans/freezes 20:34:39.110/.138, first declaration 20:34:39.411,
+  first audits 20:34:44.131, first build 20:34:59.397; carrier declaration
+  20:38:47.421, carrier matrix 20:39:23.794; lookup declaration
+  21:09:57.677, first lookup build 21:11, lookup matrix 21:11:44, scene freeze
+  21:12:46).
+- The registry and candidate inventories (`unknown=0`), the ten registry AST
+  audits, the 17 static falsifiers at exit 101, and the 548-entry
+  admitted-source comparison (166 equal, 382 differing, all disclosed).
+- The budget arithmetic exactly, and the scene and entry rehashes above.
+
+## Process
+
+The ruling is written here; the continuation-58 sections are appended to
+brief-742 and brief-623 and the G15-CM4 block in TODO.md; `state.md` is
+rebuilt; the three documents are committed and pushed; `clean-temp.py` runs
+dry-run then apply (expected to refuse on the dirty `.temp` layer); the
+dispatch log is archived as `.prev-20261118-2122`; memory is updated; and
+continuation 59 is dispatched on `gpt-6.2-astra` at effort `max`.
