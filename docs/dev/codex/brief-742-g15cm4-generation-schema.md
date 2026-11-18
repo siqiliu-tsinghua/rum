@@ -5901,3 +5901,214 @@ rebuilt; the three documents are committed and pushed; `clean-temp.py` runs
 dry-run then apply (expected to refuse on the dirty `.temp` layer); the
 dispatch log is archived as `.prev-20261118-2122`; memory is updated; and
 continuation 59 is dispatched on `gpt-6.2-astra` at effort `max`.
+
+## Continuation 59 ruling (director) — the Q58 evaluation-source alias authentication is repaired and all 160 declared lookup draws pass (80 configurations: 16 at [1,0,0,25], 24 at [1,0,0,46], 16 at [3,0,0,23], 24 at [3,0,0,44] over both families, both roles, both arms, both modes and eight and one; both P1470 foreign runs preserve the foreign installation's single alias), and every prior matrix is re-earned (144 retirement, 80 carrier, 96 append, 96 handoff, the 848 main, the 72 J, the 48 component and the 640 scope-form draws), with ten publication AST audits passing and seventeen static falsifiers rejected. The new append-namespace class is declared and frozen at 22:20:19 before its 22:21:54 builds, and its first ForeignRegistration draw stops under Q28: P0267/form-1 (witness, armed, hash; source `9aeb0299…`, 224,866 B; binary `c444e6b0…`) was declared [1,0,0,49] and reproduced [0,1,0,49] at eight and one on that one binary, because the actual receiver token forwards the proposed namespace, `join_queue` resolves it through the reverse index, and the inner `JoinAppend` destructor retires the unrelated outer confirmation (index and payload gone, retired=true, zero hits against one expected) while both ordinary return values stay exact; the six counterpart cases pass in all 48 draws, 46 of 96 declared draws are NOT_RUN, and nothing was repaired. The ruling is `Q59-append-receiver-namespace-authentication` (a genuine scratch-consumer design defect, the same class as Q54–Q58 one layer deeper, not a production regression); the lookup repair, the matrices, the audits and the falsifiers earn focused scratch credit while the append-namespace claim and the complete bar earn nothing, and this gate makes no new allocation: continuation 60 runs under the remaining 15,631.120352672991 s.
+
+## Run record
+
+Continuation 59 ran `cdx` as unit `brief-742-cdx-20261118-213157-3477078`: rc 0,
+peak 2,573,291,520 B, oom 0 / oom_kill 0. The log is 3,233,687 B, sha256
+`4666428d28df7979a467f6ee537cfa001dc917bd17b1a706bb54a207eb3f3b3d`; the worker
+header reads `model: gpt-6.2-astra`, `reasoning effort: max`. The report is
+18,127,311 B, verdict STOP: 42,465
+changes (42,463 added, 2 modified `PROGRESS.md`/`report.json`, 0 deleted, every
+path under `.temp/brief-742`), 46 PASS / 2 FAIL / 8 NA, 4,836 citations,
+0 questions, 2 deviations, 0 disclosures.
+
+## Delivered and accepted
+
+**The Q58 evaluation-source alias authentication is repaired and all 160
+declared lookup draws pass.** The helper differs from the accepted c58 helper
+by 55 diff lines (45 changed): a new `identity_proofs::registered_at_pause`
+reads the immutable records and returns the unique unqueued registration for
+the occurrence between the preceding producer pause (or entry) and this pause,
+requiring the entry, the owner, uniqueness and that the installation is not
+retired; `source_proof` now requires the transported slot's proof id and owner,
+the independent occurrence registration, the generation, the namespace and the
+reverse alias to agree before issuing a `QueuePause` or `EvaluationReturn`
+proof; `evaluation_owner` reads the proposed `unpaused` alias, issues the
+proof, and only then removes the alias and publishes the source (a cached
+alias is returned only through the same proof); `pause_installed` does the
+same on the queue edge; `pending_construction` requires the token owner to
+equal the construction owner. All 160 lookup draws are exact — 80
+configurations: 16 at `[1,0,0,25]`, 24 at `[1,0,0,46]`, 16 at `[3,0,0,23]`,
+24 at `[3,0,0,44]` over both families, both roles, both arms, both modes and
+eight and one — so both P1470 foreign runs preserve the foreign installation's
+single alias. Ten publication AST audits pass with
+`independent_occurrence_registration=true`,
+`registered_object_and_nonce=true`,
+`proof_precedes_consumption_and_publication=true`, `both_edges_exact=true`,
+`original_guards_exact=true` and `entire_prior_AST_restored=true`; the
+fixed-body audit restores all ten (`projections=10`,
+`entire_prior_bodies_exact=true`). Seventeen one-node static falsifiers of the
+repair are each rejected with exit 101 at the declared obligation against the
+calibrated positive `8baa26c7…`.
+
+**Every prior matrix is re-earned exact.** The 144 retirement draws
+(counterparts 4/0/0/39, foreign_root and other_registration 1/0/0/42), the 80
+carrier calibration draws (40 valid, 40 collapse, 0 unrelated failures), the
+96 append draws (4/0/0/27 and 1/0/0/30), the 96 handoff draws (14/0/0/39 and
+2/0/0/51), the 848 main draws (26,964/232), the 72 J draws, the 48 component
+draws, the 640 scope-form runs (640/640, 68,480/7,600/0/236,640), the 172
+calibrations, both runtime placements and the route-family and join-run
+families all match their declarations; the remaining driver reports
+`child_commands=1,078 serial_seconds=515.612672`.
+
+## The stop
+
+The new append-namespace class is declared and frozen before execution: the
+plan (48 items, 96 draws, two cases — six counterpart cases `Valid`,
+`Identical`, `Missing`, `ForeignRoot`, `UnknownEpoch`, `ForeignControl` and the
+`ForeignRegistration` control — `pre_execution=true`) and its freeze are
+written at 22:20:19, the first of the eight fixture binaries is built at
+22:21:54, the matrix runs at 22:22:14, and the scene freezes at 22:23:25 with
+`candidate_failure=true candidate_repair=false`. The 24 counterpart
+configurations pass in all 48 draws. The first `other_registration` draw fails:
+P0267/form-1, witness, armed, hash (source `9aeb0299…`, 224,866 B; binary
+`c444e6b07719a559595fbd3f17815062dcf36a6ea9aa1a32ec6ccefcd0f24ee8`) was
+declared `[1,0,0,49]` and reproduced `[0,1,0,49]` at eight and one on that one
+binary. Fifty of 96 declared draws were executed; 46 are NOT_RUN;
+`candidate_repair=false` and `expectation_repair=false`.
+
+The observation is `CM742C59 ACTUAL_APPEND_NAMESPACE row=P0267
+change=ForeignRegistration witness=true enabled=true returned_same=true
+visits=1 hits=0 expected_hits=1
+outer_after(registration,source,index,payload,confirmed,revoked,retired,claimed)=Some((true, true, false, false, true, false, true, false))
+records_equal_ordinary=true` and the assertion is
+`Q35_UNRELATED_OUTER_CONFIRMATION_SURVIVES_INNER_RECEIVER_NAMESPACE`. The inner
+append received its own queue and the other live installation's complete
+same-generation namespace. The actual receiver token remains valid in
+`append_observation::observe`, which forwards the proposed namespace;
+`join_queue` resolves that namespace through the reverse index; the inner
+`JoinAppend` destructor then retires the confirmation selected by this scope,
+so the outer confirmation index and payload are gone and the outer queue loses
+its eligible omission while both ordinary return values remain exact and both
+executions record zero hits against the one expected.
+
+## Ruling: `Q59-append-receiver-namespace-authentication`
+
+The finding is a genuine design-level defect of the scratch consumer model,
+the same class as Q54–Q58 one layer deeper: the append receiver resolves a
+proposed namespace through `reverse` and retires the selected confirmation
+without authenticating the namespace against the actual receiving queue's own
+independent registration. Q35's accepted carrier rule — an actual append may
+retire only its independently registered receiver's confirmation, and every
+unrelated live confirmation survives — has not been carried into this receiver
+namespace resolution. It is not a production regression and not a
+reclassification; it claims no incorrect return value, only the retirement of
+an unrelated live confirmation. The delivered lookup repair, the matrices, the
+audits and the falsifiers earn focused scratch credit; the append-namespace
+claim and the complete bar earn nothing. The first static-falsifier run
+crashed on its second case (the pattern matched twice in the searched source
+text); the corrected run scopes the search to the owner function body and
+passes all 17 cases — a retained construction failure with no evidence change.
+
+## Ordered continuation 60
+
+1. Complete the zero-unknown inventory of every append-receiver namespace
+   resolution and confirmation retirement: `append_observation::observe`,
+   `join_queue`, `JoinAppend::drop`, `retire_append_confirmation`,
+   `confirmed_append`, the proposed-namespace and token transport,
+   `State.reverse`, `State.confirming`/`confirmed`/`confirmed_at`, and every
+   consumer, in both witness and runtime renders, both feature modes and both
+   arms, over the six counterpart cases and the `ForeignRegistration` control.
+2. Authenticate the proposed namespace against the receiver's independently
+   registered installation before resolving it through `reverse` or retiring
+   any confirmation: only the actual receiving queue's own registration may
+   authorize retirement; a foreign, mixed, absent or unknown namespace
+   supplies no authority; unrelated live registrations, sources, confirmations
+   and payloads stay exact.
+3. Make the frozen append-namespace control the acceptance: all 96 draws (50
+   executed in c59, 46 outstanding), the six counterpart cases and the
+   `ForeignRegistration` control, in both roles, arms, modes and thread counts;
+   the 160 lookup draws, the 144 retirement draws, the 80 carrier draws, the 96
+   append draws, the 96 handoff draws and the 578/598/496/53/31/210/374 bodies
+   stay exact.
+4. Re-run every matrix: source-ticket, boundary, P0558, main, J, components,
+   scope fresh and reused, calibrations, both runtime placements,
+   whole-consumers.
+5. Complete the bar under the envelope: the 134/4,422/133 execution closure,
+   151 plans with rejection, the two 94-path/188-postimage roots, schema
+   emission with 151 cells, the complete-overlay audits, the ordered standing
+   replay, `cargo fmt --check`, both workspace modes with the seven skips and
+   the unfiltered gates, and the switched same-binary checks. Stop before any
+   group that cannot fit and report the exact remainder; repair no frozen
+   tree, production or maintained source.
+
+## Not delivered
+
+The complete bar stays unexecuted. The 134/4,422/133 closure is indexed only;
+plans are 0/151; emitted overlay paths are 0/94; postimages are 0/188; the
+schema is unchanged (`f9604852…`, `new_source_schema=null`,
+`complete_plan_hash=null`, 90 preimages, 180 postimages, 151 immutable rows);
+the standing replay is NOT_RUN with `covered_maintained_edits=0
+acceptance_suites=0`; the workspace is NOT_RUN (`fmt=false hash=false
+nohash=false unfiltered_suspension_oracle=false
+unfiltered_typed_slot_census=false switched_same_binary=false`,
+`workspace_seconds=0`); the generator is NOT_DELIVERED with every flag false;
+the append-namespace repair and 46 draws are open.
+
+## Allocation
+
+Continuation 59 charged 4,785.801476603985 s — 3,035.801476603985 s measured
+from 2,980 receipts (plus 18 driver-style records, zero problems, elapsed sum
+exactly 3,035.801476603985) + 200.0 s conservative inspections/setup +
+1,490.0 s bookkeeping + the fixed 60 s reporting reserve — of the
+20,416.921829276976 s envelope, leaving 15,631.120352672991 s; CM4 stood at
+68,083.07817072302 of 88,500 s and now stands at 72,868.879647327 s.
+
+**No new allocation.** Continuation 60 runs under the remaining
+15,631.120352672991 s, which already exceeds the 12,993.017385754993 s
+envelope continuation 58 ran under. If the bar cannot fit, continuation 60
+stops before the group that does not fit and reports the exact remainder; a
+further envelope is decided then, not automatically. The assigned 6,000 s
+workspace is untouched (0/6,000), and the 1,440 s verification and second
+6,000 s workspace stay held.
+
+## Freeze
+
+The stopped scene is 20,984 files / 11,174,741,745 bytes in
+`continuation-stop/`; I rehashed all 20,984 frozen copies against the manifest
+with zero missing and zero bad. The 30 prior trees hold 212,601 entries — the
+c58 scene (20,642) is exact, the known director-replay transients (405) are
+unchanged with `unexplained=0`, and the two `freeze-stop.log` drifts (stages
+32/33) are unrepaired.
+
+## Entry
+
+Entry authenticates 5,400 maintained / 590 design / 446,632 accepted files. I
+rehashed all 590 design and the 41,776 accepted files new against the c58
+entry (22,321,786,336 B together) with zero missing and zero bad; the 404,856
+carried accepted files are hash-identical to the c58 entry (zero changed, zero
+removed). The only maintained deltas are my three committed documents at HEAD
+`9ea39931` (TODO.md, brief-623, brief-742), recorded in `entry-drift.json`,
+with the same 23 porcelain entries.
+
+## What I verified
+
+- All 2,980 receipts against their logs (2,962 command markers, 18
+  driver-style records, zero problems; elapsed sum exactly
+  3,035.801476603985 s) and 94 binaries hashed.
+- The red from a director copy outside the scene at eight and one: exit 101,
+  the same observation line and assertion.
+- The lookup matrix: 80 passing configurations with the four declared count
+  sets, driver `planned_draws=160 executed_draws=160 builds=16`.
+- The retirement, carrier, append and handoff drivers: 144, 80, 96 and 96
+  declared draws, all matching their declared counts.
+- The append-namespace matrix: 24 passing counterpart configurations, the
+  failing foreign configuration at draw 25, `executed_draws=50`, declared
+  `[1,0,0,49]`, observed `[0,1,0,49]`, `no_repair=true`.
+- The plan, freeze, build and first-execution timestamps (plan/freeze
+  22:20:19, first binary 22:21:54, matrix 22:22:14, scene freeze 22:23:25).
+- The ten publication AST audits, the 17 static falsifiers of the corrected
+  run (`rejected=17 positive=8baa26c7…`), and the retained first-run crash.
+- The budget arithmetic exactly, and the scene and entry rehashes above.
+
+## Process
+
+The ruling is written here; the continuation-59 sections are appended to
+brief-742 and brief-623 and the G15-CM4 block in TODO.md; `state.md` is
+rebuilt; the three documents are committed and pushed; `clean-temp.py` runs
+dry-run then apply (expected to refuse on the dirty `.temp` layer); the
+dispatch log is archived; memory is updated; and continuation 60 is dispatched
+on `gpt-6.2-astra` at effort `max`.

@@ -2015,6 +2015,105 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   epoch, acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0
   Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10
   blocked.
+  Continuation 59 is gated (Q28 append receiver namespace STOP).
+  The Q58 evaluation-source alias authentication is repaired: a new
+  identity_proofs::registered_at_pause reads the immutable records and
+  returns the unique unqueued registration for the occurrence between
+  the preceding producer pause (or entry) and this pause (entry, owner,
+  uniqueness, not retired); source_proof requires the transported slot's
+  proof id and owner, the independent occurrence registration, the
+  generation, the namespace and the reverse alias to agree before
+  issuing a QueuePause or EvaluationReturn proof; evaluation_owner reads
+  the proposed unpaused alias, issues the proof, and only then removes
+  the alias and publishes the source (a cached alias is returned only
+  through the same proof); pause_installed does the same on the queue
+  edge; pending_construction requires the token owner to equal the
+  construction owner. All 160 lookup draws are exact (80 configurations:
+  16 at [1,0,0,25], 24 at [1,0,0,46], 16 at [3,0,0,23], 24 at
+  [3,0,0,44]), so both P1470 foreign runs preserve the foreign
+  installation's single alias; ten publication AST audits pass with
+  entire_prior_AST_restored=true and the fixed-body audit restores all
+  ten; seventeen one-node static falsifiers are rejected at exit 101
+  against the calibrated positive 8baa26c7... (the first script crashed
+  on its second case because the pattern matched twice in the searched
+  text; the corrected run scopes to the owner body and passes all
+  seventeen — a retained construction failure with no evidence change).
+  Every prior matrix is re-earned exact: 144 retirement (4/0/0/39,
+  1/0/0/42 x2), 80 carrier (40 valid, 40 collapse, 0 unrelated), 96
+  append (4/0/0/27, 1/0/0/30), 96 handoff (14/0/0/39, 2/0/0/51), 848
+  main = 26,964/232, 72 J, 48 components, 640 scope forms =
+  68,480/7,600/0/236,640, 172 calibrations, both runtime placements and
+  the route-family/join-run families (remaining driver 1,078 children,
+  515.612672 s). The new append-namespace class (48 items, 96 declared
+  draws, six counterpart cases plus the ForeignRegistration control,
+  pre_execution=true) and its freeze are written at 22:20:19, the first
+  of the eight fixture binaries is built at 22:21:54, the matrix runs at
+  22:22:14, and the scene freezes at 22:23:25 with
+  candidate_failure=true candidate_repair=false. The 24 counterpart
+  configurations pass in all 48 draws; the first ForeignRegistration
+  draw fails: P0267/form-1, witness, armed, hash (source 9aeb0299...,
+  224,866 B; binary c444e6b0...) was declared [1,0,0,49] and reproduced
+  [0,1,0,49] at eight and one on that one binary, with
+  outer_after(registration,source,index,payload,confirmed,revoked,
+  retired,claimed)=Some((true, true, false, false, true, false, true,
+  false)) and the asserted
+  Q35_UNRELATED_OUTER_CONFIRMATION_SURVIVES_INNER_RECEIVER_NAMESPACE;
+  the actual receiver token remains valid in
+  append_observation::observe, which forwards the proposed namespace,
+  join_queue resolves it through the reverse index, and the inner
+  JoinAppend destructor retires the outer confirmation while both
+  ordinary return values stay exact and both executions record zero hits
+  against the one expected. Fifty of 96 declared draws were executed, 46
+  are NOT_RUN, candidate_repair=false and expectation_repair=false. I
+  verified all 2,980 receipts against their logs (2,962 markers, 18
+  driver records, zero problems; elapsed sum exactly
+  3,035.801476603985 s) and 94 binaries, reproduced the red from a
+  director copy at eight and one, rehashed the whole 20,984-file /
+  11,174,741,745-byte scene with zero bad, and rehashed the 590 design
+  and 41,776 new accepted files (22,321,786,336 B) with zero missing and
+  zero bad while the 404,856 carried accepted files stay hash-identical.
+  The bar stays unexecuted: the 134/4,422/133 closure is indexed only,
+  plans 0/151, emitted 0/94, postimages 0/188, the schema is unchanged
+  (f9604852..., 90 preimages, 180 postimages, 151 immutable rows), the
+  standing replay is NOT_RUN and the workspace is NOT_RUN
+  (fmt/hash/nohash/unfiltered/switched all false, 0/6,000). The ruling
+  (Q59-append-receiver-namespace-authentication) is a genuine
+  design-level defect of the scratch consumer model, the same class as
+  Q54-Q58 one layer deeper (Q35's accepted rule that an actual append
+  may retire only its independently registered receiver's confirmation
+  not yet carried into the receiver namespace resolution), not a
+  production regression; the lookup repair, the matrices, the audits and
+  the falsifiers earn focused scratch credit while the append-namespace
+  claim and the complete bar earn nothing, and continuation 60 must
+  complete the zero-unknown inventory of every append-receiver namespace
+  resolution and confirmation retirement, authenticate the proposed
+  namespace against the receiver's independently registered installation
+  before resolving it through reverse or retiring any confirmation, make
+  the frozen append-namespace control the acceptance with all 96 draws
+  (50 executed, 46 outstanding) while the 160 lookup, 144 retirement, 80
+  carrier, 96 append, 96 handoff draws and the 578/598/496/53/31/210/374
+  bodies stay exact, re-run every matrix, and then complete the bar.
+  Allocation: continuation 59 charged 4,785.801476603985 s
+  (3,035.801476603985 s measured + 200.0 s inspections/setup + 1,490.0 s
+  bookkeeping + 60 s reserve) of 20,416.921829276976 s, leaving
+  15,631.120352672991 s; CM4 stood at 68,083.07817072302 of 88,500 s and
+  now stands at 72,868.879647327 s. **No new allocation**: continuation
+  60 runs under the remaining 15,631.120352672991 s, which already
+  exceeds the 12,993.017385754993 s envelope continuation 58 ran under;
+  if the bar cannot fit, it stops before the group that does not fit and
+  reports the exact remainder, and a further envelope is decided then,
+  not automatically. The 6,000 s workspace stays at 0 of 6,000, and the
+  1,440 s verification and second 6,000 s workspace stay held. Entry
+  authenticates 5,400 maintained / 590 design / 446,632 accepted files;
+  the only maintained deltas are my three committed documents at HEAD
+  9ea39931 (same 23 porcelain). Continuation 60 repairs the append
+  receiver namespace authentication and completes the bar under
+  15,631.120352672991 s and the assigned 6,000 s workspace, repairing no
+  frozen tree, production or maintained source and stopping before any
+  group that cannot fit and reporting the exact remainder; no campaign,
+  epoch, acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0
+  Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10
+  blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
