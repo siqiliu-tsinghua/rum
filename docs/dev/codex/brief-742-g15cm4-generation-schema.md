@@ -5320,3 +5320,308 @@ Ruling written here; appended to brief-742 and brief-623 (Continuation 144),
 TODO.md extended, `state.md` rebuilt, committed and pushed; clean-temp run;
 dispatch log archived; memory updated; continuation 57 dispatched on
 `gpt-6.2-astra` at effort max.
+
+## Continuation 57 ruling (director) — the Q56 append-confirmation repair (the index proposes a candidate key, the append's actual registration supplies the installation, the independently recorded source supplies the confirmation, all reads precede removal or claim, and a mismatch leaves both aliases untouched) is delivered and accepted: all 96 append draws are exact (48 counterparts at 4/0/0/27 and 48 foreign-index draws at 1/0/0/30 over three forms x two roles x two arms x two modes x eight and one), the 96 handoff draws are exact (48 declared_classes at 14/0/0/39 and 48 issued_substitution at 2/0/0/51), the 578/598/496/210/53/31/374 bodies stay byte-exact, eleven independent AST falsifiers are rejected by name, and every matrix is re-earned (848/72/48/640, 400 raw by exact identity, 172 calibrations, P0558, both runtime placements at 1,433/0/5/2 per draw) with 2,497 receipts verified and 62 binaries hash-exact. The new class-wide registry-retirement falsifier then stops under Q28 on its first foreign-root control: P0267/form-1 (witness, armed, hash) was declared [1,0,0,42] and reproduced [0,1,0,42] at eight and one on one binary (`52620b90…`), because `retire_root` selects from the mutable transported `Installed` copy, so the inner teardown erases the unrelated live outer registration, its confirmation index and payload while its independent proof survives; the four counterparts pass and 94 declared draws are NOT_RUN. The ruling is `Q57-registry-retirement-root-authentication` (genuine scratch-consumer design defect, Q35's accepted carrier rule not yet carried into the teardown selector, not a production regression); the complete bar stays unexecuted, and this gate allocates a fresh 8,000 s envelope so continuation 58 runs under 12,993.017385754993 s.
+
+Brief 742's continuation 57 ran `cdx` as unit
+`brief-742-cdx-20261118-191100-2812115`, rc 0, and returned a compliant
+Q28 STOP. The Q56 append-confirmation repair is delivered and accepted with
+focused scratch credit: all 96 append draws are exact, the frozen
+foreign-index control is green in every role, arm and mode, the eleven
+independent AST falsifiers are rejected, and every matrix is re-earned. The
+class-wide registry-retirement falsifier then fails on
+`PortBlocked::RegistryRetirementSelectsForeignInstalledRoot`, ruled
+`Q57-registry-retirement-root-authentication`, and this gate allocates a
+fresh focused envelope for continuation 58.
+
+## 1. Run record
+
+`cdx` ran as unit `brief-742-cdx-20261118-191100-2812115`, rc 0, peak
+2,582,536,192 B, oom 0 / oom_kill 0; log 2,242,652 B, sha256
+`ec4dc07d10753e9686a96eb5d564fe9752546b54d3460932b284ee02307e8aca`; the
+worker model is `gpt-6.2-astra` at effort `max`. The report
+(`report-continuation-57.json`, 16,844,644 B, sha256 `21253a04…`) is STOP:
+40,708 changes (40,706 added, 2 modified — `PROGRESS.md` and `report.json` —
+0 deleted, all under `.temp/brief-742`), 36 PASS / 3 FLAGGED / 2 FAIL /
+8 NA, 4,096 citations verified, 0 questions, 1 deviation (the complete
+bar), 0 disclosures. The stop rule is Q28 with reason P0267/form-1
+ForeignRoot, witness, armed, hash, and the finding
+`PortBlocked::RegistryRetirementSelectsForeignInstalledRoot`. No git or
+network command ran and no `.git-attempts` exists. HEAD stayed `261da953`
+with the same 23 porcelain entries.
+
+## 2. Delivered and accepted (focused scratch credit)
+
+### 2.1 The Q56 append repair
+
+The helper differs from the accepted c56 helper by exactly four hunks
+(93 diff lines; 242,342 → 243,765 B, +1,423 B; the same repair appears in
+both `cm740_probe.rs` and the rendered `append-witness.rs`):
+
+- a new `confirmed_append(state, scope, namespace)` takes the installation
+  from the append scope, requires `scope.namespace == Some(Some(namespace))`
+  and `state.reverse[(generation, namespace)] == install`, requires the
+  transported record's own proof, generation and namespace to match, and
+  only then reads the index as a candidate key: `key.install == install`,
+  `proof.installed == installed`, `key.source == SourceKey::pause(&proof.token)`,
+  `authenticate(proof, QueuePause)` and
+  `identity_proofs::confirmed_append_source(install.0, key.source,
+  authenticated)`;
+- `retire_append_confirmation` removes the index and the payload only after
+  `confirmed_append` returns `Some`; a missing, mismatched, unknown or
+  foreign record leaves both aliases untouched and skips the queue-proof
+  retirement through that path (the proof still expires at the original
+  generation/namespace teardown);
+- `omit_join` (publication) uses the same authenticated lookup and only then
+  `identity_proofs::claim`;
+- every read precedes the claim or removal, and the lexical scope and
+  observation still close normally.
+
+This is exactly the ordered seam: the index proposes a key, the actual
+append registration supplies the installation, and the independently
+recorded source supplies the confirmation. The old one-step
+`confirmed_at.remove(&id)` path cannot recur.
+
+### 2.2 Acceptance
+
+The new `c56_append_controls` fixture (21 fixed + 10 additive = 31 tests
+per copy) is exact in all 96 draws: 48 counterpart draws at 4/0/0/27 and 48
+foreign-index draws at 1/0/0/30, over three forms × two roles × two arms ×
+two modes × thread counts eight and one. The c56 failing control
+(`ForeignIndex`) is green in witness and runtime, armed and disabled, hash
+and nohash. The 96 handoff draws are exact (48 `declared_classes` at
+14/0/0/39 and 48 `issued_substitution` at 2/0/0/51). The fixed bodies are
+byte-exact in every affected render — append 31, boundary 496, helper 210,
+handoff 53 ×2, source-ticket 578, whole-consumers 598, calibration 374 —
+with the whole prior AST restored.
+
+The independent AST auditor rejects eleven isolated one-node weakenings of
+the repair, each at its declared obligation with exit 101: unchecked
+removal, key with another install, registration from the proof, foreign
+source, wrong edge, record selector from the key, unconfirmed source,
+remove-before-authentication, retire-on-mismatch, claim through a foreign
+namespace, and claim before the proof. I read the falsifier construction
+and the auditor: it compares the authorized edits with the old source,
+forces the read/claim/removal order, and rejects each mutation by name.
+
+### 2.3 Inventories
+
+The append inventory is complete with zero unknown: 286 inputs, 42
+consumers, 44 body variants, 18,648 bound functions, 299 member sites and
+7 carriers. The wider candidate-selector census (54 consumers, 23,976 bound
+functions, 57 distinct bodies, 125 selector sites) resolves every current
+render's actual keys, readers and removals with unknown=0. The admitted
+placement embeds the authenticated helper byte-for-byte.
+
+### 2.4 Matrices
+
+Every matrix is re-earned on the repaired helper: source-ticket 4 draws =
+2,312/0/0/0; boundary 4 = 1,984/0/0/0; P0558 8 = 128/0/0/0; main 848 =
+26,964/232/0/0; J 72 = 2,280/0/0/0; components 48 = 5,384/168/0/0; scope
+fresh 640 = 68,480/7,600/0/236,640; the 400 raw draws reuse only by exact
+identity (5,400/600/0/25,200; two sources, eight binaries, all logs
+hash-exact); calibrations 172 = 63,956/372/0/0 over 42 variants / 374
+controls / 15,708 cells; whole-consumers 4 = 2,392/0/0/0; both runtime
+placements 4 draws each = 5,732/0/20/8 (1,433/0/5/2 per draw, one binary);
+the 702 pair audits and 86 calibration audits all exit 0. The class-wide
+retirement fixture adds 31 fixed + 12 additive tests; the three J forms
+carry 12 source-form obligations and 144 declared draws.
+
+## 3. The stop
+
+### 3.1 Ordering
+
+The retirement class is a new declared scratch fixture
+(`queue_transport::State.installed`, group `queue_install`, control
+`q35_second_live_install_preserves_first`). Its plan and freeze are at
+19:58:55.513/.541, the declaration at 19:58:55.594, the eight builds from
+19:58:58.374 to 19:59:15.460, the first runs after that and the stop at
+19:59:17 — frozen before execution. The plan declares 3 forms × 2 roles ×
+2 arms × 2 modes × 2 threads × 3 groups = 144 draws over the P0267, P0312
+and P0323 forms, with the class declaration naming five forms
+(P1470/P1471 declared but not rendered) and `full_execution=false`. All 48
+counterpart draws pass at 4/0/0/39. The first foreign-root draw —
+P0267/form-1, witness, armed, hash (source `8d4a60ee…`, binary
+`52620b90…`) — was declared `[1,0,0,42]` and reproduced `[0,1,0,42]` at
+eight and one thread on that one binary; the scene froze at 20:04:16 with
+the remaining 94 draws NOT_RUN, `candidate_repair=false`,
+`expectation_repair=false`, and nothing repaired. The post-stop
+reproduction at 20:03:35 is byte-identical.
+
+### 3.2 The failure
+
+At P0267 the inner root's actual teardown erased the unrelated live outer
+registration, its confirmation index and payload while its independently
+registered proof stayed live. The observation is `registration=false,
+reverse=true, indexed=false, payload=false, registered_source=true,
+confirmed_source=(true,false,false,false), inner_registration_present=false`
+against the expected `registration=true, reverse=true, indexed=true,
+payload=true, registered_source=true, confirmed_source=(true,false,false,false),
+inner_registration_present=false`. The armed run then publishes once
+instead of twice and the ordered stream differs from ordinary execution.
+
+### 3.3 The mechanism and the authority
+
+`retire_root(root)` performs two independent operations:
+
+    identity_proofs::retire_namespace(|n| n.0 == root);
+    STATE.with(|cell| cell.borrow_mut().retire(|i| i.namespace.root == root));
+
+The first selects from the immutable identity records and is correct. The
+second selects from the mutable transported `Installed` copy. The control
+rewrites only `State.installed[outer].namespace.root` to the actual inner
+root; the inner teardown then matches the outer record, removes the outer
+installation, and removes its confirmation index and payload by install id.
+The reverse alias survives because the removal uses the mutated namespace
+key, and the independent identity records survive — so the transport and
+the authority disagree, and a live unrelated registration is destroyed.
+
+This is the same discipline class as Q54, Q55 and Q56 one layer deeper: a
+consumer selects a record for removal through a transported or mutable
+selector without authenticating it against the independent actual
+registration. Q35's accepted carrier rules already forbid it ("Invalid-
+present transport rejects; it cannot select which other key to retire";
+"unrelated owner's cleanup cannot clear it"; "Taking one key never clears
+another"). It is a genuine design-level defect of the scratch consumer
+model, not a production regression and not a reclassification.
+
+## 4. Ruling: `Q57-registry-retirement-root-authentication`
+
+No teardown may select, retire or remove a record through a transported or
+mutable copy of a registration — its root, control, generation, namespace,
+index or proof — without authenticating the selection against the
+independently registered actual installation and its actual retiring
+object. A transported record that disagrees with the independent
+registration is not a retirement target: the actual inner object retires
+only its own registration, and every unrelated live registration, its
+reverse alias, confirmation aliases, payload and independent proof must
+survive untouched.
+
+Continuation 58 is ordered to:
+
+1. Inventory every registry and teardown selector and removal with zero
+   unknown across every render — `State::retire`, `retire_root`,
+   `retire_control`, `clear_registry`, `InstallGuard::drop`,
+   `JoinAppend::drop`, and every consumer of `State.installed`, `unpaused`,
+   `reverse`, `sources`, `paused`, `paused_at`, `confirmed` and
+   `confirmed_at` — each with its actual object, selector source, state
+   effect, consumer and isolation falsifier, building on the accepted
+   54-consumer / 125-selector-site census.
+2. Repair the teardown selection so the survivors are derived from the
+   independent actual registration records (or each transported record is
+   authenticated against them) before any removal; a mismatched transported
+   slot leaves all live registrations, aliases, confirmations and proofs
+   untouched; execute the declared carrier calibration — collapse only the
+   carrier, the named two-owner/second-insertion control must fail, all
+   unrelated controls green.
+3. Add the independent AST falsifier that rejects the unauthenticated
+   selection and its sibling mutations, and make the frozen foreign-root
+   control the acceptance — green in every affected render, all 144
+   declared retirement draws including the 94 outstanding at eight and one,
+   the 48 counterparts exact — while the 96 append draws, the 96 handoff
+   draws and the 578/598/496/53/31/210/374 bodies stay exact.
+4. Re-run every matrix: the 848/72/48/640 draws (the 400 raw draws only by
+   exact identity), the 172 calibrations, P0558, both runtime placements,
+   the whole-consumers, source-ticket and boundary fixtures, and re-audit
+   every affected render.
+5. Then complete the bar: the 134/4,422/133 execution closure, the
+   151-plan generator with rejection, the two 94-target/188-postimage
+   roots, the six-column 94-row schema with 151 cells, the byte/AST/
+   omission and disabled-parity audits, the ordered standing replay,
+   `cargo fmt --check`, both workspace modes with the seven skips and the
+   unfiltered `suspension_oracle`/`typed_slot_census`, and the switched
+   same-binary checks.
+
+Under the allocated envelope and the assigned 6,000 s workspace, repairing
+no frozen tree, production or maintained source, and stopping before
+starting any group that cannot fit and reporting the exact remainder.
+
+## 5. Not delivered
+
+The shared-retirement-consumer claim and the complete bar earn nothing. The
+134/4,422/133 closure is a structural index only (152 forms), complete
+plans 0/151, the two 94-target/188-postimage roots have 0 postimages, the
+schema is unchanged (`f9604852…`, `new_source_schema=null`,
+`complete_plan_hash=null`) with all 94 admitted paths `not_emitted`; the
+complete-overlay audits, the ordered standing replay, `cargo fmt --check`,
+both workspace modes and the switched checks are unexecuted; standing
+replay and workspace are NOT_RUN, workspace 0/6,000; the 90/180/151 cells
+authenticate. The retirement class is executed only for 50 of its 144
+declared draws, its declared carrier calibration is unexecuted, and the
+P1470/P1471 forms are declared but not rendered.
+
+## 6. Allocation
+
+Continuation 57 charged 4,194.631851504979 s (2,686.131851504979 s measured
++ 200.0 s conservative inspections/setup + 1,248.5 s bookkeeping + the
+fixed 60 s reserve) of the 9,187.649237259971 s envelope, leaving
+**4,993.017385754993 s**; CM4's share stands at 63,506.982614245004 of
+68,500 s, the assigned 6,000 s workspace is untouched (0/6,000), and the
+1,440 s verification and second 6,000 s workspace stay held.
+`candidate_failure=true`, `allocation_stop=false`.
+
+This gate allocates a fresh 8,000 s focused envelope from the project's
+reserve: continuation 58 runs under **12,993.017385754993 s**, CM4's share
+becomes 76,500 s, the stage reserve 117,000 s, and 743–746 keep their
+40,500 s unchanged. The extension is an allocation from the project's
+reserve, not a bar change: the bar, the stop-loss and the authorization
+limits are unchanged.
+
+## 7. Freeze
+
+The stopped scene is 20,344 files / 10,561,408,515 bytes in
+`continuation-stop/`. I rehashed all 20,344 pairs myself with zero missing
+and zero bad. The 28 prior trees hold 171,615 entries with the c56 scene
+(19,533) and its 119 recorded transients; the 286 inherited and 119 c55
+director-replay transients (405 records) are unchanged and unexplained=0;
+the two `freeze-stop.log` drifts (stages 32 and 33) stay open and
+unrepaired. Nothing was repaired. My own runs this gate were the red and
+the 242 draws from copies outside the scene, so the scene was untouched by
+the gate.
+
+## 8. Entry
+
+Entry authenticates 5,400 maintained / 590 design / 364,151 accepted files
+(hashes taken at 19:18, before this continuation's outputs). I rehashed all
+590 design files (278,559,491 B) and all 39,661 accepted files new against
+the c56 entry (20,822,838,953 B) with zero missing and zero bad; the
+324,490 carried accepted files are hash-identical to the c56 entry (zero
+changed, zero removed), and my c56 gate rehashed that whole set. The only
+three maintained deltas are my own committed documents (`TODO.md`,
+brief-623, brief-742) at HEAD `261da953`; the pre-existing layer is the
+same 23 porcelain entries; the worker changed no maintained or production
+file (maintained_changes=0, production_changes=0, new_own_catches=0).
+
+## 9. What I verified and what stays open
+
+Verified by me: all 2,497 receipts against their logs (2,483 command
+markers, 14 driver logs, zero problems; elapsed sum exactly
+2,686.131851504979 s) and 62 distinct binaries hashed; all 242 executed
+draws re-run from director copies outside the scene — 96 append, 96 handoff
+and 50 retirement — with zero mismatches; the red reproduced at eight
+threads with the observation line byte-identical (exit 101, 0 passed / 1
+failed / 42 filtered); the full freeze (20,344 pairs); the full design and
+new-accepted entry hashes and the carried-set identity; the four append
+audit groups and the confirmed fixed-body counts; the eleven rejected
+falsifiers by name; all 702 pair audits and 86 calibration audits exit 0;
+the group totals (848/72/48/640, 400 raw, 172, 578, 598, 496, 128, 5,732
+×2, 768 handoff, 240 append, 192 retirement); the plan, freeze, declaration
+and build timestamps; and the budget arithmetic. The three FLAGGED items
+are retained construction failures with no evidence change: the first
+inventory attempted to open a standalone helper in the installed macro
+placement, the second found six uncatalogued reference spellings (both
+resolved, final inventory unknown=0), and the inherited C55-to-C56
+comparator expected a second issuer migration (the corrected comparator
+compared every current owner and assertion byte with zero allowed
+replacements and all 43 frozen source pairs passed).
+
+Open: everything in section 5, plus the Q57 repair and the retirement
+class's own calibration and 94 unexecuted draws. Continuation 58 carries
+both.
+
+## 10. Process
+
+Ruling written here; appended to brief-742 and brief-623 (Continuation
+145), TODO.md extended, `state.md` rebuilt, committed and pushed;
+clean-temp run; dispatch log archived; memory updated; continuation 58
+dispatched on `gpt-6.2-astra` at effort max.

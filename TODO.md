@@ -1846,6 +1846,79 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   the exact remainder; no campaign, epoch, acceptance or CM5; pair
   (45,5,false) Open, C2 118 Residual + 0 Lost, 51 owners and five
   source duties Open, `CHANGELOG.md` and S10 blocked.
+  Continuation 57 is gated (Q28 registry-retirement root STOP).
+  The Q56 append-confirmation repair is delivered and accepted: a new
+  confirmed_append takes the installation from the append scope, requires
+  the recorded namespace and reverse registration and the transported
+  record's own proof, generation and namespace, and authenticates the
+  candidate index key (key.install == install, key.source ==
+  SourceKey::pause(&proof.token), authenticate, confirmed_append_source)
+  before any removal; retire_append_confirmation removes the index and
+  payload only after that lookup, a mismatch leaves both aliases untouched
+  and skips the queue-proof retirement through that path, and omit_join
+  uses the same authenticated lookup before claim. The c56 fixture is
+  green in all 96 draws (48 counterparts at 4/0/0/27 and 48 foreign-index
+  at 1/0/0/30 over three forms x two roles x two arms x two modes x eight
+  and one), the 96 handoff draws are exact (14/0/0/39 and 2/0/0/51), the
+  578/598/496/210/53/31/374 bodies stay byte-exact, eleven one-node
+  weakenings are each rejected by an independent AST auditor, and every
+  matrix is re-earned (848/72/48/640; 400 raw by exact identity; 172
+  calibrations 63,956/372; P0558 128; both runtime placements
+  1,433/0/5/2 per draw; 702 pair and 86 calibration audits). I verified
+  all 2,497 receipts against their logs (zero problems, elapsed sum
+  2,686.131851504979 s), hashed 62 binaries, replayed all 242 executed
+  draws from director copies with zero mismatches, and reproduced the red
+  byte-identically. The new retirement class
+  (queue_transport::State.installed, five declared forms, 31 fixed + 12
+  additive tests, 144 declared draws) was frozen at 19:58:55.5 before its
+  19:58:58–19:59:15 builds; all 48 counterparts pass at 4/0/0/39, and then
+  the first foreign-root item (P0267/form-1 witness armed hash) was
+  declared [1,0,0,42] and reproduced [0,1,0,42] at eight and one on one
+  binary: retire_root retires the identity namespace correctly but selects
+  the transport record by i.namespace.root == root from the mutable
+  Installed copy, so the inner teardown removes the outer installation and
+  its confirmation index and payload while the reverse alias and the
+  independent proof survive, and the armed stream publishes once instead
+  of twice. The stop is compliant under Q28: nothing was repaired, 94
+  draws are NOT_RUN, the declared carrier calibration is unexecuted, and
+  the scene is frozen (20,344 files / 10,561,408,515 bytes; every pair
+  rehashed with zero bad). The ruling
+  (Q57-registry-retirement-root-authentication) is a genuine design-level
+  defect of the scratch consumer model (Q35's accepted rule that
+  invalid-present transport cannot select which other key to retire, not
+  yet carried into the teardown selector), not a production regression;
+  the append repair earns focused scratch credit while the shared-
+  retirement claim and the complete bar earn nothing, and continuation 58
+  must inventory every registry and teardown selector with zero unknown,
+  authenticate the selection against the independent registration before
+  any removal, execute the declared carrier calibration, add the
+  independent AST falsifier, make the frozen foreign-root control the
+  acceptance with all 144 declared draws including the 94 outstanding
+  while the 96 append, 96 handoff and 578/598/496/53/31/210/374 bodies
+  stay exact, re-run every matrix, and then complete the 134/4,422/133
+  closure, the 151-plan generator, the two 94/188 roots, the schema
+  cells, the audits, the standing replay, fmt, both workspace modes and
+  the switched checks. Allocation: continuation 57 charged
+  4,194.631851504979 s (2,686.131851504979 s measured + 200.0 s
+  inspections/setup + 1,248.5 s bookkeeping + 60 s reserve) of
+  9,187.649237259971 s, leaving 4,993.017385754993 s; CM4 stood at
+  63,506.982614245004 of 68,500 s, and this gate allocates a fresh 8,000 s
+  envelope from the project's reserve, so continuation 58 runs under
+  12,993.017385754993 s; CM4's share becomes 76,500 s, the stage reserve
+  117,000 s, 743–746 keep 40,500 s, the workspace stays at 0 of 6,000 s,
+  and the 1,440 s verification and second 6,000 s workspace stay held.
+  Entry authenticates 5,400 maintained / 590 design / 364,151 accepted
+  files; I rehashed all 590 design (278,559,491 B) and the 39,661 new
+  accepted (20,822,838,953 B) with zero missing and zero bad, and the
+  324,490 carried files are hash-identical to the c56 entry; the only
+  maintained deltas are my committed documents at HEAD `261da953` (same
+  23 porcelain). Continuation 58 repairs the registry-retirement root
+  authentication and completes the bar under 12,993.017385754993 s and
+  the assigned 6,000 s workspace, repairing no frozen tree, production or
+  maintained source and stopping before any group that cannot fit and
+  reporting the exact remainder; no campaign, epoch, acceptance or CM5;
+  pair (45,5,false) Open, C2 118 Residual + 0 Lost, 51 owners and five
+  source duties Open, `CHANGELOG.md` and S10 blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
