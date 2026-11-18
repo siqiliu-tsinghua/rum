@@ -1422,6 +1422,98 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   bar under 14,070.369583264994 s, repairing no frozen tree,
   production or maintained source and stopping before any group that
   cannot fit.
+- G15-CM4 continuation 52 (gated 2026-11-18): the four ordered lookup guards
+  are delivered and accepted with focused scratch credit only. `ordinary`,
+  `frame`, `initial` and `ordinary_request` each gain a leading
+  `if !ENABLED { return false; }`; a byte diff against the c50 helper shows
+  only those four insertions, the accepted 450-control fixture stays
+  byte-exact (the same four insertions in its two embedded copies and no
+  other change) and passes 450/0/0/0 in hash and nohash at eight and one,
+  and the independent syn auditor v2 requires each guard to be the first
+  statement, erases them and restores the whole AST exactly while requiring
+  all 187 helper tests and all 450 controls to be token-identical (the v1
+  private-`frame` homonym is a retained construction failure; no candidate
+  or fixed control was edited). I rebuilt the frozen fixture with the
+  declared rustc invocation and selector `RUM_CM740_OMIT=C3.evaluate_call.
+  unstable_head` and reproduced 450/0/0/0 in both modes at eight and one.
+  The 144-item public census (99 pub / 45 pub(super), 91 exposed: 85
+  source-route items including 20 non-callable declarations and two
+  value-only constructors, four declared lookups, two fixture observations
+  and 53 internal, unknown 0, 1,623 copied-crate source files with zero
+  unknown imports) is accepted as a surface classification with its stated
+  lexical limits, but is ruled incomplete in the one dimension the repair
+  decision needs: `fixture_call_anchors` is empty for `pause` while the
+  frozen fixture calls it in both copies and asserts `(1,
+  u64::from(ENABLED))`. The first further correction then stops under Q28:
+  a literal leading return in `pause` passes its new held-borrow control
+  (1/0/0/450 in both modes at eight and one) but breaks 70 unchanged
+  disabled controls, 381/70/0/0 identically at eight and one on one binary
+  `8128c3c2…`, exactly the declared names, with the fixed
+  `one_pause_one_initial_return` expecting (1,0) and receiving (0,0); the
+  plan and edits were frozen at 12:37:51 before the build at 12:38:07, the
+  nohash full draw is NOT_RUN after the same-binary stop, and no candidate,
+  expectation, control, scanner or frozen tree was repaired. I copied the
+  frozen fixture, rebuilt it and reproduced the exact 70-name set in both
+  modes at eight and one and the held-borrow control. The finding is ruled
+  a scratch instrument-surface conflict: `pause` is called unconditionally
+  from `crates/rum-runtime/src/runtime/builtins_input.rs:248` (followed by
+  `queue_transport::pause_installed()`) and its first action reaches
+  `LEDGER.with(|cell| cell.borrow_mut())`, so a disabled build pays TLS and
+  a mutable ledger borrow on the ordinary input path, while the frozen
+  fixture requires `pause` to record when disabled; the c50
+  boundary/private-core split — a guarded public boundary with the runtime
+  callers redirected, the recording primitive keeping its exact name and
+  body, the fixture untouched — resolves both duties. This is not a
+  reclassification of `pause` (the 152 frozen obligations stay), not a
+  production regression, not a semantic catch, not an inventory ordering
+  artifact and not universal impossibility. The class rule in the c52 order
+  is withdrawn and replaced: the duty is on the runtime-reached path and
+  the frozen fixture's own assertions define what the fixture requires; the
+  57 "further callable duties" are not 57 guards (17 items have runtime
+  callers, six already carry leading guards, and many are fixture API whose
+  recording the fixed contract requires). Nothing else is delivered and
+  nothing else earns credit: the class-wide correction, the re-render of
+  the 114 sources / 170 copies and the three J routes, the 848/72/48/640
+  draws and the 400 raw draws (no reuse claim), the 134/4,422/133 closure,
+  the 151-plan generator, the two 94-target/188-postimage roots, the
+  six-column 94-row schema with 151 cells, the audits, the ordered standing
+  replay, `cargo fmt --check`, both workspace modes with the seven skips
+  and the unfiltered gates, and the switched same-binary checks are all
+  open; standing replay and workspace are NOT_RUN, workspace 0/6,000,
+  complete plans 0/151, complete calibration runs 0/172, emitted paths 0;
+  the schema is unchanged (`f9604852…`, new_source_schema=null,
+  complete_plan_hash=null), all 94 admitted paths are `not_emitted`, and
+  the 90/180 pre/postimages and 151 cells authenticate. The stop is not an
+  allocation limit: 40 receipts charge 491.25330465500883 s (376.253304655
+  00883 s measured + 35.0 s conservatively charged inspections + 20.0 s
+  bookkeeping + the fixed 60 s reserve) of 14,070.369583264994 s, leaving
+  13,579.116278609985 s; CM4 stands at 46,920.88372139001 of 60,500 s, the
+  workspace at 0 of 6,000 s, and the 1,440 s verification and second
+  6,000 s workspace stay held; no extension or held envelope was borrowed
+  and no new allocation is made. The stopped scene is 135 files /
+  185,421,600 bytes in `pause-contract-stop/`, both sides exact (270 hashes
+  rehashed, zero bad); entry authenticates 5,400 maintained / 590 design /
+  228,671 accepted files, with all 219,053 carried accepted hashes
+  identical to the c51 entry and the 9,618 new ones every file under
+  `continuation-51` (6,436,751,948 bytes hashed by me, zero bad), the 590
+  design hashes unchanged, and the only three maintained deltas my own
+  committed documents (`TODO.md`, brief-623, brief-742) at their HEAD
+  `7c6e10fd` blobs; the 23 prior trees / 104,523 entries hold with the c51
+  scene fully rehashed both sides, 400-entry c50 and c49 samples exact and
+  the 116 director transients byte-identical to the c51 record; the two
+  known `freeze-stop.log` drifts stand unrepaired; HEAD `7c6e10fd` with the
+  same 23 porcelain entries. Continuation 53 completes the classification
+  with runtime and fixture call anchors and per-item asserted disabled-arm
+  values with zero unknown, corrects `pause` and every other
+  runtime-reached entry by the c50 boundary pattern with additive
+  held-borrow controls, the six existing boundaries' evidence completed and
+  the 450 fixed controls byte-exact and green in both modes at eight and
+  one, the disabled full-runtime arm at 1433/0/5/2, re-renders and audits
+  the 114/170 and three J routes, re-runs the affected 848/72/48/640 draws
+  by exact hash identity (the 400 raw draws only by identity), then
+  completes the bar under the remaining 13,579.116278609985 s and the
+  assigned 6,000 s workspace, repairing no frozen tree, production or
+  maintained source and stopping before any group that cannot fit.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
