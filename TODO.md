@@ -1336,6 +1336,57 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   keeps both source gates green, then finishes the bar under the
   binding 1,201.5615750949778 s, reusing only by exact hash identity
   and repairing no frozen tree, production or maintained source.
+  Run: 36,930 `.temp` changes, 15 PASS / 2 FLAGGED / 1 FAIL / 2 NA,
+  804.9180160759861 s charged, CM4 at 44,103.356440981006 of 44,500 s,
+  leaving 396.6435590189917 s, which this gate extends by a fresh
+  16,000 s focused allocation from the project's reserve (CM4's share
+  60,500 s, stage reserve 101,000 s; 743–746 retain 40,500 s; the
+  1,440 s verification and second 6,000 s workspace held; workspace
+  0/6,000). Continuation 50 makes the append instrument inert: eight
+  registered helper edits privatize the six protocol primitives and
+  add four public source boundaries that return before any state (the
+  constructor gate precedes `Rc::new`), the wrapper enters through
+  `source_append` and binds and finishes only on `Some`, the queue's
+  namespace/owners-mutex computation sits inside `if ENABLED`, and
+  the helper moved to `src/tests/cm740_probe.rs` (lib.rs
+  226,973 → 764 B) so both unchanged source gates see only admitted
+  source; the AST audit passes with the byte inverse exact and seven
+  firing falsifiers, and the disabled full-runtime arm is 1433/0/5/2
+  at 8/1 on one binary, declared before the runs (10:46:41 plan,
+  10:47:55 build, 10:48:12 and 10:48:52 runs). I reproduced it in
+  director copies: a rebuilt binary (28.81 s) and both threads
+  (16.34 s / 40.64 s) give 1433/0/5/2 with the three c49 failures
+  green. The direct-caller census is zero-unknown: 12 hits — one
+  production wrapper, five wrapper/queue-API, six scanner needles
+  and one unchanged maintained-test bypass — with no test or scanner
+  edited, and the caller inventory states its own limits (125 files,
+  1,599 calls, 444 append-duty calls, four current external calls,
+  114 pending copies, finite dispatch graph not proven, complete
+  closure false). The 444 preserved route controls plus two
+  public-boundary counterparts are 446/0/0/0 in both modes at 8/1,
+  and I reran all four draws. The stop is a compliant allocation
+  limit: 46 receipts sum to 721.9180160759861 s plus 23.0 s
+  bookkeeping and the 60 s reserve, so 804.9180160759861 s of the
+  binding 1,201.5615750949778 s, leaving 396.6435590189917 s; at the
+  decision 612.5448643459799 s remained against the 848-run /
+  230-build group's prior measured 782.9024138279947 s (conservative
+  3,210 s), so the group was not started and nothing was borrowed.
+  The complete bar is not delivered and earns nothing (generator,
+  two 94-target/188-postimage roots, six-column 94-row schema with
+  151 cells, closure, audits, replay, fmt, workspace, switched
+  checks; standing replay and workspace NOT_RUN; schema `f9604852…`
+  unchanged, 94 admitted paths `not_emitted`, 90/180 and 151 exact).
+  The scene is 18,419 files / 5,194,445,665 bytes with both sides
+  exact (36,838 hashes), entry 188,116 files authenticate with zero
+  differences, and the 116 director transients (108 missing, 8
+  changed) and two known open log drifts stand unrepaired.
+  Continuation 51 propagates the split to the 114 sources / 170
+  copies and runs the 848 draws, completes the 134/4,422/133
+  closure, the 151-plan generator, the two roots, the schema and the
+  audits, then the ordered replay, fmt, both workspace modes and the
+  switched checks under 16,396.6435590189917 s, reusing only by
+  exact hash identity and repairing no frozen tree, production or
+  maintained source.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the

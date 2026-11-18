@@ -3530,3 +3530,211 @@ and repairing no frozen tree, production or maintained source. No campaign,
 epoch, acceptance or CM5; pair `(45,5,false)` Open with zero admitted
 receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
 `CHANGELOG.md` and S10 blocked.
+
+## Continuation 50 ruling (director) — continuation 50 delivers all three ordered prerequisites (the append-route instrument is inert when `ENABLED=false`, the direct `FrameStorage::append` callers are classified with zero unknown, and both unchanged source gates are green on the corrected copied tree with the probe/control text under `src/tests`) and then stops on a compliant allocation limit when the 848-run / 230-build changed-source matrix cannot fit the CM4 share's remaining 612.5448643459799 s; the three deliverables are accepted with focused scratch credit only, the complete bar remains unexecuted, and this gate allocates a fresh 16,000 s focused envelope from the project's reserve (CM4's share 60,500 s, stage reserve 101,000 s, 743–746 unchanged) for continuation 51.
+
+Continuation 50 delivered all three ordered prerequisites: the append-route
+instrument is inert when `ENABLED=false`, the direct `FrameStorage::append`
+callers are classified with zero unknown, and both unchanged source gates are
+green on the corrected copied tree with the probe/control text under
+`src/tests`. It then stopped on allocation when the next required group — the
+848-run / 230-build changed-source matrix — could not fit in the CM4 share's
+remaining 612.5448643459799 s even at its prior measured charge of
+782.9024138279947 s. The stop is compliant; the three deliverables are
+accepted with focused scratch credit only; the complete bar is not delivered
+and earns nothing. This gate allocates a fresh 16,000 s focused allocation
+from the project's reserve — CM4's share becomes 60,500 s and the stage
+reserve 101,000 s, with 743–746's 40,500 s unchanged — and orders
+continuation 51 to finish the complete bar and the full closure under
+16,396.6435590189917 s.
+
+### 1. Run record
+
+`cdx` ran as unit `brief-742-cdx-20261118-103011-1239230`, rc 0, peak
+2,631,008,256 B, oom 0 / oom_kill 0; log 2,095,909 B, sha256
+`7d87767c47643092315c36375b2dfc60ef5c182f3bf977a9e5ab528a914f8140`. The
+report is STOP: 36,930 changes (36,928 added, 2 modified — `PROGRESS.md` and
+`report.json` — 0 deleted), all under `.temp/brief-742`; 20 checks (15 PASS,
+2 FLAGGED, 1 FAIL — the complete bar — 2 NA), 2,114 citations verified, 0
+questions, 1 deviation (the complete bar not delivered), 0 disclosures. The
+stop rule is the envelope limit: "stop before a required group exceeds the
+envelope; no extension or held allocation borrowing", with the reason that
+the next complete required matrix does not fit the remaining allowance even
+at its prior measured charge, before mandatory closing authentication, and
+that no candidate control failed. No git command ran and no network. I
+rehashed every entry hash — 188,116 files across 5,400 maintained, 590 design
+and 182,126 accepted — with zero differences and zero missing, and the
+working tree shows exactly the same 23 porcelain entries at HEAD `dabf605d`.
+
+### 2. Accepted: the append-route instrument is inert when disabled
+
+Eight registered helper edits make the six protocol primitives private and
+add four public source boundaries that return before any state; the
+constructor's `ENABLED` gate precedes `Rc::new`, so a disabled append
+allocates nothing; `SuspendedEvaluation::append` enters through
+`source_append` and binds and finishes only when it returns `Some`;
+`ProfileQueue::append`'s namespace and owners-mutex computation sits inside
+`if ENABLED`; and the probe/control module moved out of `src/lib.rs`
+(226,973 → 764 B) into a new `src/tests/cm740_probe.rs` (226,862 B). The AST
+audit passes with the byte inverse exact on all three edited files, four
+public source gates, six private primitives, `mint_gate_before_Rc=true`,
+`ordinary_append_once=true`, every fixed control body and all other nodes
+exact, and seven firing falsifiers — wrong-enable-condition,
+state-before-gate, mint-before-gate, duplicate-ordinary-append,
+fixture-attribute-change, namespace-lock-before-enable, scanner-visible-
+helper — each rejected.
+
+The declaration (plan and edits at 10:46:41) preceded the build at 10:47:55
+and the runs at 10:48:12 and 10:48:52, and the disabled full-runtime arm is
+exactly 1433/0/5/2 at eight and one thread on one binary, with all seven
+inherited skips supplied and the five ignored names resolved from source
+attributes. I reproduced it independently: I copied the v3 root to
+`.temp/director/gate-c50/runtime-disabled-v3`, rebuilt the test binary there
+(28.81 s, exit 0) and ran it at eight (16.34 s) and one (40.64 s) — 1433
+passed, 0 failed, 5 ignored, 2 filtered, exit 0 both times, with
+`logical_queued_frames_have_one_owner_in_both_modes`,
+`suspension_protocol_repository_invariants_hold` and
+`kernel_crates_do_not_write_stdout_outside_tests_and_bins` green. Credit is
+focused source-route validation of the append boundary only: not complete
+inertness, not execution closure of all 134 boundaries, not workspace,
+overlay or parity credit.
+
+### 3. Accepted: the direct-caller classification is zero-unknown
+
+The whitespace-compacted six-needle census over the maintained runtime, core
+and stdlib sources finds 12 hits classified with zero unknown: one production
+wrapper, five `SuspendedEvaluation` wrapper/queue-API hits, six scanner
+needles that are not executed calls, and exactly one direct
+`FrameStorage::append` caller — the unchanged `queue_boundaries` test,
+declared the enabled bypass — with `maintained_tests_edited=0` and
+`test_or_scanner_edits=0`. The caller inventory is explicit about its own
+limits: 125 source files, 1,599 indexed calls, 444 append-duty calls, four
+current external source calls (exactly the four public boundaries in the
+copied `core.rs` and `profile_queue.rs`), zero external calls to the now
+private primitives, and 114 older source copies pending;
+`exhaustive_within_declared_source_list=true` but
+`finite_dispatch_graph_proven=false`, `complete_closure=false` and
+`source_propagation_reused=false`. That is a pending inventory, not a
+closure certificate, and it earns no execution credit.
+
+### 4. Accepted: both unchanged source gates are green on the corrected tree
+
+The relocation is the c49 remedy: the helper lives at
+`crates/rum-runtime/src/tests/cm740_probe.rs`, a path both unchanged scanners
+skip, and neither scanner was edited, weakened or skipped — they are two of
+the 1,433 maintained tests that pass in the disabled arm at eight and one.
+The scene adds exactly one scratch module (`additional_scratch_module=1`) and
+claims no generated overlay addition (`generated_overlay_additions=0`,
+`complete_overlay=false`).
+
+### 5. Accepted: the preserved route controls and the AST restoration
+
+The source-boundary fixture keeps all 444 accepted control bodies and
+attributes byte-exact, adds two counterparts (the same
+`actual_source_boundaries_follow_compile_time_enable_without_state_when_disabled`
+test in both `ENABLED` copies), and passes 446/0/0/0 in both feature modes at
+eight and one thread; the whole-AST restoration, byte inverse and enable
+values are exact, and the declaration preceded execution
+(`execution_used=false`). The added control proves both branches: with
+`ENABLED` true it constructs, binds, observes and finishes through the public
+entries and asserts the recorded namespace and completion; with `ENABLED`
+false `source_append` is `None`, all four public entries stay inert even with
+a fixture-owned private core object and the state mutably borrowed, no append
+source is recorded and the fixture's own entry is untouched. I reran all four
+draws from the frozen binaries: 446 passed, 0 failed, 0 ignored, 0 filtered
+in both modes at eight and one, each binary printing both its `enabled=true`
+and `enabled=false` branch. These are fixture controls; they produce no
+catch, admission or acceptance receipt.
+
+### 6. Admitted: the allocation STOP is compliant
+
+The 46 receipts sum to exactly 721.9180160759861 s; with 23.0 s of
+bookkeeping (46 × 0.5) and the fixed 60 s reserve the continuation charged
+804.9180160759861 s of the binding 1,201.5615750949778 s, leaving
+396.6435590189917 s. At the decision point it had charged
+589.0167107489979 s with 612.5448643459799 s remaining, while the next
+required group — 848 runs, 230 distinct builds, pinned in
+`pending-source-closure.json` with 114 sources and 170 copies — costs at
+least its previously measured 782.9024138279947 s and at most the
+conservative 3,210 s. The group was not started, no extension or held
+allocation was borrowed, no candidate control failed, and no observed
+execution was used as an expectation. The stop is the prescribed behaviour
+and its costs stand. I verified the ledger myself: 46 receipts in the focused
+group, no `CARGO_TARGET_DIR` in any of them, no codegen or optimization
+override, both cargo commands `--offline --locked -j8`, the 16 G/no-swap
+scope inherited with oom 0, and the arithmetic exact to the recorded
+decimals.
+
+### 7. Not delivered: the complete bar
+
+The 151-plan generator with duplicate/overlap/unknown-anchor rejection, the
+two fresh 94-target/188-postimage roots, the six-column 94-row schema with
+all 151 `source_schema` cells, the byte/AST/omission and disabled-parity
+audits, the ordered standing replay, `cargo fmt --check`, both workspace
+modes with the seven skips and the unfiltered `suspension_oracle`/
+`typed_slot_census` at failed=0 and filtered=0, the switched same-binary
+checks, and the full 134-boundary / 4,422-obligation / 133-carrier execution
+closure with the affected-source per-form matrices and every moved-duty
+caller listed: none ran and none is credited. Standing replay and workspace
+gates are NOT_RUN; workspace spent 0 of 6,000 s. The schema is unchanged
+(`f9604852…`, `new_source_schema=null`, `complete_plan_hash=null`), all 94
+admitted paths are `not_emitted` with zero postimages, and the 90 preimages /
+180 postimages / 151 cells authenticate.
+
+### 8. Budget, freeze and entry, and the allocation decision
+
+Charged 804.9180160759861 s: 721.9180160759861 s over 46 receipts (every log
+hash exact), 23.0 s bookkeeping, the fixed 60 s reserve; the closing receipt
+falls inside the reserve. CM4 stands at 44,103.356440981006 of 44,500 s.
+
+Allocation decision: a fresh 16,000 s focused allocation from the project's
+reserve extends CM4's share to 60,500 s and the stage reserve from 85,000 s
+to 101,000 s; 743–746 retain their 40,500 s, the 1,440 s verification
+envelope and the second 6,000 s workspace stay held, and the assigned 6,000 s
+workspace envelope stands untouched. Continuation 51's focused envelope is
+therefore 396.6435590189917 + 16,000 = **16,396.6435590189917 s**. This is an
+allocation from the project's reserve at a new gate, not an extension granted
+inside the c49 envelope — the c43 precedent — and the bar, the stop-loss and
+the authorization limits are unchanged.
+
+The new scene is 18,419 files / 5,194,445,665 bytes, covering the three
+scratch roots (v1 4,717 files — the failed first render retained — and v2/v3
+6,770 each) and the continuation's artifacts. I rehashed both sides of every
+manifest entry — 36,838 hashes — with zero differences and zero missing. The
+21 prior frozen trees hold 81,306 entries with their copies exact, the two
+known open log drifts and the 116 director-regenerated transients (108
+missing and 8 changed on the originals side at entry, unexplained 0);
+nothing was repaired, and my sample of 400 entries each from the c48 and c49
+manifests is exact. Entry: 5,400 maintained, 590 design and 182,126 accepted
+files authenticate, 188,116 hashes rehashed with zero differences and zero
+missing. The three inherited document drifts (TODO.md, brief-623, brief-742)
+are at their committed entry hashes, verified against HEAD blobs, and the
+pre-existing change layer is unchanged at HEAD `dabf605d`. The maintained
+test build carries its three pre-existing dead-code warnings; the copied
+instrument adds one `unused_must_use` warning at `cm740_probe.rs:1319` that
+has been present in the instrument since continuation 48 — it is scratch,
+not maintained, and the complete overlay's audit must settle it rather than
+carry it.
+
+### 9. Continuation 51 is ordered
+
+1. Propagate the guarded append boundary/private-core split to the 114
+   listed affected sources and their 170 copies, independently audit each
+   render, and execute the 848 required family draws under their recorded
+   expected sets at eight and one thread.
+2. Complete the full 134-boundary / 4,422-obligation / 133-carrier execution
+   closure with the affected-source per-form matrices and every moved-duty
+   caller listed.
+3. Complete the 151-plan generator with duplicate/overlap/unknown-anchor
+   rejection, the two fresh 94-target/188-postimage roots, the six-column
+   94-row schema with all 151 `source_schema` cells, and the byte/AST/
+   omission and disabled-parity audits.
+4. Then the ordered standing replay, `cargo fmt --check`, both workspace
+   modes with the seven skips and the unfiltered oracle/census at failed=0
+   and filtered=0, and the switched same-binary checks.
+
+Under the 16,396.6435590189917 s focused envelope and the untouched 6,000 s
+workspace envelope, reusing only by exact hash identity and repairing no
+frozen tree, production or maintained source. If a required group cannot fit,
+stop before starting it and report the exact remainder. No campaign, epoch,
+acceptance or CM5.
