@@ -2489,6 +2489,54 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   schedule and the matrices, and continues the bar; no campaign, epoch,
   acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0 Lost, 51
   owners and five source duties Open, `CHANGELOG.md` and S10 blocked.
+  Continuation 65 (gated 2026-11-19) delivers the Q64 repair and stops on the
+  field-calibration declaration. `live_teardown_for_adapter` composes the Q63
+  receiver authentication with an operation-liveness check, and both the
+  abandonment path and the final-drop backstop call `forget_operation` and
+  `forget_direct_claim` only through its result before any effect; the frozen
+  exercise, the `sibling_retire` tests and every assertion are byte-identical.
+  The typed-abandon-entries schedule completes at 96/96 draws (counterparts
+  29/0/2, all foreign entries 1/0/30), retirement-receiver passes 32/32, typed
+  carriers 96/96, last-drop 32/32, typed construction 96 plus 8 live, the
+  retirement family 736/736, and every prior matrix is re-earned with the bodies
+  578/598/496/53/31/210/374 and the 974/974 assertions intact; qualified
+  obligations rise to 459/4,422 with 34/134 actors and 4/133 fields. The new
+  family-frame-bindings calibration (46 forms, 736 draws, one writer statement
+  `l.frames.clear();`) passes 720 draws and stops under Q28 on P1818/form-1
+  witness/armed/hash: declared [26,4,0,0], observed [25,5,0,0] at eight and one
+  on the same binary 1068e4bf..., because the existing frozen test
+  different_actual_targets_have_independent_projected_owners reads 1 hit where
+  it requires 2 — both occurrences arm before either owner resumes, the single
+  clear erases the first adapter's frame binding, and the first resume's claim
+  is rejected. The declaration enumerated [] fixed tests for 024.rs, so the
+  analyzer missed the semantic two-target consumer of the field. The ruling
+  (Q65-frame-binding-calibration-failure-set-derivation): a collapsed-field
+  calibration must derive its declared failure set from the source as the
+  complete transitive set of frozen tests that depend on the mutated field,
+  with each test named with its assertion and path, frozen before execution with
+  zero unknown; an under-enumerated dependency stops, and the successor may not
+  adopt the observed run post hoc, edit the frozen tests or model, weaken the
+  bar, or delete or reclassify a draw. Continuation 66 must derive the complete
+  per-form dependency set for core::Ledger.frames across all 46 forms, freeze
+  the successor plan, re-run the full 736-draw schedule (14 outstanding) with
+  P1818's eight configurations matching the derived five-failure set, preserve
+  the sealed stopped declaration, keep exact by recomputed hash identity
+  wherever every input is byte-identical to c65, then continue the bar with the
+  paired-token and additional sibling groups, the two-form writer, the deferred
+  storage handoffs and the 21 remaining retirement forms. Allocation:
+  continuation 65 charged 7,668.439746931021 s (4,653.439746931021 s measured
+  over 5,510 receipts + 2,755.0 s bookkeeping + 200.0 s inspections/setup + 60
+  s reserve) of 19,993.105053099 s, leaving 6,621.156252773984 s; CM4 stood at
+  98,210.40400029499 of 112,500 s and now stands at 105,878.84374722601 s; no
+  new allocation, so continuation 66 runs under the remaining 6,621.156252773984
+  s and the assigned 6,000 s workspace (0/6,000) with the 1,440 s verification
+  and second 6,000 s workspace held. The stopped scene is 26,520 files /
+  16,081,287,014 bytes with all pairs rehashed zero missing and zero bad; entry
+  authenticates 5,400 maintained / 590 design / 634,623 accepted files with
+  inherited_document_drifts=3 (my three committed c64 documents at HEAD
+  87776228) and production_changes=0. No campaign, epoch, acceptance or CM5;
+  pair (45,5,false) Open, C2 118 Residual + 0 Lost, 51 owners and five source
+  duties Open, `CHANGELOG.md` and S10 blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
