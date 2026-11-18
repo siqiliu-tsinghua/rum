@@ -2354,6 +2354,88 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   bar; no campaign, epoch, acceptance or CM5; pair (45,5,false) Open, C2
   118 Residual + 0 Lost, 51 owners and five source duties Open,
   `CHANGELOG.md` and S10 blocked.
+  Continuation 63 is gated (Q28 typed-frame retirement receiver STOP).
+  The Q62 projection type is repaired: R02277 redirects to
+  source_completion_owner(issued: Option<IssuedSource>) -> JoinOwner,
+  type-identical to join_owner and pinned by const fn assertions; the
+  runtime handle is re-expressed behind the same JoinOwner name and
+  constructor call sites as completion_handle::JoinOwner(ScopeId,
+  JoinIdentity, Option<CapturedEntry>) where JoinIdentity derefs to the
+  registered object and is None only for the inactive handle, and Drop and
+  join_result_kind early-return only for that inactive handle, so the
+  disabled render acquires no scope, object or ticket. All 40 builds pass
+  (5 bases x 2 roles x 2 arms x 2 modes); the five witness renders are
+  byte-exact to c62; the per-base AST audits, the 180-assertion byte audits
+  and the restoration audit (allowed_changes=13,
+  old_constructor_unchanged=true) pass; the all-source-pair audit covers
+  117 sources / 234 renders / 173 copies / 702 inherited audits with
+  changed_runtime_inverses=5. The E carrier schedule completes on the
+  unchanged c62 frozen plan 5fa734bc: 96/96 draws (48 configurations x 2
+  threads, 24 builds), 8 live draws with 25 tests each, 6 AST audits, 96
+  exact two-owner snapshots, witness_bytes_exact=3 runtime_inverses=3. The
+  typed construction group passes 96/96 draws on two forms and two stores
+  (core::Ledger.frames, core::Pair.tokens) with 24 builds and 6 AST audits,
+  existing_tests=14 added_test=1, full_73_form_class=false. Every prior
+  draw and matrix is re-earned: lookup 160, retirement 144, carrier 80,
+  append 96, handoff 96, append-namespace 96, install-forms 40,
+  confirmed-carrier 96, publication-receiver 64, main 848 (route-family
+  1,078 children), J 72, components 48, scope 640, calibration 172 (258
+  children) with 86/86 source audits, runtime 8 commands, placement 8
+  commands at 1433/0/5/2 same_binary, the bodies 578/598/496/53/31/210/374,
+  and the 974/974 frozen-assertion audit with zero waivers (reproduced with
+  my own build of the auditor, which fires at exit 101 on a one-byte
+  mutation). The new typed retirement-receiver group (16 configurations x 2
+  threads = 32 draws; cases Actual / Missing / ForeignType / OtherLive; two
+  forms) is declared at 03:00:44.629 and built at 03:00:48.591; its first
+  configuration (P0278/form-1, witness, armed, hash) returns 18 passed / 1
+  failed against [19,0,0,0] at eight and one threads on the same binary
+  fa642405 in foreign_live_key_preserves_actual_outer: abandoning physical
+  adapter B with A's live key at core::forget_frame marks A's operation
+  retired, invalidates A's construction record and removes A's frame
+  binding (outer_after=[true,false,false,false,true]), so A's next resume
+  records zero hits against the required one. The three other cases and
+  all 15 prior controls pass; the group is sealed (17 files, repairs=0),
+  candidate_repair=false and expectation_repair=false, and 30 of 32 draws
+  are NOT_RUN. The ruling
+  (Q63-typed-frame-retirement-actual-receiver-authentication): the consumer
+  must authenticate the proposal against the actual abandoning adapter's
+  independently recorded identity before any effect, so a live key of
+  another adapter of the same concrete type supplies no authority; the
+  repair lives in the probe entry or the registered edit set, carrying the
+  actual adapter identity alongside the proposed key in the shape Q61
+  established for publication, and may not edit the frozen control or its
+  assertions or reclassify a draw. This is the Q35 class one layer deeper,
+  a genuine design-level defect of the scratch consumer model, not an
+  instrument defect and not a production regression. Continuation 64 must
+  repair the typed retirement entry under Q63 and re-earn the full 32-draw
+  schedule (2 executed, 30 outstanding) while keeping the two typed stores
+  and their 96 draws exact, keep the 974/974 assertions, the bodies, the 64
+  publication draws, the 172 calibration draws, both placements, the 96 E
+  draws plus 8 live and the 40/96 install-form and confirmed-carrier draws
+  exact, re-run every matrix on the final source, and then continue the bar
+  from 407/4,422 obligations, 31/134 actors, 4/133 fields and 26 named
+  carrier groups through 134/4,422/133, the 151 plans, 94 paths, 188
+  postimages and the 151-cell schema. Allocation: continuation 63 charged
+  5,467.828513560977 s (3,437.8285135609767 s measured over 3,540 receipts
+  + 1,770.0 s bookkeeping + 200.0 s inspections/setup + 60 s reserve) of
+  13,460.933566659976 s, leaving 7,993.105053099 s; CM4 stood at
+  87,039.06643334002 of 100,500 s and now stands at 92,506.894946901 s.
+  This gate allocates a fresh 12,000 s focused envelope from the project
+  stage reserve: continuation 64 runs under 19,993.105053099 s, CM4's share
+  becomes 112,500 s, the stage reserve 81,000 s, and 743-746 keep their
+  40,500 s unchanged. The 6,000 s workspace stays at 0/6,000, and the
+  1,440 s verification and second 6,000 s workspace stay held. The stopped
+  scene is 21,885 files / 12,385,779,711 bytes with all 21,885 frozen pairs
+  rehashed zero missing and zero bad; the c62 tree (22,107 files)
+  authenticates exact and the 405 director transients are unchanged. Entry
+  authenticates 5,400 maintained / 590 design / 590,836 accepted files with
+  inherited_document_drifts=3 (my three committed documents at HEAD
+  c4b1306f) and production_changes=0. Continuation 64 repairs the typed
+  retirement entry under the receiver-authentication contract, re-earns the
+  32-draw schedule and the matrices, and continues the bar; no campaign,
+  epoch, acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0
+  Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10
+  blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the

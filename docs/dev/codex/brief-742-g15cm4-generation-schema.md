@@ -6732,3 +6732,247 @@ compacted 72; commit with `git add` and `git commit` in separate calls,
 ending `Co-Authored-By: Claude Code <noreply@anthropic.com>`; push; clean-temp
 dry-run then `--apply`; the dispatch log archived; memory updated; then
 continuation 63 dispatched.
+
+## Continuation 63 ruling (director) — the Q62 registered runtime projection type is repaired with a type-identical redirect and all 40 builds pass, the E carrier schedule completes at 96/96 draws plus 8 live, the typed construction group passes 96/96 on two forms and every prior draw and matrix is re-earned — and then the new typed retirement-receiver group stops under Q28: physically abandoning adapter B with A's live key transported to `core::forget_frame` retires A's operation, invalidates A's construction record and removes A's frame binding, so A's next resume records zero hits against the required one. The ruling is `Q63-typed-frame-retirement-actual-receiver-authentication` (the Q35 class one layer deeper: a genuine design-level defect of the scratch consumer model, not an instrument defect, not a production regression); the projection repair, the E schedule, the typed construction group and every re-earned matrix earn focused scratch credit while the retirement-receiver claim and the complete bar earn nothing, and this gate allocates a fresh 12,000 s envelope so continuation 64 runs under 19,993.105053099 s.
+
+## Run record
+
+Continuation 63 ran `cdx` as unit `brief-742-cdx-20261119-021017-550950`:
+rc 0, peak 6,212,231,168 B, oom 0 / oom_kill 0. The log is 2,427,328 B,
+sha256 `9089dfe75d57cf0c3c496f24999e01331f690191a11e0b1c899d8a33b3c82863`;
+the worker header reads `model: gpt-6.2-astra`, `reasoning effort: max`,
+sandbox `workspace-write`. The report is a STOP: 43,790 changes (43,788
+added, 2 modified `PROGRESS.md`/`report.json`, 0 deleted, every path under
+`.temp/brief-742`), 39 PASS / 2 FAIL / 8 NA, 5,801 citations, 0 questions,
+2 deviations, 0 disclosures; no git or network command ran and no
+`.git-attempts` exists.
+
+## Delivered and accepted with focused scratch credit
+
+**The Q62 repair is delivered.** Registered reference R02277 no longer
+changes the projection's type: the runtime render now redirects to
+`source_completion_owner(issued: Option<IssuedSource>) -> JoinOwner`,
+type-identical to `join_owner` (same argument type, result type, borrow
+shape and generic arity), pinned by `const _: fn(Option<IssuedSource>) ->
+JoinOwner = join_owner;`, `... = source_completion_owner;` and `const _:
+fn(&JoinOwner, &Result<(), crate::EvalError>) = join_result::<()>;`. The
+runtime handle is re-expressed as `completion_handle::JoinOwner(ScopeId,
+JoinIdentity, Option<CapturedEntry>)` behind the same `JoinOwner` name and
+constructor call sites (`old_constructor_unchanged=true`), where
+`JoinIdentity` derefs to the registered `scope_object::Object` and carries
+`None` only for the inactive handle; `Drop` and `join_result_kind` early-
+return only when `!ENABLED` and the registration is absent, so the disabled
+render acquires no scope, object or ticket while the armed render calls the
+unchanged production constructor. All 40 builds pass (5 bases × 2 roles ×
+2 arms × 2 modes): bases 083, 098, 099, 100 and 101 as runtime and witness
+in armed and disabled, hash and nohash. The five witness renders are byte-
+exact to c62 (`73b613a1…`, `65aefe0b…`, `6346dbcd…`, `077cc8b9…`,
+`3e0fea66…`); the runtime renders carry `2230ce02…`, `aeba5d00…`,
+`1049a425…`, `96f68d69…`, `5ee32b49…` and build to `916697bd…`,
+`1362a8ae…`, `f8d55e3e…`, `8eb7a339…`, `b4e08da6…` (armed) and
+`f13af276…`, `f6356be1…`, `3d894a4a…`, `cb27fcfd…`, `555523b0…`
+(disabled). The per-base AST audits pass (`original_inputs_return_generics_
+exact`, `producer_body_exact`, `actual_sink_borrow_exact`,
+`disabled_return_before_state`, `destructor_and_sink_restore`,
+`nested_control_single_callee_delta`), the assertion byte audit reads 180
+assertions per base byte-exact with `renderer_manifest_used=false`, and the
+restoration audit passes with `whole_prior_AST_exact=true allowed_changes=13
+issuance_and_absence_checked=true old_constructor_unchanged=true`. The all-
+source-pair audit covers 117 sources, 234 renders, 173 copies and 702
+independent inherited audits with `changed_runtime_inverses=5
+whole_prior_AST_and_bytes_exact=true all_frozen_assertions_exact=true`.
+
+**The E carrier schedule completes.** All 96 draws of the unchanged c62
+frozen plan (`5fa734bc…`) pass at eight and one on 24 builds: 48
+configurations (2 forms × 2 roles × 2 arms × 2 modes × 3 classes) —
+`valid` at `[26,0,0,0]` in every recording configuration and `[1,0,0,25]`
+in the runtime-disabled render, `payload-collapse` and `scope-collapse` at
+their declared rejection counts and exit codes (witness armed/disabled and
+runtime armed reject at 101; runtime disabled keeps `[1,0,0,25]`). The
+eight live draws pass with 25 tests each, the six E AST audits pass
+(`independent_actual_receivers=2 issuer_view_readonly=true
+fixed_source_restored=true frozen_tests=25 added_test=1`), and the
+execution audit reads `draws=96 valid=32 payload_collapse=32 scope_collapse=32
+independent_two_owner_snapshots_exact=96 live_draws=8 AST_audits=6
+frozen_fixed_tests=25 new_own_catches=0`. The frozen-schedule equivalence
+audit reads `configurations=48 draws=96 old_plan_hash=5fa734bc…
+witness_bytes_exact=3 runtime_inverses=3 observer_bytes_exact=true
+fixed_counts_names_exit_selectors_filters_and_order_exact=true`.
+
+**The typed construction group is delivered on two forms.** 96/96 draws at
+eight and one on 24 builds over two forms (P0278/form-1, P0281/form-1), two
+stores (`core::Ledger.frames`, `core::Pair.tokens`) and three variants; the
+declaration is `class=construction_records fields=2 forms=2 roles=2
+variants=3 draws=96 live_hash_identical=8 existing_tests=14 added_test=1
+full_73_form_class=false pre_execution=true`. The six typed AST audits pass
+(`fixed_tests=14`, `physical_arc_and_type=true`,
+`independent_direct_record=true`, `whole_ast_restored=true`), the live
+group is hash-identical across eight draws, and the obligation audit reads
+`actual_source_forms=2 independently_challenged_stores=2 additional_draws=96
+exact_live_draws=8 two_actual_allocations=true
+weak_loses_only_first_owner=true full_73_form_class=false`. The class is
+explicitly partial: the two stores are calibrated on two of 73 forms and
+`not_credited` names the other construction forms and deferred storage.
+
+**Every prior draw and matrix is re-earned on the final source.** Lookup
+160, retirement 144, carrier 80 (16 builds), append 96, handoff 96,
+append-namespace 96, install-forms 40 (4 builds), confirmed-carrier 96
+(16 builds), publication-receiver 64 (8 builds), main 848 (route-family
+driver 1,078 children, 542.733238 s), J 72 (84 children, 34.886544 s),
+components 48 (72 children, 56.884248 s), scope 640 (207.007271 s), the
+calibration 172 draws (258 child commands, 261.909481 s) with 86/86 source
+audits over 43 sources and 86 copies, the runtime driver (8 commands,
+140.109029 s), the placement runtime (8 commands, 138.108107 s) at
+`1433/0/5/2` with `same_binary=true` in both modes, and source-ticket,
+boundary, P0558 and whole-consumers. The frozen bodies stay
+578/598/496/53/31/210/374, the frozen-assertion audit stays 974/974 with
+`whole_order_and_owner_byte_exact=true assertion_waivers=0` (I reproduced
+it with my own build of the auditor and confirmed it fires at exit 101 on a
+one-byte mutation), and the declaration audit reads `variants=42
+controls=374 cells=15708 forced=93 not_forced=15615
+new_installation_cells=1596 unknown=0 firing_variants=38 masked_variants=4
+all_causal_anchors_exact=true whole_byte_inverses=true
+frozen_source_and_control_hashes_exact=true execution_used=false`.
+
+## The stop
+
+The new typed retirement-receiver group is declared at 03:00:44.629 (16
+configurations × 2 thread counts = 32 draws, four cases `Actual`, `Missing`,
+`ForeignType`, `OtherLive`, two forms P0278/form-1 and P0281/form-1, two
+roles, two arms, two modes) and built at 03:00:48.591. Its first
+configuration (P0278/form-1, witness, armed, hash) returns 18 passed and 1
+failed against the declared `[19,0,0,0]` at both eight and one threads on
+the same binary `fa642405a0606ebf7cbcda8a80ad62a406b142dfb38781aa1f96f46c7cae5c60`.
+The failing test is
+`foreign_live_key_preserves_actual_outer`: physically abandoning adapter B
+while transporting A's live key to `core::forget_frame` marks A's operation
+retired, invalidates A's construction record and removes A's frame binding
+(`outer_after=[true,false,false,false,true]` against the required
+`[true,true,true,true,true]`), so A's next resume records zero hits against
+the required one. The other three cases pass (Actual, Missing, ForeignType
+all keep `[true,true,true,true,true]`, first hit one, second hit zero), all
+15 prior controls pass, and the provenance reads
+`only_proposed_retirement_key_changed=true`,
+`complete_prior_AST_and_15_original_tests_exact=true`,
+`actual_B_Arc_and_type_preserved=true`. The group is sealed immediately
+(17 files, `plan_and_runtime_sources_exact=true`,
+`actual_diagnostics_sealed=true`, `repairs=0`); `candidate_repair=false` and
+`expectation_repair=false`; 2 of 32 draws are executed and 30 are NOT_RUN.
+
+## Ruling: `Q63-typed-frame-retirement-actual-receiver-authentication`
+
+At typed-frame retirement the consumer must authenticate the proposal
+against the actual abandoning adapter's independently recorded identity
+before any effect. A proposed key that identifies another live adapter of
+the same concrete frame type supplies no authority: the foreign, missing,
+mixed-type and foreign-live-key proposals must all leave the actual outer
+adapter's operation record, construction record, frame binding, paired
+source token and omission hit untouched. The repair lives in the probe
+entry or the registered edit set of the typed construction consumer — the
+retirement entry must carry the actual adapter's identity (the `Arc` it
+abandons) alongside the proposed key, in the shape Q61 established for
+publication, and compare the proposed key's independently registered
+frame/adapter binding with the actual binding before mutating the ledger; an
+explicit before-effect rejection is the declared allowed outcome. It may
+not edit the frozen control body or its assertions, delete or reclassify a
+draw, or reclassify the failure.
+
+This is a genuine design-level defect of the scratch consumer model — the
+Q35 class one layer deeper (Q35's accepted rule that an actual append may
+retire only its own independently registered receiver's confirmation, not
+yet carried into typed-frame retirement) — not an instrument-validity
+defect, not a production regression and not a reclassification.
+
+The projection repair, the E schedule, the typed construction group, the
+calibration, the audits and every re-earned matrix keep their focused
+scratch credit. The retirement-receiver claim, the complete typed class and
+the complete bar earn nothing.
+
+## Ordered continuation 64
+
+1. Repair the typed-frame retirement entry under Q63 and re-earn the full
+   32-draw retirement-receiver schedule (2 executed, 30 outstanding),
+   preserving the frozen P0278/P0281 control and its declarations and the
+   15 prior controls; keep the two typed-construction stores and their 96
+   draws exact.
+2. Keep the frozen-assertion audit 974/974 with zero waivers, the bodies
+   578/598/496/53/31/210/374, the 64 publication draws, the 172 calibration
+   draws (86/86 source audits), both runtime placements, the 96 E draws
+   plus 8 live, the 40 install-form and 96 confirmed-carrier draws and the
+   five runtime projections at 40 builds exact; re-run every matrix on the
+   final source.
+3. Then continue the bar from 407/4,422 qualified source obligations,
+   31/134 actors, 4/133 fields and 26 named carrier groups: complete
+   134/4,422/133, the 151 plans, the 94 paths, the 188 postimages and the
+   151-cell schema, then the audits, the ordered standing replay,
+   `cargo fmt --check`, both workspace modes and the switched checks. Stop
+   before any group that cannot fit and report the exact remainder.
+
+## Not delivered
+
+The retirement-receiver class has 30/32 draws NOT_RUN and its claim is
+unearned. The complete bar is unexecuted: plans 0/151, emitted paths 0/94,
+postimages 0/188; the schema is unchanged (`f9604852…`, 90 preimages, 180
+postimages, 151 immutable rows); 4,015 obligations outside the named union;
+typed construction is 2 of 73 forms with other construction forms and
+deferred storage not credited; the standing replay and the workspace are
+NOT_RUN (0/6,000); complete-class credit is zero.
+
+## Allocation
+
+Continuation 63 charged 5,467.828513560977 s — 3,437.8285135609767 s
+measured over 3,540 receipts (3,515 command markers with exit and elapsed
+exact and 25 driver records, zero problems) + 1,770.0 s bookkeeping + 200.0
+s conservative inspections/setup + the fixed 60 s reserve — of
+13,460.933566659976 s, leaving 7,993.105053099 s; CM4 stood at
+87,039.06643334002 of 100,500 s and now stands at 92,506.894946901 s.
+
+The remaining 7,993.105053099 s cannot cover the typed retirement repair,
+the 32-draw schedule, the re-earned matrices and the bar. This gate
+allocates a fresh 12,000 s focused envelope from the project's stage
+reserve: continuation 64 runs under 19,993.105053099 s, CM4's share becomes
+112,500 s, the stage reserve 81,000 s, and 743–746 keep their 40,500 s
+unchanged. The assigned 6,000 s workspace is untouched (0/6,000), and the
+1,440 s verification and second 6,000 s workspace stay held.
+
+## Freeze
+
+The stopped scene is 21,885 files / 12,385,779,711 bytes;
+`originals_and_copies_exact=true`. I rehashed all 21,885 manifest entries
+on both sides with zero missing and zero bad. The c62 tree (22,107 files)
+authenticates exact against its own manifest with zero missing and zero
+bad, the 405 director-replay transients are unchanged with
+`unexplained=0`, and the two `freeze-stop.log` drifts (stages 32/33) are
+unrepaired.
+
+## Entry
+
+Entry authenticates 5,400 maintained / 590 design / 590,836 accepted files
+with `inherited_document_drifts=3` — my three committed documents
+(`TODO.md`, brief-623, brief-742) at HEAD `c4b1306f` — and
+`production_changes=0`. The authentication pins 90 preimages, 180
+postimages, 151 immutable rows and the unchanged schema `f9604852…`.
+
+## What I verified
+
+I verified all 3,540 ledger receipts against their logs (3,515 command
+markers with exit and elapsed exact, 25 driver records, zero problems;
+measured sum exactly 3,437.8285135609767 s); the plain `check` (OK, 5,801
+citations); every declared draw count against its matrix log; the
+974/974 audit with my own build of the auditor, plus a one-byte mutation of
+one assertion that the same build rejects at exit 101; the retirement red
+from my own copy of the fixture at eight and one (18/1/0/0, same binary,
+same assertion); all 40 projection builds declared and my own rebuilds of
+083 runtime (byte-identical `916697bd…`) and all five witnesses; all
+21,885 frozen pairs and the c62 tree; entry; and the budget arithmetic
+exactly.
+
+## Process
+
+`.temp/director/ruling-c63.md`; brief-742 appended (`## Continuation 63
+ruling (director)`), brief-623 appended (`### Continuation 151`), TODO's
+G15-CM4 block extended; state.md rebuilt from bullet 76 + 75 + 74 +
+compacted 73; commit with `git add` and `git commit` in separate calls,
+ending `Co-Authored-By: Claude Code <noreply@anthropic.com>`; push;
+clean-temp dry-run then `--apply`; the dispatch log archived; memory
+updated; then continuation 64 dispatched.
