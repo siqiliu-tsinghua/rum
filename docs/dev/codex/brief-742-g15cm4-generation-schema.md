@@ -3738,3 +3738,235 @@ workspace envelope, reusing only by exact hash identity and repairing no
 frozen tree, production or maintained source. If a required group cannot fit,
 stop before starting it and report the exact remainder. No campaign, epoch,
 acceptance or CM5.
+
+## Continuation 51 ruling (director) — continuation 51 delivers the 114-source / 170-copy propagation, the 848-run / 230-build family group, the three J routes, the 48 component draws and the 640 fresh scope draws (with 400 unchanged raw draws reused only by exact hash identity), and then stops under Q28 when the new 450-control disabled-entry fixture fails exactly its four additive held-borrow controls at eight and one on one binary: the four public lookups borrow the TLS ledger before any `ENABLED` check, violating the c49 disabled invariant as written; the repair is four guards, proved in a director copy to yield 450/0/0/0; the delivered evidence is accepted with focused source-route credit only, the complete bar remains unexecuted, and continuation 52 runs under the remaining 14,070.369583264994 s.
+
+Continuation 51 propagated the accepted c50 append boundary/private-core split
+to the 114 listed sources and their 170 copies, re-ran the 848-run / 230-build
+family group that the c50 envelope could not hold, added the three copied J
+source routes with 72 draws, re-established the 48 component draws and the 640
+fresh scope draws (with 400 unchanged raw draws reused only by exact hash
+identity), and then stopped under Q28 when four additive held-borrow controls
+in the new 450-control disabled-entry fixture failed at eight and one thread on
+one binary. The stop is compliant: the fixture is a compiled candidate, its
+declared expectation was 450/0/0/0, and the observed 446/4/0/0 is exactly the
+four new controls, reproduced by me from a director copy with a causal
+four-guard repair in a copy yielding 450/0/0/0. The finding is real and is
+ruled an instrument-surface inertness defect, not a production regression and
+not a semantic catch. The delivered propagation and matrices are accepted with
+focused source-route credit only. The complete bar is not delivered and earns
+nothing. Continuation 52 must repair the four lookups under a class-wide
+public-surface enumeration, re-render and re-run the affected evidence, and
+then finish the bar under the remaining 14,070.369583264994 s.
+
+### 1. Run record
+
+`cdx` ran as unit `brief-742-cdx-20261118-111832-1277497`, rc 0, peak
+3,606,089,728 B, oom 0 / oom_kill 0; log 1,837,004 B, sha256
+`9b4d8488de79447d299e900890556b72211b6afad8017373615875f1209a4181`. The
+report is STOP: 9,621 changes (9,619 added, 2 modified — `PROGRESS.md` and
+`report.json` — 0 deleted), all under `.temp/brief-742`; 22 checks (17 PASS, 1
+FLAGGED, 2 FAIL, 2 NA), 2,526 citations verified, 0 questions, 1 deviation, 0
+disclosures. The expanded `report-all-command-runs.json` carries all 2,066
+child runs and validates at 6,326 citations. No git command ran (0 executed
+git calls, no `.git-attempts`), no network. I scanned the ledger myself: 2,066
+focused receipts, no `CARGO_TARGET_DIR` in any command or environment, no
+codegen or optimization override, every cargo command the ledger holds is
+offline/locked at `-j8`, all cwd values are the repo root, zero git and zero
+network commands, the 16 G/no-swap scope with oom 0. The arithmetic is exact:
+1,233.2739757539966 s measured + 1,033.0 s bookkeeping (2,066 × 0.5) + 60 s
+reserve = 2,326.2739757539966 s charged of the 16,396.6435590189917 s
+envelope, leaving 14,070.369583264994 s; CM4's share stands at
+46,429.630416735 of 60,500 s; workspace 0 of 6,000; the 1,440 s verification
+and the second 6,000 s workspace stay held; no envelope overrun, and the stop
+is a candidate failure, not an allocation stop.
+
+### 2. Accepted: the 114-source / 170-copy propagation and its audits
+
+The c51 plan reuses the accepted c50 declaration by exact hash identity
+(`disabled-v3-edits.json`, `39403a0d…`; the plan's eight edits are byte-equal
+to the c50 `helper_edits`) and renders 114 sources with 170 copies, 8
+registered edits per copy, byte inverse exact, fixed control bodies unchanged,
+0 unknown source matches, 0 expectation changes. The independent auditor
+(`22e1f740…`) ran once per source: 114 logs, all exit 0, and the driver's PASS
+line reports whole-AST restoration, fixed controls and attributes exact,
+source boundaries matching the accepted c50 pins, and 0 unknown edits. I
+re-ran five sampled audits (sources 1, 40, 57, 80, 114) from the frozen
+commands and reproduced every PASS line, and I confirmed the declaration hash
+against the c50 file.
+
+### 3. Accepted: the 848-run family group, the J routes, the components and the scope draws
+
+The main family is 848 runs over 230 distinct builds, declared before
+execution (plan and freeze at 11:23:58, first audit at 11:24:16, first build
+at 11:25:42), and every run matches its declared counts, exit and failure set:
+26,964 passed / 232 deliberate rejections / 0 ignored / 0 filtered / 0
+unexpected. The three copied J source routes add 72 runs (2,280 passed) with
+six audited actual append methods; I re-ran all three v2 whole-file audits and
+reproduced their PASS lines, and the first auditor's retained failure is
+settled as construction: it matched the unchanged `runtime::real` homonym and
+rejected the reference body, while the v2 auditor qualifies `runtime::actual`,
+restores only its two declared append bodies from the accepted c50 pins, and
+compares the whole file including the reference; the failed attempt, log and
+candidate stay frozen. The component matrix re-ran 24 items / 48 draws exact
+at 494/0, 470/24, 64/0, 60/4, 34/0 and 32/2. The scope matrix re-ran 320 fresh
+items / 640 draws exact, and the 200 reused items / 400 runs are the accepted
+c47 raw draws whose source and binary hashes still match exactly; the total
+decomposes exactly to 73,880/8,200/0/261,840 (fresh 68,480/7,600/236,640 plus
+reused 5,400/600/25,200). With the J runs, the source-family total is 920
+draws at 29,244/232/0/0. I re-ran all four drivers myself from copies under
+`.temp/director/c51-{route,join,components,scope}`: the route driver
+reproduced all 12 group PASS lines and 26,964/232/0/0 over 848 runs and 230
+builds (471.34 s), the join driver reproduced 72 runs / 2,280 passed, the
+component driver reproduced 24 items / 48 exact draws, and the scope driver
+reproduced 320 items / 640 exact draws. The calibration declarations are
+preserved: 42 × 374
+= 15,708 cells, 93 forced, 15,615 not-forced, zero unknown; the 172 new
+calibration draws did not run and are not claimed.
+
+### 4. Compliance of the Q28 stop
+
+The fixture declared `counts: [450, 0, 0, 0]` and `failures: []` in
+`disabled-entry-plan.json`, frozen at 11:49:23.921 together with the candidate
+`disabled-entry-controls.rs` (`555ce84c…`); the build ran at 11:49:50.549 and
+the two runs at 11:49:50.836 (t8) and 11:49:51.305 (t1) on the one binary
+`07d5dea4…`, both exit 101 with 446 passed / 4 failed / 0 ignored / 0
+filtered and exactly the four `disabled_lookup_entry_contract` names, each
+log carrying four `already mutably borrowed: BorrowError` panics. I copied the
+frozen candidate into `.temp/director/gate-c51/repro.rs`, rebuilt it with the
+same rustc invocation and the same maintained `librum_core` rlib, and
+reproduced 446/4 at eight and one on my binary with the same four names; the
+nohash draw is correctly NOT_RUN after the same-binary stop, no candidate or
+expectation was repaired, and the stopped scene is frozen. The AST audit is
+non-vacuous: it parses the c50 base and the candidate, asserts 446 vs 450
+tests, proves every base test's token stream is present unchanged, then erases
+the added module and asserts the whole-file token stream equals the base
+exactly, with `helper_edits=0`.
+
+### 5. The finding: the four disabled lookups touch TLS before any check
+
+The four failing controls are a valid detector, not an artifact. Each runs in
+a fresh thread, asserts `!ENABLED`, holds the thread-local ledger's
+`borrow_mut()` live across the call and asserts the lookup returns false; a
+disabled entry that returns before any state cannot panic, while one that
+borrows the same TLS cell panics. The four functions in the unchanged c50
+helper are:
+
+- `pub fn ordinary(row: &str) -> bool { LEDGER.with(|c| eligible(&c.borrow(), row, true).is_some()) }` (`cm740_probe.rs:455`)
+- `pub fn frame(row: &str) -> bool { LEDGER.with(|c| eligible(&c.borrow(), row, false).is_some()) }` (`:456`)
+- `pub fn initial(row: &str) -> bool { LEDGER.with(|c| initial_token(&c.borrow(), row).is_some()) }` (`:939`)
+- `pub fn ordinary_request(row: &str) -> bool { LEDGER.with(|c| request_token(&c.borrow(), row).is_some()) }` (`:1002`)
+
+None has an `ENABLED` guard, so each borrows the TLS ledger before checking
+the compile-time flag. That violates the c49 ruling's disabled invariant as
+written in brief-742 lines 3442–3444 — "when `ENABLED=false`, every probe
+entry point returns before any state — no minted `Rc`, no TLS, no
+bookkeeping, no assertion" — and the c51 plan declared and froze that reading
+before execution. The repair is causal and minimal: adding `if !ENABLED {
+return false; }` before the borrow in each function, in a director copy,
+turns the same fixture into 450 passed / 0 failed / 0 ignored / 0 filtered at
+eight and one. The finding is classified as a scratch instrument-surface
+inertness defect: the four are declared public lookups of the 134-boundary
+consumer surface (59 declared duties over 40 rows and 40 forms, anchored at
+their definitions by `lookup-obligations.json`), my scans of the copied runtime
+tree and the maintained tree find zero external calls to the four (only the
+probe's own fixtures call them), and no maintained code calls them, so this is
+not a production regression, not a default-path cost in the maintained
+runtime, and not a semantic catch; the c50 credit covered only the append
+boundaries and is not extended. The disabled full-runtime arm was
+not re-run after the stop, and the four lookups' inertness is the one open
+contract item.
+
+### 6. Not delivered
+
+The complete bar remains unexecuted and earns nothing: the full
+134-boundary/4,422-obligation/133-carrier execution closure with the
+affected-source per-form matrices and every moved-duty caller, the 151-plan
+generator with duplicate/overlap/unknown-anchor rejection, the two fresh
+94-target/188-postimage roots, the six-column 94-row schema with all 151
+`source_schema` cells, the byte/AST/omission and disabled-parity audits, the
+ordered standing replay, `cargo fmt --check`, both workspace modes with the
+seven skips and the unfiltered `suspension_oracle`/`typed_slot_census` at
+failed=0/filtered=0, and the switched same-binary checks. Standing replay and
+workspace are NOT_RUN; workspace spent 0 of 6,000 s; complete plans 0 of 151;
+complete calibration runs 0 of 172; emitted overlay paths 0; `new_source_schema=null`
+and `complete_plan_hash=null`. The schema is unchanged (`f9604852…`), all 94
+admitted paths are `not_emitted`, and the 90 preimages / 180 postimages / 151
+cells authenticate. No campaign, epoch, acceptance, settlement or CM5.
+
+### 7. Allocation and continuity
+
+No new allocation is made. Continuation 52 runs under continuation 51's
+remaining focused envelope of 14,070.369583264994 s and the assigned 6,000 s
+workspace envelope (spent 0); CM4's share stays 60,500 s with
+46,429.630416735 s committed, 743–746 retain their 40,500 s, and the 1,440 s
+verification and the second 6,000 s workspace stay held. This is the carried
+pool's remainder at a new gate, not an extension; the bar, the stop-loss and
+the authorization limits are unchanged.
+
+### 8. Freeze and entry
+
+The stopped scene is 4,798 files / 3,212,799,257 bytes in
+`disabled-lookup-stop/`, frozen after the stop at 11:54:55 with the failed
+controls, logs, candidate and binaries retained; I rehashed both sides of
+every entry (9,596 hashes) with zero bad or missing. The entry authenticates
+5,400 maintained, 590 design and 219,053 accepted files. I rehashed all 590
+design and 219,053 accepted hashes — 219,643 files, 100,179,110,800 bytes —
+with zero differences and zero missing, recomputed the 5,400 maintained
+hashes (121,623,089 bytes, zero bad), and verified that the only maintained
+deltas against the c50 entry are the three inherited documents I committed in
+`4c7c7f6f` — `TODO.md`, brief-623 and brief-742 — whose working-tree hashes
+equal their HEAD blobs. The accepted carry is exact: all 182,126 c50 accepted
+hashes are unchanged and 36,927 files are new, which is every file under
+`continuation-50` (the 36,928th added path is the excluded top-level
+`report-continuation-50.json`, outside the accepted categories by
+construction). The prior scenes hold 22 trees / 99,725 entries; my sample of
+400 entries each from the c50 and c48 manifests is exact, the two known open
+`freeze-stop.log` drifts remain open and unrepaired, and the 116
+director-regenerated transients are unchanged (108 missing, 0 changed,
+unexplained 0). The three inherited document drifts are at their HEAD blobs;
+the pre-existing layer is unchanged at HEAD `4c7c7f6f` (23 porcelain
+entries); the maintained test build's three dead-code warnings are
+pre-existing and the inherited `unused_must_use` at `cm740_probe.rs:1319`
+remains scratch, to be settled by the complete overlay's audit.
+
+### 9. Continuation 52 ordered
+
+1. Class-wide correction, fresh inputs, no repair of any frozen scene: from
+   the accepted c50 helper, produce a new candidate whose registered edits add
+   the disabled early return to `ordinary`, `frame`, `initial` and
+   `ordinary_request` before any TLS or bookkeeping, and enumerate every
+   public item of the probe module with a per-item classification and anchor —
+   source-route entry (must return before all state when disabled, with a
+   held-borrow control), declared lookup consumer (same requirement), fixture
+   scaffolding (exempt only with an anchor proving it is called solely by
+   probe-aware fixtures), or internal/private — with zero unknown. The four
+   lookups are repaired, not reclassified; if the enumeration finds any other
+   unguarded entry of the same class, it is repaired the same way. No
+   maintained test, scanner, frozen tree or accepted control is edited, and no
+   maintained or production source changes.
+2. Re-render and audit: propagate the corrected helper to the 114 sources and
+   170 copies and the three J source routes with the same registered edits;
+   audit every render independently (byte inverse and whole AST, fixed bodies
+   and attributes exact); the 446 inherited controls plus the four new ones
+   must be 450/0/0/0 in hash and nohash at eight and one on the same binary,
+   with the nohash draw now run.
+3. Re-run the affected evidence — the 848 main draws / 230 builds, the 72 J
+   draws, the 48 component draws and the 640 fresh scope draws — after
+   establishing by exact hash identity which sources the correction changed,
+   and reuse the unchanged 400 raw draws only by exact hash identity, with
+   every declaration frozen before execution and every expected set derived
+   from the accepted declarations, never from observed execution.
+4. Then complete the bar: the full 134/4,422/133 closure with the
+   affected-source per-form matrices and every moved-duty caller, the 151-plan
+   generator with duplicate/overlap/unknown-anchor rejection, the two fresh
+   94-target/188-postimage roots, the six-column 94-row schema with all 151
+   `source_schema` cells, the byte/AST/omission and disabled-parity audits,
+   the ordered standing replay, `cargo fmt --check`, both workspace modes with
+   the seven skips and the unfiltered `suspension_oracle`/`typed_slot_census`
+   at failed=0/filtered=0, and the switched same-binary checks.
+5. Under the remaining 14,070.369583264994 s focused envelope and the assigned
+   6,000 s workspace envelope, repairing no frozen tree, production or
+   maintained source, and stopping before starting any required group that
+   cannot fit and reporting the exact remainder. No campaign, epoch,
+   acceptance or CM5.

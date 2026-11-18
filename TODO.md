@@ -1387,6 +1387,41 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   switched checks under 16,396.6435590189917 s, reusing only by
   exact hash identity and repairing no frozen tree, production or
   maintained source.
+  Run: 9,621 `.temp` changes, 17 PASS / 1 FLAGGED / 2 FAIL / 2 NA,
+  2,326.2739757539966 s charged of the 16,396.6435590189917 s envelope,
+  leaving 14,070.369583264994 s (CM4 at 46,429.630416735 of 60,500 s;
+  workspace 0/6,000; the 1,440 s verification and second 6,000 s
+  workspace held; no new allocation). Continuation 51 delivers the
+  114-source / 170-copy propagation (the c50 eight-edit declaration
+  reused by exact hash identity; 114 independent audits exit 0; five
+  sampled reruns exact), the 848-run / 230-build family group
+  (26,964/232/0/0, declared before execution), the three J routes
+  (72 runs, 2,280 passed, three v2 whole-file audits reproduced), the
+  48 component draws and the 640 fresh scope draws with 400 reused raw
+  draws by exact hash identity, decomposing to 73,880/8,200/0/261,840.
+  The new 450-control disabled-entry fixture then fails its four
+  additive held-borrow controls at 8/1 on one binary: `ordinary`,
+  `frame`, `initial` and `ordinary_request` borrow the TLS ledger
+  before any `ENABLED` check, violating the c49 disabled invariant
+  (brief lines 3442–3444). I reproduced 446/4 at 8/1 from a director
+  rebuild, and the four `if !ENABLED { return false; }` guards in a
+  copy give 450/0/0/0; the finding is a scratch instrument-surface
+  defect, not production, not a semantic catch. The complete bar is
+  not delivered and earns nothing (closure, generator, two
+  94-target/188-postimage roots, schema 151 cells, audits, replay,
+  fmt, both workspace modes, switched checks; standing replay and
+  workspace NOT_RUN; schema `f9604852…` unchanged, 94 paths
+  `not_emitted`, 90/180 and 151 exact). The stopped scene is 4,798
+  files / 3,212,799,257 bytes exact both sides; entry 219,643
+  design/accepted and 5,400 maintained hashes zero-bad; the 22 prior
+  trees / 99,725 entries hold with the two known log drifts and 116
+  director transients (108 missing, 0 changed) unrepaired.
+  Continuation 52 repairs the four lookups under a class-wide public
+  enumeration, re-renders and re-audits the 114/170 and three J
+  routes, re-runs the affected 848/72/48/640 draws, then completes the
+  bar under 14,070.369583264994 s, repairing no frozen tree,
+  production or maintained source and stopping before any group that
+  cannot fit.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
