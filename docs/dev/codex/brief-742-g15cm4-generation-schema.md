@@ -6323,3 +6323,209 @@ rebuilt; the three documents are committed and pushed; `clean-temp.py`
 runs dry-run then apply (expected to refuse on the dirty `.temp` layer);
 the dispatch log is archived; memory is updated; and continuation 61 is
 dispatched on `gpt-6.2-astra` at effort `max`.
+
+## Continuation 61 ruling (director) — the Q60 frozen-assertion contract is repaired and all 974 frozen assertion-and-owner entries match byte for byte with zero waivers, all 96 append-namespace draws stay exact, the calibration completes green (172/172 draws, 2/2 runtime placements, 86/86 source audits, 374 fixed tests and fixed_assertions_byte_exact), the 15 static falsifiers are rejected, and every prior matrix is re-earned — and then the new publication-receiver class stops under Q28 on its first `EligibleRegistration` draw: P1470/form-1 (witness, armed, hash; source `03f8aa2e…`, 195,445 B; binary `e460b0d6…`) was declared `[1,0,0,28]` and reproduced `[0,1,0,28]` at eight and one, because `omit_evaluation_pass` compares the proposed namespace with the active proof's installation, claims the proof and skips ordinary publication without authenticating the actual publishing queue against the eligible installation's independently registered identity, so a different live same-generation queue records one omission hit and produces neither boundary-taken nor cell-boundary. All 16 counterpart configurations pass in 32 draws at [6,0,0,23], 30 of 64 declared draws are NOT_RUN, and nothing is repaired. The ruling is `Q61-evaluation-publication-receiver-authentication` (the same class as Q54–Q60 one layer deeper, Q35's rule not yet carried into the publication/omission seam, not a production regression); the re-expression, the calibration, the audits, the 96 append-namespace draws and the matrices earn focused scratch credit while the publication consumer claim and the complete bar earn nothing, and this gate makes no new allocation: continuation 62 runs under the remaining 6,589.274375287914 s.
+
+## Run record
+
+Continuation 61 ran `cdx` as unit `brief-742-cdx-20261118-234145-4055512`:
+rc 0, peak 2,572,500,992 B, oom 0 / oom_kill 0. The log is 2,228,821 B,
+sha256 `a48d7d2acf409780fff8a504bb6648573a837f9dc3899f52d3142699ebed574c`;
+the worker header reads `model: gpt-6.2-astra`, `reasoning effort: max`,
+sandbox `workspace-write`. The report is a STOP: 43,854 changes (43,852
+added, 2 modified `PROGRESS.md`/`report.json`, 0 deleted, every path under
+`.temp/brief-742`), 36 PASS / 2 FLAGGED / 2 FAIL / 8 NA, 5,267 citations,
+0 questions, 2 deviations, 0 disclosures, no git or network command and no
+`.git-attempts`.
+
+## Delivered and accepted with focused scratch credit
+
+**The Q60 repair is delivered.** The receiver binding now lives in a
+separate `receivers: BTreeMap<ProofId, AppendReceiver>` side table: the
+`InstalledRecord` struct and its insertion assertion are byte-identical to
+the accepted source, `source_install` takes `impl Into<ReceiverRegistration>`
+and writes the optional receiver after the unchanged assertion, and
+`receiver_installation` filters the immutable registration table by that
+side table. The frozen literal auditor passes at eight and one with
+`frozen_assertions=974 whole_order_and_owner_byte_exact=true
+assertion_waivers=0` — I reproduced both runs from a director copy outside
+the scene — and all 96 append-namespace draws remain exact. The former
+P0267 red is still green in my replay at eight and one (`hits=1
+expected_hits=1`, the outer installation's registration, source, index,
+payload and confirmation all preserved).
+
+**The calibration is complete and green.** 172/172 draws and 2/2 runtime
+placements pass; the calibration driver runs 258 child commands in
+292.147779 s. The calibration source audits pass **86/86** over 43 sources
+and 86 copies with `whole_AST_restoration=true`,
+`fixed_controls_attributes_exact=true` and `fixed_assertions_byte_exact=true`;
+the receiver AST audits pass for both copies (`fixed_tests=374`,
+`independent_registration=true`, `actual_receiving_queue=true`,
+`nonce_before_reverse=true`, `retirement_by_nonce=true`,
+`unbound_supplies_no_authority=true`, `original_guards_exact=true`,
+`entire_prior_AST_restored=true`), and the 15 one-node static falsifiers
+are each rejected with exit 101 at the declared obligation.
+
+**Every matrix is re-earned** on the re-expressed source: lookup 160,
+retirement 144, carrier 80, append 96, handoff 96, append-namespace 96,
+main 848 (route-family driver 1,078 children, 534.904401 s), J 72
+(84 children), components 48, scope 640, install-forms 40,
+confirmed-carrier 96, source-ticket, boundary, P0558, whole-consumers, the
+runtime driver (8 commands) and the placement runtime (8 commands). The
+draw-closure line records `completed_calibration_draws=172/172
+runtime_placements=2/2 source_duty_index=134/4422/133` over 21
+authenticated groups and 702 pair audits.
+
+**The new publication-receiver class is declared and frozen before
+execution** (32 items, 64 declared draws, groups `counterparts` and
+`eligible_registration`, `pre_execution=true`, frozen at 00:25:29 before
+its 00:32:43 builds). All 16 counterpart configurations pass in 32 draws at
+`[6,0,0,23]` with boundary-taken and cell-boundary and zero hits, the 40
+installation draws and 96 confirmation draws pass, and then the first
+`eligible_registration` draw stops the run.
+
+## The stop
+
+P1470/form-1, witness, armed/hash. The observation is
+`CM742C60 PUBLICATION RECEIVER row=P1470 change=EligibleRegistration
+generation=2 actual_foreign=true registry_exact=true returned=true
+hits_before=0 hits_after=1 expected_hits_after=0 new_events=[]`; it was
+declared `[1,0,0,28]` and reproduced `[0,1,0,28]` at eight and one on the
+one binary `e460b0d6…` (source `03f8aa2e…`, 195,445 B; plan `d63507e1…`,
+31,318 B; freeze `1fc80558…`). I reproduced the red from a director copy
+outside the scene at eight and one: exit 101, the same observation line,
+`0 passed; 1 failed; 28 filtered`.
+
+The two live queues have distinct registered roots, epochs and controls.
+The actual publishing queue is the other live same-generation queue; only
+its proposed namespace argument changes to the eligible queue's namespace.
+`omit_evaluation_pass` compares `Some(proof.installed.namespace) ==
+namespace`, authenticates the proof and claims it, then removes the
+evaluation and increments `state.hits` while skipping ordinary boundary
+publication. It never authenticates the actual publishing queue against the
+eligible installation's independently registered receiver, so the foreign
+call returns `true`, the omission count rises from 0 to 1, and the
+`boundary-taken` and `cell-boundary` events never occur. The six
+counterpart cases (`Original`, `Identical`, `Absent`, `OtherRoot`,
+`UnknownEpoch`, `OtherControl`) all produce boundary-taken and
+cell-boundary with zero hits, so the fixture is non-vacuous. Thirty of 64
+declared draws are NOT_RUN; `candidate_repair=false` and
+`expectation_repair=false`.
+
+## Ruling: `Q61-evaluation-publication-receiver-authentication`
+
+The finding is the same class as Q54–Q60 one layer deeper: the evaluation
+publication/omission seam authenticates the proposed namespace against the
+active proof's installation but not the actual publishing queue against the
+eligible installation's independently registered identity. Q35's accepted
+rule — an actual queue may omit only its own independently registered
+installation's publication, and every unrelated live queue keeps its
+ordinary publication — has not been carried into this seam. It is a genuine
+design-level defect of the scratch consumer model, not a production
+regression and not a reclassification. The re-expression under the frozen
+assertion contract, the calibration, the audits, the 96 append-namespace
+draws and the matrices earn focused scratch credit; the publication
+consumer claim and the complete bar earn nothing.
+
+## Ordered continuation 62
+
+1. Complete the zero-unknown inventory of every evaluation-pass
+   publication and omission seam: `omit_evaluation_pass`,
+   `publication_receiver`, `State.evaluation`, `State.current_evaluation_scopes`,
+   `claim`, `authenticate(proof, SourceEdge::EvaluationReturn)`,
+   `pending_construction`, `producer_owner`, `state.hits`, the
+   `boundary-taken` and `cell-boundary` events, and every consumer, in both
+   witness and runtime renders, both feature modes and both arms, over the
+   six counterpart cases and the `EligibleRegistration` control.
+2. Authenticate the actual publishing receiver against the eligible
+   installation's independently registered identity before claiming the
+   proof or skipping ordinary publication, so a foreign, mixed, absent or
+   unknown receiver supplies no authority and every unrelated live queue
+   keeps its own ordinary boundary publication with zero omission hits.
+3. Make the frozen publication-receiver control the acceptance: all 64
+   draws (34 executed, 30 outstanding), the 16 counterpart configurations
+   and the 16 `eligible_registration` configurations, while the 160 lookup,
+   144 retirement, 80 carrier, 96 append, 96 handoff, 96 append-namespace,
+   40 install-forms, 96 confirmed-carrier draws, the 172 calibration draws,
+   the 2 runtime placements, the frozen-assertion audit (974/974, zero
+   waivers) and the 578/598/496/53/31/210/374 bodies stay exact.
+4. Re-run every matrix on the final source.
+5. Complete the bar under the envelope: the 134/4,422/133 execution
+   closure, 151 plans, the two 94-path/188-postimage roots, schema emission
+   with 151 cells, the complete-overlay audits, the ordered standing
+   replay, `cargo fmt --check`, both workspace modes with the seven skips
+   and the unfiltered gates, and the switched same-binary checks. Stop
+   before any group that cannot fit and report the exact remainder; repair
+   no frozen tree, production or maintained source.
+
+## Not delivered
+
+The publication-receiver group is 34 of 64 draws; 30 are NOT_RUN. The
+complete bar stays unexecuted: the closure is indexed only, plans 0/151,
+emitted 0/94, postimages 0/188, the schema is unchanged (`f9604852…`,
+90 preimages, 180 postimages, 151 immutable rows), the standing replay is
+NOT_RUN and the workspace is NOT_RUN at 0/6,000 s.
+
+## Allocation
+
+Continuation 61 charged 5,123.194645757001 s — 3,266.694645757001 s
+measured from 3,193 receipts (20 driver records and 3,173 command markers,
+zero problems, elapsed sum exactly 3,266.694645757001) + 200.0 s
+conservative inspections/setup + 1,596.5 s bookkeeping + the fixed 60 s
+reporting reserve — of the 11,712.469021044915 s envelope, leaving
+6,589.274375287914 s. CM4 stood at 76,787.53097895508 of 88,500 s and now
+stands at 81,910.72562471208 s.
+
+**No new allocation.** Continuation 62 runs under the remaining
+6,589.274375287914 s. The assigned 6,000 s workspace is untouched
+(0/6,000), and the 1,440 s verification and second 6,000 s workspace stay
+held.
+
+## Freeze
+
+The stopped scene is 21,464 files / 11,514,088,955 bytes in
+`continuation-stop/`; I rehashed all 21,464 frozen copies against the
+manifest with zero missing and zero bad. The c60 tree (6,820 files)
+authenticates exact at entry with `original_drifts=0`; the 405
+director-replay transients are unchanged with `unexplained=0`, and the two
+`freeze-stop.log` drifts (stages 32/33) are unrepaired.
+
+## Entry
+
+Entry authenticates 5,400 maintained / 590 design / 502,754 accepted files
+with `inherited_document_drifts=3` (my three committed documents at HEAD
+`836603e6`) and `production_changes=0`; the authentication pins 90
+preimages, 180 postimages, 151 immutable rows and the unchanged schema
+`f9604852…`. Entry took 424.354056 s.
+
+## What I verified
+
+- All 3,193 ledger receipts against their logs (3,173 command markers with
+  exit and elapsed exactly equal and 20 driver records, zero problems; the
+  measured sum is exactly 3,266.694645757001 s) and the charged arithmetic
+  exactly.
+- The frozen literal audit from a director copy at eight and one: 974/974
+  byte-exact with zero waivers.
+- The P0267 append-namespace green replay from a director copy at eight
+  and one: exit 0, `hits=1 expected_hits=1`, the outer installation
+  preserved.
+- The publication red from a director copy at eight and one: exit 101, the
+  same `EligibleRegistration` observation line and the same 0-passed
+  1-failed result.
+- The 48 declared append-namespace configurations and the 32 publication
+  configurations against their declared counts; the 16 counterpart
+  publication configurations at `[6,0,0,23]`; the first
+  `eligible_registration` stop at `[0,1,0,28]` against `[1,0,0,28]`.
+- All 21,464 frozen copies rehashed (0 missing, 0 bad) and the entry
+  authentication lines (5,400/590/502,754; 90/180/151; no production
+  change).
+- The declaration order: every group's freeze precedes its first build.
+
+## Process
+
+The ruling is written here; the continuation-61 sections are appended to
+brief-742 and brief-623 and the G15-CM4 block in TODO.md; `state.md` is
+rebuilt; the three documents are committed and pushed; `clean-temp.py`
+runs dry-run then apply (expected to refuse on the dirty `.temp` layer);
+the dispatch log is archived; memory is updated; and continuation 62 is
+dispatched on `gpt-6.2-astra` at effort `max`.

@@ -2189,6 +2189,85 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   epoch, acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0
   Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10
   blocked.
+  Continuation 61 is gated (Q28 publication receiver namespace STOP).
+  The Q60 frozen-assertion contract is repaired: the receiver binding now
+  lives in a separate receivers: BTreeMap<ProofId, AppendReceiver> side
+  table; InstalledRecord and its insertion assertion stay byte-identical;
+  source_install takes impl Into<ReceiverRegistration> and writes the
+  optional receiver after the unchanged assertion; receiver_installation
+  filters the immutable registration table by the side table. The frozen
+  literal auditor passes at eight and one with frozen_assertions=974,
+  whole_order_and_owner_byte_exact=true and assertion_waivers=0 (both runs
+  reproduced from a director copy), and all 96 append-namespace draws stay
+  exact; the former P0267 red remains green in my replay (hits=1
+  expected_hits=1, the outer installation preserved). The calibration is
+  complete and green: 172/172 draws and 2/2 runtime placements, 258 child
+  commands in 292.147779 s, 86/86 calibration source audits over 43 sources
+  and 86 copies with whole_AST_restoration, fixed_controls_attributes_exact
+  and fixed_assertions_byte_exact; the receiver AST audits pass for both
+  copies (fixed_tests=374) and the 15 static falsifiers are rejected at exit
+  101. Every matrix is re-earned: lookup 160, retirement 144, carrier 80,
+  append 96, handoff 96, append-namespace 96, main 848 (route-family 1,078
+  children, 534.904401 s), J 72, components 48, scope 640, install-forms
+  40, confirmed-carrier 96, source-ticket, boundary, P0558,
+  whole-consumers, runtime 8 commands and placement 8 commands; the draw
+  closure records completed_calibration_draws=172/172
+  runtime_placements=2/2 over 21 authenticated groups and 702 pair audits.
+  The new publication-receiver class (32 items, 64 declared draws, groups
+  counterparts and eligible_registration, pre_execution=true, frozen at
+  00:25:29 before its 00:32:43 builds) passes all 16 counterpart
+  configurations in 32 draws at [6,0,0,23] with boundary-taken and
+  cell-boundary and zero hits, and the 40 installation and 96 confirmation
+  draws pass; the first eligible_registration draw then stops under Q28:
+  P1470/form-1 (witness, armed, hash; source 03f8aa2e...,
+  195,445 B; binary e460b0d6...) was declared [1,0,0,28] and reproduced
+  [0,1,0,28] at eight and one, with generation=2 actual_foreign=true
+  registry_exact=true returned=true hits_before=0 hits_after=1
+  expected_hits_after=0 new_events=[]. The two live queues have distinct
+  registered roots, epochs and controls; the actual publishing queue is the
+  other live same-generation queue and only its namespace argument changes.
+  omit_evaluation_pass compares Some(proof.installed.namespace) ==
+  namespace, authenticates and claims the proof, removes the evaluation and
+  increments state.hits while skipping ordinary boundary publication,
+  without authenticating the actual publishing queue against the eligible
+  installation's independently registered receiver. Thirty of 64 declared
+  draws are NOT_RUN; candidate_repair=false and expectation_repair=false.
+  The ruling (Q61-evaluation-publication-receiver-authentication) treats
+  the finding as the same class as Q54-Q60 one layer deeper (Q35's rule
+  that an actual queue may omit only its own independently registered
+  installation's publication), not a production regression; the
+  re-expression, the calibration, the audits, the 96 append-namespace
+  draws and the matrices earn focused scratch credit while the publication
+  consumer claim and the complete bar earn nothing. Continuation 62 must
+  complete the zero-unknown inventory of every evaluation-pass publication
+  and omission seam, authenticate the actual publishing receiver against
+  the eligible installation's independently registered identity before
+  claiming the proof or skipping ordinary publication, make the frozen
+  publication-receiver control the acceptance with all 64 draws (34
+  executed, 30 outstanding) while the 160 lookup, 144 retirement, 80
+  carrier, 96 append, 96 handoff, 96 append-namespace, 40 install-forms, 96
+  confirmed-carrier draws, the 172 calibration draws, the 2 runtime
+  placements, the frozen-assertion audit (974/974, zero waivers) and the
+  578/598/496/53/31/210/374 bodies stay exact, re-run every matrix, and
+  then complete the bar. Allocation: continuation 61 charged
+  5,123.194645757001 s (3,266.694645757001 s measured + 200.0 s
+  inspections/setup + 1,596.5 s bookkeeping + 60 s reserve) of
+  11,712.469021044915 s, leaving 6,589.274375287914 s; CM4 stood at
+  76,787.53097895508 of 88,500 s and now stands at 81,910.72562471208 s.
+  **No new allocation**: continuation 62 runs under the remaining
+  6,589.274375287914 s. The 6,000 s workspace stays at 0 of 6,000, and the
+  1,440 s verification and second 6,000 s workspace stay held. Entry
+  authenticates 5,400 maintained / 590 design / 502,754 accepted files with
+  inherited_document_drifts=3 and production_changes=0; the only maintained
+  deltas are my three committed documents at HEAD 836603e6 (same 23
+  porcelain). Continuation 62 repairs the publication receiver
+  authentication under the frozen assertion and calibration contract,
+  completes the bar under 6,589.274375287914 s and the assigned 6,000 s
+  workspace, repairing no frozen tree, production or maintained source and
+  stopping before any group that cannot fit and reporting the exact
+  remainder; no campaign, epoch, acceptance or CM5; pair (45,5,false) Open,
+  C2 118 Residual + 0 Lost, 51 owners and five source duties Open,
+  `CHANGELOG.md` and S10 blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
