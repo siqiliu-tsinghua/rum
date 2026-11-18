@@ -1286,46 +1286,48 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   and the registered omission, recorded with causal anchors in a new
   frozen plan, and continuation 45 executes all 168 runs against it
   and then finishes the complete bar.
-  Run: 932 `.temp` changes, 12 PASS / 1 FLAGGED / 2 FAIL / 2 NA,
-  440.89446853600384 s charged, 8,188.809854282883 s carry (no
-  extension; CM4's share stays 44,500 s with 36,329.01437547007 s
-  committed; 743–746 retain 40,500 s), workspace 0/6,000.
-  Continuation 47 delivered Q43 fully: the adapted modules differ
-  from the frozen c45/c46 originals by one row-derivation line each
-  (`const ROW` → the fixture's own `SELECTED`), the plan was frozen
-  at 05:51:31 before the first build at 05:52:03, the whole-AST
-  audit passes (374 bodies/attributes exact, four row derivations,
-  distinct-owner setup preserved), the complete 374-control fixture
-  is 374/0 in both cfg arms at 8/1 and the omission variant 366/8
-  with exactly the eight installation names, and each of the five
-  forms is 38/0 valid and 30/8 weak in both cfg arms at 8/1; 48 runs
-  at 4,320/192/0/13,440. The core/queue scope component (48 edits at
-  two copies) keeps 374/0 and gives 494/0 with 120 controls and
-  470/24 with exactly the declared 24 names; the raw component (3
-  objects, 13 edits) keeps 63/0 and gives 78/0 with 15 controls and
-  75/3 with the three cross-live names; the host component (3
-  objects, 65 edits) keeps 34/0 and gives 64/0 with 30 controls.
-  The host omission declaration then stops: it declares 58/6 but the
-  same binary reports 60/4 at 8/1 because the retained Q40
-  `guard_source_matches` inside `HostCall::record` rejects the
-  cross-live substitution (guard.0/.1 change, guard.2 keeps the
-  outer Rc) before the first host write, so only the conversion and
-  output cross-live names fire; the two call names are masked. The
-  417-file scene is frozen without repair and the six-name plan
-  stays frozen.
-  Ruling: the corrected host derivation is the four conversion/output
-  names with the two call names classified masked by the retained
-  Q40 check, recorded in a new separately frozen plan before
-  execution and rerun in both cfg arms at 8/1 (60/4 exact); the
-  host-call identity stays required by Q42 and the masking earns no
-  falsifier credit. The final bar states 38 firing variants + four
-  masked limits, plus the masked host-call pair (no credit) and the
-  Q42 firing names (core/queue 24, raw 3, host conversion/output 4).
-  Continuation 48: the corrected host declaration and route closure;
-  the full independent scope AST/omission audits and affected-source
-  per-form matrices; the registration caller migration; the
-  re-rendered 42 variants and the 15,708-cell participation, with all
-  168 runs exact; then the complete bar.
+  Run: 56,021 `.temp` changes, 12 PASS / 2 FLAGGED / 3 FAIL / 2 NA,
+  6,350.574759540948 s charged, 1,838.2350947419345 s carry (CM4's
+  share is 42,679.58913501102 of 44,500 s, leaving the binding
+  1,820.41086498898 s; no extension; 743–746 retain 40,500 s),
+  workspace 0/6,000. Continuation 48 is a worker execution-protocol
+  STOP: five cargo commands set CARGO_TARGET_DIR against the adopted
+  DRAFT-COMMON rule, so they and every dependent run earn no cargo,
+  parity, workspace, generator or fixture credit, and the
+  27,451-file scene is frozen without repair; the optional
+  full-runtime baseline also misdeclares 1440/0/0/0 against the same
+  live binary's 1430/5/5 at 8/1 (three missing copied runners and
+  two known exclusions), with no expected set or fixture repaired.
+  The corrected host declaration is accepted (a new separately
+  frozen 64-entry plan with four forced conversion/output names,
+  sixty not-forced actors and the two masked call names, frozen at
+  06:49:17 before the first build; valid 64/0 and weak 60/4 in both
+  cfg arms at 8/1), with the eight-variant host family (34/0 and
+  32/2), the full scope AST/omission audits (core/queue 10 objects ×
+  two copies, raw 3 × one, host 3 × two), the source-route migration
+  static evidence (337 stage audits over 114 sources, 150 files and
+  1,762 calls with zero unknown, a 46-site order audit rejecting 250
+  corrupted inputs, 48 registration and 72 join runs, and the
+  70-actor 444-control fixture at 444/0 in four draws — no cargo
+  credit), the matrices (920 family records at 29,244/232 and 124
+  raw/paired records at 6,056/124/0/700) and the complete
+  calibration (42 × 374 = 15,708 cells, 93 forced and 15,615
+  not-forced with zero unknown, 1,596 installation cells, the
+  13a22a04… manifest frozen at 08:36:27 before any build, all 172
+  draws exact at 63,956/372/0/0, 38 firing variants plus four
+  masked limits and the masked host-call pair, Q42 firing names
+  core/queue 24, raw 3, host conversion/output 4), plus the
+  scope-form matrix at 1,040 exact runs (73,880/8,200/0/261,840).
+  The complete bar is not executed and earns nothing: the
+  134/4,422/133-carrier closure, the 151-plan generator with
+  rejection, two 94-target/188-postimage roots, the six-column
+  94-row schema with 151 cells, the ordered standing replay, fmt,
+  both workspace modes with the seven skips and the unfiltered
+  gates, and the switched checks all remain open. Continuation 49
+  redoes the five excluded cargo checks in the prescribed
+  environment without CARGO_TARGET_DIR, then finishes the bar under
+  the binding 1,820.41086498898 s, reusing only by exact hash
+  identity.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the

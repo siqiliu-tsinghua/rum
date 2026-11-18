@@ -3061,3 +3061,278 @@ Continuation 48 is ordered. First, mint and separately freeze the corrected host
 The budget is honest. Continuation 47 charged 440.89446853600384 s — the 155 charged receipts sum to 301.74423872899933 s exactly, the bookkeeping is 155 × 0.5 s, the closing receipts measure 0.6502298070045071 s with 1.0 s bookkeeping, so the reserve and closing total 1.6502298070045072 s beyond the recorded sum — of the carried 8,629.704322818887 s, leaving exactly 8,188.809854282883 s, which is continuation 48's focused envelope with no extension. CM4's share stays 44,500 s with 36,329.01437547007 s committed; the stage reserve stays 85,000 s, the assigned 6,000 s workspace envelope stays untouched, the 1,440 s verification envelope and second 6,000 s workspace stay held, and 743–746 retain their 40,500 s unchanged.
 
 The surfaces are preserved. All 932 report changes are under `.temp/brief-742`; the maintained 5,400, design 590 and accepted 76,649 sets authenticate — I rehashed all 5,400 maintained and 590 design files with zero differences, the three inherited document drifts are exactly `TODO.md`, brief-623 and brief-742 at their committed hashes, `production_changes=0` and `maintained_changes=0`. The fifteen earlier frozen trees plus the continuation-44, continuation-45 and continuation-46 trees rehash 29,194 entries with zero bad and exactly the two known open `freeze-stop.log` drifts (c32 and c33; all closed copies exact), and the new 417-entry tree I rehashed in full with originals and copies exact. `f9604852…` is unchanged with `new_source_schema=null` and `complete_plan_hash=null`, all 90 preimages / 180 postimages and the 151 `source_schema` cells authenticate, all 94 admitted paths are `not_emitted` with zero maintained byte delta and zero postimages, the 58 scratch Rust fragments carry exact before/after hashes and 58 content-addressed diffs, and the 155 charged plus two closing receipts, 342 evidence files and artifact hashes authenticate. The pre-existing change layer is unchanged (HEAD `a5afef60`, the same 23 porcelain entries / 32 expanded instances). No campaign, epoch, acceptance or CM5; pair `(45,5,false)` Open with zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open; `CHANGELOG.md` and S10 blocked. Next: continuation 48, then the verification stage, 743–746 and CM5.
+
+## Continuation 48 ruling (director) — continuation 48 is a worker execution-protocol STOP that still delivers and freezes the corrected host declaration, the host route closure, the full scope AST/omission audits, the source-route migration's static evidence, the current matrices and the complete 42-variant calibration, while five `CARGO_TARGET_DIR` commands and every dependent run earn no credit and the complete bar remains unexecuted.
+
+Status: **STOP accepted as a worker execution-protocol violation.** The
+corrected host declaration, the host route closure, the full scope
+AST/omission audits, the source-route migration's static evidence, the
+current matrices and the complete 42-variant calibration are accepted as
+verified. The five `CARGO_TARGET_DIR` commands and every dependent run earn
+no cargo, parity, workspace, generator or fixture credit, and the optional
+full-runtime baseline is admitted as a worker setup/declaration error with no
+gate meaning. The complete bar remains unexecuted and uncounted.
+
+### 1. Run record
+
+`cdx` unit `brief-742-cdx-20261118-064444-769402`, rc 0, peak
+6,425,288,704 B, oom 0 / oom_kill 0; log 14,382,599 B, sha256
+`6790905747b76c4734de62f9ecaee00188a217d9d0f6bc457999a7738638521c`. Report
+STOP, 56,021 changes — 56,019 added, 2 modified (`PROGRESS.md`,
+`report.json`), 0 deleted, every change under `.temp/brief-742` — 12 PASS /
+2 FLAGGED / 3 FAIL / 2 NA, 392,371 citations verified, 0 questions, 3
+deviations, 0 disclosures. `allocation_stop=false`,
+`candidate_control_stop=false`, `calibration_declaration_stop=false`,
+`worker_execution_protocol_stop=true`, `no_envelope_overrun=true`.
+
+The three FAIL are `execution-protocol` (worker), `optional-full-runtime-baseline`
+(worker setup/declaration) and `complete-bar` (not delivered); the two NA are
+`standing-replay` and `workspace-gates` (not run); the two FLAGGED are the
+retained construction attempts and the unadmitted cargo evidence, both
+settled as instrument/protocol facts with no credit. All 56,021 changes are
+under `.temp/brief-742`; the only non-report changes in the tree are the
+pre-existing 32 expanded instances of the unchanged dirty layer (23
+porcelain entries), and HEAD stays `81987da0`.
+
+### 2. The protocol violation is admitted as a worker execution error
+
+The brief's standing-replay and workspace section says: "Use the exact
+DRAFT-COMMON.md commands and script mirror procedure" (brief-742, line 2706),
+and the adopted contract at `.temp/brief-747/continuation-1/DRAFT-COMMON.md`
+(sha256 `f2e9a57c39e02349420995e10661c47919f3b1d510aa6a6ae9401e2b8cb44551`,
+line 34) says exactly: "No CARGO_TARGET_DIR or codegen/optimization
+changes." The worker set `CARGO_TARGET_DIR` in five cargo commands:
+
+- `route-real-source-typecheck-default` (cargo check, exit 0)
+- `route-real-source-typecheck-nohash` (cargo check, exit 0)
+- `runtime-routes-live-default-build` (cargo test build, exit 0)
+- `runtime-routes-disabled-default-build` (cargo test build, exit 0)
+- `runtime-routes-fresh-disabled-default-build` (cargo test build, exit 0)
+
+I verified the rule text and hash, and I scanned all 4,722 receipts: exactly
+five commands contain `CARGO_TARGET_DIR`, and no other command does. The
+worker stopped when it recognized the violation, froze the scene and claimed
+nothing. The 27,451-file / 11,080,763,517-byte `protocol-stop/` tree freezes
+the originals and copies, excluding only its own then-open freeze log and
+pending wrapper receipt; I rehashed every entry and both sides: zero
+mismatches.
+
+Ruling: the five commands and every dependent unit run — the runtime-routes
+live/disabled list and 35-test runs, the fresh disabled build and its runs,
+and the optional full baselines — receive no admitted cargo, parity, workspace,
+generator or fixture credit. Their costs stay charged and their logs stay
+recorded. This is not a candidate-contract finding, not allocation
+exhaustion, not an inventory artifact, and not a regression. It is a worker
+execution error.
+
+### 3. The optional full-runtime baseline is admitted as a setup/declaration error
+
+The optional unchanged-live full-unit attempt declared 1440 passed / 0
+failed / 0 ignored / 0 filtered. The same unchanged live binary
+`c555b648f476acf264404acb309609572e83e19b469360be04d4f9368a201d92`
+reports 1430 passed / 5 failed / 5 ignored / 0 filtered at eight and one
+thread. Three failures are the missing copied `scripts/run-bounded.py` in
+the retention, option-read-phase and option-reentry compile controls; two
+are the already explicitly excluded `lp655_root_context_falsifier` and
+`lp656_public_root_context_falsifier`. The full disabled candidate never
+ran; the first claimed disabled binary reused the live Cargo artifact and is
+uncredited; the later distinct disabled binary
+`60c7475b16cc10b9859d61354f2b1ee556418e7f2f255752486705c4f1cc882f`
+ran 35 selected tests at 8/1 but under the prohibited environment, so those
+results are also uncredited.
+
+No expected set, fixture, control, declaration or frozen scene was repaired
+after the failure; the incorrect declaration stays frozen and wrong. This is
+not a candidate regression and not a stale-fingerprint/position ordering
+artifact. The full disabled suite remains unexecuted.
+
+### 4. Accepted: the corrected host declaration and the host route closure
+
+The new plan `host-corrected-plan.json` (`f6c6dc67…`, 388,818 B) is a
+separate derivation from the accepted source check order: 64 participation
+entries, exactly 4 forced names (`conversion_cross_live_scope` and
+`output_cross_live_scope`, armed and disabled), each with its control body,
+omitted span and violated assertion anchors; 60 not-forced entries with
+per-actor reasons; the two `call_cross_live_scope` names recorded as the
+masked pair by the retained Q40 `guard_source_matches` on `guard.2` before
+the first host write; zero unknown; `observed_logs_used_as_authority=false`;
+`source_edits=0`; `control_edits=0`; the prior six-name plan and all 417
+files of the c47 scene unchanged. The freeze `host-corrected-freeze.json`
+(`a039cc92…`) was written at 06:49:17.562, before the first build at
+06:49:30.367. The valid binary `ed15030a…` is 64/0 in hash and nohash at
+eight and one, and the weak binary `1b387358…` is 60/4 in both, with exactly
+the four conversion/output names. I reran all eight draws myself and
+reproduced the counts and names.
+
+The eight-variant host family is also accepted: the plan
+(`7eae136d…`) and freeze were written at 06:51:25, before the first build at
+06:51:40; the candidate is 34/0 and the seven weak variants are 32/2 with
+their named retired/consumed transport pairs; 16 entries and 32 runs are
+exact. The host route closure is delivered as eight affected sources
+(099–106) in four stage renders each (`factory`, `host`, `installation`,
+`scope`), `pending=[]`, and 32 independent stage audits, all exit 0, with
+the stages frozen at 07:48:29 before the audits.
+
+### 5. Accepted: the full scope AST and omission audits
+
+All independent audits pass: core/queue 10 objects in two copies, raw 3
+objects in one copy and host 3 objects in two copies restore their
+accepted pre-edit ASTs with every fixed test body and attribute exact and
+the registered callers preserved; the additive audits restore the fixed
+bases with 120 core/queue, 15 raw and 30 host added controls whose actors
+equal the frozen declarations; the omission audits (494, 78 and 64 tests)
+omit only the pointer association with all other nodes exact; the factory
+audit extracts the original OperationPermit call body verbatim; and the
+scope writer-order audit covers 36 sites (24 core/queue, 4 raw, 8 host)
+with checks before every authority write, own retirement after the write,
+103 pure falsifiers and zero unknown. These are static evidence; they earn
+no cargo, parity or workspace credit.
+
+### 6. Accepted: the source-route migration's static evidence (no cargo credit)
+
+The route migration is accepted as scratch static evidence only. The
+propagation is 337 independent stage audits (registration 109, result 114,
+append 114) over 114 sources in 170 copies, every audit exit 0 and every
+inverse exact. The current caller inventory covers 150 files and 1,762 call
+sites with zero unknown, actual receivers recorded, zero free registration
+authority calls, and the source wrapper calls preserved. The 46-site order
+audit checks the actual-object check before the write, capture retirement
+before the guard pop and the old empty-scope guard before reset, rejects 250
+deliberately corrupted auditor inputs, and reads no renderer plan. The five
+registration sources and three join sources are separately migrated with 48
+and 72 exact rustc-built runs. The 70 new route actors (24 registration, 22
+join-result, 24 join-append) form the additive 444-control fixture, 444/0 in
+four draws, whose AST audit erases the additions back to the fixed 374; it
+is not the required complete 374 calibration fixture. The migration's
+cargo-level validation — the whole-source typechecks and the runtime-route
+builds — is exactly the inadmissible set and must be redone.
+
+### 7. Accepted: the current matrices
+
+The current main family is 920 records at 29,244/232/0/0 with zero
+unexpected, all expected sets exact, 848 fresh shared-helper runs and 72
+unchanged J runs reused by exact hash identity, and 334 validated file
+hashes exact. The raw/paired matrix is 124 records at 6,056/124/0/700, with
+460 file hashes exact. The settled component matrices are core/queue 494/0
+and 470/24, host 64/0 and 60/4, host-family 34/0 and 32/2, the complete
+installation omission 366/8 in four draws, and the five declared InstallGuard
+forms 38/0 valid and 30/8 weak with 336 filtered in both cfg arms at eight
+and one. I reran four family records and three raw records with identical
+counts, and all five form pairs plus the complete weak draw; every
+reproduction matched. These are rustc-built fixtures and are independent of
+the five prohibited cargo commands; they earn fixture credit only.
+
+### 8. Accepted: the complete 42-variant calibration
+
+The calibration is accepted in full. The participation is 42 variants × 374
+controls = 15,708 cells: 93 forced cells, each with its control body,
+omitted span and violated assertion anchors; 15,615 not-forced cells, each
+with its reason; 0 unknown; 1,596 new installation cells. The declaration
+freeze `13a22a04…` lists 99 artifacts and pins the plan
+`c90be807…` and participation `578e4769…`; it was written at 08:36:27.07,
+before any build or run (the first build follows at 08:39). The independent
+declaration audit passes with `all_causal_anchors_exact=true`,
+`whole_byte_inverses=true`, `frozen_source_and_control_hashes_exact=true` and
+`execution_used=false`; the test AST audit preserves all 374 bodies and
+attributes across all 42 variants. All 172 draws are exact and total
+63,956/372/0/0: the valid 374-control candidate is 374/0 in all four draws,
+and the 168 variant draws total 62,460/372/0/0. There are 38 firing
+variants; the four zero-failure variants — guard weak-6, operation-record,
+operation-call and operation-ticket — are the declared masked limits with no
+falsifier credit, and the masked host-call pair is separate. The Q42
+component omissions fire 24 core/queue names, 3 raw names and 4 host
+conversion/output names. I re-derived the 15,708-cell and 172-draw
+arithmetic from the frozen files, reran the valid candidate at 374/0 and
+guard weak-2 at 370/4 in both threads, and reproduced them exactly.
+
+### 9. Accepted, at its stated partial scope: the scope-form matrix
+
+The scope-form declaration binds the unchanged actor scenes to every
+declared form: 520 items, 1,040 runs, 79 core/queue forms, 25 raw forms, 1
+host form, 22 scope boundaries and 373 scope-object actor obligations. The
+plan and freeze were written at 08:57:27.36, before the first run at
+08:57:39.41; every expectation is derived from immutable accepted inputs
+with `expectation_inputs` recording that no observed execution was used;
+every source and binary hash is asserted against the freeze. All 1,040 runs
+are exact: 73,880 passed / 8,200 deliberate rejections / 0 ignored /
+261,840 declared filtered. This is the scope-object actor subset; it is not
+the full affected-source per-form matrix, not a complete 134-boundary or
+133-carrier closure, and earns no complete-overlay credit.
+
+### 10. Not credited; still open
+
+- The complete bar: full 134-boundary / 4,422-obligation / 133-carrier
+  execution closure; the 151-plan generator with duplicate, overlap and
+  unknown-anchor rejection; two fresh 94-target / 188-postimage roots; the
+  byte/AST/omission and disabled-parity audits; the six-column 94-row schema
+  with all 151 `source_schema` cells; the ordered standing replay; `cargo
+  fmt --check`; both workspace modes with the seven declared skips and the
+  unfiltered `suspension_oracle`/`typed_slot_census` at failed=0 and
+  filtered=0; and the switched same-binary checks. Nothing of this ran:
+  `standing-replay` and `workspace-gates` are NOT_RUN, and workspace spent
+  0 of 6,000 s.
+- The five prohibited commands and every dependent run; the optional
+  full-runtime baseline; the full disabled suite.
+- The route migration's cargo-level validation, which must be redone in the
+  prescribed environment.
+- The complete 151-plan/overlay closure and the full affected-source
+  per-form matrices.
+
+The schema is unchanged (`f9604852…`, `new_source_schema=null`,
+`complete_plan_hash=null`), all 94 admitted paths are `not_emitted` with zero
+maintained byte delta and zero complete postimages, the 11,902 scratch
+fragments carry exact before/after hashes and 1,081 unique content-addressed
+diffs, and 1,110 artifacts authenticate.
+
+### 11. Continuation 49 is ordered
+
+1. Redo the five excluded checks in the prescribed environment: offline,
+   locked, `-j8`, `RUST_TEST_THREADS=8`, inherited 16 G/no-swap scope, one
+   cargo at a time, no `CARGO_TARGET_DIR` and no codegen/optimization
+   change. Use the exact DRAFT-COMMON.md commands and script mirror
+   procedure; if a copied crate's default target directory is used, it
+   stays under `.temp` and is disclosed. Record the full environment.
+2. Then finish the complete bar — the 151-plan generator with rejection,
+   two fresh 94-target/188-postimage roots, the six-column 94-row schema
+   with 151 cells, the audits, the ordered standing replay, `cargo fmt
+   --check`, both workspace modes with the seven skips and the unfiltered
+   oracle/census, and the switched same-binary checks — and the full
+   134/4,422/133-carrier execution closure with the affected-source per-form
+   matrices and every moved-duty caller listed.
+3. Reuse only by exact hash identity; repair no frozen tree, production or
+   maintained source; never weaken an expectation or re-label an omission.
+4. Envelope: the CM4 share remainder is **1,820.41086498898 s**
+   (42,679.58913501102 committed of 44,500), which is the binding limit;
+   the focused line's 1,838.2350947419345 s exceeds it by 17.824 s and is
+   not additive. No extension. Workspace is 0/6,000 s; the 1,440 s
+   verification and second 6,000 s workspace stay held; 743–746 retain
+   40,500 s.
+
+### 12. Budget and accounting
+
+Charged 6,350.574759540948 s = 3,918.3346526989335 s over 4,720 charged
+receipts + 2,360.0 s bookkeeping + the 60 s reserve + 2 closing receipts at
+12.240106842014939 s. All five prohibited commands remain charged. The
+receipt count, the per-receipt seconds, the bookkeeping, the reserve and
+the closing sum all reproduce exactly from the receipts themselves.
+
+### 13. Freezes, entry and status
+
+The 19 prior frozen trees rehash 29,611 entries / 23,548,300,905 bytes with
+zero bad copies and zero unaccounted originals — only the two known open
+`freeze-stop.log` drifts (continuations 32 and 33), whose actual hashes
+match the recorded ones, and whose closed copies are exact. The new
+27,451-entry tree rehashes zero-bad on both sides. Entry: 5,400 maintained
+files, 590 design files and 77,578 accepted files authenticate — I rehashed
+all 83,568 hashes (54.5 GB accepted) with zero differences — and the three
+inherited document drifts (TODO.md, brief-623, brief-742) match their
+committed entry hashes and differ from their priors. No git or network
+command ran in the worker; all writes are under `.temp/brief-742`.
+
+Status is unchanged: pair `(45,5,false)` Open with zero admitted receipts;
+C2 Open at 118 Residual + 0 Lost; 51 owners and five source duties Open;
+`CHANGELOG.md` and S10 blocked; CM5 unauthorized; no campaign, epoch,
+acceptance or settlement.
+
+Next: continuation 49 completes the bar; then the verification stage
+(1,440 s + held second 6,000 s workspace), 743–746 and CM5.
