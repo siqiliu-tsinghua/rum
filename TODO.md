@@ -1633,6 +1633,68 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   12,856.178777779012 s and the assigned 6,000 s workspace, repairing no
   frozen tree, production or maintained source and stopping before any
   group that cannot fit.
+  Continuation 54 is gated (Q28 source-ticket consumer contract STOP).
+  The witness classification is complete with zero unknown (2,693
+  references across 117 sources / 173 copies, 13,106 assertion anchors,
+  15 known unexercised, 198 ordinary method edges explicitly not
+  claimed), and the 17 mechanisms are re-decided against the union of
+  frozen fixtures: 14 boundary/private-core splits, 3 leading returns,
+  `source_scope` reopened to a split. All 117 witness/runtime pairs are
+  rendered and audited (234 renders, 468 audits, witness never
+  installed, runtime redirects exactly the caller census; the helper
+  differs from c53 by exactly three hunks and the 496-control fixture by
+  the same three hunks in each copy with no fixed body touched). P0558
+  leads at 16/0/0/0 in all eight draws; the refreshed 848/72/48/640
+  draws are exact (26,964/232, 2,280, 5,384/168, 68,480/7,600/236,640),
+  the 172 calibrations are exact (63,956/372 over 42 variants / 374
+  controls / 15,708 cells, 93 forced, 4 masked, 38 firing, 0 unknown),
+  the 400 raw draws are reused only by exact hash identity (200 sources
+  and 200 binaries rehashed exact), and both copied runtime placements
+  reproduce 1433/0/5/2 in hash and nohash at eight and one. I verified
+  1,800 recorded runs against their logs and the ledger (0 problems),
+  rehashed 362 binaries, and re-ran the signature groups from copies.
+  The new source-ticket candidate (`a6513067…`) then fails 502/6/0/0 in
+  both copies at eight and one on one binary: a captured ticket with
+  only mutable entry/owner fields lets entry-only retire another live
+  queue, owner-only revoke its return, and both fields confirm it;
+  `JoinOwner::drop` retires and revokes without authenticating the
+  captured producer. The stop is compliant: no candidate, expectation,
+  fixed control or frozen tree was repaired, and the nohash draw is
+  NOT_RUN after the same-binary stop. The ruling
+  (`Q54-source-ticket-authentication`) is a genuine design-level defect
+  of the scratch consumer model, not a production regression; the
+  delivered work earns focused witness/source-route credit only, the
+  complete bar earns nothing, and continuation 55 must inventory every
+  `SourceScope` producer/transport/consumer with zero unknown, bind the
+  captured producer independently at capture, authenticate each consumer
+  before confirmation or retirement, make the six failing controls the
+  acceptance while the 496 fixed and 12 additive bodies stay byte-exact,
+  re-earn both modes and all affected matrices by hash identity, and
+  complete the 134/4,422/133 closure, the 151-plan generator, the two
+  94/188 roots, the schema with 151 cells, the audits, the replay, fmt,
+  both workspace modes and the switched checks. Allocation: no new
+  allocation; 2,247 receipts charge 4,029.895877425093 s of
+  12,856.178777779012 s, leaving 8,826.28290035392 s; CM4 stands at
+  51,673.71709964608 of 60,500 s, the workspace at 0 of 6,000 s, and the
+  1,440 s verification and second 6,000 s workspace stay held. The
+  stopped scene is 21,025 files / 15,433,042,841 bytes in
+  `source-ticket-stop/`; every frozen copy is byte-exact, while my own
+  replay of the frozen runtime and placement binaries regenerated 114
+  transient compile-control originals under the two copied roots (108
+  deleted, 6 rewritten), recorded and unrepaired. Entry authenticates
+  5,400 maintained / 590 design / 242,865 accepted files (+13,903 = the
+  c53 stage); I rehashed all 590 design and all 242,865 accepted files
+  (112,206,490,975 B) with zero missing and zero bad; the 25 prior trees
+  hold 111,602 entries with the c53 scene (6,944) and its 56
+  director-replay transients recorded, the 116 inherited transients
+  unchanged and the two known `freeze-stop.log` drifts unrepaired; HEAD
+  `56606749` with the same 23 porcelain entries. Continuation 55 repairs
+  the consumer design and completes the bar under 8,826.28290035392 s
+  and the assigned 6,000 s workspace, repairing no frozen tree,
+  production or maintained source and stopping before any group that
+  cannot fit and reporting the exact remainder; no campaign, epoch,
+  acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0 Lost,
+  51 owners and five source duties Open, `CHANGELOG.md` and S10 blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the

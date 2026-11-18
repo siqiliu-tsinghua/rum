@@ -4545,3 +4545,292 @@ assertions choose what its render must do.
    workspace**, repairing no frozen tree, production or maintained source, and
    stopping before starting any required group that cannot fit and reporting
    the exact remainder. No campaign, epoch, acceptance or CM5.
+
+## Continuation 54 ruling (director) — the witness classification is completed with zero unknown (2,693 references, 13,106 assertion anchors, 15 known unexercised over 117 sources / 173 copies), the 17 mechanisms are re-decided against the union of frozen fixtures (14 boundary/private-core splits, 3 leading returns, `source_scope` reopened to a split), all 117 witness/runtime pairs are rendered and independently audited (234 renders, 468 audits, witness never installed, runtime redirects exactly the caller census), P0558 leads at 16/0/0/0 in all eight draws, the refreshed 848/72/48/640 draws and 172 calibrations are exact, the 400 raw draws are reused only by exact hash identity, and both copied runtime placements reproduce 1433/0/5/2 in both modes at eight and one; the new source-ticket challenge then fails 502/6/0/0 in both copies at eight and one on the same binary — a captured ticket with mutable entry/owner fields lets entry-only retire another live queue, owner-only revoke its return, and both fields confirm it — so the ruling accepts the delivered work with focused witness/source-route credit, repairs the source-ticket consumer design before the bar, and orders continuation 55 under the remaining 8,826.28290035392 s.
+
+Continuation 54 completed the work the c53 ruling ordered and then stopped on a
+new compiled candidate control. It classified every external probe reference
+over the 117 sources and 173 copies with zero unknown, re-decided the 17
+mechanisms against the union of frozen fixtures (14 boundary/private-core
+splits, 3 leading returns, with `source_scope` reopened to a split), rendered
+and independently audited all 234 witness/runtime renders (468 audits), led
+with P0558, propagated the pair discipline, re-ran the 848 / 72 / 48 / 640
+draws and the 172 calibrations, and reused the 400 raw draws only by exact
+hash identity. Both copied runtime placements reproduce 1433/0/5/2 in both
+modes at eight and one. Then the new source-ticket challenge failed: the
+captured `SourceScope` transports only mutable entry/owner fields, and
+`JoinOwner::drop` retires the entry and revokes the owner without
+authenticating either against the recorded producer, so a substituted ticket
+can retire, revoke or confirm another live queue. The stop is compliant under
+Q28 (502/6/0/0 at eight and one on the same binary, frozen without repair),
+the finding is a genuine design-level defect of the source-ticket consumer
+model rather than a production regression, and the complete bar still earns
+nothing. The delivered work earns focused witness/source-route credit.
+
+## 1. Run record
+
+`cdx` ran as unit `brief-742-cdx-20261118-140525-1764879`, rc 0, peak
+4,795,764,736 B, oom 0 / oom_kill 0; log 5,509,406 B, sha256
+`0e32975ed5d7e3a0a67ae7055df369037d65e5b723e51fd10a5e3e168a9754e0`; the
+worker header records `model: gpt-6-astra`, reasoning effort `max`. The
+Codex config was changed to `gpt-6.2-astra` / `max` at 16:18, after this run
+started, so continuation 54 ran on the previous Astra; continuation 55 will
+pick up GPT-6.2-Astra max from the config. Report: STOP, 42,128 changes
+(42,126 added, 2 modified — `PROGRESS.md` and `report.json` — 0 deleted, all
+under `.temp/brief-742`), 31 PASS / 1 FLAGGED / 2 FAIL / 2 NA, 3,858
+citations, 0 questions, 1 deviation, 0 disclosures; no git or network command
+ran and no `.git-attempts` exists. `report.py check --against-git` reports
+42,160 scope problems: 42,128 are the `.temp`-ignored additions and 32 are the
+pre-existing tracked layer (the same 23 porcelain entries, expanded), so the
+worker changed nothing outside its scratch root. HEAD stayed `56606749`.
+
+## 2. Accepted: the witness classification
+
+The classification is frozen at `witness-classification.json` and its freeze
+log: 2,693 references = 2,446 explicit probe paths + 247 receiver methods;
+13,106 assertion anchors; 15 known-unexercised references over five sources
+(the only `FrameAbandon::abandon` callers are the wrapper and the adapter, with
+no frozen caller of `FixtureFrame::abandon`; recorded as unexercised support
+with no execution credit); unknown references 0; ambiguous probe targets 0; 247
+method references resolved from declared receiver types with 0 unresolved. The
+198 ordinary method edges are declared explicitly as `not_claimed`, not
+silently resolved, and the file states three limits (witness classification,
+not the complete 151-plan graph; reachability is possible call/teardown
+participation, not an executed receipt; unexercised support earns no
+execution credit). The 17 decisions are exactly 14 boundary/private-core
+splits and 3 leading disabled returns; `queue_transport::source_scope` is
+reopened as a split: the witness retains the recording body, and a new public
+`source_capture_scope` returns `None` before any state when disabled. Four
+source anchors across the two frozen component copies pin that decision
+(`make`, `scene`, `join_result_actual_inner`, and the retained primitive). I
+sampled 60 anchors across the 2,693 references and 13,106 assertions against
+the sources: all exact. The classification completes the c52/c53 gap without
+reclassifying any earlier control.
+
+## 3. Accepted: the 117 pairs, 234 renders and 468 audits
+
+The plan declares 117 sources (114 main + 3 J), 173 copies (170 + 3), 234
+renders (117 witness + 117 runtime), zero unknown corrected-entry callers,
+`witness_installed=false`, `complete_overlay=false`,
+`observed_execution_used=false`. The independent auditor ran AST and
+assertion audits twice per source (468 records, all exit 0):
+
+- witness: every fixed test body token-identical to the source; 14 new
+  boundaries restorable, 14 originals' visibility, 7 leading returns; 0
+  external redirects in all 117; the per-source fixed tests are exact.
+- runtime: the same restoration, and `audit.redirects == callers.counts` —
+  every original external caller of the corrected entries redirected, with no
+  extra redirect. The redirect census reconciles exactly: 53 preflight sources
+  call a privatized name (5 of the 58 call only non-private helpers:
+  `count_hits`, fixture helpers, `paired_eval`), plus the three J sources = 56
+  runtime renders with redirects; the other 61 have none.
+- deltas: 295 records; `maintained_delta=0` everywhere; 46 byte-inverse-exact
+  helper/fixture records; 0 `complete_generated_overlay` claims. The helper
+  differs from the accepted c52 helper by exactly the 23 declared edits
+  (14 privacies, 3 leading returns, 6 boundary/control blocks); against the
+  accepted c53 helper the delta is exactly 3 hunks (add `source_capture_scope`,
+  make `source_scope` private, point its guard control at the boundary). The
+  496-control fixture differs from c53 by the same three hunks in each of its
+  two embedded copies — no fixed control body was touched. I rehashed the 595
+  freeze entries and all 234 render hashes: zero mismatches.
+- P0558 first: the witness and runtime AST audits pass (`external_redirects`
+  0 and 2), the 197 assertion literals are byte-exact in both roles, and the
+  eight draws are 16/0/0/0 (armed/disabled × hash/nohash × eight/one) on the
+  frozen P0558 source `fc4fc19a…`.
+- installation: the installed runtime audit covers nine copied sources, keeps
+  the primitives private, redirects three `source_scope` capture sites, and
+  reports `witness_render_installed=false`; the placement declares 94 admitted
+  paths, 3 modified, 0 additional overlay paths, the scratch-only helper
+  removed, and 0 scanner edits.
+
+## 4. Accepted: the refreshed draws and both runtime arms
+
+The groups are exact at the declared counts, and I verified them
+independently: 1,800 recorded runs parsed from their logs against the command
+ledger (0 mismatches, 362 distinct binaries rehashed exact), plus my own
+re-runs from copies under `.temp/director/gate-c54/`:
+
+- boundary 4 draws, 496/0/0/0 in both modes at eight and one (I reran all four);
+- P0558 8 draws, 128/0/0/0 (I reran all eight);
+- main 848 draws, 26,964/232/0/0 over 230 builds (sample rerun: 84/0);
+- J 72 draws, 2,280/0/0/0 (sample rerun: 20/0);
+- components 48 draws, 5,384/168/0/0 (sample rerun: 494/0);
+- scope fresh 640 draws, 68,480/7,600/0/236,640 (sample rerun: 120/0/0/374);
+- raw reuse 400 draws, 5,400/600/0/25,200, reused only by exact identity: I
+  rehashed all 200 raw sources and 200 raw binaries and all still equal the
+  c47 executed hashes; no source-path or overlay credit is claimed;
+- calibrations 172 draws, 63,956/372/0/0: 42 variants, 374 controls, 15,708
+  cells, 93 forced, 4 masked, 38 firing, 0 unknown, 86 source audits over 43
+  sources / 86 copies with the fixed assertions byte-exact (sample rerun:
+  374/0);
+- runtime 4 draws and placement runtime 4 draws, 1,433/0/5/2 each
+  (5,732/0/20/8 total) in hash and nohash at eight and one; I reran all eight
+  draws from copies and reproduced 1,433 passed / 0 failed / 5 ignored /
+  2 filtered.
+
+The runtime numbers are the disabled full-runtime arm on the copied trees; the
+`--no-default-features` build legitimately produces the same artifact because
+`rum-runtime`'s default feature set is empty, as disclosed since c53. The
+placement oracle compiled but did not execute; no execution credit is claimed
+for it.
+
+## 5. The stop: the source-ticket challenge
+
+The candidate is `source-ticket-candidate.rs` (sha256 `a6513067…`, binary
+`00b857db…`), declared 508/0/0/0 in `source-ticket-plan.json` before its first
+run. It adds 12 controls to the 496 fixed; the 496 stay green and the 12 split
+6 pass / 6 fail. Both `armed` and `disabled` copies fail the same three
+classes, and the t8 and t1 runs are identical: **502 passed / 6 failed /
+0 ignored / 0 filtered, exit 101**, on one binary:
+
+- `another_live_entry_cannot_retire_the_other_queue`
+- `another_live_owner_cannot_revoke_the_other_queue`
+- `another_live_ticket_cannot_confirm_the_other_queue`
+
+The observed effects are explicit in the printed scenes: substituting only the
+entry removes the other queue's paused proof (`other_pending=false`); only the
+owner revokes the other queue's return and leaves it unconfirmable
+(`other_confirmed=false`, `other_rejected=false`); substituting both confirms
+the other queue (`foreign_confirmed=true`). The valid two-owner scene and the
+unknown-entry/owner challenges stay green, and the independent producer,
+installation, pause and queue snapshots are unchanged at the substitution
+seam, so the challenge changes only the captured copy. The mechanism is in the
+helper: `SourceScope` carries only `entry: ProofId` and `owner: Activation`;
+`join_owner` records that value; `join_result_kind` accepts any source whose
+`entry_key(owner) == entry` (a consistent foreign pair passes), removes
+`paused_at[entry]` and `paused[key]`, and confirms on the matching proof; and
+`JoinOwner::drop` unconditionally calls
+`revoke_unconfirmed_queue_return(&source.owner)` and removes
+`paused_at[source.entry]` / `paused[key]` — neither consumer authenticates the
+captured producer independently. The stop is compliant: the plan and source
+were frozen before execution, the same binary reproduced at one thread, no
+candidate, expectation, fixed control or frozen tree was repaired, and the
+nohash draw is correctly NOT_RUN after the same-binary stop. No execution
+credit extends to the three J source forms; the control scope is the helper
+boundary in both witness copies.
+
+## 6. Ruling on `Q54-source-ticket-authentication`
+
+The finding is genuine and is a **design-level defect of the source-ticket
+consumer model**, not a production regression: nothing in the maintained
+runtime evaluates these probe paths, and no maintained or production file was
+changed. It is not a reclassification and it is not an inventory-ordering
+artifact: a ticket whose only transport is mutable entry/owner fields lets a
+consumer act on a foreign live queue, which is exactly the duty the Q34/Q35
+consumer contracts were meant to carry. The repair is ordered, not deferred:
+
+1. the captured actual producer must be bound independently at capture
+   (identity recorded at the producer, not reconstructed from the ticket's
+   fields) and authenticated at every consumer before confirmation or
+   retirement;
+2. no invalid ticket may select a retirement, revocation or confirmation key
+   belonging to another live queue, whether it substitutes the entry, the
+   owner, or both;
+3. the valid two-owner path and the unknown-entry/owner rejections must stay
+   green, and the six failing controls become the acceptance for the repair;
+4. the 496 fixed control bodies and the 12 additive control bodies stay
+   byte-exact; new controls are additive only; no fixed expectation may be
+   weakened.
+
+The delivered c54 work earns focused witness/source-route credit only: the
+classification, the 117/173 propagation, the renders and audits, the refreshed
+draws, the reuse by identity, the calibrations and both runtime arms. The
+source-ticket finding earns no new own catch and no admission (it is a defect
+of the scratch instrument's design, not a catch in maintained code). The
+complete bar earns nothing.
+
+## 7. Not delivered
+
+The full 134-boundary / 4,422-obligation / 133-carrier execution closure (this
+stage reached 22 scope-actor boundaries / 373 obligations), the 151-plan
+generator with duplicate/overlap/unknown-anchor rejection, the two fresh
+94-target / 188-postimage roots (0 postimages emitted), the six-column 94-row
+schema with all 151 `source_schema` cells (schema unchanged
+`f9604852…`, new_source_schema=null, complete_plan_hash=null; all 94 admitted
+paths `not_emitted`), the byte/AST/omission and disabled-parity audits of a
+complete overlay, the ordered standing replay, `cargo fmt --check`, both
+workspace modes with the seven skips and the unfiltered
+`suspension_oracle`/`typed_slot_census`, and the switched same-binary checks
+are all open. Standing replay and workspace are NOT_RUN; workspace spent 0 of
+6,000 s. The complete overlay is not claimed (`complete_generated_overlay`
+false in all 295 delta records).
+
+## 8. Allocation
+
+No new allocation. 2,247 receipts charge 4,029.895877425093 s = 2,646.395877425093 s
+measured + 200.0 s conservatively charged inspections/setup + 1,123.5 s
+bookkeeping + the fixed 60 s reserve, of the 12,856.178777779012 s envelope,
+leaving **8,826.28290035392 s**. CM4's share becomes 51,673.71709964608 of
+60,500 s; the assigned 6,000 s workspace is untouched (0/6,000); the 1,440 s
+verification and the second 6,000 s workspace stay held. The stop is a
+candidate failure, not an allocation limit (`allocation_stop=false`), and no
+extension or held envelope was borrowed. I verified the ledger independently:
+2,247 focused receipts, no `CARGO_TARGET_DIR`, no codegen or optimization
+override, every cargo command offline/locked at `-j8`, the 16 G/no-swap scope
+with oom 0/0, no git or network command, and the arithmetic exact to the
+recorded decimals.
+
+## 9. Freeze and entry
+
+The stopped scene is 21,025 files / 15,433,042,841 bytes in
+`source-ticket-stop/` (freeze PASS at 16:09, originals and copies exact). My
+own rehash of all 21,025 entries confirms every frozen copy is byte-exact. My
+own replay of the frozen runtime and placement binaries at 16:28 regenerated
+**114 transient originals** under `.temp/brief-579/compile-controls` in the two
+copied roots — 108 deleted and 6 rewritten (`rule-root-pass.stderr`,
+`syntax-root-pass.stderr` under `placement-runtime`;
+`missing-pass.stderr`, `private-pass.stderr`, `root-pass.stderr`,
+`syntax-root-pass.stderr` under `runtime-disabled`) — the known
+director-replay transient class, recorded and unrepaired; the frozen copies of
+all 114 remain exact. Entry authenticates 5,400 maintained / 590 design /
+242,865 accepted files (+13,903 = every file of the c53 stage; none under
+continuation-54). I independently rehashed all 590 design files
+(278,559,491 B) and all 242,865 accepted files (112,206,490,975 B): 0 missing,
+0 bad. The 5,400 maintained files were not rehashed (git covers them; the
+23 porcelain entries are unchanged and HEAD is `56606749`). The 25 prior
+frozen trees hold 111,602 entries with the c53 scene (6,944) and its 56
+director-replay transients recorded; the 116 inherited director transients
+are unchanged and the two known `freeze-stop.log` drifts stand unrepaired.
+
+## 10. Continuation 55 ordered
+
+Continuation 55 repairs the source-ticket consumer design and then resumes the
+bar, under the remaining 8,826.28290035392 s and the assigned 6,000 s
+workspace:
+
+1. **Inventory first, zero unknown.** Enumerate every `SourceScope` producer
+   (capture points), every transport, and every consumer: `join_owner` mint,
+   `join_result_kind` confirmation, `JoinOwner::drop` retirement,
+   `identity_proofs::revoke_unconfirmed_queue_return`,
+   `confirm_queue_return`, and every state-key write, in the helper and in all
+   117 sources / 173 copies; record per item the enclosing frozen assertion,
+   the disabled-arm value and the render role; report ambiguities rather than
+   guessing.
+2. **Design the independent binding.** Capture the actual producer's identity
+   at capture through a path that does not reconstruct it from the ticket's
+   mutable fields; authenticate at each consumer before any confirmation or
+   retirement key is selected; cover entry-only, owner-only, both-fields and
+   unknown-entry/owner invalid classes; keep the valid two-owner path
+   unchanged.
+3. **Implement and certify.** Additive controls per consumer and per invalid
+   class; the six failing controls become the acceptance; the 496 fixed and
+   the 12 additive control bodies stay byte-exact; no fixed expectation
+   weakened; the witness/runtime pair discipline continues (witness never
+   installed; runtime renders private and redirected; the delta exactly the
+   registered visibility and redirect edits, audited per source).
+4. **Re-earn the matrices.** Source-ticket matrix in both feature modes at
+   eight and one; boundary 496/0/0/0 ×4; P0558 16/0/0/0 ×8; the 117/173 pairs
+   re-rendered/re-audited if changed; runtime and placement 1,433/0/5/2 ×8;
+   the affected 848/72/48/640 draws by exact hash identity, the 400 raw draws
+   only by identity, and the 172 calibrations re-earned if their sources
+   changed.
+5. **Complete the bar.** Full 134/4,422/133 closure, the 151-plan generator
+   with rejection, the two 94-target/188-postimage roots, the six-column
+   94-row schema with 151 cells, the byte/AST/omission/disabled-parity audits,
+   the ordered standing replay, `cargo fmt --check`, both workspace modes with
+   the seven skips and the unfiltered gates, and the switched same-binary
+   checks. Repair no frozen tree, production or maintained source; stop
+   before starting any group that cannot fit and report the exact remainder.
+   No campaign, epoch, acceptance or CM5; pair `(45,5,false)` Open, C2 118
+   Residual + 0 Lost, 51 owners and five source duties Open, `CHANGELOG.md` and
+   S10 blocked.
