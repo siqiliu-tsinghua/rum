@@ -2537,6 +2537,32 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   87776228) and production_changes=0. No campaign, epoch, acceptance or CM5;
   pair (45,5,false) Open, C2 118 Residual + 0 Lost, 51 owners and five source
   duties Open, `CHANGELOG.md` and S10 blocked.
+  - G15-CM4 continuation 66 (2026-11-19): the Q65 successor is delivered — the complete per-form
+    `core::Ledger.frames` dependency set is derived over all 46 forms (808 source-level test entries,
+    5,996 selected test cells, unknown=0, execution unused) and the successor plan is frozen 19.9 s
+    before its first build; P1818's four armed configurations now declare the five failures including
+    `different_actual_targets_have_independent_projected_owners` (`assert_eq!(hits,2*armed());`), the
+    four disabled configurations read `[4,0,0,26]`, and all 736 draws re-ran exact on the same binary
+    `1068e4bf...` that the c65 stopped draw used; seven source falsifiers x two roles reject the
+    under-enumeration shapes. `family-paired-tokens` (`core::Pair.tokens`) passes 736/736 and the
+    sibling `actual-and-foreign-sibling-entries` group passes 736/736 over 46 forms, two
+    registered actors and eight added physical proposals, raising the obligation union to 551/4,422
+    (34/134 actors, 4/133 fields, 0/26 complete groups). The new two-form `typed-construction-writer`
+    group (128 draws; actor `core::bind_frame`) passes its 64-draw actual/other_live prefix and stops
+    under Q28 on P0278/form-1 witness armed hash missing: declared `[1,0,0,34]`, observed `[0,1,0,34]`
+    at eight and one on `41b1bd66...`, because the writer stamps the transported `(0, actual_type)`
+    proposal into the pending token and inserts the direct operation, paired token, live construction
+    record and frame binding under the missing key; the actual adapter receives none and the surviving
+    outer owner keeps its five properties and its first hit. The group is sealed (14 files, repairs=0)
+    with `candidate_repair=false` and `expectation_repair=false`; 64 matched, 2 rejected, 62 NOT_RUN.
+    Ruling Q66 (`Q66-typed-construction-writer-actual-allocation-authentication`): the writer must
+    authenticate the proposal against the actual newly allocated adapter and its genuine pending source
+    before any record is issued; a missing/foreign/mixed-type proposal supplies no authority, and the
+    compliant outcomes are a well-bound physical allocation or an explicit before-effect rejection that
+    leaves every prior record set unchanged. Continuation 66 charged 4,110.386052918038 s of
+    6,621.156252773984 s; **new allocation** 12,000 s: continuation 67 runs under
+    14,510.770199855946 s, CM4's share 124,500 s, the stage reserve 69,000 s, 743-746 keep 40,500 s;
+    workspace 0/6,000, the 1,440 s verification and second 6,000 s workspace held.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
