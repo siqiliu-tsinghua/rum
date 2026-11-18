@@ -2436,6 +2436,59 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
   epoch, acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0
   Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10
   blocked.
+  Continuation 64 (gated 2026-11-19) repairs the Q63 frame-retirement receiver
+  with `retirement_for_adapter`: the actual adapter's Arc is carried and the
+  proposal must equal its key, a live Direct record of that key, the token's
+  frame identity and the current frame record before `forget_frame` runs, in
+  both the abandonment path and the final-drop backstop, and the registered
+  edits propagate over 69 renders; the retirement-receiver group is green at
+  32/32 draws with the c63 red green in my own rebuild, the typed carriers at
+  96/96, the new last-drop group at 32/32, and every prior matrix is re-earned
+  with the bodies 578/598/496/53/31/210/374 and the 974/974 assertions intact.
+  The new typed-abandon-entries group (96 draws; entries Operation and
+  DirectClaim) passes all 16 counterpart configurations and then stops under
+  Q28 on its first foreign-operation configuration: P0278/form-1 witness
+  armed/hash declares [1,0,0,30] and reproduces [0,1,0,30] at eight and one on
+  the same binary 756a06a5..., because the unguarded core::forget_operation
+  forwards A's live key to retire_operation_frame and retires A's operation, so
+  claim_typed_frame rejects it and A's first legitimate resume records zero
+  hits against the required one (outer_after=[true,false,true,true,true]). The
+  group is sealed (14 files, repairs=0), 34 of 96 draws are executed and 62 are
+  NOT_RUN. The ruling
+  (Q64-typed-teardown-entry-actual-receiver-authentication): every typed
+  teardown entry that retires an operation or direct claim must authenticate
+  the proposal against the actual abandoning adapter's independently recorded
+  identity before any effect, in the Q63 shape, so a foreign live key of the
+  same concrete type supplies no authority; the repair lives in the probe entry
+  or the registered edit set and may not edit the frozen exercise or its
+  assertions or reclassify a draw, and the sealed draw and the queued
+  direct-claim control stay as declared. This is the Q35/Q63 class one entry
+  deeper, a genuine design-level gap of the scratch consumer model, not an
+  instrument defect and not a production regression. Continuation 65 must
+  repair the operation and direct-claim retirement entries under Q64 and
+  re-earn the full 96-draw schedule (34 executed, 62 outstanding) while keeping
+  the repaired retirement-receiver 32/32, the typed carriers 96/96, the
+  last-drop 32/32, the 974/974 assertions, the bodies, the 64 publication
+  draws, the 172 calibration draws, both placements, the 96 E draws plus 8
+  live and the 40/96 install-form and confirmed-carrier draws exact, re-run
+  every matrix, and then continue the bar from 409/4,422 obligations, 32/134
+  actors, 4/133 fields and 0/26 complete carrier groups through 134/4,422/133,
+  the 151 plans, 94 paths, 188 postimages and the 151-cell schema. Allocation:
+  continuation 64 charged 5,703.509053393995 s (3,613.5090533939947 s measured
+  over 3,660 receipts + 1,830.0 s bookkeeping + 200.0 s inspections/setup + 60
+  s reserve) of 19,993.105053099 s, leaving 14,289.595999705005 s; CM4 stood at
+  92,506.894946901 of 112,500 s and now stands at 98,210.40400029499 s; no new
+  allocation, so continuation 65 runs under the remaining 14,289.595999705005
+  s and the assigned 6,000 s workspace (0/6,000) with the 1,440 s verification
+  and second 6,000 s workspace held. The stopped scene is 22,305 files /
+  12,645,053,095 bytes with all pairs rehashed zero missing and zero bad;
+  entry authenticates 5,400 maintained / 590 design / 634,623 accepted files
+  with inherited_document_drifts=3 (my three committed c63 documents at HEAD
+  95f80c2c) and production_changes=0. Continuation 65 repairs the teardown
+  entries under the receiver-authentication contract, re-earns the 96-draw
+  schedule and the matrices, and continues the bar; no campaign, epoch,
+  acceptance or CM5; pair (45,5,false) Open, C2 118 Residual + 0 Lost, 51
+  owners and five source duties Open, `CHANGELOG.md` and S10 blocked.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
