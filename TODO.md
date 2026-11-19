@@ -2591,6 +2591,38 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     verification and second 6,000 s workspace held. Continuation 68 re-renders assertion-free, runs
     the 112 literal draws first, then the auditor, the 128 writer draws, the 11 group matrices, the
     pending matrices and the deferred bar.
+  - G15-CM4 continuation 68 (2026-11-19): the Q67 assertion-free writer is re-rendered and every
+    schedule is re-earned — 112 literal draws on the 56 changed role renders first (pair 022/witness
+    back to 199 assertions byte-exact at exit 0), 128 typed-writer draws with
+    `explicit_rejection=false` everywhere, the 11 group matrices on the admissible renders (3,488
+    draws), the pending rebind matrices (552 draws with 272 identical inputs hash-exact), the
+    projection set and the re-derived allocation auditor (positive=2, 14 falsifiers) — and the writer
+    obligations (489, 521) and actor `core::bind_frame` are earned, raising the accepted bar to
+    553/4,422 (35/134 actors, 4/133 fields, 0/26 groups). Then the new deferred-cursor-writer group
+    (P2132–P2135 × 2 roles × 2 arms × 2 modes × 5 classes = 160 configurations / 320 draws; actor
+    `core::Guard::defer`) stopped under Q28 on its first missing-key control: P2132/form-1 witness
+    armed hash missing declared `[1,0,0,39]` and observed `[0,1,0,39]` at eight and one on the same
+    binary `cf2013219e...`, because the transport presented address zero with the actual type under a
+    genuine pending source and `Guard::defer` inserted both deferred records under the proposed key
+    (`foreign_records_changed=true`) while issuing nothing to the actual Box. The group is sealed (18
+    files, repairs=0) with `candidate_repair=false` and `expectation_repair=false`; 194 of 320 draws
+    executed (192 matched + 2 rejected), 126 NOT_RUN; my own build of the sealed source reproduces it
+    and shows mixed_type failing identically, so the class is the whole foreign-proposal family.
+    Ruling Q68 (`Q68-deferred-cursor-writer-physical-cursor-authentication`): the deferred writer must
+    authenticate the proposal against the actual boxed cursor's physical identity (address and
+    concrete type) and its genuine pending source before issuing either record; missing, foreign and
+    mixed-type proposals supply no authority; the compliant outcomes are a well-bound physical write
+    or an assertion-free pre-effect refusal (control flow, not an unwind, per Q67), with the frozen
+    duplicate assertion intact and the other_live `inner_rejected` a diagnostic that may be false, the
+    comparator unwinding-agnostic, and the edit set and deferred auditor re-derived assertion-free
+    with the calibration still rejecting under-authenticated shapes. Continuation 69 re-renders the
+    deferred writer assertion-free, re-runs the 320-draw schedule, then the `construct_deferred` and
+    `DeferredEvaluationGuard::drop` handoffs on all four forms and the 21 remaining retirement forms.
+    Continuation 68 charged 6,415.2339194878 s of 9,195.838536784908 s, leaving 2,780.6046172971073
+    s; CM4 now 121,719.39538270289 of 124,500 s; **new allocation** 12,000 s: continuation 69 runs
+    under 14,780.6046172971073 s, CM4's share 136,500 s, the stage reserve 57,000 s, 743-746 keep
+    40,500 s; workspace 0/6,000 with the 1,440 s verification and second 6,000 s workspace held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
