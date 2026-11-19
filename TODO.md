@@ -2706,6 +2706,52 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     allocation; workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace, 57,000 s
     stage reserve and 40,500 s for 743-746 held.
 
+  - G15-CM4 continuation 71 (2026-11-19): the Q70 deferred-guard refusal is re-rendered assertion-free
+    (+373 bytes per role, one registered edit; no new assertion — the sealed examiner reads 320
+    assertion literals byte-exact on both roles at eight and one, the frozen comparator and six
+    added controls are byte-identical, and the re-derived drop auditor forces the exact refusal
+    text with 2 positives and 52 falsifiers rejected at exit 101). Six of seven classes match (384
+    draws); the group then stops under Q28 on item 193, P2132/form-1 witness armed hash
+    other_provenance, because the separate Q70 resume duty fails: the counts `[1,0,0,49]` match and
+    the frozen comparator is exact, but the refusal preserves both record sets and both objects
+    (`unchanged=true source_pop=false transport_pop=false own_pop=false inner_current=true
+    outer_current=true`) while both genuine resumes take the native path (`inner_exact=false
+    outer_exact=false inner_hits=0 outer_hits=0`, one prime hit only). The group is sealed (34
+    files, exact) with `candidate_repair=false` and `expectation_repair=false`; 386 of 448 draws
+    executed (384 matched + 2 rejected), 62 NOT_RUN. My own 8 builds reproduce all 386 executed
+    draws with every instrument line byte-identical, and I ran the 62 NOT_RUN draws: under the
+    per-arm duty all 448 draws pass — 32 armed-recording draws decline, 16 witness-disabled
+    recording draws decline with their native expectation, and 16 runtime-disabled inactive draws
+    take the ordinary actual path. The mechanism: the injected transported top disagrees with the
+    independent source vector at one entry, `lexical_current` requires their equality and gates
+    `resume_frame`/`frame()`/the omission path, and the refusal pops nothing, so no frame
+    authenticates and both resumes take `resume_realization` natively; in c70 the exact resumes came
+    from the defect's unauthorized pop, which restored the pair equality — so Q70's results/hits
+    clause was satisfiable only by the forbidden effect and was mine, derived from the defective
+    run's by-product. Ruling Q71 (`Q71-deferred-evaluation-drop-fail-closed-forwarding`): Q70's
+    authentication stands unchanged and exactly as rendered (complete transported top equals the
+    guard's own independent source top, owner and token, before either pop and before the
+    retirement; a mismatch returns in control flow, pops nothing, retires nothing, no assert or
+    panic); the results/hits clause is withdrawn for the conflicting class; the compliant outcome is
+    fail-closed forwarding — the mismatched top stays, the pair invariant stays false, every
+    forwarding that depends on it declines until the mismatch is removed, and nothing derived from
+    the forged vector forwards; per-slot relaxation is refused as a new member of the Q63-Q70
+    receiver-authentication class. Per arm: armed recording declines with `inner_exact=false
+    outer_exact=false`, zero hits, one prime source hit and hit identity, three armed lines;
+    disabled-but-recording declines the same way with `inner_exact=true outer_exact=true` (the
+    native expectation), zero hit lines, three armed lines; inactive is not a conflict and takes the
+    ordinary actual path with exact native results, zero hits, zero armed lines. The frozen 44 + 6
+    and `drop_verdicts.py` stay byte-exact, both sealed scenes stay sealed, the stopped draws are
+    not deleted or reclassified. The drop group earns nothing; the four drop rows stay with
+    `full_four_form_gate=false`. Continuation 72 re-declares the group under Q71 with the same
+    sources, re-derives and calibrates the per-arm duty before execution, re-runs the full 448-draw
+    schedule including the 62 unexecuted draws, pays the four drop obligations and the actor if all
+    pass (bar 565/4,422, 38/134, 4/133, 0/26), then runs the 21 remaining retirement forms.
+    Continuation 71 charged 1,579.039068450074398884 s of 11,084.132876044091905269 s, leaving
+    9,505.093807594017506385 s; CM4 now 126,994.906192405979793615 of 136,500 s; no new
+    allocation; workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace, 57,000 s
+    stage reserve and 40,500 s for 743-746 held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
