@@ -2874,6 +2874,48 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     130,023.416321838988657193 of 136,500 s; no new allocation; workspace 0/6,000 with the 1,440 s
     verification, second 6,000 s workspace, 57,000 s stage reserve and 40,500 s for 743-746 held.
 
+  - G15-CM4 continuation 75 (2026-11-19): the Q74 successor fixture is re-declared (two independent
+    Q18 pairs per draw, the separate two-live-receiver retirement window with foreign/missing/kind
+    receiver falsifiers), frozen and calibrated before the build (plan 2b0a3f24..., freeze 66aca184...
+    20 pins, 282 controls: 61 positives and 221 falsifiers, the c74 204 retained byte-exact), with the
+    derivation reused by hash identity (dcdb1cc7..., 40 inputs identical, 21 rows, zero unknown, 10/6/5,
+    credit 0); cases 1-36 (P0292, P0394, P0396, P0410, nine cases each) pass at threads 8 and 1 on the
+    recording-hash build, 72 exact draws; the run then stops on its own declared one-witness control:
+    PortBlocked::RetirementWitnessNestedPairCardinality on P0494 case 36, one actual pause, three typed
+    witnesses, three queued matches, declared 1/1, after 74 of 864 draws (790 remaining). The selected
+    program's one pause is three nested activations of the row's own
+    resume_call_with_dispatch_plan -> run_call_dispatch_stage edge (call.rs:239/323); each invocation
+    observes InputRequired and constructs its own ResumeCallWithDispatchPlanSuspensionFrame at its own
+    suspension branch (call.rs:86/345), with distinct frame identities and owner paths
+    (P0494@0/P0494@0/P0494@6, P0494@0/P0494@0, P0494@0), each retired by its own receiver
+    (resume, drop, forget_enter, forget_exit; live/bound/retired exact), values
+    Atom(Integer(Small(73))) equal, no omission, no queued frame or request; the pair's token map is
+    keyed by activation (one ProducerPause plus ParentReturn tokens with the same occurrence,
+    lib.rs:312-325/681), so the Q74 one-token clause was a one-activation assumption. Ruling Q75
+    (Q75-nested-construction-cardinality): the run and the STOP stand; the derivation reuse and the 72
+    exact draws are accepted; credit 0 and all 21 indices Open; the failure is a declaration over-reach
+    in the control, not a candidate failure; the Q74 "exactly one witness token per pair" clause and the
+    join's one-witness and distinct-occurrence clauses are withdrawn as stated; the source proof is
+    corrected for parent activations (own dispatch call actually returned InputRequired, own suspension
+    branch constructed after that return, frame owned by its activation with the scope live through
+    allocation to its own retirement, the chain anchored in exactly one actual ProducerPause per pair
+    with the origin preserved and no descendant attribution). Continuation 76 predeclares the activation
+    cardinality per case (P0494 = 3, single-activation rows = 1), requires a full-identity bijection
+    between the issued tokens and the queued activations (one match per token at its own activation, one
+    visit per match, no unmatched/extra/duplicate/cross-pair match, no non-pair match, no fictitious
+    queued frame or request, equal values, no omission), keeps the exact per-frame lifecycle with its
+    own receiver and the retained foreign/missing/kind falsifiers and two-live-receiver window,
+    calibrates the new control before the build and runs the complete 864-draw schedule at 8/1 on the
+    four builds (the control and join change, so the hash-identity exemption does not cover the draw
+    evidence); on a pass it pays the ten executable obligations (641, 1191, 1228, 1318, 1799, 1828,
+    2021, 2973, 3585, 3614) to 571/4,422 with actors 37/134 and fields 4/133 unchanged, the eleven Open
+    (363, 392, 769, 798, 1347, 2259, 2655, 2684, 2713, 2742, 3680) named and unpaid, then the
+    generator, then the remaining duties, audits, ordered standing replay, cargo fmt --check, both
+    workspace modes and the switched checks. Everything sealed stays sealed. Continuation 75 charged
+    939.90290051104968168 s of 6,476.583678161008642807 s, leaving 5,536.680777649958961127 s; CM4 now
+    130,963.319222350038338873 of 136,500 s; no new allocation; workspace 0/6,000 with the 1,440 s
+    verification, second 6,000 s workspace, 57,000 s stage reserve and 40,500 s for 743-746 held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
