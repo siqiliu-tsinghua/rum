@@ -2916,6 +2916,43 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     130,963.319222350038338873 of 136,500 s; no new allocation; workspace 0/6,000 with the 1,440 s
     verification, second 6,000 s workspace, 57,000 s stage reserve and 40,500 s for 743-746 held.
 
+  - G15-CM4 continuation 76 (2026-11-19): the Q75 per-activation cardinality is predeclared (108
+    cases over 12 sites, zero unknown, P0494 = 3, 99 one-activation cases) and the 366-control nested
+    join is calibrated before the build (69 positives, 297 falsifiers), and the complete 864-draw
+    schedule passes at threads 8 and 1 on the four builds (864/864 exact, every pair a full-identity
+    bijection with one match per token at its own activation, zero omission, receivers exact); the ten
+    executable obligations (641, 1191, 1228, 1318, 1799, 1828, 2021, 2973, 3585, 3614) are paid to
+    571/4,422 with actors 37/134 and fields 4/133 unchanged, the eleven Open (363, 392, 769, 798,
+    1347, 2259, 2655, 2684, 2713, 2742, 3680) named and unpaid, the payment 7cc28422... re-derived
+    byte-identically. The run then enters the generator (discovery, bindings, pair 48/48, class 52
+    children, grant 84 controls) and stops at the local-handoff control on index 625/P0292:
+    PortBlocked::QueuedOmissionReceiptAmbientReselection, four of sixteen draws, matched 2, distinct
+    failed 2 (binary 44d7b28d..., freeze 9cfd5a32..., stopped draw 88938b2f...). The queued scene's
+    genuine local omission receipt (occurrence 0) and permit stay exact; the probe mutates only the
+    ambient copy (occurrence 1); core::hit reselects the ambient occurrence and fails its own
+    authentication at lib.rs:405 ("hit without own activation token") at both threads — the frozen
+    record's PARTIAL. Attempt 1 dies to the Codex safety filter while composing its report; the routed
+    mst resume authenticates the sealed tree by a twice-identical manifest (47,867 files /
+    13,656,745,486 B), re-derives the payment byte-identically, re-executes the four handoff draws
+    (exits 0,0,101,101, same observations and panic), seals its stopped draw d779d5c0... and reports
+    (39 checks, 4 deviations, 1 question). Ruling Q76
+    (Q76-queued-omission-receipt-ambient-authentication): the run and the STOP stand; the schedule and
+    the payment are accepted at 571/4,422, 37/134, 4/133, 0/26; the generator earns nothing (0/151,
+    0/94, 0/188, schema f9604852 unchanged); the stop is a genuine candidate-contract violation; the
+    question is ruled option 1 — bind the hit to the independent local-source record with the ambient
+    copy read-only, in the Q34 consumer shape (the full identity at the omission boundary; corruption
+    calibrations at ambient occurrence, origin, episode and frame kind), class-wide so that every
+    consumer which reselects an ambient permission authenticates it against its local source and the
+    ambient copy is inert everywhere (option 2 refused, option 3 forbidden). The payment stands (no
+    sealed draw exercised hit), but the hit insertion is one of the ten registered paths, so the
+    successor re-renders, rebuilds and re-runs the complete 864-draw schedule (the input changed, so
+    the hash-identity exemption does not apply), then the handoff control, then the generator's
+    151/94/188/151 and the remaining duties; hash-identity reuse wherever every input is byte-identical,
+    anything changed re-run. Continuation 76 charged 1,918.853685601992759835 s of 5,536.680777649958961127 s,
+    leaving 3,617.827092047966201292 s; CM4 now 132,882.172907952031098708 of 136,500 s; no new
+    allocation; workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace, 57,000 s
+    stage reserve and 40,500 s for 743-746 held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
