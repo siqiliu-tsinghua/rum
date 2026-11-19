@@ -2981,6 +2981,33 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace and 40,500 s for
     743-746 held.
 
+  - G15-CM4 continuation 78 (2026-11-19): the Q77 emission is executed — the hard-coded
+    full_composition=false literal removed; the resolve re-derived 151 plans / 152 forms / 10
+    classes / 79 subtypes / 94 surface preimages on the live source (hash-identical to the sealed
+    c77 derivation); the 90 preimages and 180 postimages re-authenticate against overlays.tsv
+    (f9604852...); the compose rendered 94/94 paths x 2 arms = 188/188 postimages per root into two
+    byte-identical roots with the erasure audit at 94/94, and 399 artifacts are frozen. The bytes
+    reproduce only 4/90 retained carriers: the demonstration crates/rum-host/src/model/mod.rs
+    (preimage ec87f29a..., pinned ae81be3c..., composed = preimage, 0 declared records, the
+    undeclared pinned line pub(crate) use outcome::cm740_output_scope;, 177-byte diff) returns
+    PortBlocked::RetainedCarrierRenderRecipeUndeclared; the audit measures 23 render-rule-owed + 49
+    undeclared-recipe + 14 symbol-heuristic supersession candidates, 246/315 exact statements and
+    74 uncovered hunks (94 lines). Q78 (Q78-retained-carrier-render-recipes) rules the run and STOP
+    stand; the schema transition is not earned (overlays.tsv unchanged, no source_schema binding,
+    production_changes=0); the PortBlocked is a genuine generator-design gap — the design marks the
+    statement extraction unimplemented for 149/152 forms, the demonstrated line is P2600's host-side
+    helper definition/export declared nowhere, and the 14 heuristic supersessions are not accepted
+    (CM740_OUTPUT_ROW is a host-side thread-local, a false positive). Continuation 79 is ordered:
+    the complete residue inventory over all 315 armed hunks with zero unknown; the class-template
+    registry for the ten classes and 79 subtypes, the helper/scaffolding recipe with its inverse,
+    the declared multi-line structural replacement rule, and per-path supersession proofs; then the
+    emission on the current source into two byte-identical roots with erasure 94/94 and the
+    six-column schema (94 rows, 151 cells) on a pass, then the remaining duties, audits, ordered
+    standing replay, cargo fmt --check, both workspace modes and the switched checks. Continuation
+    78 charged 284.0800406759954 s of 12,485.472055178932 s, leaving 12,201.392014502937 s for
+    continuation 79; CM4 now 136,298.60798549707 of 148,500 s; stage reserve 45,000 s; workspace
+    0/6,000 with the 1,440 s verification, second 6,000 s workspace and 40,500 s for 743-746 held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
