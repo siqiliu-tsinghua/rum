@@ -2623,6 +2623,46 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     under 14,780.6046172971073 s, CM4's share 136,500 s, the stage reserve 57,000 s, 743-746 keep
     40,500 s; workspace 0/6,000 with the 1,440 s verification and second 6,000 s workspace held.
 
+  - G15-CM4 continuation 69 (2026-11-19): the Q68 deferred writer is re-rendered assertion-free
+    (+80 bytes per role, no new assertion — the literal examiner reads 266 assertions byte-exact on
+    both roles at eight and one) and passes 320/320 draws in 8 builds with all five classes green,
+    `nonunwinding_traces=256` and `inner_rejected=false inner_native=Some(true)` on the foreign
+    classes; my own builds reproduce all 320 draws with all 256 observation lines identical, and the
+    writer auditor (2 positives, 26 falsifiers) plus four falsifiers I generated myself behave
+    exactly. The four `Guard::defer` obligations (3703, 3726, 3749, 3772) and the actor
+    `core::Guard::defer` are earned, raising the accepted bar to **557/4,422** (36/134 actors,
+    4/133 fields, 0/26 groups). Then the new deferred-cursor-reader group (P2132-P2135 x 2 roles x
+    2 arms x 2 modes x 5 classes = 160 configurations / 320 draws; 40 frozen + 4 added controls;
+    actor `core::construct_deferred`) stopped under Q28 on its first foreign-live-key control:
+    P2132/form-1 witness armed hash other_live declared `[1,0,0,43]` and observed `[0,1,0,43]` at
+    eight and one on the same binary `73f23db3...`, because `construct_deferred` removed both
+    deferred records at the transported key before checking the token, the proof and
+    `pending_construction` — proposing the other live cursor's key consumed that Box's two records
+    (`foreign_changed=true survivor=false claim=Foreign`) and the inner resume took the hit while
+    the outer recorded zero. The group is sealed (27 files, repairs=0) with `candidate_repair=false`
+    and `expectation_repair=false`; 130 of 320 draws executed (128 matched + 2 rejected), 190
+    NOT_RUN. My own build of the sealed source reproduces it at eight and one and shows missing and
+    mixed_type passing (32/32 each, the proposed key is absent), so the class is the whole
+    foreign-live-key family — 24 of 32 other_live configurations fail, and the 8 runtime-disabled
+    passes are vacuous (`genuine_source=false previous_occupied=false`). Ruling Q69
+    (`Q69-deferred-constructor-physical-cursor-authentication`): the deferred constructor must
+    authenticate the proposal against the actual boxed cursor's physical identity (address and
+    concrete type) and its genuine pending source before removing either record or issuing any
+    construction authority; missing/foreign/mixed proposals supply no authority; the compliant
+    outcomes are a well-bound physical consumption or an assertion-free pre-effect refusal (control
+    flow, not an unwind, per Q67/Q68) that removes nothing and leaves the actual cursor native and
+    the other live Box with both records, native behavior and its single hit; the frozen 40-test
+    base and 4 added controls stay declared, the comparator stays unwinding-agnostic, and the edit
+    set and reader auditor are re-derived assertion-free with the calibration still rejecting
+    under-authenticated shapes. The reader group earns nothing; the four `construct_deferred` rows
+    are outside the union and the four drop rows stay unpaid. Continuation 70 re-renders the
+    deferred constructor assertion-free, re-runs the 320-draw schedule, then runs the four drop
+    handoffs and the 21 remaining retirement forms. Continuation 69 charged
+    1,783.328948774986240739 s of 14,780.6046172971073 s, leaving 12,997.275668522121059261 s;
+    CM4 now 123,502.724331477876240739 of 136,500 s; no new allocation; workspace 0/6,000 with the
+    1,440 s verification, second 6,000 s workspace, 57,000 s stage reserve and 40,500 s for 743-746
+    held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
