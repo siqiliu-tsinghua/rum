@@ -2842,6 +2842,38 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace, 57,000 s stage reserve
     and 40,500 s for 743-746 held.
 
+  - G15-CM4 continuation 74 (2026-11-19): the 21-row retirement derivation audit is delivered with
+    zero unknown rows — ten rows have a post-result typed route (P0292/641, P0394/1191, P0396/1228,
+    P0410/1318, P0494/1799, P0498/1828, P0554/2021, P1477/2973, P1814/3585, P1817/3614), six return
+    the producer result without a caller-owned construction (P0256/363, P0259/392, P0314/769,
+    P0315/798, P0413/1347, P0814/2259), and five construct raw frames (P1139/2655, P1142/2684,
+    P1147/2713, P1155/2742, P1937/3680), all at credit 0 — and the run then stops on its own queued
+    control: PortBlocked::RetirementWitnessQueuedPairIdentity on P0292, queued_physical=2,
+    queued_survivor=0 at eight and one threads, after 2/864 draws; the physical and survivor
+    retirement witnesses are exact (one independently issued record per scene, typed allocation,
+    alias drop, resume, drop, forget_enter, forget_exit), both values exact, both libtests pass, and
+    the failure is the fixture's grouping: two sessions run under one queued begin, whose one Q18
+    pair is consumed by that begin, and the pair's activation identities are the run's single
+    monotone entry ordinals (the unqueued tokens at ordinals 1 and 3, both matched in the first
+    queued session's 0-4, none in the second's 5-9). Ruling Q74
+    (Q74-queued-ownership-attribution): the run and the STOP stand; the derivation audit is
+    accepted; the per-scene eligibility clause is withdrawn as stated, because the consume side is a
+    matching queued activation at the original ordinary omission and the probe's pair carries no
+    session identity; the successor fixture uses independent Q18 pairs for the queued check (one
+    unqueued and one queued begin per execution, one witness token per pair, 1/1, no fictitious
+    queued frame, queued value equals resumed, no omission) with the simultaneous
+    two-live-receiver window kept for the retirement boundary and the foreign/missing/kind receiver
+    falsifiers, both controls re-declared before execution; the bar stands at 561/4,422, 37/134,
+    4/133, 0/26 and the generator at 0/151, 0/94, 0/188 with the schema unchanged. Everything
+    sealed stays sealed. Continuation 75 is ordered: reuse the derivation by hash identity,
+    re-declare the two controls, run the complete schedule, pay the ten executable obligations on a
+    pass (to 571/4,422, 37/134, 4/133, 0/26, the eleven Open named and unpaid), then the generator,
+    then the remaining duties, audits, ordered standing replay, cargo fmt --check, both workspace
+    modes and the switched checks. Continuation 74 charged 905.77682179401747919 s of
+    7,382.360499955026121997 s, leaving 6,476.583678161008642807 s; CM4 now
+    130,023.416321838988657193 of 136,500 s; no new allocation; workspace 0/6,000 with the 1,440 s
+    verification, second 6,000 s workspace, 57,000 s stage reserve and 40,500 s for 743-746 held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
