@@ -3036,6 +3036,54 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     2,751.7728506270214 s of 6,000; CM4 now 137,465.1679827221 s of 148,500 s; stage reserve
     45,000 s; the 1,440 s verification, second 6,000 s workspace and 40,500 s for 743-746 held.
 
+  - G15-CM4 continuation 80 (2026-11-20): the Q79 order executes — the class-template registry
+    is delivered from the declarations (10 classes / 79 subtypes / 6 entries; every generated
+    text equals the pin byte-for-byte), the inventory is corrected to 316 recipe hunks / 771
+    lines with zero unknown, the compose renders 94 paths x 2 arms into two byte-identical roots
+    with erasure 94/94 and 78 REPRODUCED / 12 SUPERSESSION-DECLARED / 4 EXTENSION-DECLARED / 0
+    mismatch, and the re-emitted six-column table (94 rows, working digest 2032dd20...) plus the
+    151 rebound source_schema cells are mechanically exact (reverting to f9604852... reproduces
+    the c78-entry bytes f55108fc... exactly). Both arms compile; the standing replay, fmt and
+    the lp03/04/05 switched checks are green; both workspace modes are green under the exact
+    seven skips (oracle 579/0/5, census 10/0/1, 0 filtered; the aggregate's two FAILED lines are
+    the census's inner forced_red_probe children); the authenticated lane on the current tree
+    passes P0543 55/55 and the campaign 151 rows / 9,060 bound / multiplicity 1 / remaining 0
+    (PortBlocked=1445 standing, full_CM_green=false honest); scope production_changes=0. The stop
+    stands: the carried-operation repair is still inert at the code level — the composed tree
+    calls only the six pre-existing helper APIs and the two repaired consumers, while every
+    producer of the consumers' authentication state has zero call sites (source_installing /
+    state.installed only in InstallGuard::drop; the registration observers; source_append /
+    state.appending only in join_append; source_finish_append_call; source_expect_result /
+    source_finish_result / state.confirmed only in join_result_kind, called only from
+    finish_result/join_result). The E site fails at state.evaluation.get(&scope)? and
+    receiver_installation; the J site fails at state.appending.last()? and confirmed_append.
+    Both omit consumers return false for every reachable state, so the five rows
+    (P1470/P1471, P0267/P0312/P0323) remain unobserved. The focused drive is accepted as
+    recorded and is evidence against the repair: zero probe lines in six runs, the composed arms
+    bind-reject at SourceIdentity before any plan, and the live controls run a helper-free live
+    tree. The c79 switched-check false green is corrected (lp655/lp656 stale path matched zero
+    tests; the real path fails with and without the switch and at baseline at control.rs:1137 —
+    inherited-red permanent exclusions, recorded; lp03/04/05 green). The gate incident is
+    disclosed: the composer's hard-coded output dir made my re-run rewrite the compose records
+    and roots in place; the residue file is hash-identical to the pre-run copy, the other
+    records' sizes equal the pre-run listing, and the roots are byte-identical to the emitted
+    table cells — no evidence changed. Continuation 81 is ordered: the producer wiring
+    (install/registration, append, JoinOwner completion) as declared supersessions with
+    inverses; the reachability proof per predicate plus the calibrated falsifier (a removed
+    producer call must silence the class and redden the drive); the focused same-binary drive of
+    the five carrier classes with the hit lines recorded verbatim, on an instrument that binds
+    by construction (the census ActiveRequiredBag path is inadmissible on a composed identity);
+    the re-composition with erasure 94/94; the re-emission of the six-column table and the
+    151-cell rebind (the digest changes again); the replay, fmt, both workspace modes and the
+    switched checks. Budget: focused 41 receipts — 2,274.3769229829195 s measured + 20.5 s =
+    2,294.8769229829195 s of 11,034.832017277902, leaving 8,739.955094294983 s as c81's LIMIT
+    (spendable 8,479.955094294983); the workspace envelope spent 4,859.558886640967 s of 6,000
+    and is topped up by 3,000 s from the stage reserve to 9,000 (4,126.941113359033 remaining);
+    CM4 now 139,760.04490570502 s of 148,500; stage reserve 42,000 s; the 1,440 s verification,
+    second 6,000 s workspace and 40,500 s for 743-746 held. No campaign, epoch, acceptance or
+    CM5; pair (45,5,false) Open; C2 118 Residual + 0 Lost; 51 owners and five source duties
+    Open; CHANGELOG.md and S10 blocked. Next: continuation 81 (mst).
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
