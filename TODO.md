@@ -3008,6 +3008,34 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     continuation 79; CM4 now 136,298.60798549707 of 148,500 s; stage reserve 45,000 s; workspace
     0/6,000 with the 1,440 s verification, second 6,000 s workspace and 40,500 s for 743-746 held.
 
+  - G15-CM4 continuation 79 (2026-11-19): the Q78 products execute — the residue inventory covers
+    all 315 pinned armed hunks with zero unknown (316 recipe hunks = 315 + one declared scaffold;
+    771 classified lines), the recipe programs and the Q26/Q27 extension recipe are frozen, the
+    compose renders 94 paths x 2 arms into two byte-identical roots with erasure 94/94 and 78
+    REPRODUCED / 12 SUPERSESSION-DECLARED / 4 EXTENSION-DECLARED / 0 mismatch, and the six-column
+    overlays.tsv (94 rows, digest 56a17177...) plus the 151 rebound mutants.tsv cells reconstruct
+    byte-exactly; both arms compile on the drive surface, the standing replay, fmt and the switched
+    checks are green, and the scope is exactly the two tables. Two stops: the workspace is red on
+    exactly the two structural lane tests per mode (the stripped RUM_CM739_LANE_* identity; a
+    one-thread rerun fails in 75.12 s with Err(Program)) — the authenticated P0543 lane cannot fit;
+    and two declared supersessions are provably inert (profile_queue.rs:371
+    omit_evaluation_pass(None) and :612 omit_join(None) return false for every state; their carrier
+    classes are five mutant rows' carrier; JoinOwner::expect_result/finish_result have no call
+    sites), while the class-template registry is not delivered (the six lines are pinned text
+    classified by regex). Q79 (Q79-carried-omission-receivers) rules the mechanical products
+    accepted, the schema transition NOT earned (source_schema remains f9604852..., the 56a17177...
+    tables are the working record only, the bar stays 571/4,422, 37/134, 4/133, 0/26), rejects the
+    two proofs, and orders continuation 80: the carried-operation repair and the class-template
+    registry with code-level proofs; a focused drive observation of the five carrier classes before
+    any re-pin; the re-composition with erasure 94/94; on that pass the re-emission of the
+    six-column table and the 151-cell rebind (the digest will change again); then the authenticated
+    P0543 lane and the remaining indexed duties toward 134/4,422/133; then both workspace modes
+    with the lane configured, fmt and the switched checks; stop before any group that cannot fit.
+    Continuation 79 charged 1,166.5599972250347 s of 12,201.392014502937 s (58 focused receipts),
+    leaving 11,034.832017277902 s for continuation 80; the workspace envelope spent
+    2,751.7728506270214 s of 6,000; CM4 now 137,465.1679827221 s of 148,500 s; stage reserve
+    45,000 s; the 1,440 s verification, second 6,000 s workspace and 40,500 s for 743-746 held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
