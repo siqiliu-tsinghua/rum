@@ -2953,6 +2953,34 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     allocation; workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace, 57,000 s
     stage reserve and 40,500 s for 743-746 held.
 
+  - G15-CM4 continuation 77 (2026-11-19): the Q76 repair is accepted — core::hit binds the hit to
+    the independent local-source record (local_source_token, Q34 shape), the ambient copy read-only;
+    the handoff control (8 cases, 182 controls, 64 draws on four builds at 8/1) keeps the real hit
+    in the six inertness cases, refuses missing-receipt and foreign-frame-kind-receipt at the
+    own-activation-token panic (exit 101), leaves the disabled arm inert, and both mutants are
+    load-bearing; the class audit finds 40 ambient-reselection rows, all core::hit, evidences index
+    625/P0292 form-1 and lists the other 39 unclaimed. The repaired render re-earns the complete
+    864-draw schedule exactly (108 cases = 99 one-activation + 9 three-activation, P0494 = 3), the
+    ten executable indices re-earned, union 571/4,422, 37/134, 4/133, 0/26 unchanged, no divergence,
+    no new obligations. The run then declares the generator emission
+    budget-fits-portblocked-not-executed on the frozen c75 register (PortBlocked::
+    RetirementWitnessNestedPairCardinality on all 94 admitted paths) and stops at the
+    remaining-indexed-duties frontier; Q77 (Q77-generator-emission-stale-register) rules the stop an
+    ordering defect — an unexecuted group plus a stale-register citation — not a candidate failure
+    and not a standing blocker: the register's reason is the c75 stop that Q75 withdrew, the register
+    is read only for its path set, the resolve re-derived all 151 plans fresh, and
+    full_composition=false is a hard-coded literal. Continuation 78 executes the emission (compose
+    and independently audit the two 94-file output sets, emit the six-column schema and the 151
+    cells; 151/151, 94/94, 188/188 on a pass), demonstrates any retained-carrier failure with the
+    failing path/preimage/bytes, declares any supersession with proof that the difference is exactly
+    the declared repair, then the remaining duties, audits, ordered standing replay, cargo fmt
+    --check, both workspace modes and the switched checks. Continuation 77 charged
+    3,132.355036869034 s of 3,617.827092047966201292 s, leaving 485.47205517893235 s; CM4 now
+    136,014.52794482108 of 136,500 s; the 2026-11-19 user ruling allocates a fresh 12,000 s envelope
+    (CM4 148,500 s, stage reserve 45,000 s); continuation 78 runs under 12,485.472055178932 s;
+    workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace and 40,500 s for
+    743-746 held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
