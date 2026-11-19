@@ -2794,6 +2794,54 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     allocation; workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace, 57,000 s
     stage reserve and 40,500 s for 743-746 held.
 
+  - G15-CM4 continuation 73 (2026-11-19): the retirement resolution renders and executes exactly — 30/30
+    source-witness draws over 15 configurations x 2 threads (P0292/ground the positive constructor
+    control; P0256/matcher and P0256/ground; P0259/matcher and P0259/fast; each at abandon, drop and
+    resume), on plan b1c4df59... with the declaration and calibration before the build and the first
+    draw — and then stops on PortBlocked::PairedConstructedFrameRetirementOwner: P0256 and P0259 each
+    return 0/12 own matches (their actual retired type is
+    EvaluateDefinitionApplicationRhsSuspensionFrame against the declared
+    TryApplyDownValuesFromSymbolSuspensionFrame), while the P0292 positive control records 12 live
+    allocations and 12 actual forget_frame calls with receiver and type exact and the matcher controls
+    allocate the declared type with the selected caller absent. The witness copies five files under
+    the admitted path set with five registered edits and exact inverse erasure, and exercises the
+    real Session with two independently suspended sessions, the real input request, typed frame
+    allocation, explicit abandonment, final drop, resume and queued input. The scene seals at 5,747
+    files / 1,308,057,854 bytes with every pair exact and the stopped draw at 98 files; the generator
+    is not delivered (0/151 plans, 0/94 paths, 0/188 postimages, schema f9604852... unchanged) and
+    the standing replay and workspace are NOT_RUN. The facts: both rows are keyed to the two
+    evaluate_definition_application_rhs(option_scope, rhs) occurrences inside
+    try_apply_down_values_from_symbol (down_values.rs:234 ground P0256, :339 fast P0259) and both
+    branches immediately return result.map_err(Route::failure); the producer's
+    EvaluateDefinitionApplicationRhsSuspensionFrame is constructed inside the call before the caller
+    observes the return — a descendant construction Q21 rule 4 and the row's own transport text forbid
+    attributing to the caller; the declared constructor suspend_down_value_application is reachable
+    only from the sibling match_compiled_owned edge, where neither RHS caller site is entered; and the
+    pinned armed statements for P0256/P0259 are shape-identical to P0266's Q747-PairedEvalReturn row,
+    so the family was keyed from the consumer function's constructor set rather than the row's own
+    call edge, with P0314/P0315 carrying the same immediate-return shape. Ruling Q73
+    (Q73-paired-construction-satisfiability): the Q19 claim is refuted for P0256/P0259 on their own
+    edges; the two obligations (indices 363 and 392) are unpayable as declared, stay Open and named
+    and take no credit; no reclassification and no re-pin, because the family determines the consumer
+    boundary set (29 core:: boundaries for the 19 Q19 forms, 27 paired:: for the 25 Q747 forms) and a
+    family change would alter the 4,422 population, so a re-basing may only be authorized explicitly
+    and never inferred by a worker or taken silently at a gate; the retirement group proceeds for the
+    other 19 rows after a per-row derivation audit of all 21 with zero unknown rows; the generator
+    proceeds on the 151 plans, whose source edges are resolved and unambiguous; the complete bar is
+    accounted separately and reports the two named obligations as the exact shortfall; the bar stands
+    at 561/4,422, 37/134, 4/133, 0/26 and the complete bar cannot be declared while indices 363/392
+    are unpayable. Everything sealed stays sealed, and no continuation may edit the frozen forms,
+    weaken the join, normalize the two rows, or adopt the run post hoc. Continuation 74 is ordered:
+    the 21-row derivation audit with zero unknown rows including P0314/P0315 and every
+    sibling-constructor consumer; execution of the satisfiable rows with their own calibration,
+    falsifiers and 8/1 draws; the generator (151 plans, 94 paths, 188 postimages, 151-cell schema
+    emission); then the remaining indexed obligations toward 134/4,422/133, the audits, the ordered
+    standing replay, cargo fmt --check, both workspace modes and the switched checks.
+    Continuation 73 charged 916.41499745607142589 s of 8,298.775497411097547887 s, leaving
+    7,382.360499955026121997 s; CM4 now 129,117.639500044971178003 of 136,500 s; no new allocation;
+    workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace, 57,000 s stage reserve
+    and 40,500 s for 743-746 held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
