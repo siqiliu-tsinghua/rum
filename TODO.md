@@ -3084,6 +3084,52 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     CM5; pair (45,5,false) Open; C2 118 Residual + 0 Lost; 51 owners and five source duties
     Open; CHANGELOG.md and S10 blocked. Next: continuation 81 (mst).
 
+  - G15-CM4 continuation 81 (2026-11-20): the Q80 order executes — every zero-call-site
+    producer of the two consumers' authentication state is wired at its actual site
+    (install/registration at begin_input_suspension and register_owner, the pause-installed
+    record, the append append/bind/observe/finish chain, the JoinOwner capture/expect/finish
+    completion at the three resume sites, the registry retirements) as declared supersessions
+    with mechanical inverses, both arms; the recipe program is 326 hunks / 860 armed lines /
+    zero unknown with 45 producer-wiring lines over 6 wired paths, and both arms compile. The
+    reachability proof per consumer predicate is delivered, and the calibrated falsifier
+    removed exactly one producer call (source_observe_append_queue): three sampled plans ran
+    canonically with zero hit lines and the drive reddened (exit 101); restored, the class
+    fires. The by-construction same-binary drive fired all five carrier classes on the composed
+    armed instrument with the verbatim identities (P0267/P0312/P0323 CM742_JOIN_HIT_ID;
+    P1470/P1471 CM742_QUEUE_HIT_ID), and the disabled arm ran the full cohorts (60/60/60/45/45)
+    canonically with zero class activity; the armed JOIN children exit 101 at the epoch teardown
+    (the runtime's own catch of the destructive omission, disclosed). The re-composition gave
+    two byte-identical roots with erasure 94/94 and 76 REPRODUCED / 14 SUPERSESSION-DECLARED / 4
+    EXTENSION-DECLARED / 0 mismatch (the two moved paths exactly builtins_input.rs and
+    suspension/core.rs), and the re-emission rebound exactly the 151 source_schema cells to
+    9dd3687b... (the 94-row table's file sha256). Standing replay all_steps_pass=true; fmt
+    clean; both workspace modes 4,371/2/66 (oracle 579/0/5, census 10/0/1, 0 filtered; the two
+    FAILED lines are the census's inner forced_red children); the lane on tree a5084dd2... /
+    binary f29e51ff... passes P0543 55/55 and the campaign 151 rows / 9,060 at multiplicity 1 /
+    remaining 0 (PortBlocked=1445, full_CM_green=false); lp03/04/05 green, lp655/656 recorded
+    inherited-red; scope production_changes=0, the 23 inherited porcelain entries,
+    local-contracts.tsv dac98a5b... byte-identical. Q81 (Q81-producer-wiring-and-earned-schema)
+    accepts the wiring, the reachability proof, the calibrated falsifier, the drive, the
+    re-composition and the re-emission; **earns the schema transition** — the accepted
+    source_schema is 9dd3687b..., f9604852... remains the c78 historical anchor and is
+    superseded, 2032dd20... is withdrawn as never accepted; the bar stays 571/4,422, 37/134,
+    4/133, 0/26 with 3,851 obligations, 97 actors and 129 fields outside; and completes CM4's
+    implementation line. The held verification stage (Q82) is ordered next: the two compose
+    roots rebuilt fresh, the full workspace in both modes on the composed tree under the exact
+    seven skips, the authenticated P0543 + campaign lane on the composed binary, and the five
+    carrier rows re-observed with the disabled cohorts canonical, under the held 1,440 s
+    focused envelope and the second 6,000 s workspace, with no inventory re-derivation, no new
+    schema emission unless the composed identity changes and no repo mutation; then 743
+    (observation policy + final epoch + class admission), 744 (shakedown), 745 (full campaign),
+    746 (acceptance); CM5 remains unauthorized. Budget: focused 92 receipts — 3,982.599862453877
+    s measured + 46.0 s = 4,028.599862453877 s of 8,739.955094294983, leaving 4,451.355231841106
+    s spendable; the workspace envelope 41 receipts (27 inherited + 14 new) — 7,439.418026114028
+    s of 9,000, c81's own 2,566.359139473061 s, remaining 1,560.5819738859718 s; CM4 now
+    146,355.00390763195 s of 148,500; stage reserve 42,000 s; the 1,440 s verification, second
+    6,000 s workspace and 40,500 s for 743-746 held. No campaign, epoch, acceptance or CM5;
+    pair (45,5,false) Open; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
+    CHANGELOG.md and S10 blocked. Next: continuation 82 (the verification stage, mst).
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
