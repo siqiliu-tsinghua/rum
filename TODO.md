@@ -2663,6 +2663,49 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     1,440 s verification, second 6,000 s workspace, 57,000 s stage reserve and 40,500 s for 743-746
     held.
 
+  - G15-CM4 continuation 70 (2026-11-19): the Q69 deferred constructor is re-rendered assertion-free
+    (+218 bytes per role, no new assertion — the sealed examiner reads 291 assertion literals
+    byte-exact on both roles at eight and one, and the frozen control module, 40 original tests and
+    4 added controls are preserved) and passes 320/320 draws in 8 builds, with all 192 foreign,
+    missing and mixed draws declining authority (`claim=Empty foreign_changed=false survivor=true`,
+    inner native, zero hits) and all 256 instrumented draws keeping their survivor; my own builds
+    reproduce all 320 draws with all 320 sealed instrument lines identical, and the reader auditor
+    (2 positives, 18 falsifiers per role) plus four falsifiers I generated myself behave exactly.
+    The four `construct_deferred` obligations (3705, 3728, 3751, 3774) and the actor
+    `core::construct_deferred` are earned, raising the accepted bar to **561/4,422** (37/134 actors,
+    4/133 fields, 0/26 groups). Then the new deferred-evaluation-drop group (P2132-P2135 x 2 roles x
+    2 arms x 2 modes x 7 classes = 224 configurations / 448 draws; 44 frozen + 6 added controls;
+    actor `core::DeferredEvaluationGuard::drop`) stopped under Q28 on its first other_provenance
+    control: P2132/form-1 witness armed hash other_provenance declared `[1,0,0,49]` and observed
+    `[0,1,0,49]` at eight and one on the same binary `54a581d4...`, because `Drop` popped the
+    independent source stack and the transported stack while testing only the enum variant, then
+    retired the inner identity even though the transported token named the outer producer
+    (`unchanged=false source_pop=true transport_pop=true own_pop=false inner_current=false
+    outer_current=true`). The group is sealed (27 files, repairs=0) with `candidate_repair=false`
+    and `expectation_repair=false`; 386 of 448 draws executed (384 matched + 2 rejected), 62
+    NOT_RUN. My own build of the sealed render reproduces it at eight and one, all 386
+    worker-executed draws are identical to mine, and I ran the 62 NOT_RUN draws: the class is the
+    whole recording other_provenance family — 24 of 32 configurations fail (witness armed and
+    disabled, runtime armed; all forms and modes), and the 8 runtime-disabled passes are vacuous
+    (`records_present=false conflicting=false`). Ruling Q70
+    (`Q70-deferred-evaluation-drop-provenance-authentication`): at the deferred evaluation guard's
+    teardown, before popping either record or retiring the scope object, the consumer must
+    authenticate that the complete transported top equals the guard's own independently registered
+    source top (owner and token, not the enum variant alone); a foreign or disagreeing transported
+    provenance supplies no authority; the compliant outcomes are a well-bound retirement that pops
+    one matching pair and retires only the actual object, or an assertion-free pre-effect refusal
+    (control flow, not an unwind, per Q67/Q68/Q69) that pops nothing and leaves both record sets,
+    both objects and both native results with their single hits exact; the frozen 44-test base and
+    6 added controls stay declared, the comparator stays unwinding-agnostic, and the edit set and
+    drop auditor are re-derived assertion-free with the calibration still rejecting
+    under-authenticated shapes. The drop group earns nothing; the four drop rows stay with
+    `full_four_form_gate=false`. Continuation 71 re-renders the deferred guard's drop
+    assertion-free, re-runs the 448-draw schedule, then runs the 21 remaining retirement forms.
+    Continuation 70 charged 1,913.142792478029153992 s of 12,997.275668522121059261 s, leaving
+    11,084.132876044091905269 s; CM4 now 125,415.867123955905394731 of 136,500 s; no new
+    allocation; workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace, 57,000 s
+    stage reserve and 40,500 s for 743-746 held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
