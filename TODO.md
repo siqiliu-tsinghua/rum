@@ -2752,6 +2752,48 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     allocation; workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace, 57,000 s
     stage reserve and 40,500 s for 743-746 held.
 
+  - G15-CM4 continuation 72 (2026-11-19): the deferred-evaluation-drop group is re-declared under
+    Q71 with the unchanged c71 sources and re-run, and all 448 draws pass over 224 configurations
+    and 8 builds at eight and one (seven classes at 64/64, matched=448, rejected=0, not_run=0; the
+    386 continuation-71 raw event streams reproduce exactly, the two formerly stopped draws pass,
+    the 62 formerly unexecuted draws ran for the first time; all four form gates 112/112,
+    full_deferred_gates=12/12). The new per-arm duty is calibrated before the first build (34
+    positives, 888 falsifiers rejected, 3 profiles, 2 sealed examples used only as calibration,
+    successor_draws_credited=0) and my replay rebuilds all 8 fixtures, reproduces all 8 binary
+    hashes and all 448 draws with every instrument line byte-identical; the sealed comparator and
+    duty are clean on every draw, and the calibration rerun is byte-identical. Inherited controls
+    exact: 320 assertion literals byte_exact on both roles at eight and one, 2 positives / 52
+    rejected over 54 AST controls. The group seals 1,013 files / 1,320,914,483 bytes with every
+    pair exact and `candidate_failure=false`/`candidate_repair=false`/`production_changes=0`. The
+    run then stops on a qualification-payment port: the ordered 565/4,422, 38/134 from the four
+    drop obligations and their actor conflicts with the distinct audit 561/4,422, 37/134
+    (`already_present=[3704, 3727, 3750, 3773]`, `actor_already_present=true`). The audit is right
+    and the ordering was mine: the four indices and `core::DeferredEvaluationGuard::drop` sit in
+    the qualified union from continuation 66 (551/34; c68 553/35, c69 557/36, c70 561/37, c71
+    561/37) on the continuation-65 actual-scope evidence — 16 items x 2 threads = 32 draws over
+    four components, exact sources, binaries and logs, expected_exact=true at eight and one — and
+    their duty rows carry `full_source_bound_execution=false`, so the missing thing was the
+    four-form proof, not a qualification; the c71 count already held the rows while the gate table
+    listed them incomplete. Ruling Q72 (`Q72-distinct-qualification-baseline`): the frozen
+    distinct-identity ledger is the only qualification baseline; a payment is the distinct
+    cardinality of its evidence set and a group's gate closure may not be added to it; an ordered
+    count that disagrees with the ledger is a port, never a licence to inflate, and never a reason
+    to reclassify prior evidence. The four drop obligations and the actor are already qualified;
+    the deferred-evaluation-drop claim is accepted at its gate bar (4 x 112/112, 448/448, 12/12
+    gates) and earns no distinct increment; the bar stands at 561/4,422, 37/134, 4/133, 0/26;
+    continuation 71's ordered 565/38 is withdrawn. Everything sealed stays sealed, and no
+    continuation may re-litigate the c65 evidence, count the gate closure, re-run the group to earn
+    what is already in the ledger, adopt a run post hoc, edit frozen tests or assertions, or weaken
+    the bar. Continuation 73 resumes the stage: the 21 retirement forms with their own executed
+    source-bound evidence (P0256 and P0259 distinguishing the RHS producer frame from the matcher
+    frame), then the generator (151 plans, 94 paths, 188 postimages, 151-cell schema emission),
+    then the remaining indexed obligations through 134/4,422/133, the audits, the ordered standing
+    replay, `cargo fmt --check`, both workspace modes and the switched checks.
+    Continuation 72 charged 1,206.318310182919958498 s of 9,505.093807594017506385 s, leaving
+    8,298.775497411097547887 s; CM4 now 128,201.224502588899752113 of 136,500 s; no new
+    allocation; workspace 0/6,000 with the 1,440 s verification, second 6,000 s workspace, 57,000 s
+    stage reserve and 40,500 s for 743-746 held.
+
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
