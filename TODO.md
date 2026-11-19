@@ -2563,6 +2563,34 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     6,621.156252773984 s; **new allocation** 12,000 s: continuation 67 runs under
     14,510.770199855946 s, CM4's share 124,500 s, the stage reserve 69,000 s, 743-746 keep 40,500 s;
     workspace 0/6,000, the 1,440 s verification and second 6,000 s workspace held.
+  - G15-CM4 continuation 67 (2026-11-19): the Q66 writer repair is delivered and functionally green
+    — `bind_allocated_frame(actual: &Arc<F>, proposed)` authenticates the proposal against the actual
+    allocation's address and concrete type, the typed-construction-writer group passes 128/128 draws
+    over 64 configurations at eight and one with `actual` issuing to the physical allocation and the
+    three foreign classes changing nothing, the 64 actual/other_live traces stay byte-identical to c66,
+    and the 11 group matrices re-run green on the post-edit renders (1,744 configurations, 3,488
+    draws) — and then stops under Q28: the frozen source-pair examiner (`4590281f...`) required 199
+    assertion literals on pair 022/witness and found 200 at exit 101 at eight and one, because the
+    repair added `assert!(!active, "PortBlocked::ForeignFrameConstructionAllocation")` at ordinal 28
+    (candidate `8429ee53...`); the prior c65 render passes at 199. The group is sealed (15 files,
+    repairs=0) with `candidate_repair=false` and `expectation_repair=false`; 2 of 112 literal draws
+    executed, 110 NOT_RUN. Ruling Q67
+    (`Q67-typed-construction-writer-assertion-free-control-flow-refusal`): the authenticated refusal
+    is control flow, not an unwind — the writer derives the physical identity from the actual
+    allocation and issues nothing when the proposal differs, adding no assertion or panicking
+    termination to a frozen source pair; the frozen writer's own occupied-key assertion stays frozen,
+    the c66 other_live trace's `explicit_rejection=true` becomes false under the compliant refusal with
+    every contract field identical, the comparator's `explicit_rejection` requirement is re-derived to
+    the contract, and the edit set and allocation auditor are re-derived assertion-free. I demonstrated
+    it on director copies: `if proposed != physical { return; }` passes the unchanged examiner at 199
+    and all four classes at eight and one with `explicit_rejection=false`. Continuation 67 earns
+    nothing; the accepted bar stands at 551/4,422 (34/134 actors, 4/133 fields, 0/26 groups) with the
+    two writer obligations and the actor recorded provisionally (553/4,422, 35/134). Continuation 67
+    charged 5,314.931663071038 s of 14,510.770199855946 s, leaving 9,195.838536784908 s; CM4 now
+    115,304.16146321509 of 124,500 s; no new allocation; workspace 0/6,000 with the 1,440 s
+    verification and second 6,000 s workspace held. Continuation 68 re-renders assertion-free, runs
+    the 112 literal draws first, then the auditor, the 128 writer draws, the 11 group matrices, the
+    pending matrices and the deferred bar.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
