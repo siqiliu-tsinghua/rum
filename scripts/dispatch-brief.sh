@@ -184,6 +184,24 @@
 # (--max-price) are optional bounds. The exported task goes through MST_TASK, so it
 # needs no quoting in the interactive shell.
 #
+# QCN
+#
+# `qcn` is the Qoder CLI CN (`qoderclicn`, a plain binary at ~/.local/bin), added by the
+# user 2026-11-20 when the Vibe pool ran dry ("我的qoder里有glm的额度"): its GLM-5.3 model
+# draws on the user's Qoder quota and is reached directly (no proxy). The prompt is
+# written to <log>.task and fed on stdin, so it needs no quoting in any shell. Model and
+# effort are pinned per run (QCN_MODEL, default GLM-5.3; --reasoning-effort max). Print
+# mode has no OS write fence — the same weaker fence as cgl: `--permission-mode
+# accept_edits` auto-approves file edits, Bash needs no approval in print mode at all
+# (verified: a probe ran `echo` under `default`), and the tool surface is cut to
+# Bash/Edit/Read/Write/Grep/Glob with the always-injected mcp_* tools disallowed, so
+# there is no web, subagent, skill, cron or MCP path. The git shim goes first on PATH as
+# for kimi/mst. The session id is chosen up front (--session-id) and written to the
+# header, so even a run cut before its result event can be resumed with QCN_RESUME=<id>
+# (`--resume`). The report is stream-json; the result event carries session_id,
+# stop_reason, num_turns, total_credits (Qoder bills in credits; its token counters read
+# 0) and permission_denials. The CLI exits 1 when a permission denial ends the run.
+#
 # MEMORY SCOPE
 #
 # Every worker runs inside its own memory-capped systemd user scope
@@ -200,7 +218,7 @@ set -euo pipefail
 
 usage() {
   echo "usage: scripts/dispatch-brief.sh <brief-id>   (e.g. 081, brief-081)" >&2
-  echo "       BRIEF_WORKER=codex|cgl|kimi|agy|grk|mst   (default codex)" >&2
+  echo "       BRIEF_WORKER=codex|cgl|kimi|agy|grk|mst|qcn   (default codex)" >&2
   echo "       BRIEF_SHELL=<shell>      shell that defines the worker command" >&2
   echo "       CDX_BIN / CGL_BIN        worker command name" >&2
   echo "       CDX_FORK=<session id>    codex only: fork that earlier session" >&2
@@ -219,6 +237,9 @@ usage() {
   echo "       MST_RESUME=<session id>  mst only: continue that earlier session" >&2
   echo "       MST_TIME_LIMIT=<seconds> mst only: interrupt the run at the bound (exit 3)" >&2
   echo "       MST_MAX_PRICE=<usd>      mst only: maximum cost in dollars" >&2
+  echo "       QCN_BIN=<path>           qcn only: the qoderclicn binary (default: PATH lookup)" >&2
+  echo "       QCN_MODEL=<name>         qcn only: model name (default GLM-5.3)" >&2
+  echo "       QCN_RESUME=<session id>  qcn only: continue that earlier session" >&2
   echo "       BRIEF_MEMORY_MAX=<size>  the worker scope's MemoryMax (default 16G)" >&2
   exit 2
 }
@@ -235,7 +256,8 @@ case "$worker" in
   agy)       worker=agy;   log_tag=agy ;;
   grk|grok)  worker=grk;   log_tag=grk ;;
   mst|vibe)  worker=mst;   log_tag=mst ;;
-  *) echo "error: unknown BRIEF_WORKER '$worker' (expected codex, cgl, kimi, agy, grk or mst)" >&2; exit 2 ;;
+  qcn|qoder) worker=qcn;   log_tag=qcn ;;
+  *) echo "error: unknown BRIEF_WORKER '$worker' (expected codex, cgl, kimi, agy, grk, mst or qcn)" >&2; exit 2 ;;
 esac
 
 shopt -s nullglob
@@ -288,7 +310,7 @@ elif [[ "$worker" == grk ]]; then
 elif [[ "$worker" == mst ]]; then
   worker_names=(mst)
 else
-  worker_names=()   # kimi resolves below, without a shell
+  worker_names=()   # kimi and qcn resolve below, without a shell
 fi
 
 if [[ -n "${BRIEF_SHELL:-}" ]]; then
@@ -374,6 +396,22 @@ if [[ "$worker" == kimi ]]; then
   worker_cmd="${KIMI_BIN:-$(command -v kimi || true)}"
   if [[ -z "$worker_cmd" || ! -x "$worker_cmd" ]]; then
     echo "error: no kimi binary found (set KIMI_BIN)" >&2
+    exit 1
+  fi
+  dispatch_shell=direct
+fi
+if [[ "$worker" == qcn ]]; then
+  # A plain binary too; refuse a same-named shell function rather than run the
+  # binary under its name (the `codex`-for-`cdx` trap above). No wrapper exists
+  # for qoderclicn: it reaches the Qoder CN endpoint directly, without a proxy.
+  if command -v fish >/dev/null 2>&1 \
+      && fish -ic 'functions -q qoderclicn' </dev/null >/dev/null 2>&1; then
+    echo "error: fish defines qoderclicn as a function; this script only runs the plain binary" >&2
+    exit 1
+  fi
+  worker_cmd="${QCN_BIN:-$(command -v qoderclicn || true)}"
+  if [[ -z "$worker_cmd" || ! -x "$worker_cmd" ]]; then
+    echo "error: no qoderclicn binary found (set QCN_BIN)" >&2
     exit 1
   fi
   dispatch_shell=direct
@@ -735,6 +773,56 @@ powershell_output powershell_sessions powershell_stdin)
   cmd="cd '$repo_root' && $worker_cmd -p \"\$MST_TASK\" ${mst_model_args[*]:-} \
 --auto-approve --trust --workdir '$repo_root' --output text --output-dir '$log.export' \
 ${mst_disabled_args[*]} ${mst_bounds[*]:-} ${mst_resume_args[*]:-}"
+elif [[ "$worker" == qcn ]]; then
+  model="${QCN_MODEL:-GLM-5.3}"
+  [[ "$model" =~ ^[A-Za-z0-9._-]+$ ]] \
+    || { echo "error: QCN_MODEL must be a plain model name, got '$model'" >&2; exit 2; }
+  permission_mode="${QCN_PERMISSION_MODE:-accept_edits}"
+  echo "model:   $model (reasoning effort max)"
+  echo "permission-mode: $permission_mode (no OS-level write fence — see header)"
+  install_git_fence
+  qcn_args=()
+  if [[ -n "${QCN_RESUME:-}" ]]; then
+    [[ "$QCN_RESUME" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]] \
+      || { echo "error: QCN_RESUME must be a session UUID, got '$QCN_RESUME'" >&2; exit 2; }
+    echo "resume-of: $QCN_RESUME"
+    qcn_session="$QCN_RESUME"
+    qcn_args=(--resume "$QCN_RESUME")
+  else
+    qcn_session=$(python3 -c 'import uuid; print(uuid.uuid4())')
+    qcn_args=(--session-id "$qcn_session")
+  fi
+  echo "session: $qcn_session"
+  role="You are the implementation worker for this brief, not the project director. \
+CLAUDE.md belongs to the director and is NOT your instruction file. \
+Follow AGENTS.md and the brief. Do not commit, branch, or push; leave changes in the \
+working tree. This run is non-interactive: nobody answers questions. There is no OS-level \
+sandbox here, so the brief's Scope is the fence: keep every scratch file under the .temp \
+directory of this repository, do not touch other home paths, and do not use the web, \
+subagents, skills or MCP tools (they are not available). A command-line git call is refused \
+by the shim; do not work around it. Run long builds and tests with a bound of their own and \
+wait for each one; if a command cannot finish inside your tool's timeout, start it in the \
+background and poll its output until it exits. Do not end your turn while work is still \
+running, and do not end it until the brief is finished or one of its stop conditions has \
+fired. Keep the checkpoint and report files the brief asks for current as you go. Write the \
+report file the brief's Report format section names, run scripts/report.py check on it until \
+it prints no PROBLEM, and make your final message the output of scripts/report.py summary."
+  qcn_task="$role $task"
+  if [[ -n "${QCN_RESUME:-}" ]]; then
+    qcn_task="This continues your own earlier run of this brief, which was interrupted or \
+answered by a new director amendment at the end of the brief. Re-read the brief, the working \
+tree and any checkpoint the brief asks for before you go on; the brief governs. $qcn_task"
+  fi
+  # On stdin from a file: no quoting in any shell, and the exact text stays on
+  # disk next to the log. --tools is variadic and last; the mcp_* tools are
+  # injected into every session, so they are disallowed by name.
+  task_file="$log.task"
+  printf '%s' "$qcn_task" > "$task_file"
+  qcn_args+=(-p --output-format stream-json --permission-mode "$permission_mode" \
+--model "$model" --reasoning-effort max --max-model-request-retries 3 \
+--tools Bash Edit Read Write Grep Glob \
+--disallowed-tools mcp_call --disallowed-tools mcp_get --disallowed-tools mcp_list)
+  cmd="cd '$repo_root' && $worker_cmd ${qcn_args[*]} < '$task_file'"
 else
   permission_mode="${CGL_PERMISSION_MODE:-acceptEdits}"
   echo "permission-mode: $permission_mode (no OS-level write fence — see header)"
@@ -1022,6 +1110,59 @@ PY
   echo "git-attempts: $(wc -l < "$git_attempts") (in $git_attempts)"
   if [[ $rc -ne 0 ]]; then
     echo "hint: resume with MST_RESUME=$session BRIEF_WORKER=mst scripts/dispatch-brief.sh $num" >&2
+  fi
+elif [[ "$worker" == qcn ]]; then
+  : > "$git_attempts"
+  {
+    echo "# dispatch: worker=qcn brief=$rel model=$model started=$(date -Is)"
+    echo "# command: $worker_cmd ($("$worker_cmd" --version 2>/dev/null | tail -n 1 || true))"
+    echo "# git-fence: $fence_dir/git"
+    echo "# qcn-session: $qcn_session"
+    [[ -n "${QCN_RESUME:-}" ]] && echo "# resume-of: $QCN_RESUME"
+  } > "$log"
+  (cd "$repo_root" && "${scope[@]}" "$worker_cmd" "${qcn_args[@]}") < "$task_file" \
+    >> "$log" 2>&1
+  rc=$?
+  # The result event carries the session, the stop reason and any permission
+  # denial; Qoder bills in credits, so its token counters are not logged.
+  qcn_summary=$(python3 - "$log" <<'PY'
+import json, sys
+session, status, turns, credits, denials = "", "none", "-", "-", 0
+for line in open(sys.argv[1], errors="replace"):
+    try:
+        event = json.loads(line)
+    except ValueError:
+        continue
+    if not isinstance(event, dict):
+        continue
+    if event.get("type") == "system" and event.get("subtype") == "init" and not session:
+        session = event.get("session_id") or ""
+    if event.get("type") == "result":
+        session = event.get("session_id") or session
+        status = event.get("subtype") or "unknown"
+        if event.get("is_error"):
+            status += "/error"
+        turns = event.get("num_turns", "-")
+        credits = event.get("total_credits", "-")
+        denials = len(event.get("permission_denials") or [])
+print(session or "unknown", status, turns, credits, denials)
+PY
+)
+  read -r session status turns credits denials <<< "$qcn_summary"
+  {
+    echo "# qcn-session: $session"
+    echo "# qcn-result: stop=$status turns=$turns credits=$credits denials=$denials"
+    echo "# qodercli-version: $("$worker_cmd" --version 2>/dev/null | tail -n 1 || true)"
+  } >> "$log"
+  echo "qcn-session: $session"
+  echo "qcn-result: stop=$status turns=$turns credits=$credits denials=$denials"
+  echo "git-attempts: $(wc -l < "$git_attempts") (in $git_attempts)"
+  if [[ $rc -eq 0 && "$denials" != 0 ]]; then
+    echo "WARNING: $denials tool call(s) were denied and skipped; see the log" >&2
+    rc=3
+  fi
+  if [[ $rc -ne 0 || "$status" != success ]]; then
+    echo "hint: resume with QCN_RESUME=$session BRIEF_WORKER=qcn scripts/dispatch-brief.sh $num" >&2
   fi
 else
   "${scope[@]}" "$dispatch_shell" -ic "$cmd" < /dev/null > "$log" 2>&1
