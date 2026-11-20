@@ -3166,6 +3166,55 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized.
     Next: continuation 83 — the route needs the user's decision (mst dry, qoder walled,
     grk per-run word).
+  - G15-CM4 continuation 83 (2026-11-20): the Q83 inventory-first repair ran on `grk` under
+    the user's second authorization (14:10:34-15:09, 116 turns, $9.42, success, STOP
+    `ComposedWorkspaceNotGreen`; report 50,633 B `b918d086...`, 8 PASS / 3 FAIL / 1 NA, 3
+    deviations, 2 disclosures). The reference inventory covers both arms of the sealed c82
+    roots: 94 paths, 188 files, root-b identical 94/94, 10 workspace crates, 131 lock
+    packages, 2,430 crate references, 2,422 resolved, 8 unresolved, **unknown=0**; the
+    eight rows are `rum_runtime` at jupyter/worker.rs:359/370/391/394 in both arms. The
+    repair is a two-line manifest admission (jupyter's Cargo.toml and Cargo.lock), live
+    pre-images 2d157db0.../e3c81a52... unchanged, inverse byte-exact, schema consequence
+    none, source_schema 9dd3687b... untouched; both jupyter arms compile; the composed tree
+    is the live working tree + the 94 armed postimages (94/94 identical to the c82
+    armed_sha cells) + the two lines, and the live tree keeps the 23 inherited porcelain
+    entries with production_changes=0. The composed workspace (both feature modes, exact
+    seven skips, 8 threads, sealed lane binary) is red: 1,024.201368 s and 615.273687 s,
+    exit 101, cargo-level 4,196/113/66 in both modes with the same 113 names (my per-binary
+    parse confirms). Nine are sandbox loopback panics and are green on the host (9/9). The
+    rest include `crate_manifest_keeps_jupyter_on_host_facade` (the admission violates the
+    corpus's own architecture invariant, which was not weakened), 26 ordinary tests dying
+    at the probe's `actual complete_work observation` oracle (49 panic sites, composed
+    lib.rs:2616), 31 census SourceIdentity panics, 8 typed_slot_census reds, one LP01
+    producer fingerprint, 8 missing UnknownHostPayload rows, the frontier count 1,241 vs
+    1,229, the stdout hygiene violation (12 `println!` in the probe module), the
+    `.frames.insert(` queue-mutation scan, and the native-stack boundary moved. The four
+    g7_continuation_contract reds are isolation-sensitive: identical on the live tree when
+    the module runs alone and green in the c82 live full suite. Standing replay was not run
+    (deviation #2); fmt is 271 hunks over 87 rendered files and was not applied. Q83
+    (Q83-inventory-admission-and-composed-instrument) accepts the run and STOP, the
+    inventory, the admission's mechanical exactness and the schema-unchanged record;
+    **rejects the admission as the repair** (the facade invariant forbids the edge); **fails
+    the verification**; and **corrects the Q82(7)(iii) bar**: the corpus's suite contains
+    live-source identity/fingerprint audits no composed identity can pass, so the bar is
+    the composed-vs-live A/B under identical commands with a declared, pre-enumerated
+    inadmissible set and zero unexplained differences, no test modified. The instrument is
+    not sound yet: the c80/c81 wiring records and asserts outside a driven run, the
+    module's text violates two textual invariants, and the wiring's frames move the
+    native-stack boundary. Continuation 84 is ordered: the facade-preserving rendered-text
+    repair through rum-host with its inverse; the instrument's inertness outside driven
+    runs and the module text fixes; the re-composition, erasure and reproduction audit; the
+    mechanical re-emission and 151-cell rebind; the derived-inventory replay on the
+    composed tree; the composed-vs-live workspace A/B on the host with the inadmissible set
+    declared in advance; the five carrier rows re-fired; no composed-binary lane; stop
+    before any group that cannot fit. Budget: c83 charged 52.90756404493004 s focused
+    + 1,670.237306060997 s workspace = 1,723.144870105927 s; with the Q82 returns
+    (4,229.467190670935 s) the stage reserve was 45,283.930473710025 s before the charge
+    and is 43,560.7856036041 s after, the 40,500 s for 743-746 covered and
+    3,060.7856036041 s unallocated; CM4 now 151,168.68158706694 s. Bar 571/4,422, 37/134,
+    4/133, 0/26; pair (45,5,false) Open; C2 118 Residual + 0 Lost; 51 owners and five
+    source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Next: continuation
+    84 — the route needs the user's word (mst dry, qoder walled, grk per-run).
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
