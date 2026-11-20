@@ -3309,6 +3309,51 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized. Next: continuation 86 (the attributed structured fast path), dispatched
     to `grk` under the user's 2026-11-20 routing ruling.
+  - G15-CM4 continuation 86 (2026-11-20): the attribution and structured fast path ran on `grk`
+    under the user's 2026-11-20 routing ruling (18:37:14-21:28, 322 turns, $29.25, success,
+    STOP under the staging rule; report 60,773 B, 7 PASS / 3 FLAGGED / 1 NA, 5 deviations,
+    6 disclosures, 0 questions, 81 citations). The ablation on the sealed c84 tree closes the
+    4,176.0000 B/level: module-only calibration 19,184.0000 (inert), no-around 19,200.0000,
+    no-hot-around 20,272.0000, no-fohe 23,328.0000, class sum 192+4,176*depth with zero
+    unexplained bytes; I rebuilt the calibration and no-hot-around trees and reproduced their
+    slopes exactly. The function-level twin render (107 files, 400 hunks, recipe 1f5272c7...,
+    inverse_bad=0) makes the hot spine the live bodies with cold `*_cm740_driven` twins; I
+    reconstructed the composed tree from the sealed c84 tree plus the saved render, built it
+    fresh, and measured 19,184.0000 / 3,360.0000 at all seven depths with depth 48 `done` at
+    924,192 - identical to live. The dead recorder is removed (reasoning recorded; the manual
+    Discard impls stay); all five carrier rows fired with their identity fields and I re-ran
+    P0267 with the worker's exact profile environment to reproduce the hit and verdict;
+    disabled cohorts 60/60/60/45/45, zero hits; the frame replay is the same 21 names as c84;
+    the scratch emission is 131 rows at 4e14ee33... with 151 cells and the repo untouched;
+    112 `.temp` changes, production_changes=0, the live tree at its 23 inherited entries; the
+    charge is 2,543.724949 s focused and 0 workspace. **The finding is the shape the peel
+    cannot see**: three off-spine hot bodies (rhs.rs twice, bridge.rs once) still call the
+    cm740_cold_P0289/P0294 blocks on the InputRequired arm, running four contract assertions
+    and an `eprintln!("C17_RETURNED_OWNERSHIP ...")` undriven - the strip removed the probe
+    `enter` and left the probe's body - and 58 probe call sites remain in non-cold functions
+    (56 frame/hit pairs in TypedFrame::resume trait impls across 12 files, 2 in old_encode).
+    The arms bar is corrected to an exact three-line enumeration (the C10 token already
+    differed in the seal; the pass folds the disabled P0543 block); the carrier child index
+    moved 4/3 -> 2 with identity fields matching; the 131-row emission means the render edits
+    files outside the c81 94-path set, to be accounted next. Q86 (Q86-twin-spine-and-hot-body-
+    residue) accepts the ablation, calibration, twin mechanism on the spine, recorder removal,
+    carriers, frame delta, scratch emission, scope and budget, and finds the fast-path property
+    failing globally. Continuation 87 is ordered: every undriven path is the live body (no
+    probe call, assertion, print, argument temporary or partial strip outside cold never-
+    inlined twins; the trait-impl and old_encode sites converted the same way; the C17 blocks
+    moved entirely into the twins; composer-generated with a byte-exact inverse); a whole-tree
+    static comparison with zero differences plus the peel at exactly live and the five rows
+    re-fired from the twins; then the standing replay (sealed 813.536064 s), the six-column
+    re-emission and 151-cell rebind on the changed identity, `cargo fmt --check`, the composed
+    and live workspace both modes with the seven skips and the nine native tests (the director
+    closes loopback), the switched lp03/lp04/lp05, zero unexplained differences; no test
+    change, no composed-binary lane. Budget: c86 charged 2,543.724949 s focused and 0 s
+    workspace; the stage reserve is 40,824.1981416041 s after the gate with the 40,500 s for
+    743-746 held; CM4 is now 153,905.26904906694 s; Q87's envelopes are 4,000 s focused +
+    10,000 s workspace. Bar 571/4,422, 37/134, 4/133, 0/26; pair (45,5,false) Open; C2 118
+    Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
+    CM5 unauthorized. Next: continuation 87 (the hot-body completion), dispatched to `grk`
+    under the user's 2026-11-20 routing ruling.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
