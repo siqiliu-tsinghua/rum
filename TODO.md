@@ -3354,6 +3354,48 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
     CM5 unauthorized. Next: continuation 87 (the hot-body completion), dispatched to `grk`
     under the user's 2026-11-20 routing ruling.
+  - G15-CM4 continuation 88 (2026-11-21): the canonical emission and the final A/B ran on `grk`
+    under the user's 2026-11-20 routing ruling (04:34:10-07:24, 227 turns, $19.19, success, DONE;
+    report 68,317 B, 12 PASS / 7 FLAGGED / 0 FAIL, 113 citations; peak 17,128,415,232 B of the
+    16 GiB scope, 99.7%, oom 0). Canonical emission is inside the composer: I re-ran `fn_split.py`
+    on my own reads of the sealed bases and reproduced both recipes byte-identically (0b787c0c...,
+    3bd38f92...), both `changed_files=126 inverse_bad=0`, and all 126 render files; `cargo fmt
+    --all -- --check` is exit 0 on both arms and the live control, the c87 tree fires 1,164 diffs
+    as the negative control, no `#[rustfmt::skip]`, no rustfmt pass over a finished render. My
+    whole-tree compare on both arms is `verbatim=13555 ws=0 wrapper=52 dispatch=123 cold=334
+    facade=4 extension=25 diff=0`; the 52 wrappers keep the live body byte-exact (early-return
+    form), 63 of the 123 dispatches are exact and 60 differ only in rustfmt whitespace, probe
+    tokens outside cold twins are only the four facade forwards. The peel is exactly live from my
+    own three fresh harness builds (19,184.0000 / 3,360.0000 at all seven depths, depth 48 done
+    at 924,192; the corpus test is green on armed and live). I rebuilt the drive binary from
+    byte-identical copies of both work trees (same binary hash suspension_oracle-ad9873bc53ac1c0b)
+    and re-fired the five rows from the twins with the pins applied after the build and reverted
+    60/60 (join generations 2/2/2, queue 3/4); disabled cohorts 60/60/60/45/45 inert. Frame delta
+    514/535, only-right 21. My parse of the four workspace logs: composed unique 59 = 48
+    enumerated + 11 baseline, extra 0 in both modes; live 11, extra 0; the seven skips absent from
+    every log; the 12 pre-replay extras are the stale-fingerprint local retention tests; the nine
+    native tests pass on the host 9/9 on all four binaries (the sandbox refused loopback and the
+    tests did not take the skip route); the live baseline's two Program reds are confirmed. The
+    six-column table recomputes to afb3110b... with all 133 rows matching the live preimage and
+    both trees; the 151 cells and the repo overlays hold it; the repo writes follow the A/B
+    (07:06:13 > 07:04:01); 9dd3687b... stays the c81 historical record; the 68-cell fingerprint
+    import is scratch and live local-contracts.tsv is still dac98a5b...; lp03/04/05 are 12/12
+    green. Scope: 0 tracked files modified after the dispatch, the inherited 23-entry porcelain
+    unchanged, sealed c76-c87 with 0 files newer and the three sealed lib.rs inodes unchanged
+    (9863066 / 9954275 / 9976980); the source arm difference is 4 files (three enable lines plus
+    the disclosed import). Budget recomputed: 856.351 s focused + 4,168.380 s workspace =
+    5,024.731 s. Q88 (Q88-canonical-emission-and-final-ab-accepted) accepts everything, records
+    the six non-blocking findings (TREE-PROBE scope 6 vs 4; the after-replay arm log's .temp/target
+    noise; the overlays why wording; check --against-git unusable; the 99.7% scope peak, so 743
+    dispatches at 20G; the pre-existing dispatch-form warnings), and closes CM4's implementation
+    and verification lines. Next: brief 743 (observation policy + final epoch + class admission)
+    — brief 741's 38 observer rows (28 NativeEqual + 3 deferred-publication + 7 profile-return)
+    and 113 ordinary, the final epoch, class admission against the 151-row bar; then 744, 745,
+    746; CM5 unauthorized. The stage reserve is 47,533.4781416041 s; Q89's envelope is 2,500 s
+    focused + 6,000 s workspace carved from the 40,500 s held, leaving 32,000 s for 744-746; CM4
+    is now 167,195.98904906694 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair (45,5,false) Open;
+    C2 118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10
+    blocked; no campaign, epoch, acceptance, CM5 or new catch.
   - G15-CM4 continuation 87 (2026-11-21): the hot-body completion ran on `grk` under the
     user's 2026-11-20 routing ruling (21:54:13-04:09, 706 turns, $60.17, success, DONE;
     report 39,245 B, 6 PASS / 7 FLAGGED / 0 FAIL, 3 deviations, 5 disclosures, 1 question,
