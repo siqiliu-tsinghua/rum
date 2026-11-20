@@ -3130,6 +3130,42 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     pair (45,5,false) Open; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
     CHANGELOG.md and S10 blocked. Next: continuation 82 (the verification stage, mst).
 
+  - G15-CM4 continuation 82 (2026-11-20): the held verification stage ran on `grk` after
+    `mst` died on the exhausted Vibe pool (402 at 06:13, only scaffolds) and `qcn` died at
+    the Qoder account wall (403 error_code 112, 345.31 credits, session resumable, no repo
+    mutation). Delivered: the fresh compose roots are 188/188 identical to the sealed c81
+    roots (76/14/4/0, erasure 94/94; my gate-copy re-run reproduces all four records
+    byte-identically); the schema is unchanged (9dd3687b..., b0830955..., dac98a5b...,
+    production_changes=0); the five carrier rows re-fired verbatim and the disabled cohorts
+    are canonical (60/60/60/45/45, zero class hits); the live-tree lane re-run is P0543 55/55
+    and campaign 151 rows / 9,060 / multiplicity 1 / remaining 0 (PortBlocked=1445,
+    full_CM_green=false); the live-tree workspace is green on the host in both modes
+    (4,366/2/66; the two reds are the accepted inner `forced_red_probe` children; the
+    worker's sandbox run reddened only the nine native ZeroMQ loopback tests). The ordered
+    composed-tree workspace was not run by the worker, and my host construction of it
+    **fails to build**: rum-jupyter/worker.rs:359/370/391/394 reference
+    `rum_runtime::cm740_probe` with no rum-runtime dependency (E0433 x4, both arms; a full
+    scan finds this to be the only unresolved cross-crate reference in the 94 paths) — no
+    stage had ever compiled the jupyter render (c79's disclosure; c81's compile gate was
+    `-p rum-runtime -p rum-stdlib -p rum-host`). My Q82 clause "the lane on the composed
+    binary" was ill-posed: the census/lane path is inadmissible on composed identities by
+    the Q80(4) rule (my composed lane build, tree 0ea9ed5a.../binary 112aa6cd..., reddened
+    with SourceIdentity); the live-tree authenticated lane stands. Q82
+    (Q82-verification-and-composed-build) accepts the run and the delivered groups, rejects
+    deviation #2 as compliance, withdraws the composed-binary lane clause, **fails the
+    stage's central verification** and **reopens CM4's implementation line**. Continuation
+    83 is ordered inventory-first: the complete rendered-reference inventory with zero
+    unknown, the minimal repair with its mechanical inverse, the composed workspace green in
+    both modes on a loopback-capable host, and the mechanical re-emission only if the source
+    identity changes; no composed-binary lane. A recording correction: the workspace
+    aggregate is 4,366/2/66, not the 4,371 carried since c79. Budget: c82 charged
+    944.9538995410257 s focused + 2,145.5789097879897 s workspace = 3,090.5328093290154 s;
+    a 945.5367169609654 s carve from the stage reserve (42,000 -> 41,054.46328303904) is
+    recorded; CM4 now 149,445.536716961 s; the 40,500 s for 743-746 stays held. Bar
+    571/4,422, 37/134, 4/133, 0/26; pair (45,5,false) Open; C2 118 Residual + 0 Lost; 51
+    owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized.
+    Next: continuation 83 — the route needs the user's decision (mst dry, qoder walled,
+    grk per-run word).
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
