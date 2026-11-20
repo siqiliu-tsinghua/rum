@@ -3265,6 +3265,50 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     CHANGELOG.md and S10 blocked; CM5 unauthorized. Next: continuation 85 (the Q85
     measurement-first stack design), dispatched to `grk` under the user's 2026-11-20
     routing ruling.
+  - G15-CM4 continuation 85 (2026-11-20): the measurement-first stack stage ran on `grk`
+    under the user's 2026-11-20 routing ruling (17:42:51-18:25, 102 turns, $8.34, success,
+    STOP under Q28; report 30,967 B, 4 PASS / 1 FLAGGED / 2 FAIL / 4 NA, 4 disclosures,
+    5 deviations, 0 questions, 36 citations). The declared harness binary-searches
+    `Session::set_native_stack_limit` for the smallest limit at which the peel returns
+    `done`; the account is live 19,184.0000 B/level (intercept 3,360.0000), composed
+    23,360.0000 (3,552.0000), delta 4,176.0000, default limit 1,048,576, depth 48 live
+    924,192 `done` versus composed 1,124,832 `StackLimit`. I rebuilt all three harnesses
+    from source in fresh target dirs and reproduced live, composed and shape 2 exactly,
+    and reconstructed shape 1 from its rewrite script to reproduce 23,248.0000 too. The
+    census counts 385 rendered calls (around 95, around_hit 6, around_ok 23, around_some
+    6, enter 33, frame 93, hit 109, ordinary 15, returned 5), `hot_enter=0`, six staying
+    rows; the class replay is 212/28/4/64/52/16 exactly. Both shapes reduce and leave
+    the peel red: shape 1 (closure kept in the hot branch) 23,248.0000 with depth 48 at
+    1,119,488, shape 2 (six staying closures in cold methods) 22,032.0000 with 1,060,960.
+    The findings: **Q28 was misapplied** (the counter is keyed on whether the count fell,
+    and both attempts fell: 4,176 -> 4,064 -> 2,848); the 696-byte/closure model is
+    falsified by shape 1's 112 B/level; the census's zero contribution for non-staying
+    classes is a model contradicted by the surviving 2,848 B; and at `opt-level=0` every
+    MIR temporary owns a frame slot, so any per-site rewrite adds fixed bytes to the hot
+    frame at every level even when its branch is not taken. "Delta at zero" was shorthand
+    for "no per-site cost": the enforceable bar is that the hot function is the live body
+    and every probe call, closure and probe argument temporary lives in cold,
+    never-inlined code reached only when driven, every remaining byte itemized per
+    function. Q85 (Q85-attributed-fast-path) accepts the harness, the account, the
+    census, the class replay, the scope and the budget; rejects the 696-byte model as an
+    account; records both shapes as its falsifications; holds Q28 did not fire; and orders
+    continuation 86: attribution by ablation first (module-only calibration, around
+    removed, hot-around removed, frame/ordinary/hit/enter removed, the class sum
+    accounting for 4,176.0000), then the structured fast path produced mechanically by
+    the composer with a byte-exact inverse and a function-level hunk class, then the
+    per-function itemized account with the peel green at depth 48 and the live control,
+    then the carrier resolution and the five carrier rows, then, if it fits, the
+    six-column re-emission and 151-cell rebind on the changed identity, the
+    derived-inventory replay and the host composed-vs-live A/B with the inadmissible set
+    enumerated before the run; no test change, no composed-binary lane. Budget: c85
+    charged 124.522513 s focused (120.022513 s measured + 4.5 s bookkeeping) and 0 s
+    workspace; the stage reserve is 43,367.9230906041 s after the gate with the 40,500 s
+    for 743-746 held and 2,867.9230906041 s unallocated; CM4 is now
+    151,361.54410006695 s; Q86's envelopes are 3,000 s focused + 7,200 s workspace.
+    Bar 571/4,422, 37/134, 4/133, 0/26; pair (45,5,false) Open; C2 118 Residual + 0 Lost;
+    51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
+    unauthorized. Next: continuation 86 (the attributed structured fast path), dispatched
+    to `grk` under the user's 2026-11-20 routing ruling.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
