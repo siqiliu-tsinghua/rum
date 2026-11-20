@@ -187,7 +187,8 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   `NoObservableTail`; P0492 is a new Lost row (resumed
   `call.stage.prepare_arguments`; 9 DIFF / 7 SAME). **Worker routing
   2026-11-12:** a Codex quota death asks about the 2nd Codex account;
-  `mst` only on a safety-filter refusal; both drained -> ask before grok.
+  `mst` only on a safety-filter refusal; both drained -> grok without asking
+  (2026-11-20 user ruling: unusable accounts make grk the default).
 
 ## Pointers
 

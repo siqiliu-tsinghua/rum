@@ -3215,6 +3215,56 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     4/133, 0/26; pair (45,5,false) Open; C2 118 Residual + 0 Lost; 51 owners and five
     source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Next: continuation
     84 — the route needs the user's word (mst dry, qoder walled, grk per-run).
+  - G15-CM4 continuation 84 (2026-11-20): the Q84 sound-instrument repair ran on `grk`
+    under the user's 2026-11-20 routing ruling (16:08:07-17:29, 203 turns, $18.34,
+    success, STOP under Q28; report 56,839 B `f5c048f5...`, 3 PASS / 4 FLAGGED / 3 FAIL / 3
+    NA, 7 deviations, 5 disclosures, 2 questions, 56 citations). The facade repair replaces
+    the c83 manifest admission: eight jupyter lines call `rum_host::HostSession::
+    cm740_enter/ordinary/hit`, the host session appends three forwarding methods, the
+    jupyter manifest stays clean, and the corpus's facade test is green on the composed
+    tree (my run). The helper's text repairs rewrite 12 `println!`, rename 19 frames and 2
+    fields; my count on the composed `lib.rs` is zero `println!` and zero `.frames.insert(`,
+    and the hygiene test is green on the composed binary. The re-composition renders 94
+    paths x 2 arms with erasure 94/94, byte-identical roots and 25 REPRODUCED / 65
+    SUPERSESSION-DECLARED / 4 EXTENSION-DECLARED / 0 mismatch; my composer reproduction on
+    a patched gate copy is byte-identical for all five records and both roots (0.164 s).
+    The peel does not move: both compiled attempts (boxed Guard and the around()/
+    around_*_armed split) leave `bounded_recursive_definition_below_native_stack_limit_
+    succeeds` red at holding_and_control_part2.rs:504 (StackLimit versus done) while the
+    live control is green; Q28 stopped the guessing and the composer's 28 unmatched
+    blocks, 64 unclosed enters and 16 unpaired sites show the compiled tree was a mixed
+    render with no stack measurement behind it. The 21-frame inventory delta (composed 514
+    vs 535, only-right 21, only-left 0, reproduced by me; live control green) is the
+    declared extension renders' manual FrameAbandon substitution and enters the declared
+    inadmissible set as a source-inventory audit of the live text (exact enumeration, no
+    scanner weakening, no derive or derived_inventory edit, re-enumerated every
+    recomposition). The dead recorder must still be fixed: the 21 substitutions call
+    `cm740_raw_retirement::retire` unconditionally into a private write-only TLS Vec no
+    code can read - a recorder capturing outside any driven run and a default-path cost,
+    inherited from the sealed c81 render and undisclosed. The driven tail changed and the
+    five carrier rows were not re-fired. Q84 (Q84-sound-instrument) accepts the run and
+    its STOP, the facade repair, the helper text repairs, the composition, the focused
+    greens, the frame delta as an exact enumeration, the loopback refusal and the scope;
+    **fails the verification** because the instrument is not inert; freezes the peel (no
+    third compiled shape under Q84); rules the frame-inventory delta inadmissible as a
+    source-inventory audit; and orders continuation 85: measure the per-level native-stack
+    delta first (fixed depths around 48, live and composed, the guard's own instrument,
+    an itemized site account, no new shape before the table), design and implement the
+    zero-frame fast path against it (no per-site closures, no per-site never-inlined
+    check, no persistent fast-path slot), resolve the dead recorder, re-fire the five
+    carrier rows with the disabled cohorts canonical, re-test the driven tail, then the
+    six-column re-emission and 151-cell rebind on the changed identity, the
+    derived-inventory replay with the exact delta, and the composed-vs-live workspace A/B
+    on the host with the inadmissible set enumerated before the run; no test change, no
+    composed-binary lane, stop before any group that cannot fit. Budget: c84 charged
+    68.34 s focused (52.34 s observed + 6.0 s bookkeeping + a disclosed 10.0 s allowance
+    for the untimed Python) and 0 s workspace; the stage reserve is 43,492.4456036041 s
+    after the gate with the 40,500 s for 743-746 held and 2,992.4456036041 s unallocated;
+    CM4 is now 151,237.02158706695 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair
+    (45,5,false) Open; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
+    CHANGELOG.md and S10 blocked; CM5 unauthorized. Next: continuation 85 (the Q85
+    measurement-first stack design), dispatched to `grk` under the user's 2026-11-20
+    routing ruling.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
