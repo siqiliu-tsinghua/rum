@@ -3354,6 +3354,59 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
     CM5 unauthorized. Next: continuation 87 (the hot-body completion), dispatched to `grk`
     under the user's 2026-11-20 routing ruling.
+  - G15-CM4 continuation 87 (2026-11-21): the hot-body completion ran on `grk` under the
+    user's 2026-11-20 routing ruling (21:54:13-04:09, 706 turns, $60.17, success, DONE;
+    report 39,245 B, 6 PASS / 7 FLAGGED / 0 FAIL, 3 deviations, 5 disclosures, 1 question,
+    85 citations). Every rendered hot path is the live preimage: 334 cold twins in 126
+    files, `verbatim=13555 ws=0 wrapper=52 dispatch=123 cold=334 facade=4 extension=25
+    diff=0 probe-module=0`, `DISPATCH-HOT 0`, `inverse_bad=0`; I reproduced the compare on
+    my own copy of the sealed c86 base and calibrated it both ways (an injected non-probe
+    hot change fires `diff=1` with the HOT-DIFF row; a new probe call grows `chosen` 334 to
+    340 and stays `diff=0`), diffed the tree (the three named files are insertion-only; the
+    65 replaced files are the `(if driven() { twin } else { live })` form; the only hot
+    signature text change is `old_encode`'s `_` to `_cm740_arg1`), and confirmed zero probe
+    tokens outside `*_cm740_driven` functions in production source. The peel is exactly live
+    from my fresh builds on both arms (19,184.0000 / 3,360.0000 at all seven depths, depth
+    48 done at 924,192) and the corpus peel test is green on the composed tree and the live
+    control. The carriers fire from the twins (P0267 join generation 2 and P1470 queue
+    generation 3, re-run by me with the pin hold applied after the build and 199 files
+    restored); disabled cohorts 60/60/60/45/45 inert; the frame delta is 514/535 with the
+    same 21 names (my re-run); the fingerprint import is 68 scratch cells; the scratch
+    emission is 133 rows at 54a0df58... with the 151-cell rebind scratch-only and the repo
+    still at 151 x 9dd3687b...; the arms differ in exactly 3 enable lines; scope clean (live
+    tree at its 32 inherited porcelain entries, no sealed continuation 70-86 touched); the
+    charge is 1,991.432 s focused + 6,274.557 s workspace (my ledger recomputation matches
+    with 26.0 s and 8.0 s bookkeeping). **The findings**: `cargo fmt --check` is red on the
+    composed tree (1,164 diffs in 131 files; the live tree is clean), and the reason given
+    for not applying rustfmt does not survive the check (rustfmt leaves the hot text
+    untouched: pure insertion on outcome.rs, 12/2 replaced lines unchanged on two others) -
+    a composer-emitter defect, not a waiver; and the pre-enumerated inadmissible set (5
+    classes) was incomplete against 48 composed-only reds in eight families (source-identity
+    17, twin-census 9, position-cell 8, typed-slot 8, source-inventory 3, source-text 1, LP01
+    1, drive-harness env 1, zero behavioral; exact table `gate-c87/workspace-classes.txt`).
+    The nine native tests pass on the host on all four binaries (9/9 each); the 66 ignored
+    names are identical; the live baseline has two pre-existing Program reds. Q87
+    (Q87-live-body-proven-canonical-form-owed) accepts the property, the peel, the carriers,
+    the recorder absence, the arms, the frame delta, the emission/rebind, scope and budget,
+    fails the canonical-form item and the pre-enumeration, and answers the census question
+    (the inventories stay sealed; no twin import). Continuation 88 is ordered: canonical
+    emission with the hot text verbatim and the inverse byte-exact, fmt green on the composed
+    tree with the live control; the evidence re-run on the canonical tree (compare, peel,
+    carriers with pins applied and reverted, disabled cohorts, frame delta); the complete
+    eight-family enumeration before the composed-vs-live workspace both modes with the seven
+    skips and the nine native tests on the host; then the standing replay, the six-column
+    re-emission and 151-cell rebind on the canonical identity (repo tables only after the
+    A/B accepts), lp03/lp04/lp05 on the same binaries; no test change, no composed-binary
+    lane, sealed stays sealed; stop before any group that cannot fit and report the exact
+    remainder. Budget: c87 charged 8,265.989 s (1,991.432 focused + 6,274.557 workspace); the
+    stage reserve is 32,558.2091416041 s, the 40,500 s held is underfunded by
+    7,941.7908583959 s and settled by a fresh explicit 20,000 s allocation under the user's
+    2026-11-19 ruling (reserve 52,558.2091416041 s); Q88 envelopes 3,000 s focused + 8,000 s
+    workspace; CM4 is now 162,171.25804906694 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair
+    (45,5,false) Open; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
+    CHANGELOG.md and S10 blocked; CM5 unauthorized. Next: continuation 88 (the canonical
+    emission and the final A/B), dispatched to `grk` under the user's 2026-11-20 routing
+    ruling.
   C2 stays Open at 118 Residual
   + 0 Lost. Then CM5.
 - G15-C2's P0248 repair (brief 719, accepted 2026-11-10: base red on the
