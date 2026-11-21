@@ -3471,6 +3471,48 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
     CHANGELOG.md and S10 blocked; CM5 unauthorized.
 
+  - G15-CM4 continuation 93 (2026-11-21): Stage A ran on `cdx` (Codex 0.169.0,
+    gpt-6.2-astra, effort max; 17:14:53-19:47:51, STOP at the source-stage scope rule;
+    44 checks 34 PASS / 5 FLAGGED / 3 FAIL / 2 NA, the 3 FAILs and 2 FLAGGEDs inherited
+    from c90; 17 deviations, 3 new; 3,143 citations; the 14 GiB scope peaked at its cap
+    with no OOM). It emitted the Route A render canonically: 135 overlay rows (schema
+    22751919dbcb952fb9dcb6e873f4387e452684f392db5f44c5de3f314c99bca2, policy 3953aa9f),
+    the 2 new overlays with the three drop-off fixes, the 16 render sites in both arms,
+    mutants column 8 rebound on all 151 rows; repaired the P0515 declared-duration view
+    (guest.rs row gate, records.rs own-program binding and raw-only exactness, the
+    fourth-difference falsifier, source_worker comparison emission); replayed the standing
+    inventories and screened the 9 NativeFault neighbors and 7 AST sites. I gated it from my
+    own reruns: re-ran the composer in a copy (byte-identical overlays.tsv/mutants.tsv;
+    CANONICAL INVERSE PASS 135/270/24/11; guard bytes 95,632/104,068 vs 95,729/104,262,
+    displacements 97/194), the P0515 falsifier in both feature modes (declared=3
+    fourth=DisabledDifference raw_unchanged=true), the importer (7/7 PASS incl. P0515
+    real_keys=30, caught=7 PortBlocked=144), all 23 screen runs (NativeFault 5 Observed /
+    1 NoHit / 3 Unarmed; AST diagnostic P0292 Observed, P0249 NoHit, five Unarmed), the
+    armed/disabled/real trees and all 135 preimage/postimages, the 68+2 replay deltas, the
+    raw P0543 SourceIdentity (the mutable .temp/probe/active now da1af7 vs the sealed
+    146b76) and the pinned read-only bind pass (55/55, same binary f29e51ff, tree a5084dd2),
+    the 9 loopback EPERMs, scope/seals (8 test-layer files, 0 sealed newer, identity/copies
+    unchanged), fmt and the meter (3,704.705717 focused / 4,461.511494 workspace). Q93
+    accepts Stage A and keeps the 16-site render class-wide: the screen found no wrong
+    predicate, spurious hit, ordinary divergence or panic; the 5 exercised sites produce the
+    exact class predicate; the 4 non-firing NativeFault sites are named program-reachability
+    findings (P0431 reaches the site but constructs no descendant frame, so the gate
+    correctly refuses; P0509/P0814/P1507 are unreached) with their transport evidence
+    unchanged; the AST 7 stays diagnostic-only; membership 28/3/7/113 and the policy digest
+    unchanged; schema 22751919 is final for the freeze. Findings: the historical
+    c92-unchanged-importer FLAGGED superseded by c93-import PASS; the mutable
+    .temp/probe/active as an open environment obligation; the six fail-closed stale
+    certificate emissions; the warnings.py import shadow; the 14 GiB cap peak (Stage B
+    dispatches at 20 GiB). Budget: Stage A charged 3,704.705717 s focused (295.294283
+    returned) + 4,461.511494 s workspace (1,538.488506 returned); epoch 16,373.940 s
+    untouched with 0 blocks and 0 admission cells; 743 pools focused 295.294283 / workspace
+    2,316.664506; Stage B carved 2,000 s focused (pool + 1,704.705717 fresh) + 5,500 s
+    workspace (pool + 3,183.335494 fresh) + the epoch; reserve 29,271.6739306041 s; CM4
+    183,805.67726006694 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair (45,5,false) Open at zero
+    admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
+    CHANGELOG.md and S10 blocked; CM5 unauthorized. Stage B (the standing replays, the clean
+    freeze, the 12-block epoch) dispatched to `cdx`.
+
   - G15-CM4 brief 743 stage 1 (2026-11-21): the observation policy ran on `grk`
     under the 2026-11-20 routing ruling (07:57:13-11:16, 341 turns, $28.45, success,
     STOP; report 46,135 B, 8 PASS / 1 FLAGGED / 2 FAIL, 73 citations; peak 67% of

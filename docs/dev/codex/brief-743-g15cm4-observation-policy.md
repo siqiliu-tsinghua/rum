@@ -531,3 +531,121 @@ in both modes; scope and seals. No epoch, no freeze, no admission, no 744.
 **Budget.** 4,000 s focused (the 743 pool 3,126.237 s + 873.763 s from the stage reserve) + one
 6,000 s workspace gate; everything else untouched; report `rum-report/1` appended; every verdict
 line quoted.
+## Gate c93 (2026-11-21) — Stage A accepted, the P0515 parity repair verified, the 16-site render stands class-wide, Stage B ordered
+
+Continuation 93 (Stage A) ran on `cdx` (Codex CLI 0.169.0, `gpt-6.2-astra`, effort max) under
+the standing routing: unit `brief-743-cdx-20261121-171450-1283493`, 2026-11-21T17:14:53–19:47:51
+CST, `verdict STOP` (the source-stage scope rule; Stage B needs the disposition), 44 checks
+(34 PASS / 5 FLAGGED / 3 FAIL / 2 NA — the 3 FAILs and 2 FLAGGEDs are inherited c90 entries),
+9 measurements (7 PASS / 2 FAIL, both inherited c90), 17 deviations (3 new), 15 disclosures,
+5 questions, 26 sections, 3,143 citations. The memory scope peaked at its 14 GiB cap with no
+OOM; `rc=0`; the worker left git alone. Scope: 8 test-layer files changed — `guest.rs`,
+`records.rs`, `duration_parity.rs`, `source_worker.rs`, `overlays.tsv`, `mutants.tsv`, the two
+replayed retention inventories — 0 production, 0 sealed files newer, `identity.json`
+`c5efa506…` and `copies.json` `71850b35…` unchanged, pair `(45,5,false)`, policy `3953aa9f…`;
+meter 3,704.705717 s of the 4,000 s focused carve (295.294283 s returned) and 4,461.511494 s
+of the 6,000 s workspace gate (1,538.488506 s returned); 0 epoch blocks, 0 admission cells.
+
+**The composer and the schema.** I re-ran `compose.py candidate` in my own copy under
+`.temp/director-gate-c93/stage-a/`: the output `overlays.tsv` and `mutants.tsv` are
+byte-identical to the live files and to the worker's `emit-candidate`; the digest
+`22751919dbcb952fb9dcb6e873f4387e452684f392db5f44c5de3f314c99bca2` equals
+`sha256(overlays.tsv)`, the policy digest is unchanged, and my re-run of `verify_render.py`
+prints `CANONICAL INVERSE PASS overlays=135 inverses=270 hot_twin_checks=24
+original_probe_functions=11 policy=28/3/7/113` plus the two `GUARD PASS` lines (95,632/104,068
+live vs 95,729/104,262 copied; displacements 97/194). The 133→135 delta is 121 inherited
+rows byte-identical, 12 changed files plus the 2 new overlays (`builtin_adapters.rs`,
+`window.rs`, the three drop-off fixes), 14 render recipes; every one of the 270
+preimage/postimage digests and every recipe inverse verifies; `mutants.tsv` column 8 carries
+the digest on all 151 rows. Both arm images carry exactly the 16 `around_ok_profile_return`
+sites (7 ProfileReturn + 9 NativeFault).
+
+**The P0515 repair.** `guest.rs` widens the comparison-view row gate to `P0492 | P0515`;
+`records.rs` binds a view to its own loaded program and fixture (`declared_p0515_leaf`
+re-derives row, key and a non-empty `duration_paths` from the registry), keeps raw-only
+records byte-exact, requires a full view once a packet supplies one, and routes parity
+through `duration_parity::applies`; the new falsifier proves a fourth difference still
+returns `DisabledDifference`; `source_worker.rs` emits the comparison for both rows. My own
+both-mode run: `CM4 P0515 DURATION FALSIFIER PASS declared=3 fourth=DisabledDifference
+raw_unchanged=true`. My importer replay on the staged index: 7/7 `CM4 OWN OMISSION RECEIPT
+PASS` (P0515 `real_keys=30 hits=1 disabled_record_exact=true raw_builds_authenticated=true`)
+with `CM4 OWN RECEIPT RECONCILIATION required=151 caught=7 PortBlocked=144`; the partial index
+exits 101 by design, and the sibling- and native-difference controls still reject.
+
+**The screen, all 23 runs replayed by me.** NativeFault: P0413/P0484/P0489/P0511/P1472
+`Observed` (selector armed, `CM740_SOURCE_HIT` at `OrdinaryActualSuccessBeforeTail`,
+`Err(Native)`, public true, native true); P0431 arms twice without a hit; P0509/P0814/P1507
+unarmed. AST candidate: P0249/P0292 no-hit, five unarmed. AST diagnostic: P0292 `Observed`,
+P0249 no-hit, five unarmed. All 23 exit 0; my classifications match the report row for row.
+
+**Builds, replays, workspace, scope.** The armed tree `bd56668…`, disabled `db01f91e…` and
+real `3441844e…` recompute; all 135 preimages and both arms' postimages match; the warning
+counts (132/130/0) keep the sealed classes and the 124 `unused_parens` sites (relocations
+follow the inserted lines); the nohook dead-code pair matches the historical control. The
+replayed deltas are exactly `local-contracts.tsv` 68 rows in column 18 only and
+`promoted.tsv` C01/C02 in columns 4+5 only; the final certificate replay passes and the six
+stale emissions failed closed. I reproduced the raw default-mode P0543 `SourceIdentity`
+failure (the accepted c81 child embeds the mutable `.temp/probe/active`, now `da1af7…`
+against the sealed `146b76…`) and the read-only pinned bind pass (`CM P0543 RECEIPTS PASS
+required=55 bound=55 executed=55`, same binary `f29e51ff…`, tree `a5084dd2…`); the nine
+loopback EPERMs are the inherited host-only exclusion; both full oracle targets are 586/0/0.
+`cargo fmt --check` exits 0; no sealed file is newer; the meter totals match.
+
+**Ruling `Q93-stage-a-accepted-neighbor-disposition`.** Stage A is accepted. The 16-site
+render stands class-wide: the screen found no wrong predicate, no spurious hit, no ordinary
+divergence and no panic at any of the 9 NativeFault sites; the 5 exercised sites produce
+exactly the class's own predicate, and the 4 non-firing sites are named
+program-reachability findings (P0431 reaches the site but constructs no descendant frame, so
+`descendant_gate_clause` correctly refuses; P0509/P0814/P1507 are not reached by their own
+programs) whose NativeFault transport evidence is unchanged. Leaving 4 declared bypass sites
+on the proven-unreachable `ordinary()` gate would leave the class defect half-closed. The AST
+7 diagnostic stays diagnostic-only (P0292 observable, P0249 no-hit, five unarmed) and is not
+part of the admission overlays. Membership stays 28/3/7/113; the policy digest is unchanged;
+the schema `22751919…` is final for the freeze. The 10 portblocked rows are accepted as named
+diagnostics; the 5 observed NativeFault rows carry a usable authenticated call-site
+observation. Findings (none blocking): the inherited c90 FAILs/FLAGGEDs carried as ruled; the
+historical `c92-unchanged-importer` FLAGGED superseded by `c93-import` PASS; the mutable
+shared `.temp/probe/active` as an open environment obligation for a future brief; the six
+fail-closed stale certificate emissions; the `warnings.py` import-shadowing deviation; the
+14 GiB cap peak (Stage B dispatches at 20 GiB).
+
+**Budget.** Stage A charged 3,704.705717 s focused (295.294283 returned) and 4,461.511494 s
+workspace (1,538.488506 returned); the epoch 16,373.940 s is untouched; 0 blocks, 0 admission
+cells. 743's pools now: focused 295.294283 s, workspace 2,316.664506 s. Stage B is carved at
+2,000 s focused (the pool + a fresh 1,704.705717 s), 5,500 s workspace (the pool + a fresh
+3,183.335494 s) and the existing 16,373.940 s epoch; stage reserve 29,271.6739306041 s; CM4
+183,805.67726006694 s. Route: cdx first, agy fallback on a cyber-filter refusal, a quota
+death asks; dispatch at `BRIEF_MEMORY_MAX=20G`.
+
+## Continuation 94 (Stage B) — the standing replays, the clean freeze and the twelve-block epoch
+
+Read the c92 and c93 rulings and this brief's Stage A/Route A sections, the c90 composition and
+blocks section, and the 741 `PLAN.md` §3. Same hard rules (test layer, no production change,
+everything sealed c76-c93 read-only, `.temp/` only, no git, no tag, every verdict quoted).
+
+**Replay.** The standing inventories replay before the freeze (68 fingerprint rows, C01/C02 in
+both modes, ownership and rejection census, LP01, typed slots); the replay must reproduce the
+Stage A state; if a covered source changes, stop and report; never hand-edit an inventory.
+
+**Freeze.** Compose the clean freeze in a new scene directory from the live snapshot plus the
+135 overlay pins (schema `22751919…`, policy `3953aa9f…`), the file set equal to the
+baseline's (5,810), the 2 new overlays and the 16 render sites included, the 3 driver-hook
+fixtures and 4 recorder pins as at c90; verify every preimage/postimage and tree hash; write
+new freeze receipts with new names — the sealed c90 `identity.json`/`copies.json` and epoch
+scene are not modified.
+
+**Epoch.** The twelve c90 labels run serially under the corrected warning bar (default and
+no-default real/disabled/armed/spot, lane real/disabled/armed/spot): one label each, no
+thirteenth, no retry of a failed label, the forced spot identity, receipts from the 135 pins,
+the admission-only build outside the labels only as at c90, the carrier drive on the drive
+trees, the peel (19,184.0000/3,360.0000; depth 48 = 924,192 bytes), and the composed-vs-live
+workspace A/B with the pre-enumerated set, the seven skips and zero unexplained differences.
+The two P0543 receipt tests run under the pinned read-only source presentation; the nine
+native loopback groups stay host-only with their EPERM refusal.
+
+**Not in scope.** No class admission (Stage C), no 744/745/746, no production change, no CM5;
+the pair, C2, the 51 owners, the five source duties, `CHANGELOG.md` and S10 unchanged.
+
+**Budget.** 2,000 s focused (the 743 pool 295.294283 s + a fresh 1,704.705717 s from the stage
+reserve) + the 5,500 s workspace carve (2,316.664506 s pool + 3,183.335494 s fresh) + the
+16,373.940 s epoch envelope; report `rum-report/1` appended; every verdict line quoted.
