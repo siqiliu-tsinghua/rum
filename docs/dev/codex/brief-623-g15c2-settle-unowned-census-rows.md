@@ -117756,3 +117756,24 @@ carved at 1,500 s focused (the 743 pool 307.23460746709644781 s plus a fresh
 1,192.76539253290355219 s from the stage reserve under the 2026-11-19 ruling) and 0 s workspace;
 the epoch balance 13,141.490754 s untouched; reserve 21,838.8530776041 s; CM4
 176,372.85640706694 s.
+
+### Continuation 96 attempt 2 — the reconciliation bar corrected, the no-default class import
+
+Continuation 96 attempt 1 (`cdx`, Codex 0.171.0 — the CLI updated with the reboot) stopped honestly
+at the written reconciliation bar: the unchanged importer on the both-mode class index returned
+`required=151 caught=10 PortBlocked=141`, not 7/144. All 20 member/mode observation packets were
+complete and valid: the three DeferredPublication rows hit at
+`OwnDeferredDefinitionPublicationAtActualProfileQueueJoin` with `Err(Native)` and each PASSed with
+60 real keys, one hit and exact disabled records; the seven ProfileReturn rows hit once with their
+own predicates (six `Err(Native)`, P0410 `Err(Output)`); the five declared ordinary negatives
+reproduced in both modes; the C10 calibration passed; entry and closing hashes held; the live five
+were stable; 32 sealed roots showed no newer file; 615.703871235 s focused charged, 884.296128765 s
+left; the epoch untouched. Ruling `Q96-class-index-reconciliation` corrects the bar to 10/141 per
+mode (the c93 7/144 was a partial index; the pre-transport `MissingRealTuple` expectation is
+superseded for the three deferred rows, as P0410's was at c92/c93), retains the
+`ObservationUnavailable/LogicalQuiescence` diagnosis as the ordinary negatives, and orders attempt
+2: the unchanged importer from `no-default-real-oracle` on the same index, expected 10/141, then the
+20-cell credit and the derived-index update. No source edit, no rebuild, no epoch label, no
+workspace suite, no 744/745/746, no CM5; the pair (45,5,false) Open at zero admitted receipts; C2
+118 Residual + 0 Lost; 51 owners and five source duties Open; `CHANGELOG.md`/S10 blocked;
+everything sealed (c76–c95) sealed.
