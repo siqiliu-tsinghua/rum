@@ -764,3 +764,45 @@ Stage C held, no 744/745/746, no CM5.
 nothing of the 7,000 s workspace carve or the 13,141.490754 s epoch balance; attempt 2 runs on the
 remaining focused carve plus the untouched workspace carve and epoch balance; stage reserve
 21,838.8530776041 s; CM4 176,372.85640706694 s.
+
+### Continuation 95 attempt 3 — the generated declaration bundles are authorized environment files
+
+Attempt 2 stopped correctly at the dispatch-pin gate: the two director-mod declaration bundles
+`tools/claude-mod/rum-director/.claude-plugin/types/claude-code/index.d.ts` (`3cbd3402…` ->
+`aec7b446…`) and `tools/claude-mod/rum-director/.claude-plugin/types/claude-code-tools/index.d.ts`
+(`43e78046…` -> `6fab043b…`) were rewritten at 23:53 by the Claude Code CLI when it moved from
+2.1.325 to 2.1.329 (the files carry `// Written by Claude Code 2.1.329.`, are gitignored, and are
+inputs to the mod's `tsconfig.json`, not to any cargo workspace). They are the harness's generated
+declarations, not rum source, and they are authorized as a second environment class beside the
+three gate journals.
+
+**The live-pin bar restated again.** The live checkout has the same 5,810 paths as the frozen real
+tree `5028530e…`, with no additions and no removals. Every path equals `inputs/source-pins.json`
+except exactly these five declared names: the three gate journals (TODO.md's 37-line insert, the
+suffix-only appends to briefs 623 and 743 — with this amendment appended after attempt 2's block,
+so the journal audit records the cumulative prefix and this block's line span) and the two
+generated declaration bundles above. The five names' hashes are recorded at the start and at the
+end of the run; a change in any of them is a disclosure, and any other difference — any file
+outside the five, any addition, any removal — is a STOP. The three workspaces run on the sealed
+composed trees and do not read the live checkout; the live checkout is the deliverable's scope
+referent, which is why its start and end states are both recorded but a tooling rewrite during the
+run does not discard workspace evidence.
+
+**Evidence reuse.** The c95 enumeration (`workspace-enumeration.json`, sha256
+`8a57577f28dc20d2c57b90b6555db8bd5e91f09e8471f34ff14f31fed4e30094`) and the sealed-input,
+enumeration and frozen-real preflight passes stand; attempt 1's and attempt 2's files stay in the
+c95 scene, and attempt 3 adds its own evidence beside them. The cumulative report is appended as
+stage `B / c95`.
+
+**Everything else stands unchanged**: the three remaining whole workspaces (armed/no-default,
+disabled/default, disabled/no-default) each with the full 69-target analysis, the switched
+lp03/lp04/lp05 follow-ups, the native-1t host-exclusion reproduction, the P0543 pinned read-only
+presentation and the certificate-acceptance replay; six complete comparisons in total; zero
+unexplained differences against the amended enumeration; the seven exact skips and the nine
+host-only loopback groups; no source edit, no freeze change, no epoch label, no admission cell,
+Stage C held, no 744/745/746, no CM5.
+
+**Budget.** Attempt 2 is charged 4.101374727964867 s of the focused carve (attempt 1 3.222776469 s,
+total 7.324151196964867 s spent, 492.67584880303514 s left) and nothing of the 7,000 s workspace
+carve or the 13,141.490754 s epoch balance; attempt 3 runs on the remainder; stage reserve
+21,838.8530776041 s; CM4 176,372.85640706694 s.
