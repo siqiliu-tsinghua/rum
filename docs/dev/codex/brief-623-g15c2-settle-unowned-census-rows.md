@@ -117365,3 +117365,34 @@ Continuation 87 ran on `grk` under the user's 2026-11-20 routing ruling (21:54:1
 ### Continuation 176 — continuation 88 emits the canonical composition and closes the A/B with zero unexplained differences
 
 Continuation 88 ran on `grk` (04:34:10–07:24, 227 turns, $19.192966, success, DONE; report 68,317 B, 12 PASS / 7 FLAGGED / 0 FAIL, 113 citations). It delivered the canonical emission from inside the composer (both recipes `0b787c0c…` / `3bd38f92…`, `changed_files=126 inverse_bad=0`, `cargo fmt --all -- --check` exit 0 on both arms and the live control, no `#[rustfmt::skip]`, no rustfmt pass over a finished render) with the hot text still the live preimage — I re-ran the composer on my own reads of the sealed bases and reproduced both recipes and all 126 render files byte-identically, and my whole-tree compare gives `verbatim=13555 ws=0 wrapper=52 dispatch=123 cold=334 facade=4 extension=25 diff=0` on both arms, the 52 wrappers keeping the live body byte-exact and the 60 whitespace-only dispatches differing only in rustfmt wrapping. The peel is exactly live from my own three fresh builds (19,184.0000 / 3,360.0000 at every depth, depth 48 done at 924,192; corpus test green on armed and live). I rebuilt the drive binary from byte-identical copies of both work trees (same binary hash) and re-fired the five carrier rows from the twins (join generations 2/2/2, queue 3/4) with the pins applied after the build and reverted 60/60, and the disabled cohorts are 60/60/60/45/45 inert. The frame delta is 514/535 with the same 21 names. My parse of the four workspace logs gives composed unique 59 = the 48 enumerated + 11 baseline with extra 0 in both modes, live 11 with extra 0, the seven skips absent everywhere, the 12 pre-replay extras the stale-fingerprint local retention tests; the nine native tests pass on the host 9/9 on all four binaries, and the live baseline's two Program reds are confirmed. The six-column table recomputes to `afb3110b…` with all 133 rows matching the live preimage and both trees; the 151 cells and the repo overlays hold it; the repo writes follow the A/B; `9dd3687b…` stays the c81 historical record; the 68-cell fingerprint import is scratch and live `local-contracts.tsv` is still `dac98a5b…`; lp03/04/05 are 12/12 green. Scope is clean (0 tracked files modified after the dispatch; sealed c76–c87 with 0 files newer and the three sealed `lib.rs` inodes unchanged; the source arm difference is 4 files — three enable lines plus the disclosed import); budget 856.351 s focused + 4,168.380 s workspace. `Q88-canonical-emission-and-final-ab-accepted` accepts the canonical emission, the hot-body identity, the peel, the carriers, the disabled cohorts, the frame delta, the A/B, the enumeration, the re-emission/rebind, the scope and the budget, records the six non-blocking findings (TREE-PROBE scope 6 vs 4; the after-replay arm log's `.temp`/`target` noise; the overlays `why` wording; `check --against-git` unusable; the 99.7% scope peak → 743 at 20G; the pre-existing dispatch-form warnings), and closes CM4's implementation and verification lines. Brief 743 (observation policy + final epoch + class admission) is ordered next: brief 741's 38 observer rows (28 NativeEqual + 3 deferred-publication + 7 profile-return) and 113 ordinary, the final epoch, class admission against the 151-row bar; then 744, 745, 746; CM5 unauthorized. The stage reserve is **47,533.4781416041 s**; Q89's envelope is **2,500 s focused + 6,000 s workspace** carved from the 40,500 s held, leaving **32,000 s for 744–746**; CM4 is now **167,195.98904906694 s**. The bar is unchanged at 571/4,422, 37/134, 4/133, 0/26; pair (45,5,false) Open; C2 118 Residual + 0 Lost; 51 owners and five source duties Open; no campaign, epoch, acceptance or CM5; CM5 unauthorized.
+
+- **2026-11-21 — gate c89 (brief 743 stage 1, observation policy + freeze + first blocks).** On
+  `grk` under the 2026-11-20 routing ruling (07:57:13-11:16, rc 0, success, 341 turns, $28.45,
+  peak 67% of 20 GiB; report 46,135 B, STOP, 8 PASS / 1 FLAGGED / 2 FAIL, 73 citations). I
+  reproduced the policy (28/3/7/113 in both modes, 6/6 with every negative firing), the replay
+  (68 fingerprint + 2 certificate rows = the git diff; ownership 61/79/8866; LP01 and typed
+  slots both modes; fmt exit 0), the workspace both modes (only the nine ZeroMQ sandbox
+  refusals; 9/9 on the host in both modes; the two c88 Program reds now ok), the freeze (5,810
+  pins 0 mismatches, 255 selections, 9,060 keys / 9,511 constituents, all six tree hashes), and
+  block 1 (fresh, 0 warnings, binary `c1f68187...`; ten members + C10 admitted; P0267
+  reproduced). The literal warning-free gate rejected 128 warnings on block 2 that are exactly
+  the declared canonical classes: 124 `unused_parens` whose location set equals the sealed c88
+  log's set exactly, 3 composer name warnings, 1 `unused_must_use` — so block 2's compile is
+  admitted under the corrected bar without a retry (the label stays consumed). **The epoch's
+  composed trees are not accepted**: they carry 126 of the 133 `overlays.tsv` pins (missing the
+  4 recorder-removal files and the 3 begin/end hook fixtures), the arm class vector is
+  `extension=4` vs c88's 25, no `begin` call site exists so `run_is_driven()` can never be true,
+  the receipts carry the 126 render deltas instead of the 133 pins (OverlaySet), the drive
+  instrument is unlisted in an admission tree (UnlistedFile), and `admit_arm.py` never verifies
+  the armed hits. I proved the corrected composition: live + the 133 armed postimages + a
+  133-pin receipt authenticates and fires armed P0267 (`observer_transport=true`,
+  `CM740_SELECTOR_ARMED`, `CM740_SOURCE_HIT`, `Err(Native)`, exit 0; tree `62826b8c...`, binary
+  `d4b7718c...`). Also recorded: the stale-binary first workspace run wrote 171 derived files
+  into sealed continuation-83 (no source changed; preserved), and the disclosed
+  `.temp/brief-546/certificates` symlink redirection. Ruling
+  `Q89-observation-policy-accepted-epoch-composition-owed`; continuation 90 ordered (the
+  corrected composition, blocks 3-12, disabled/armed/no-default admissions with fired hits, the
+  ten class packets all-or-nothing, the carrier drive, the peel exactly live, the A/B with the
+  pre-enumerated set). Stage 1 charged 969.912 s focused + 5,221.824 s workspace + 217.511 s
+  epoch = 6,409.247 s; 743 remainders 5,030.088 / 6,778.176 / 17,782.489 s; reserve
+  37,033.4781416041 s; CM4 173,605.23604906694 s.

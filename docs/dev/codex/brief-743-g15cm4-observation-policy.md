@@ -65,3 +65,134 @@ This stage owns the designed group: **4 × 1,500 s focused/maintenance envelopes
 - The ordinary guard (`logical_profile_test_assert_quiescent()`) keeps its present source and call position byte-exact and its full force; no environment variable may switch it off; a needed runtime accessor is a STOP.
 - A topology outside the reviewed three transport classes stops for class design, not for a new one-off path. Do not run the remaining 123 rows or the full shakedown.
 - The report is `rum-report/1` under `.temp/brief-743/report.json`; the source stage and the class stage keep separate attempts, every member packet and ordinary negative is linked, and the final message is `scripts/report.py summary`.
+
+---
+
+## Gate c89 (2026-11-21) — the source stage accepted, the composition owed
+
+The first stage ran on `grk` (unit `brief-743-grk-20261121-075713-982190`, 07:57:13-11:16, rc 0,
+success, 341 turns, $28.45403, peak 67.0% of 20 GiB, 3 git-fence reads). Report 46,135 B, STOP,
+8 PASS / 1 FLAGGED / 2 FAIL, 73 citations. The full record is `.temp/director/ruling-c89.md`.
+
+Accepted with my own reproductions: the policy (28 NativeFault / 3 DeferredPublication / 7
+ProfileReturn / 113 ordinary; both modes 6/6 with every negative control firing; the transport
+replaces the 28-row test in `mutations/source_worker.rs`; `verify_own_omission` and the guard's
+two byte positions untouched); the replay (68 fingerprint + 2 certificate rows, exactly the git
+diff; ownership 61/79/8866; LP01 and typed slots both modes; fmt exit 0); the workspace both
+modes with only the nine ZeroMQ sandbox refusals (9/9 on the host in both modes; the two c88
+live-baseline Program reds now ok); the freeze (5,810 pins, 0 mismatches now; 255 selections =
+151+100+4; 9,060 keys / 9,511 constituents; all six tree hashes recomputed); block 1
+`default-real` (fresh, 0 warnings, binary `c1f68187...`; the ten members + C10 admitted; I
+reproduced P0267); and the corrected warning bar — block 2 compiled with cargo exit 0 and the
+literal "warning-free" gate rejected 128 warnings that are exactly the declared classes (124
+`unused_parens` at the sealed c88 `build-drive-disabled.log`'s set, 124 = 124 with zero
+difference; 3 composer name warnings; 1 `unused_must_use`), so block 2 is admitted without a
+retry and the label stays consumed. Scope: exactly 10 repo files (3 added, 7 modified), all in
+the brief's test layer; sealed c76-c88 sources unchanged; the disclosed
+`mutations/source_worker.rs` path deviation accepted.
+
+The epoch's composed trees are **not** accepted: `overlays.tsv` has 133 pins and the frozen
+trees carry only the 126 render files, missing the 4 recorder-removal postimages and the 3
+driver-hook fixtures (`guest.rs`, `native.rs`, `semantic_controls.rs`). The class vector on the
+frozen arms is `extension=4` where c88 had 25, and no `cm740_probe::begin` call site exists, so
+`run_is_driven()` can never be true and no twin can fire; the authentication would fail
+`Postimage`/`UnlistedFile`, and a drive tree fails `UnlistedFile` because its instrument is not
+a pin. The receipt writer uses the 126 render deltas instead of the 133 schema pins (I hit
+`OverlaySet`), and `admit_arm.py` never checks the armed hit lines. I proved the fix: tree = the
+live snapshot + the 133 overlays.tsv armed postimages, receipt with the 133 pins — armed P0267
+authenticated, `observer_transport=true`, `CM740_SELECTOR_ARMED`, `CM740_SOURCE_HIT`,
+`predicate=Err(Native)`, exit 0 (tree `62826b8c...`, binary `d4b7718c...`; the worker builds its
+own and reuses neither).
+
+Findings recorded: F1 the 7 missing pins; F2 drive instruments unlisted in admission trees;
+F3 the 126-key receipt; F4 no hit verification in `admit_arm.py`; F5 the stale-binary first
+workspace run wrote 171 derived files into sealed continuation-83 (no source changed; preserved,
+never deleted); F6 the disclosed `.temp/brief-546/certificates` symlink redirection (the fixed
+path of `local/production.rs:13`; prior files moved aside and preserved).
+
+Order: continuation 90 (the corrected composition, blocks 3-12, the disabled/armed/no-default
+admissions with fired hits, the class packets all-or-nothing, the carrier drive on the drive
+trees, the peel exactly live, the composed-vs-live A/B with the pre-enumerated set). Budget:
+stage 1 charged 969.912 s focused + 5,221.824 s workspace + 217.511 s epoch = 6,409.247 s;
+743's remainders are 5,030.088 s focused, 6,778.176 s workspace, 17,782.489 s epoch blocks; the
+stage reserve is 37,033.4781416041 s with no new allocation; CM4 is now 173,605.23604906694 s.
+
+---
+
+## Continuation 90 — the corrected composition and the remaining epoch
+
+Gate c89 (`.temp/director/ruling-c89.md`) accepted the source stage, the freeze identity, block
+1 and block 2 under the corrected warning bar. It found the frozen composed trees carry only 126
+of the 133 schema pins and that the admission instruments cannot authenticate or fire. This
+continuation builds the full composition, finishes the epoch and the class admission. Read the
+ruling first.
+
+**Goal.** One final epoch identity on the accepted canonical form: the full 133-pin composition,
+blocks 3-12 under the corrected warning bar, the disabled/armed/no-default class admissions with
+real fired hits, the ten class packets all-or-nothing on their own both-mode evidence, the five
+carrier rows from the drive trees, the peel exactly live, and the composed-vs-live workspace A/B
+with the declared enumeration. A private capture bit is not a receipt; a no-hit armed run is not
+an admission.
+
+**The composition.** The admission trees are the live snapshot (the frozen `real` tree,
+`495696b8...`) plus, for each of the 133 rows of
+`crates/rum-stdlib/tests/suspension_oracle/mutations/source_auth/overlays.tsv`, that arm's
+postimage column. Every row's preimage digest must equal the baseline file's sha256 and every
+written file's sha256 must equal the row's postimage digest; the copied file set must equal the
+baseline's exactly (`.git/target/.temp/__pycache__/.mypy_cache` are excluded by `Snapshot::read`
+and the tree hash). Verify the seven non-render pins explicitly (the four recorder files and the
+three hook fixtures). Seal the admission trees and record the exact per-file before/after
+digests. The frozen pre-instrument trees stay immutable. Drive trees = admission tree +
+`obligations/cm742_c81_drive.rs` + the `obligations/mod.rs` hook, for `drive_arm.py` only; never
+authenticate on a drive tree (its extra files are unlisted). Record their hashes. Append the
+admission and drive tree hashes and the exact deltas to the epoch identity; never rewrite it.
+
+**The blocks.** 3-12 in the designed order: `default-armed`, `default-spot`,
+`no-default-real`, `no-default-disabled`, `no-default-armed`, `no-default-spot`, `lane-real`,
+`lane-disabled`, `lane-armed`, `lane-spot`; one label each; `default-disabled` is consumed and
+admitted under the corrected bar — no retry, no thirteenth block. Corrected warning bar: every
+warning must belong to a class present in the sealed continuation-88 log for the same arm, and
+the `unused_parens` (file, line) set must equal the declared 124-site set exactly; zero warnings
+of any other class; quote the per-class counts and the location-set diff. Fresh at every block:
+`cache_hit=false`, release, codegen units 1, no old build or hash reuse, elapsed ≤ 1,500 s.
+
+**The admissions.** The receipt carries arm/baseline_tree/binary/codegen_units/configuration/
+profile/tree plus the 133 overlay lines (file, preimage, the arm's postimage digest); the
+authentication must pass and its verdict is quoted. `default-disabled` and `default-armed`,
+`no-default-real`/`disabled`/`armed`, ascending rows, one-thread reproduction on any failure,
+the C10 calibration (`default-real` is already admitted). The armed arm must show, for every
+member: `CM743_TRANSPORT ... observer_transport=true`, `CM740_SELECTOR_ARMED`,
+`CM740_SOURCE_HIT`, the own predicate with the authentic native difference, and the class
+packet's arm-then-hit and observations true; a missing hit is a named PortBlocked with the class
+finding. The disabled arm must show `observer_transport=false`, zero class hits, and the inert
+cohorts 60/60/60/45/45. The ten classes are all-or-nothing on each member's own both-mode
+packets; exactly the 20 logical own cells; no receipts from synthetic data; the four failed rows
+keep `MissingRealTuple` plus `ObservationUnavailable/LogicalQuiescence`.
+
+**The carriers, the peel, the A/B.** Carrier drive on the drive trees: five rows, the identities
+(join and queue generations, pair, occurrence), pins applied after the build and reverted, the
+disabled cohorts. Peel: the harness and the corpus test, `19,184.0000 / 3,360.0000` at every
+depth, depth 48 `done` at the default limit, both arms and the live control. A/B: the 133-pin
+composed trees vs the live workspace in both feature modes; declare the inadmissible set before
+the first run (the c87/c88 eight families plus the new policy/test-layer names); the seven
+skips; zero unexplained differences; scratch under the excluded `.temp`/`target` so the tree
+hashes are unchanged before and after; the nine native tests stay for the director on the host
+(record the sandbox refusal).
+
+**Scope and hard rules.** Test-layer only; no production, ordinary-runner, predicate,
+guest/native/adapter, program, coverage, selection or immutable-column change; no new accessor;
+no new selector or broad environment bypass; no row repair; no live repo mutation beyond the
+accepted source stage; everything sealed (c76-c89) stays sealed and read-only; do not delete the
+171 derived files the stale binary wrote into continuation-83 (F5) — record them;
+`.temp/brief-743/` only; no git, no network, no `unsafe`, no new dependency. A topology outside
+the reviewed three classes stops for design. If admission is blocked, stop without dispatching
+744 and persist the named PortBlocked records and the complete unspent ledger.
+
+**Budget.** 743's remainders: focused 5,030.088 s (4 envelopes), workspace 6,778.176 s (2
+envelopes), epoch blocks 17,782.489 s (10 labels at 1,500 s). Stop and report at every envelope
+boundary; the unused returns per the standing rule; a shortfall stops and reports the exact
+remainder; no scope is shrunk (the 2026-11-19 ruling if a top-up is ruled).
+
+**Report.** `rum-report/1` at `.temp/brief-743/report.json` (the continuation attempt appends
+attempts); every block, admission, packet and ordinary negative linked; final message
+`scripts/report.py summary`.

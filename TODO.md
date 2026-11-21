@@ -3354,6 +3354,39 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
     CM5 unauthorized. Next: continuation 87 (the hot-body completion), dispatched to `grk`
     under the user's 2026-11-20 routing ruling.
+  - G15-CM4 brief 743 stage 1 (2026-11-21): the observation policy ran on `grk`
+    under the 2026-11-20 routing ruling (07:57:13-11:16, 341 turns, $28.45, success,
+    STOP; report 46,135 B, 8 PASS / 1 FLAGGED / 2 FAIL, 73 citations; peak 67% of
+    20 GiB). I re-ran both policy modes (6/6, every negative firing), fmt (exit 0),
+    the nine ZeroMQ tests on the host (9/9 both modes), the workspace red set, the
+    replay imports (68 fingerprint + 2 certificate rows = the git diff; ownership
+    61/79/8866; LP01 and typed slots both modes), the freeze pins (5,810, zero
+    mismatches), all six tree hashes, block 1 (fresh, 0 warnings, binary c1f68187...;
+    the ten members + C10 admitted; P0267 reproduced), and block 2's warning set:
+    128 warnings = the declared classes, with the 124 `unused_parens` locations
+    exactly equal to the sealed c88 set (124 = 124, zero difference), so block 2's
+    compile is admitted under the corrected bar without a retry. The epoch composed
+    trees are NOT accepted: 126 of the 133 overlays.tsv pins (missing the 4
+    recorder-removal files and the 3 begin/end hook fixtures; extension=4 vs 25; no
+    `begin` call site, so run_is_driven() can never be true), the receipt writer uses
+    the 126 render deltas (OverlaySet), the drive instrument is unlisted in an
+    admission tree (UnlistedFile), and admit_arm.py never checks the armed hits. I
+    proved the fix: live + the 133 armed postimages + a 133-pin receipt authenticates
+    and fires armed P0267 (observer_transport=true, CM740_SELECTOR_ARMED,
+    CM740_SOURCE_HIT, Err(Native), exit 0; tree 62826b8c..., binary d4b7718c...).
+    Also recorded: the stale-binary first workspace run wrote 171 derived files into
+    sealed continuation-83 (no source changed; preserved, never deleted), and the
+    disclosed .temp/brief-546/certificates symlink redirection. Q89 accepts the
+    source stage, the freeze and blocks 1-2 and orders continuation 90: the
+    corrected 133-pin composition, blocks 3-12 under the corrected bar, the
+    disabled/armed/no-default admissions with fired hits, the ten class packets
+    all-or-nothing, the carrier drive on separate drive trees, the peel exactly live,
+    and the composed-vs-live A/B with the pre-enumerated set. Stage 1 charged
+    969.912 s focused + 5,221.824 s workspace + 217.511 s epoch = 6,409.247 s;
+    743 remainders 5,030.088 / 6,778.176 / 17,782.489 s; reserve 37,033.4781416041 s;
+    CM4 173,605.23604906694 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair (45,5,false)
+    Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
+    source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized.
   - G15-CM4 continuation 88 (2026-11-21): the canonical emission and the final A/B ran on `grk`
     under the user's 2026-11-20 routing ruling (04:34:10-07:24, 227 turns, $19.19, success, DONE;
     report 68,317 B, 12 PASS / 7 FLAGGED / 0 FAIL, 113 citations; peak 17,128,415,232 B of the
