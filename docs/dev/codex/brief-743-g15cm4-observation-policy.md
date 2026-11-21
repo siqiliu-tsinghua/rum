@@ -452,3 +452,82 @@ the report must be copied from a named file or a named log; the gate is run from
 3,000 s carve plus a fresh explicit 2,000 s allocation from the stage reserve under the user's
 2026-11-19 ruling (“预算不够就追加吧”). Report the metered receipts as before; an unspent balance
 returns.
+
+## Gate c92 (2026-11-21) — Route A accepted, the P0515 declared-duration parity gap ordered repaired, the around_ok neighbor screen ordered
+
+Continuation 92 (resume) ran on `agy` — the user's 2026-11-21 route decision (only cdx and agy
+usable; the model now Gemini 4 Neon) after grk's 402 balance wall — under the User's explicit
+fabrication caution (“之前gemini有过伪造测试报告的劣迹，所以验收时要格外小心”). Unit
+`brief-743-agy-20261121-154248-1221520`, conversation `81a4a64d-3aad-4a0a-8a83-7fb16ca14f85`,
+15:42:48–16:54, `status=SUCCESS`, no denials, 4,324.67 s, peak 8,000,614,400 B of 14 GiB (53.2%),
+oom 0/0, 2 git-fence entries (agy's own `merge-base` probes, refused); report 233,662 B, STOP,
+29 checks (21 PASS / 3 FLAGGED / 3 FAIL / 2 NA; the FAILs are the inherited c90 entries), 465
+citations, 13 deviations, 10 disclosures, 4 questions, 15 sections. The full record is
+`.temp/director/ruling-c92.md`; the ruling id is `Q92-route-a-accepted-p0515-parity-ordered`.
+
+Accepted with my own reproductions: I re-ran `apply_route_a.py` on a fresh copy of the sealed c90
+tree and its 9 outputs hash exactly to the worker's tree and receipt (the prototype tree is
+script-produced); `proto/armed` differs from c90 in exactly the 9 Route A files plus the
+`mutants.tsv`/`overlays.tsv` 133→135 rebinding (no adds, no removals); I rebuilt `suspension_oracle`
+from a copied armed tree (tree hash `68941cca…`), generated my own authentication receipt and ran
+the seven rows myself — all seven arm and hit once at their declared phases with the own predicate
+(6× `Err(Native)` pub/nat true; P0410 `Err(Output)` pub=false nat=true), records=1, exit 0; the
+ordinary lane reproduces byte-exact equality for the five and `snapshot.rs:30:9` panics with
+`faults=9`/`253` for P0410/P0515; the disabled and real arms and the nohook control are false
+(375/375 records with 0 hits; nohook 0 hits with `Ok(())`); and I assembled my own packet index
+(my own armed logs and receipt, my disabled/real runs, the worker's trees/auth) on which the
+unchanged importer prints 6 PASS plus `PortBlocked P0515 missing_evidence=DisabledDifference`
+(reconciliation `caught=6 PortBlocked=145`). I independently diffed the P0515 real-vs-real and
+real-vs-disabled tuples: exactly the 3 `AbsoluteTiming` duration-leaf differences and no
+non-duration difference, and confirmed in the live code that `declared_duration` already lists
+those 3 P0515 fixtures while `CM740_DURATION_PARITY` is P0492-only. The prototype `schema_digest`
+is `56398c2decde77c915e68e77f5da84666ec18c7ca3209fcf7328b9ca1f4ddc3f` (135 rows), the live
+`afb3110b…` (133 rows), and `mutants.tsv` column 8 carries the matching digest on all 151 rows;
+scope, seals (`identity.json` `c5efa506…`, `copies.json` `71850b35…`), the 23 `around_ok` sites
+(7 profile + 9 NativeFault bypass + 7 AST carrier) and the budget (1,584.935 s of 2,960.344 s
+metered) all verify.
+
+Findings (none blocking): the stale `run_importer_t8.py` assertion (7 vs the delivered 6/145 —
+the report itself is honest); the hard-coded real-arm receipt numbers on the reuse path; the
+nohook control's one modified-file warning (the candidate arms are clean); the guard-byte
+phrasing (the offsets differ only by the render's 97/194 hook bytes); and the accepted
+cross-class disclosure that 9 admitted NativeFault `around_ok` rows share the unreachable-hit
+topology and 7 AST carrier sites need screening. Ruling: Route A is adopted (zero weakening;
+Route B/C not invoked); the P0515 duration-parity view is repaired in Stage A (exactness:
+raw records unchanged, sibling/native fields exact, only the declared duration leaf tolerated;
+a 4th difference must still block); the neighbor screen is ordered before the freeze; the staged
+plan is Stage A → B (freeze + 12-block epoch) → C (20-cell admission) → D (744/745/746). Budget:
+c92 charged 1,584.935 s focused (1,375.409 s returned; 743 focused pool 3,126.237 s); Stage A is
+carved at 4,000 s focused (the 743 pool plus a fresh 873.763 s from the stage reserve under the
+2026-11-19 ruling) plus one 6,000 s workspace gate; stage reserve 34,159.7151416041 s; CM4
+178,917.63604906694 s; the pair (45,5,false), C2, the 51 owners, the five source duties, S10 and
+CM5 are unchanged.
+
+## Continuation 93 (Stage A) — the composer emission, Route A, the P0515 parity repair and the neighbor screen
+
+Read the c92 ruling and the five c92 sections of the brief, then the 741 `PLAN.md` §3 and
+`ROW-EVIDENCE.md`. Implementation in the test layer, one gated step:
+
+**Emit Route A canonically.** The composer/generator emits the Route A render (the pair-scoped
+`DescendantEdge` primitive at the two suspension-frame sinks, the `descendant_gate_clause`
+invariant, the call-site `around_ok_profile_return`/`OkAction::ReturnOk` early return on the cold
+twins, and the two new non-hot dispatch overlays `builtin_adapters.rs`/`window.rs` with the three
+drop-off fixes) with composer-generated canonical text, a byte-exact inverse and no hand edits;
+`overlays.tsv` becomes 135 rows and `mutants.tsv` column 8 is mechanically rebound; the schema
+digest is re-derived and the policy files' placement decided per Q3.
+
+**Repair the P0515 declared-duration parity.** Extend `CM740_DURATION_PARITY`'s admitted comparison
+view to P0515 using the existing `declared_duration` allowlist (the 3 fixtures), exactness as the
+ruling states, and ship the falsifier that a 4th difference still produces `DisabledDifference`.
+
+**Screen the neighbors.** The 9 NativeFault `around_ok`/`bypasses_profile_finish=1` rows and the 7
+AST carrier sites are measured under the current render and the new primitive; the 9 rows' render
+follows the outcome (the overlay set and schema digest follow; membership stays 28/3/7/113).
+
+**Verify.** Standing inventories replay before the first acceptance suite; the 12 unit + E0603 +
+live-binary + importer + nohook falsifiers and the peel run; canonical inverse; one workspace gate
+in both modes; scope and seals. No epoch, no freeze, no admission, no 744.
+
+**Budget.** 4,000 s focused (the 743 pool 3,126.237 s + 873.763 s from the stage reserve) + one
+6,000 s workspace gate; everything else untouched; report `rum-report/1` appended; every verdict
+line quoted.

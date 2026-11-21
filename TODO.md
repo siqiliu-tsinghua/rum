@@ -3438,6 +3438,39 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
     source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized.
 
+  - G15-CM4 continuation 92 (2026-11-21): the non-weakening review resumed on `agy` (Gemini 4
+    Neon XHigh) under the user's 2026-11-21 route decision and fabrication caution, after the
+    grk attempt died on its 402 balance wall (89 turns, $7.48; wall 2,039.656 s charged;
+    checkpoint preserved). The agy run (15:42:48-16:54, SUCCESS, no denials, 4,324.67 s, peak
+    53.2% of 14 GiB; report 233,662 B, STOP, 29 checks 21 PASS / 3 FLAGGED / 3 FAIL / 2 NA -
+    the FAILs inherited from c90 - 465 citations) delivered Route A: a pair-scoped
+    `DescendantEdge` construction record at the two suspension-frame sinks, the queued-half
+    `descendant_gate_clause`, and the cold-twin `around_ok_profile_return`/`OkAction::ReturnOk`
+    early return. I gated it from my own reruns: re-applied the transform on a fresh c90 copy
+    (9/9 byte-identical); rebuilt the armed oracle from a copied tree (hash 68941cca) and
+    reproduced all seven armed verdicts, the ordinary lane (5 byte-equal, P0410/P0515 panics
+    faults=9/253), the disabled/real arms (375/375 records, 0 hits) and the nohook control
+    (0 hits, `Ok(())`); assembled my own packet index on which the unchanged importer prints
+    6 PASS + `PortBlocked P0515 DisabledDifference` (caught=6, PortBlocked=145); reproduced
+    the P0515 clause (only the 3 `AbsoluteTiming` duration-leaf tuples differ;
+    `declared_duration` already lists them, `CM740_DURATION_PARITY` is P0492-only); verified
+    the 135-row schema digest `56398c2d...`, the 151-row column-8 rebinding, the 23
+    `around_ok` sites (7+9+7), scope, seals and the meter (1,584.935 s of 2,960.344 s). Q92
+    accepts Route A (zero weakening; Route B/C not invoked), orders the P0515 parity repair in
+    Stage A (raw records unchanged, sibling/native fields exact, only the declared duration
+    leaf tolerated; a 4th difference still blocks) and the pre-freeze screen of the 9
+    NativeFault `around_ok` neighbors and the 7 AST carrier sites; the plan is Stage A
+    (composer + Route A + parity + screen) -> Stage B (freeze + 12-block epoch) -> Stage C
+    (20-cell admission) -> Stage D (744/745/746). Findings: the stale `run_importer_t8.py`
+    assertion (7 vs the honest 6/145), the hard-coded real-arm receipt numbers on the reuse
+    path, the nohook control's one modified-file warning, the guard-byte phrasing. Budget:
+    c92 charged 1,584.935 s focused (1,375.409 returned; 743 focused pool 3,126.237 s);
+    Stage A carved at 4,000 s focused (the pool + 873.763 s fresh from the reserve) + one
+    6,000 s workspace gate; epoch 16,373.940 s; reserve 34,159.7151416041 s; CM4
+    178,917.63604906694 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair (45,5,false) Open at zero
+    admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
+    CHANGELOG.md and S10 blocked; CM5 unauthorized.
+
   - G15-CM4 brief 743 stage 1 (2026-11-21): the observation policy ran on `grk`
     under the 2026-11-20 routing ruling (07:57:13-11:16, 341 turns, $28.45, success,
     STOP; report 46,135 B, 8 PASS / 1 FLAGGED / 2 FAIL, 73 citations; peak 67% of

@@ -117532,3 +117532,48 @@ returns; 743 focused remainder 4,750.828 s; continuation 92's 3,000 s leaves
 37/134, 4/133, 0/26; the pair stays Open at zero admitted receipts, C2 118 Residual +
 0 Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10 blocked, CM5
 unauthorized, everything sealed (c76-c91) staying sealed.
+### Continuation 92 (resume) — Route A accepted, the P0515 parity repair and the neighbor screen ordered (Q92)
+
+Continuation 92 resumed on `agy` (Gemini 4 Neon XHigh) under the user's 2026-11-21 route decision
+and fabrication caution (unit `brief-743-agy-20261121-154248-1221520`, conversation
+`81a4a64d-3aad-4a0a-8a83-7fb16ca14f85`, 15:42:48–16:54, `status=SUCCESS`, no denials, 4,324.67 s,
+peak 8,000,614,400 B of 14 GiB, oom 0/0; 2 git-fence entries, agy's own `merge-base` probes;
+report 233,662 B, STOP, 29 checks 21 PASS / 3 FLAGGED / 3 FAIL / 2 NA — the FAILs inherited from
+c90 — 465 citations, 13 deviations, 10 disclosures, 4 questions, 15 sections). It delivered the
+Route A design: a pair-scoped `DescendantEdge` construction record at the two suspension-frame
+sinks, a queued-half gate (`descendant_gate_clause`), and the call-site
+`around_ok_profile_return`/`OkAction::ReturnOk` early return on the cold twins, with 12 unit
+falsifiers, E0603, three live-binary falsifiers, four importer falsifiers and the nohook control.
+
+I gated it from code and my own reruns: I re-ran `apply_route_a.py` on a fresh c90 copy and its nine
+outputs hash exactly to the worker's tree and receipt; `proto/armed` differs from c90 in exactly
+the nine Route A files plus the 133→135 `mutants.tsv`/`overlays.tsv` rebinding; I rebuilt
+`suspension_oracle` from a copied armed tree (tree hash `68941cca…`), generated my own
+authentication receipt and reproduced all seven armed verdict lines (declared phases, 6×
+`Err(Native)` pub/nat true, P0410 `Err(Output)` pub=false nat=true, records=1, exit 0), the
+ordinary lane (5 byte-equal, P0410/P0515 panics at `snapshot.rs:30:9` with faults 9/253), the
+disabled and real arms (375/375 records, 0 hits) and the nohook control (0 hits, `Ok(())`). I
+assembled my own packet index (my armed logs and receipt, my disabled/real runs, the worker's
+trees/auth) and the unchanged importer printed 6 PASS plus `PortBlocked P0515
+missing_evidence=DisabledDifference` (reconciliation caught=6 PortBlocked=145). I independently
+reproduced the P0515 clause: real-vs-real and real-vs-disabled differ only in the 3
+`AbsoluteTiming` duration-leaf tuples, and the live code already declares those 3 fixtures while
+`CM740_DURATION_PARITY` is P0492-only. Scope, seals, the 23 `around_ok` sites (7 profile + 9
+NativeFault bypass + 7 AST carrier), the prototype `schema_digest` `56398c2d…` (135 rows), the
+live `afb3110b…` (133 rows) and the meter (1,584.935 s of 2,960.344 s) all verify.
+
+**Ruling `Q92-route-a-accepted-p0515-parity-ordered`:** Route A is accepted and adopted (zero
+weakening; Route B/C not invoked); the P0515 declared-duration parity gap is a real pre-existing
+defect and is repaired in Stage A (the same leaf-only tolerance already declared for P0515's 3
+fixtures; a 4th difference must still block); the 9 NativeFault `around_ok` neighbors and 7 AST
+carrier sites are screened before the freeze, and the 9 rows' render follows the outcome; Stage A
+(composer emission + Route A + P0515 parity + the screen) → Stage B (freeze + 12-block epoch) →
+Stage C (20-cell admission) → Stage D (744/745/746). Findings recorded: the stale
+`run_importer_t8.py` assertion (7 vs the honest 6/145), the hard-coded real-arm receipt numbers on
+the reuse path, the nohook control's single modified-file warning, and the guard-byte phrasing.
+Budget: c92 charged 1,584.935 s focused (1,375.409 returned; 743 focused pool 3,126.237 s); Stage A
+carved at 4,000 s focused (the pool + a fresh 873.763 s from the stage reserve under the 2026-11-19
+ruling) + one 6,000 s workspace gate; epoch 16,373.940 s untouched; stage reserve
+34,159.7151416041 s; CM4 178,917.63604906694 s. The bar stays 571/4,422, 37/134, 4/133, 0/26; the
+pair (45,5,false) Open at zero receipts, C2 118 Residual + 0 Lost, 51 owners and five source duties
+Open, `CHANGELOG.md`/S10 blocked, CM5 unauthorized, everything sealed (c76–c91) sealed.
