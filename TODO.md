@@ -3550,6 +3550,30 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
     dispatched to `cdx`.
 
+  - G15-CM4 continuation 95 (2026-11-22): Stage B was completed on `cdx` (Codex 0.169.0,
+    gpt-6.2-astra, effort max) in four attempts, each stopped honestly on a scope boundary or a
+    new unlisted difference before any evidence was over-claimed: attempt 1 (Q95 journal
+    allowance), attempt 2 (the Claude Code CLI's rewrite of two gitignored director-mod type
+    bundles), attempt 3 (the armed-only Route A falsifier in the disabled arms), attempt 4 (the
+    completion). The six comparisons are complete, all at 69/69 targets with 66 ignored, 7 exact
+    skips, 9 host-only loopback refusals and zero unexplained: live/default and live/no-default
+    4,342/9/0 declared; armed/default and armed/no-default 4,294/58/49; disabled/default and
+    disabled/no-default 4,293/59/50. The amended enumeration `a8c3eafb…` adds exactly the
+    armed-only falsifier for disabled in both modes (restoring `8a57577f…` when removed); the
+    c94 hygiene name and the original enumerations and FAILs stay in the record. Ruling
+    `Q95-stage-b-complete` credits Stage B in full; the two declared composed findings are
+    accepted as composition semantics with code-verified causes. Deferred obligations: the
+    configuration-aware falsifier assertions, the P0543 receipt test's independence from the
+    mutable probe path, the `--against-git` inherited-dirty accounting gap, and a future
+    tree-hash exclusion for the gitignored mod type bundle. Budget: attempt 4 charged
+    100.701256 s focused + 1,522.705398 s workspace; c95 totals 192.765393 s focused and
+    3,040.695664 s workspace; balances 307.234607 s focused, 3,959.304336 s workspace,
+    13,141.490754 s epoch; reserve 21,838.8530776041 s; CM4 176,372.85640706694 s. Bar
+    571/4,422, 37/134, 4/133, 0/26; pair (45,5,false) Open at zero admitted receipts; C2 118
+    Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
+    CM5 unauthorized. Per the 2026-11-21 pause ruling the line stops here for the user's
+    morning reboot; Stage C (the 20-cell admission) is the resume point.
+
   - G15-CM4 brief 743 stage 1 (2026-11-21): the observation policy ran on `grk`
     under the 2026-11-20 routing ruling (07:57:13-11:16, 341 turns, $28.45, success,
     STOP; report 46,135 B, 8 PASS / 1 FLAGGED / 2 FAIL, 73 citations; peak 67% of

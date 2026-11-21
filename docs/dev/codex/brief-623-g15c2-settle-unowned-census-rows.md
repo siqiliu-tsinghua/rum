@@ -117704,3 +117704,30 @@ returned) + 3,232.449246 s epoch (13,141.490754 left); 743 pools focused 67.1791
 0/26; the pair (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners
 and five source duties Open; `CHANGELOG.md`/S10 blocked; CM5 unauthorized; everything sealed
 (c76–c94) sealed.
+
+### Continuation 95 (Stage B completion) — the six comparisons and the pause
+
+Continuation 95 completed Stage B in four attempts on `cdx` (each stop honest: the two
+authorized-difference classes — the c94 gate journals and the Claude Code CLI's rewritten mod
+type bundles — and the armed-only Route A falsifier), and c95 is gated as
+`Q95-stage-b-complete`: the six comparisons are complete at 69/69 targets each with 66 ignored,
+7 exact skips, 9 host-only loopback refusals and zero unexplained — live/default and
+live/no-default 4,342/9/0 declared; armed/default and armed/no-default 4,294/58/49;
+disabled/default and disabled/no-default 4,293/59/50. The amended enumeration `a8c3eafb…` adds
+exactly `cm740_probe::cm743_route_a_falsifiers::route_a_positive_and_all_falsifiers` as
+`armed-only-falsifier` for disabled in both modes (removing it restores `8a57577f…`); the c94
+hygiene name stays declared; the original enumerations and FAILs stay in the record. The
+falsifier's cause is code-verified: the composed module has one `#[test]` whose assertions
+presume the armed gate, `descendant_gate_clause` returns `Err("disabled")` at lib.rs:712 under
+`!ENABLED`, and both armed modes pass it while the live file has no such module. Deferred
+obligations: configuration-aware assertions, the P0543 receipt test's independence, the
+`--against-git` gap, and the mod type bundle's tree-hash exclusion. Budget: c95 charged
+192.765393 s focused and 3,040.695664 s workspace; balances 307.234607 s focused, 3,959.304336 s
+workspace, 13,141.490754 s epoch; reserve 21,838.8530776041 s; CM4 176,372.85640706694 s.
+Findings (none blocking): the c95 attempts' reader/publisher instrument errors, each disclosed
+and corrected before evidence; the approval of the two environment classes; the second external
+rewrite of `claude-code-tools/index.d.ts` during attempt 3, recorded and inert to the sealed
+comparison trees. Stage C (the 20-cell admission) is held and is the resume point after the
+user's morning reboot; no 744/745/746; no CM5. The bar stays 571/4,422, 37/134, 4/133, 0/26; the
+pair (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
+source duties Open; `CHANGELOG.md`/S10 blocked; everything sealed (c76–c95) sealed.

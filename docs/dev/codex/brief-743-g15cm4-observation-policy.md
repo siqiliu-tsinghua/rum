@@ -854,3 +854,24 @@ else a STOP); no source edit, no freeze change, no epoch label, no admission cel
 430.3865354390335269 s interrupted residual; 5,482.00973406192054702 left); the epoch balance
 13,141.490754 s is untouched; attempt 4 runs on the remainders; stage reserve 21,838.8530776041 s;
 CM4 176,372.85640706694 s.
+
+### Gate c95 — Stage B complete; the pause order (2026-11-22)
+
+Ruling `Q95-stage-b-complete`: continuation 95 is accepted and Stage B is credited in full. The
+six comparisons are complete at 69/69 targets each with 66 ignored, 7 exact skips, 9 host-only
+loopback refusals and zero unexplained: live/default and live/no-default 4,342/9/0 declared;
+armed/default and armed/no-default 4,294/58/49; disabled/default and disabled/no-default
+4,293/59/50. The amended enumeration `a8c3eafb…` adds exactly the armed-only falsifier for
+disabled in both modes (removing it restores `8a57577f…` exactly) and keeps the c94 hygiene
+name; the original enumerations and FAILs stay in the record. The two composed findings are
+accepted as declared composition semantics with code-verified causes; deferred obligations are
+recorded (configuration-aware falsifier assertions; the P0543 receipt test's independence from
+the mutable probe path; the `--against-git` inherited-dirty accounting gap; a future tree-hash
+exclusion for the gitignored director-mod type bundle). Budget: c95 charged 192.765393 s
+focused and 3,040.695664 s workspace; balances 307.234607 s focused, 3,959.304336 s workspace,
+13,141.490754 s epoch; stage reserve 21,838.8530776041 s; CM4 176,372.85640706694 s. The full
+gate record is `.temp/director/ruling-c95.md`.
+
+**Pause order.** Per the user's 2026-11-21 pause ruling, the line stops here for the morning
+reboot: no Stage C, no further dispatch, no new work until the user returns. Stage C (the
+20-cell admission) is the resume point; no 744/745/746; no CM5.
