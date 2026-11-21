@@ -726,5 +726,41 @@ allowance is not widened.
 
 **Budget and stop.** 500 s focused (the 743 pool 67.179147 s + a fresh 432.820853 s) + the
 7,000 s workspace carve + the epoch balance 13,141.490754 s untouched; report `rum-report/1`
-appended (stage `C / c95`); stop at six complete comparisons, or on a budget or scope boundary,
+appended (stage `B / c95`); stop at six complete comparisons, or on a budget or scope boundary,
 or on any new unlisted difference; stage reserve 21,838.8530776041 s; CM4 176,372.85640706694 s.
+
+### Continuation 95 attempt 2 — Q95 answered, the live-pin bar restated
+
+Q95 is answered yes. The three differing paths are the director's c94 gate commit `5b4cf956`:
+the 37-line TODO.md bullet inserted at lines 3515-3551 and the continuation-94 sections appended
+to briefs 623 (64 lines) and 743. They are gate journals, not source; the checkout keeps them.
+Attempt 1's journal audit is correct and its stop was the ordered behavior.
+
+**The restated live-pin bar.** The live checkout has the same 5,810 paths as the frozen real tree
+`5028530e…`, with no additions and no removals. Every path equals `inputs/source-pins.json` except
+exactly those three declared documentation names, whose live hashes are recorded at this dispatch
+and whose journal audit (shape, line span, new-line count, and that the content is the c94 gate
+record) is repeated: TODO.md is the one mid-file insertion (suffix_only=false), the two briefs are
+suffix-only appends. A source difference, an added path or a removed path is still a STOP. The
+workspaces run on the live checkout as pinned at this dispatch; the frozen real tree `5028530e…`
+remains the composed-vs-live control and the base of the composed arms.
+
+**Evidence reuse.** The c95 enumeration written by attempt 1 (`workspace-enumeration.json`, sha256
+`8a57577f28dc20d2c57b90b6555db8bd5e91f09e8471f34ff14f31fed4e30094`) stands; its sealed-input,
+enumeration and frozen-real preflight passes are re-verified by hash identity rather than
+re-derived; attempt 1's files stay in the c95 scene, and attempt 2 adds its own evidence beside
+them. The cumulative report is appended as stage `B / c95`; attempt 1's `C / c95` label was a
+brief slip and is superseded.
+
+**Everything else stands unchanged**: the three remaining whole workspaces (armed/no-default,
+disabled/default, disabled/no-default) each with the full 69-target analysis, the switched
+lp03/lp04/lp05 follow-ups, the native-1t host-exclusion reproduction, the P0543 pinned read-only
+presentation and the certificate-acceptance replay; six complete comparisons in total; zero
+unexplained differences against the amended enumeration; the seven exact skips and the nine
+host-only loopback groups; no source edit, no freeze change, no epoch label, no admission cell,
+Stage C held, no 744/745/746, no CM5.
+
+**Budget.** Attempt 1 is charged 3.222776469 s of the 500 s focused carve (496.777223531 left) and
+nothing of the 7,000 s workspace carve or the 13,141.490754 s epoch balance; attempt 2 runs on the
+remaining focused carve plus the untouched workspace carve and epoch balance; stage reserve
+21,838.8530776041 s; CM4 176,372.85640706694 s.
