@@ -3354,6 +3354,51 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
     CM5 unauthorized. Next: continuation 87 (the hot-body completion), dispatched to `grk`
     under the user's 2026-11-20 routing ruling.
+  - G15-CM4 continuation 90 (2026-11-21): the corrected composition and the epoch blocks ran on
+    `grk` under the 2026-11-20 routing ruling (11:42:40-13:02, 155 turns, $14.23, success, STOP;
+    report 66,228 B, 10 PASS / 2 FLAGGED / 3 FAIL, 115 citations; peak 35.8% of 20 GiB). I
+    reproduced the whole 133-pin composition: live `6af3d99f...` = frozen real `495696b8...` +
+    exactly the three journal files; all 133 preimages/postimages verified; admission trees
+    `6cef83af...`/`c5d599a6...`/`4eac7561...`/`b9b1fde9...` = baseline + pins + journals with
+    file set 5,810; drive trees `3041233e...`/`e566d734...`/`341f4c95...`/`de8f4cd4...` = admission
+    + the reviewed instrument + the mod.rs hook; the seven non-render pins and the 5 begin sites;
+    identity.json `c5efa506...` and copies.json `71850b35...` unchanged; the six frozen trees
+    re-hashed; the 171 continuation-83 derived files preserved. My own parse of every block
+    compiler log: 12 labels / 12 starts / 12 finishes in the designed order, no thirteenth,
+    default-disabled not retried; armed 132 warnings / 6 classes / the 124 unused_parens sites
+    equal to the sealed c88 armed set, disabled 128-130 / 5 / the same 124 sites equal to the
+    sealed disabled set, real and spot 0; cargo exit 0, cache_hit=false, release, codegen 1,
+    max 116.4 s. no-default-spot and lane-spot pass; default-spot's dirty rebuild fb054603... is
+    superseded by the disclosed clean rebuild equal to block 1 (c1f68187...), ledger exit 3, no
+    second label. The admission-only 133-pin default-disabled build (3fed2829..., 130 warnings,
+    the 124 sites exact) is disclosed and outside the labels; the 133-pin receipts carry
+    baseline_tree=6af3d99f... and the armed P0256 authentication passed. The class admission
+    stopped: armed P0256 armed its selector and produced no source hit (Ok(()),
+    native_difference=false) at 8 and 1 threads; the named PortBlocked and the unspent ledger
+    are on disk; 744 was not dispatched. My own breadth on the default-armed admission tree: all
+    seven profile-return rows never hit (P0314/P0410/P0515 never arm) and are strict-equal, while
+    all three deferred-publication rows arm, hit and show Err(Native) with a native difference;
+    in the ordinary lane the three deferred rows hit and then panic at the logical teardown, and
+    the seven profile-return rows exit 0 with no hit and no quiescence failure. The canonical
+    render is around_ok(row, phase, false, || ..._cm740_driven(..)); its only difference is the
+    hit print and an early return of the same value, the hit is gated on ordinary(row), and that
+    gate never succeeds at these sites because the queued run's frame permit belongs to a deeper
+    activation than the wrapper's enter activation; verify_own_omission would reject the packets
+    as IdentitySurvivor. The profile-return class is therefore unsatisfiable as designed — a
+    class-wide design finding, not a row defect. Q90 accepts the composition, the blocks, the
+    spot identity repair, the admission-only build and the stop; the ten-member all-or-nothing
+    admission is not credited; the class returns for a design ruling; the deferred-publication
+    evidence is noted but its own admission is unrun. Continuation 91 is ordered as a design-only
+    (Scope: NONE) calibration and ruling package for the profile-return class: reproduce the two
+    breadth tables, trace the failing eligible clause per member, audit the render semantics
+    against the declared operation, the verify_own_omission clauses, one design recommendation
+    with the policy/schema impact, answers to Q1-Q4, and a costed staged plan. Continuation 90
+    charged 1,408.549 s epoch; 743 remainders focused 5,030.088 / workspace 6,778.176 / epoch
+    16,373.940 s; continuation 91's 4,000 s focused leaves 1,030.088 s; reserve
+    37,033.4781416041 s; CM4 175,013.78504906694 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair
+    (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
+    source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized.
+
   - G15-CM4 brief 743 stage 1 (2026-11-21): the observation policy ran on `grk`
     under the 2026-11-20 routing ruling (07:57:13-11:16, 341 turns, $28.45, success,
     STOP; report 46,135 B, 8 PASS / 1 FLAGGED / 2 FAIL, 73 citations; peak 67% of

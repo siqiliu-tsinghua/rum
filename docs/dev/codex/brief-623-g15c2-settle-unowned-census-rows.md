@@ -117396,3 +117396,78 @@ Continuation 88 ran on `grk` (04:34:10–07:24, 227 turns, $19.192966, success, 
   pre-enumerated set). Stage 1 charged 969.912 s focused + 5,221.824 s workspace + 217.511 s
   epoch = 6,409.247 s; 743 remainders 5,030.088 / 6,778.176 / 17,782.489 s; reserve
   37,033.4781416041 s; CM4 173,605.23604906694 s.
+### Continuation 90 — brief 743's second run: the corrected 133-pin composition and the blocks land, the profile-return class is found unsatisfiable (Q90)
+
+Continuation 90 ran on `grk` under the user's 2026-11-20 routing ruling (unit
+`brief-743-grk-20261121-114240-1112219`, 2026-11-21T11:42:40–13:02, rc 0,
+`status=success`, 155 turns, $14.234372, refused=0, peak 7,698,337,792 B of the
+20 GiB scope (35.8%), oom 0/0; 3 git-fence attempts, reads only; report 66,228 B,
+**STOP**, 10 PASS / 2 FLAGGED / 3 FAIL, 115 citations verified, 0 questions,
+6 deviations, 10 disclosures).
+
+It delivered the corrected composition the c89 gate ordered: the admission trees
+are the frozen baseline plus the 133 `overlays.tsv` postimages plus the three
+post-freeze director journal bytes, and the drive trees add only the reviewed
+carrier instrument and the `obligations/mod.rs` hook. I reproduced the whole
+composition myself: live `6af3d99f...` = frozen real `495696b8...` + exactly the
+three journals; all 133 preimages and postimages verified; the four admission
+trees `6cef83af...` / `c5d599a6...` / `4eac7561...` / `b9b1fde9...` and the four
+drive trees `3041233e...` / `e566d734...` / `341f4c95...` / `de8f4cd4...` all
+re-hash to the claims; file set exactly 5,810; the seven non-render pins are the
+four recorder `resume_frames.rs` and the three hook fixtures; 5
+`cm740_probe::begin` sites; `identity.json` (`c5efa506...`) and `copies.json`
+(`71850b35...`) unchanged; the six frozen trees unchanged; the 171 derived files
+in sealed continuation-83 preserved. The twelve labels finished in the designed
+order with one start and one finish each, no thirteenth, `default-disabled` not
+retried; my own parse of every json compiler log gives armed 132 warnings / 6
+classes / the 124 `unused_parens` sites equal to the sealed c88 armed set,
+disabled 128-130 / 5 classes / the same 124 sites equal to the sealed disabled
+set, and real/spot 0 warnings, every block `cargo_exit=0 cache_hit=false`
+release codegen 1 under 117 s. `no-default-spot` and `lane-spot` pass their
+forced identities; `default-spot`'s dirty incremental rebuild (`fb054603...`) is
+superseded by a disclosed clean rebuild equal to block 1 (`c1f68187...`) with the
+ledger row left at exit 3, no second label. The admission-only default-disabled
+133-pin build (`3fed2829...`, 130 warnings / the exact 124 sites) is disclosed
+and outside the labels; the 133-pin receipts carry `baseline_tree=6af3d99f...`
+and the armed P0256 authentication passed.
+
+The class admission then stopped: default-armed P0256 authenticated, armed its
+selector, and produced no `CM740_SOURCE_HIT` — `Ok(())` with
+`native_difference=false` at eight threads and at one thread. The named
+`PortBlocked` record and the unspent ledger are on disk; 744 was not dispatched.
+
+The finding is the class, and I completed the breadth myself on the
+default-armed admission tree: the seven profile-return rows never hit (four
+never arm a selector at all) and are strict-equal with no native difference,
+while the three deferred-publication rows arm, hit and show `Err(Native)` with a
+native difference. In the ordinary lane under the same binary the three deferred
+rows hit and then panic at the logical-teardown assertion, while the seven
+profile-return rows exit 0 with no hit and no quiescence failure. The canonical
+render is `around_ok(row, phase, false, || ..._cm740_driven(..))`; its difference
+is the hit print and an early return of the same value, the hit is gated on
+`ordinary(row)`, and that gate never succeeds at these sites because the queued
+run's frame permit belongs to a deeper activation than the wrapper's `enter`
+activation; `verify_own_omission` would reject the packets as
+`IdentitySurvivor`. So the profile-return class's declared operation is not
+exercised, its declared hit is unreachable, its transform is an identity, and
+its own premise (the ordinary runner cannot observe the row) is false for all
+seven. That is a class-wide design finding, not a row defect.
+
+Ruling `Q90-composition-blocks-and-class-finding`: the composition, the blocks,
+the spot identity repair, the admission-only build, the stop, the scope and the
+seals are accepted; the ten-member all-or-nothing admission is not credited; the
+profile-return class returns for a design ruling; the deferred-publication
+evidence is noted but its own admission (disabled at zero hits, both modes, real
+matrices, the packet) is unrun. Continuation 91 is ordered as a design-only
+(`Scope: NONE`) calibration and ruling package for the profile-return class:
+reproduce the two breadth tables, trace the failing `eligible` clause per member,
+audit the render semantics against the declared operation, state the
+`verify_own_omission` clauses, decide the design with one recommendation and the
+impact on the 743 policy and 742 schema, answer Q1-Q4, and return a costed
+staged plan. Budget: continuation 90 charged 1,408.549 s on the epoch envelope
+(743 epoch remainder 16,373.940 s; focused 5,030.088 s; workspace 6,778.176 s;
+stage reserve 37,033.4781416041 s; continuation 91's 4,000 s focused leaves
+1,030.088 s; CM4 now 175,013.78504906694 s). The bar is unchanged at 571/4,422,
+37/134, 4/133, 0/26; the pair stays Open at zero admitted receipts, C2 118
+Residual + 0 Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10
+blocked, CM5 unauthorized, everything sealed (c76-c90) staying sealed.

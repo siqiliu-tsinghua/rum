@@ -196,3 +196,123 @@ remainder; no scope is shrunk (the 2026-11-19 ruling if a top-up is ruled).
 **Report.** `rum-report/1` at `.temp/brief-743/report.json` (the continuation attempt appends
 attempts); every block, admission, packet and ordinary negative linked; final message
 `scripts/report.py summary`.
+## Gate c90 (2026-11-21) — the corrected composition and the blocks accepted, the profile-return class found unsatisfiable, a design ruling owed
+
+Continuation 90 ran on `grk` (unit `brief-743-grk-20261121-114240-1112219`,
+11:42:40-13:02, rc 0, success, 155 turns, $14.234372, peak 35.8% of 20 GiB, 3 git-fence
+reads). Report 66,228 B, STOP, 10 PASS / 2 FLAGGED / 3 FAIL, 115 citations, 0 questions,
+6 deviations, 10 disclosures. The full record is `.temp/director/ruling-c90.md`.
+
+Accepted with my own reproductions: the corrected composition (live `6af3d99f...` = frozen
+real `495696b8...` + the three journal files exactly; all 133 preimages and postimages
+verified; the four admission trees `6cef83af...`/`c5d599a6...`/`4eac7561...`/`b9b1fde9...` =
+baseline + the 133 pins + the journals, file set 5,810; the four drive trees = admission +
+the reviewed instrument + the `obligations/mod.rs` hook at `3041233e...`/`e566d734...`/
+`341f4c95...`/`de8f4cd4...`; the seven non-render pins; 5 `cm740_probe::begin` sites;
+`identity.json` `c5efa506...` and `copies.json` `71850b35...` unchanged; all six frozen trees
+re-hashed; the 171 derived files in continuation-83 preserved); blocks 3-12 in the designed
+order, 12 labels / 12 starts / 12 finishes, no thirteenth, `default-disabled` not retried,
+under the corrected bar exactly (my parse of every json compiler log: armed 132 warnings / 6
+classes / the 124 `unused_parens` sites equal to the sealed c88 armed set, disabled 128-130 /
+5 classes / the same 124 sites equal to the sealed disabled set, real and spot 0 warnings;
+`cargo_exit=0`, `cache_hit=false`, release, codegen units 1, max 116.4 s of 1,500 s; every
+oracle hash equals its receipt); the forced identities (`no-default-spot` and `lane-spot`
+pass; `default-spot`'s dirty incremental rebuild `fb054603...` is superseded by the disclosed
+clean rebuild `c1f68187...` equal to block 1, ledger exit 3, no second label); the
+admission-only 133-pin `default-disabled` build (`3fed2829...`, 130 warnings / the 124 sites
+exact, outside the twelve labels, disclosed); the 133-pin receipts (7 fields, 133 overlays,
+`baseline_tree=6af3d99f...`) and the armed P0256 authentication; the stop (P0256 armed:
+transport true, selector armed, predicate `Ok(())`, `native_difference=false`, no source hit;
+one-thread reproduced; named PortBlocked; ten rows unspent; 744 not dispatched); scope and
+seals (0 tracked files modified after the dispatch, the inherited porcelain unchanged, no
+sealed file newer, the worker wrote only under `.temp/brief-743/`).
+
+The finding is the class: **the profile-return class is unsatisfiable as designed.** My own
+breadth calibration on the default-armed admission tree (all ten members, the admission's
+exact environment) gives: the seven profile-return rows — P0256/P0259/P0266/P0315 arm a
+selector once or twice and P0314/P0410/P0515 never arm; none produces `CM740_SOURCE_HIT`;
+all seven are `Ok(())` with `native_difference=false` and equal public output; the three
+deferred-publication rows (P0267/P0312/P0323) each arm, hit, and show `Err(Native)` with
+`native_difference=true`. In the ordinary lane under the same binary the three deferred rows
+hit and then panic at the logical-teardown assertion, while the seven profile-return rows
+exit 0 with no hit and no quiescence failure — their ordinary run is clean. The canonical
+render at the site is `cm740_probe::around_ok(row, phase, false, || ..._cm740_driven(..))`;
+its whole difference is the hit print and an early return of the same value, the hit is
+gated on `ordinary(row)` (the queued-run authentication), and that gate never succeeds
+there because the queued run's frame permit belongs to a deeper activation than the
+wrapper's `enter` activation. `verify_own_omission` would also reject the packets
+(`IdentitySurvivor` — the armed observation must differ from the real baseline; an own
+`Err(...)` predicate is required; a fired hit is required). So for all seven members the
+declared operation is not exercised, the declared hit is unreachable, and the transform is
+an identity. This is a class-wide design finding: no single-row repair is authorized.
+
+Ruling `Q90-composition-blocks-and-class-finding`: the composition, the blocks, the spot
+identity, the admission-only build and the stop are accepted; the ten-member all-or-nothing
+admission is not credited (the pair stays Open at zero admitted receipts); the profile-return
+class returns for a design ruling; the deferred-publication evidence is noted but its own
+admission (disabled at zero hits, both modes, real matrices, the packet) is unrun.
+
+## Continuation 91 — the profile-return class: design-only calibration and ruling package
+
+Read the c90 ruling first (`.temp/director/ruling-c90.md`), then the accepted 741 design's
+`PLAN.md` section 3 and `ROW-EVIDENCE.md` for the seven rows, and the c90 breadth evidence
+(`.temp/director/gate-c90/README.md`, `breadth-summary.tsv`, `ordinary-breadth-summary.tsv`,
+`breadth.py`, `ordinary_breadth.py`, and the per-row logs). This is design only: **Scope:
+NONE**. No source change, no live build, no test change, no admission, no epoch, no campaign,
+no 744. Everything sealed stays sealed and read-only; scratch and instrumented copies only
+under `.temp/brief-743/design/`; the frozen/composed trees, `identity.json` and `copies.json`
+are not written.
+
+**Goal.** Return a ruling package that decides what the profile-return class is, why its
+members cannot produce the accepted evidence, and what the correct design is — with one
+recommendation, a per-row contract, falsifiers, the impact on the 743 policy and the 742
+schema, and a costed staged plan. You may run the admitted evidence and instrumented copies
+to answer, but you change nothing.
+
+**Reproduce the evidence.** Re-run the ten-member armed breadth and the ordinary breadth on
+the default-armed admission tree exactly as the c90 gate did (environment in the gate's
+`breadth.py`/`ordinary_breadth.py`: `RUM_CM740_ROW`/`OMIT`/`PROGRAM`/`ARM=armed`/`PROFILE=on`/
+`BASELINE`=repo/`RECEIPT`=the 133-pin `default-armed-authentication.tsv`, profile group on,
+`RUM_PROFILE_EVALUATION_CACHE_INCREMENTAL=0`; ordinary adds `RUM_CM740_ORDINARY=1`; the binary
+is `epoch/default-armed-oracle`, the active tree is `c90-default-armed-6cef83af...`). Quote
+the verdict lines and reconfirm the selector split and the predicate split.
+
+**The diagnosis (all seven members, source-anchored).**
+1. Per-member eligibility trace: which clause of `cm740_probe::ordinary`/`eligible` fails at
+   the declared site in the queued run — run not queued or not current, episode missing,
+   `owner` missing, `pair.tokens` missing for the wrapper activation, `frame_identity` absent,
+   or `issued_queued_frame` false — and where the frame permit was actually issued in the
+   resumed run (its owner activation and path versus the wrapper's `enter` path). Instrumented
+   copies of the composed tree under `.temp/brief-743/design/` are allowed; builds only there.
+2. The three rows that never arm (P0314/P0410/P0515): prove why the declared producer pause is
+   not reached or not armed on the selected program, and whether the declared phase/prompt in
+   the row schema matches the actual pause.
+3. Render semantics: show that each of the seven emitted transforms is an identity (no value
+   change, no skipped tail), compare it with the declared operation (actual result at the
+   enclosing return boundary, early return before the tail), and name the exact site and shape
+   where a driven-path difference should exist.
+4. The unchanged `verify_own_omission` clauses that reject the current packets
+   (`IdentitySurvivor`, own-predicate, hit, build identity) and the exact evidence it requires;
+   state what a valid packet must contain for this class.
+
+**The design decision (one recommendation).** Consider at least: (i) regenerate the seven
+carriers so the driven path returns the declared early result with a genuine native difference,
+equal public output and a reachable declared hit, keeping the hot body the live preimage and
+the canonical form; (ii) an evidence contract the unchanged predicate can pass without
+weakening it; (iii) a class-wide reclassification with its consequences for the 151-row bar
+and the campaign. Then state: the per-row render contract and its falsifier; the impact on the
+743 policy (memberships, `ClassPacket`, the 20-cell schedule, the class stop rules); the 742
+schema/overlay re-emission and re-authentication; the costed staged briefs and envelopes with
+any explicit new-allocation request; risks and stop conditions. No single-row repair.
+
+**Questions the ruling must answer.** Q1: is the declared operation satisfiable by any render
+within the reviewed probe protocol at these sites — if so, what exactly, and if not, which
+clause of the class definition is wrong? Q2: should the class exist at all, given the
+seven-row ordinary lane is clean and quiescence-free? Q3: what must be re-derived and
+re-authenticated if the class is removed or re-scoped? Q4: does the corrected composition
+leave the deferred-publication evidence valid, and what remains to complete its own admission?
+
+**Budget.** 4,000 s focused, carved from 743's focused remainder (5,030.088 s), leaving
+1,030.088 s; no workspace and no epoch blocks; stop at the envelope boundary and report the
+exact remainder. Report `rum-report/1` at `.temp/brief-743/report.json` (append attempt),
+design sections, every verdict line quoted, final message `scripts/report.py summary 743`.
