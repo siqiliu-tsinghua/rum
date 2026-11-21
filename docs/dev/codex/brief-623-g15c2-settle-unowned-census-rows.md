@@ -117813,3 +117813,29 @@ or a pair/control failure stops immediately. No source edit, no build, no new bi
 label, no workspace suite, no 745/746, no CM5; everything sealed (c76–c96) read-only; the live
 five recorded at start/end. Budget: the final-epoch envelope balance 13,141.490754 s of
 16,373.940; 0 s focused; 0 s workspace; a projected overrun is a ruling, never a scope cut.
+
+### Continuation 97 attempt 1 — STOP at the live-pin gate (brief 744)
+
+Attempt 1 (unit `brief-744-cdx-20261122-031104-35453`, 03:11:04–03:21, rc 0, 20 GiB scope peak
+0.53 GiB, oom 0/0, 0 repo changes) authenticated the whole entry — twelve labels, twelve build
+receipts and compiler logs, three trees, 43 artifact pins, epoch `b1e68590…`, membership
+28/3/7/113, the Stage C publications and C10, 27 historical verdict lines replayed, 14 sealed
+roots / 2,518,300 files with none newer — and stopped exactly at the brief's written bar: the
+live checkout held 5,811 paths, 5,805 matched, five declared differences, zero removals, zero
+other modifications, and one addition, `docs/dev/codex/brief-744-g15cm4-shakedown.md`
+(`197b63da…`) — the dispatch document itself, committed in `d083daa5`. No epoch binary ran;
+0/244 cells; pair Open at zero admitted receipts; Q1 asked. I reproduced the stop independently
+(my own traversal: 5,811 paths, the same one addition, the same five differences, no
+outside-five, tree `adfc0549…`; start and end snapshots byte-identical `e97b6d7e…`; the added
+file git-tracked; no `.git-attempts`; no sealed file newer; `git status` at the inherited 23
+entries; report check OK with 141 citations; meter exact). Ruling
+`Q744-live-pin-dispatch-document`: the stop is correct and the defect is mine — the c94 pins
+predate the dispatch document by construction, since a brief is committed before dispatch; the
+live allowance becomes the five declared differences plus the committed dispatch documents of
+the 744–746 line, each recorded by start/end hash, an in-run change a disclosure, and any other
+difference a STOP. Attempt 1's scene stays read-only, its report preserved at
+`attempt-1-report.json` (`31e52ec6…`); attempt 2 re-dispatches the unchanged 244-cell shakedown
+writing under `.temp/brief-744/attempt-2/` with the cumulative report retaining attempt 1.
+Attempt 1 charged 35.300107319 s of the final-epoch envelope (0 focused, 0 workspace); balance
+13,106.190646681 s; reserve 21,838.8530776041 s; CM4 176,372.85640706694 s. Everything sealed
+(c76–c96) stays sealed; 745/746 held; CM5 unauthorized.

@@ -3550,6 +3550,29 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
     dispatched to `cdx`.
 
+  - G15-CM4 continuation 97 attempt 1 (brief 744) (2026-11-22): the unchanged-epoch shakedown
+    stopped honestly before the first cell at the live-pin gate — the live checkout held 5,811
+    paths against the brief's 5,810 because the dispatch document itself
+    (`docs/dev/codex/brief-744-g15cm4-shakedown.md`, `197b63da…`, committed in `d083daa5`) is
+    outside the c94 pins. Entry authentication passed completely (twelve labels, twelve build
+    receipts and compiler logs, three trees, 43 artifact pins, epoch `b1e68590…`, membership
+    28/3/7/113, the Stage C publications and C10, 27 historical verdict lines replayed, 14 sealed
+    roots / 2,518,300 files with none newer); no epoch binary ran; 0/244 cells; 0 repo changes;
+    pair Open at zero admitted receipts; Q1 asked. I reproduced the scope result independently
+    (5,811 paths, the same one addition, the same five declared differences, no outside-five,
+    tree `adfc0549…`; start/end snapshots byte-identical `e97b6d7e…`; the added file git-tracked;
+    no `.git-attempts`; no sealed file newer; `git status` at the inherited 23 entries; report
+    check OK with 141 citations; meter exact) and ruled `Q744-live-pin-dispatch-document`: the
+    pins predate the dispatch document by construction, so the live allowance becomes the five
+    declared differences plus the committed dispatch documents of the 744–746 line (start/end
+    hash recorded; in-run change a disclosure; any other difference a STOP); the attempt-1 scene
+    stays read-only with its report preserved (`attempt-1-report.json`, `31e52ec6…`) and attempt
+    2 re-dispatches the amended brief (six-name instantiation, `.temp/brief-744/attempt-2/`
+    scene, cumulative report retaining attempt 1). Attempt 1 charged 35.300107319 s of the epoch
+    envelope (13,106.190646681 s left); 0 focused; 0 workspace; reserve 21,838.8530776041 s;
+    CM4 176,372.85640706694 s. Bar 571/4,422, 37/134, 4/133, 0/26; C2 118 Residual + 0 Lost;
+    51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized.
+
   - G15-CM4 continuation 96 (Stage D, brief 744) (2026-11-22): the unchanged-epoch shakedown
     was dispatched on `cdx` (Codex 0.171.0, gpt-6.2-astra, effort max) at 20G after the c96
     gate accepted Stage C (20/20 credited). Measurement-only on the final epoch: 244 logical
