@@ -117934,3 +117934,59 @@ brings it to **49,676.4222427641 s** and the CM4 line to **204,210.425572227 s**
 stays 118 Residual + 0 Lost; the 51 owners and five source duties stay Open; `CHANGELOG.md` and
 S10 stay blocked; CM5 remains unauthorized; everything sealed (c76–c98) stays sealed; 745 and
 746 remain held.
+
+### Continuation 99 — attempt 1 stopped at the retained callbacks; `Q749-retained-callers` amends the plan
+
+Brief 749 Stage A attempt 1 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`, effort max), unit
+`brief-749-cdx-20261122-045113-82310`, 2026-11-22T04:51:13–05:03:28 CST, rc 0, the 20 GiB scope
+peaked at 288,350,208 B (0.27 GiB, oom 0/0), 0 repo changes; report `.temp/brief-749/report.json`
+(86,093 B; verdict STOP; 7 checks PASS / 1 FAIL (`own-retention-cut`) / 2 NA; 3 measurements
+PASS; 1 deviation — the brief was opened before the scene existed and archived immediately after;
+1 question `Q749-retained-callers`; `scripts/report.py check 749` OK, 232 citations); 54 bounded
+read-only commands summing **7.5967964620012935 s** focused of the 4,631 s carve (0 workspace, 0
+epoch), matching `ledger.json`. The scope held: every write under `.temp/brief-749/`,
+`git status --porcelain` still the inherited 23 entries, no file under `.temp` (outside the scene
+and `.temp/logs`) newer than the dispatch, no `.git-attempts`, no cargo/git/network, the sealed
+inputs read at their sealed digests (mutants `14bd4326…`, overlays `22751919…`, policy
+`3953aa9f…`) and the baseline 95/45/11 intact.
+
+The STOP, verified by me in the sealed armed tree: the 748 cut 1 anchors at `rule.rs:111`, but
+P0001's frozen selection (`C34.empty-prefix-callback-value-charge…`) is executed by the fixture
+callback `callback_charge` (`native.rs:143`, prefix `empty`), and P0002's
+(`C32.retained-callback-prefix-restoration…`) by `retained_prefix`, which pushes 101 and 103
+(`native.rs:182-183`) and calls at `:185` with positive capacity. Both calls go to the ordinary
+`RetentionContext::evaluate` (`bridge.rs:85`); neither goes through `evaluate_in`. The rule
+path's `scoped` prefix is a fresh zero-capacity `RetainedValues` (`retained.rs:83-94`), so the
+driven clone returns through `bridge.rs:151-158` before P0002's producer (`:174`) and hit
+(`:189`). `native.rs` is sealed overlay row 135 (preimage `83d0f6a8…`, disabled = armed
+`12fa73b2…`), preserved under the 748 plan; and `RetentionContext::evaluate` is pinned
+`byte_exact` in `hot-bodies.json` (`bd58a68f…`), so the body cannot become the dispatcher — the
+callers must. The full caller census of the two-argument method: `rule.rs:111`, `native.rs:143`
+and `:185`, and five `accounting_mode/tests/*` calls (`tests/rule.rs:223`, `tests/mod.rs:194`,
+`tests/exits.rs:28/141/174`) that are `cfg(test)` rum-runtime unit-test code outside the oracle
+lane. The probe gates (`driven()` = `run_is_driven()`, `ordinary(row)` row-eligible and
+`ENABLED`-gated) make the caller-side shape behavior-preserving — the same as the 194 existing
+`if driven() { …_cm740_driven } else { … }` retargetings.
+
+Ruling `Q749-retained-callers` (`.temp/director/ruling-749.md`): the STOP is correct and the plan
+defect is mine. Bind both scheduled fixture callers at `native.rs:143` and `:185` with the
+qualified caller shape (same prefix and argument, original call textually unchanged, both original
+`evaluate` bodies untouched); keep the `rule.rs:111` cut (a real caller of the same driven
+function; the class-wide repair binds every caller on a selection path); `native.rs` moves from
+preserved to re-rendered, so the partition becomes **33 re-rendered + 2 new + 102 preserved =
+137 rows** over **35 files**, the repair **49 cuts**, the rows still 62 (56 own + 6 dependencies),
+274 postimages, the recomputed `source_schema`, the policy `3953aa9f…` unchanged. A
+**scheduled-caller audit** is added for all 62 affected rows: derive from each frozen program
+through the lane registrations the call site actually executed to the producer and the hit, and
+prove the repair binds it — the 748 static `reachable` verdict alone is not a catch, because a
+driven clone reachable from an unrelated caller proves nothing about the frozen selection (this
+STOP is the proof). The re-scan bar becomes "all 151 reachable, 0 unknown **and** every affected
+row's own selection path reaches its producer and hit". Nothing is reclassified, promoted or
+settled; the 95 working rows and the 13 PortBlocked bindings are preserved; STOP at Stage A.
+Budget: attempt 1 charged 7.5967964620012935 s focused of 749's carve; the remainder is
+4,623.403203537999 s focused + 5,577 s workspace (0 epoch), inside the 10,208 s carve taken from
+the stage reserve 39,468.4222427641 s; CM4 stays 204,210.425572227 s; an overrun is a ruling, not
+a scope cut. The pair `(45,5,false)` stays Open at zero admitted receipts; C2 118 Residual + 0
+Lost; the 51 owners and five source duties Open; membership 28/3/7/113; `CHANGELOG.md` and S10
+blocked; CM5 unauthorized; everything sealed (c76–c99). The amended brief 749 attempt 2 is
+dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the standing routing.

@@ -3550,6 +3550,34 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
     dispatched to `cdx`.
 
+  - G15-CM4 continuation 99 attempt 1 (brief 749) (2026-11-22): Stage A stopped at cut 1 on the
+    retained callbacks; `Q749-retained-callers` binds the frozen fixture callers and amends the
+    plan. Attempt 1 (unit `brief-749-cdx-20261122-045113-82310`, 04:51:13–05:03, rc 0, 20 GiB
+    peak 0.27 GiB, oom 0/0, 0 repo changes; report `.temp/brief-749/report.json`, verdict STOP,
+    7 PASS / 1 FAIL / 2 NA, 3 measurements PASS, 1 deviation, 1 question; `report.py check 749`
+    OK, 232 citations; 54 read-only commands summing 7.5967964620012935 s focused of the 4,631 s
+    carve, 0 workspace, 0 epoch) stopped before rendering under the brief's own rule: cut 1
+    anchors at `rule.rs:111`, but P0001/P0002's frozen selections execute the fixture callbacks
+    `callback_charge` (`native.rs:143`, prefix `empty`) and `retained_prefix`
+    (`native.rs:185`, after two pushes, positive capacity); `native.rs` is sealed overlay row
+    135 (preimage `83d0f6a8…`, disabled=armed `12fa73b2…`), preserved under 748; the rule path's
+    `scoped` prefix is a fresh zero-capacity `Vec` (`retained.rs:83-94`), so the driven clone
+    returns at `bridge.rs:151-158` before P0002's producer (174) and hit (189); the original
+    `RetentionContext::evaluate` is a hot body (`hot-bodies.json`, `byte_exact`, `bd58a68f…`).
+    I verified the registrations, the two frozen programs, the row-135 seals, the hot-body pin,
+    the full caller census (rule.rs:111, native.rs:143/185, five cfg(test) calls) and the probe
+    gates (`driven()`/`ordinary()` — the same shape as the 194 existing retargetings). Ruling
+    `Q749-retained-callers`: the STOP is correct and the plan defect is mine; bind
+    `native.rs:143/185` with the qualified caller shape and keep `rule.rs:111`; `native.rs`
+    moves to re-rendered (33 + 2 new + 102 preserved = 137 rows; 49 cuts over 35 files); add
+    the scheduled-caller audit for all 62 affected rows (the 748 static verdict alone is not a
+    catch) and strengthen the re-scan accordingly. Budget: 7.5967964620012935 s focused charged;
+    4,623.403203537999 s focused + 5,577 s workspace remain; 0 epoch; reserve
+    39,468.4222427641 s; CM4 204,210.425572227 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair
+    (45,5,false) Open at zero receipts; C2 118 + 0; 51 owners and five source duties Open;
+    CHANGELOG/S10 blocked; CM5 unauthorized; everything sealed (c76–c99). The amended brief 749
+    attempt 2 is dispatched to `cdx`.
+
   - G15-CM4 continuation 98 (brief 748) (2026-11-22): the carrier-dispatch reachability inventory
     is accepted and the repair line is ordered. Brief 748 ran on `cdx` (Codex 0.171.0,
     gpt-6.2-astra, effort max), unit `brief-748-cdx-20261122-035406-54975`, 03:54:06–04:38 CST,
