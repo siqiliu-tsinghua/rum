@@ -3399,6 +3399,45 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
     source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized.
 
+  - G15-CM4 continuation 91 (2026-11-21): the profile-return design review ran on `grk` under
+    the 2026-11-20 routing ruling (13:20:04-13:59, 98 turns, $7.81, success, STOP; report
+    113,677 B, 14 PASS / 2 FLAGGED / 3 FAIL / 1 NA, 196 citations; peak 53.7% of 14 GiB). I
+    reproduced the package's spine: the reconstructed baseline `6af3d99f...` and the active
+    default-armed tree `6cef83af...` hash to the receipt values; the armed and ordinary
+    ten-member breadth is identical to my c90 tables row for row (the seven profile-return
+    rows hit never - P0314/P0410/P0515 never arm - and are `Ok(())` with no native
+    difference; the three deferred rows hit with `Err(Native)`; the ordinary deferred rows
+    panic at snapshot.rs:30 while the seven exit 0). The eligibility trace shows no
+    `CM743_BIND`, empty token and permit paths, `pair_tokens_missing` at the reached queued
+    sites, P0515's driven fast path still missing the token, and P0314/P0410 with no own site
+    and an `owner_missing` arming. The accepted `around_ok` returns the body result and the
+    caller tail runs at all seven sites; the live code has no early return;
+    `verify_own_omission` is unchanged. The policy rows carry `success_return=1`,
+    `bypasses_profile_finish=1` and the `around_ok:...` evidence. The package recommended
+    reclassifying all seven to ordinary; Q91 refuses: the clean ordinary lane is the 741
+    packet's expected case, the carriers are diagnostic-native tail omissions the ordinary
+    observation cannot see, so reclassification would settle five unattempted hypotheses by a
+    blind observation (a semantic loss); the package also treated the accepted protocol as
+    fixed and never evaluated the class-preserving route (a non-weakening queued-success
+    authentication plus the call-site early-return render). The class stays, the policy is
+    not re-derived, and the deferred class's admission waits. Q1: unsatisfiable under the
+    accepted protocol; the unimplemented clause is `success_return &&
+    bypasses_profile_finish`, the carrier's declared omission, not a live-tail property. Q2:
+    the class should exist; removal, if ever, is a ruled scope cut. Q3: a new primitive or a
+    site re-derivation re-emits the affected overlays and source schemas, re-derives the
+    policy and digests, re-freezes and re-authenticates. Q4: the deferred evidence is valid;
+    its admission still needs the disabled arm at zero hits, both modes, the real matrices,
+    the cohorts and the packet. Continuation 92 is ordered as the design-only (`Scope:
+    NONE`) non-weakening review: Route A (the primitive plus the call-site early-return
+    render), Route B (the producer-frame site re-derivation), and only if both fail with
+    evidence, Route C (removal with the full recorded cost), with a scratch prototype, the
+    impact analysis and a costed plan. Budget: continuation 91 charged 279.26 s focused; the
+    unused 3,720.74 s returns, so 743 focused is 4,750.828 s; continuation 92's 3,000 s
+    leaves 1,750.828 s; workspace 6,778.176 s and epoch 16,373.940 s untouched; reserve
+    37,033.4781416041 s; CM4 175,293.04504906694 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair
+    (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
+    source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized.
+
   - G15-CM4 brief 743 stage 1 (2026-11-21): the observation policy ran on `grk`
     under the 2026-11-20 routing ruling (07:57:13-11:16, 341 turns, $28.45, success,
     STOP; report 46,135 B, 8 PASS / 1 FLAGGED / 2 FAIL, 73 citations; peak 67% of

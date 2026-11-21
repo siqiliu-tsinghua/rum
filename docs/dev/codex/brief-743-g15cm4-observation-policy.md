@@ -316,3 +316,118 @@ leave the deferred-publication evidence valid, and what remains to complete its 
 1,030.088 s; no workspace and no epoch blocks; stop at the envelope boundary and report the
 exact remainder. Report `rum-report/1` at `.temp/brief-743/report.json` (append attempt),
 design sections, every verdict line quoted, final message `scripts/report.py summary 743`.
+## Gate c91 (2026-11-21) — the profile-return diagnosis accepted, the reclassification rejected, a non-weakening protocol review ordered
+
+Continuation 91 ran on `grk` under the user's 2026-11-20 routing ruling (unit
+`brief-743-grk-20261121-132004-1142247`, session `6e94be85-6461-47f0-af45-4dc89975c5b2`,
+13:20:04-13:59, rc 0, success, 98 turns, $7.80657, refused 0, peak 8,068,964,352 B of 14 GiB
+(53.7%), oom 0/0, 3 git-fence reads; report 113,677 B, STOP, 14 PASS / 2 FLAGGED / 3 FAIL /
+1 NA, 196 citations, 9 deviations, Q1-Q4, 10 sections). The three FAILs are the c90 stop's own
+entries. The full record is `.temp/director/ruling-c91.md`.
+
+Accepted with my own reproductions: the reconstructed baseline (`6af3d99f...`) and the active
+default-armed admission tree (`6cef83af...`) hash to the receipt values; the ten-member armed
+and ordinary breadth reproduces my c90 tables row for row (the seven profile-return rows hit
+never — P0314/P0410/P0515 never arm — and are `Ok(())` with no native difference; the three
+deferred rows hit with `Err(Native)` and a native difference; the ordinary deferred rows panic
+at `snapshot.rs:30` while the seven exit 0); the eligibility trace (no `CM743_BIND` anywhere,
+empty token and permit paths, `pair_tokens_missing` at the reached queued sites, P0515's driven
+fast path still missing the pair token, P0314/P0410 with no own site and an `owner_missing`
+arming); the render audit (the accepted `around_ok` returns the body result and the caller tail
+runs at all seven sites; the live code has no early return; the 741 declared early return is
+the overlay shape the render does not emit); the unchanged `verify_own_omission` clauses and
+their order; the policy rows (`success_return=1`, `bypasses_profile_finish=1`, the
+`around_ok:...` evidence, `profile = success_return && bypasses_profile_finish`); scope (0
+tracked files newer than the dispatch, the inherited 23-entry porcelain unchanged, no sealed
+scene written, the worker wrote only under `.temp/brief-743/design/` plus the appended
+report); the budget (279.26 s metered of the 4,000 s carve).
+
+The recommendation (iii) — reclassify all seven to ordinary — is **not accepted**. A clean
+ordinary lane is the 741 packet's expected case ("if ordinary returns, its observation must
+equal the observer-path observation"), not evidence that the ordinary runner can observe the
+native-only omission; the seven carriers' selected mutants are diagnostic-native tail omissions,
+and reclassifying would settle five unattempted hypotheses by an observation that cannot see
+them — a semantic loss and a reclassification wearing a repair's clothes. The package also
+treated the accepted probe protocol as fixed, so it never evaluated the one question that could
+preserve the class: a non-weakening authentication for a queued-side success at a call-site
+probe whose frame construction binds to a deeper activation. The class stays, the policy is not
+re-derived, and the deferred class's own admission waits for the policy decision.
+
+Q1: under the accepted protocol the declared operation is not satisfiable (the hit is
+unreachable and the render is an identity); the unimplemented clause is `success_return &&
+bypasses_profile_finish`, which is the carrier's declared diagnostic omission, not a live-tail
+property. Q2: the class should exist; removal, if ever, is a ruled scope cut. Q3: a new
+primitive or a site re-derivation re-emits the affected overlays and source schemas and
+re-derives the policy and digests, then re-freezes and re-authenticates every packet. Q4: the
+deferred evidence remains valid; its admission still needs the disabled arm at zero hits, both
+modes, the real matrices, the cohorts and the packet.
+
+## Continuation 92 — the profile-return class: the non-weakening path, design only
+
+Read the c91 ruling first (`.temp/director/ruling-c91.md`), then the 741 `PLAN.md` section 3
+and `ROW-EVIDENCE.md` for the seven rows, the 743 policy rows, and the c91 evidence
+(`.temp/brief-743/design/`, its `STATUS.md`, `breadth.json`, `ordinary-breadth.json`,
+`diag_rows.py` and `logs/diag-*.log`, and the c90 gate's `breadth.py`/`ordinary_breadth.py`).
+This is design only: **Scope: NONE**. No source change, no live build, no test change, no
+admission, no epoch, no campaign, no 744. Everything sealed (c76-c91) stays sealed and
+read-only; scratch, instrumented copies and prototype builds only under
+`.temp/brief-743/design2/`; the frozen/composed trees, `identity.json` and `copies.json` are not
+written.
+
+**Goal.** Decide, with evidence, whether the profile-return class can be admitted with the
+unchanged predicate and no weakening, and return one recommendation with the per-row contract,
+the falsifiers, the policy/schema/re-freeze impact, answers to Q1-Q4 and a costed staged plan.
+
+**State the class precisely.** Quote the seven policy rows (`success_return`,
+`bypasses_profile_finish`, the evidence string) and the live tails at the seven sites: the
+live code runs the finish; the declared early return is the carrier's simulated diagnostic
+omission, so the class is an oracle-fidelity obligation (the observer must catch the simulated
+native-only omission). State what the class is for and what its removal would leave unobserved.
+
+**Route A — a non-weakening queued-success authentication.** Enumerate the ledger records the
+resumed half produces for the producer's suspension frame (construction identity, bound slots,
+current frame records, the pair scope) and determine which are pair-scoped, unforgeable from
+the probe, and survive into the queued half. Specify the primitive that lets the wrapper
+activation prove the construction of a descendant: its inputs, its invariant, its state, and
+why it is not weaker than `ordinary()`/`frame()` (what it verifies, what it cannot). Falsifiers
+that must fire: wrong pair/row/episode, wrong arm, wrong phase, pre-arm hit, a probe without
+the construction, a construction outside the pair, an ambient-env or forged capability, a
+disabled-arm hit. Show it is false without the real resumed-half construction, on an
+instrumented copy, and that the existing `ordinary()`/`frame()`/`eligible()` and the ordinary
+guard's two byte positions are untouched.
+
+**The render.** The call-site conditional early return of the declared shape: when the
+authenticated gate holds and the actual producer result is `Ok`, hit at the declared phase and
+return `Ok(value)` before the caller tail; otherwise return the body result and let the tail
+run. The hot path stays the live preimage; the driven path is the cold twin plus the gate;
+composer-generated canonical text with a byte-exact inverse and no hand edits. State the
+native-difference mechanism (the omitted finish), the public-exact behavior, the disabled arm
+(zero hits, exact), the ordinary-run equality and the quiescence outcome.
+
+**Prototype and decide.** On the instrumented scratch copies, show for all seven: the armed
+hit at the declared phase, `Err(Native)`, `native_difference=true`,
+`public_output_exact=true`, and the unchanged `verify_own_omission` accepting; the real and
+disabled matrices; the ordinary equality; or the exact blocking clause. If Route A fails, state
+why with the offending clause, then evaluate Route B (a site re-derivation: the hit at the
+producer's frame resume, the deferred shape) with its phase/schema consequences and quiescence
+behavior; only if both fail with evidence, evaluate Route C (class removal) with the full cost
+— membership 28/3/0/120, the policy and schema re-derivation, the 20-cell schedule, the bar
+impact, and the five hypotheses' unobserved native omissions — and recommend one, recording a
+ruled scope cut if removal.
+
+**The impact.** For the recommended route: the policy TSV and `policy_digest`, the overlays and
+`schema_digest`, the re-freeze, the packet re-authentication, the class stop rules, the 20-cell
+schedule, and the deferred-publication class's own admission sequence after the policy decision.
+
+**Hard constraints.** No weakening of `ordinary()`, `frame()`, `eligible()`,
+`issued_queued_frame`, the ordinary guard's two byte positions, `verify_own_omission` or the
+predicate classes; no new selector or broad environment bypass; no new `unsafe`; no
+default-path cost; test-layer only; no hand-edited render or inventory; every sealed scene and
+the c76-c91 evidence read-only; no source, epoch, campaign, acceptance or 744 action; stop at
+the envelope boundary and report the exact remainder.
+
+**Budget.** 3,000 s focused, carved from 743's focused remainder (4,750.828 s), leaving
+1,750.828 s; no workspace and no epoch blocks; no new allocation; prototype builds only under
+`.temp/brief-743/design2/` and metered. Report `rum-report/1` at `.temp/brief-743/report.json`
+(append attempt), design sections, every verdict line quoted, final message
+`scripts/report.py summary 743`.

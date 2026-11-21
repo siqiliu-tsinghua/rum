@@ -117471,3 +117471,64 @@ stage reserve 37,033.4781416041 s; continuation 91's 4,000 s focused leaves
 37/134, 4/133, 0/26; the pair stays Open at zero admitted receipts, C2 118
 Residual + 0 Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10
 blocked, CM5 unauthorized, everything sealed (c76-c90) staying sealed.
+### Continuation 91 — the profile-return diagnosis lands, the reclassification is refused, the non-weakening path is ordered (Q91)
+
+Continuation 91 ran on `grk` under the user's 2026-11-20 routing ruling (unit
+`brief-743-grk-20261121-132004-1142247`, session `6e94be85-6461-47f0-af45-4dc89975c5b2`,
+2026-11-21T13:20:04-13:59, rc 0, `status=success`, 98 turns, $7.80657, refused=0,
+peak 8,068,964,352 B of 14 GiB (53.7%), oom 0/0; 3 git-fence attempts, reads only;
+report 113,677 B, **STOP**, 14 PASS / 2 FLAGGED / 3 FAIL / 1 NA, 196 citations
+verified, 9 deviations, Q1-Q4, 10 sections). It delivered the design-only package the
+c90 gate ordered: the ten-member armed and ordinary breadth reproduced on the
+default-armed admission tree (identical to my c90 tables row for row), the per-member
+eligibility trace, the render-semantics audit, the unchanged `verify_own_omission`
+clauses, the recommendation, the contracts and a costed plan.
+
+I reproduced the package's spine myself: the reconstructed baseline
+(`6af3d99f...`) and the active tree (`6cef83af...`) hash to the receipt values; the
+breadth is identical (the seven profile-return rows never hit, P0314/P0410/P0515
+never arm, all `Ok(())` with no native difference; the three deferred rows hit with
+`Err(Native)` and a native difference; the ordinary deferred rows panic at
+`snapshot.rs:30`, the seven exit 0); the eligibility trace shows no `CM743_BIND`
+anywhere, empty token and permit paths, `pair_tokens_missing` at the reached queued
+sites, P0515's driven fast path still missing the token, and P0314/P0410 with no own
+site and an `owner_missing` arming; the accepted `around_ok` returns the body result
+and the caller tail runs at all seven sites, while the live code has no early return;
+`verify_own_omission` (BuildIdentity, MissingRealTuple, DisabledDifference,
+BaselinePause, Unarmed, NoHit, IdentitySurvivor, the own-predicate test, the
+StrictNativeEqual `Err(Native)` requirement) is unchanged; the policy rows carry
+`success_return=1` and `bypasses_profile_finish=1` with the `around_ok:...` evidence.
+
+The package recommended class-wide reclassification of the seven to ordinary
+(option iii). **Ruling `Q91-diagnosis-accepted-reclassification-rejected`:** the
+diagnosis is accepted, the recommendation is refused. The clean ordinary lane is the
+741 packet's expected case, not a refutation — the packet admits an ordinary return
+whose observation equals the observer-path observation; the carriers' selected
+mutants are diagnostic-native tail omissions invisible to the ordinary observation,
+so reclassifying would settle five unattempted hypotheses by an observation that
+cannot see them (a semantic loss; reclassification is not repair). The package also
+treated the accepted probe protocol as fixed, so it never evaluated the
+class-preserving question: a non-weakening authentication for a queued-side success
+at a call-site probe whose frame construction binds to a deeper activation. The class
+stays, the policy is not re-derived, and the deferred class's admission waits for the
+policy decision.
+
+Q1: unsatisfiable under the accepted protocol (the hit is unreachable, the render an
+identity); the unimplemented clause is `success_return && bypasses_profile_finish`,
+the carrier's declared omission, not a live-tail property. Q2: the class should
+exist; removal, if ever, is a ruled scope cut. Q3: a new primitive or a site
+re-derivation re-emits the affected overlays and source schemas, re-derives the
+policy and digests, re-freezes and re-authenticates every packet. Q4: the deferred
+evidence is valid; its admission still needs the disabled arm at zero hits, both
+modes, the real matrices, the cohorts and the packet. Continuation 92 is ordered as
+the design-only (`Scope: NONE`) non-weakening review: Route A (the primitive plus the
+call-site early-return render), Route B (the producer-frame site re-derivation), and
+only if both fail with evidence, Route C (removal with the full recorded cost), with
+the prototype under `.temp/brief-743/design2/`, the impact analysis and a costed
+plan. Budget: continuation 91 charged 279.26 s focused (the unused 3,720.74 s
+returns; 743 focused remainder 4,750.828 s; continuation 92's 3,000 s leaves
+1,750.828 s; workspace 6,778.176 s and epoch 16,373.940 s untouched; stage reserve
+37,033.4781416041 s; CM4 175,293.04504906694 s). The bar is unchanged at 571/4,422,
+37/134, 4/133, 0/26; the pair stays Open at zero admitted receipts, C2 118 Residual +
+0 Lost, 51 owners and five source duties Open, `CHANGELOG.md` and S10 blocked, CM5
+unauthorized, everything sealed (c76-c91) staying sealed.
