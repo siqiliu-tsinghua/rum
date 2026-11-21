@@ -117990,3 +117990,96 @@ a scope cut. The pair `(45,5,false)` stays Open at zero admitted receipts; C2 11
 Lost; the 51 owners and five source duties Open; membership 28/3/7/113; `CHANGELOG.md` and S10
 blocked; CM5 unauthorized; everything sealed (c76–c99). The amended brief 749 attempt 2 is
 dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the standing routing.
+
+### Continuation 100 — attempt 2 stopped at P0339's cover-witness gap; `Q749-P0339-frozen-hit` orders brief 750
+
+Brief 749 Stage A attempt 2 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`, reasoning effort
+max), unit `brief-749-cdx-20261122-051446-92453`, 2026-11-22T05:14:46–05:41 CST, rc 0, the
+20 GiB scope peaked at 332,959,744 B (0.31 GiB, oom 0/0), 0 repo changes. Stage report
+`.temp/brief-749/attempt-2/report.json` (148,327 B; verdict STOP; 13 checks; 6 measurements);
+cumulative `.temp/brief-749/report.json` (242,307 B; verdict STOP; 15 PASS / 2 FAIL / 6 NA;
+3 deviations; questions `Q749-retained-callers` answered and `Q749-P0339-frozen-hit`;
+`scripts/report.py check 749` OK, 466 citations); attempt 1's report preserved verbatim at
+`.temp/brief-749/attempt-1-report.json` (86,093 B, sha256 `4ebbbe32…`). Dispatch log
+`.temp/logs/cdx_brief_749.log` (1,132,998 B). The scene is 91 bounded commands whose monotonic
+sum is **29.80946500299069 s** focused (0 workspace, 0 epoch; every receipt summed by me,
+matching `ledger.json` to the last digit); cumulative 37.406261464991985 s, leaving
+4,593.593738535008 s focused + 5,577 s workspace. Scope held: every write under
+`.temp/brief-749/`; `git status --porcelain` still the inherited 23 entries; no `.git-attempts`;
+no cargo/git/network in the 91 receipts or their 83 scripts (two keyword hits are
+directory-exclusion literals); sealed inputs at their digests (mutants `14bd4326…`, overlays
+`22751919…`, policy `3953aa9f…`); nothing under `.temp` outside the scene and `.temp/logs` newer
+than the dispatch except my own clean-temp records; the three disclosed deviations carry no
+verdict.
+
+Attempt 2 proved before the STOP: the copied Stage A generator reproduced the exact 135-row
+parent table with all 270 sealed postimages (I compared every row's preimage, disabled and armed
+digest against the sealed `overlays.tsv`: zero mismatches; `native.rs` line 135
+`83d0f6a8…`/`12fa73b2…`); seven cuts over six files (`rule.rs:111`, `native.rs:143`,
+`native.rs:185`, `filter.rs:192`, `default_values.rs:380`, `replace_all.rs:700`,
+`definitions.rs:255`) rendered twice byte-identically and inverted to live in all twelve
+file-recipes; I diffed four of the six files and each diff is exactly the qualified dispatcher
+with the original call untouched (`native.rs` 143/185 keep `empty`/`values`, `args[0].clone()`
+and the original two-line `cx` / `.evaluate` spelling, with the lane `begin/end` pairs
+unmodified because no other hunk exists); both retention withholding negatives pass
+(`WITHHOLD RESCAN P0001/P0002 verdict=producer-unreachable scheduled_incoming=0
+companion_dispatch=1 runtime_rule_dispatch=1 entire_driven_body_preserved=true dynamic_receipts=0`);
+the audit table holds all 62 affected rows (seven dispatch-bound, 54 unattempted at the STOP);
+the caller census matches mine.
+
+The STOP: cut 5 rendered correctly and bound `resume_normalize_rules_after_rule_exprs`'s only
+caller (`rewrite_rules.rs:42`), but P0339's own frozen selection cannot reach its credited hit.
+The cover is `mutant-coverage.tsv:37` (`own P0339 <tuple> CM739.batch2.P0339.00596175b0039980bc434cda
+one-own-catch`; tuple `P0339 \t Error \t held_and_splice.tail-hold \t
+…rewrite_rules.rs:196:Session::drive_rewrite_rule_exprs_owned@201 \t
+NormalizeRules.lhsPreparation`). The program `55e20f3f…` is
+`log={};scope=17;c23rulesonce=True;c23rules:=If[c23rulesonce,(c23rulesonce=False;Input["finish"]),c23lhs->91];`
+with source expression `NormalizeRules[c23rules]` (`guest.rs:743-744`) and one constituent
+answering `Hold[c23lhs->91]` (`programs.tsv:4383`). `NormalizeRules` is HoldAll
+(`builtin_catalog/rules.rs:565`) → `eval_normalize_rules` (`definitions.rs:12`) → the driven
+drive (`rewrite_rules.rs:238`, `around("P0339")`) → the driven resolve (`around("P0338")`) →
+`self.evaluate` → `Hold[Rule[c23lhs,91]]` → `normalize_rewrite_rule_exprs_from_resolved_cm740_driven`
+(`rewrite_rules.rs:304`) → `normalize_rewrite_rules` (`definition_analysis_helpers.rs:484`) →
+`normalize_single_rewrite_rule` (`:501`), which accepts only two-argument `Rule`/`RuleDelayed`
+and returns `None` for the `Hold` head (`:521`). The continuation receives `None` at its only
+caller; the driven clone's `Some` arm (`definitions.rs:282-291`) guards the sole hit at `:293`
+under `rules.len() == 1`, and the `None` arm (`:295-299`) emits the same `argform` message as
+the original body (`:266-271`). No frame state can enter the hit branch with `None`. The
+historical record agrees: all 55 P0339 cells in
+`.temp/g15-c2/c23/normalized-rule-consumer-list-emission-full-proofs.json` are SAME (both raw
+logs `semantic_same:true, native_same:true`, real-1.log:4192 / disabled-1.log:52707); the row's
+fault maximum is 0; the 741 taxonomy calls it an unattempted hypothesis. Verdict lines:
+`SCHEDULED DATAFLOW P0339 … normalized_option=None required_option=Some required_rule_count=1`;
+`CUT 5 STOP P0339 scheduled_caller_bound=1 producer_path=1 driven_target_bound=1
+selected_paths_to_existing_hit=0 hypothetical_frame_true_paths_to_hit=0`. I re-derived every
+fact from the sealed armed tree and the historical logs; the STOP is genuine.
+
+Ruling `Q749-P0339-frozen-hit` (`.temp/director/ruling-750.md`): the STOP is correct and cut 5
+stays. The defect is twofold: my 749 bar conflated the repair's duty (the executed caller is
+bound) with the selection's duty (the frozen program reaches its hit), and the cover program was
+chosen by the 740 c1 rule's fallback — `choice = next((p for p in own if p['variant'] ==
+'Middle' and p['context'] == 'phase_observation.trace'), own[0])`
+(`.temp/brief-740/c1/assemble_lane_mutations.py:11`) — without any witness check; 78 of the 151
+own covers are not the preferred program, and every own row has 30–715 bound programs, so a
+witness candidate exists in the row's own matrix. The class-wide response: a design-only
+**cover-witness inventory** of all 151 own covers plus the six dependencies (the executed
+caller, the producer and hit, every guard's value condition with the code fact, the historical
+outcome, a `static-witness`/`static-non-witness` verdict with zero unknown), and for every
+non-witness row a proven witness candidate from its own bound programs with the old→new tuple.
+The non-witness covers are then revised by an authorized live edit before the render's pins
+freeze — the real fix, not a deferred line. Sequence: continuation 100 = brief 750 (design-only,
+`Scope: NONE`); after its gate brief 751 = the authorized cover revision, then brief 749 amends
+to attempt 3 for the full 49-cut render with the witness statuses in the 62-row audit, the
+137-row table and schema, the source gate and the pins; Stage B, Stage C, the 744 restart (its
+18 own cells on the revised covers), 745 and 746 follow their gates. Nothing is reclassified,
+promoted, exempted or settled; the 20 class cells stand (measured witnesses); the 95 reachable
+rows' images and the 13 PortBlocked bindings are preserved; no predicate weakened; no hit moved;
+everything sealed (c76–c99) stays sealed; 745/746 held. Budget: attempt 2 charged
+29.80946500299069 s focused (91 receipts summed; 0 workspace, 0 epoch); continuation 100 (brief
+750) carved 2,400 s focused from the stage reserve 39,468.4222427641 s, leaving
+37,068.4222427641 s; CM4 stays 204,210.425572227 s; an overrun is a ruling, never a scope cut.
+The pair `(45,5,false)` stays Open at zero admitted receipts; C2 118 Residual + 0 Lost; the 51
+owners and five source duties Open; membership 28/3/7/113 with policy `3953aa9f…` and schema
+`22751919…`; `CHANGELOG.md` and S10 blocked; CM5 unauthorized. Brief 750 is dispatched on `cdx`
+at `BRIEF_MEMORY_MAX=20G` under the standing routing (agy on a cyber-filter refusal, a Codex
+quota death stops and asks).

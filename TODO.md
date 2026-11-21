@@ -3550,6 +3550,36 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
     dispatched to `cdx`.
 
+  - G15-CM4 continuation 100 attempt 2 (brief 749) (2026-11-22): Stage A stopped at cut 5 on
+    P0339's cover-witness gap; `Q749-P0339-frozen-hit` orders the cover-witness inventory
+    (brief 750). Attempt 2 (unit `brief-749-cdx-20261122-051446-92453`, 05:14:46–05:41 CST,
+    rc 0, 20 GiB peak 0.31 GiB, oom 0/0, 0 repo changes; cumulative report
+    `.temp/brief-749/report.json`, verdict STOP, 15 PASS / 2 FAIL / 6 NA, 466 citations;
+    attempt-1 report preserved verbatim at `attempt-1-report.json`, 86,093 B, `4ebbbe32…`;
+    91 bounded commands summing 29.80946500299069 s focused, 0 workspace, 0 epoch; cumulative
+    37.406261464991985 s, 4,593.593738535008 s focused + 5,577 s workspace remain) rendered
+    the exact 135-row parent table with all 270 sealed postimages (I compared every row myself:
+    zero mismatches), seven cuts over six files twice byte-identically with twelve inverses to
+    live (rule.rs:111, native.rs:143/185, filter.rs:192, default_values.rs:380,
+    replace_all.rs:700, definitions.rs:255), both withholding negatives, and the census. The
+    STOP: cut 5 bound `resume_normalize_rules_after_rule_exprs`'s only caller
+    (`rewrite_rules.rs:42`), but P0339's frozen cover
+    `CM739.batch2.P0339.00596175b0039980bc434cda` (prelude `c23rules:=If[c23rulesonce,
+    (c23rulesonce=False;Input["finish"]),c23lhs->91];`, source `NormalizeRules[c23rules]`,
+    answer `Hold[c23lhs->91]`) normalizes to `None` (HoldAll → `normalize_single_rewrite_rule`,
+    `definition_analysis_helpers.rs:521`), and the sole hit at `definitions.rs:293` is nested
+    under `Some` and `rules.len() == 1`; all 55 historical cells are SAME; the cover was chosen
+    by the 740 c1 fallback `own[0]` (78 of 151 covers are not `Middle/phase_observation.trace`)
+    and was never witness-checked. Ruling: the STOP is correct, cut 5 stays, and the class-wide
+    response is a design-only cover-witness inventory of all 151 own covers plus a proven
+    witness candidate from each non-witness row's own bound matrix (30–715 programs per row),
+    then an authorized cover revision before the render's pins freeze. Budget: 29.80946500299069 s
+    charged; continuation 100 (brief 750) carved 2,400 s focused from the stage reserve
+    39,468.4222427641 s (0 workspace, 0 epoch); CM4 204,210.425572227 s. Bar 571/4,422,
+    37/134, 4/133, 0/26; pair (45,5,false) Open at zero receipts; C2 118 + 0; 51 owners and
+    five source duties Open; CHANGELOG/S10 blocked; CM5 unauthorized; everything sealed
+    (c76–c99); 745/746 held. Brief 750 is dispatched to `cdx`.
+
   - G15-CM4 continuation 99 attempt 1 (brief 749) (2026-11-22): Stage A stopped at cut 1 on the
     retained callbacks; `Q749-retained-callers` binds the frozen fixture callers and amends the
     plan. Attempt 1 (unit `brief-749-cdx-20261122-045113-82310`, 04:51:13–05:03, rc 0, 20 GiB
