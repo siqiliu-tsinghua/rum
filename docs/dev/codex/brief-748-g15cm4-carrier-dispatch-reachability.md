@@ -1,4 +1,4 @@
-# Brief 747 — CM4 carrier-dispatch reachability inventory (design-only, `Scope: NONE`)
+# Brief 748 — CM4 carrier-dispatch reachability inventory (design-only, `Scope: NONE`)
 
 **Director-dispatched, one stage, one gate, no production change.** This answers the `Q744-dispatch-reachability` STOP: on the accepted final epoch's armed tree the generated overlays exist byte-for-byte, but at least 33 of the 247 `*_cm740_driven` functions are never called — including the producer wrappers of three of the 18 already-caught own rows (P0416 `eval_rule_cm740_driven`, P0813 `eval_catch_cm740_driven`, P2593 `eval_first_cm740_driven`) — so the accepted signatures cannot be reproduced and the 745 campaign cannot run on this epoch. `Scope: NONE`: inventory, root cause and repair design only.
 
@@ -9,6 +9,7 @@ When this brief is done: every one of the 151 rows has a verdict — with file:l
 ## Context pointers
 
 - Read `AGENTS.md`; `.temp/director/ruling-744.md` (attempt-1 stop and attempt-2 gate); `docs/dev/codex/brief-744-g15cm4-shakedown.md`; brief 743's continuation 96 blocks; `PLAN.md` §5; `.temp/brief-741/DRAFT-COMMON.md`; `.temp/brief-741/attempt-plan.json`; `.temp/brief-741/PLAN.md`; `.temp/brief-741/SIGNATURES.md`; `.temp/brief-741/ROW-EVIDENCE.md`; `.temp/brief-741/row-taxonomy.tsv`; brief 742's generation records and `.temp/brief-742/`; the c92/c93 Route A install records and gates (`.temp/director/ruling-c92.md`, `ruling-c93.md`, `gate-c92/`), and the c94/c95 acceptance (`.temp/director/ruling-c94.md`, `ruling-c95.md`).
+- The accepted design inventory: `docs/dev/codex/brief-747-g15cm4-ownership-inventory.md` — the complete 151-row ownership matrix (138 expressible + 13 named PortBlocked, Q24/Q25; commits `e403546f`/`8f5ba77b`/`95572511`). Its per-row ownership plan is the base row matrix for this deliverable: adopt its rows and classes, verify them against the sealed schema, and do not re-derive the ownership plan from scratch.
 - The accepted final epoch under `.temp/brief-743/stage-b/epoch-b/`: the six release labels (`default-real 407873a7…`, `default-disabled a4154279…`, `default-armed 53545760…`, `no-default-real 40c78b04…`, `no-default-disabled 084643c4…`, `no-default-armed 52e84590…`) and the three sealed trees `5028530e…`/`9ee7ee79…`/`c739385a…`; identity `b1e68590…`, policy `3953aa9f…`, schema `22751919…`, membership 28/3/7/113, the 255-per-mode selections. **Read-only.**
 - The attempt-2 finding: `.temp/brief-744/attempt-2/finding.json`, `packets/002/armed.log` (`da160d1d…`), `armed-one-thread.log`, `logs/entry.log`, `ledger.json`, `report.json`. The known facts at dispatch: `eval_rule_cm740_driven` (`crates/rum-runtime/src/runtime/definitions/definitions.rs:178`) has one occurrence in the whole armed tree, `builtin_adapters.rs:355` calls `session.eval_rule(args)` which never reaches it; 33 of 247 `*_cm740_driven` definitions are single-occurrence; three of the 18 own rows are among them. These are the director's scan results — re-derive them, do not copy them.
 
@@ -24,7 +25,7 @@ When this brief is done: every one of the 151 rows has a verdict — with file:l
 
 ## Hard rules
 
-- `Scope: NONE` of production. Files you MAY create: everything under `.temp/brief-747/` only. You may READ the sealed epoch, `.temp/brief-740`..`743`, `.temp/brief-744` and the earlier scenes; nothing under them may be written.
+- `Scope: NONE` of production. Files you MAY create: everything under `.temp/brief-748/` only. You may READ the sealed epoch, `.temp/brief-740`..`743`, `.temp/brief-744` and the earlier scenes; nothing under them may be written.
 - No compile, no build, no `cargo` that compiles, no epoch binary execution, no new lane, no source/inventory/schema/policy/manifest edit, no git, no network, no `unsafe`, no new dependency. Bounded read-only commands only, charged to this brief's carve; scratch in `.temp/`, never `/tmp`.
 - `DRAFT-COMMON.md` in full. Pair `(45,5,false)` stays Open at zero admitted receipts; C2 stays Open at 118 Residual + 0 Lost; the 51 owners and five source duties stay Open; membership 28/3/7/113 with policy `3953aa9f0b03…` and schema `22751919dbcb…` unchanged; `CHANGELOG.md` and S10 stay blocked; CM5 remains unauthorized; everything sealed (c76–c96) stays sealed.
 - Never weaken a predicate, never reclassify a row, never propose exempting the dead rows, never count a byte-identical overlay as reachable evidence.
@@ -38,4 +39,4 @@ When this brief is done: every one of the 151 rows has a verdict — with file:l
 
 ## Report format
 
-`rum-report/1` at `.temp/brief-747/report.json`; every verdict, the inventory paths and hashes, the root cause, the repair plan and forecast, the risk register, the Open ledger state. `changes` is empty (design-only). Save every command's full output under `.temp/brief-747/` before parsing; cite lines exactly. Before finishing run `python3 scripts/report.py check 747` (without `--against-git`) and fix every PROBLEM; the final message is only `python3 scripts/report.py summary 747`. STOP at the inventory and the repair plan; no repair, no dispatch of 744/745/746.
+`rum-report/1` at `.temp/brief-748/report.json`; every verdict, the inventory paths and hashes, the root cause, the repair plan and forecast, the risk register, the Open ledger state. `changes` is empty (design-only). Save every command's full output under `.temp/brief-748/` before parsing; cite lines exactly. Before finishing run `python3 scripts/report.py check 748` (without `--against-git`) and fix every PROBLEM; the final message is only `python3 scripts/report.py summary 748`. STOP at the inventory and the repair plan; no repair, no dispatch of 744/745/746.

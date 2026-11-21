@@ -3570,7 +3570,7 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     `*_cm740_driven` definitions are single-occurrence, including three of the 18 own rows
     (P0416, P0813, P2593). The finding is genuine and class-wide; the final epoch is not
     campaign-ready. C10's default cell is credited (21 distinct completed overall); the
-    cm3-carrier family is blocked; 745/746 remain held. Continuation 98 = brief 747 design-only
+    cm3-carrier family is blocked; 745/746 remain held. Continuation 98 = brief 748 design-only
     (`Scope: NONE`) is carved 2,400 s focused from the stage reserve (0 workspace, 0 epoch):
     151-row/247-definition reachability inventory, root cause, pair/structural check, minimal
     repair design and re-derivation forecast; the repair and the 744 restart follow a later

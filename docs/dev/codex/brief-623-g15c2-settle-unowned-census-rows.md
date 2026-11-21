@@ -117874,7 +117874,7 @@ class-wide; C10's default cell is credited (21 distinct completed overall); P041
 `PortBlocked/Unarmed`, never a catch; the cm3-carrier family is blocked and the accepted final
 epoch is not campaign-ready — the 18-row shakedown and the 745 campaign cannot complete on it
 without a source-changing repair and full re-derivation; 745/746 remain held. Continuation 98 =
-brief 747 (`Scope: NONE`) is carved 2,400 s focused from the stage reserve (0 workspace, 0
+brief 748 (`Scope: NONE`) is carved 2,400 s focused from the stage reserve (0 workspace, 0
 epoch): the complete 151-row/247-definition reachability inventory, the root cause in the
 generated dispatch render, the pair/structural dependency check, the minimal repair design and
 the re-derivation forecast. The repair, the new epoch and the 744 restart enter later briefs
