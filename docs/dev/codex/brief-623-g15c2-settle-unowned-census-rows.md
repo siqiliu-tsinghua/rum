@@ -117640,3 +117640,67 @@ reserve at 29,271.6739306041 s and CM4 at 183,805.67726006694 s. The bar stays 5
 Lost; 51 owners and five source duties Open; `CHANGELOG.md`/S10 blocked; CM5 unauthorized;
 everything sealed (c76–c93) sealed. Plan: Stage B (the standing replays, the clean freeze, the
 12-block epoch) → Stage C (the 20-cell admission) → Stage D (744/745/746).
+
+### Continuation 94 (Stage B) — the standing replays, the clean freeze and the twelve-block epoch
+
+Continuation 94 (Stage B) ran on `cdx` (Codex CLI 0.169.0, `gpt-6.2-astra`, effort max) under
+the standing routing (unit `brief-743-cdx-20261121-201530-1428859`, 20:15:30–23:22:35 CST, rc 0,
+`verdict STOP` under the pre-declared rule — zero unenumerated workspace differences and the
+5,500 s workspace boundary; 20 GiB scope, 14.29 GiB peak, no OOM; report stage `B / c94`, 78
+checks 66 PASS / 5 FLAGGED / 5 FAIL / 2 NA — the two new FAILs are the incomplete workspace A/B
+and the composed-kernel-stdout check, the rest inherited — 9 measurements, 21 deviations, 19
+disclosures, 6 questions (Q1–Q4, Q93, Q94), 35 sections, 3,825 citations; 0 live source changes,
+0 production, 0 sealed newer; meter focused 1,932.820853 / 2,000, workspace 5,500 / 5,500
+(5,406.516821 completed + 93.483179 residual), epoch 3,232.449246 / 16,373.940). It replayed the
+standing inventories (68 fingerprints, C01/C02 both modes, ownership 61/79/8866, rejection
+census, LP01, typed slots), composed the clean freeze in the new scene from the live snapshot
+plus the 135 pins (5,810 files; the 2 new overlays and the 16 sites; the 3 driver-hook fixtures
+and 4 recorder pins; ten sealed trees; 43 artifact pins; the c90 identity/copies untouched),
+ran the twelve labels serially under the corrected warning bar (12/12 PASS, one each, three
+forced identities; armed 132/6 with the 124 `unused_parens` sites, disabled 130/5, real/spot 0),
+fired the five carriers (join P0267/P0312/P0323, queue P1470/P1471; disabled inert
+60/60/60/45/45), ran the three peels (19,184.0000/3,360.0000, depth 48 = 924,192), passed both
+P0543 tests in both live modes under the pinned presentation and rejected both in armed/default
+with the declared `SourceIdentity`, and ran three of six workspaces (live/default and
+live/no-default complete at 69/69 with nine EPERM and zero unexplained; armed/default complete
+at 69/69 with 48 declared + 9 EPERM + 1 unlisted; armed/no-default 9 started / 8 completed /
+61 owed; disabled × 2 unstarted) before the 5,508 s supervisor bound.
+
+I gated it from code and my own reruns: recomputed the ten trees and all 135 preimages/deltas,
+the lane-manifest deltas, the 43 artifact pins, the seven c90 pins and the c90 seals; replayed
+the twelve blocks and all 12 binaries; the carriers; the peels; the standing verdicts; the P0543
+passes and the composed rejection; the live workspace results; the 5,500 s accounting; the scope
+(live pins `5028530e…`, 0 sealed newer, the 23-entry porcelain unchanged, no git attempts, fmt
+exit 0); the meter. The unlisted finding is the composed `crates/rum-runtime/src/lib.rs` carrying
+13 `println!` calls inside `#[cfg(test)] mod cm743_route_a_falsifiers` (852; lines 971–1212;
+postimages `e8fe11f3…`/`86f4add8…`), which the path-based kernel-stdout hygiene test flags in
+the composed arm; the live file has 0 matches and the live arms pass.
+
+**Ruling `Q94-stage-b-partial-credit-hygiene-declared-topup`:** Stage B is partially credited —
+the standing replays, the freeze, the twelve blocks, the forced identities, the carrier drive,
+the peel, the P0543 live passes, both live workspace comparisons, armed/default's declared
+evidence and the scope/seals/meter stand. The composed stdout finding is declared, not repaired
+(option 2): it is cfg(test) test-support output in a composed test image with zero live matches;
+a source repair would re-derive the schema, the freeze, all twelve labels and every packet
+authentication and rename the falsifier tests the accepted evidence cites, for a path-based
+approximation with no live-code effect; the original enumeration and the FAIL check stay in the
+record. The workspace A/B is incomplete and gets a fresh carve (the 2026-11-19 budget ruling):
+continuation 95 runs the three remaining whole workspaces (armed/no-default, disabled/default,
+disabled/no-default) under a c95 enumeration that adds exactly the hygiene test as a declared
+composed-arm difference for armed and disabled in both modes, with the same seven skips, the
+nine host-only loopback groups, the pinned P0543 presentation and the six-configuration bar;
+no source edit, no epoch label, no admission cell, Stage C held, no 744/745/746, no CM5.
+Findings (none blocking): the `check --against-git` inherited-dirty accounting gap (the
+cumulative `changes` lists the brief's 15 files; the other 20 dirty files are the pre-dispatch
+inherited set, unchanged); the four certificate preflight reds as derived-position ordering
+artifacts with passing follow-ups; the `default-spot` clean rebuild outside the ledger; the
+admission-only default-disabled build outside the twelve labels; the inherited c90
+FAILs/FLAGGEDs carried; the c92/c93 FLAGGEDs settled by their rulings; the 14.29 GiB peak with
+no OOM. Budget: c94 charged 1,932.820853 s focused (67.179147 returned) + 5,500 s workspace (0
+returned) + 3,232.449246 s epoch (13,141.490754 left); 743 pools focused 67.179147 s / workspace
+0.000000 s / epoch 13,141.490754 s; continuation 95 carved at 500 s focused (pool + fresh
+432.820853 s) + 7,000 s workspace + the epoch balance, leaving the stage reserve at
+21,838.8530776041 s and CM4 at 176,372.85640706694 s. The bar stays 571/4,422, 37/134, 4/133,
+0/26; the pair (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners
+and five source duties Open; `CHANGELOG.md`/S10 blocked; CM5 unauthorized; everything sealed
+(c76–c94) sealed.

@@ -3513,6 +3513,43 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     CHANGELOG.md and S10 blocked; CM5 unauthorized. Stage B (the standing replays, the clean
     freeze, the 12-block epoch) dispatched to `cdx`.
 
+  - G15-CM4 continuation 94 (2026-11-21): Stage B ran on `cdx` (Codex 0.169.0, gpt-6.2-astra,
+    effort max; 20:15:30-23:22:35, rc 0, STOP under the pre-declared rule at the 5,500 s
+    workspace boundary; 78 checks 66 PASS / 5 FLAGGED / 5 FAIL / 2 NA, the two new FAILs are the
+    incomplete A/B and the composed-kernel-stdout check; 21 deviations, 19 disclosures, 6
+    questions, 35 sections, 3,825 citations; 20 GiB scope, 14.29 GiB peak, no OOM; 0 live source
+    changes, 0 production, 0 sealed newer). It replayed the standing inventories (68
+    fingerprints, C01/C02 both modes, ownership 61/79/8866, rejection census, LP01, typed slots),
+    composed the clean freeze in the new scene from the live snapshot plus the 135 pins (5,810
+    files; ten sealed trees; 43 artifact pins; the seven c90 pins; the c90 identity/copies
+    untouched), ran the twelve labels (12/12 PASS, one each, three forced identities; armed
+    132/6 with the 124 `unused_parens` sites, disabled 130/5, real/spot 0), fired the five
+    carriers (join P0267/P0312/P0323, queue P1470/P1471; disabled inert 60/60/60/45/45), ran the
+    three peels (19,184.0000/3,360.0000, depth 48 924,192), passed both P0543 tests in both live
+    modes under the pinned presentation (55/55) with the declared `SourceIdentity` rejection in
+    armed/default, and ran three of six workspaces (live modes complete 69/69 with nine EPERM
+    and zero unexplained; armed/default 48 declared + 9 EPERM + 1 unlisted; armed/no-default 9
+    started / 8 completed / 61 owed; disabled x 2 unstarted). I gated it from code and my own
+    reruns (trees, pins, blocks, binaries, carriers, peels, standing verdicts, P0543, workspace
+    accounting, scope/seals, fmt, meter). Q94 partially credits Stage B: the standing replays,
+    freeze, twelve blocks, forced identities, carrier drive, peel, P0543 live passes, both live
+    workspace comparisons and the scope/seals/meter stand; the unlisted composed-kernel-stdout
+    finding (13 `println!` in the `#[cfg(test)] cm743_route_a_falsifiers` module of the frozen
+    `lib.rs` postimages, live 0) is declared, not repaired — a source repair would re-derive
+    the schema, freeze, all labels and every authentication for a path-based approximation with
+    no live-code effect; the original enumeration and the FAIL check stay in the record.
+    Continuation 95 completes the A/B (armed/no-default, disabled/default, disabled/no-default)
+    under a c95 enumeration that adds exactly the declared hygiene name; budget c94 charged
+    1,932.820853 s focused (67.179147 returned) + 5,500 s workspace + 3,232.449246 s epoch
+    (13,141.490754 left); c95 carved at 500 s focused (pool + fresh 432.820853) + 7,000 s
+    workspace + the epoch balance; reserve 21,838.8530776041 s; CM4 176,372.85640706694 s.
+    Findings: the `check --against-git` inherited-dirty accounting gap; the certificate
+    preflights as ordering artifacts; the spot clean rebuild and admission-only build outside
+    the ledger; the inherited c90 FAILs/FLAGGEDs carried. Bar 571/4,422, 37/134, 4/133, 0/26;
+    pair (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and
+    five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
+    dispatched to `cdx`.
+
   - G15-CM4 brief 743 stage 1 (2026-11-21): the observation policy ran on `grk`
     under the 2026-11-20 routing ruling (07:57:13-11:16, 341 turns, $28.45, success,
     STOP; report 46,135 B, 8 PASS / 1 FLAGGED / 2 FAIL, 73 citations; peak 67% of

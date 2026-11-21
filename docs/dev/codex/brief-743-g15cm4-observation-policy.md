@@ -649,3 +649,82 @@ the pair, C2, the 51 owners, the five source duties, `CHANGELOG.md` and S10 unch
 **Budget.** 2,000 s focused (the 743 pool 295.294283 s + a fresh 1,704.705717 s from the stage
 reserve) + the 5,500 s workspace carve (2,316.664506 s pool + 3,183.335494 s fresh) + the
 16,373.940 s epoch envelope; report `rum-report/1` appended; every verdict line quoted.
+
+## Gate c94 (2026-11-21) — Stage B partial credit, the composed stdout finding declared, the A/B completed under a fresh carve
+
+Continuation 94 ran on `cdx` (Codex CLI 0.169.0, `gpt-6.2-astra`, effort max), unit
+`brief-743-cdx-20261121-201530-1428859`, 20:15:30–23:22:35 CST, rc 0, STOP under the
+pre-declared rule (zero unenumerated workspace differences; stop at the 5,500 s workspace
+boundary), 20 GiB scope with a 14.29 GiB peak, no OOM, no git attempts. Report: stage `B / c94`,
+78 checks (66 PASS / 5 FLAGGED / 5 FAIL / 2 NA; the new FAILs are the workspace A/B gate and the
+composed-kernel-stdout check, the other three FAILs and the inherited FLAGGEDs are c90/c92/c93
+entries), 9 measurements, 21 deviations, 19 disclosures, 6 questions (Q1–Q4, Q93, Q94), 35
+sections, 3,825 citations. The live tree is unchanged (5,810 files, `5028530e…`), 0 production
+changes, 0 sealed files newer, the c90 identity/copies untouched; 0 class-admission cells.
+Meter: focused 1,932.820853 / 2,000 (67.179147 left); workspace 5,500 / 5,500 (5,406.516821
+completed + 93.483179 residual); epoch 3,232.449246 / 16,373.940 (13,141.490754 left).
+
+I gated it from code and my own reruns, not the report: recomputed the ten sealed trees (the
+live `5028530e…`; arm trees `c739385a…`/`9ee7ee79…`; lane `215fc23d…`/`b0751b36…`/`6e2c75de…`;
+the four drive trees +1 file +`mod.rs`), every 135-row preimage and each composed delta's
+postimage, the nine lane-manifest deltas, the 43 artifact pins, the seven c90 pins and the c90
+seals; replayed the twelve blocks (12 starts / 12 PASS finishes, one each, spot == real, three
+distinct binaries per configuration, all 12 binaries re-hash, warnings 132/6 classes with the
+124 `unused_parens` sites and 5 proved relocations armed, 130/5 disabled, 0 real/spot, missing
+0 / extra 0 / unknown 0, three forced identities); the five carrier drives fired (join
+P0267/P0312/P0323, queue P1470/P1471) and the disabled cohorts stayed inert (60/60/60/45/45); the
+three peels (19,184.0000 / 3,360.0000, depth 48 = 924,192 bytes, corpus pass); the standing
+replays (68 fingerprints, C01/C02 both modes, ownership 61/79/8866, rejection census exact, LP01
+and typed slots 10/1); the P0543 live passes in both modes under the pinned read-only
+presentation (55/55; source `146b76…`, tree `a5084dd2…`, binary `f29e51ff…`) and the declared
+`SourceIdentity` rejection in armed/default; both live workspace comparisons (69/69 targets, nine
+EPERM at one thread, 0 unexplained, 7 skips); armed/default (69/69, 58 = 48 declared + 9 EPERM +
+1 unlisted); the 5,408 s supervisor bound and the 5,500 s spend; the scope (`live_changes=0`,
+0 sealed newer, the 23-entry porcelain unchanged, no git attempts, fmt exit 0); the meter.
+
+The unlisted finding is
+`runtime::tests::hygiene::kernel_crates_do_not_write_stdout_outside_tests_and_bins` on the
+composed `crates/rum-runtime/src/lib.rs` postimages (armed `e8fe11f3…`, disabled `86f4add8…`):
+13 `println!` calls (971–1212) inside a `#[cfg(test)] mod cm743_route_a_falsifiers` (852); the
+live file has 0 matches and the live arms pass. The hygiene test is a path-based text scan
+skipping only `/tests/` and `/bin/`; it cannot express `cfg(test)`.
+
+**Ruling `Q94-stage-b-partial-credit-hygiene-declared-topup`.** Stage B is partially credited:
+the standing replays, the clean freeze, the twelve blocks, the three forced identities, the
+carrier drive, the peel, the P0543 live passes, both live workspace comparisons, armed/default's
+declared evidence and the scope/seals/meter stand. The composed stdout finding is declared, not
+repaired (Q94 option 2): it is test-support output of a cfg(test) module in a composed test
+image, with zero live matches; a source repair would re-derive the 135-row schema, the freeze,
+all twelve labels and every packet authentication, and rename the falsifier tests the accepted
+evidence cites, for a path-based approximation with no live-code effect. The original
+enumeration and the FAIL check stay in the record. The A/B is incomplete (armed/no-default 9
+started / 8 completed / 61 owed; disabled × 2 unstarted), so continuation 95 completes it under
+a fresh carve.
+
+## Continuation 95 (Stage B completion) — the remaining three workspaces
+
+Read this brief's continuation 94 section and the c94 gate record above; the Stage B scene
+(`.temp/brief-743/stage-b/`) is the input and stays read-only except for new c95 evidence; the
+live tree must stay at the dispatch pins (`inputs/source-pins.json`, 5,810 files,
+`5028530e…`); no source edit, no freeze change, no epoch label, no admission cell, no
+744/745/746, no CM5.
+
+**Enumeration.** Preserve `inputs/stage-b-workspace-enumeration.json` and the twelve build
+receipts; write a new c95 enumeration that adds exactly one declared composed-arm difference:
+`runtime::tests::hygiene::kernel_crates_do_not_write_stdout_outside_tests_and_bins` for armed
+and disabled in both modes, with the evidence (13 cfg(test) `println!` sites in the frozen
+`lib.rs` postimages `e8fe11f3…`/`86f4add8…`, the live file at 0, both live modes passing). Keep
+the eight c88 families, the c90 observation-policy names, the P0515 loader control, the seven
+exact skips and the two pinned P0543 names unchanged.
+
+**Runs.** The three remaining whole-workspace executions — armed/no-default, disabled/default,
+disabled/no-default — each with the full 69-target analysis, the switched lp03/lp04/lp05
+follow-ups, the native-1t host-exclusion reproduction, the P0543 pinned read-only presentation
+and the certificate-acceptance replay. Six complete comparisons in total; zero unexplained
+differences against the amended enumeration; the nine loopback groups stay host-only; the live
+allowance is not widened.
+
+**Budget and stop.** 500 s focused (the 743 pool 67.179147 s + a fresh 432.820853 s) + the
+7,000 s workspace carve + the epoch balance 13,141.490754 s untouched; report `rum-report/1`
+appended (stage `C / c95`); stop at six complete comparisons, or on a budget or scope boundary,
+or on any new unlisted difference; stage reserve 21,838.8530776041 s; CM4 176,372.85640706694 s.
