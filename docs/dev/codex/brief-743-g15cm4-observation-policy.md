@@ -806,3 +806,51 @@ Stage C held, no 744/745/746, no CM5.
 total 7.324151196964867 s spent, 492.67584880303514 s left) and nothing of the 7,000 s workspace
 carve or the 13,141.490754 s epoch balance; attempt 3 runs on the remainder; stage reserve
 21,838.8530776041 s; CM4 176,372.85640706694 s.
+
+### Continuation 95 attempt 4 — the armed-only falsifier is declared for the disabled arms
+
+Attempt 3 completed armed/no-default to the full 69-target analysis (4,294 passed / 58 failed / 66
+ignored / 7 filtered; 49 declared composed failures, nine host-only loopback refusals, seven exact
+skips, zero unexplained; the switched lp03/lp04/lp05 follow-ups, the native-1t reproduction, the
+P0543 pinned read-only presentation and the C01/C02 certificate replay passed), then stopped
+disabled/default at 40 started / 39 completed targets on one new unlisted failure, reproduced at
+one thread on the same binary: `cm740_probe::cm743_route_a_falsifiers::
+route_a_positive_and_all_falsifiers` panics at `crates/rum-runtime/src/lib.rs:939` with
+`left: Err("disabled")` against `right: Err("run_not_queued")`.
+
+**The cause, verified in the frozen images.** The Route A falsifier module (line 852) has exactly
+one `#[test]` (line 930), and its assertions (939, 947 and the later falsifiers) expect the armed
+gate's refusals. `descendant_gate_clause` returns `Err("disabled")` at line 712 under
+`if !ENABLED` (line 711), and `ENABLED` is `!cfg!(disabled) && !cfg!(live)` in the armed postimage
+`e8fe11f3…` and `false` in the disabled postimage `86f4add8…` (line 27). The test passes in both
+armed modes (armed/default c94 log line 4376; armed/no-default attempt-3 log line 4384), and the
+live `lib.rs` has 0 matches. The disabled arm's gate is inert by design; its `Err("disabled")` is
+the proof of inertness.
+
+**Disposition — declare, do not repair.** The name joins the amended enumeration as a declared
+composed-arm difference, family `armed-only-falsifier`, for disabled in both modes, with the
+evidence above; the original enumeration and the `c95a3-disabled-falsifier` FAIL stay in the
+record. A repair (making the assertion configuration-aware) would re-derive the 135-row schema,
+its digest, the freeze, all twelve labels and every packet authentication, and would edit the very
+falsifier suite the accepted Route A evidence cites, after seeing the failure; the configuration
+blindness is recorded as a deferred obligation for a future source-changing pass.
+
+**The remaining runs.** Disabled/default runs again from the start to the full 69-target analysis,
+and disabled/no-default runs to the full 69-target analysis, each with the switched lp03/lp04/lp05
+follow-ups, the native-1t host-exclusion reproduction, the P0543 pinned read-only presentation and
+the certificate-acceptance replay. The new enumeration is derived from `8a57577f…` plus this one
+name; the preflight verifies that removing the new family reproduces `8a57577f…` exactly and that
+the other families, the seven exact skips, the two pinned P0543 names and the nine host-only
+loopback groups are unchanged. Six complete comparisons in total; zero unexplained differences
+against the amended enumeration; the live checkout has the same 5,810 paths with no adds or
+removals, every path equal to `inputs/source-pins.json` except the five authorized names, whose
+hashes are recorded at the start and end of the run (a change in them is a disclosure, anything
+else a STOP); no source edit, no freeze change, no epoch label, no admission cell, Stage C held, no
+744/745/746, no CM5.
+
+**Budget.** Attempt 3 is charged 84.73998514103005182 s of the focused carve
+(92.06413633799491882 spent, 407.93586366200508118 left) and 1,517.99026593807945298 s of the
+7,000 s workspace carve (1,087.60373049904592608 s of completed commands plus the
+430.3865354390335269 s interrupted residual; 5,482.00973406192054702 left); the epoch balance
+13,141.490754 s is untouched; attempt 4 runs on the remainders; stage reserve 21,838.8530776041 s;
+CM4 176,372.85640706694 s.
