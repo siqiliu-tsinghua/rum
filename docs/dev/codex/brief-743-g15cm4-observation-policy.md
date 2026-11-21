@@ -431,3 +431,24 @@ the envelope boundary and report the exact remainder.
 `.temp/brief-743/design2/` and metered. Report `rum-report/1` at `.temp/brief-743/report.json`
 (append attempt), design sections, every verdict line quoted, final message
 `scripts/report.py summary 743`.
+
+## Continuation 92 (resume) — the profile-return class: the non-weakening path, design only
+
+The first continuation-92 attempt ran on `grk` (session `4f1a765e-c69f-484a-8b64-3d157f6e0ac4`,
+unit `brief-743-grk-20261121-141300-1163339`) from 14:13 and died at 14:47 with
+`API error (status 402 Payment Required): Grok Build usage balance exhausted` after 89 turns
+($7.475908); it wrote no report. The on-disk checkpoint is a starting point only, not evidence:
+`.temp/brief-743/design2/STATUS.md` (the decision so far), `route_a_probe.rs`, `patch_route_a.py`
+(written as its last action and never run — the scratch tree `design2/tree` is unpatched: no file
+newer than 14:13 and no probe markers), and the scratch build cache `design2/target`. Re-verify
+every checkpoint claim against the tree and the logs; do not trust it blindly. All orders and hard
+constraints of the continuation-92 section above still apply unchanged: design only, `Scope: NONE`,
+no source change, no live build, no epoch, no campaign, no admission, no 744, everything sealed
+(c76-c91) read-only, scratch and prototype builds only under `.temp/brief-743/design2/`, and the
+frozen/composed trees, `identity.json` and `copies.json` not written. Every verdict line quoted in
+the report must be copied from a named file or a named log; the gate is run from code and reruns.
+
+**Budget.** The continuation's carve is 2,960.344 s focused: the 960.344 s left of the original
+3,000 s carve plus a fresh explicit 2,000 s allocation from the stage reserve under the user's
+2026-11-19 ruling (“预算不够就追加吧”). Report the metered receipts as before; an unspent balance
+returns.
