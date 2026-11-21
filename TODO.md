@@ -3550,6 +3550,31 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
     dispatched to `cdx`.
 
+  - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
+    P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
+    candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);
+    `Q751-P1142-initial-edge` widens the class to every hit-side incoming edge (initial call,
+    typed-frame resume, continuation resume) and orders brief 752, the completed hit-side-edge
+    and value inventory, with the verified physical table. Run: unit
+    `brief-751-cdx-20261122-064625-129948`, 06:46:25–07:19 CST, rc 0, 20 GiB peak 0.41 GiB,
+    oom 0/0, 0 repo changes; report `.temp/brief-751/report.json` (31,491 B, STOP, 5 PASS /
+    2 FAIL (`own-completion`, `fixed-partition`), 59 citations); 208 receipts summing
+    51.913903746 s focused. P1142: the queued occurrence enters the ordinary reader at
+    `arrays/mod.rs:219`; the driven reader (`options/core.rs:166`, producer `:185-192`, guard
+    `:193`, hit `:196`) has its only caller in `abort_cleanup.rs:104` (CheckAbort); the
+    unqueued read resumes at `read_phase.rs:147` into the frozen continuation; the C5
+    historical mutant wrapped `options/core.rs:96` (`paired-calls.json`, typed-own arm/hit),
+    the C7 same-tuple cell is SAME. The four resume-edge cuts are byte-pinned (P0338
+    `rewrite_rules.rs:450`; P0435 `part_assignment/resume_frames.rs:24`; P1070
+    `guarded/resume_frames.rs:110`; P1818 `associations/mutation/resume_frames.rs:29`; the
+    last two are new files). The verified physical table is 139 files / 278 postimages (rows
+    25 and 67 preserved→re-rendered), not the brief's fixed 137. Budget: 751 charged
+    51.913903746 s focused, unspent 2,948.086096254 s returns; reserve 44,372.2138845001 s;
+    brief 752 carved 3,000 s focused, leaving 41,372.2138845001 s; CM4 209,210.425572227 s.
+    Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2
+    118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
+    CM5 unauthorized; 745/746 held. Brief 752 dispatched to `cdx`.
+
   - G15-CM4 continuation 101 (brief 750) (2026-11-22): the cover-witness inventory stopped at
     P0338 under its no-candidate rule after fifteen own verdicts (the thirteen measured
     witnesses — the ten Stage C class rows, C10, P0001, P0002 — and the two non-witnesses

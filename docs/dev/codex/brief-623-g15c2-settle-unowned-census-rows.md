@@ -118143,3 +118143,69 @@ Residual + 0 Lost; the 51 owners and five source duties Open; membership 28/3/7/
 `3953aa9f…` and schema `22751919…`; `CHANGELOG.md` and S10 blocked; CM5 unauthorized. Brief 751
 is dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the standing routing (agy on a
 cyber-filter refusal, a Codex quota death stops and asks).
+
+### Continuation 102 — brief 751 stopped at P1142's initial edge; `Q751-P1142-initial-edge` widens the class and orders the completed hit-side-edge inventory
+
+Brief 751 (design-only resume-edge dispatch and witness completion inventory) ran on `cdx`
+(Codex CLI 0.171.0, `gpt-6.2-astra`, reasoning effort max), unit
+`brief-751-cdx-20261122-064625-129948`, 2026-11-22T06:46:25–07:19 CST, rc 0, the 20 GiB scope
+peaked at 436,486,144 B (0.41 GiB, oom 0/0), 0 repo changes; report
+`.temp/brief-751/report.json` (31,491 B; verdict STOP; 5 PASS / 2 FAIL (`own-completion`,
+`fixed-partition`); 1 disclosure; 2 deviations; `scripts/report.py check 751` OK with 59
+citations); 208 bounded read-only receipts summing 51.713911422 s measured + 0.2 s allowances =
+51.913903746 s focused (0 workspace, 0 epoch); every write under `.temp/brief-751/`, the
+inherited 23-entry tree unchanged, no build/git/network (one keyword hit in a Python source
+string). It carried the nineteen dispositions — thirteen measured witnesses, P0339 with its 30
+candidates and the `98c7b14d…` recommendation, four **resume-edge fixes**, and the P1142 stop —
+and proved the four cuts byte-pinned in the sealed armed tree: P0338 at
+`definition_catalog/rewrite_rules.rs:450` (hit `:315` in the driven mapper `:306`); P0435 at
+`definitions/part_assignment/resume_frames.rs:24` (hit `part_assignment.rs:288` in
+`finish_positional_part_assignment_cm740_driven` `:213`); P1070 at
+`kernel_data/structure_data/replace/guarded/resume_frames.rs:110` (hit `guarded.rs:617` in the
+driven selector `:608`); P1818 at `rum-stdlib/src/associations/mutation/resume_frames.rs:29`
+(hit `mutation.rs:920` in `finish_held_association_part_mutation_cm740_driven` `:793`). The last
+two are new copied files; rows 25 (`rewrite_rules.rs`, `bef3ceb6…`) and 67
+(`guarded/resume_frames.rs`, `00e72695…`) move preserved→re-rendered; the verified physical
+table is **139 files / 278 postimages**, not the brief's fixed 137. The six dependencies retain
+105 plans (45/5, 45/5, C1 2, G15A 1, G15B 1, Some 1) with zero additional cuts; 132 rows
+remain unadjudicated.
+
+The STOP, verified by me from the sealed armed tree and the historical C5/C7 scenes: P1142's
+queued occurrence enters the **ordinary** reader at `functional_ops/arrays/mod.rs:219` (the
+continuation is constructed at `:210`); the driven reader `option_rule_expr_for_symbol_cm740_driven`
+(`options/core.rs:166`) has exactly one caller — `abort_cleanup.rs:104`, for
+`CheckAbortOptionWorking` — and contains the producer `enter("P1142")` block (`:185-192`), the
+`ordinary("P1142")` guard (`:193`) and the sole hit (`:196`); on the unqueued side the read
+suspends and `OptionsReadSuspensionFrame`'s shared resume (`options/read_phase.rs:147`) finishes
+through the frozen continuation, never entering the reader; the queued child is `Ok(0)`, which
+satisfies the guard; the 49 cuts include only the P1937 `Dot` cut at `arrays/mod.rs:38`. The
+historical C5 mutant wrapped the reader's own `resolve_option_entry_value(&entry)` call at
+`options/core.rs:96` (`paired-calls.json`), and `typed-own-P1142-1.log` shows
+`C2_ARM P1142 ArrayFilter.defaultOption:2` then
+`C2_MUTANT_HIT P1142 ActualTypedCarrierBeforeOuterTail`; the same-tuple C7 cell is SAME
+(`options-coverage.tsv:1213`, raw lines real `:242034`, disabled `:243840`). Ruling
+`Q751-P1142-initial-edge` (`.temp/director/ruling-752.md`): the STOP is correct under the
+brief's resume-body-only scope and the finding is genuine; the fix is the standard initial
+call-site cut at `arrays/mod.rs:219` (parent row 116, already re-rendered, no new file); my
+brief's class definition was too narrow — the correct class is **every hit-side incoming edge on
+the credited execution, initial or resumed** — and the 137-row figure was my forecast made a
+bar. The four resume-edge fixes are accepted; the class-wide response is brief 752, the
+completed hit-side-edge and value inventory of all 151 own rows plus the six dependencies (per
+row the fixture path, the credited occurrence, every incoming edge with its kind and `driven()`
+dispatch fact, the value; verdicts static-witness / cover-candidate / hit-side-edge-fix / stop,
+recorded per row with the scan continuing, zero unknown), the exact cut list, the verified
+physical table and `source_schema` rule, and the completed candidate/revision list. Then brief
+753 = the authorized live cover revision; then brief 749 amends to attempt 3 for the full
+49 + N cut render, the audit carrying the witness and edge statuses, the verified row table and
+schema, the source gate and the pins; Stage B, Stage C, the 744 restart, 745 and 746 follow
+their gates. Nothing is reclassified, promoted, exempted or settled; the 20 class cells stand;
+the 95 reachable images and 13 PortBlocked bindings are preserved; everything sealed (c76–c99)
+stays sealed; 745/746 held. Budget: brief 751 charged 51.913903746 s focused (208 receipts; 0
+workspace, 0 epoch); its unspent 2,948.086096254 s returns, so the stage reserve is
+44,372.2138845001 s; continuation 102 (brief 752) is carved 3,000 s focused (0 workspace, 0
+epoch), leaving 41,372.2138845001 s; the CM4 line stays 209,210.425572227 s; an overrun is a
+ruling, never a scope cut. The pair `(45,5,false)` stays Open at zero admitted receipts; C2 118
+Residual + 0 Lost; the 51 owners and five source duties Open; membership 28/3/7/113 with policy
+`3953aa9f…` and schema `22751919…`; `CHANGELOG.md` and S10 blocked; CM5 unauthorized. Brief 752
+is dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the standing routing (agy on a
+cyber-filter refusal, a Codex quota death stops and asks).
