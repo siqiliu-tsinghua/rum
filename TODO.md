@@ -3550,6 +3550,24 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
     dispatched to `cdx`.
 
+  - G15-CM4 continuation 96 (2026-11-22): Stage C — the twenty-cell class admission — was
+    dispatched on `cdx` (Codex 0.169.0, gpt-6.2-astra, effort max) on the final epoch: the ten
+    admission rows (DeferredPublication P0267/P0312/P0323 and ProfileReturn
+    P0256/P0259/P0266/P0314/P0315/P0410/P0515) run in ascending row order, default then
+    no-default, real/disabled/armed on the six label binaries and sealed trees, all-or-nothing,
+    with the C10 calibration retained for 744. The bar is the accepted c92/c93 state: seven
+    ProfileReturn packets PASS (six `Err(Native)`, P0410 `Err(Output)`), three DeferredPublication
+    rows retained as `MissingRealTuple` with `ObservationUnavailable/LogicalQuiescence`, the
+    disabled arms transport-false and exact, the importer `required=151 caught=7 PortBlocked=144`
+    per mode, and the five declared ordinary quiescence negatives recorded. The final epoch and
+    every earlier scene stay sealed; the live checkout keeps its pins except the three
+    documentation journals and the two generated mod bundles. Budget: 1,500 s focused (the
+    307.234607 s pool plus a fresh 1,192.765393 s from the stage reserve under the 2026-11-19
+    ruling) and 0 s workspace; epoch 13,141.490754 s untouched; reserve 21,838.8530776041 s; CM4
+    176,372.85640706694 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair (45,5,false) Open at zero
+    admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
+    CHANGELOG.md and S10 blocked; CM5 unauthorized.
+
   - G15-CM4 continuation 95 (2026-11-22): Stage B was completed on `cdx` (Codex 0.169.0,
     gpt-6.2-astra, effort max) in four attempts, each stopped honestly on a scope boundary or a
     new unlisted difference before any evidence was over-claimed: attempt 1 (Q95 journal

@@ -117731,3 +117731,28 @@ comparison trees. Stage C (the 20-cell admission) is held and is the resume poin
 user's morning reboot; no 744/745/746; no CM5. The bar stays 571/4,422, 37/134, 4/133, 0/26; the
 pair (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
 source duties Open; `CHANGELOG.md`/S10 blocked; everything sealed (c76–c95) sealed.
+
+### Continuation 96 (Stage C) — the twenty-cell class admission
+
+Continuation 96 is dispatched on `cdx` (the standing routing) for Stage C, the 20-cell class
+admission: the ten admission rows — the three DeferredPublication members P0267/P0312/P0323 and
+the seven ProfileReturn members P0256/P0259/P0266/P0314/P0315/P0410/P0515 — run in ascending row
+order, default then no-default, real then disabled then armed, on the final epoch's six label
+binaries and sealed trees, all-or-nothing per class, with the C10 calibration retained for 744.
+The accepted c92/c93 signatures are the bar: the seven ProfileReturn rows hit once with their own
+predicates (six `Err(Native)`, P0410 `Err(Output)`), the three DeferredPublication rows hit at
+their join phase with `Err(Native)`, the disabled arms stay transport-false with exact parity, the
+importer prints `required=151 caught=7 PortBlocked=144` per mode with the three deferred rows
+retaining `MissingRealTuple` plus the `ObservationUnavailable/LogicalQuiescence` diagnosis, and
+the declared five ordinary quiescence negatives (P0267/P0312/P0323/P0410/P0515) are recorded
+verbatim. The final epoch and every earlier scene stay sealed and read-only; the live checkout
+keeps its dispatch pins with exactly the five declared names (the three documentation journals and
+the two generated mod bundles). A failing member is a named PortBlocked with a class finding and a
+one-thread reproduction; the admission stops, 744 is not dispatched, and the unspent ledger is
+persisted. No source edit, no rebuild, no epoch label, no workspace suite, no 744/745/746, no CM5;
+the pair (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
+source duties Open; `CHANGELOG.md`/S10 blocked; everything sealed (c76–c95) sealed. Budget: Stage C
+carved at 1,500 s focused (the 743 pool 307.23460746709644781 s plus a fresh
+1,192.76539253290355219 s from the stage reserve under the 2026-11-19 ruling) and 0 s workspace;
+the epoch balance 13,141.490754 s untouched; reserve 21,838.8530776041 s; CM4
+176,372.85640706694 s.
