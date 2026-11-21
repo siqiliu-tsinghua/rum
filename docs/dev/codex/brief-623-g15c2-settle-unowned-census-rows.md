@@ -117879,3 +117879,58 @@ epoch): the complete 151-row/247-definition reachability inventory, the root cau
 generated dispatch render, the pair/structural dependency check, the minimal repair design and
 the re-derivation forecast. The repair, the new epoch and the 744 restart enter later briefs
 after that inventory is gated. Everything sealed (c76–c96) stays sealed; CM5 unauthorized.
+
+### Continuation 98 — completed: the reachability inventory is accepted and the repair line is ordered
+
+Brief 748 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`, effort max), unit
+`brief-748-cdx-20261122-035406-54975`, 2026-11-22T03:54:06–04:38 CST, rc 0, the 20 GiB scope
+peaked at 690,786,304 B (0.66 GiB, oom 0/0), 0 repo changes; report
+`.temp/brief-748/report.json` (828,994 B, `203d4f1c…`; DONE; 168 checks PASS, 6 measurements
+PASS, 0 deviations, 0 disclosures, 0 questions; `scripts/report.py check 748` OK with 2,159
+citations); 317 bounded read-only commands summing **62.622632966994935 s** of the 2,400 s
+focused carve (0 workspace, 0 epoch). The inventory: of 151 own rows **95 reachable, 45
+producer-unreachable, 11 hit-site-unreachable, zero unknown**; the 18 own rows are 15 live and
+P0416/P0813/P2593 dead (P2593 also loses its resumed optional completion); all ten admitted
+class rows and C10 live; 247 driven names (250 physical bodies, 33 singletons; 189 mapped, 58
+unmapped) with an 84-entry supplement (31 generic + 53 offset-suffixed including C10, 4
+singles); the six pair/structural dependencies are blocked — P0325/P0326 producer-unreachable,
+C1/G15A/Some hit-site-unreachable under their frozen programs, G15B producer-unreachable — the
+Cases programs entering the ordinary traversal and the structural controls having no
+`enter_slow` arming scope. I gated it from the sealed armed tree and the raw logs, not the
+report: P0416's `eval_rule_cm740_driven` (`definitions.rs:178`) is a singleton and the `Rule`
+builtin calls `session.eval_rule` (`builtin_adapters.rs:355`); C10's `resume_cm740_driven_73dc`
+has two occurrences with an ordered arm before the hit in both mode logs; the Cases bypass is
+visible at `collect/options.rs:33-38` against the driven clones at `traversal.rs:332/382`; `arm`
+requires `producer_owner` and only `enter_slow` pushes `Some` (`lib.rs:462/1514/1536/2037/2247`);
+all 47 repair anchors match the sealed tree byte-exactly; 47 cuts cover exactly the 56
+unreachable rows + 6 dependencies over 34 files (32 existing overlay files + 2 new paths that
+exist in the live source), 137 overlay rows and 274 postimages, every row with a positive and a
+withholding negative; the schema mechanism is sha256(overlays.tsv) = `22751919…`; the forecast
+arithmetic recomputes (Stage A 8,166.217 + Stage B/C 14,554.003 = 22,720.220, ×1.25 + 3,992 =
+32,393, point 26,713; 744 804–3,341, 745 5,706–6,009, 746 4,198–5,247); no repo change, no
+sealed write, no build/git/network, the meter exact. Ruling `Q748-dispatch-reachability`: the
+inventory is accepted with zero unknown, the finding is genuine and wider than the STOP, the
+earlier credits stand (Stage C 20/20, C10, c94–c96) because the failure is dispatch reachability
+in the generated dispatch and not the admitted cells, and nothing is reclassified, promoted or
+settled. The repair line is ordered: **brief 749 Stage A** — the qualified render (47 cuts at
+their anchored original boundaries, the authenticated control-proof adapter, the two new copied
+paths), the 137-row overlay table with full postimages and the new `source_schema` on all 151
+mutant records, the re-pinned identity inputs and the source gate, with the P0416/C10 and
+five-pattern calibrations and the withholding negatives — then Stage B (the new epoch, twelve
+blocks, Stage B proofs), Stage C (the 20 class cells and C10 re-earned in both modes), the 744
+restart on the new epoch with the unchanged 244-cell schedule, then 745 and 746. The repair's
+acceptance falsifiers are live arms and ordered same-activation hits per affected row with
+baseline/disabled parity, the withholding negative, the pair `(45,5,false)` and the four
+structural controls' frozen bar; a repaired epoch that cannot reproduce them stops for a
+ruling — never a weakened bar and never a moved hit. The thirteen Q25 rows stay PortBlocked.
+Budget: 744 stays at 107.954458377 s of the superseded epoch; the closed lines return
+**17,837.56916516 s** (the 743 focused pool 844.728533444 + the Stage B workspace balance
+3,959.304336093 + the superseded epoch's unspent 13,033.536295623); the stage reserve becomes
+39,676.4222427641; a fresh explicit **10,000 s** allocation under the user's 2026-11-19 ruling
+brings it to **49,676.4222427641 s** and the CM4 line to **204,210.425572227 s**; 749 is carved
+**4,631 s focused + 5,577 s workspace = 10,208 s** (0 epoch), leaving 39,468.4222427641 s with
+2,686.9192427641 s headroom against the remaining worst case 36,781.503 s. The bar stays
+571/4,422, 37/134, 4/133, 0/26; the pair `(45,5,false)` stays Open at zero admitted receipts; C2
+stays 118 Residual + 0 Lost; the 51 owners and five source duties stay Open; `CHANGELOG.md` and
+S10 stay blocked; CM5 remains unauthorized; everything sealed (c76–c98) stays sealed; 745 and
+746 remain held.

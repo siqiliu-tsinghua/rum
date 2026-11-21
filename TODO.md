@@ -3550,6 +3550,38 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
     dispatched to `cdx`.
 
+  - G15-CM4 continuation 98 (brief 748) (2026-11-22): the carrier-dispatch reachability inventory
+    is accepted and the repair line is ordered. Brief 748 ran on `cdx` (Codex 0.171.0,
+    gpt-6.2-astra, effort max), unit `brief-748-cdx-20261122-035406-54975`, 03:54:06–04:38 CST,
+    rc 0, 20 GiB peak 0.66 GiB, oom 0/0, 0 repo changes; report `203d4f1c…` (DONE; 168 checks
+    PASS, 6 measurements PASS, 0 deviations/questions; `report.py check 748` OK, 2,159 citations);
+    317 read-only commands summing 62.622632966994935 s of the 2,400 s focused carve (0
+    workspace, 0 epoch). The inventory: 151 own rows — 95 reachable, 45 producer-unreachable, 11
+    hit-site-unreachable, zero unknown; the 18 own rows 15 live and P0416/P0813/P2593 dead; all
+    ten admitted class rows and C10 live; 247 driven names (250 bodies, 33 singletons; 189
+    mapped/58 unmapped) plus 84 supplement entries (31 generic + 53 offset incl. C10; 4
+    singles); the six pair/structural dependencies blocked (P0325/P0326 producer-unreachable,
+    C1/G15A/Some hit-site-unreachable under the frozen programs, G15B producer-unreachable). I
+    verified the two calibrations in the sealed tree and raw logs, the Cases ordinary-traversal
+    bypass (`options.rs:33-38` vs `traversal.rs:332/382`), the arming-scope owner (`lib.rs`
+    462/1514/1536/2037/2247), all 47 repair anchors byte-exactly, the 62-row coverage over 34
+    files (32 existing + 2 new), the schema = sha256(overlays.tsv) = `22751919…`, and the
+    forecast arithmetic (Stage A 8,166.217 + Stage B/C 14,554.003, ×1.25 + 3,992 = 32,393; 744
+    804–3,341, 745 5,706–6,009, 746 4,198–5,247). Ruling `Q748-dispatch-reachability`: accepted
+    with zero unknown; the finding is genuine and wider than the STOP; the earlier credits stand
+    (Stage C 20/20, C10, c94–c96); nothing reclassified; the repair line is ordered — 749 Stage
+    A (qualified render + control-proof + two new paths + 137-row table + new schema + 151
+    `source_schema` rows + pins + source gate) in flight, then Stage B, Stage C, the 744 restart
+    on the new epoch, then 745/746. Budget: 744 stays 107.954458377 s; the closed lines return
+    17,837.56916516 s (743 focused 844.728533444 + Stage B workspace 3,959.304336093 + epoch
+    13,033.536295623); reserve 39,676.4222427641; a fresh 10,000 s allocation (user 2026-11-19
+    ruling) lifts it to 49,676.4222427641 and CM4 to 204,210.425572227; 749 carved 4,631 focused
+    + 5,577 workspace = 10,208 s, leaving 39,468.4222427641 with 2,686.9192427641 headroom
+    against the remaining worst case 36,781.503. Bar 571/4,422, 37/134, 4/133, 0/26; pair
+    (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
+    source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; everything sealed
+    (c76–c98).
+
   - G15-CM4 continuation 97 attempt 2 (brief 744) (2026-11-22): the unchanged-epoch shakedown
     stopped on a carrier-dispatch reachability finding after crediting one cell. Attempt 2 (unit
     `brief-744-cdx-20261122-032546-41457`, 03:25:46–03:43, rc 0, 20 GiB peak 1.04 GiB, oom 0/0,
