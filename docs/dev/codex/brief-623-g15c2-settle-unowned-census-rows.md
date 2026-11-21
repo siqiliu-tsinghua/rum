@@ -117795,3 +117795,21 @@ paths, 0 outside five, 0 in-run changes); 32 sealed roots with no newer file; no
 re-run; `git status` at the inherited 23 entries; 39.567595321 s charged (655.271466556 of 1,500 s
 used, 844.728533444 s left); 0 s workspace; epoch untouched. Stage C complete; Stage D held for a
 new dispatch; CM5 unauthorized.
+
+### Continuation 96 (Stage D, brief 744) — the unchanged-epoch shakedown
+
+Brief 744 was dispatched on `cdx` (0.171.0, gpt-6.2-astra, effort max) at 20G after the c96 gate
+credited Stage C 20/20. Measurement-only on the accepted final epoch: 244 logical cells — the 18
+already-caught own rows in ascending order (C10, P0416, P0492, P0508, P0527, P0543, P0544, P0554,
+P0558, P0813, P0820, P0823, P0825, P0827, P1476, P1562, P1563, P2593), both modes, real matrix
+then disabled then armed; the 100 frozen pair cells (P0325/P0326, 50 each) requiring
+`(45, 5, false)` per row/mode with zero admitted receipts; and the four structural controls
+C1/G15A/G15B/Some — in the accepted 510-cell schedule's 744 subsequence (`a0741752…`). The C10
+Stage C packet is reusable only by identical epoch/binary/tree/program/selection/environment
+identity. The eight observer, ten source-auth and four Q7 predicate negatives, the generator
+continuation/token negatives and the unarmed/hit-before-arm/no-hit/identity/disabled-difference/
+raw-artifact falsifiers run on this exact epoch; a changed known signature, a disabled difference
+or a pair/control failure stops immediately. No source edit, no build, no new binary, no epoch
+label, no workspace suite, no 745/746, no CM5; everything sealed (c76–c96) read-only; the live
+five recorded at start/end. Budget: the final-epoch envelope balance 13,141.490754 s of
+16,373.940; 0 s focused; 0 s workspace; a projected overrun is a ruling, never a scope cut.
