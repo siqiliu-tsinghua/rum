@@ -3550,6 +3550,36 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
     dispatched to `cdx`.
 
+  - G15-CM4 continuation 97 attempt 2 (brief 744) (2026-11-22): the unchanged-epoch shakedown
+    stopped on a carrier-dispatch reachability finding after crediting one cell. Attempt 2 (unit
+    `brief-744-cdx-20261122-032546-41457`, 03:25:46–03:43, rc 0, 20 GiB peak 1.04 GiB, oom 0/0,
+    0 repo changes) passed the amended six-name live-pin bar (5,811 paths, tree `9d6a5d03…`
+    equal start/end, zero outside/in-run changes), authenticated the whole entry (epoch
+    `b1e68590…`, twelve labels, three trees, 43 pins, membership 28/3/7/113, Stage C
+    publications and C10, 14 sealed roots / 2,518,300 files none newer) and ran the first two
+    own rows. C10 default passed as its own fresh cell (the Stage C packet was not reused — the
+    environment identity moved; real 55 / disabled 55 / armed one record with two arms and one
+    hit, `Err(Native)`). P0416 default is a `PortBlocked/Unarmed`: real and disabled exact (50
+    records each, identical pause vectors), armed with zero `CM740_SELECTOR_ARMED`, zero
+    `CM740_SOURCE_HIT` and `Ok(())` where `Err(Output)` is accepted; the same-binary one-thread
+    reproduction is identical. 1 passed, 1 blocked, 242 unattempted; pair/structural/negatives
+    unreached; pair Open at zero receipts. Ruling `Q744-dispatch-reachability`: my scan of the
+    sealed armed tree shows P0416's wrapper `around("P0416", …)` in `eval_rule_cm740_driven`
+    (`definitions.rs:178`) is never called — the name occurs once and the `Rule` builtin
+    dispatches to `session.eval_rule` (`builtin_adapters.rs:355`) — and 33 of the 247
+    `*_cm740_driven` definitions are single-occurrence, including three of the 18 own rows
+    (P0416, P0813, P2593). The finding is genuine and class-wide; the final epoch is not
+    campaign-ready. C10's default cell is credited (21 distinct completed overall); the
+    cm3-carrier family is blocked; 745/746 remain held. Continuation 98 = brief 747 design-only
+    (`Scope: NONE`) is carved 2,400 s focused from the stage reserve (0 workspace, 0 epoch):
+    151-row/247-definition reachability inventory, root cause, pair/structural check, minimal
+    repair design and re-derivation forecast; the repair and the 744 restart follow a later
+    ruling. Budget: attempt 2 charged 72.654351058 s of the epoch envelope (0 focused, 0
+    workspace); 744 cumulative 107.954458377 s; balance 13,033.536295623 s of 16,373.940;
+    reserve 21,838.8530776041 s; CM4 176,372.85640706694 s. Bar 571/4,422, 37/134, 4/133, 0/26;
+    C2 118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10
+    blocked; CM5 unauthorized.
+
   - G15-CM4 continuation 97 attempt 1 (brief 744) (2026-11-22): the unchanged-epoch shakedown
     stopped honestly before the first cell at the live-pin gate — the live checkout held 5,811
     paths against the brief's 5,810 because the dispatch document itself

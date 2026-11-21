@@ -117839,3 +117839,43 @@ writing under `.temp/brief-744/attempt-2/` with the cumulative report retaining 
 Attempt 1 charged 35.300107319 s of the final-epoch envelope (0 focused, 0 workspace); balance
 13,106.190646681 s; reserve 21,838.8530776041 s; CM4 176,372.85640706694 s. Everything sealed
 (c76–c96) stays sealed; 745/746 held; CM5 unauthorized.
+
+### Continuation 97 attempt 2 — the shakedown stops on a carrier-dispatch reachability finding
+
+Attempt 2 (unit `brief-744-cdx-20261122-032546-41457`, 03:25:46–03:43, rc 0, 20 GiB scope peak
+1.04 GiB, oom 0/0, 0 repo changes) passed the amended six-name live-pin bar (5,811 paths: 5,805
+matched + five declared differences + the amended brief `69c5c5e7…`; tree `9d6a5d03…` equal at
+start and end; zero outside; zero in-run changes), authenticated the whole entry (epoch
+`b1e68590…`, twelve labels, twelve build receipts and compiler logs, three trees, 43 pins,
+membership 28/3/7/113, the Stage C publications and C10 identity, 14 sealed roots / 2,518,300
+files with none newer, attempt 1 preserved at `attempt-1-report.json` `31e52ec6…`), and ran the
+first two own rows. C10 default passed as its own fresh cell (the Stage C packet was not reused:
+the environment identity moved — HOME/USER/TMPDIR/PATH in `calibration-identity.json`): real 55
+records, disabled 55, armed one record with two selector arms and one source hit,
+`Err(Native)`, `test result: ok`. P0416 default is a named `PortBlocked/Unarmed`: real and
+disabled exact (50 constituent records each, identical pause vectors, every comparison row
+`signature_exact=true`), armed with zero `CM740_SELECTOR_ARMED`, zero `CM740_SOURCE_HIT` and
+`predicate=Ok(()) public_output_exact=true native_difference=false` where the accepted signature
+is `Err(Output)` with `public_output_exact=false native_difference=true`; the same-binary
+one-thread reproduction is identical. 1 passed, 1 blocked, 242 unattempted; pair, structural
+and negatives unreached; pair Open at zero receipts. I gated it from code and raw logs, re-ran
+`report.py check 744` (OK, 448 citations), verified the meter (top-level groups
+72.654351058 s; 744 cumulative 107.954458377 s; epoch balance 13,033.536295623 s), `git status`
+at the inherited 23 entries, no `.git-attempts`, no sealed file newer. My own scan of the
+sealed armed tree found the cause: P0416's producer wrapper `cm740_probe::around("P0416", …)`
+sits in `fn eval_rule_cm740_driven` (`crates/rum-runtime/src/runtime/definitions/definitions.rs:178`),
+whose name occurs exactly once in the tree (its definition) while the `Rule` builtin dispatches
+to `session.eval_rule` (`crates/rum-runtime/src/runtime/builtin_adapters.rs:355`) — the wrapper,
+its guard and the `frame("P0416")` hit site are unreachable, so zero arms follows structurally;
+of 247 `*_cm740_driven` definitions 33 are single-occurrence, and three of the 18 own rows are
+among them (P0416 `eval_rule_cm740_driven`, P0813 `eval_catch_cm740_driven`, P2593
+`eval_first_cm740_driven`). Ruling `Q744-dispatch-reachability`: the STOP is genuine and
+class-wide; C10's default cell is credited (21 distinct completed overall); P0416 default is a
+`PortBlocked/Unarmed`, never a catch; the cm3-carrier family is blocked and the accepted final
+epoch is not campaign-ready — the 18-row shakedown and the 745 campaign cannot complete on it
+without a source-changing repair and full re-derivation; 745/746 remain held. Continuation 98 =
+brief 747 (`Scope: NONE`) is carved 2,400 s focused from the stage reserve (0 workspace, 0
+epoch): the complete 151-row/247-definition reachability inventory, the root cause in the
+generated dispatch render, the pair/structural dependency check, the minimal repair design and
+the re-derivation forecast. The repair, the new epoch and the 744 restart enter later briefs
+after that inventory is gated. Everything sealed (c76–c96) stays sealed; CM5 unauthorized.
