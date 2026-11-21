@@ -3566,14 +3566,30 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     attempt 2's no-default import on the same index and importer. The seven ProfileReturn rows
     hit once with their own predicates (six `Err(Native)`, P0410 `Err(Output)`), the disabled arms
     are transport-false and exact, the C10 calibration passed in both modes, and the five
-    declared ordinary quiescence negatives are recorded. The final epoch and every earlier scene
-    stay sealed; the live checkout keeps its pins except the three documentation journals and the
-    two generated mod bundles. Budget: 1,500 s focused (the 307.234607 s pool plus a fresh
-    1,192.765393 s from the stage reserve under the 2026-11-19 ruling) and 0 s workspace; attempt
-    1 charged 615.703871 s, 884.296129 s left; epoch 13,141.490754 s untouched; reserve
-    21,838.8530776041 s; CM4 176,372.85640706694 s. Bar 571/4,422, 37/134, 4/133, 0/26; pair
-    (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
-    source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized.
+    declared ordinary quiescence negatives are recorded. Attempt 2 (unit
+    `brief-743-cdx-20261122-024539-24665`, 02:45:39–03:00:30, rc 0) ran the unchanged importer from
+    `no-default-real-oracle` (`40c78b04…`) on the same index and printed the ten PASS rows
+    (`configuration=no-default`, real_keys 60/60/60/60/60/55/55/60/55/30, hits=1, exact disabled
+    records, authenticated raw builds) and `required=151 caught=10 PortBlocked=141 settlements=0`;
+    its exit 101 is the importer's final `assert!(blocked.is_empty())` over the 141 rows outside
+    the class index, the same partial-index red as the default run (exit 101, same line) and c93's
+    7/144 — recorded as the `partial_index_exit` bar. Stage C then credited all 20 cells
+    (DeferredPublication 3/3, ProfileReturn 7/7, both modes, all-or-nothing), recorded the C10
+    calibration (`class_cells=0`, `shakedown_credit=0`), and published the ledger (20 acquired /
+    20 admitted / 20 spent / 0 remaining), the class-admission table, the packet index, the
+    510-cell schedule (20 c96 credited; 244 shakedown + 246 campaign unspent) and the cumulative
+    report (attempt-1 `c96-import` FAIL retained, superseded by
+    `Q96-class-index-reconciliation`). The final epoch and every earlier scene stay sealed; the
+    live checkout keeps its pins except the three documentation journals and the two generated mod
+    bundles; the live five were stable start to end (5,810 paths, 0 outside five, 0 in-run
+    changes), the 32 sealed roots had no newer file, no member packet was re-run, and `git status`
+    stayed at the inherited 23 entries. Budget: 1,500 s focused (the 307.234607 s pool plus a
+    fresh 1,192.765393 s from the stage reserve under the 2026-11-19 ruling) and 0 s workspace;
+    attempts 1 and 2 charged 655.271466556 s, 844.728533444 s left; epoch 13,141.490754 s
+    untouched; reserve 21,838.8530776041 s; CM4 176,372.85640706694 s. Stage C is complete; Stage D
+    (744 shakedown, 745 campaign, 746 acceptance) stays held for a new dispatch. Bar 571/4,422,
+    37/134, 4/133, 0/26; pair (45,5,false) Open at zero admitted receipts; C2 118 Residual + 0
+    Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized.
 
   - G15-CM4 continuation 95 (2026-11-22): Stage B was completed on `cdx` (Codex 0.169.0,
     gpt-6.2-astra, effort max) in four attempts, each stopped honestly on a scope boundary or a

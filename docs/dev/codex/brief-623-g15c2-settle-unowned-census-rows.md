@@ -117777,3 +117777,21 @@ superseded for the three deferred rows, as P0410's was at c92/c93), retains the
 workspace suite, no 744/745/746, no CM5; the pair (45,5,false) Open at zero admitted receipts; C2
 118 Residual + 0 Lost; 51 owners and five source duties Open; `CHANGELOG.md`/S10 blocked;
 everything sealed (c76–c95) sealed.
+
+### Continuation 96 attempt 2 — completed: Stage C admitted 20/20
+
+Attempt 2 (`cdx`, Codex 0.171.0, unit `brief-743-cdx-20261122-024539-24665`, 02:45:39-03:00:30 CST,
+rc 0) ran the unchanged importer from `no-default-real-oracle` (`40c78b04…`) on the same both-mode
+class index (`8bbd71a7…`): the ten PASS rows with `configuration=no-default` (real_keys
+60/60/60/60/60/55/55/60/55/30, hits=1, exact disabled records, authenticated raw builds) and
+`required=151 caught=10 PortBlocked=141 settlements=0`; exit 101 is the importer's final
+`assert!(blocked.is_empty())` over the 141 rows outside the class index, the same partial-index red
+as the default run. On the match Stage C credited 20/20 cells (DeferredPublication 3/3,
+ProfileReturn 7/7, both modes), recorded the C10 calibration (`class_cells=0`,
+`shakedown_credit=0`), and published the ledger (20/20/0), class-admission table, packet index,
+510-cell schedule (244 + 246 unspent) and cumulative report (attempt-1 FAIL retained, superseded by
+`Q96-class-index-reconciliation`). Entry/closing authentication held; the live five stable (5,810
+paths, 0 outside five, 0 in-run changes); 32 sealed roots with no newer file; no member packet
+re-run; `git status` at the inherited 23 entries; 39.567595321 s charged (655.271466556 of 1,500 s
+used, 844.728533444 s left); 0 s workspace; epoch untouched. Stage C complete; Stage D held for a
+new dispatch; CM5 unauthorized.
