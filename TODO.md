@@ -3550,6 +3550,31 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
     dispatched to `cdx`.
 
+  - G15-CM4 continuation 101 (brief 750) (2026-11-22): the cover-witness inventory stopped at
+    P0338 under its no-candidate rule after fifteen own verdicts (the thirteen measured
+    witnesses — the ten Stage C class rows, C10, P0001, P0002 — and the two non-witnesses
+    P0339 and P0338); `Q750-P0338-resumed-normalizer` accepts the STOP as a third defect class,
+    mutation placement off the credited resumed path, and orders the combined resume-edge
+    dispatch and witness completion inventory as brief 751. Run: unit
+    `brief-750-cdx-20261122-055629-108426`, 05:56:29–06:36 CST, rc 0, 20 GiB peak 0.30 GiB,
+    oom 0/0, 0 repo changes; report `.temp/brief-750/report.json` (204,715 B, STOP, 11 PASS /
+    1 FAIL / 1 NA, 421 citations); 235 receipts summing 44.294454517999476 s focused.
+    P0338: every one of its 55 bound programs suspends at the producer (`Input:finish`), and
+    the fixture-declared tail `ResolveRewriteRuleExprsOwnedSuspensionFrame>normalize_rewrite_rule_exprs_from_resolved`
+    resumes into the ordinary mapper (`rewrite_rules.rs:450`), while the sole hit (`:315`) is in
+    the driven mapper called only on the immediate arm (`:213`); 30 of 55 carry the required
+    guard, the historical C25 mutant patched the ordinary mapper (raw hit line 996, all 55
+    baseline cells SAME). P0339 keeps its 30 candidates and the recommendation
+    `CM739.batch2.P0339.98c7b14db11050b728de7c50` (context `tail-hold` → `unevaluated`); the six
+    dependencies stay 45/5, 45/5, 2, 1, 1, 1. The 136 remaining rows carry no verdict
+    (unadjudicated, not unknown). Budget: 750 charged 44.294454517999476 s focused, its unspent
+    2,355.7055454820006 s returns, reserve 39,424.1277882461 s; a fresh 5,000 s allocation
+    under the 2026-11-19 ruling lifts the reserve to 44,424.1277882461 s and CM4 to
+    209,210.425572227 s; brief 751 is carved 3,000 s focused, leaving 41,424.1277882461 s.
+    Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2
+    118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
+    CM5 unauthorized; 745/746 held. Brief 751 dispatched to `cdx`.
+
   - G15-CM4 continuation 100 attempt 2 (brief 749) (2026-11-22): Stage A stopped at cut 5 on
     P0339's cover-witness gap; `Q749-P0339-frozen-hit` orders the cover-witness inventory
     (brief 750). Attempt 2 (unit `brief-749-cdx-20261122-051446-92453`, 05:14:46–05:41 CST,

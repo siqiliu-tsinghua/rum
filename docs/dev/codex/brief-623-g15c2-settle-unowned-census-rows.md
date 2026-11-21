@@ -118083,3 +118083,63 @@ owners and five source duties Open; membership 28/3/7/113 with policy `3953aa9f�
 `22751919…`; `CHANGELOG.md` and S10 blocked; CM5 unauthorized. Brief 750 is dispatched on `cdx`
 at `BRIEF_MEMORY_MAX=20G` under the standing routing (agy on a cyber-filter refusal, a Codex
 quota death stops and asks).
+
+### Continuation 101 — brief 750 stopped at P0338's resume edge; `Q750-P0338-resumed-normalizer` orders the combined resume-edge dispatch and witness completion inventory
+
+Brief 750 (design-only cover-witness inventory) ran on `cdx` (Codex CLI 0.171.0,
+`gpt-6.2-astra`, reasoning effort max), unit `brief-750-cdx-20261122-055629-108426`,
+2026-11-22T05:56:29–06:36 CST, rc 0, the 20 GiB scope peaked at 320,835,584 B (0.30 GiB,
+oom 0/0), 0 repo changes; report `.temp/brief-750/report.json` (204,715 B; verdict STOP;
+11 PASS / 1 FAIL / 1 NA; 2 deviations; `scripts/report.py check 750` OK with 421 citations);
+235 bounded receipts summing exactly 44.294454517999476 s focused (0 workspace, 0 epoch),
+matching `ledger.json` to the last digit; every write under `.temp/brief-750/`, the inherited
+23-entry tree unchanged, no cargo/git/network. It derived fifteen own rows — the thirteen
+measured witnesses (the ten Stage C class rows, C10, P0001, P0002) and P0339/P0338 as
+non-witnesses — and stopped at P0338 under the brief's no-candidate rule, publishing no
+unknown verdict and stating that the zero-unknown bar was not met (136 own rows unadjudicated).
+P0339 has 30 witness candidates in its own 55-program matrix; the recommended replacement is
+`CM739.batch2.P0339.98c7b14db11050b728de7c50`, changing only the context from
+`held_and_splice.tail-hold` to `held_and_splice.unevaluated` (the pause answer
+`Unevaluated[c23lhs->91]` unwraps to the two-argument Rule). The six dependency rows carry 105
+plans: 45/5 on each pair side, C1 2, G15A 1, G15B 1, Some 1, all witness.
+
+The STOP, verified by me from the sealed armed tree and the historical C25 scene: P0338's
+fixture declares the credited tail as `ResolveRewriteRuleExprsOwnedSuspensionFrame>normalize_rewrite_rule_exprs_from_resolved`
+(`guest.rs` P0338 entry); every one of the row's 55 bound programs returns
+`Err(InputRequired)` at the producer (the pause plan's one `Input:finish`); the shared frame
+(`rewrite_rules.rs:433`) resumes into the ordinary mapper (`:450`, defined `:291-300`), while
+the row's only hit (`:315`) is inside the driven mapper (`:306`), whose only caller is the
+immediate arm (`:213`), and the driven resolve's suspension arm stores the same frame (`:215`).
+Thirty of the 55 programs (including the frozen cover) carry the required nonempty guard; zero
+enter the driven mapper on the credited path. The historical C25 mutant patched the ordinary
+mapper in place (`prepare_rule_guards.py:22,28-29`), so its hit (raw line 996) executed on the
+resumed path through the ordinary body, and all 55 baseline cells are SAME. Ruling
+`Q750-P0338-resumed-normalizer` (`.temp/director/ruling-751.md`): the STOP is correct and is a
+third defect class — mutation placement off the credited resumed path, neither the P0339 cover
+gap nor the 748 dispatch gap — and the class-wide response is the combined executed-edge and
+value inventory of all 151 own rows plus the six dependencies (each row: the fixture path, the
+credited occurrence, the producer edge, the hit's enclosing driven function, all its incoming
+edges, the traversed edge's `driven()` dispatch fact, the value condition; verdicts
+`static-witness` / `cover-candidate` / `resume-edge-fix` / `stop`, zero unknown; a row may carry
+both duties), the exact added cut list in the 748 plan's own "route both immediate and resumed
+at their shared private destination" shape (anchors byte-exact, the original call textually
+unchanged, the inversion to live, both falsifiers, the recomputed 137-row partition and the new
+`source_schema`), and the completed candidate/revision list. The fix binds an incoming edge on
+the same credited activation the historical mutant executed; it moves no hit, weakens no
+predicate and reclassifies no row. Sequence: continuation 101 = brief 751 (design-only,
+`Scope: NONE`); after its gate brief 752 = the authorized live cover revision; then brief 749
+amends to attempt 3 for the full 49 + N cut render, the audit carrying both witness and dispatch
+statuses, the 137-row table and schema, the source gate and the pins; Stage B, Stage C, the 744
+restart, 745 and 746 follow their gates. Nothing is reclassified, promoted, exempted or settled;
+the 20 class cells stand; the 95 reachable images and 13 PortBlocked bindings are preserved;
+everything sealed (c76–c99) stays sealed; 745/746 held. Budget: brief 750 charged
+44.294454517999476 s focused (235 receipts; 0 workspace, 0 epoch); its unspent
+2,355.7055454820006 s returns, so the stage reserve is 39,424.1277882461 s; a fresh explicit
+allocation of 5,000 s under the user's 2026-11-19 ruling lifts the reserve to
+44,424.1277882461 s and the CM4 line to 209,210.425572227 s; continuation 101 (brief 751) is
+carved 3,000 s focused (0 workspace, 0 epoch), leaving 41,424.1277882461 s; an overrun is a
+ruling, never a scope cut. The pair `(45,5,false)` stays Open at zero admitted receipts; C2 118
+Residual + 0 Lost; the 51 owners and five source duties Open; membership 28/3/7/113 with policy
+`3953aa9f…` and schema `22751919…`; `CHANGELOG.md` and S10 blocked; CM5 unauthorized. Brief 751
+is dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the standing routing (agy on a
+cyber-filter refusal, a Codex quota death stops and asks).
