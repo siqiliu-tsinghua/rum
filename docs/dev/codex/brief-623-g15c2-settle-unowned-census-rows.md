@@ -119428,3 +119428,38 @@ Stage C/C10 readmission and a further 744 restart, each gated; 745/746 held; CM5
 unauthorized; the pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0
 Lost; 51 owners and five source duties Open; membership 28/3/7/113; `CHANGELOG.md`/S10
 blocked; everything sealed (c76–c99) stays sealed.
+
+## Continuation 127 — brief 768's certified re-anchoring generator, STOP on the ordinary-body allowance (2026-11-23)
+
+Brief 768 (committed `137eeb04`, pushed) ran on `grk` (grok-4.7 effort xhigh), unit
+`brief-768-grk-20261123-062527-985714`, session `866a6861-…`, 06:25:33–07:00:54 CST,
+`status=success turns=90 cost_usd=6.128198 refused=0`, peak 536,285,184 B (oom 0/0), rc 0;
+scene `.temp/brief-768/` (16.9 MB); report STOP, `report.py check 768` OK (17 citations),
+13 PASS / 1 FAIL checks, 1 PASS measurement, 2 deviations, 0 questions, changes 0.
+Delivered and verified: the 152 closed byte chains (147 transformed + 5 additions, finals
+equal to the 766 bytes; `cases.rs`'s full history); the 147-row overlays table (147 live
+preimages, 147 armed = 766 bytes, 144 armed = disabled, the three arm files reverted by the
+one recorded constant); the 5 additions byte-equal to 766; the class-anchored table (18,203
+rows, exactly 60 changed paths, only sha256 cells, all equal to 766, `provenance.tsv`
+untouched); the 151 `source_schema` cells; the whole-tree declaration (147 + 5 + 5,663);
+the ordinary calibration and falsifier; the KATs; and an in-place generator rerun that
+reproduced every substantive artifact byte-identically. My gate read all six 759-file
+diffs. The FAIL: 14 ordinary-body stops — 12 ordinary bodies carrying the 759 contract's
+q25 hook insertions (`lib.rs` `begin`/`end`/`arm_source`/`pause`; `core.rs`
+`insert_suspension_frame`/`insert_typed_erased_frame_named`; `driver.rs` `drive_frames`;
+`cases.rs` `resume_collect_string_cases_from_index`/`resume_collect_literal_string_cases`/
+`drive_string_cases_output_result`; `resume_frames.rs` `abandon`/`resume`) and 2
+contract-declared helpers (`insert_suspension_frame_q25`, `challenge_equal_siblings`).
+The changes are pure q25 insertions except the `core.rs` call re-expression (identical
+callee and arguments) and the `cases.rs` `resume_or_suspend!` de-sugaring (identical to
+the macro arm a literal `Err(InputRequired)` call site takes). My brief's allowance named
+only the q25 module and the proof (F0, mine); the worker correctly failed closed. Ruling
+777 accepts the STOP and the two deviations and orders brief 769, the declared hook-site
+ordinary-body certificate: the allowance table for the 14 sites plus the q25 module and
+proof, byte-exact added/removed line sets, three falsifiers, and a re-emission whose six
+substantive artifacts are byte-identical to 768's. F2 is carried into the source-A/B
+brief: the A/B's constructed baseline must be rebuilt from installed bytes with the eight
+drift paths asserted, or `mod.rs:211-212` fires. Budget: 768 charged 7.087 s of 3,000,
+2,992.913 s returned, reserve 34,728.69578847017 s; brief 769 carves focused 900 s ->
+33,828.69578847017 s. Q25 stays unwaived; 744/745/746 held; CM5 unauthorized; sealed
+c76–c99 stays sealed.

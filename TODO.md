@@ -3987,6 +3987,38 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 127 (brief 768 STOP, the certified re-anchoring generator) (2026-11-23):
+    brief 768 built the certified re-anchoring generator in `.temp/brief-768/` (16.9 MB) and
+    was accepted STOP. Run: grk, unit `brief-768-grk-20261123-062527-985714`, session
+    `866a6861-…`, 06:25:33–07:00:54 CST, `status=success turns=90 cost_usd=6.128198 refused=0`,
+    peak 536,285,184 B, rc 0; `report.py check 768` OK (17 citations); 13 PASS / 1 FAIL checks,
+    2 deviations. Delivered: the byte chain 152/152 closed (147 transformed files with 5–12
+    links each + 5 additions, finals equal to the 766 bytes; `cases.rs` history full and
+    matching); the 147-row overlays table with hex/sha agreement, 147 live preimages, 147 armed
+    = 766 bytes, 144 armed = disabled and exactly the three arm files reverted by the one
+    recorded constant; the 5 additions byte-equal to their 766 files; the class-anchored loader
+    table (18,203 rows, 9,029 rows changed on exactly 60 paths, only the sha256 cells changed,
+    all equal to the 766 bytes, `provenance.tsv` untouched); the 151 `source_schema` cells =
+    the generated overlays; the whole-tree declaration (147 + 5 + 5,663 = 5,810 baseline
+    files, `other=0`); the ordinary calibration 840/118 with its falsifier; the KATs; and an
+    in-place generator rerun that reproduced every substantive artifact byte-identically. The
+    FAIL is the ordinary-body certificate: 14 stops = 12 existing ordinary bodies changed by
+    the 759 contract's hook insertions plus 2 contract-declared helpers outside the q25 module
+    (`insert_suspension_frame_q25`, `challenge_equal_siblings`). My gate read all six diffs:
+    pure q25 insertions except the `core.rs` call re-expression (same callee and arguments) and
+    the `cases.rs` `resume_or_suspend!` de-sugaring (identical to the macro arm taken by a
+    literal `Err(InputRequired)` call site). F0: my brief's allowance named only the q25 module
+    and proof, so the worker correctly failed closed; the allowance is extended to the 14 named
+    sites and must be mechanical (ruling 777). F1: the arm columns live in the overlays table,
+    verified. F2 carried: the A/B's constructed baseline must be rebuilt from installed bytes
+    with the eight drift paths asserted, or `mod.rs:211-212` fires at install. F3: the
+    hash-only 760 intermediate and the 22-doc recount are accepted. Scope clean (0 live
+    writes, 0 scene writes, 23 inherited git entries, no build/test/git/network). Budget:
+    7.087 s of 3,000 charged, 2,992.913 s returned, reserve 34,728.69578847017 s; brief 769
+    (the declared hook-site ordinary-body certificate, scene-only, no build) carves focused
+    900 s -> 33,828.69578847017 s. Q25 stays unwaived (13 rows, P2379 included, zero admitted
+    receipts); 744/745/746 held; CM5 unauthorized; sealed c76-c99 stays sealed.
+
   - G15-CM4 continuation 126 (brief 767 DONE, the derived-inventory reconciliation) (2026-11-23):
     brief 767 re-derived the complete byte-pinning inventory and decision in
     `.temp/brief-767/` (309 KB) and was accepted DONE. Run: grk, unit

@@ -140,3 +140,44 @@ the next command sample`.
 certificate, ordinary-bodies, overlays, additions, class-table, tree-declaration, generator,
 budget. The summary must state the zero-unknown result, the artifact digests, and the exact open
 facts.
+
+## Gate c127 (2026-11-23) — accepted STOP; the ordinary-body allowance is extended
+
+Run: `grk` (grok-4.7, effort xhigh), unit `brief-768-grk-20261123-062527-985714`,
+session `866a6861-a6b8-464f-b962-fce463fc348b`, 06:25:33 – 07:00:54 CST,
+`status=success turns=90 cost_usd=6.128198 refused=0`, scope peak 536,285,184 B,
+rc 0; scene `.temp/brief-768/` (16.9 MB); `report.py check 768` OK, 17 citations;
+13 PASS / 1 FAIL checks, 1 PASS measurement, 2 deviations, 0 questions, changes 0.
+
+Verified: the five tree digests and file counts, the 199 live pins, the eight drift
+paths and 22 docs, the five absent additions, the 13 Q25 OPEN rows; 152 closed byte
+chains (147 transformed + 5 additions, finals equal to the 766 bytes); `cases.rs`
+history full and matching; 147 overlay rows with hex/sha agreement, 147 live
+preimages, 147 armed = 766 bytes, 144 armed = disabled and exactly the three arm
+files reverted by the one recorded constant; the five additions byte-equal to 766;
+the class table 18,203 rows with exactly 60 changed paths and 9,029 rows whose only
+changed cell is the sha256, all equal to the 766 bytes, `provenance.tsv` unchanged;
+the 151 `source_schema` cells equal to the generated overlays; the whole-tree
+declaration 147 + 5 + 5,663; the ordinary calibration 840/118 and its falsifier;
+the KATs; and an in-place generator rerun reproducing every substantive artifact
+byte-identically (only budget timing lines differ), so the evidence is genuine.
+Scope clean (0 live writes, 0 scene writes, 23 inherited git entries).
+
+Findings: **F0** — the 14 ordinary-body stops are the 759 contract's own hook sites
+(12 existing bodies: the four `lib.rs` arm-lifecycle hooks, the two `core.rs`
+insertion registrations, `drive_frames`, the three `cases.rs` string-case sites,
+`abandon`/`resume`) plus two contract-declared helpers (`insert_suspension_frame_q25`,
+`challenge_equal_siblings`); my brief's allowance named only the q25 module and the
+proof, so the worker correctly failed closed. The diffs are pure q25 insertions
+except the `core.rs` call re-expression (identical callee and arguments) and the
+`cases.rs` macro de-sugaring (identical to the macro arm taken by a literal
+`Err(InputRequired)` call site). **F1** — the arm columns live in the overlays table,
+not the certificate log; substance verified. **F2** — carried: the A/B's constructed
+baseline must be rebuilt from installed bytes, with the eight drift paths asserted,
+or `mod.rs:211-212` fires. **F3** — the hash-only 760 intermediate and the 22-doc
+recount are accepted.
+
+Budget: 768 charged 7.087 s of 3,000; unspent 2,992.913 s returns; reserve
+34,728.69578847017 s. Q25 stays unwaived. Next: brief 769, the declared hook-site
+ordinary-body certificate (scene-only, no build, focused 900 s), then the fixture
+brief.
