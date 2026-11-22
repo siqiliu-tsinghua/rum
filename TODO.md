@@ -3875,6 +3875,42 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     S10 blocked; CM5 unauthorized; 745/746 held; sealed c76–c99 stays sealed. Brief 754 amended
     to attempt 3, committed and dispatched to `cdx` at `BRIEF_MEMORY_MAX=20G`.
 
+  - G15-CM4 continuation 112 (brief 754 attempt 3) (2026-11-22): Stage B completed and accepted.
+    The three pending workspace cases ran 69/69 targets each under the frozen plan and the seven
+    skips: armed/no-default 4,294/58/66/7 (48 declared, 9 host EPERM, 1 adjudicated oracle
+    timeout), disabled/default 4,293/59/66/7 (49, 9, 1 adjudicated), disabled/no-default
+    4,294/58/66/7 (49, 9, 0); with the attempt-2 live pair and armed/default the six-case gate
+    is credited at 414 targets with zero unexplained differences. The two fresh serial
+    adjudications under the ruling-761 delegation used the suite binaries (`32c030f2…`,
+    `c25306eb…`) at one thread under the original 700 s inner bound with no cached verdict:
+    exit 0, `[1,0,0,1163]`, 616.251591978 s / 642.448999076 s, 291 agreements / 0
+    disagreements. Follow-ups: lp03 3/0, lp04 1/0, lp05 1/0; native 0/9/0/143 with the nine
+    EPERMs at one thread and the same binary; C01/C02 package certificate PASS. The combined
+    Stage B acceptance identity `7af7b461…` binds build identity `809b6473…`, freeze
+    `c724c9ab…`, the six-comparison manifest `c3bc2616…`, ruling 761 (`b2797319…`), the raw
+    armed/default record `8594e956…`, the twelve binaries, the ten trees, the program matrix,
+    membership 28/3/7/113, zero class admissions and zero new catches. My independent gate:
+    the three raw logs re-parsed (totals exact; failing names exactly declared + 9 EPERM +
+    oracle, 58/59/58, no extras or missing; scratch-roots ok in all six); the suite oracle
+    binaries hash to the serial binaries; both serial logs show 291/0 and no cache reuse; the
+    native binaries hash to the one-thread records; all ten trees and twelve label binaries
+    re-hash; the identity's inputs re-hash; the live snapshot recomputes to `2313045a…` over
+    5,818 files; the 29 receipts sum to 122.505098429 s focused + 4,794.512888459 s workspace +
+    0 s epoch, cumulative 1,854.661859880 / 10,356.564773932 / 2,180.454507404 s; ledger
+    `e17a4ab0…`; report check OK with 69,060 citations. Run: unit
+    `brief-754-cdx-20261122-164426-556516`, 16:44:26–18:14 CST, rc 0, 20 GiB peak
+    16,521,252,864 B (15.388 GiB, oom 0/0), 0 repo changes; report DONE (30 PASS / 4 FLAGGED /
+    1 NA; 4 PASS measurements; 6 deviations, all attempt 2's; 0 questions). Budget: 15,982.
+    318858784 s unspent returns; stage reserve 18,049.09109388812 → 34,031.40995267212 s; 749
+    pools closed. Scene: git status exactly the inherited 23 entries, HEAD = origin/main =
+    `bddcbc7e`, no crates write, no `.git-attempts`, sealed c94/c95 and attempt-7 scenes
+    untouched, attempts 1–2 preserved byte-exactly, `.temp` mtime scan clean outside the scene.
+    Ruling 762 (`.temp/director/ruling-762.md`) accepts Stage B; Stage C (the twenty-cell class
+    admission on this epoch, brief 755) is next, then the 744 restart, 745 (campaign) and 746
+    (acceptance). Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted
+    receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and
+    S10 blocked; CM5 unauthorized; 745/746 held; sealed c76–c99 stays sealed.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);

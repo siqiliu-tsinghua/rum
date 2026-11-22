@@ -118665,3 +118665,55 @@ pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51
 five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held; sealed
 c76–c99 stays sealed. Brief 754 is amended to attempt 3, committed and dispatched to `cdx` at
 `BRIEF_MEMORY_MAX=20G`; its gate follows, then Stage C, the 744 restart, 745 and 746.
+
+### Continuation 112 — brief 754 attempt 3 completes the six-case workspace gate and the combined Stage B identity; Stage B is accepted
+
+Brief 754 attempt 3 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`, effort max) as unit
+`brief-754-cdx-20261122-164426-556516`, 2026-11-22T16:44:26–18:14 CST, rc 0, the 20 GiB scope
+peaking at 16,521,252,864 B (15.388 GiB, oom 0/0), 0 repo changes; dispatch log
+`.temp/logs/cdx_brief_754.log` (936,103 B). The cumulative `.temp/brief-754/report.json`
+(`2377f246…`) is DONE with 35 checks — 30 PASS / 4 FLAGGED / 1 NA — 4 PASS measurements, 6
+deviations (all attempt 2's), 0 questions and 0 changes; `scripts/report.py check 754` OK with
+69,060 citations. The three pending cases ran 69/69 targets each under the frozen plan (the
+seven exact skips, nine host EPERMs, the corrected fixture parent in both arms):
+armed/no-default 4,294/58/66/7 (48 declared + 9 host + one adjudicated oracle timeout),
+disabled/default 4,293/59/66/7 (49 + 9 + one), disabled/no-default 4,294/58/66/7 (49 + 9 + 0);
+with attempt 2's live pair and the adjudicated armed/default the six-case workspace gate is
+credited at 414 targets with zero unexplained differences. The two fresh serial adjudications
+under the ruling-761 delegation used the same suite binaries (`32c030f2…`,
+`rum_stdlib-862d7f0ccd1e433a`; `c25306eb…`, `rum_stdlib-453cd87cd9e2d63c`) at one thread under
+the original 700 s inner bound with no cached verdict: exit 0, `[1,0,0,1163]`,
+616.251591978 s / 642.448999076 s, 291 agreements and 0 disagreements each. The per-case
+follow-ups pass (lp03 3/0, lp04 1/0, lp05 1/0; the native suite 0/9/0/143 with the nine
+EPERMs at one thread and the same binary; the C01/C02 package certificate). The combined Stage
+B acceptance identity `.temp/brief-754/attempt-3/epoch/cm754-epoch-identity.json` is
+`7af7b461abfd724980735f06e8b173f2824381bbb6d71104b1678f2cd85bcd25` with
+`status=accepted under Q754-armed-default`, `accepted_workspace_gate=true`, binding build
+identity `809b6473…`, freeze `c724c9ab…`, the six-comparison manifest `c3bc2616…`, ruling 761
+(`b2797319…`), raw armed/default `8594e956…`, the twelve binaries, the ten trees, the program
+matrix (9,060 / 9,511; 255 selections / 151 own), membership 28/3/7/113, zero class admissions
+and zero new catches. I verified the delivered record independently: the three suites re-parsed
+with exact totals and failing-name set equality (declared + 9 EPERM + oracle; 58/59/58, no
+extras or missing; scratch-roots ok in all six); the suite oracle binaries hash to the serial
+binaries; both serial logs end `1 passed; 0 failed; 0 ignored; 1163 filtered out` with
+`A1_ORACLE_TOTAL agreements=291 disagreements=0` and no `ORACLE_REUSED`; the native suite
+binaries hash to the one-thread records (`26f8bd1f…`, `2d20300a…`, `4dc17396…`); every
+follow-up log hashes to its record; all ten frozen trees recompute to their pins and all twelve
+label binaries re-hash; the identity's inputs re-hash (six-comparisons `c3bc2616…`, blocks
+`ee5bb36c…`, freeze `c724c9ab…`, build `809b6473…`, `Q754-armed-default.json` `7ca22094…`,
+the six per-case chains); my own live snapshot is 5,818 files at `2313045a…`; the 29 receipts
+sum to 122.505098429 s focused + 4,794.512888459 s workspace + 0 s epoch, cumulative
+1,854.661859880 / 10,356.564773932 / 2,180.454507404 s; `ledger.json` is `e17a4ab0…`. Budget:
+15,982.318858784 s unspent returns, the stage reserve 18,049.09109388812 → 34,031.40995267212
+s, the 749 pools closed. Scene: `git status --porcelain` exactly the inherited 23 entries,
+HEAD = `origin/main` = `bddcbc7e`, no crates write, no `.git-attempts`, the sealed attempt-7
+and c94/c95 scenes have no file newer than the dispatch, the c95 `six-comparisons.json` still
+hashes `d2a9d5c4…`, attempts 1 and 2's preserved reports/ledgers are byte-exact, and the
+`.temp` mtime scan outside the scene finds only the dispatch log, the director's `state.md` and
+the `gate-762/` artifacts. Ruling 762 accepts Stage B (all eight deliverables, the six-case
+credit, the confirmed serial adjudications and the combined identity); attempt 3's scene is
+read-only and no attempt 4 exists. Stage C — the twenty-cell class admission on this epoch —
+is next as brief 755, then the 744 restart, 745 (campaign) and 746 (acceptance). Bar
+571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118
+Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
+unauthorized; 745/746 held; sealed c76–c99 stays sealed.
