@@ -118599,3 +118599,69 @@ owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthoriz
 held; sealed c76–c99 stays sealed. Brief 754 is amended to attempt 2, committed and dispatched
 to `cdx` at `BRIEF_MEMORY_MAX=20G`; its gate follows, then Stage C, the 744 restart, 745 and
 746.
+
+### Continuation 111 — brief 754 attempt 2 completes Stage B except the workspace gate; `Q754-armed-default` adjudicates the armed/default timeout and orders attempt 3
+
+Attempt 2 (unit `brief-754-cdx-20261122-133010-385998`, 13:30:10–16:28 CST, rc 0, 20 GiB peak
+16,379,740,160 B / 15.254 GiB, oom 0/0, 0 repo changes; report STOP with 18 PASS / 2 FAIL / 1
+FLAGGED / 1 NA, 6 deviations, 1 question `Q754-armed-default`, 1,557 citations; dispatch log
+2,297,111 B; 89 bounded receipts summing 1,727.118092219 s focused + 5,562.051885473 s
+workspace + 2,180.454507404 s epoch, cumulative 1,732.156761451 / 5,562.051885473 /
+2,180.454507404; 13 non-zero receipts all disclosed or expected) delivered the clean freeze,
+the twelve labels, the four carrier drives, the peels, the P0543 passes and the build epoch
+identity, and stopped on the armed/default workspace case. The freeze reproduced Stage A
+byte-exactly — source `97eaeb45…`, disabled `b41d1873…`, armed `bd8b7548…`, 5,810 files, the
+four drive trees 5,811 files (`057bb0ba…`, `04aeecec…`, `66ca4427…`, `651173d3…`), the render
+replay 288/288 with schema `5c3b02a3…`, policy `3953aa9f…` and mutants `e8b3b6e4…`; I
+re-implemented the tree hash and re-derived all ten frozen trees, all 144 preimages, all 288
+postimages and the three input tables myself. The twelve labels passed (12 starts / 12 PASS,
+forced spot identities equal to real, three distinct binaries per configuration, real/spot
+zero warnings, disabled 130 in five classes, armed 132 in six, 124 unused-parens sites each,
+zero missing/extra/unknown); I re-hashed all twelve label binaries and re-parsed the disabled
+and armed build transcripts. The four carrier drives fired 20 row executions — join P0267/
+P0312/P0323 with join hit ids, queue P1470/P1471 with queue hit ids, disabled cohorts inert
+60/60/60/45/45 — and I matched a raw carrier log to its manifest digest; the 62-row audit (56
+own + 6 dependencies) and the ten supplemental edge-fix rows have no missing caller; the 26
+withholding fixtures still fail the selected edge. The three peels reproduce 19,184.0000
+bytes/level, the 3,360.0000-byte intercept and 924,192 bytes at depth 48, and the private frame
+sink is E0603. Both live P0543 modes pass with 55/55 obligations; the c81 lane binary is
+`f29e51ff…`; the nine native groups are EPERM refusals at one thread with the same binary per
+case; the armed/default raw suite keeps its two `SourceIdentity` refusals. The build epoch
+identity is `809b6473…` (accepted_workspace_gate=false, combined acceptance identity pending).
+The workspace gate stopped after three suites (207 targets): live/default and live/no-default
+are credited 69/69 each (4,342 passed / 9 EPERM / 66 ignored / 7 filtered, no unexplained; my
+own parses), and armed/default completed 69/69 with 58 failures — 48 of the 49 c95 declared
+composed differences (the scratch-roots test passed with its fixture parent present), nine
+host EPERM refusals and one unlisted compiler-oracle timeout. My verification of the raw
+record: the 58 distinct failing names are exactly those 48 + 9 + the oracle test; the oracle
+child was killed at its built-in 700 s bound (the target finished in 749.06 s), the same binary
+`51329d79…` (`rum_stdlib-453cd87cd9e2d63c`) passes at one thread under the same bound in
+626.2 s with `[1,0,0,1163]`, no cached verdict, 291 agreements and 0 disagreements, and the
+live/default oracle target passed at 679.01 s inside the same bound; the two-sided scratch
+control with the same binary `f8b1659e…` (`suspension_oracle-370017ee92fbea53`) gives exit 0
+with the parent present and exit 101 with c95's ENOENT with it absent. The unstarted cases are
+armed/no-default, disabled/default and disabled/no-default. Ruling `Q754-armed-default`
+(`.temp/director/ruling-761.md`): the STOP is correct; the armed/default case is adjudicated,
+not re-run — the raw suite stays pinned (`8594e956…`), the case is credited with 48 declared
+composed differences, nine host refusals and zero unexplained after the two adjudications, the
+scratch-roots declaration is superseded by the two-sided control, and the compiler-oracle
+timeout is an environment-bound artifact with the same-binary serial verdict; the three
+pending cases are authorized with the corrected fixture setup; the six-case workspace gate is
+credited and the combined acceptance identity is issued with the ruling and raw record recited;
+per-case serial adjudication is delegated with STOP on any disagreement, a second timeout at
+one thread, any other unlisted difference or any other declared-now-passing test. Budget: the
+caps become 2,500 s focused + 11,500 s workspace + 16,374 s epoch (focused +500, workspace
++3,000; epoch unchanged), remaining 767.843238549 / 5,937.948114527 / 14,193.545492596; the
+fresh draw is 26,156.13828741898 s (922.8657900179824 focused + 8,859.272497400998 workspace +
+16,374 epoch), moving the stage reserve 44,205.2293813071 → 18,049.09109388812 s; the 749 pools
+are exhausted, unspent time returns, an actual overrun stops for a new ruling, and no scope is
+cut. Scene: `git status --porcelain` is still exactly the inherited 23 entries, HEAD =
+`origin/main` = `4bd73bef`, no crates write, no `.git-attempts`, the live snapshot recomputes
+to `6f5ed053…` over 5,818 files, the sealed c94/c95 and accepted attempt-7 scenes have no file
+newer than the dispatch, attempt 1's and attempt 2's preserved reports/ledgers are byte-exact
+(`4840876b…`/`a7d7a507…`, `8b10e742…`/`3f1f4c70…`), the c95 `six-comparisons.json` still
+hashes `d2a9d5c4…`, and no git or network receipt exists. Bar 571/4,422, 37/134, 4/133, 0/26;
+pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and
+five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held; sealed
+c76–c99 stays sealed. Brief 754 is amended to attempt 3, committed and dispatched to `cdx` at
+`BRIEF_MEMORY_MAX=20G`; its gate follows, then Stage C, the 744 restart, 745 and 746.

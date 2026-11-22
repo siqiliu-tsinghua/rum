@@ -3825,6 +3825,56 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     (scene `.temp/brief-754/attempt-2/`, cumulative report and ledger at the root) and
     dispatched to `cdx` at `BRIEF_MEMORY_MAX=20G`.
 
+  - G15-CM4 continuation 111 (brief 754 attempt 2) (2026-11-22): Stage B completed everything
+    except the workspace gate. The clean freeze reproduced Stage A byte-exactly (source
+    `97eaeb45…`, disabled `b41d1873…`, armed `bd8b7548…`, 5,810 files; four drive trees 5,811
+    files `057bb0ba…` / `04aeecec…` / `66ca4427…` / `651173d3…`; render replay 288/288; my own
+    re-derivation of all 144 preimages, 288 postimages, schema `5c3b02a3…`, policy
+    `3953aa9f…`, mutants `e8b3b6e4…`, and all ten tree hashes matched). The twelve labels
+    passed (12 starts / 12 PASS, forced spot == real, three distinct binaries per
+    configuration; real/spot zero warnings, disabled 130 in five classes, armed 132 in six,
+    124 unused-parens sites, zero new families; I re-hashed all twelve binaries). The four
+    carrier drives fired 20 row executions (join P0267/P0312/P0323, queue P1470/P1471;
+    disabled cohorts inert 60/60/60/45/45; the manifest and raw log digests matched); the
+    62-row audit and 26 withholding fixtures pass; the three peels reproduce
+    19,184/3,360/924,192 with E0603; both live P0543 modes pass 55/55 with the nine EPERM
+    refusals and the two SourceIdentity refusals; the build epoch identity `809b6473…` is
+    issued. The workspace gate stopped after three suites (207 targets): live/default and
+    live/no-default are credited 69/69 (4,342/9/66/7, unexplained 0; my own parse), and
+    armed/default completed 69/69 with 58 failures = 48 of the 49 c95 declared composed
+    differences (scratch-roots passed with its fixture parent present) + nine host EPERMs +
+    one unlisted compiler-oracle timeout. I verified the raw record: the 58 failing names are
+    exactly those; the oracle child was killed at its 700 s bound (target 749.06 s), the same
+    binary `51329d79…` passes at one thread under the same bound in 626.2 s with [1,0,0,1163]
+    and 291 agreements / 0 disagreements; the live/default oracle target passed at 679.01 s;
+    the two-sided scratch control with the same binary `f8b1659e…` gives pass present / ENOENT
+    absent. The three pending cases are armed/no-default, disabled/default and
+    disabled/no-default. Run: unit `brief-754-cdx-20261122-133010-385998`, 13:30:10–16:28 CST,
+    rc 0, 20 GiB peak 16,379,740,160 B (15.254 GiB, oom 0/0), 0 repo changes; report STOP
+    (21 PASS / 2 FLAGGED / 2 FAIL / 1 NA, 6 deviations, 1 question, 1,557 citations); 89
+    receipts summing 1,727.118092219 s focused + 5,562.051885473 s workspace + 2,180.454507404
+    s epoch (cumulative 1,732.156761451 / 5,562.051885473 / 2,180.454507404; 13 non-zero, all
+    disclosed or expected). Ruling `Q754-armed-default` (`.temp/director/ruling-761.md`):
+    adjudicate armed/default without replacement — raw record pinned `8594e956…`, 48 declared
+    + 9 host + 0 unexplained after the two adjudications, the scratch-roots declaration
+    superseded by the two-sided control, the timeout an environment-bound artifact with the
+    same-binary serial verdict; authorize the three pending cases with the corrected fixture
+    setup; credit the six-case gate and issue the combined acceptance identity; per-case serial
+    adjudication delegated with STOP on disagreement, a repeat timeout, any other unlisted
+    difference or any other declared-now-passing test. Budget: caps now 2,500 s focused +
+    11,500 s workspace + 16,374 s epoch (focused +500, workspace +3,000; epoch unchanged);
+    remaining 767.843238549 / 5,937.948114527 / 14,193.545492596; fresh draw
+    26,156.13828741898 s (922.8657900179824 + 8,859.272497400998 + 16,374), reserve
+    44,205.2293813071 → 18,049.09109388812 s; 749 pools exhausted; unspent returns. Scene:
+    git status still 23 inherited entries, HEAD = origin/main = `4bd73bef`, no crates write,
+    no `.git-attempts`, live snapshot `6f5ed053…` (5,818 files, my re-hash), sealed c94/c95 and
+    attempt-7 scenes untouched, attempt 1's and attempt 2's preserved reports/ledgers
+    byte-identical (`4840876b…`/`a7d7a507…`, `8b10e742…`/`3f1f4c70…`), no git/network
+    receipts. Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted
+    receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and
+    S10 blocked; CM5 unauthorized; 745/746 held; sealed c76–c99 stays sealed. Brief 754 amended
+    to attempt 3, committed and dispatched to `cdx` at `BRIEF_MEMORY_MAX=20G`.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);

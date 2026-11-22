@@ -26,6 +26,25 @@ state: the five accepted input pins, the two sealed records and the 4,690-file c
 with zero differences and zero files newer than entry. Re-hash them again at entry and start
 from there.
 
+**Attempt 2** completed everything except the workspace gate: the clean freeze (5,810 files;
+source `97eaeb45…`, disabled `b41d1873…`, armed `bd8b7548…`; render replay 288/288), the twelve
+labels (12 PASS, forced spot identities, three distinct binaries per configuration, warnings
+130/132 with 124 unused-parens sites and zero new families), the four carrier drives (20 row
+executions; join P0267/P0312/P0323, queue P1470/P1471; disabled cohorts inert 60/60/60/45/45),
+the 62-row audit and 26 withholding fixtures, the three peels (19,184 / 3,360 / 924,192) and
+E0603, both live P0543 modes (55/55), and the build epoch identity `809b6473…`. It stopped on
+the armed/default workspace case: 69/69 targets with 48 of the 49 c95 declared composed
+differences (the scratch-roots test passed with its fixture parent present), nine host EPERM
+refusals and one unlisted compiler-oracle timeout (built-in 700 s bound; the same binary passes
+at one thread under the same bound in 626.2 s with 291 agreements and 0 disagreements; the
+live/default oracle target passed at 679.01 s inside the same bound). Ruling `Q754-armed-default`
+(`.temp/director/ruling-761.md`) adjudicates the case without a replacement — the raw record
+stays pinned, the scratch-roots declaration is superseded by the two-sided control, and the
+timeout is an environment-bound artifact with the serial same-binary verdict — and orders this
+attempt 3 to run the three pending cases with the corrected fixture setup, credit the six-case
+workspace gate and issue the combined Stage B acceptance identity. Attempt 2's passing
+deliverables are its evidence and are not re-run; do not retry the twelve labels.
+
 ## Context pointers
 
 - Read `AGENTS.md`; brief 623's "Campaign invariants" section; rulings
@@ -54,10 +73,11 @@ from there.
 ## Scope
 
 - MAY create/modify: everything under `.temp/brief-754/`, with this attempt confined to
-  `.temp/brief-754/attempt-2/` (the new freeze scene, the epoch, the evidence); the cumulative
-  report and ledger stay at `.temp/brief-754/report.json` and `.temp/brief-754/ledger.json`.
-  Attempt 1's root artifacts — its scripts, `logs/`, `evidence/`, `receipts/`,
-  `attempt-1-report.json` and `attempt-1-ledger.json` — are read-only.
+  `.temp/brief-754/attempt-3/` (the workspace completion, the adjudication records, the
+  identity); the cumulative report and ledger stay at `.temp/brief-754/report.json` and
+  `.temp/brief-754/ledger.json`. Attempt 2's scene and root artifacts — its scripts, `logs/`,
+  `evidence/`, `receipts/`, `attempt-2-report.json` and `attempt-2-ledger.json` — are
+  read-only, as are attempt 1's root artifacts.
 - MAY read: the live source tree, the accepted scenes and sealed scenes, the earlier
   `.temp/brief-*` records.
 - MUST NOT: edit the live source tree (0 tracked changes); write under any sealed or accepted
@@ -103,13 +123,25 @@ from there.
    (the accepted c81 lane binary and its source), with the declared `SourceIdentity` rejection
    in armed/default as at c94; the nine native loopback groups stay host-only with their EPERM
    refusal, one thread, the same binary.
-7. **The workspace A/B.** Compose-vs-live with the pre-enumerated target set and the seven
-   declared skips; 69/69 targets per mode; zero unexplained differences; the nine EPERM
-   refusals declared; any declared composition difference carried from the c94/c95 record is
-   named, never silently accepted.
+7. **The workspace A/B.** Compose-vs-live with the pre-enumerated target set, the seven
+   declared skips and the corrected fixture-parent setup in both arms; 69/69 targets per case;
+   zero unexplained differences; the nine EPERM refusals declared; any declared composition
+   difference carried from the c94/c95 record is named, never silently accepted. Attempt 2
+   credited live/default and live/no-default; this attempt runs the three pending cases —
+   armed/no-default, disabled/default and disabled/no-default — with their four follow-up
+   groups, and credits the armed/default case under ruling `Q754-armed-default`: the raw suite
+   stays pinned (`8594e956…`), the scratch-roots declaration is superseded by the two-sided
+   control, and the compiler-oracle timeout is adjudicated by the same-binary serial verdict.
+   If the oracle test times out in a remaining case, apply the same control to that case's
+   binary (same inner bound, threads=1, no cached verdict) and record the exit, counts,
+   duration and agreement totals; a clean pass (zero disagreements) continues without a new
+   ruling, while any disagreement, a second timeout at one thread, any other unlisted
+   difference or any other declared-now-passing test stops.
 8. **The epoch identity.** The new tree hashes, binaries, blocks, membership, selections,
    program matrix, forced identities and input pins, recomputed from the produced bytes; the
-   `rum-report/1` report with every verdict line quoted.
+   combined Stage B acceptance identity is issued once all six workspace cases are accounted
+   for, reciting ruling `Q754-armed-default`, the pinned raw armed/default record and the two
+   adjudications; the `rum-report/1` report with every verdict line quoted.
 
 ## Hard rules
 
@@ -136,24 +168,28 @@ from there.
   presence audit; the 26 withholding fixtures still fail as required.
 - The three peels; the private frame E0603; the P0543 passes in both modes; the nine loopback
   EPERMs.
-- The two workspace comparisons 69/69 with zero unexplained differences, seven skips.
+- The six workspace cases accounted for — live/default and live/no-default credited, the
+  armed/default case credited under `Q754-armed-default` with its raw record pinned, and the
+  three pending cases credited at 69/69 — with zero unexplained differences, the seven skips
+  and the nine EPERM refusals declared.
 - The epoch identity complete; the live tree unchanged (git status exactly the inherited 23
   entries, no `crates/` write); the sealed scenes untouched; no epoch binary executed outside
   the scene.
-- Budget: **2,000 s focused + 8,500 s workspace + 16,374 s epoch** (attempt 1 charged
-  5.038669232 s focused, 0 s workspace, 0 s epoch, leaving 1,994.961330768 s focused). The 749
-  pool remainder 1,572.0955407500176 s focused + 2,640.727502599002 s workspace is consumed
-  first; the fresh draw is 422.8657900179824 s focused + 5,859.272497400998 s workspace +
-  16,374 s epoch = **22,656.13828741898 s** from the stage reserve, leaving it at
-  21,549.09109388812 s; unspent returns; a projected overrun stops for a director ruling, never
-  a scope cut.
+- Budget: **2,500 s focused + 11,500 s workspace + 16,374 s epoch** (attempts 1–2 charged
+  1,732.156761451 s focused + 5,562.051885473 s workspace + 2,180.454507404 s epoch, leaving
+  767.843238549 s focused + 5,937.948114527 s workspace + 14,193.545492596 s epoch). The 749
+  pools are exhausted (0 s focused and 0 s workspace); the fresh draw is 922.8657900179824 s
+  focused + 8,859.272497400998 s workspace + 16,374 s epoch = **26,156.13828741898 s** from the
+  stage reserve, leaving it at 18,049.09109388812 s; unspent returns; a projected overrun
+  stops for a director ruling, never a scope cut.
 
 ## Report format
 
-`rum-report/1` at `.temp/brief-754/report.json` as the cumulative record (attempt 1's is
-preserved at `attempt-1-report.json`; the ledger is cumulative at `.temp/brief-754/ledger.json`
-with attempt 1's at `attempt-1-ledger.json`), reciting attempt 1's 5.038669232 s focused
-charge; `changes` empty (every write is under `.temp/brief-754/`); sections for the freeze, the
+`rum-report/1` at `.temp/brief-754/report.json` as the cumulative record (attempt 1's and
+attempt 2's are preserved at `attempt-1-report.json` and `attempt-2-report.json`; the ledger is
+cumulative at `.temp/brief-754/ledger.json` with the attempts' at `attempt-1-ledger.json` and
+`attempt-2-ledger.json`), reciting attempts 1–2's 1,732.156761451 s focused + 5,562.051885473 s
+workspace + 2,180.454507404 s epoch; `changes` empty (every write is under `.temp/brief-754/`); sections for the freeze, the
 twelve labels, the drives, the peels, the P0543 passes, the workspace A/B, the identity and
 the ledger; cite lines exactly. Before finishing run `python3 scripts/report.py check 754`
 (without `--against-git`) and fix every PROBLEM; the final message is only
