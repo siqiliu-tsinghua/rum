@@ -3987,6 +3987,38 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 117 (brief 758 STOP) (2026-11-22): brief 758 stopped correctly at the
+    inventory-build gate; ruling 767 authorizes the two-mode inventory builds and continues
+    the proof as brief 759. Brief 758 (`1409ddb3`) ran on `cdx`, unit
+    `brief-758-cdx-20261122-215234-765602`, 21:52:34–22:12:50 CST, rc 0, peak 1,037,975,552 B,
+    0 repo changes; report STOP (7 PASS / 1 FAIL `inventory-replay` / 1 NA, 2 measurements
+    PASS, 2 deviations, 1 question `inventory-builds`; check OK, 318 citations); scene
+    `.temp/brief-758/` (5,844 files, 135,665,153 B). Delivered: entry authentication (45
+    pins; the single deviation is the c116 appendix to the brief-757 document — the pinned
+    12,976 bytes are the exact prefix, `5a2826cb…`; full 21,710 bytes `0050a7d1…`, heading
+    line 172), the three epoch identities, the twelve label binaries, the three 5,810-file
+    trees, the independent copy `bd8b7548…` (0 shared inodes, 0 symlinks), the 97-row class
+    rebinding (84 design-carried / 13 proof needed) with the 13+3 mappings, the frozen
+    fixture and clause digests, the replay preflight (3 generate + 9 validate `cargo test`
+    commands; both feature modes; compile-time `include_str!` inventory embedding; archived
+    binaries embed the historical tables and old roots, never the fresh copy's), all 13
+    dispositions `PortBlocked` with zero executed anchors, and zero receipts, changes or live
+    writes. The STOP is correct: brief 758 authorized one default proof-only build and made
+    any second build a gate; the replay compiles verifiers in both modes, so the repriced
+    upper (3,814.863200569478480 s) exceeds the 3,500 s carve. My gate recomputed the copy
+    and parent digests (both 5,810 files, `bd8b7548…`), re-hashed the twelve executables and
+    the three epoch identities, reproduced the 45 pins, the archived-binary offsets, the
+    include_str!/`default = ["hash"]` sites, the baseline rc pattern, the 318 citations, the
+    two deviations, the scope (inherited 23 git entries, HEAD = `origin/main` = `1409ddb3`,
+    zero live writes, no target, no receipts) and the budget. Ruling 767 accepts the STOP and
+    the entry/copy/preflight evidence; Q25 stays unwaived (13 named stops, zero admitted
+    receipts); `inventory-builds` is authorized within exact bounds; brief 759 (working copy
+    of the accepted 758 copy under `.temp/brief-759/`, the contract, the 3+9 replays, one
+    default proof-only build, one bounded fixture invocation, the 13 dispositions, zero
+    importable receipts) carves 4,200 s focused (31,310.50799778417 → 27,110.50799778417 s),
+    0 workspace, 0 epoch. Next: brief 759's gate, then the generator/source gate, the
+    deterministic render, the re-freeze, the fresh epoch, the readmit/C10 and a further 744
+    restart, each gated; 745/746 held.
   - G15-CM4 continuation 116 (brief 757) (2026-11-22): the Q25 raw-receiver ownership contract
     is fully designed with zero unknown; brief 757 accepted and the isolated P2379 proof
     ordered as brief 758. Brief 757 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`,

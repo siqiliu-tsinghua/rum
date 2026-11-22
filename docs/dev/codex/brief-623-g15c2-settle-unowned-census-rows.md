@@ -118918,3 +118918,37 @@ fresh explicit draw if the remaining reserve is short, never a scope cut. The im
 line stays staged and gated: Q25 proof, generator/source gate, deterministic render,
 re-freeze, fresh epoch, readmit/calibrate, 744 restart; 745/746 held; CM5 unauthorized; the
 standing state is unchanged.
+
+Continuation 117 — brief 758 stopped correctly at the inventory-build gate; ruling 767
+authorizes the two-mode inventory builds and continues the proof as brief 759 (accepted
+2026-11-22). Brief 758 (`1409ddb3`) ran on `cdx`, unit
+`brief-758-cdx-20261122-215234-765602`, 21:52:34–22:12:50 CST, rc 0, peak 1,037,975,552 B,
+0 repo changes; report STOP (7 PASS / 1 FAIL `inventory-replay` / 1 NA, 2 measurements
+PASS, 2 deviations, 1 question; check OK, 318 citations); scene `.temp/brief-758/` (5,844
+files, 135,665,153 B). It delivered the entry authentication (45 pins; the single deviation
+is the c116 appendix to the brief-757 document — the pinned 12,976 bytes are the exact
+prefix, `5a2826cb…`; full `21,710` bytes `0050a7d1…`, heading line 172), the three epoch
+identities, the twelve label binaries, the three 5,810-file trees, the independent copy
+(`bd8b7548…`, 0 shared inodes, 0 symlinks), the 97-row class rebinding (84 design-carried /
+13 proof needed) with the 13+3 mappings, the frozen fixture and clause digests, the replay
+preflight (3 generate + 9 validate `cargo test` commands; both feature modes; compile-time
+`include_str!` inventory embedding; the archived binaries embed the historical tables and
+old roots, never the fresh copy's), all 13 dispositions `PortBlocked` with zero executed
+anchors, and zero receipts, changes or live writes. The STOP is correct: brief 758 authorized
+one default proof-only build and made any second build a gate; the replay compiles verifiers
+in both modes and the repriced upper (3,814.863200569478480 s) exceeds the 3,500 s carve. My
+gate recomputed the copy and parent digests (both 5,810 files, `bd8b7548…`), re-hashed the
+twelve executables and three epoch identities, reproduced the 45 pins, the archived-binary
+offsets and the include_str!/`default = ["hash"]` sites, the baseline rc pattern, the 318
+citations, the two deviations, the scope (inherited 23 git entries, HEAD = `origin/main` =
+`1409ddb3`, zero live writes, no target, no receipts) and the budget. Ruling 767 accepts the
+STOP and the entry/copy/preflight evidence, keeps Q25 unwaived (13 named stops, zero
+admitted receipts), authorizes `inventory-builds` within exact bounds (the 3+9 recorded
+commands with their both-mode compiles, one default proof-only build, one fixture
+invocation), and orders brief 759 (working copy of the accepted 758 copy under
+`.temp/brief-759/`, the contract, the authorized replays, one build, one execution, 13
+dispositions, zero importable receipts). Budget: 1,215.65708628 s spent of 3,500,
+2,284.34291372 s returned, reserve 31,310.50799778417 s; brief 759 carves 4,200 s focused →
+27,110.50799778417 s, 0 workspace, 0 epoch. Next: brief 759's gate, then the
+generator/source gate, the deterministic render, the re-freeze, the fresh epoch, the
+readmit/C10 and a further 744 restart, each gated; 745/746 held.

@@ -211,3 +211,53 @@ and the copy, the contract implementation, the standing inventories, the fixture
 and raw observations, the predictions versus actual outcomes, the 13 dispositions, and the
 scope; cite lines exactly. STOP at the proof gate: no live edit, no admission, no generator/
 source stage, no 744 restart, no 745/746, no CM5.
+
+## Gate c117 (2026-11-22) — brief 758 stopped correctly at the inventory-build gate; the entry and the copy are authenticated; ruling 767 authorizes the two-mode inventory builds and continues the proof as brief 759
+
+- Run: unit `brief-758-cdx-20261122-215234-765602`, cdx (Codex CLI 0.171.0,
+  `gpt-6.2-astra`, reasoning max), 2026-11-22T21:52:34–22:12:50 CST, rc 0, the 20 GiB scope
+  peaked at 1,037,975,552 B (0.97 GiB, oom 0/0); dispatch log `.temp/logs/cdx_brief_758.log`;
+  scene `.temp/brief-758/` (5,844 files, 135,665,153 B). The report is STOP: 7 PASS, 1 FAIL
+  (`inventory-replay`), 1 NA, 2 measurements PASS, 2 deviations, 1 question
+  (`inventory-builds`), 0 disclosures, 0 changes; `scripts/report.py check 758` OK with 318
+  citations; budget 1,215.65708628 s spent of 3,500, 2,284.34291372 s returned, reserve
+  **31,310.50799778417 s**.
+- Delivered: entry authentication of the 45 pins (the single deviation is the director's
+  c116 appendix to the brief-757 document: the pinned 12,976 bytes are the exact prefix,
+  `5a2826cb…`; the full 21,710 bytes hash `0050a7d1…`, appendix heading line 172), the three
+  epoch identities, the twelve label binaries and the three 5,810-file trees; the independent
+  copy `.temp/brief-758/copy` (5,810 files, `bd8b7548…`, 0 shared inodes, 0 symlinks,
+  independently writable); the class rebinding (97 rows: 84 `design-carried`, 13 `proof
+  needed`; the 13+3 mappings with 2,097 + 1,241 + 261 numbered quotes; 8 concrete receiver
+  types from 17 parsed files; 0 proof executions); the frozen fixture/selection
+  (`e5e3a1ff…`/`ae59ceca…`, `Cov:138`/`Progs:957`/`Mut:138`, Strict, the
+  `records.rs:341–351` clause slice `3685fd04…`); the replay preflight (3 generate + 9
+  validate commands, all `cargo test`, targets `lib`/`suspension_oracle`/`typed_slot_census`,
+  both modes; compile-time `include_str!` embedding; the archived binaries embed the
+  historical tables and old roots, never the fresh copy's) and the withheld build plan; all
+  13 dispositions `PortBlocked` with zero executed anchors; zero receipts, zero changes and
+  zero live writes.
+- The STOP is correct: brief 758 lines 67–70 authorize one default proof-only build and make
+  a second build a director gate; lines 110–119 require the prescribed replay before
+  acceptance and make an additional build a gate. The replay compiles verifiers in both
+  feature modes, and the repriced upper (3,461.374142684478480 + 2 × 176.74452894250 =
+  3,814.863200569478480 s) exceeds the 3,500 s carve. No covered edit, Cargo invocation or
+  fixture execution occurred.
+- My gate: I recomputed the copy and the armed parent with the scene's tree-hash recipe (both
+  5,810 files, both `bd8b7548…`), found 0 hardlinked files, re-hashed the twelve executables
+  12/12 and the three epoch identities, reproduced all 45 pins (the one expected append
+  mismatch), reproduced the archived-binary offsets and the fresh-table/old-root absences in
+  both modes, re-read the generate/validate command sets and the accepted baseline's rc
+  pattern, re-read the `include_str!` sites and `default = ["hash"]`, verified the report
+  check (318 citations), the two deviations, the scope (inherited 23 git entries, HEAD =
+  `origin/main` = `1409ddb3`, no live writes, no target, no receipts, no subprocess/network
+  in the scene scripts) and the budget.
+- Ruling 767 accepts the STOP and the entry/copy/preflight evidence; **Q25 stays unwaived**
+  (13 named stops, zero admitted receipts); `inventory-builds` is authorized within exact
+  bounds; the proof line continues as **brief 759** (a working copy of the accepted 758 copy
+  under `.temp/brief-759/`, the contract, the 3+9 replays with their both-mode compiles, one
+  default proof-only build, one bounded single-threaded fixture invocation, the 13
+  dispositions, zero importable receipts), carving 4,200 s focused
+  (31,310.50799778417 → 27,110.50799778417 s), 0 workspace, 0 epoch. Next: brief 759's gate,
+  then the generator/source gate, the deterministic render, the re-freeze, the fresh epoch,
+  the Stage C/C10 readmission and a further 744 restart, each gated; 745/746 remain held.
