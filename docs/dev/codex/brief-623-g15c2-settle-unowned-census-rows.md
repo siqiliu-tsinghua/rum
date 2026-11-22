@@ -119363,3 +119363,68 @@ epoch, the Stage C/C10 readmission and a further 744 restart, each gated; 745/74
 unauthorized; the pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0
 Lost; 51 owners and five source duties Open; membership 28/3/7/113; `CHANGELOG.md`/S10
 blocked; everything sealed (c76–c99) stays sealed.
+
+## Continuation 126 — brief 767's complete inventory and the two-anchor decision (2026-11-23)
+
+Brief 767 (committed `6de224b2`) ran on `grk` (grok-4.7, effort xhigh), unit
+`brief-767-grk-20261123-052946-965956`, session `482e8ce9-e136-4887-bdb9-63b267e06511`,
+2026-11-23 05:29:46 – 06:05:02 CST, `grk-result: status=success turns=83
+cost_usd=6.868584 refused=0`, the 20 GiB scope peaked at 607,109,120 B (oom 0/0), rc 0;
+scene `.temp/brief-767/` (309 KB); report DONE; `scripts/report.py check 767` OK, 40
+citations; 7 PASS checks, 2 PASS measurements, 3 deviations, 0 questions, 0 disclosures,
+changes 0. The delivery: a complete zero-unknown inventory of the thirteen provenance
+kinds, their producers and consumers (packet and the two c52 sealed kinds have measured
+absences; the guest-dependency branch does not fire because the table has zero C10 ids);
+the 199 source-kind paths (zero cross-kind conflicts, all matching live, 198 distinct
+digests); the 135 overlay rows (preimages 135/135, committed postimages 100/135 matching
+the 749 arms, the same 35 missing both arms); the 9 manifest pins (`pre` = live); the
+`mutants.tsv` `source_schema` equal to sha256 of the committed overlays table; the per-path
+disposition over all 199 pins (the 766 copy misses exactly the 60 render-changed pinned
+paths, split 2 canonical+guest-route / 57 guest-route-only / 1 guest-dependency — the
+director's 56 corrected, 2+56+1 was 59; of the 60, 45 both-arm, `segments.rs` armed-only,
+13 emitted past the render, and `cases.rs` the frozen `2d915381…` with its full history);
+the 9 render-only files outside the overlay schema (all preserved through 764/766); the
+157-file live-vs-766 difference (144 render ∪ 24 emission ∪ 8 drift, zero gap) and the 5
+additions (the two q25 files from 759/760 plus the three class files from 766); the
+certificates with their limits (`FULL INVERSE`, `RENDER TWICE`, `ORDINARY BODY PASS
+functions=840 shifted_paired=118` twice, `SPLIT PASS`, 97 `ROW VALIDATE PASS`,
+`ZERO-UNKNOWN`, `EMIT PASS rows=97 files=27 importable_receipts=0 rows_closed=0`, the 13
+`Q25 OPEN` rows including P2379, the 759 postimages, the 760 `core.rs` step) and the named
+gap that no ordinary-body certificate covers the brief 759 edit; the strategy decision
+(certified generated re-anchoring, fail-closed; authenticated-baseline loading and
+route-text pins rejected); and eight implementation drafts in `TEMPLATE.md` shape. The
+director's gate reproduced every count from the raw tables and re-ran the worker's
+`derive.py` and `chain.py` redirected under `.temp/director/gate-767/rerun/`, reproducing
+the logs byte-identically, and found **F0**: one pin table cannot serve both
+`guest::programs` (which hashes the working tree) and `source_auth::verify` (which hashes
+the baseline snapshot against the same seals and checks overlay preimages against it), and
+addition rows cannot be ordinary overlay rows because the pin loop demands a baseline
+preimage and the key-set equality rejects extras. Ruling 776 (`.temp/director/ruling-776.md`)
+accepts the delivery and the three deviations (two of them the director's: the 56
+arithmetic; the loose "all 135 postimages" paraphrase; the third the untimed `derive.py`,
+bounded by remeasurement), keeps **Q25 unwaived** (13 rows, P2379 included, zero admitted
+receipts), and decides F0 as **two anchors, two generated tables, one certificate**:
+`provenance.tsv` stays byte-unchanged as the A/B's baseline anchor; the generator emits a
+class-anchored loader table (same row identities; sha256 cells equal to the certified
+final bytes for the 60 changed paths) that the loader reads on the installed tree; the
+overlays table is re-anchored and extended to 147 rows with the live preimage and the
+certified arm bytes (the class tree is the armed byte; `cases.rs` `2d915381…` on both arms
+with its history); the five additions are a declared addition set checked by a fail-closed
+verifier extension (`baseline keys ⊎ declared additions == copied keys`); the A/B's
+baseline for the installed tree is a constructed snapshot (the ordinary program bytes from
+the certificate plus the installed tree's inventory and non-transformed files, because the
+scene chain predates 21 post-749 docs); and the certificate binds baseline table ↔ class
+table ↔ overlays ↔ additions ↔ the live → 749 → 759 → 760 → 766 chain, recomputed and
+never hand-edited. F1 (the drafts name 3 additions, the tree adds 5) and F2 (draft 02's
+threads-1 fixture run and 2,000 s carve contradicted the 8-thread campaign rule and the
+766 fixture bound) are carried into the implementation briefs. Budget: 767 charged 35 s of
+the 2,000 s carve (measured 9.796 s; untimed commands remeasured at 11.854 s and 4.847 s
+plus ~4 s reconcile), unspent 1,965 s returns, reserve **34,735.78278847017 s**; brief 768,
+the certified re-anchoring generator, carves focused 3,000 s + workspace 0 + epoch 0
+(reserve → 31,735.78278847017 s), and a projected overrun stops for a ruling, never a scope
+cut. Next: 768's gate, the fixture brief, the source A/B, the probe and hot-path A/B, the
+deterministic render with the inventory regeneration, the re-freeze, the fresh epoch, the
+Stage C/C10 readmission and a further 744 restart, each gated; 745/746 held; CM5
+unauthorized; the pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0
+Lost; 51 owners and five source duties Open; membership 28/3/7/113; `CHANGELOG.md`/S10
+blocked; everything sealed (c76–c99) stays sealed.

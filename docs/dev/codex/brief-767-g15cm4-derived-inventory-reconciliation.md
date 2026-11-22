@@ -162,3 +162,41 @@ sample`. No build is authorized.
 `rum-report/1` JSON at `.temp/brief-767/report.json` via `scripts/report.py`, sections:
 inventory, consumers, disposition, certificates, decision, drafts, budget. The summary must
 state the zero-unknown result, the decision and its consequences, and the exact open facts.
+
+## Gate c126 (2026-11-23) — accepted DONE; two anchors decided
+
+Run: `grk` (grok-4.7, effort xhigh), unit `brief-767-grk-20261123-052946-965956`,
+session `482e8ce9-e136-4887-bdb9-63b267e06511`, 05:29:46 – 06:05:02 CST,
+`status=success turns=83 cost_usd=6.868584 refused=0`, scope peak 607,109,120 B,
+rc 0; scene `.temp/brief-767/` (309 KB); `report.py check 767` OK, 40 citations;
+7 PASS checks, 2 PASS measurements, 3 deviations, 0 questions, changes 0.
+
+Verified: the thirteen kinds and their consumers; 199 source paths, zero
+cross-kind conflicts, all matching live; 198 distinct digests; the ledger and
+promotion pins; 135 overlay rows with hex/sha agreement and 135/135 preimages;
+9 manifest pins `pre` = live; `mutants.tsv` `source_schema` = sha256 of the
+committed overlays table; the 60-path miss set equal to the render-changed
+pinned files, split 2+57+1 (my 56 is corrected); the 60's 45 both-arm / 1
+armed-only / 13 emitted-past-render / 1 frozen (`cases.rs` `2d915381…`); the
+100/135 committed postimages; the 9 render-only files preserved; 157 changed
+live-vs-766 with zero gap; the 759/760 endpoints; the 766 certificate lines; the
+13 Q25 OPEN rows; scope clean, no receipts; and the worker's scripts re-run
+redirected reproduce the logs byte-identically.
+
+Findings: **F0** — one pin table cannot serve both `guest::programs` (working
+tree) and `source_auth::verify` (baseline snapshot), and additions cannot be
+overlay rows; decided **two anchors, two generated tables, one certificate**:
+`provenance.tsv` unchanged, a generated class-anchored loader table, the
+overlays re-anchored to 147 rows plus a declared 5-addition set with a
+fail-closed verifier extension, the constructed baseline snapshot stated, and
+the certificate binding all. **F1** — the drafts name 3 additions; the emitted
+tree adds 5 (the two q25 files from 759/760). **F2** — draft 02's threads 1 and
+2,000 s carve are replaced by the 8-thread rule and a matching carve. **F3** —
+my corrections (the 56 arithmetic; the c110–c112 arms matched the table, not
+the 749 render, whose bytes `FULL INVERSE` certifies; the misattributed
+"all 135" phrase).
+
+Budget: charged 35 s of 2,000 (9.796 measured plus remeasured untimed
+commands); unspent 1,965 s returns; reserve 34,735.78278847017 s. Q25 stays
+unwaived. Next: brief 768, the certified re-anchoring generator, carved
+focused 3,000 s + workspace 0 + epoch 0.

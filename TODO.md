@@ -3987,6 +3987,44 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 126 (brief 767 DONE, the derived-inventory reconciliation) (2026-11-23):
+    brief 767 re-derived the complete byte-pinning inventory and decision in
+    `.temp/brief-767/` (309 KB) and was accepted DONE. Run: grk, unit
+    `brief-767-grk-20261123-052946-965956`, session `482e8ce9-…`, 05:29:46–06:05:02 CST,
+    `status=success turns=83 cost_usd=6.868584 refused=0`, peak 607,109,120 B, rc 0;
+    7 PASS checks, 2 PASS measurements, 3 deviations, 0 questions, changes 0; `report.py
+    check 767` OK, 40 citations. Verified from the raw tables: 13 provenance kinds and
+    their consumers (packet/c52 sealed kinds have measured absences); 199 source-kind
+    paths, zero cross-kind conflicts, all matching live, 198 distinct digests; 135 overlay
+    rows with preimages 135/135 and committed postimages 100/135 matching the 749 arms
+    (the same 35 miss both arms); 9 manifest pins `pre` = live; `mutants.tsv` 151 rows,
+    `source_schema` 22751919… = sha256 of the committed overlays; the 766 copy misses
+    exactly 60 pinned paths = the render-changed ∩ pinned (split 2 canonical+guest-route,
+    57 guest-route-only, 1 guest-dependency — my 56 corrected; 2+56+1 was 59); of the 60,
+    45 both-arm, `segments.rs` armed-only, 13 emitted, `cases.rs` frozen `2d915381…`;
+    157 changed live-vs-766 = 144 render ∪ 24 emission ∪ 8 drift, zero gap; 5 additions
+    (2 q25 from 759/760 + 3 class from 766); the 759 postimages and the 760 `core.rs`
+    step; the 766 certificate lines and the 13 Q25 OPEN rows; scope clean (0 live writes,
+    scenes untouched, no receipts) and the worker's scripts reproduced byte-identically
+    when re-run redirected into `.temp/director/gate-767/rerun/`. Gate findings: F0 — one
+    pin table cannot serve both `guest::programs` (working tree) and `source_auth::verify`
+    (baseline snapshot), and additions cannot be overlay rows; decided **two anchors, two
+    generated tables, one certificate** (`provenance.tsv` unchanged; a generated
+    class-anchored loader table; overlays re-anchored to 147 rows + a declared 5-addition
+    set with a fail-closed verifier extension; the constructed baseline snapshot stated);
+    F1 — the drafts' 3 additions become 5; F2 — draft 02's threads 1 and 2,000 s carve are
+    replaced by the 8-thread rule and a matching carve; F3 — my corrections (the 56
+    arithmetic; the c110–c112 arms matched the table, not the 749 render, which
+    `FULL INVERSE` certifies; the misattributed "all 135" phrase). Budget: charged 35 s of
+    2,000 (9.796 measured; untimed commands remeasured at 11.854 + 4.847 + ~4), unspent
+    1,965 s returns, reserve 34,735.78278847017 s. Ruling 776
+    (`.temp/director/ruling-776.md`) accepts the delivery and the three deviations, keeps
+    Q25 unwaived (13 rows, P2379 included, zero admitted receipts), and orders brief 768,
+    the certified re-anchoring generator, carved focused 3,000 s + workspace 0 + epoch 0
+    (reserve → 31,735.78278847017 s). Next: 768's gate → the fixture brief → the source
+    A/B → the probe and hot-path A/B → the deterministic render with the inventory
+    regeneration → the re-freeze → the fresh epoch → the Stage C/C10 readmission → a
+    further 744 restart, each gated; 745/746 held.
   - G15-CM4 continuation 125 (brief 766 STOP, provenance seal vs the class render) (2026-11-23):
     brief 766 repaired the emitter (`rewrite_sync_around` consumes the whole
     `ns::cm740_probe::` prefix; `class_forms.py` 69,665 B `bd78582a…`), re-emitted from the
