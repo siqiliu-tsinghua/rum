@@ -3987,6 +3987,56 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 115 (brief 756) (2026-11-22): the frame-authorization class is fully
+    inventoried and designed; brief 756 accepted. Brief 756 ran on `cdx`, unit
+    `brief-756-cdx-20261122-200211-717859`, 20:02:11–20:50:51 CST, rc 0, peak 402,591,744 B
+    (0.37 GiB, oom 0/0), 0 repo changes; report DONE (149 PASS / 1 FLAGGED / 2 measurements
+    PASS / 2 deviations; check OK, 1,608 citations); scene `.temp/brief-756/` (52 files,
+    5,751,569 B). Delivered the chain proof and placed P0416's failure on the
+    construction/binding link (no own-row `control::source` Installing → `control::allocated`
+    returns at `lib.rs:566` → no `FRAMES` entry → `control::resume` at `adapter.rs:52` finds
+    none → no `l.resuming` token → `frame("P0416")` false; the lookup/filter and parent
+    candidates on an existing entry are eliminated by the complete issuer set); the
+    zero-unknown class — **82 production literal guards** (46 typed-frame resume, 22
+    continuation resume, 8 initial call, 6 other) + **12 array-selected rows** + **1 wrapper**
+    = **95 frame-gated**, the five `FrameResumePassThrough` carriers (P0416/P0820/P0825 gated;
+    P1814/P1817 not), **97 in scope**, **54 outside**, 151 membership verdicts; **66
+    missing-link**, **18 carrier-shape**, **13 named Q25 stops** (P0214/P0216, P1070,
+    P2348/P2354, P2379/P2381/P2385/P2387/P2409/P2411/P2416/P2418); the four structural
+    controls link by link; the exhaustive negative-reference audit over 1,633 Rust files
+    (1,231 state references, 722 external sites, the module declaration as the only residual;
+    sole `FRAMES` insert `L:602`, `bound_slots` insert `L:2212`, `resuming` pushes
+    `L:2247`/`L:2254`, production `resume_frame` caller `L:637`, sole `control::resume`
+    caller `adapter.rs:52`, `bind_allocated_frame` zero callers); the c7-vs-ledger delta (13
+    unqueued frame rows, P0554/P1562/P1563 ordinary, P0543's unchecked Input lane, C10's
+    completed-generation bit); the 36 historical signatures (18 rows × 2 modes) with raw
+    hashes; the five-group handoff design, the withheld non-admission fixture, the six staged
+    implementation briefs and the forecast (reference 25,051.376 s; full independent
+    29,593.460846470422–33,402.389216615422 s). My gate re-derived the class from the armed
+    tree (82 production literals = 81 P-rows + `C5.default.profiled.finish`, **not** P0256
+    whose only literal is the `cfg(test)` assertion at `lib.rs:1166`; the four arrays exactly
+    the named 12; the only dynamic `frame(row)` left is the held pair in `arguments.rs:270`;
+    the only `framed=true` wrappers are P0248 and the overlapping P2593; P1814/P1817
+    `around_ok(false)`; kinds 46/22/8/6 and 49/32/8/6; the 97 table equals
+    `membership.frame_gated ∪ {P1814,P1817}` with 54 outside and zero unknown), verified the
+    chain and the 13 stop facts against the source, all 36 signature raw hashes and marker
+    lines, the audit counts, the scope (git status the inherited 23 entries, HEAD =
+    `origin/main` = `1c1869e4`, no `.git-attempts`, zero writes outside the scene, no
+    execution/build/network) and the budget. Ruling 765
+    (`.temp/director/ruling-765.md`) accepts the brief and corrects the c114 gate's
+    82-literal count to the 95-gated/97-in-scope class (P0256 excluded as a `cfg(test)`
+    assertion, C5 included as a production literal); no bar moved. Q25 is not waived: the 13
+    rows stay named stops until an approved allocation-to-consumption proof, and brief 757
+    (design-only `Scope: NONE`, the raw-receiver ownership contract and its positive
+    genuine-Arc / two-same-state-sibling fixture) is ordered; P0554/P1562/P1563 are included
+    in the generator anchors for the 18-row bar. Budget: 2,883.614046147 s spent of 3,000,
+    116.385953853 s returned; reserve 29,896.61322587612 s; a fresh explicit draw of
+    5,003.310562594052 s (standing user ruling) → 34,899.92378847017 s; brief 757 carves
+    2,500 s focused → 32,399.92378847017 s, 0 workspace, 0 epoch. Bar 571/4,422, 37/134,
+    4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost;
+    51 owners and five source duties Open; membership 28/3/7/113; CHANGELOG.md and S10
+    blocked; CM5 unauthorized; 745/746 held; sealed c76–c99 stays sealed.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);

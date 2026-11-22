@@ -118815,3 +118815,73 @@ ruling. The scene is read-only from now; attempts 1 and 2 stay read-only. 745/74
 held. Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts;
 C2 118 Residual + 0 Lost; 51 owners and five source duties Open; membership 28/3/7/113;
 CHANGELOG.md and S10 blocked; CM5 unauthorized; sealed c76–c99 stays sealed.
+
+## Continuation 115 — brief 756 accepted: the frame-authorization class is fully inventoried and designed; the Q25 ownership proof is ordered
+
+Brief 756 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`, reasoning effort max), unit
+`brief-756-cdx-20261122-200211-717859`, 2026-11-22T20:02:11–20:50:51 CST, rc 0, the 20 GiB
+scope peaked at 402,591,744 B (0.37 GiB, oom 0/0), 0 repo changes; dispatch log
+`.temp/logs/cdx_brief_756.log` (5,453,585 B); scene `.temp/brief-756/` (52 files, 5,751,569
+B). The report is DONE: 149 PASS, 1 FLAGGED (`ownership-stops`, the 13 named Q25 rows
+retained), 2 measurements PASS, 2 deviations, 0 questions, 0 disclosures;
+`scripts/report.py check 756` OK with 1,608 citations. The deviations are the literal-class
+correction (the four dynamic arrays and the framed wrappers resolved at their actual
+helpers) and two static-reader corrections (the one-thread run id position and
+digit-suffixed constructor names), both rechecked against the original bytes.
+
+The chain: `frame(row)` needs `l.resuming.last()` with a present frame identity and
+`authenticated_parent`; only `resume_frame` pushes it; only `control::resume` (the typed
+adapter at `adapter.rs:52`) calls it; only `control::allocated` under a `control::source`
+Installing fills `FRAMES`; the source scopes exist only for the four structural controls
+and require the `"CM740-SEMANTIC"` program. P0416's failure is placed on the
+construction/binding link: no own-row Installing exists, `record_descendant_frame` →
+`control::allocated` returns at `lib.rs:566`, no `FRAMES` entry is created, `control::resume`
+finds none, no resume token is pushed, and `frame("P0416")` is false by construction. The
+lookup/filter and parent-authentication candidates on an existing entry are eliminated by
+the complete issuer set.
+
+The class, zero unknown: 82 production literal guards (46 typed-frame resume, 22
+continuation resume, 8 initial call, 6 other) + 12 array-selected rows + 1 wrapper = 95
+frame-gated; the five `FrameResumePassThrough` carriers (P0416/P0820/P0825 gated;
+P1814/P1817 `around_ok(false)`); 97 in scope; 54 outside; 151 membership verdicts; 66
+missing-link, 18 carrier-shape, 13 named Q25 stops (P0214/P0216, P1070, P2348/P2354,
+P2379/P2381/P2385/P2387/P2409/P2411/P2416/P2418); the four structural controls link by
+link. The negative-reference audit covers the 1,633 Rust files of the armed tree: 1,231
+state references, 722 external qualified sites, the module declaration as the only residual;
+the sole `FRAMES` insert is `L:602`, the sole `bound_slots` insert `L:2212`, the `resuming`
+pushes `L:2247`/`L:2254`, the production `resume_frame` caller `L:637`, the sole
+`control::resume` caller `adapter.rs:52`, `bind_allocated_frame` zero callers. The c7 delta:
+the historical sticky `ARMED` bit against the ledger's same-activation identity; 13 of the
+18 scheduled catches used the unqueued frame bit, P0554/P1562/P1563 the ordinary bit
+retained into queued, P0543 its unchecked Input lane, C10 its completed-generation bit. The
+36 historical signatures (18 rows × 2 modes) are read from the c7 files with raw hashes and
+ordered events; the falsifier binds them to the 20 Stage C cells, C10, the pair
+`(45,5,false)`, the four structural cells and resumed==queued.
+
+My gate re-derived the class from the armed tree: the 82 production literals are the 81
+P-rows plus `C5.default.profiled.finish` (`default_fallback.rs:238`), **not** P0256, whose
+only literal is the `cfg(test)` assertion at `lib.rs:1166` and whose actual guard is
+`hit_descendant` on queued Ok; the four arrays add exactly the named 12; the only other
+dynamic `frame(row)` is the held pair in `arguments.rs:270`; the only `framed=true`
+wrappers are P0248 and the overlapping P2593; P1814/P1817 are `around_ok(...,false)`; the
+kinds reproduce 46/22/8/6 and 49/32/8/6; the 97-row table equals
+`membership.frame_gated ∪ {P1814,P1817}` with 54 outside. I verified the chain line by line,
+the 13 stop rows' source facts, all 36 signature raw hashes (36/36) and marker lines, the
+audit counts, the scope (git status exactly the inherited 23 entries, HEAD = `origin/main`
+= `1c1869e4`, no `.git-attempts`, zero writes outside the scene, no execution/build/
+network) and the budget (2,883.614046147 s spent of 3,000; 116.385953853 s returned; 0
+workspace, 0 epoch).
+
+Ruling 765 (`.temp/director/ruling-765.md`) accepts brief 756 and corrects the c114 gate's
+82-literal count to the 95-gated / 97-in-scope class (P0256 excluded as a `cfg(test)`
+assertion, C5 included as a production literal); no bar moved. Q25 is not waived: the 13
+rows stay named stops until an approved allocation-to-consumption proof exists, and brief
+757 — a design-only (`Scope: NONE`) per-row design of the raw-receiver ownership contract
+with its positive genuine-Arc / two-same-state-sibling fixture — is ordered. P0554/P1562/
+P1563 are included in the generator anchors for the 18-row bar. Budget: the fresh explicit
+draw of 5,003.310562594052 s (standing user ruling 「预算不够就追加吧」) moves the reserve
+29,896.61322587612 → 34,899.92378847017 s; brief 757 carves 2,500 s focused →
+32,399.92378847017 s, 0 workspace, 0 epoch. The implementation line stays staged and gated:
+Q25 design, Q25 proof, generator/source gate, deterministic render, re-freeze, fresh epoch,
+readmit/calibrate, 744 restart; 745/746 held; CM5 unauthorized; the standing state is
+unchanged.
