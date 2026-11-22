@@ -201,3 +201,57 @@ copy, the repair and the contract, the authorized inventory replays, the fixture
 and raw observations, the predictions versus actual outcomes, the 13 dispositions, and the
 scope; cite lines exactly. STOP at the proof gate: no live edit, no admission, no generator/
 source stage, no 744 restart, no 745/746, no CM5.
+
+## Gate c119 (2026-11-23) — brief 760 stopped correctly at the three-compilation bound; the contract compiles, two proof-file errors remain; ruling 769 authorizes the repair as brief 761
+
+- Run: `grk` (grok-4.7 xhigh), unit `brief-760-grk-20261122-235747-817579`, session
+  `e0245b45-9bb1-43e8-bb8a-6c0510f2dcd3`, 2026-11-22 23:57:47 – 2026-11-23 00:18:13 CST
+  (wall ≈ 1,226 s); `status=success turns=67 cost_usd=4.942238 refused=0`; peak
+  2,790,141,952 B (2.60 GiB, oom 0/0), rc 0; log `.temp/logs/grk_brief_760.log`
+  (1,928,299 B); scene `.temp/brief-760/` (7,067 files, 1,806,344,850 B). Report STOP:
+  `changes` empty, 3 deviations, 1 question (`fourth-compile`); `report.py check 760` OK
+  (49 citations).
+- Delivered: the entry (759 copy 5,812 files `e0647d43…`; 7/7 preimages against the 758 copy,
+  9/9 postimages against the 759 copy; `records.rs` `7364f150…`; the working copy with
+  `INODE PASS compared=5812 shared_inodes=0 devices=[53]`); the repair — the q25 module moved
+  to `crates/rum-runtime/src/cm740_probe/q25_ownership.rs` (`43416be6…`, 29,522 B) matching
+  the `#[path]` at `lib.rs:6526–6527`, then two `Arc` unsized-coercion fixes in
+  `core.rs:643–681` (`core.rs` final `7766b20e…`, 33,984 B); three bounded compilations
+  (2400 s kill bound, 32× the 73.687540332 s warm sample), each receipted: compile 1
+  `E0308` at `core.rs:659`, compile 2 `E0308` at `core.rs:661`, compile 3 builds
+  `rum-runtime` (lib, 121 warnings) and `rum-stdlib` (lib, 15 warnings) and fails only in
+  the test target — `E0382` moved `message` at `q25_p2379_proof.rs:419:40` and `E0133`
+  `std::env::set_var` at `q25_p2379_proof.rs:495:5` under edition 2024. The 3 generate + 9
+  validate commands, the proof-only build and the fixture were not launched; no prediction
+  and no `NoHit` observed; `records.rs:283–305` deferred; all 13 rows named stops (anchors
+  present, unexecuted); zero importable and admitted receipts; no live write, no git, no
+  network, no `unsafe`.
+- My gate: 16/16 pre/postimages re-hashed; the 760 copy re-hashed (moved q25 `43416be6…`,
+  `core.rs` `7766b20e…`, `q25_p2379_proof.rs` still the 759 `73d92bd0…`, `records.rs`
+  `7364f150…`) and re-walked with the scene's recipe (5,812 files,
+  `abb03ca582c77860b9469625bc057d845e5b0d6be196cc0d530944c859349c85`); 0 shared inodes
+  between the copies; the three compiles read directly (real builds, exact diagnostics,
+  both libraries built in compile 3); the repaired `core.rs` read and judged semantically
+  sound (strong count back to 1 before the log, the registered `Weak<dyn>` on the same
+  allocation, no predicate or ordering change); `RUM_CM740_OMIT` confirmed read lazily by
+  the thread-local `SELECTED` at `lib.rs:182`; scope clean (0 live files newer than the
+  dispatch, 0 files newer in the 758/759 scenes, no live target, empty receipts; the three
+  `.git-attempts` are the grk harness's read-only probes); budget verified
+  (628.748740127 s focused of 5,500; 4,871.251259873 s returned; reserve
+  26,457.97424923717 s).
+- Ruling 769 (`.temp/director/ruling-769.md`): the STOP is correct — the third bounded
+  compilation consumed the authorization and a fourth is a director gate; the worker did not
+  wrap `set_var` in `unsafe`, did not touch a prediction, `records.rs` or any predicate, and
+  did not launch the remaining sequence. The record is accepted; **Q25 stays unwaived** (13
+  named stops, zero admitted receipts). Question `fourth-compile` is authorized as **brief
+  761**: re-enter from the repaired 760 copy, repair only the two proof-file errors (the
+  moved-message borrow with the emitted text and order unchanged; remove the in-test
+  `set_var` and supply `RUM_CM740_OMIT=P2379` in the one fixture invocation's environment,
+  keeping the env-mint assertion and `guest_grant=false`), at most three bounded
+  compilations, then the recorded 3 generate + 9 validate commands, one default proof-only
+  build, one bounded single-threaded fixture invocation, the 13 dispositions and zero
+  importable receipts. Budget: 5,500 s focused carved from the corrected reserve
+  (26,457.97424923717 → 20,957.97424923717 s), 0 workspace, 0 epoch; unspent returns.
+- Next: brief 761's gate follows; then the generator/source gate, the deterministic render,
+  the re-freeze, the fresh epoch, the Stage C/C10 readmission and a further 744 restart,
+  each gated; 745/746 stay held; CM5 unauthorized.

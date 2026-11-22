@@ -118994,3 +118994,47 @@ against the 4,200 carve (23.785 s over, recorded); the corrected reserve is
 0 epoch. Next: brief 760's gate, then the generator/source gate, the deterministic render, the
 re-freeze, the fresh epoch, the readmit/C10 and a further 744 restart, each gated; 745/746
 held.
+
+Continuation 119 (2026-11-23): brief 760 stopped correctly at the three-compilation bound
+with the contract compiling; ruling 769 authorizes the two proof-file repairs and the
+remaining sequence as brief 761. Run: `grk` (grok-4.7 xhigh), unit
+`brief-760-grk-20261122-235747-817579`, session `e0245b45-9bb1-43e8-bb8a-6c0510f2dcd3`,
+2026-11-22 23:57:47 – 2026-11-23 00:18:13 CST (wall ≈ 1,226 s), `status=success turns=67
+cost_usd=4.942238 refused=0`, peak 2,790,141,952 B (oom 0/0), rc 0; scene
+`.temp/brief-760/` (7,067 files, 1,806,344,850 B). Delivered: the entry (the 759 copy
+re-walked to 5,812 files `e0647d43…`; 7/7 preimages against the 758 copy and 9/9
+postimages against the 759 copy; `records.rs` `7364f150…`; the working copy with
+`INODE PASS compared=5812 shared_inodes=0 devices=[53]`); the repair — the q25 module
+moved to `crates/rum-runtime/src/cm740_probe/q25_ownership.rs` (`43416be6…`, 29,522 B)
+matching the `#[path]` at `lib.rs:6526–6527`, then two `core.rs` edits coercing an
+explicitly typed `Arc<F>` temporary to `Arc<dyn SuspensionFrame>` and dropping it before
+the strong-count log (`core.rs` final `7766b20e…`, 33,984 B); three bounded compilations
+(2400 s kill bound = 32× the 73.687540332 s warm sample), each receipted — compile 1
+`E0308` at `core.rs:659`, compile 2 `E0308` at `core.rs:661`, compile 3 builds
+`rum-runtime` (lib, 121 warnings) and `rum-stdlib` (lib, 15 warnings) and fails only the
+test target with `E0382` moved `message` at `q25_p2379_proof.rs:419:40` and `E0133`
+`std::env::set_var` at `:495:5` under edition 2024; the 3 generate + 9 validate
+commands, the proof-only build and the fixture were not launched; no prediction, no
+`NoHit`; the `records.rs:283–305` importer deferred; all 13 rows named stops; zero
+importable and admitted receipts; no live write, no git, no network, no `unsafe`. My
+gate: 16/16 pre/postimages re-hashed; the 760 copy re-hashed (moved q25 `43416be6…`,
+`core.rs` `7766b20e…`, the proof test still the 759 `73d92bd0…`, `records.rs`
+`7364f150…`) and re-walked with the scene's recipe (5,812 files, `abb03ca5…`); 0 shared
+inodes between the copies; the three compile logs read directly (real builds, exact
+diagnostics, both libraries built in compile 3); the repaired `core.rs` read and judged
+semantically sound; `RUM_CM740_OMIT` confirmed read lazily by the thread-local `SELECTED`
+at `lib.rs:182`; scope clean; budget verified (628.748740127 s focused of 5,500;
+4,871.251259873 s returned; reserve 26,457.97424923717 s). Ruling 769 accepts the STOP,
+keeps Q25 unwaived (13 named stops, zero admitted receipts), accepts the three deviations
+(the unpinned compile argv, the data-derived 2400 s bound, the `/usr/bin/time` wrapper
+miss rc 127), and authorizes `fourth-compile` as brief 761: re-enter from the repaired
+760 copy `abb03ca5…`, repair only the moved-message borrow and the in-test `set_var`
+(`RUM_CM740_OMIT=P2379` in the one fixture invocation's environment; the env-mint
+assertion and `guest_grant=false` unchanged; no `unsafe`), at most three bounded
+compilations, then the recorded 3 generate + 9 validate commands, one default proof-only
+build, one bounded single-threaded fixture invocation, the 13 dispositions, zero
+importable receipts. Budget: carve 5,500 s focused (26,457.97424923717 →
+20,957.97424923717 s), 0 workspace, 0 epoch; unspent returns; a projected overrun stops
+for a ruling. Next: brief 761's gate, then the generator/source gate, the deterministic
+render, the re-freeze, the fresh epoch, the readmit/C10 and a further 744 restart, each
+gated; 745/746 held.

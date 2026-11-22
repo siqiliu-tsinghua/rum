@@ -3987,6 +3987,31 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 119 (brief 760 STOP) (2026-11-23): brief 760 stopped correctly at
+    the three-compilation bound with the contract compiling; ruling 769 authorizes the two
+    proof-file repairs and the remaining sequence as brief 761. Run: grk (grok-4.7 xhigh),
+    unit `brief-760-grk-20261122-235747-817579`, session `e0245b45-…`, 23:57:47–00:18:13 CST
+    (wall ~1,226 s), `status=success turns=67 cost_usd=4.942238 refused=0`, peak
+    2,790,141,952 B, rc 0; scene `.temp/brief-760/` (7,067 files). Delivered: entry (759 copy
+    5,812 files `e0647d43…`; 7/7 preimages, 9/9 postimages; `records.rs` `7364f150…`; working
+    copy 0 shared inodes); the q25 module moved to `cm740_probe/` (`43416be6…`) plus two
+    `Arc` unsized-coercion fixes in `core.rs` (final `7766b20e…`); three bounded compilations
+    (`E0308` at `core.rs:659`, `E0308` at `core.rs:661`, then compile 3 builds both libraries
+    and fails the test target with `E0382` moved `message` at `q25_p2379_proof.rs:419:40` and
+    `E0133` `set_var` under edition 2024 at `:495:5`); the 3 generate + 9 validate commands,
+    the proof build and the fixture were not launched; no prediction, no `NoHit`; 13 named
+    stops; zero importable receipts; no live write. My gate: 16/16 hashes, the 760 copy tree
+    `abb03ca5…` (5,812 files), the compiles read directly, the repaired `core.rs` judged
+    semantically sound, scope and budget verified (628.748740127 s of 5,500; reserve
+    corrected to 26,457.97424923717 s). Ruling 769 accepts the STOP, keeps Q25 unwaived, and
+    authorizes `fourth-compile` as brief 761 (two proof-file fixes — moved-message borrow and
+    in-test `set_var` replaced by `RUM_CM740_OMIT=P2379` in the fixture invocation's
+    environment — then the recorded 3+9, one proof build, one fixture, 13 dispositions, zero
+    importable receipts), carving 5,500 s focused (26,457.97424923717 →
+    20,957.97424923717 s), 0 workspace, 0 epoch. Next: brief 761's gate, then the
+    generator/source gate, the deterministic render, the re-freeze, the fresh epoch, the
+    readmit/C10 and a further 744 restart, each gated; 745/746 held.
+
   - G15-CM4 continuation 118 (brief 759 STOP) (2026-11-22): brief 759 stopped correctly after
     the first authorized generate failed to compile; ruling 768 authorizes the repair as brief
     760. Attempt 1 (cdx, unit `brief-759-cdx-20261122-221917-777868`, birth
