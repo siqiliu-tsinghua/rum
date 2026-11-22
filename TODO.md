@@ -3911,6 +3911,41 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and
     S10 blocked; CM5 unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 113 (brief 755) (2026-11-22): Stage C accepted — the twenty-cell class
+    admission on the Stage B epoch `7af7b461…`. The ten members P0256/P0259/P0266/P0267/P0312/
+    P0314/P0315/P0323/P0410/P0515 were admitted all-or-nothing across both modes: 20 logical own
+    cells, 20 admitted, no member PortBlocked, 60 member arm runs in the required order plus the
+    ten ordinary lanes and the ten one-thread negative reproductions, 100 worker executions and
+    14 scene readers. My independent gate: 580 + 507 + 375 pinned path/hash pairs re-hashed (three
+    5,810-file trees recomputed with my own `F\0<path>\0<bytes>` walk); all 20 packets and 60 arm
+    records plus the six calibration arms re-derived from raw logs (identity, transport, frozen
+    case/constituent matrices rebuilt from the epoch's 9,060-program matrix, verdicts, pauses,
+    hits, predicates, captures, test results — zero discrepancies); the real/disabled parity
+    recomputed (exact except P0515's three declared duration leaves in both modes, no fourth);
+    both class importer logs parsed (required=151 caught=10 PortBlocked=141 settlements=0 per
+    mode, ten PASS rows identical to the c96 table, exit-101 partial-index bar, 151-row
+    partition, both on `class.tsv` `1db0fb6c…`, each mode's own real build — the c96 pairing,
+    receipts.rs:164–168); the calibration importer 151/1/150/0 both modes; C10 verified with
+    class_cells=0 and shakedown_credit=0 on exactly the six epoch binaries; the 510-cell
+    schedule (255 selections × 2 modes, 20 attempted, 490 unspent 244/246, c96 row sets
+    preserved); the 122 receipts summing to exactly 850.339323135 s focused, 0 workspace, 0
+    epoch; the live snapshot recomputed to `72ed4d6a…` over 5,819 files, entry = closing, five
+    mutable names unchanged; the sealed scan 416 roots zero newer (my own dispatch-cutoff scan
+    clean outside the scene); report check OK with 2,423 citations. The one deviation (the
+    projection reader `TypeError`) was corrected before the first member command and both
+    receipts retained. The new class index re-binds the ten members to their own selections on
+    this epoch (tuples decode exactly to the sealed program keys); the c96 table `bef35931…` and
+    index `8bbd71a7…` are the inventory by hash identity, with no c96 credit. Ruling 763
+    (`.temp/director/ruling-763.md`) accepts Stage C; the 744 restart, 745 (campaign) and 746
+    (acceptance) follow, each gated. Run: unit `brief-755-cdx-20261122-182838-676153`,
+    18:28:38–18:50:58 CST, rc 0, 20 GiB peak 4,671,066,112 B (4.35 GiB, oom 0/0), 0 repo
+    changes; report DONE (16 PASS checks, 1 PASS measurement, 1 deviation, 0 questions).
+    Budget: 1,200 s carve, 850.339323135 s spent, 349.660676865 s returned, reserve
+    32,831.40995267212 → 33,181.07062953712 s; 749 pools closed. Bar 571/4,422, 37/134, 4/133,
+    0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51
+    owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746
+    held; sealed c76–c99 stays sealed.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);

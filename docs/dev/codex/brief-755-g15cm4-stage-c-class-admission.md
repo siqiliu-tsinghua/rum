@@ -163,3 +163,66 @@ removed or re-signatured here.
 `changes` empty (every write is under `.temp/brief-755/`); sections for the entry, the class
 index, the twenty cells, the importer, the calibration, the ledger and the scope; cite lines
 exactly. STOP at Stage C: no 744/745/746, no CM5.
+
+## Gate c113 (2026-11-22) — Stage C accepted
+
+Brief 755 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`, reasoning effort max), unit
+`brief-755-cdx-20261122-182838-676153`, 2026-11-22T18:28:38–18:50:58 CST, rc 0, the
+20 GiB scope peaked at 4,671,066,112 B (4.35 GiB, oom 0/0), 0 repo changes; dispatch log
+`.temp/logs/cdx_brief_755.log` (1,774,030 B). The report `.temp/brief-755/report.json`
+is DONE: 16 checks PASS, 1 measurement PASS, 1 deviation, 0 questions, 0 disclosures,
+0 changes; `scripts/report.py check 755` OK with 2,423 citations.
+
+Delivered: the entry and closing authentication from the bytes (Stage B identity
+`7af7b461…`, build `809b6473…`, freeze `c724c9ab…`, six-comparison manifest
+`c3bc2616…`, the twelve label executables and the three 5,810-file trees, membership
+28/3/7/113, 255 selections / 151 own, the render pins, the c96 table `bef35931…` and
+index `8bbd71a7…`; the live snapshot 5,819 files at `72ed4d6a…` at both moments, the
+five declared mutable names unchanged); the new class index `indices/class.tsv`
+(`1db0fb6c…`, 6 build + 60 run rows, every run row hash-bound to its new raw log, every
+build row to the epoch file) and `member-bindings.json` (`d575244e…`) binding the 20
+cells to their current own selections, row identities, sealed program files and builds;
+the twenty-cell admission (10 members × 2 modes, 20/20 admitted all-or-nothing, the 60
+arm runs in the required order, the frozen case/constituent matrices rebuilt from the
+epoch matrix and matched exactly, the seven ProfileReturn and three DeferredPublication
+signatures exact, the disabled arms inert, parity exact except P0515's three declared
+duration leaves in both modes, the five ordinary negatives with same-binary one-thread
+reproductions); the two unchanged importer executions on the same both-mode index
+(`required=151 caught=10 PortBlocked=141 settlements=0` per mode, the ten PASS rows
+identical to the c96 table, the accepted exit-101 partial-index bar, each mode's own
+real build per the `cfg!(feature = "hash")` branch); the C10 calibration on exactly the
+six epoch binaries (verified, `class_cells=0`, `shakedown_credit=0`, importer
+151/1/150/0 exit 101 both modes); and the evidence/ledger (class-admission
+`6d556f4b…`, packet-index `3e1644aa…`, ordinary-negatives `e42ced67…`, the 510-cell
+schedule with 20 attempted and 490 unspent 244/246, the 122 receipts summing exactly to
+850.339323135 s focused / 0 workspace / 0 epoch).
+
+I verified all of it independently: 580 + 507 + 375 pinned path/hash pairs re-hashed
+(including the three trees by my own `F\0<path>\0<bytes>` walk); all 20 packets and 60
+arm records plus the six calibration arms re-derived from the raw logs; the parity
+recomputed from the raw logs; both importer logs and both calibration importer logs
+parsed and compared to the c96 table; the schedule checked cell by cell; the live
+snapshot recomputed; the receipts re-summed; and the 29 non-zero exits enumerated (the
+corrected projection reader, the ordinary negatives, and the accepted importers —
+nothing else). The one deviation — the first focused projection reader exited 1 with a
+`TypeError` — was corrected in the scene-local reader before the first member command
+(both receipts retained; `opening-projection-checked` passed at 18:34:49 before the
+first member command). The brief's “no-default-real binary … for each mode” sentence is
+reconciled to the c96 protocol's per-mode real build, as the `import-mode-binding` check
+discloses; the bar per mode is met on the same both-mode index.
+
+Budget: 1,200 s focused carved and fixed; 850.339323135 s spent; 349.660676865 s
+returned; reserve 32,831.40995267212 → 33,181.07062953712 s; workspace 0, epoch 0; the
+749 pools remain exhausted and closed; no overrun. Scene: `git status --porcelain` is
+exactly the inherited 23 entries, HEAD = `origin/main` = `d04f1375`, nothing under
+`crates/` or `target/` newer than the dispatch, no `.git-attempts`, the sealed scan 416
+roots with zero newer files (my own dispatch-cutoff scan agrees outside the scene), and
+no git or network receipt (`git_calls=0`, `network_calls=0`, `epoch_builds=0`,
+`workspace_suites=0`). Ruling 763 (`.temp/director/ruling-763.md`) accepts Stage C: all
+six deliverables stand, the projection-reader correction and the importer mode pairing
+are adjudicated, no bar was weakened and no scope cut. The scene is read-only from now.
+Next: the 744 restart, then 745 (campaign) and 746 (acceptance), each gated. The bar
+stays 571/4,422, 37/134, 4/133, 0/26; the pair `(45,5,false)` stays Open at zero admitted
+receipts; C2 stays 118 Residual + 0 Lost; the 51 owners and five source duties stay Open;
+membership stays 28/3/7/113; `CHANGELOG.md` and S10 stay blocked; CM5 remains
+unauthorized; everything sealed (c76–c99) stays sealed; 745/746 remain held.

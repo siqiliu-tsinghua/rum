@@ -118717,3 +118717,49 @@ is next as brief 755, then the 744 restart, 745 (campaign) and 746 (acceptance).
 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118
 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
 unauthorized; 745/746 held; sealed c76–c99 stays sealed.
+
+### Continuation 113 — brief 755 completes the twenty-cell class admission on the Stage B epoch; Stage C is accepted
+
+Brief 755 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`, effort max) as unit
+`brief-755-cdx-20261122-182838-676153`, 2026-11-22T18:28:38–18:50:58 CST, rc 0, the 20 GiB
+scope peaking at 4,671,066,112 B (4.35 GiB, oom 0/0), 0 repo changes; dispatch log
+`.temp/logs/cdx_brief_755.log` (1,774,030 B). `.temp/brief-755/report.json` is DONE: 16
+checks PASS, 1 measurement PASS, 1 deviation, 0 questions, 0 disclosures, 0 changes;
+`scripts/report.py check 755` OK with 2,423 citations. The ten members
+P0256/P0259/P0266/P0267/P0312/P0314/P0315/P0323/P0410/P0515 were admitted all-or-nothing
+across both modes on the Stage B epoch `7af7b461…`: 20 logical own cells acquired and 20
+admitted, no member PortBlocked, the 60 member arm runs in the required order plus the ten
+ordinary lanes and ten same-binary one-thread negative reproductions (100 worker executions,
+14 scene readers). The new class index `indices/class.tsv` (`1db0fb6c…`, 6 build + 60 run
+rows) re-binds every member to its current own selection, row identity, sealed program files
+and builds, with the selection tuples decoding exactly to the sealed program keys; the c96
+table `bef35931…` and index `8bbd71a7…` are the inventory by hash identity with no c96 credit.
+Both unchanged importer executions consumed the same both-mode index and returned
+`required=151 caught=10 PortBlocked=141 settlements=0` per mode with the ten PASS rows and the
+accepted exit-101 partial-index assertion, each mode on its own real build (the
+`cfg!(feature = "hash")` branch; the brief's “no-default-real for each mode” sentence is
+reconciled to the c96 pairing and disclosed). The C10 calibration ran on exactly the six epoch
+binaries and is verified with `class_cells=0` and `shakedown_credit=0`; its importer returned
+151/1/150/0 exit 101 in both modes. My independent gate: 580 + 507 + 375 pinned path/hash
+pairs re-hashed (the three trees recomputed with my own `F\0<path>\0<bytes>` walk); all 20
+packets and 60 arm records plus the six calibration arms re-derived from the raw logs with the
+frozen case/constituent matrices rebuilt from the epoch's 9,060-program matrix (zero
+discrepancies); the real/disabled parity recomputed (exact except P0515's three declared
+duration leaves in both modes, no fourth); both class importer logs and both calibration
+importer logs parsed and compared to the c96 table; the 510-cell schedule checked cell by cell
+(255 selections × 2 modes; 20 attempted; 490 unspent 244/246; the c96 row sets preserved); the
+122 receipts summing to exactly 850.339323135 s focused, 0 workspace, 0 epoch; the live
+snapshot recomputed to `72ed4d6a…` over 5,819 files at both moments with the five mutable names
+unchanged; the sealed scan 416 roots zero newer (my dispatch-cutoff scan agrees outside the
+scene); the 29 non-zero exits enumerated (the corrected projection reader, the ordinary
+negatives and the accepted importers only). The one deviation — the first focused projection
+reader exited 1 with a `TypeError` — was corrected in the scene-local reader before the first
+member command, both receipts retained. Budget: 1,200 s focused carve, 850.339323135 s spent,
+349.660676865 s returned, reserve 32,831.40995267212 → 33,181.07062953712 s; the 749 pools
+closed. Scene: `git status --porcelain` exactly the inherited 23 entries, HEAD =
+`origin/main` = `d04f1375`, no crates or target write after the dispatch, no `.git-attempts`,
+no git or network receipt. Ruling 763 accepts Stage C (`.temp/director/ruling-763.md`); the
+scene is read-only from now. Next: the 744 restart, then 745 (campaign) and 746 (acceptance).
+Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118
+Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
+unauthorized; 745/746 held; sealed c76–c99 stays sealed.
