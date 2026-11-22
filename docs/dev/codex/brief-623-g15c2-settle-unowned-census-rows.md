@@ -119176,3 +119176,69 @@ fixture run is a new gate. Brief 764 carves 1,800 s focused (23,905.35125736417 
 22,105.35125736417 s), 0 workspace, 0 epoch. Next: brief 764's gate, then the
 generator/source gate, the deterministic render, the re-freeze, the fresh epoch, the
 readmit/C10 and a further 744 restart, each gated; 745/746 held.
+
+**Continuation 123 (2026-11-23) — brief 764 green proof, ruling 773.** Brief 764 ran on
+`grk` (grok-4.7 xhigh), unit `brief-764-grk-20261123-015843-878162`, session
+`36412f52-9ea8-4263-89f9-f38168682a18`, 2026-11-23 01:58:43 – 02:29:08 CST (wall ≈ 1,825 s),
+`grk-result: status=success turns=64 cost_usd=4.693274 refused=0`, peak 2,929,233,920 B, rc 0;
+scene `.temp/brief-764/` (7,779 files, 3,531,631,642 B); `report.py check 764` OK with 113
+citations; 10 PASS / 1 NA checks, 3 measurements PASS, 3 deviations, question
+`generator-source`. Delivered and verified: the entry (763 copy 5,812 files `0d677622…`;
+eleven rows; `INODE PASS compared=5865 shared_inodes=0 devices=[53]`); the classifier repair
+in `q25_p2379_proof.rs` only (32,082 B `0fc8d966…` → 36,042 B `ee789084…`; the
+`FnArg::Receiver` arm with an explicit colon and `Arc`+`Self` tokens accepted; a non-receiver,
+reference, bare, bare-mut, explicit-mut and wrong type rejected with their own messages; the
+impl/trait scan and the `begin_concrete` first-statement check unchanged; the falsifier line
+`Q25_AST_FALSIFIER real=accepted ampersand_self=rejected:reference receiver &self
+wrong_type=rejected:wrong receiver type std :: sync :: Arc < Other >`); repair compile 1 of
+3 rc 0 in 58.679229 s; one default release proof-only build rc 0 in 65.454731 s (binary
+`suspension_oracle-547fa4362abc58a1`, 122,054,584 B,
+`b3f1d4a8b6cbf38496d628214db34b7ad23d3fb1cd1c14876cc52f22c0cde8d7`); one `--list` printing
+the full harness name; and the one fixture invocation rc 0 in 0.145603 s, single-threaded in
+the non-admission image with `RUM_CM740_OMIT=P2379`: the ordinary reference (`{"X","X"}` both
+halves, pauses 2/0, `Ok(())`), the positive (one ARM, one HANDOFF, one committed REGISTER at
+A=139703072979440 `token=Some(0)`, one granted DISPATCH at the same address `strong=2
+weak_eq=true type_eq=true`, one granted then one denied append, `tracked=true` dispose,
+unqueued `{"X"}` vs queued `{"X","X"}`, `Err(Output)`, `public_output_exact=false`,
+`native_difference=false`), the withheld variant (ARM, commit false, `DISPATCH grant=false
+reason=uncommitted`, two denied appends, both `{"X","X"}`, `Ok(())`, equal reference native
+snapshots, `Q25_REJECTION withheld=NoHit clause=records.rs:344-350 before=352-366
+armed=true hits=0`), the A/B/C siblings rejected both ways with `SIBLING_SLOT survived=true
+phase=Offered`, the five replay steps and BEGIN episodes, and the 17 negatives (three as full
+trials, 14 as `NEGATIVE` lines); `Q25_PROOF_RESULT failures=0 non_admission=true
+importable_receipts=0 rows_closed=0`, `Q25_PROOF_OK`, `test result: ok. 1 passed; 0 failed; 0
+ignored; 0 measured; 591 filtered out`; the importer `DEFERRED not-claimed`; P2379 alone
+`executed=true`, the other twelve static anchors only; zero importable and admitted receipts.
+My gate re-walked both copies (`0d677622…` → `0f8cbc32…`, 5,812 files each), showed the only
+per-file difference is `q25_p2379_proof.rs`, verified the byte pre/postimages and the built
+image, read the diff in full and every raw log (fixture, `--list`, the two compilations),
+proved every quoted observation is an asserted prediction in the proof source, and verified
+the scope (0 live newer than the dispatch, 0 newer in scenes 758–763, receipts empty,
+`changes` empty, three read-only git probes). The three deviations are accepted: the scene's
+documented budget stop-line formula; the proof file's 36,042 B over the 35,000-byte
+threshold (adoption debt, not split because no other file edit was allowed); and the first
+`apply_repair` preflight refusal before any write (needle count 1 vs 2 because the falsifier
+snippet repeats the line; the logged apply is the only byte edit). Budget: focused 240.647 s
+of the 1,800 s carve; unspent 1,559.353 s; reserve 23,664.70425736417 s; 0 workspace, 0
+epoch. Ruling 773 (`.temp/director/ruling-773.md`) accepts the record and the deviations,
+keeps **Q25 unwaived** (all 13 rows named stops at zero admitted receipts), answers
+`generator-source` by releasing the independent generator/source stage, records the fresh
+explicit draw 11,235.219531105997 s (23,664.70425736417 → 34,899.923788470167 s, the full
+independent estimate upper bound 33,402.389216615422 s plus the 25 % Stage A sensitivity
+1,497.534571854745 s, per the standing user ruling 「预算不够就追加吧」), and orders **brief
+765**: enter from the 764 copy (`0f8cbc32…`, 5,812 files), copy the accepted generator roots
+(`.temp/brief-749/attempt-7/generator/brief-742/continuation-88/fn_split.py`,
+`.../brief-743/stage-a/compose.py`, `.../generator/control.rs.in`, and
+`.temp/brief-749/attempt-7/qualified_dispatch.py`) into the scene, implement the source-level
+forms of the 756 design carrying the proven Q25 raw-driver contract, produce the per-row AST
+round-trip and physical source→recipient→consumer validation for the 97 in-scope rows, the
+positive/withheld non-admission fixture per applicable shape (97×2), the standing inventory
+replays after the last covered edit and before the first acceptance suite, the two-mode
+source A/B workspace suites, the probe/falsifier checks and a measured hot-path A/B only if
+touched, preserving the four controls, the ordinary bodies, the accepted dispatch inverses
+and the exact rejections; STOP at the generator gate, no live edit, no render, no re-freeze,
+no epoch, no admission, no 744 restart, zero importable receipts, the 13 Q25 rows stay named
+stops. Brief 765 carves focused 6,500 s + workspace 3,100 s (34,899.923788470167 →
+25,299.923788470167 s), epoch 0; unspent returns; a projected overrun stops for a ruling,
+never a scope cut. Next: brief 765's gate, then the deterministic render, the re-freeze, the
+fresh epoch, the Stage C/C10 readmission and a further 744 restart, each gated; 745/746 held.

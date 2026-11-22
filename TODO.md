@@ -3987,6 +3987,36 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 123 (brief 764 green P2379 proof) (2026-11-23): brief 764 repaired
+    the receiver classifier, built the proof binary and ran the one fixture green; ruling 773
+    accepts, keeps Q25 unwaived, releases the generator/source stage, records a fresh draw of
+    11,235.219531105997 s and orders brief 765. Run: grk, unit
+    `brief-764-grk-20261123-015843-878162`, session `36412f52-…`, 01:58:43–02:29:08 CST
+    (wall ~1,825 s), `status=success turns=64 cost_usd=4.693274 refused=0`, peak
+    2,929,233,920 B, rc 0; scene `.temp/brief-764/` (7,779 files, 3.53 GB); 10 PASS / 1 NA
+    checks, 3 measurements PASS, 3 deviations, question `generator-source`. Delivered: entry
+    (763 copy 5,812 files `0d677622…`; eleven rows; 0 shared inodes); the classifier repair
+    only `q25_p2379_proof.rs` (32,082 B `0fc8d966…` → 36,042 B `ee789084…`; the
+    `FnArg::Receiver` arm accepted; falsifier `Q25_AST_FALSIFIER` line quoted); repair
+    compile 1 of 3 rc 0; one release proof build rc 0 (binary `b3f1d4a8…`, 122,054,584 B);
+    `--list` full name; one fixture rc 0 in 0.145603 s with ordinary/positive/withheld/
+    sibling/lifetime/17-negative observations, `Q25_PROOF_OK failures=0`, withheld `NoHit`
+    at `records.rs:344-350`, P2379 alone `executed=true`, importer deferred, zero importable
+    receipts. My gate: both copy walks (`0d677622…` → `0f8cbc32…`, 5,812 files), only
+    `q25_p2379_proof.rs` differs, byte pre/postimages and image hash verified, the diff and
+    every raw log read, every prediction proven asserted in the proof source; scope and
+    budget verified (240.647 s of 1,800; reserve 23,664.70425736417 s). Ruling 773
+    (`.temp/director/ruling-773.md`) accepts the record and the three deviations, keeps Q25
+    unwaived (13 named stops, zero admitted receipts), answers `generator-source` by
+    releasing the stage, draws 11,235.219531105997 s (reserve → 34,899.923788470167 s) and
+    orders brief 765 (the generator/source stage: the source-level forms with the proven Q25
+    raw-driver contract, per-row AST and physical validation for the 97 in-scope rows, the
+    97×2 positive/withheld non-admission fixtures, inventory replays, two-mode source A/B;
+    STOP at the generator gate), carving focused 6,500 s + workspace 3,100 s
+    (→ 25,299.923788470167 s), epoch 0. Next: brief 765's gate, then the deterministic
+    render, the re-freeze, the fresh epoch, the readmit/C10 and a further 744 restart, each
+    gated; 745/746 held.
+
   - G15-CM4 continuation 122 (brief 763 STOP) (2026-11-23): brief 763 adopted the promoted
     table, reproduced both certificate checks green, built the proof binary and spent the one
     fixture invocation, which stopped in the pre-trial static classifier on a defective syn
