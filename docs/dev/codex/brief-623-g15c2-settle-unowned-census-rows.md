@@ -119092,3 +119092,40 @@ importable receipts. Budget: carve 3,500 s focused (25,096.48887323717 →
 a ruling. Next: brief 762's gate, then the generator/source gate, the deterministic render,
 the re-freeze, the fresh epoch, the readmit/C10 and a further 744 restart, each gated;
 745/746 held.
+
+**Continuation 121 (2026-11-23) — brief 762 STOP, ruling 771.** Brief 762 ran on `grk`,
+unit `brief-762-grk-20261123-010120-850204`, session `d83cd504-18d2-4044-95d7-145bcded4c6f`,
+01:01:20 – 01:23:24 CST (wall ≈ 1,324 s), `status=success turns=43 cost_usd=3.112638
+refused=0`, peak 2,552,946,688 B, rc 0; scene `.temp/brief-762/` (7,360 files,
+3,507,293,343 B). It delivered the entry (761 copy 5,812 files `918e0c38…`; ten rows; the 759
+path absent; `INODE PASS compared=5853 shared_inodes=0`), the certificate-table adoption
+(`85d75662…` over `6b390887…`, 68/68 rows changing only the fingerprint column, zero other
+cells, `records.rs` `7364f150…` unchanged), and the four certificate replays: the two emits
+rc 101 panicking at `production.rs:99:6` with `production source anchor expired` after
+printing the C01/C02 rows with rejection count 0 — the accepted baseline content — and the
+two checks rc 101 at the same anchor, where the baseline is rc 0 with `test result: ok. 1
+passed; 0 failed`. It stopped there, did not spend the proof build or the fixture, kept all 13
+Q25 rows as named stops, and produced zero importable receipts. My gate reproduced the
+scene-recipe digests (`918e0c38…` for the 761 copy, `7dd616dc…` for the 762 copy as left),
+re-hashed the ten rows, showed the two copies differ only in the adopted inventory file,
+re-derived the column proof, read the four raw logs, and established the mechanism: the
+inventory's promoted.tsv source-anchor cells are live-tree coordinates (`options/core.rs`
+`:106:5-122:6` / `:224:5-238:6`) while the copy's `options/core.rs` (`171a62fb…`,
+byte-identical to the brief 754 armed tree) has the items at 214 and 397; the accepted 754
+baseline check ran with its generated promoted table in place, and that
+`generated-promoted.tsv` (`fdae14fe…`, 18,162 B) is byte-identical to the merge of the era's
+two one-sided emissions (columns 0-3 and 6-8 from the hash=true emission, column 5 from the
+hash=false emission). Today's merge of the fresh pair is 18,162 B `4337950c…`, differing from
+the inventory only in columns 3, 4 and 5 on 2/2 rows. The STOP is correct; my brief's check
+bar required the promoted adoption it did not name. Ruling 771
+(`.temp/director/ruling-771.md`) accepts the STOP and the deviation (the checks reused the
+emit binaries under the recorded shared target directory), keeps Q25 unwaived, and orders
+brief 763: the two emits at rc 101, the calibrated merge (expected `4337950c…`/18,162 B), the
+column proof, the adoption over the copy's promoted.tsv, the two checks at rc 0 with the
+C01/C02 rows and `test result: ok. 1 passed; 0 failed`, one default release proof-only build,
+one bounded single-threaded fixture with the full harness name, the 13 dispositions and zero
+importable receipts. Budget: 394.967 s charged of the 3,500 s carve (261.958 s command spend
+plus the 133.009 s meter span), unspent 3,105.033 s, reserve 24,701.52184483117 s; brief 763
+carves 2,500 s (→ 22,201.52184483117 s), 0 workspace, 0 epoch. Next: brief 763's gate, then
+the generator/source gate, the deterministic render, the re-freeze, the fresh epoch, the
+readmit/C10 and a further 744 restart, each gated; 745/746 held.

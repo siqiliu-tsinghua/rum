@@ -3987,6 +3987,39 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 121 (brief 762 STOP) (2026-11-23): brief 762 adopted the
+    certificate table and reproduced the emit content exactly, then stopped correctly when the
+    two certificate checks failed on the stale promoted.tsv source-anchor cells; ruling 771
+    authorizes the promoted-table adoption (merged from the two generator emissions) and the
+    full proof as brief 763. Run: grk, unit `brief-762-grk-20261123-010120-850204`, session
+    `d83cd504-…`, 01:01:20–01:23:24 CST (wall ~1,324 s), `status=success turns=43
+    cost_usd=3.112638 refused=0`, peak 2,552,946,688 B, rc 0; scene `.temp/brief-762/` (7,360
+    files, 3.51 GB). Delivered: entry (761 copy 5,812 files `918e0c38…`; ten rows; 759 path
+    absent; `INODE PASS compared=5853 shared_inodes=0`); adoption (`85d75662…` over
+    `6b390887…`, 68/68 rows fingerprint column only, zero other cells; `records.rs`
+    `7364f150…`); four certificate replays — emit ×2 rc 101 panicking at
+    `production.rs:99:6` with `production source anchor expired` after the C01/C02 rows with
+    rejection count 0 (baseline content), check ×2 rc 101 at the same anchor (baseline rc 0,
+    `test result: ok. 1 passed; 0 failed`); proof build and fixture not spent; 13 named
+    stops; zero importable receipts; no live write. My gate: the scene-recipe digests
+    (`918e0c38…` for the 761 copy, `7dd616dc…` for the 762 copy as left), the ten rows, the
+    one-file copy delta, the column proof, all four raw logs, and the mechanism — the
+    inventory anchors are the live-tree coordinates while the copy's `options/core.rs`
+    (`171a62fb…`, identical to the 754 armed tree) resolves the items at 214/397; the 754
+    baseline check ran with its generated promoted table in place (`fdae14fe…`, 18,162 B),
+    which is byte-identical to the merge of the era's two one-sided emissions, and today's
+    merge is `4337950c…`/18,162 B differing from the inventory only in columns 3/4/5 on 2/2
+    rows; scope and budget verified (394.967 s charged of 3,500; reserve
+    24,701.52184483117 s). Ruling 771 accepts the STOP and the deviation (checks reused the
+    emit binaries under the shared target dir), keeps Q25 unwaived, and authorizes
+    `anchor-cell` as brief 763 (emits ×2 at rc 101, merge calibrated on the 754 pair, adopt
+    the merged table, checks ×2 at rc 0 with the C01/C02 rows, one release proof build, one
+    bounded single-threaded fixture invocation with the full harness name, the 13
+    dispositions, zero importable receipts), carving 2,500 s focused (24,701.52184483117 →
+    22,201.52184483117 s), 0 workspace, 0 epoch. Next: brief 763's gate, then the
+    generator/source gate, the deterministic render, the re-freeze, the fresh epoch, the
+    readmit/C10 and a further 744 restart, each gated; 745/746 held.
+
   - G15-CM4 continuation 120 (brief 761 STOP) (2026-11-23): brief 761 fixed and compiled the
     proof test, ran the authorized replays and the release build, and stopped correctly when
     the single fixture invocation matched zero tests; ruling 770 authorizes the full-name
