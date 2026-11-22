@@ -3580,6 +3580,37 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
     CM5 unauthorized; 745/746 held. Brief 753 dispatched to `cdx`.
 
+  - G15-CM4 continuation 104 (brief 753) (2026-11-22): the six authorized cover revisions are
+    applied to the live coverage table — P0249/P0339/P0350/P0351/P1155/P1610 at
+    `mutant-coverage.tsv:13/37/40/41/96/115`, each old line equal to the 752 record and each
+    new line equal to its `proposed_tsv_line`; the other 249 records, the header, the order and
+    the LF endings are byte-identical; P2593's row is untouched. Run: unit
+    `brief-753-cdx-20261122-081859-168659`, 08:18:59–08:34 CST, rc 0, 20 GiB peak
+    250,335,232 B (0.233 GiB, oom 0/0), 0 repo changes; report `.temp/brief-753/report.json`
+    (DONE, 12/12 PASS, 2 disclosures, 1 deviation, 233 citations); 42 receipts summing
+    88.504842433 s focused (0 workspace, 0 epoch). Digest `6665e35b…` → `8d861eb5…`
+    (113,453 → 113,485 bytes). Each new program is one `programs.tsv` record at
+    4340/4412/4582/4603/8914/4924 with all thirteen fields equal to `new_selected_record`,
+    and one `bound` record at bindings 2123/3484/3647/3717/7620/8519; every new tuple hex
+    decodes. Successor records under `.temp/brief-753/successor/`: `frozen-schedule.json`
+    equals the revised live table (255, file order) and differs from the pre-revision schedule
+    in exactly six; `selected-own-tuples.json` (151) differs from c7 in exactly six, each
+    equal to `new_selected_record`; the change list against C1 is exactly seven rows in
+    coverage order (the six plus P2593, whose successor equals the c7 override — the c1
+    difference is pre-existing and asserted by `freeze_requirements.py:31-32`). The parse
+    shape replicates `schema.rs:70-100` (255 records, 6 columns, unique keys, 251 hex tuples,
+    4 dashes, no `guest_heads.`). Policy `3953aa9f…`, overlays `22751919…`, programs
+    `a75abf18…`, bindings `3109b3a2…`, mutants `14bd4326…` and both sealed epoch copies
+    (`6665e35b…`) are unchanged; c1/c2/c7 digests and mtimes hold; the only file under
+    `crates/` newer than dispatch is the table; git status still 23 inherited entries; no
+    `.git-attempts`. `Q753-cover-revision` accepts the revision and the successor records and
+    orders brief 749 attempt 3. Budget: 753 charged 88.504842433 s; unspent 1,111.495157567 s
+    returns; reserve 44,205.2293813071 s; CM4 209,210.425572227 s; 749 attempt 3 runs inside
+    749's carve 4,593.593738535008 s focused + 5,577 s workspace, 0 epoch. Bar 571/4,422,
+    37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual +
+    0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
+    unauthorized; 745/746 held. Brief 749 attempt 3 dispatched to `cdx`.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);

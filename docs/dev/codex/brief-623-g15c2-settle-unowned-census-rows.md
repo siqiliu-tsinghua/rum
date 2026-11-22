@@ -118257,3 +118257,50 @@ or settled; the 20 class cells stand; the 95 reachable images and 13 PortBlocked
 preserved; no predicate weakened; no hit moved; everything sealed (c76–c99) stays sealed;
 745/746 held. Brief 753 is dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the standing
 routing (agy on a cyber-filter refusal, a Codex quota death stops and asks).
+
+### Continuation 104 — brief 753 applies the six live cover revisions; `Q753-cover-revision` accepts them and orders brief 749 attempt 3
+
+Brief 753 (unit `brief-753-cdx-20261122-081859-168659`, 08:18:59–08:34 CST, rc 0, 20 GiB peak
+250,335,232 B = 0.233 GiB, oom 0/0, 0 repo changes; report `.temp/brief-753/report.json`,
+DONE, 12/12 checks PASS, 2 disclosures, 1 deviation, `report.py check 753` OK with 233
+citations; 42 receipts = 88.504842433 s focused, 0 workspace, 0 epoch) applied the six
+authorized cover revisions to the live
+`crates/rum-stdlib/tests/suspension_oracle/inventory/obligations/mutant-coverage.tsv`. My gate,
+from the bytes: the live digest moved `6665e35b…` → `8d861eb5…` (113,453 → 113,485 bytes),
+exactly six lines differ from the sealed epoch copy (`:13/37/40/41/96/115` — P0249, P0339,
+P0350, P0351, P1155, P1610), all 249 other records plus the header, order, LF convention and
+trailing newline are byte-identical, P2593's row is untouched, each old line equals the 752
+record's `live_coverage_line.line`, each new line equals its `proposed_tsv_line`, and each new
+tuple hex decodes to `new_tuple`. Each new program is exactly one `programs.tsv` record at the
+recorded line (4340/4412/4582/4603/8914/4924 — all thirteen fields equal to
+`new_selected_record`) and one `bound` record (bindings 2123/3484/3647/3717/7620/8519). The
+successor records: `frozen-schedule.json` equals the revised live table record for record (255,
+file order) and differs from the pre-revision schedule in exactly six, each equal to
+`new_schedule_record`; `selected-own-tuples.json` (151, coverage order) differs from c7 in
+exactly six, each equal to `new_selected_record`; the change list against c1 is exactly seven
+rows in coverage order (the six plus P2593), and P2593's successor equals the c7 override —
+the c1 difference is pre-existing and asserted by `freeze_requirements.py:31-32`.
+
+The parse shape replicates `schema.rs:70-100` on the revised table (255 records, six columns,
+255 unique keys, 251 hex tuples decoding to UTF-8, 4 `-` tuples, no `guest_heads.`). The
+policy `3953aa9f…`, overlays `22751919…`, programs `a75abf18…`, bindings `3109b3a2…` and
+mutants `14bd4326…` digests are unchanged, both sealed epoch copies remain `6665e35b…` at
+their old mtimes, the c1/c7 files are at their recorded digests, the only file under `crates/`
+newer than the dispatch is the table, nothing under `.temp` outside the scene and log is
+newer, `git status --porcelain` is still the inherited 23 entries, and there is no
+`.git-attempts`. The two disclosures: the first read preceded the recorder (0.100 s
+allowance); the supplementary state hash exited 1 because it included three read-only sandbox
+mounts with per-command timestamps — two scans and mine confirm the table is the only
+persistent live change. `Q753-cover-revision` (`.temp/director/ruling-754.md`) accepts the
+revision and the successor records, confirms no build is owed for a data-only `include_str!`
+edit, and orders **brief 749 attempt 3**: the full 58-cut render over the derived 143-file /
+286-postimage table, the 62-row audit extended with the c103 witness/edge statuses, the
+materialized `source_schema` and identity pins, the source gate in both modes; then Stage B,
+Stage C, the 744 restart, 745 and 746. Budget: brief 753 charged 88.504842433 s focused; its
+unspent 1,111.495157567 s returns, so the stage reserve is 44,205.2293813071 s; the CM4 line
+stays 209,210.425572227 s; attempt 3 runs inside 749's carve of 4,593.593738535008 s focused
++ 5,577 s workspace, 0 epoch. Nothing is reclassified, promoted, exempted or settled; the 20
+class cells credited at c96 stand; the 95 reachable images and 13 PortBlocked bindings are
+preserved; no predicate weakened; no hit moved; everything sealed (c76–c99) stays sealed;
+745/746 held. Brief 749 attempt 3 is dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the
+standing routing (agy on a cyber-filter refusal, a Codex quota death stops and asks).
