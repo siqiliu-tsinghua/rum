@@ -3550,6 +3550,36 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized. Continuation 95
     dispatched to `cdx`.
 
+  - G15-CM4 continuation 103 (brief 752) (2026-11-22): the completed hit-side-edge and value
+    inventory is accepted — all 151 own rows have verdicts (135 static-witness, 6
+    cover-candidate, 10 hit-side-edge-fix; zero stops, zero unknown), the six dependency rows
+    carry 104 selections / 105 root plans (P0325 45/5, P0326 45/5, C1 2, G15A 1, G15B 1,
+    Some 1; zero added cuts; pair `(45,5,false)` Open), and the six matrices yield 228 proven
+    candidates of 360 programs. Run: unit `brief-752-cdx-20261122-072639-146874`,
+    07:26:39–08:07:40 CST, rc 0, 20 GiB peak 721,174,528 B, oom 0/0, 0 repo changes; report
+    `.temp/brief-752/report.json` (81,758 B, DONE, 12/12 PASS, 242 citations); 294 receipts
+    summing 78.47966076 s focused. `Q752-hit-side-edge-inventory` accepts the nine-cut set —
+    the five carried cuts plus four new initial calls (P1147 `names/options.rs:55`; C3
+    `predicates/truth.rs:138`; P0485 `callable/head_ops.rs:29`; P0509/P0287
+    `control_data/assertions.rs:11`, one cut serving two rows) — each span byte-exact against
+    the declared sealed whole-file image, the original call textually preserved in the else
+    arm, and the three negatives stated. The derived physical table is 143 files / 286
+    postimages (100 preserved, 35 re-rendered, 8 new; 58 cuts); rows 25/67/116 re-rendered;
+    the `source_schema` rule is SHA-256 of the exact ordered `overlays.tsv` bytes (digest
+    deferred); policy `3953aa9f…` and sealed schema `22751919…` unchanged. The six cover
+    revisions are authorized: P0249 (Error→Middle), P0339 (tail-hold→unevaluated), P0350
+    (tail-nothing→unevaluated), P0351 (tail-hold→unevaluated), P1155
+    (last-pause-return→tail-sequence), P1610 (value.base→last-pause-return); their new
+    programs are bound and their live coverage lines 13/37/40/41/96/115 match byte-exactly;
+    249/255 unchanged per mode, 9,060 programs preserved, P2593's override retained. The
+    P1142 prompt name is `c7option` (register `Input:63376f7074696f6e:30`; fixture guest.rs
+    accepts c7option), correcting ruling-752's `c5option` prose. Budget: 752 charged
+    78.47966076 s focused; unspent 2,921.52033924 s returns; reserve 44,293.7342237401 s;
+    brief 753 carved 1,200 s focused, leaving 43,093.7342237401 s; CM4 209,210.425572227 s.
+    Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2
+    118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
+    CM5 unauthorized; 745/746 held. Brief 753 dispatched to `cdx`.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);

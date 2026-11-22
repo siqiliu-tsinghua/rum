@@ -118209,3 +118209,51 @@ Residual + 0 Lost; the 51 owners and five source duties Open; membership 28/3/7/
 `3953aa9f…` and schema `22751919…`; `CHANGELOG.md` and S10 blocked; CM5 unauthorized. Brief 752
 is dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the standing routing (agy on a
 cyber-filter refusal, a Codex quota death stops and asks).
+
+### Continuation 103 — brief 752 completes the hit-side-edge inventory; `Q752-hit-side-edge-inventory` accepts nine cuts and authorizes the six cover revisions
+
+Brief 752 (unit `brief-752-cdx-20261122-072639-146874`, 2026-11-22T07:26:39–08:07:40 CST,
+rc 0, 20 GiB peak 721,174,528 B, oom 0/0, 0 repo changes; report
+`.temp/brief-752/report.json`, 81,758 B, DONE, 12/12 checks PASS, 242 citations; 294 receipts
+summing exactly 78.47966076 s focused, 0 workspace, 0 epoch) delivered the completed
+hit-side-edge and value inventory: all **151 own rows** carry a verdict — **135
+static-witness, 6 cover-candidate and 10 hit-side-edge-fix**, zero stops and zero unknown —
+plus the six dependency identities with **104 selections / 105 root plans** (P0325 45/5,
+P0326 45/5, C1 2, G15A 1, G15B 1, Some 1; 95 value-passing plans, 10 tagged-throw stops
+against the frozen every-cell bar, zero added cuts), and the six own matrices with **228
+proven candidates of 360 programs**. The **nine-cut set** is the five carried cuts (P0338
+`rewrite_rules.rs:450`, P0435 `part_assignment/resume_frames.rs:24`, P1070
+`guarded/resume_frames.rs:110`, P1818 `associations/mutation/resume_frames.rs:29`, P1142
+`arrays/mod.rs:219`) plus four new initial calls the table proves: P1147
+`namespace_tools/names/options.rs:55`, C3.evaluate_call.unstable_head
+`predicates/truth.rs:138`, P0485 `functional_ops/callable/head_ops.rs:29`, and P0509/P0287
+`kernel_data/control_data/assertions.rs:11` (one cut serving two rows). I re-derived every
+span from the byte-pinned sealed whole-file images (all nine equal their `match` text, the
+dispatcher keeps the original call textually in the else arm, the driven twin and hit exist,
+the three negatives are stated). The **derived physical table** is **143 files / 286
+postimages** (100 preserved, 35 re-rendered, 8 new; 58 cuts): rows 25 (`rewrite_rules.rs`) and
+67 (`guarded/resume_frames.rs`) move preserved→re-rendered, row 116 (`arrays/mod.rs`) was
+already re-rendered, and the eight new files are the two 748 paths, the two 751 frame files and
+the four new-cut files. The `source_schema` rule is SHA-256 of the exact ordered
+`overlays.tsv` bytes (digest deferred to the render); policy `3953aa9f…` and sealed schema
+`22751919…` unchanged. Ruling `Q752-hit-side-edge-inventory` (`.temp/director/ruling-753.md`)
+accepts the inventory, the nine cuts, the derived table and the dependency results, and
+authorizes **brief 753**, the live cover revision: the six rows P0249 (Error→Middle), P0339
+(tail-hold→unevaluated), P0350 (tail-nothing→unevaluated), P0351 (tail-hold→unevaluated),
+P1155 (last-pause-return→tail-sequence) and P1610 (value.base→last-pause-return) — each new
+program is already bound to its row, its registry and binding records match, the live coverage
+lines 13/37/40/41/96/115 match the recorded old lines byte-exactly, 249/255 selections stay
+unchanged per mode, 9,060 bound programs are preserved and P2593's override is retained. The
+P1142 prompt name is corrected: the register says `Input:63376f7074696f6e:30` (`c7option`,
+fixture `guest.rs:1050`), not the `c5option` of ruling-752's prose; no finding, cut or cover
+changes. Then brief 749 amends to attempt 3 for the full 58-cut render over the 143-file
+table, the 62-row audit extended with the witness and edge statuses, the materialized
+`source_schema` and the identity pins; Stage B, Stage C, the 744 restart, 745 and 746 follow.
+Budget: brief 752 charged 78.47966076 s focused; its unspent 2,921.52033924 s returns, so the
+stage reserve is 44,293.7342237401 s; continuation 103 (brief 753) is carved 1,200 s focused,
+leaving 43,093.7342237401 s; the CM4 line stays 209,210.425572227 s; 749 keeps
+4,593.593738535008 s focused + 5,577 s workspace. Nothing is reclassified, promoted, exempted
+or settled; the 20 class cells stand; the 95 reachable images and 13 PortBlocked bindings are
+preserved; no predicate weakened; no hit moved; everything sealed (c76–c99) stays sealed;
+745/746 held. Brief 753 is dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the standing
+routing (agy on a cyber-filter refusal, a Codex quota death stops and asks).
