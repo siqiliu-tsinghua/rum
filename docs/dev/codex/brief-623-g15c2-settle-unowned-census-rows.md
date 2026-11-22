@@ -118763,3 +118763,55 @@ scene is read-only from now. Next: the 744 restart, then 745 (campaign) and 746 
 Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118
 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
 unauthorized; 745/746 held; sealed c76–c99 stays sealed.
+
+## Continuation 114 — brief 744 attempt 3: the repaired-epoch shakedown stops on P0416 and the frame-authorization class is opened
+
+The repaired-epoch shakedown ran on `cdx` as unit
+`brief-744-cdx-20261122-191622-697436`, 2026-11-22T19:16:22–19:38:33 CST, rc 0, the 20 GiB
+scope peaked at 3,210,489,856 B (2.99 GiB, oom 0/0), 0 repo changes; dispatch log
+`.temp/logs/cdx_brief_744.log` (1,010,051 B); scene `.temp/brief-744/attempt-3/`. The
+cumulative report is STOP (25 PASS / 2 FLAGGED / 3 FAIL / 3 NA; 5 deviations; `check 744` OK,
+1,140 citations); the attempt-2 cumulative was preserved byte-exactly and both earlier STOP
+objects stay verbatim. Entry and closing authentication re-hashed (Stage B identity
+`7af7b461…`, build `809b6473…`, freeze `c724c9ab…`, six-comparisons `c3bc2616…`, the twelve
+binaries, the three trees, membership 28/3/7/113, the Stage C publications); the live
+snapshot 5,819 files at `7b8a0229…` at both endpoints with the five mutable names stable; the
+sealed scan 546 roots found zero newer files. Default C10 was caught (55 constituents and 132
+lifecycle observations per real/disabled; armed hit at `completed-generation-inert-pause`,
+`Err(Native)`, public true / native difference true). Default P0416 was blocked: real and
+disabled 50 constituents and 168 lifecycle observations each, byte-identical to the c7
+baselines; armed recorded two selector arms at `KeyMap.callback:2`/`:4` (attempt 2 emitted
+none) but zero `ActualAttachedFrameInputBeforeTail` hits and `Ok(())` with public true /
+native difference false, reproduced at one thread on the same binary `6919c52a…`. Occupancy:
+one complete, one blocked, 242 untouched (21/510 complete overall); the 246 stage-745 cells
+equal the accepted reservation cell for cell and stay held. Cost: seven epoch workers
+37.108175480 s nested in 21 receipts summing 400.843357514 s inclusive; epoch balance
+14,193.545492596 → 13,792.702135082 s; forecast 4,972 s.
+
+The finding is class-level. On the repaired armed tree, `frame(row)` is
+`eligible(l,row,false)`, which requires `l.resuming.last()` to carry a frame identity
+authenticated against the row's activation; `l.resuming` is pushed only by `resume_frame`,
+which the typed-frame adapter's `control::resume` reaches only for frames registered in
+`FRAMES` by `control::allocated` under a `control::source` scope; those scopes exist only for
+the four structural controls (`C1`/`G15A`/`G15B`/`Some`), and their `authority()` requires
+the episode program `"CM740-SEMANTIC"` while own-row guest runs open `"CM740-GUEST"`; the
+generic `bind_allocated_frame` has no callers. Static classification: 82 of the 151 own rows
+are `frame()`-gated (46 typed-frame resume, 22 continuation resume, 8 initial call, 6
+other); the five `FrameResumePassThrough` carriers are P0416/P0820/P0825 (gated) and
+P1814/P1817 (not); 13 of the 18 own rows of the 744 schedule are gated (P0416, P0492, P0527,
+P0558, P0813, P0820, P0823, P0825, P0827, P1476, P2593, P0508, P0544). The c7 receipts came
+from a different sticky-flag probe (`.temp/brief-740/c7/default-armed-4d411242…/lib.rs:24-36`),
+and the c103 `static-witness` verdicts certified call edges, not the ledger's frame
+authorization; the producer routing repair itself succeeded.
+
+Ruling 764 (`.temp/director/ruling-764.md`) accepts the STOP, names P0416 default
+`PortBlocked/NoHit`, blocks family `cm3-carrier`, and orders brief 756 — a design-only
+(`Scope: NONE`) complete zero-unknown inventory and design of the frame-authorization class
+with the class-wide falsifier — before any further shakedown. Budget: 400.843357514 s spent
+of the 14,193.545492596 s carve; 13,792.702135082 s returns; stage reserve
+18,987.52513694112 → 32,780.22727202312 s; brief 756 carves 3,000 s focused →
+29,780.22727202312 s, 0 workspace, 0 epoch; unspent returns; a projected overrun stops for a
+ruling. The scene is read-only from now; attempts 1 and 2 stay read-only. 745/746 remain
+held. Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts;
+C2 118 Residual + 0 Lost; 51 owners and five source duties Open; membership 28/3/7/113;
+CHANGELOG.md and S10 blocked; CM5 unauthorized; sealed c76–c99 stays sealed.

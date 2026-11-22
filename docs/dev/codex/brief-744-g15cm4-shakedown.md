@@ -278,3 +278,80 @@ exactly. Before finishing run `python3 scripts/report.py check 744` (without
 `--against-git`) and fix every PROBLEM; the final message is only
 `python3 scripts/report.py summary 744`. STOP at the 244 completed cells and the re-frozen
 745 schedule; 745 and 746 are not dispatched here.
+
+## Gate c114 (2026-11-22) — attempt 3 STOP accepted; the frame-authorization class is opened
+
+Attempt 3 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`, reasoning effort max), unit
+`brief-744-cdx-20261122-191622-697436`, 2026-11-22T19:16:22–19:38:33 CST, rc 0, the 20 GiB
+scope peaked at 3,210,489,856 B (2.99 GiB, oom 0/0), 0 repo changes; dispatch log
+`.temp/logs/cdx_brief_744.log` (1,010,051 B); scene `.temp/brief-744/attempt-3/` (149 files,
+7.3 MB). The cumulative report `.temp/brief-744/report.json` is STOP: 25 PASS / 2 FLAGGED /
+3 FAIL / 3 NA; 5 deviations; `report.py check 744` OK with 1,140 citations; the final
+message was `python3 scripts/report.py summary 744`. The attempt-2 cumulative was preserved
+as `.temp/brief-744/attempt-2-cumulative.json` (`f6b8706d…`); attempts 1 and 2's STOP
+objects stay verbatim.
+
+Delivered: the entry/closing authentication (Stage B identity `7af7b461…`, build
+`809b6473…`, freeze `c724c9ab…`, six-comparisons `c3bc2616…`, the twelve binaries, the three
+trees, membership 28/3/7/113, the Stage C publications; the live snapshot 5,819 files at
+`7b8a0229…` at both endpoints with the five declared mutable names stable; the sealed scan
+546 roots with zero newer files); **C10 default caught** (real/disabled 55 constituents and
+132 lifecycle observations each; armed hit at `completed-generation-inert-pause`,
+`Err(Native)`, public true / native difference true); **P0416 default blocked** (real and
+disabled 50 constituents and 168 lifecycle observations each, byte-identical to the c7
+baselines; armed two selector arms at `KeyMap.callback:2`/`:4`, zero source hits,
+`Ok(())`, public true / native difference false, reproduced at one thread on the same binary
+`6919c52a…`). Occupancy: stage 744 one complete, one blocked, 242 untouched; 21/510
+complete overall; the 246 stage-745 cells equal the accepted reservation cell for cell and
+stay held. Cost: 7 epoch workers 37.108175480 s nested in 21 receipts summing
+400.843357514 s inclusive; epoch balance 14,193.545492596 → 13,792.702135082 s; forecast
+4,972 s for the held cells.
+
+I verified it independently: all 73 pinned path/tree pairs in both authentication records
+re-hashed with zero mismatches and zero entry/closing inconsistency; the epoch chain and
+every Stage C publication re-hashed; the 20 stage-755 cells all credited with importer and
+proof; the seven raw P0416/C10 logs read directly (two arms, zero hits, `Ok(())`, one-thread
+same binary and environment, `RUST_TEST_THREADS=1`); the observation payload `5460a362…`
+identical across real, disabled, armed and one-thread; the real/disabled matrices identical
+to the c7 logs; the lifecycle counts 132/168 re-derived; the packet index's 103 leaves and
+the meter's 63 file pins re-hashed; the live snapshot recomputed to `7b8a0229…`; the sealed
+scan re-run over 6,517,167 files with zero newer; the 745 subsequence byte-equal to the
+reservation; git status the inherited 23 entries, HEAD = `origin/main` = `26855a73`, no
+`.git-attempts`; and the two non-zero top-level exits are the declared stop orchestration
+and the rebounded first citation check.
+
+The STOP is correct under this brief's rule: the producer arms now fire (attempt 2 emitted
+none), but the required ordered hit and predicate do not, and the same binary reproduces.
+P0416 default is `PortBlocked/NoHit`; family `cm3-carrier` (P0416, P0820, P0825) is blocked;
+no cell beyond cells 1–2 is attempted.
+
+The finding is class-level, not P0416-only. On the repaired armed tree, `frame(row)` is
+`eligible(l,row,false)`, which requires `l.resuming.last()` to carry a frame identity
+authenticated against the row's activation; `l.resuming` is pushed only by `resume_frame`,
+which the typed-frame adapter's `control::resume` reaches only for frames registered in
+`FRAMES` by `control::allocated` under a `control::source` scope; those scopes exist only
+for the four structural controls (`C1`/`G15A`/`G15B`/`Some`), and their `authority()`
+requires the episode program `"CM740-SEMANTIC"` while own-row guest runs open
+`"CM740-GUEST"`; the generic `bind_allocated_frame` has no callers. Static classification:
+82 of the 151 own rows are `frame()`-gated (46 typed-frame resume, 22 continuation resume,
+8 initial call, 6 other); the five `FrameResumePassThrough` carriers are P0416/P0820/P0825
+(frame-gated) and P1814/P1817 (not); 13 of the 18 own rows of this schedule are
+frame-gated (P0416, P0492, P0527, P0558, P0813, P0820, P0823, P0825, P0827, P1476, P2593,
+P0508, P0544). The c7 receipts came from a different, sticky-flag probe
+(`.temp/brief-740/c7/default-armed-4d411242…/crates/rum-runtime/src/lib.rs:24-36`), and the
+c103 `static-witness` verdicts certified call edges, not the ledger's frame authorization.
+The producer routing repair succeeded; the frame-construction/frame-resume handoff for
+own-row carriers is missing.
+
+Ruling 764 (`.temp/director/ruling-764.md`) accepts the STOP, blocks the family, and orders
+brief 756 — a design-only (`Scope: NONE`) complete zero-unknown inventory and design of the
+frame-authorization class, with the class-wide falsifier and the implementation briefs —
+before any further shakedown. Budget: 400.843357514 s spent of the 14,193.545492596 s
+carve; 13,792.702135082 s returns; stage reserve 18,987.52513694112 → 32,780.22727202312 s;
+brief 756 carves 3,000 s focused → 29,780.22727202312 s, 0 workspace, 0 epoch; unspent
+returns; a projected overrun stops for a ruling. The scene is read-only from now; attempts
+1 and 2 stay read-only. The bar stays 571/4,422, 37/134, 4/133, 0/26; the pair
+`(45,5,false)` stays Open at zero admitted receipts; C2 stays 118 Residual + 0 Lost; the 51
+owners and five source duties stay Open; membership stays 28/3/7/113; `CHANGELOG.md` and S10
+stay blocked; CM5 remains unauthorized; everything sealed (c76–c99) stays sealed; 745/746
+remain held.

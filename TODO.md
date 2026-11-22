@@ -3946,6 +3946,47 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746
     held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 114 (brief 744 attempt 3) (2026-11-22): the repaired-epoch shakedown
+    stopped on P0416 — a class-level frame-authorization gap. Attempt 3 ran on `cdx`, unit
+    `brief-744-cdx-20261122-191622-697436`, 19:16:22–19:38:33 CST, rc 0, peak 3,210,489,856 B
+    (2.99 GiB, oom 0/0), 0 repo changes; report STOP (25 PASS / 2 FLAGGED / 3 FAIL / 3 NA;
+    check OK, 1,140 citations). C10 default was caught (real/disabled 55 constituents, 132
+    lifecycle observations each; armed hit at `completed-generation-inert-pause`, `Err(Native)`,
+    public true / native difference true). P0416 default was blocked: real/disabled 50
+    constituents and 168 lifecycle observations each, byte-identical to the c7 baselines; armed
+    two selector arms at `KeyMap.callback:2`/`:4` (attempt 2 emitted none), zero source hits,
+    `Ok(())`, public true / native difference false, reproduced at one thread on the same
+    binary `6919c52a…`. My independent gate: all 73 pinned path/tree pairs in both
+    authentication records re-hashed (zero mismatches, zero entry/closing inconsistency); the
+    epoch chain `7af7b461…`/`809b6473…`/`c724c9ab…`/`c3bc2616…` and every Stage C publication
+    re-hashed; the 20 stage-755 cells all credited; the seven raw logs read directly (two arms,
+    zero hits, `Ok(())`, `RUST_TEST_THREADS=1` reproduction, observation payload `5460a362…`
+    identical across real/disabled/armed/one-thread); the real/disabled matrices identical to
+    the c7 logs; the packet index's 103 leaves and the meter's 63 file pins re-hashed; the live
+    snapshot recomputed to `7b8a0229…` over 5,819 files; the sealed scan re-run over 6,517,167
+    files with zero newer; the 745 subsequence byte-equal to the reservation; git status the
+    inherited 23 entries, HEAD = `origin/main` = `26855a73`, no `.git-attempts`. The finding:
+    on the repaired armed tree `frame(row)` requires an authenticated resuming token; `l.resuming`
+    is pushed only by `resume_frame`, reached only for frames registered by the control lane,
+    whose `source` scopes exist only for the four structural controls (`C1`/`G15A`/`G15B`/`Some`)
+    under `"CM740-SEMANTIC"`; own-row guest runs open `"CM740-GUEST"` and the generic
+    `bind_allocated_frame` has no callers. Static class: 82 of the 151 own rows are `frame()`-gated
+    (46 typed-frame resume, 22 continuation resume, 8 initial call, 6 other); the five
+    `FrameResumePassThrough` carriers are P0416/P0820/P0825 (gated) and P1814/P1817 (not); 13 of
+    the 18 own rows of the 744 schedule are gated. The c7 receipts came from a different
+    sticky-flag probe, and the c103 `static-witness` verdicts certified call edges, not runtime
+    authorization; the producer routing repair itself succeeded. Ruling 764
+    (`.temp/director/ruling-764.md`) accepts the STOP, blocks family `cm3-carrier`, and orders
+    brief 756 — a design-only (`Scope: NONE`) complete zero-unknown inventory and design of the
+    frame-authorization class with the class-wide falsifier — before any further shakedown.
+    Budget: 400.843357514 s spent of the 14,193.545492596 s carve (7 workers 37.108175480 s);
+    13,792.702135082 s returns; stage reserve 18,987.52513694112 → 32,780.22727202312 s; brief
+    756 carves 3,000 s focused → 29,780.22727202312 s, 0 workspace, 0 epoch. Occupancy: stage
+    744 one complete, one blocked, 242 untouched; 21/510 complete overall; 745's 246 held. Bar
+    571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118
+    Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
+    unauthorized; 745/746 held; sealed c76–c99 stays sealed.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);
