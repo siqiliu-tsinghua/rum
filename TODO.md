@@ -3987,6 +3987,38 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 125 (brief 766 STOP, provenance seal vs the class render) (2026-11-23):
+    brief 766 repaired the emitter (`rewrite_sync_around` consumes the whole
+    `ns::cm740_probe::` prefix; `class_forms.py` 69,665 B `bd78582a…`), re-emitted from the
+    pristine 764 copy (27 files: 3 new, 24 changed; 97 `ROW VALIDATE`, groups
+    50/25/16/4/2, ZERO-UNKNOWN, ORDINARY BODY 840/118, CONTROL AUTHORITY, Q25 FIRST,
+    EMIT PASS 97/27, 13 Q25 OPEN, no `cm740_probe::if`), built the non-admission image green
+    on repair 2 of 8 (36.495 s), and ran the class fixtures. Run: grk, unit
+    `brief-766-grk-20261123-042132-937322`, session `0b579b89-…`, 04:21:32–05:17 CST,
+    `status=success turns=183 cost_usd=15.497602 refused=0`, peak 2,772,881,408 B, rc 0;
+    scene `.temp/brief-766/` (1,022 MB); 5 PASS / 1 FLAGGED / 2 FAIL / 4 NA, 1 deviation,
+    Q1. The fixtures: 2 passed (digest KAT, importer NoHit), 194 failed — every row
+    `SourceIdentity` in `guest::programs()` at `class_lease_fixtures.rs:33`, reproduced at
+    one thread — because the committed `provenance.tsv` pins the pre-render baseline
+    (ordinal 1 `session.rs` sealed `ef78a1de…` = live vs copies `7127298d…`; ordinal 7
+    `worker.rs` unreached; 139/141 match). My wider finding: 60 of the 199 pinned paths
+    differ and they are exactly the 749-rendered files (2 canonical-source, 56 guest-route,
+    1 guest-dependency `segments.rs`), `overlays.tsv`'s 135 preimage/postimage pins are
+    stale on the emitted tree (21 emission files are overlay files, 3 are outside the
+    set), the render changed 9 files beyond the overlay schema, and the final render would
+    leave the live tree unable to load its own table; `manifests::PINS` unaffected.
+    Ruling 775 (`.temp/director/ruling-775.md`) accepts the STOP, answers Q1 (live bytes
+    stay the baseline authority; the class-form tree is an accepted transformation; the
+    derived inventories are reconciled by a prescribed, generated, certified
+    transformation, and the deterministic render regenerates them), records my two brief
+    defects (the unsatisfiable fmt-close bar against the entry-frozen dirty files; treating
+    `provenance.tsv` as immutable), keeps Q25 unwaived, and orders brief 767, a design-only
+    (`Scope: NONE`) zero-unknown inventory and decision for the derived-inventory
+    reconciliation. Carve focused 2,000 s + workspace 0 + epoch 0 (reserve →
+    32,770.78278847017 s). Next: brief 767's gate, the implementation briefs it drafts, the
+    fixtures/Q25/replays/source A/B/probe/hot-path, the deterministic render with the
+    inventory regeneration, the re-freeze, the fresh epoch, the Stage C/C10 readmission and
+    a further 744 restart, each gated; 745/746 held.
   - G15-CM4 continuation 124 (brief 765 STOP, memory-scope fence) (2026-11-23): brief 765
     extended the generator, emitted the 97-row class forms into the 765 copy (27 files: 3
     new, 24 changed; static validation green: 97 `ROW VALIDATE PASS`, groups

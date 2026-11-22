@@ -274,3 +274,87 @@ and the close, and is sized to pass the scene's own stop line at the first works
 sample`; `informational_stack_3x` is logged, not the stop line. A wrong physical identity or
 an unmatched historical constituent stops at its first failed link; do not skip ahead to a
 later deliverable to fit the carve.
+
+## Gate c125 (director record)
+
+Brief 766 ran on `grk` (grok-4.7, effort xhigh), unit
+`brief-766-grk-20261123-042132-937322`, session
+`0b579b89-1204-48d2-801f-5b0fc2fa3c3a`, 2026-11-23 04:21:32 – 05:17 CST,
+`grk-result: status=success turns=183 cost_usd=15.497602 refused=0`, the 20 GiB scope
+peaked at 2,772,881,408 B (oom 0/0), rc 0; log `.temp/logs/grk_brief_766.log`; scene
+`.temp/brief-766/` (1,022 MB). The report is STOP; `scripts/report.py check 766` OK with
+81 citations; checks 5 PASS, 1 FLAGGED, 2 FAIL, 4 NA; 1 measurement PASS; 1 deviation;
+1 question (Q1).
+
+Delivered and verified: the entry re-authenticated (`ENTRY IDENTITY PASS files=5812
+digest=0f8cbc32b864f0d58a2a6052e607bf16cd37e5df4aa998f5421e7b4e080e604a shared_inodes=0`;
+the eleven rows; the 759 path absent; the 764 walk reproduced by the director last gate);
+the emitter repaired (`rewrite_sync_around` spans from `call_prefix_start`, consuming the
+whole `ns::cm740_probe::` prefix; `class_forms.py` 61,626 B `80c7b579…` → 62,501 B
+`da179d44…` → 68,248 B `8838633e…` → 69,652 B `173e1b33…` → 69,665 B `bd78582a…` final;
+all edits with byte pre/postimages); the re-emission (`RESTORE PASS files=5812 digest=0f8cbc32…
+restored=24 removed=3 shared_inodes=0`; `GROUPS typed=50 raw=25 synchronous=16 cursor=4
+queued-success=2 unclassified=0`; `ZERO-UNKNOWN PASS rows=97 object=97 source_edge=97
+recipe=97 falsifier=97 missing=0`; 97 `ROW VALIDATE PASS`; `ORDINARY BODY PASS functions=840
+shifted_paired=118`; `CONTROL AUTHORITY PASS rows=C1,G15A,G15B,Some`; `SPLIT PASS`; `Q25
+FIRST PASS frame=DriveStringCasesOutputResultSuspensionFrame first=begin_concrete`;
+`RUSTFMT EDITION 2021 PARSE PASS files=27`; `EMIT PASS rows=97 files=27
+importable_receipts=0 rows_closed=0`; 13 `Q25 OPEN`; `PREFIX SCAN PASS files=27
+token=cm740_probe::if hits=0`); the director's own content walk of the copy (5,815 files
+against 5,812: exactly 3 added and 24 changed, no removals; every inverse's preimage equals
+the 764 file and every postimage equals the 766 file; the three new files parse); the
+non-admission image (three compilations within the eight-compilation bound: E0308 ×2, then
+E0631, then rc 0 in 36.495 s; every repair through the emitter and re-emitted; `--offline
+--locked -j8` with the epoch toolchain directly in the dispatch scope; isolated
+`.temp/brief-766/build`); the fixtures (8 threads: 2 passed — `FIXTURE DIGEST_KAT PASS` and
+`FIXTURE IMPORTER_SOURCE NoHit before IdentitySurvivor` — and 194 failed, 97 positive + 97
+withheld, every one `FIXTURE PROGRAMS row=… err=SourceIdentity` at
+`class_lease_fixtures.rs:33`; reproduced at `--test-threads=1` on
+`class_lease_positive_p0216`); the frozen files equal to the 764 entry (`q25_ownership.rs`
+`43416be6…` 29,522 B; the proof `ee789084…` 36,042 B; `records.rs` `7364f150…`; `cases.rs`
+`2d915381…`); the fmt close red only on the two entry-frozen files (39 diffs; the pristine
+sample shows the 764 entry itself is rustfmt-dirty there; the 27 emitted files are
+cargo-fmt clean and edition-2021 parse clean); the scope (0 live files outside `.temp` newer
+than the dispatch; 0 writes in scenes 749/756/764/765; `receipts/` empty; `changes` empty;
+3 read-only harness `.git-attempts`); the budget (focused 105.428 s of 6,476.287 s;
+workspace 0 of 5,400; epoch 0; unspent 11,770.859 s; reserve 34,770.78278847017 s).
+
+**The STOP.** `guest::programs()` returns `BindingError::SourceIdentity` before any class
+row runs. `load_programs_with` checks the provenance canonical-source rows in order;
+ordinal 1 `crates/rum-host/src/session.rs` sealed `ef78a1de…` (33,545 B) equals the live
+file while both copies are `7127298d…` (36,731 B) and the generator did not edit it;
+ordinal 7 `crates/rum-jupyter/src/adapter/worker.rs` has the same shape and is unreached;
+139 of 141 canonical-source seals match; provenance was not hand-edited, `guest::programs`
+was not weakened, and the live bytes were not copied into the scene. **The STOP is
+correct** and accepted (the role text forbids working around a refused link).
+
+**The wider finding (recorded in ruling 775).** The committed byte-pinning inventories are
+baseline-derived and the accepted class-form pipeline changed their subjects: in the scene
+copy 60 of the 199 provenance-pinned paths differ, and they are exactly the files the
+accepted 749 render changed (2 canonical-source, 56 guest-route-only, 1 guest-dependency
+`profiling/logical/segments.rs`), so re-anchoring only the two canonical-source rows would
+still fail the rest; `overlays.tsv` pins 135 files whose postimages are stale for the 21
+overlay files the emission changed, and the emission's 3 files outside the overlay set would
+fail `UnlistedFile`, so the source A/B was accepted on the render-only arms and never
+covered the emission; the render changed 9 files beyond the overlay schema; `manifests::PINS`
+(9 Cargo.toml) are unaffected. Consequence: once the deterministic render installs the class
+forms into live, the committed pins no longer match the live tree and every
+`guest::programs()` consumer blocks unless the render regenerates them. The repair is a
+design decision, not a scene patch. Ruling 775 answers Q1 (neither "reconcile the entry to
+the live bytes" nor "stop on the link": the live bytes stay the baseline authority; the
+class-form tree is an accepted transformation; the derived inventories are reconciled by a
+prescribed, generated, certified transformation, and the deterministic render regenerates
+them), keeps **Q25 unwaived** (13 rows, P2379 included, zero admitted receipts), records the
+brief defects as the director's (the fmt-close bar was unsatisfiable against the two
+entry-frozen dirty files; the brief treated `provenance.tsv` as immutable and ordered the
+fixtures before the inventory relation they needed), and orders **brief 767**, a design-only
+(`Scope: NONE`) complete zero-unknown inventory and decision for the derived-inventory
+reconciliation. Budget: 766 charged 105.428 s and returns 11,770.859 s; reserve
+34,770.78278847017 s; brief 767 carves **focused 2,000 s + workspace 0 + epoch 0**
+(reserve → **32,770.78278847017 s**). Next: brief 767's gate, the implementation brief(s) it
+drafts, the deterministic render with the inventory regeneration, the re-freeze, the fresh
+epoch, the Stage C/C10 readmission and a further 744 restart, each gated; 745 (campaign) and
+746 (acceptance) stay held. The bar stays 571/4,422, 37/134, 4/133, 0/26; the pair
+`(45,5,false)` stays Open at zero admitted receipts; C2 118 Residual + 0 Lost; the 51 owners
+and five source duties Open; membership 28/3/7/113; `CHANGELOG.md` and S10 stay blocked; CM5
+remains unauthorized; everything sealed (c76–c99) stays sealed.

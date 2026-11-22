@@ -119299,3 +119299,67 @@ resume/insertion paths). Brief 766 carves focused 6,476.287 s + workspace 5,400 
 ruling, never a scope cut. Next: brief 766's gate, then the deterministic render, the
 re-freeze, the fresh epoch, the Stage C/C10 readmission and a further 744 restart, each
 gated; 745/746 held; CM5 unauthorized.
+
+## Continuation 125 — brief 766: the provenance seals meet the class render (2026-11-23)
+
+Brief 766 (committed `f6444c8e`) ran on grk, unit `brief-766-grk-20261123-042132-937322`,
+session `0b579b89-1204-48d2-801f-5b0fc2fa3c3a`, 2026-11-23 04:21:32 – 05:17 CST,
+`grk-result: status=success turns=183 cost_usd=15.497602 refused=0`, the 20 GiB scope
+peaked at 2,772,881,408 B (oom 0/0), rc 0; scene `.temp/brief-766/` (1,022 MB); the report
+is STOP, `report.py check 766` OK with 81 citations, 5 PASS / 1 FLAGGED / 2 FAIL / 4 NA,
+1 measurement PASS, 1 deviation, one question (Q1). It delivered the emitter repair
+(`rewrite_sync_around` spans from `call_prefix_start`; `class_forms.py` 61,626 B
+`80c7b579…` → 62,501 B `da179d44…` → 68,248 B `8838633e…` → 69,652 B `173e1b33…` →
+69,665 B `bd78582a…`), the re-emission from the pristine 764 copy (27 files: 3 new, 24
+changed; 97 `ROW VALIDATE PASS`, groups 50/25/16/4/2, ZERO-UNKNOWN, ORDINARY BODY 840/118,
+CONTROL AUTHORITY, Q25 FIRST, `RUSTFMT EDITION 2021 PARSE PASS files=27`, EMIT PASS 97/27,
+13 Q25 OPEN, `PREFIX SCAN … hits=0`), the non-admission image green on repair 2 of the 8
+allowed compilations (36.495 s, direct `cargo test --offline --locked -j8` in the dispatch
+scope), and the fixtures: 2 passed (the digest KAT and the importer `NoHit`), 194 failed —
+97 positive + 97 withheld, every one `FIXTURE PROGRAMS row=… err=SourceIdentity` at
+`class_lease_fixtures.rs:33`, reproduced at `--test-threads=1` on
+`class_lease_positive_p0216`. The frozen files equal the 764 entry; the close fmt is red
+only on the two entry-frozen files, which the pristine sample shows were already dirty at
+entry. Scope clean (0 live files outside `.temp` newer than the dispatch, earlier scenes
+untouched, `receipts/` empty, `changes` empty); focused 105.428 s of 6,476.287, workspace
+and epoch 0; reserve 34,770.78278847017 s.
+
+The STOP is the provenance seal versus the accepted class render: `guest::programs()`
+returns `BindingError::SourceIdentity` before any class row runs; ordinal 1
+`crates/rum-host/src/session.rs` is sealed `ef78a1de…` (33,545 B, equal to the live file)
+while both copies are `7127298d…` (36,731 B) and the generator never edited it; ordinal 7
+`crates/rum-jupyter/src/adapter/worker.rs` has the same shape; 139/141 canonical-source
+seals match. The worker did not edit `provenance.tsv`, did not weaken `guest::programs`,
+and did not copy the live bytes into the scene; the STOP is correct. The director's wider
+finding: the committed byte pins are baseline-derived, and the scene copy differs from all
+199 pinned paths in exactly the 60 files the 749 render changed (2 canonical-source, 56
+guest-route-only, 1 guest-dependency `runtime/profiling/logical/segments.rs`), so
+re-anchoring only the two canonical-source rows would still fail the rest; `overlays.tsv`
+pins 135 files whose postimages are stale for the 21 overlay files the emission changed,
+the emission's 3 files outside the overlay set would fail `UnlistedFile`, and the render
+changed 9 files beyond the overlay schema, so the source A/B accepted at c110–c112 ran on
+the render-only arms and never covered the emission; `manifests::PINS` (9 Cargo.toml) are
+unaffected. Once the deterministic render installs the class forms into live, the committed
+pins would no longer match the live tree and every `guest::programs()` consumer would block
+unless the render regenerates them.
+
+Ruling 775 (`.temp/director/ruling-775.md`) accepts the STOP and the delivery, answers Q1 —
+neither "reconcile the entry bytes to the live bytes" (that would dismantle the accepted
+render) nor "stop on the link": the live bytes stay the baseline authority, the class-form
+tree is an accepted transformation of them, the derived inventories are reconciled to it by
+a prescribed, generated, certified transformation, and the deterministic render regenerates
+them — records the two brief defects as mine (the fmt-close bar was unsatisfiable against
+the two entry-frozen dirty files; the brief treated `provenance.tsv` as immutable and
+ordered the fixtures before the inventory relation they needed), keeps **Q25 unwaived**
+(13 rows, P2379 included, zero admitted receipts), and orders **brief 767**, a design-only
+(`Scope: NONE`) complete zero-unknown inventory and decision for the derived-inventory
+reconciliation: every byte-pinning inventory and consumer, every pinned path's disposition,
+the certificate per transformation, the repair decision with its consequence for the final
+live tree, and the drafts of the implementation briefs. Brief 767 carves focused 2,000 s +
+workspace 0 + epoch 0 (reserve → 32,770.78278847017 s); unspent returns; a projected overrun
+stops for a ruling, never a scope cut. Next: brief 767's gate, the implementation briefs it
+drafts, the deterministic render with the inventory regeneration, the re-freeze, the fresh
+epoch, the Stage C/C10 readmission and a further 744 restart, each gated; 745/746 held; CM5
+unauthorized; the pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0
+Lost; 51 owners and five source duties Open; membership 28/3/7/113; `CHANGELOG.md`/S10
+blocked; everything sealed (c76–c99) stays sealed.
