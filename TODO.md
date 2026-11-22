@@ -3705,6 +3705,42 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held. Brief 749 attempt 6 amended
     and committed; dispatched to `cdx`.
 
+  - G15-CM4 continuation 108 (brief 749 attempt 6) (2026-11-22): Stage A reused the accepted
+    nameability preflight (116/116), reproduced the accepted parent byte-exactly (135 rows /
+    270 postimages, 98+37+9 partition, 66/66 protected records, 12/12 peer assertions per arm,
+    native hooks 2/2 across six variants, the 255/151/6 live selection), verified the cut-49
+    canonical arm (36-byte `cx.evaluate(values, args[0].clone())`, rustfmt-clean, accepted
+    inverse; `rum-host/src/model/mod.rs` 1,064 B `f118494a…` in both arms) and emitted 50 of
+    the 58 cuts per arm (38 files / 637,960 B per arm, arms equal). The six c103 cuts
+    50/51/52/56/57/58 are byte-exact in both images. It stopped at cuts 53/54/55 on
+    `Q749-c103-canonical-else`: the sealed ordinary calls are 216/148/91 B, the standing
+    canonical emitter writes 244/180/170 B at the rendered else arms; restoring only the
+    sealed call gives exactly one rustfmt diff in each of the six images; cuts 53/54 have equal
+    sealed and emitted typed AST digests (`24785f7d…`, `27c61724…`), cut 55's only token
+    difference is the formatter-added trailing comma after `self` (`12a8fe8e…` vs
+    `2910e282…`). Run: unit `brief-749-cdx-20261122-105351-251275`, 10:53:51–11:11:27 CST,
+    rc 0, 20 GiB peak 542,937,088 B (0.506 GiB, oom 0/0), 0 repo changes; attempt-6 report STOP
+    (10 PASS / 1 FAIL (`a6-c103-canonical`) / 5 NA; 2 deviations; 1 question), cumulative
+    `report.py check 749` OK 1,721 citations; 76 receipts summing 69.89334395599144 s focused
+    (72 exit 0, 4 disclosed non-zero; 0 workspace, 0 epoch); attempts 1–6 =
+    322.23153426697536 s, leaving 4,308.768465733025 s + 5,577 s workspace. Ruling
+    `Q749-c103-canonical-else` / `Q749-ordinary-canonical-class` generalizes the c107 principle
+    to every cut's ordinary arm: the emitted spelling is exactly the standing canonical
+    emitter's output at that position, cuts 53/54/55 explicitly (244/180/170 B, cut 55's comma
+    recorded), the six byte-exact c103 cuts keep their sealed bytes, the typed invocation and
+    c103 witness/producer/hit/value stay unchanged, each recipe records the two-step inverse to
+    the live preimage, and the `a6-c103-canonical` bar is superseded; no row reclassified, no
+    further re-export, the partition still 144 files / 288 postimages with 58 cuts unchanged.
+    Scene holds: git status still 23 inherited entries, HEAD = origin/main = `a29bc4b0`,
+    nothing under `crates/` newer than the dispatch, no `.git-attempts`, writes only attempt-6
+    plus `attempt-5-report.json` and `report.json`, live pins `22751919…` / `3953aa9f…` /
+    `14bd4326…` / `8d861eb5…`, archived reports and the preserved attempt-5 cumulative
+    (`0cd9b3ad…`, 1,321 citations) byte-exact, no git/network/cargo/rustc receipts; the four
+    non-zero receipts are the STOP signal and the three disclosed report-only probes. Bar
+    571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118
+    Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
+    unauthorized; 745/746 held. Brief 749 attempt 7 amended and committed; dispatched to `cdx`.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);

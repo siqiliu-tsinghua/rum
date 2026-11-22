@@ -118433,3 +118433,54 @@ Budget: attempt 5 charged 67.01911845699942 s; attempts 1–5 = 252.338190310983
 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners
 and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held.
 Brief 749 attempt 6 is amended and committed and dispatched to `cdx`.
+
+### Continuation 108 — brief 749 attempt 6 stops at the three c103 ordinary arms; `Q749-ordinary-canonical-class` generalizes the canonical rule
+
+Attempt 6 (unit `brief-749-cdx-20261122-105351-251275`, 10:53:51–11:11:27 CST, rc 0, 20 GiB
+peak 542,937,088 B / 0.506 GiB, oom 0/0, 0 repo changes; report STOP with 10 PASS / 1 FAIL
+(`a6-c103-canonical`) / 5 NA, 2 deviations, 1 question; cumulative `report.py check 749` OK
+with 1,721 citations; 76 receipts summing 69.89334395599144 s focused, 0 workspace, 0 epoch)
+preserved the attempt-5 cumulative first (`.temp/brief-749/attempt-5-report.json`, 694,328 B,
+`0cd9b3ad…`, 1,321 citations) and then reproduced the accepted groundwork: the 116-binding
+preflight (byte-identical to attempt 5's evidence), the 135-row / 270-postimage parent (the
+`parent-render.json`, `nameability.json` and `protected-parent-items.json` files are
+byte-identical to the accepted attempt-5 copies, so my earlier 135-row derivation carries),
+66/66 protected records with 12 exact peer assertions per arm, the native hooks 2/2 across six
+variants, the 255/151/6 live selection, and the cut-49 canonical arm (36-byte
+`cx.evaluate(values, args[0].clone())`, rustfmt-clean, accepted inverse; `model/mod.rs` 1,064 B
+`f118494a…` in both arms). It emitted 50 of the 58 cuts per arm (38 files / 637,960 B per arm,
+arms equal), with the six c103 cuts 50/51/52/56/57/58 byte-exact in both images, and stopped at
+cuts 53/54/55: the sealed ordinary calls are 216/148/91 B, the standing canonical emitter writes
+244/180/170 B at the rendered else arms (+28 / +32 / +79 B), and restoring only the sealed call
+gives exactly one rustfmt diff in each of the six images. I re-derived all three from the
+sealed armed tree and both canonical images (sealed texts occur exactly once at the stated
+lengths; canonical texts exactly once at 244/180/170 B; sealed text absent from the canonical
+images) and replayed the pinned rustfmt (1.8.0-stable, edition/style 2024, `max_width=100`,
+`skip_children=true`) in `.temp/director/gate-758/`: the six canonical images are 0-hunk clean
+and the six restored-only-sealed images each produce exactly 1 hunk. Cuts 53/54 have equal
+sealed and emitted typed AST digests (`24785f7d…`, `27c61724…`); cut 55's only token difference
+is the formatter-added trailing comma after `self` (`12a8fe8e…` vs `2910e282…`). Ruling
+`Q749-c103-canonical-else` / `Q749-ordinary-canonical-class`
+(`.temp/director/ruling-758.md`): the STOP is correct and the finding is a plan-text defect —
+"the original call, textually unchanged" means the same typed invocation in every cut, so the
+ordinary arm is emitted in exactly the standing canonical emitter's spelling wherever it
+reflows the call; cuts 53/54/55 are explicitly authorized (including cut 55's comma), the six
+byte-exact c103 cuts keep their sealed bytes, the typed invocation and the c103
+witness/producer/hit/value are unchanged, each recipe records the exact sealed and canonical
+calls and the two-step inverse to the live preimage, the canonical image must pass the pinned
+`cargo fmt --check`, restoring only the sealed call must produce exactly one diff, and the
+`a6-c103-canonical` bar is superseded; no `#[rustfmt::skip]`, exemption, moved continuation or
+text-position workaround; no row reclassified or moved; no further re-export; the partition
+stays 144 files / 288 postimages (98 preserved + 37 re-rendered + 9 new) with 58 cuts
+unchanged. Scene: git status still the inherited 23 entries, HEAD = origin/main = `a29bc4b0`,
+nothing under `crates/` newer than the dispatch, no `.git-attempts`, writes only attempt-6 plus
+`attempt-5-report.json` and `report.json`, live pins `22751919…` / `3953aa9f…` / `14bd4326…` /
+`8d861eb5…`, the archived reports byte-identical, the receipts free of git, cargo, rustc and
+network calls; the four non-zero receipts are the `incoming.py` STOP signal (exit 3) and the
+three disclosed report-only probe readers (exit 1), each with a corrected replay. Budget:
+attempt 6 charged 69.89334395599144 s; attempts 1–6 = 322.23153426697536 s of the 4,631 s
+carve, leaving 4,308.768465733025 s focused + 5,577 s workspace, 0 epoch; reserve
+44,205.2293813071 s and CM4 209,210.425572227 s unchanged. Bar 571/4,422, 37/134, 4/133, 0/26;
+pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and
+five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held. Brief
+749 attempt 7 is amended and committed and dispatched to `cdx`.

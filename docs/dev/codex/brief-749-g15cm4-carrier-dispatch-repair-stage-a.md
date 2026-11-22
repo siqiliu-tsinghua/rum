@@ -56,15 +56,30 @@ formatter diff per copy, and the typed call is unchanged. Ruling `Q749-P0002-can
 (`.temp/director/ruling-757.md`) authorizes the canonical spelling at that one call; the
 amendment after attempt 5 (in force) is below.
 
-**This is attempt 6.** It renders the same **58** cuts over the same **144-file /
-288-postimage** table, with cut 49's ordinary arm in the authorized canonical spelling; the
-amendment after attempt 5 (in force) is below.
+**Attempt 6.** Attempt 6 (unit `brief-749-cdx-20261122-105351-251275`, 69.89334395599144 s
+focused) preserved the attempt-5 cumulative at `.temp/brief-749/attempt-5-report.json`
+(694,328 B, SHA-256 `0cd9b3ad…`, 1,321 citations), reused the accepted preflight (116/116),
+reproduced the parent byte-exactly (135 rows / 270 postimages, the 98+37+9 partition, 66/66
+protected records, 12 exact peer assertions per arm, the native hooks, the 255/151/6 live
+selection) and emitted 50 of the 58 cuts per arm, with cuts 50/51/52/56/57/58 byte-exact, then
+stopped under the STOP rule with `Q749-c103-canonical-else`: cuts 53 (216→244 B), 54
+(148→180 B) and 55 (91→170 B, including one formatter-added trailing comma) cannot keep the
+sealed ordinary call bytes under the standing canonical emitter at the rendered else arm;
+restoring only the sealed call gives exactly one formatter diff in each image. Ruling
+`Q749-c103-canonical-else` (`Q749-ordinary-canonical-class`,
+`.temp/director/ruling-758.md`) generalizes the c107 principle to every cut's ordinary arm;
+the amendment after attempt 6 (in force) is below.
+
+**This is attempt 7.** It renders the same **58** cuts over the same **144-file /
+288-postimage** table, with every ordinary arm in the canonical spelling the standing emitter
+produces (cuts 53/54/55 explicitly; the six byte-exact c103 cuts unchanged); the amendment
+after attempt 6 (in force) is below.
 
 ## Goal
 
-When this brief is done, in `.temp/brief-749/attempt-6/` only (plus the preserved
-attempt-1, attempt-2, attempt-3, attempt-4 and attempt-5 reports and the cumulative report at
-the parent paths): every one of the **58** cuts — the 748 plan's 47 (with cuts 15 and 17 relocated to their credited callers
+When this brief is done, in `.temp/brief-749/attempt-7/` only (plus the preserved
+attempt-1, attempt-2, attempt-3, attempt-4, attempt-5 and attempt-6 reports and the cumulative
+report at the parent paths): every one of the **58** cuts — the 748 plan's 47 (with cuts 15 and 17 relocated to their credited callers
 by `Q749-protected-profile-twins`), the two fixture caller cuts at `native.rs:143` and `:185`,
 and the nine c103 cuts (five carried, four further initial calls) — is rendered at its
 anchored original boundary into the two copied images, bound by typed symbol, receiver,
@@ -268,7 +283,7 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
    the exact fact — never a row exception, never a text-position workaround, never a moved
    hit.
 
-## Amendment after attempt 5 (in force, c107)
+## Amendment after attempt 5 (c107; attempt 6 ran under this; item 6 superseded by c108)
 
 1. **Cut 49's ordinary arm is the same typed call in canonical spelling.** The words "the
    original call, textually unchanged" in the amendment after attempt 1 (c102 item 1) mean the
@@ -309,6 +324,54 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
    never a row exception, never a text-position workaround, never a moved hit. The canonical
    authorization in item 1 is the only whitespace normalization permitted.
 
+## Amendment after attempt 6 (in force, c108)
+
+1. **The canonical ordinary arm is a class, not a cut exception.** The words "the original
+   call, textually unchanged" (c102 item 1, c105 items 1–2, c106 item 1) mean the same typed
+   invocation in every cut, not the sealed parent's line breaks — the c107 principle. Wherever
+   the standing canonical emitter reflows the live ordinary invocation at the rendered else
+   arm, the emitted spelling is exactly that canonical output. Cuts 53 (216→244 B), 54
+   (148→180 B) and 55 (91→170 B, including the formatter's trailing comma after `self`) are
+   authorized explicitly in both images; every other cut's ordinary arm follows the same rule.
+   Where the formatter's output equals the sealed call — the six c103 cuts 50/51/52/56/57/58 —
+   the sealed spelling is kept byte-exactly and must not be renormalized. No
+   `#[rustfmt::skip]`, no local format exemption, no moved continuation and no other
+   text-position workaround; the driven arm calls the driven twin with the same receiver and
+   argument expressions.
+2. **The typed invocation is preserved and recorded.** Receiver or free function, method,
+   argument expressions and their order, and the continuation are identical to the live
+   invocation. Cuts 53/54 have equal sealed and emitted typed AST digests (`24785f7d…`,
+   `27c61724…`); cut 55's only token difference is the one formatter-added trailing comma,
+   which is semantically inert and must be recorded as exactly that (its AST serialization
+   digest differs only for that reason: `12a8fe8e…` vs `2910e282…`). The c103 witness,
+   producer, hit and value conditions are unchanged for every row.
+3. **The recipe records the normalization and still inverts.** Each affected cut's recipe
+   records the exact sealed-parent call, the exact emitted canonical call, and the two-step
+   inverse (canonical → the sealed parent call → the live preimage), byte-exactly. The check
+   bars are: (a) the canonical image passes `cargo fmt --check` under the pinned toolchain;
+   (b) restoring only the sealed ordinary call into the canonical image produces exactly one
+   formatter diff; (c) the typed identity above; (d) the inverse reaches the live preimage.
+   The attempt-6 `a6-c103-canonical` bar ("the sealed ordinary invocation is present in all
+   nine canonical dispatchers") is superseded — it cannot be satisfied by any canonical image
+   for these three cuts.
+4. **Nothing else moves.** No row is reclassified or moved; no further re-export is
+   authorized; the partition stays **144 files / 288 postimages = 98 preserved + 37 re-rendered
+   + 9 new** with 58 cuts unchanged; the accepted 116-binding preflight is reusable; the 66
+   protected records, the 12 exact peer assertions per arm, the native hooks, the 255/151/6
+   live selection and the six byte-exact c103 cuts' ordinary arms stay green; the 20 class
+   cells credited at c96 and everything sealed (c76–c99) stay untouched.
+5. **Scene and budget.** New work under `.temp/brief-749/attempt-7/`; before writing the new
+   cumulative, copy the current cumulative `.temp/brief-749/report.json` verbatim to
+   `.temp/brief-749/attempt-6-report.json`, and keep attempt 6's scene read-only. Budget:
+   attempts 1–6 charged 322.23153426697536 s focused; the remaining carve is
+   4,308.768465733025 s focused + 5,577 s workspace, 0 epoch; an overrun is a new ruling,
+   never a scope cut.
+6. **STOP rules stay.** Any other cut that cannot be expressed at its anchored boundary, any
+   affected row whose scheduled caller cannot be bound, any unnameable identifier, or any
+   other divergence of the recomputed bytes from a byte-pinned anchor stops with the exact
+   fact — never a row exception, never a text-position workaround, never a moved hit. The
+   canonical normalization in item 1 is the only permitted formatter change.
+
 ## Context pointers
 
 - Read `AGENTS.md`; `.temp/director/ruling-749.md`; `.temp/brief-749/attempt-1-report.json` and
@@ -322,8 +385,12 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
   `.temp/brief-749/attempt-5-report.json` and the attempt-5 scene (read-only), especially
   `evidence/nameability.json`, `evidence/parent-render.json`,
   `evidence/cut-disposition.tsv`, `evidence/formatter-controls.json` and
-  `evidence/partition-at-stop.json`; rulings
-  `.temp/director/ruling-754.md`, `ruling-755.md`, `ruling-756.md` and `ruling-757.md`;
+  `evidence/partition-at-stop.json`; `.temp/brief-749/attempt-6-report.json` and the
+  attempt-6 scene (read-only), especially `evidence/decision.json`,
+  `evidence/incoming-byte-contracts.json`, `evidence/cut-disposition.tsv`,
+  `evidence/specimen-pins.json` and `evidence/partition-at-stop.json`; rulings
+  `.temp/director/ruling-754.md`, `ruling-755.md`, `ruling-756.md`, `ruling-757.md` and
+  `ruling-758.md`;
   `.temp/director/ruling-748.md`;
   brief 748 (`docs/dev/codex/brief-748-g15cm4-carrier-dispatch-reachability.md`) and its scene in
   full, especially `repair-sites.tsv` (47 cuts: file, anchor, destination, rows, operation),
@@ -354,19 +421,19 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
 
 ## Scope (Stage A only)
 
-- MAY create/modify: everything under `.temp/brief-749/attempt-6/` for new work; the report
-  paths `.temp/brief-749/attempt-5-report.json` (a verbatim copy of the current cumulative
+- MAY create/modify: everything under `.temp/brief-749/attempt-7/` for new work; the report
+  paths `.temp/brief-749/attempt-6-report.json` (a verbatim copy of the current cumulative
   `report.json`) and `.temp/brief-749/report.json` (the new cumulative report). Everything else
-  under `.temp/brief-749/` — attempt 1's files, the attempt-2, attempt-3, attempt-4 and
-  attempt-5 scenes — is a read-only record. Put the renderer, the copies of the generator
-  scripts, the rendered trees, the re-derived tables and every scratch file under `attempt-6/`.
+  under `.temp/brief-749/` — attempt 1's files and the attempt-2 through attempt-6 scenes — is
+  a read-only record. Put the renderer, the copies of the generator scripts, the rendered
+  trees, the re-derived tables and every scratch file under `attempt-7/`.
 - MAY read: the live source tree, the sealed scenes, the earlier `.temp/brief-*` records.
 - MUST NOT: edit the live source tree (0 tracked changes); write under any sealed scene; edit the
   live 135-row `overlays.tsv`, the live `mutants.tsv`, the policy, the schema, the manifest or
   the selections; run the epoch binaries; create an epoch label; build the twelve blocks; run the
   six workspace comparisons, Stage B or Stage C; commit or use git; touch the network; add a
   dependency or `unsafe`. Builds may run only on the rendered copies under
-  `.temp/brief-749/attempt-6/`, never on the live tree or a sealed tree.
+  `.temp/brief-749/attempt-7/`, never on the live tree or a sealed tree.
 
 ## Deliverable
 
@@ -437,7 +504,7 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
   row's scheduled caller cannot be bound, STOP with the exact missing fact — never a row
   exception and never a text-position workaround.
 - Paste verbatim evidence for every verdict (file:line, rendered text, measured count). Save
-  every command's full output under `.temp/brief-749/attempt-6/` before parsing.
+  every command's full output under `.temp/brief-749/attempt-7/` before parsing.
 - Standings: replay the source-stage inventories on the rendered copy before the source gate;
   a red caused only by a stale fingerprint or position cell is an ordering artifact, reported
   as such, never weakened or hand-edited.
@@ -467,18 +534,25 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
   `.and_then(CallbackValue::adopt)` continuation unchanged), the recipe records the 49→36
   normalization and inverts byte-exactly to the live preimage, and the standing format gate is
   green in both feature modes.
-- Budget: attempts 1–5 charged 7.5967964620012935 + 29.80946500299069 + 34.498837827006355 +
-  113.41397256198616 + 67.01911845699942 = **252.33819031098392 s** focused; the remaining
-  carve is **4,378.661809689016 s focused + 5,577 s workspace, 0 epoch**; every bounded command
-  debits by monotonic elapsed time; a projected overrun stops for a director ruling, never a
-  scope cut.
+- Every ordinary arm (c108 class): the rendered else arm is exactly the standing canonical
+  emitter's output for the live invocation at that position; cuts 53/54/55 are exactly the
+  measured 244/180/170-byte spellings (cut 55 including the trailing comma), the six byte-exact
+  c103 cuts 50/51/52/56/57/58 keep their sealed bytes, the driven arm calls the driven twin
+  with the same receiver and arguments, the typed identity holds for cuts 53/54 and only the
+  one recorded comma differs for cut 55, restoring only the sealed ordinary call yields exactly
+  one formatter diff per image, and each recipe inverts byte-exactly to the live preimage.
+- Budget: attempts 1–6 charged 7.5967964620012935 + 29.80946500299069 + 34.498837827006355 +
+  113.41397256198616 + 67.01911845699942 + 69.89334395599144 = **322.23153426697536 s**
+  focused; the remaining carve is **4,308.768465733025 s focused + 5,577 s workspace, 0
+  epoch**; every bounded command debits by monotonic elapsed time; a projected overrun stops
+  for a director ruling, never a scope cut.
 
 ## Report format
 
-`rum-report/1` at `.temp/brief-749/attempt-6/report.json`; first copy the current cumulative
-`.temp/brief-749/report.json` verbatim to `.temp/brief-749/attempt-5-report.json`, and write the
+`rum-report/1` at `.temp/brief-749/attempt-7/report.json`; first copy the current cumulative
+`.temp/brief-749/report.json` verbatim to `.temp/brief-749/attempt-6-report.json`, and write the
 new cumulative `.temp/brief-749/report.json` in the 744 precedent's shape retaining attempts
-1–5's STOP records and the attempt-6 outcome; `changes` empty (every write is under the allowed
+1–6's STOP records and the attempt-7 outcome; `changes` empty (every write is under the allowed
 paths); sections for the render, the scheduled-caller audit, the re-scan, the table and schema,
 the source gate, the falsifiers, the pins, the budget and the Open ledger. Save every command's
 full output in the scene; cite lines exactly. Before finishing run
