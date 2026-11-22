@@ -3741,6 +3741,55 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held. Brief 749 attempt 7 amended and committed; dispatched to `cdx`.
 
+  - G15-CM4 continuation 109 (brief 749 attempt 7) (2026-11-22): Stage A is accepted. The full
+    58-cut render produced the **144-file / 288-postimage** table (`5c3b02a3…`, 11,674,289 B;
+    design 98 preserved + 37 re-rendered + 9 new; measured 100 byte-exact prior files + 35
+    differing + 9 new, the two extra byte-exact files being the relocated protected targets
+    `control_data/nonlocal.rs` and `scoping/lexical/module.rs`), twice byte-identically
+    (tables, mutants, policy, recipes, partition and all 288 images); every hex payload hashes
+    to its digest; all 144 preimages equal the live files; all 288 recipes invert postimage →
+    sealed parent → live preimage byte-exactly (my replay). The mutants table has 151 data
+    rows with only `source_schema` replaced (`5c3b02a3…` for `22751919…`) and 1,057 other
+    cells byte-equal; the policy stays `3953aa9f…`. The c108 class holds: five reflows per arm
+    — cut 13 66→53 B, cut 49 49→36 B, cut 53 216→244 B, cut 54 148→180 B, cut 55 91→170 B
+    with the trailing comma — the six byte-exact c103 cuts keep their bytes, and my pinned
+    rustfmt replay gives 0 hunks on all ten canonical images and exactly 1 hunk on all ten
+    restored-only-sealed images. The source gate passes in both modes (69 sections; 4,342
+    passed / 9 failed / 66 ignored / 7 filtered, the only failures the nine Jupyter native
+    loopback EPERMs reproduced serially from binary `6a27659e…`; the seven accepted skips; the
+    three switched suites; fmt and four cargo-check configurations exit 0; 12 route-A
+    falsifiers per mode; peel 19,184/3,360/924,192; private frame E0603; 133/131 warnings vs
+    131/129 sealed with zero new families). All 151 own rows are reachable (135
+    static-witness, 6 cover-candidate, 10 hit-side-edge-fix) with 453 selected sites and zero
+    unknown; both source graphs are equal; 147 direct caller-to-hit paths and 4 two-phase
+    handoffs (C10, P0267, P0312, P0323); 247 definition names / 250 concrete bodies / 11 new
+    control items; the 62-row audit (56 own + 6 dependencies) and ten supplemental edge-fix
+    rows (nine cuts, 50–58); 105 dependency plans (P0325 50, P0326 50, C1 2, G15A 1, G15B 1,
+    Some 1) with 10 tagged-throw missing successes and zero admissions. The authoritative
+    source baseline standing replay is green (`unexplained=[]`); the two supplemental composed
+    copies carry only the declared ordering artifacts (positions 302→349, options 233→405, the
+    LP01 stale `down_values.rs` producer, the same eight typed-slot names, 0 new), plus the one
+    real new opaque callback `cm740_probe::control::Bound.live` and 33 diagnostic-only
+    UnknownConstruct additions, owner statuses unchanged; no inventory was hand-edited. Run:
+    unit `brief-749-cdx-20261122-112116-266698`, 11:21:16–12:50:28 CST, rc 0, 20 GiB peak
+    16,747,417,600 B (15.596 GiB, oom 0/0), 0 repo changes; attempt-7 report DONE (17/17
+    PASS; 4 deviations; 0 questions), cumulative `report.py check 749` OK 2,086 citations;
+    100 receipts summing 2,731.634255751007 s focused + 2,936.272497400998 s workspace (28
+    disclosed non-zero, each with a corrected replay), 0 epoch; attempts 1–7 =
+    3,053.8657900179824 s focused, leaving 1,577.1342099820176 s + 2,640.727502599002 s
+    workspace. Scene holds: git status still 23 inherited entries, HEAD = origin/main =
+    `07875950`, nothing under `crates/` newer than the dispatch, no `.git-attempts`, writes
+    only attempt-7 plus `attempt-6-report.json` and `report.json`, live pins `22751919…` /
+    `3953aa9f…` / `14bd4326…` / `8d861eb5…` / `a75abf18…`, all six preserved cumulative
+    reports byte-identical (`4ebbbe32…`, `1c91982f…`, `37fd1f52…`, `21c37db9…`, `0cd9b3ad…`,
+    `69f6954…`), no git/network receipts. Bar 571/4,422, 37/134, 4/133, 0/26; pair
+    `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five
+    source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held; sealed
+    c76–c99 stays sealed. Ruling `Q749-stage-a-rendered-144` accepts Stage A and orders Stage
+    B (brief 754): the standing replays, the clean freeze from the accepted render, the
+    twelve-block epoch, the carrier drives, the peels, the P0543 live passes and the workspace
+    A/B.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);

@@ -118484,3 +118484,68 @@ carve, leaving 4,308.768465733025 s focused + 5,577 s workspace, 0 epoch; reserv
 pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and
 five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held. Brief
 749 attempt 7 is amended and committed and dispatched to `cdx`.
+
+### Continuation 109 — brief 749 attempt 7 completes Stage A: the 58-cut render, the 144-file / 288-postimage table and the new schema are accepted
+
+Attempt 7 (unit `brief-749-cdx-20261122-112116-266698`, 11:21:16–12:50:28 CST, rc 0, 20 GiB
+peak 16,747,417,600 B / 15.596 GiB, oom 0/0, 0 repo changes; report DONE with 17/17 checks
+PASS, 4 deviations, 0 questions; cumulative `report.py check 749` OK with 2,086 citations; 100
+bounded receipts summing 2,731.634255751007 s focused + 2,936.272497400998 s workspace, 0
+epoch; 28 non-zero receipts all disclosed with corrected replays) delivered the full Stage A
+render. The attempt-6 cumulative was preserved first at `.temp/brief-749/attempt-6-report.json`
+(893,981 B, `69f6954…`). The render: `TABLE render=two files=144 postimages=288 preserved=98
+rerendered=37 new=9 full_payloads=true table_bytes=11674289 source_schema=5c3b02a3…`, with
+`RENDER TWICE PASS ... full_tables_recipes_and_schema_byte_identical=true`; the two renders are
+byte-identical in the table, mutants, policy, recipes, partition and all 288 images. I re-read
+the table myself: 144 sorted rows, every hex payload hashes to its digest (288/288), all 144
+preimages equal the live files, the partition's pre/parent/post records are exact for both
+arms, and the measured preservation is 100 byte-exact prior files + 35 differing + 9 new (the
+design is 98/37/9; the two extra byte-exact files are the relocated protected targets
+`control_data/nonlocal.rs` and `scoping/lexical/module.rs`). I replayed all 288 two-step
+inverses from the rendered images: postimage → sealed parent → live preimage, byte-exactly.
+The mutants table changes only `source_schema` on its 151 rows (1,057 other cells byte-equal);
+the policy stays `3953aa9f…`. The c108 class holds: five reflows per arm (cut 13 66→53, cut 49
+49→36, cuts 53/54/55 216→244/148→180/91→170 with cut 55's trailing comma), the six byte-exact
+c103 cuts unchanged, and my pinned rustfmt replay in `.temp/director/gate-759/` gives 0 hunks
+on all ten canonical images and exactly 1 hunk on all ten restored-only-sealed images. The
+source gate passes in both modes (69 sections; 4,342 passed / 9 failed / 66 ignored / 7
+filtered; the only failures are the nine Jupyter native loopback EPERMs, reproduced serially
+from the identical binary `6a27659e…`; the seven accepted skips; the three switched lp03/lp04/
+lp05 suites; fmt and four cargo-check configurations exit 0; 12 route-A falsifiers per mode;
+peel 19,184/3,360/924,192; private frame E0603; 133/131 warnings against 131/129 sealed with
+zero new families). The static stage: all 151 own rows reachable (135 static-witness, 6
+cover-candidate, 10 hit-side-edge-fix), 453 selected sites, 0 unreachable, 0 unknown; both
+recovered source graphs equal; 147 direct caller-to-hit paths and 4 two-phase handoffs (C10,
+P0267, P0312, P0323); 247 definition names / 250 concrete bodies / 11 new control items; the
+62-row scheduled audit (56 own + 6 dependencies) and ten supplemental edge-fix rows (nine
+cuts, 50–58); 105 dependency plans (P0325 50, P0326 50, C1 2, G15A 1, G15B 1, Some 1) with 10
+tagged-throw missing successes and 0 admissions. The authoritative source baseline standing
+replay is green (`unexplained=[]`); the two supplemental composed copies carry only the
+declared ordering artifacts (positions 302→349, options 233→405, the LP01 stale
+`down_values.rs` producer, the same eight typed-slot names, 0 new), plus one real new opaque
+callback `cm740_probe::control::Bound.live` and 33 diagnostic-only UnknownConstruct additions
+per role with owner statuses unchanged; no inventory was hand-edited. The 26 whole-file
+withholding fixtures (13 cuts × 2 arms) retain the typed ordinary call and row guards while
+the selected driven edge disappears; runtime catches 0; Stage B/C measures the dynamics.
+Ruling `Q749-stage-a-rendered-144` (`.temp/director/ruling-759.md`): Stage A is accepted with
+the 144-row render, the schema `5c3b02a3…` and the two source-tree pins (`b41d1873…` disabled,
+`bd8b7548…` armed; source `97eaeb45…`; real baseline `5028530e…`) as the Stage B input; the
+two relocated targets are byte-preserved regardless of their design label; the six
+supplemental standing reds are ordering artifacts, not accepted green, and Stage B's freeze
+rebases the inventory by item identity including the new callback; the nine loopback refusals
+are the accepted environment; no dynamic claim; no row reclassified or moved; no further
+re-export; the 13 PortBlocked rows, pair `(45,5,false)` at zero admitted receipts, C2 118
+Residual + 0 Lost, the 51 owners and five source duties, membership 28/3/7/113,
+`CHANGELOG.md`/S10 blocked, CM5 unauthorized, sealed c76–c99 and 745/746 held all stand.
+Scene: git status still the inherited 23 entries, HEAD = origin/main = `07875950`, nothing
+under `crates/` newer than the dispatch, no `.git-attempts`, writes only attempt-7 plus
+`attempt-6-report.json` and `report.json`, live pins `22751919…` / `3953aa9f…` / `14bd4326…` /
+`8d861eb5…` / `a75abf18…`, all six preserved cumulative reports byte-identical
+(`4ebbbe32…`, `1c91982f…`, `37fd1f52…`, `21c37db9…`, `0cd9b3ad…`, `69f6954…`), no
+git/network receipts. Budget: attempt 7 charged 2,731.634255751007 s focused +
+2,936.272497400998 s workspace; attempts 1–7 = 3,053.8657900179824 s focused of the 4,631 s
+carve, leaving 1,577.1342099820176 s focused + 2,640.727502599002 s workspace, 0 epoch; reserve
+44,205.2293813071 s and CM4 209,210.425572227 s unchanged. Next: brief 754 = Stage B (the
+standing replays, the clean freeze from the accepted render, the twelve-block epoch, the
+carrier drives, the peels, the P0543 live passes and the workspace A/B), then Stage C, the 744
+restart, 745 and 746.
