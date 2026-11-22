@@ -118304,3 +118304,46 @@ class cells credited at c96 stand; the 95 reachable images and 13 PortBlocked bi
 preserved; no predicate weakened; no hit moved; everything sealed (c76–c99) stays sealed;
 745/746 held. Brief 749 attempt 3 is dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the
 standing routing (agy on a cyber-filter refusal, a Codex quota death stops and asks).
+
+### Continuation 105 — brief 749 attempt 3 stopped on cuts 15/17 at the protected profile twins; `Q749-protected-profile-twins` relocates them to the credited callers
+
+Brief 749 attempt 3 (unit `brief-749-cdx-20261122-084123-177316`, 08:41:23–08:57 CST, rc 0,
+20 GiB peak 383,143,936 B = 0.365 GiB, oom 0/0, 0 repo changes; attempt-3 report
+`.temp/brief-749/attempt-3/report.json` STOP, cumulative `report.py check 749` OK with 706
+citations; 65 bounded receipts summing exactly 34.498837827006355 s focused, 0 workspace, 0
+epoch; attempts 1–3 = 71.90509929199834 s, leaving 4,559.094900708002 s + 5,577 s workspace)
+reproduced the accepted parent first — `PARENT RENDER PASS rows=135 postimages=270
+preserved_rows=100 re_render_rows=35 planned_new_paths=8`, the 18 c103 anchor cells exact, and
+`PROTECTED ITEM REPLAY PASS declared_bodies=42 profile_return_hot_twins=24 matched=66/66` — and
+then stopped under the STOP rule: cuts 15 and 17 were designed as entry dispatchers inside
+`Session::eval_catch` (`nonlocal.rs:80`) and `Session::eval_module` (`lexical/module.rs:15`),
+the unique protected peers of the profile-return driven twins. `verify_render.py:46` asserts
+`functions(post)[hot]==prior_fns[hot]==live_fns[hot]` for every such peer. I reproduced the
+pins: `eval_catch` lines 80–109, 1,358 B, `fc003b03…`; `eval_module` lines 15–83, 2,585 B,
+`6d480445…`; both identical in live and the sealed armed tree. The diagnostic insertion grows
+them to 1,466 B / 2,694 B and both fail the predicate in both arms; restoring the parent
+passes; the recipe inverts to live. The caller census is exactly three calls: the two
+production sites `ControlDataBuiltin::Catch => self.eval_catch(args),`
+(`control_data/mod.rs:75`, rows P0812/P0813/P0814) and `session.eval_module(args)`
+(`builtin_adapters.rs:405`, row P1507), plus one `cfg(test)` call at
+`profiling/tests/control.rs:1134`; the c103 inventory credits exactly the two production
+sites. `control_data/mod.rs` is absent from the 135-row overlays and byte-identical in the
+live, real, disabled and armed trees (`21056f70…`); `builtin_adapters.rs` is parent row 8
+(live `0be72928…`, disabled = armed `f8ca28fc…`). Ruling `Q749-protected-profile-twins`
+(`.temp/director/ruling-755.md`): the STOP is correct and the finding is a plan defect, not a
+row defect; both cuts relocate to their credited incoming call sites in the
+`Q749-retained-callers` shape — cut 15 at `control_data/mod.rs:75`, cut 17 at
+`builtin_adapters.rs:405` — with `if crate::cm740_probe::driven() { <driven twin with the same
+args> } else { <the original call, textually unchanged> }`, the protected bodies byte-exact,
+and the three negatives restated. The partition recomputes: `builtin_adapters.rs` preserved →
+re-rendered, `control_data/mod.rs` a ninth new overlay file pinned to its live bytes — the
+forecast is 144 files / 288 postimages = 99 preserved + 36 re-rendered + 9 new, 58 cuts
+unchanged (two relocated, not added); the render recomputes the table, the counts and the
+`source_schema`. No row is reclassified or moved: the credited edge is the same call site, the
+value and hit unchanged. The one disclosure is an external
+`tools/claude-mod/rum-director/.claude-plugin/types/claude-code-tools/index.d.ts` timestamp
+observed during the attempt (no task command wrote it; origin unverified). Attempt 4 continues
+inside 749's carve. Nothing reclassified; the 20 class cells stand; 95 reachable images and 13
+PortBlocked preserved; sealed (c76–c99) stays sealed; 745/746 held. Brief 749 attempt 4 is
+dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the standing routing (agy on a
+cyber-filter refusal, a Codex quota death stops and asks).

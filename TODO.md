@@ -3611,6 +3611,32 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held. Brief 749 attempt 3 dispatched to `cdx`.
 
+  - G15-CM4 continuation 105 (brief 749 attempt 3) (2026-11-22): Stage A stopped on cuts 15 and
+    17, whose entry dispatchers would wrap the protected ordinary methods
+    `Session::eval_catch` (`nonlocal.rs:80`, span 1,358 B, sha256 `fc003b03…`) and
+    `Session::eval_module` (`lexical/module.rs:15`, 2,585 B, `6d480445…`) — the unique
+    protected peers of the profile-return driven twins, which `verify_render.py:46` requires
+    byte-equal to live in both arms. The parent reproduced exactly first (135 rows / 270
+    postimages, 66/66 protected records, 18/18 c103 anchors). Run: unit
+    `brief-749-cdx-20261122-084123-177316`, 08:41:23–08:57 CST, rc 0, 20 GiB peak
+    383,143,936 B (0.365 GiB, oom 0/0), 0 repo changes; attempt-3 report STOP, cumulative
+    `report.py check 749` OK 706 citations; 65 receipts summing 34.498837827006355 s focused
+    (0 workspace, 0 epoch); attempts 1–3 = 71.90509929199834 s, leaving 4,559.094900708002 s
+    + 5,577 s workspace. I reproduced the pins and the predicate: the diagnostic insertions
+    grow the spans to 1,466 B / 2,694 B, both fail in both arms, restoring passes, the
+    recipe inverts to live. The caller census is exactly three calls — the two production
+    sites `control_data/mod.rs:75` (P0812/P0813/P0814) and `builtin_adapters.rs:405` (P1507),
+    plus one `cfg(test)` call. `control_data/mod.rs` is absent from the 135-row overlays and
+    identical in all four trees (`21056f70…`); `builtin_adapters.rs` is row 8 (live
+    `0be72928…`, postimages `f8ca28fc…`). `Q749-protected-profile-twins` relocates cuts 15
+    and 17 to those credited call sites with the original calls textually in the else arm and
+    the protected bodies byte-exact; the partition recomputes to 144 files / 288 postimages
+    (99 preserved + 36 re-rendered + 9 new), 58 cuts unchanged. One disclosure (an external
+    `tools/claude-mod` timestamp, no task write). Bar 571/4,422, 37/134, 4/133, 0/26; pair
+    `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and
+    five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held.
+    Brief 749 attempt 4 dispatched to `cdx`.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);
