@@ -30,25 +30,28 @@ by brief 753), 10 hit-side-edge-fix, zero unknown — and accepted nine cuts bey
 Attempt 3 rendered the 58 cuts over the then-derived 143-file / 286-postimage table; the
 amendment after attempt 2 (in force) is below.
 
-**This is attempt 4.** Attempt 3 (unit `brief-749-cdx-20261122-084123-177316`, 34.498837827006355 s
+**Attempt 4.** Attempt 4 (unit `brief-749-cdx-20261122-090319-193939`, 113.41397256198616 s
 focused; its cumulative report is preserved verbatim at
-`.temp/brief-749/attempt-3-report.json` as the first step below) reproduced the accepted
-parent byte-exactly (135 rows / 270 postimages, 66/66 protected records) and stopped under the
-STOP rule with `Q749-protected-profile-twins`: the 748 plan's cuts 15 and 17 wrap the ordinary
-`Session::eval_catch` (`nonlocal.rs:80`) and `Session::eval_module` (`lexical/module.rs:15`),
-which are the unique protected peers of the profile-return driven twins, so
-`verify_render.py:46` rejects the insertion in both arms. Ruling `Q749-protected-profile-twins`
-(`.temp/director/ruling-755.md`) relocates both cuts to their credited incoming call sites —
-`control_data/mod.rs:75` and `builtin_adapters.rs:405` — with the original calls textually
-unchanged and the protected bodies byte-exact. This attempt renders the same **58** cuts over
-the recomputed **144-file / 288-postimage** table; the amendment after attempt 3 (in force) is
-below.
+`.temp/brief-749/attempt-4-report.json` as the first step below) reproduced the accepted
+parent byte-exactly (135 rows / 270 postimages, 66/66 protected records, cut 37 bound in both
+copies) and stopped under the STOP rule with `Q749-P2600-converter-visibility`: cut 38's driven
+success converter `eval_success_from_runtime_cm740_driven` (`outcome.rs:414`, `pub(crate)`
+inside the private `model::outcome` module) cannot be named from the scheduled caller at
+`session.rs:549`; Rust 1.85 rejected every spelling in both arms and both feature modes
+(E0425/E0603) and the host library reproduced E0603. Ruling `Q749-P2600-converter-visibility`
+(`.temp/director/ruling-756.md`) authorizes the single-item crate-private re-export in
+`model/mod.rs` and recomputes the partition to **144 files / 288 postimages = 98 preserved +
+37 re-rendered + 9 new**; the amendment after attempt 3 (in force for it) is below.
+
+**This is attempt 5.** It renders the same **58** cuts over the recomputed **144-file /
+288-postimage** table, with the nameability preflight (c106 amendment item 4) before the
+render; the amendment after attempt 4 (in force) is below.
 
 ## Goal
 
-When this brief is done, in `.temp/brief-749/attempt-4/` only (plus the preserved attempt-1,
-attempt-2 and attempt-3 reports and the cumulative report at the parent paths): every one of
-the **58** cuts — the 748 plan's 47 (with cuts 15 and 17 relocated to their credited callers
+When this brief is done, in `.temp/brief-749/attempt-5/` only (plus the preserved
+attempt-1, attempt-2, attempt-3 and attempt-4 reports and the cumulative report at the parent
+paths): every one of the **58** cuts — the 748 plan's 47 (with cuts 15 and 17 relocated to their credited callers
 by `Q749-protected-profile-twins`), the two fixture caller cuts at `native.rs:143` and `:185`,
 and the nine c103 cuts (five carried, four further initial calls) — is rendered at its
 anchored original boundary into the two copied images, bound by typed symbol, receiver,
@@ -60,7 +63,7 @@ dependencies' dispatch edges live on their revised selected programs; the four s
 controls have their authenticated source/frame handoff installed; the 95 already-working rows'
 images and the 13 PortBlocked bindings are preserved; the disabled and armed images render
 twice byte-identically, invert every recipe, and yield a **144-file / 288-postimage** overlay
-table (99 preserved + 36 re-rendered + 9 new) with full postimages and a new `source_schema`
+table (98 preserved + 37 re-rendered + 9 new) with full postimages and a new `source_schema`
 on all 151 mutant records, recomputed from the exact bytes; the identity inputs are re-pinned;
 and the source gate is green in both feature modes. No epoch label, no block, no workspace
 comparison, no class admission, no live-tree edit and no new catch is claimed here.
@@ -161,7 +164,7 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
    to `.temp/brief-749/attempt-2-report.json`, and keep attempt 2's scene read-only. The
    in-force scene and budget are in the c105 amendment.
 
-## Amendment after attempt 3 (in force, c105)
+## Amendment after attempt 3 (c105; attempt 4 ran under this; items 2 and 5 superseded by c106)
 
 1. **Cuts 15 and 17 are relocated to their credited incoming call sites.** The ordinary
    `Session::eval_catch` (`crates/rum-runtime/src/runtime/kernel_data/control_data/nonlocal.rs:80`,
@@ -214,14 +217,56 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
    bytes from a byte-pinned anchor stops with the exact fact — never a row exception, never a
    text-position workaround, never a moved hit.
 
+## Amendment after attempt 4 (in force, c106)
+
+1. **Cut 38's converter is nameable through one crate-private re-export.** In
+   `crates/rum-host/src/model/mod.rs` (752 partition row 2, sealed bytes `d955b703…`, 1,000 B,
+   preserved in both arms), append exactly one line after the sealed final line
+   `pub(crate) use outcome::cm740_output_scope_cm740_driven as cm740_output_scope;`:
+   `pub(crate) use outcome::eval_success_from_runtime_cm740_driven;` (with its LF). The
+   postimage is `f118494a447d447059f188ccf8b57a378a5a6b2b1c64be128be6a41f441f628e` (1,064 B)
+   in both the disabled and the armed image; the live file (`ec87f29a…`) is untouched, and no
+   other byte moves. The appended file is rustfmt-clean under edition 2024. The cut at
+   `session.rs:549` keeps its rendered form
+   `crate::model::eval_success_from_runtime_cm740_driven(response)` in the driven arm and
+   `eval_success_from_runtime(response)` textually unchanged in the else arm.
+2. **The partition recomputes.** Row 2 moves preserved → re-rendered. The forecast is **144
+   files / 288 postimages = 98 preserved + 37 re-rendered + 9 new; 58 cuts unchanged**. The
+   270 parent postimages, the 66 protected records, the 12 exact peer assertions per arm and
+   the c103 anchor cells must stay green. The render recomputes the table, the counts and
+   `source_schema` = sha256 of the exact ordered rendered `overlays.tsv` bytes from the bytes
+   it produces; row 2's new digests appear in the rendered table and the report.
+3. **No row is reclassified or moved.** The P2600 credited edge, value and hit are unchanged;
+   no predicate weakens; no hit moves; no program, mutant, policy or selection changes.
+4. **A nameability preflight precedes the render.** For every one of the 58 cuts, resolve every
+   identifier its dispatcher introduces from the dispatcher's module against the frozen parent
+   tree — inherent method, same-module item, imported item, and `crate::` path with module
+   privacy and re-export lists — and record the resolution per cut in the scene. Any other
+   unnameable reference stops with the exact fact; no further re-export is pre-authorized; no
+   text-position workaround and no moved hit.
+5. **Scene and budget.** New work under `.temp/brief-749/attempt-5/`; before writing the new
+   cumulative, copy the current cumulative `.temp/brief-749/report.json` verbatim to
+   `.temp/brief-749/attempt-4-report.json`, and keep attempt 4's scene read-only. Budget:
+   attempts 1–4 charged 185.3190718539845 s focused; the remaining carve is
+   4,445.6809281460155 s focused + 5,577 s workspace, 0 epoch.
+6. **STOP rules stay.** Any further cut that cannot be expressed at its anchored boundary, any
+   affected row whose scheduled caller cannot be bound, any unnameable identifier in the
+   preflight, or any divergence of the recomputed bytes from a byte-pinned anchor stops with
+   the exact fact — never a row exception, never a text-position workaround, never a moved
+   hit.
+
 ## Context pointers
 
 - Read `AGENTS.md`; `.temp/director/ruling-749.md`; `.temp/brief-749/attempt-1-report.json` and
   the attempt-1 scene's `logs/` and `evidence/` (read-only); `.temp/brief-749/attempt-2-report.json`
   and the attempt-2 scene (read-only); `.temp/brief-749/attempt-3-report.json` and the
   attempt-3 scene (read-only), especially `evidence/protected-dispatch-conflict.json`,
-  `evidence/four-selected-callers.json` and the `verify_render.py:46` replay; rulings
-  `.temp/director/ruling-754.md` and `ruling-755.md`; `.temp/director/ruling-748.md`;
+  `evidence/four-selected-callers.json` and the `verify_render.py:46` replay;
+  `.temp/brief-749/attempt-4-report.json` and the attempt-4 scene (read-only), especially
+  `evidence/p2600-source-binding.json`, `evidence/compiler-diagnostics.json`,
+  `evidence/cut-disposition.tsv` and `evidence/partition-inputs.json`; rulings
+  `.temp/director/ruling-754.md`, `ruling-755.md` and `ruling-756.md`;
+  `.temp/director/ruling-748.md`;
   brief 748 (`docs/dev/codex/brief-748-g15cm4-carrier-dispatch-reachability.md`) and its scene in
   full, especially `repair-sites.tsv` (47 cuts: file, anchor, destination, rows, operation),
   `repair-plan.json` (per-cut design, per-row positive and negative, schema fields, preservation),
@@ -251,19 +296,19 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
 
 ## Scope (Stage A only)
 
-- MAY create/modify: everything under `.temp/brief-749/attempt-4/` for new work; the report
-  paths `.temp/brief-749/attempt-3-report.json` (a verbatim copy of the current cumulative
+- MAY create/modify: everything under `.temp/brief-749/attempt-5/` for new work; the report
+  paths `.temp/brief-749/attempt-4-report.json` (a verbatim copy of the current cumulative
   `report.json`) and `.temp/brief-749/report.json` (the new cumulative report). Everything else
-  under `.temp/brief-749/` — attempt 1's files, the attempt-2 scene and the attempt-3 scene —
+  under `.temp/brief-749/` — attempt 1's files, the attempt-2, attempt-3 and attempt-4 scenes —
   is a read-only record. Put the renderer, the copies of the generator scripts, the rendered
-  trees, the re-derived tables and every scratch file under `attempt-4/`.
+  trees, the re-derived tables and every scratch file under `attempt-5/`.
 - MAY read: the live source tree, the sealed scenes, the earlier `.temp/brief-*` records.
 - MUST NOT: edit the live source tree (0 tracked changes); write under any sealed scene; edit the
   live 135-row `overlays.tsv`, the live `mutants.tsv`, the policy, the schema, the manifest or
   the selections; run the epoch binaries; create an epoch label; build the twelve blocks; run the
   six workspace comparisons, Stage B or Stage C; commit or use git; touch the network; add a
   dependency or `unsafe`. Builds may run only on the rendered copies under
-  `.temp/brief-749/attempt-4/`, never on the live tree or a sealed tree.
+  `.temp/brief-749/attempt-5/`, never on the live tree or a sealed tree.
 
 ## Deliverable
 
@@ -286,7 +331,7 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
    callers), and one representative per repair pattern — original-boundary dispatcher, retention
    caller, function-value/registration route, continuation resume, structural control.
 3. **The overlay table and the schema.** Re-derive the sorted table from the rendered bytes —
-   the forecast is 144 files / 288 postimages (99 preserved + 36 re-rendered + 9 new), and
+   the forecast is 144 files / 288 postimages (98 preserved + 37 re-rendered + 9 new), and
    the render must publish the counts it actually produced — with file, preimage, disabled and
    armed sha256 and the full payloads; invert every recipe to its input; verify the untouched
    files byte-identical; the new `source_schema` is sha256 of the exact ordered rendered
@@ -334,7 +379,7 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
   row's scheduled caller cannot be bound, STOP with the exact missing fact — never a row
   exception and never a text-position workaround.
 - Paste verbatim evidence for every verdict (file:line, rendered text, measured count). Save
-  every command's full output under `.temp/brief-749/attempt-4/` before parsing.
+  every command's full output under `.temp/brief-749/attempt-5/` before parsing.
 - Standings: replay the source-stage inventories on the rendered copy before the source gate;
   a red caused only by a stale fingerprint or position cell is an ordering artifact, reported
   as such, never weakened or hand-edited.
@@ -347,6 +392,8 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
   schema = sha256(rendered `overlays.tsv`); only `source_schema` replaced on the 151 mutant
   rows; the policy digest unchanged; the real image byte-identical; the untouched files
   byte-identical; the 95 working rows preserved; the 13 PortBlocked unchanged.
+- The nameability preflight: every identifier every dispatcher introduces resolved from its
+  module against the frozen parent tree, recorded per cut; zero unresolved.
 - The re-scan: 151 own rows, 0 unreachable, 0 unknown; the six dependencies' dispatch edges
   live on their revised selected programs; the 247-definition map complete; the
   P0416/C10/P0001/P0002 and per-pattern calibrations; the withholding fixtures fail as
@@ -356,17 +403,18 @@ comparison, no class admission, no live-tree edit and no new catch is claimed he
   justified, zero rows settled by argument.
 - The source gate green in both modes with declared differences only; the hot bodies
   byte-identical; the Stage A identity record complete.
-- Budget: attempts 1–3 charged 7.5967964620012935 + 29.80946500299069 + 34.498837827006355 =
-  **71.90509929199834 s** focused; the remaining carve is **4,559.094900708002 s focused +
-  5,577 s workspace, 0 epoch**; every bounded command debits by monotonic elapsed time; a
-  projected overrun stops for a director ruling, never a scope cut.
+- Budget: attempts 1–4 charged 7.5967964620012935 + 29.80946500299069 + 34.498837827006355 +
+  113.41397256198616 = **185.3190718539845 s** focused; the remaining carve is
+  **4,445.6809281460155 s focused + 5,577 s workspace, 0 epoch**; every bounded command debits
+  by monotonic elapsed time; a projected overrun stops for a director ruling, never a scope
+  cut.
 
 ## Report format
 
-`rum-report/1` at `.temp/brief-749/attempt-4/report.json`; first copy the current cumulative
-`.temp/brief-749/report.json` verbatim to `.temp/brief-749/attempt-3-report.json`, and write the
+`rum-report/1` at `.temp/brief-749/attempt-5/report.json`; first copy the current cumulative
+`.temp/brief-749/report.json` verbatim to `.temp/brief-749/attempt-4-report.json`, and write the
 new cumulative `.temp/brief-749/report.json` in the 744 precedent's shape retaining attempts
-1–3's STOP records and the attempt-4 outcome; `changes` empty (every write is under the allowed
+1–4's STOP records and the attempt-5 outcome; `changes` empty (every write is under the allowed
 paths); sections for the render, the scheduled-caller audit, the re-scan, the table and schema,
 the source gate, the falsifiers, the pins, the budget and the Open ledger. Save every command's
 full output in the scene; cite lines exactly. Before finishing run

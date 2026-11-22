@@ -118347,3 +118347,45 @@ inside 749's carve. Nothing reclassified; the 20 class cells stand; 95 reachable
 PortBlocked preserved; sealed (c76–c99) stays sealed; 745/746 held. Brief 749 attempt 4 is
 dispatched on `cdx` at `BRIEF_MEMORY_MAX=20G` under the standing routing (agy on a
 cyber-filter refusal, a Codex quota death stops and asks).
+
+### Continuation 106 — brief 749 attempt 4 stopped at cut 38 on the private model namespace; `Q749-P2600-converter-visibility` authorizes the single-item re-export
+
+Brief 749 attempt 4 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`, effort max), unit
+`brief-749-cdx-20261122-090319-193939`, 09:03:19–09:19 CST, rc 0, 20 GiB peak 1,819,217,920 B
+(1.694 GiB, oom 0/0), 0 repo changes; attempt-4 report
+`.temp/brief-749/attempt-4/report.json` (STOP; 8 PASS / 1 FAIL / 3 NA; 2 deviations; 1
+question); cumulative `.temp/brief-749/report.json` (STOP; `report.py check 749` OK, 1,024
+citations); 107 receipts summing exactly 113.41397256198616 s focused (0 workspace, 0 epoch).
+It reproduced the accepted parent byte-exactly — `PARENT RENDER PASS rows=135 postimages=270
+planned_preserved_rows=99 planned_re_render_rows=36 planned_new_paths=9`, both `STAGE A
+PROFILE-TWIN REPLAY PASS ... exact_peer_assertions=12`, `PROTECTED ITEM REPLAY PASS
+declared_bodies=42 profile_return_hot_twins=24 matched=66/66`, and the 753 successor
+selection — and bound cut 37 (P2600 entry, `session.rs:457` → `:506`) in both copies and
+modes with the complete original cut-38 call. It stopped at cut 38: the scheduled caller at
+`session.rs:549` (inside `call_unprotected_cm740_driven`, [503,553], `60983b4d…`; call-file
+pin `9779d8c2…`) must call `eval_success_from_runtime_cm740_driven` (`outcome.rs:414`,
+`pub(crate)` inside the private `model::outcome`); `model/mod.rs:2` keeps `mod outcome;`
+private and the re-export list at `:20-23` names only the ordinary converter. I reproduced
+the compiler falsifier from the raw logs: 12 rejected oracle probes (three spellings × two
+arms × two modes; E0425/E0603), seven withheld/restored controls PASS with 0 unexpected
+diagnostics and `test_binaries_run=0`, and the host library independently E0603.
+`model/mod.rs` is 752 row 2, preserved at sealed `d955b703…` in both arms (live `ec87f29a…`;
+no `rum-host` item among the 66 protected records). Ruling
+`Q749-P2600-converter-visibility` (`.temp/director/ruling-756.md`) authorizes the single-item
+crate-private re-export: append exactly
+`pub(crate) use outcome::eval_success_from_runtime_cm740_driven;` after the sealed final
+line, preimage 1,000 B → postimage `f118494a…` 1,064 B in both images, live untouched,
+rustfmt-2024 clean (I verified the digest and the fmt on a copy under
+`.temp/director/gate-756/`). The partition recomputes to 144 files / 288 postimages = 98
+preserved + 37 re-rendered + 9 new, 58 cuts unchanged; a nameability preflight over all 58
+cuts precedes the render, and any other unnameable identifier stops with the exact fact.
+Scene: git status still the inherited 23 entries, nothing under `crates/` newer than
+dispatch, no `.git-attempts`, live pins `8d861eb5…` / `ec87f29a…`, 20 offline `--locked`
+compiler receipts with CARGO_HOME/TARGET_DIR in the scene (repo `target/` untouched).
+Budget: attempt 4 charged 113.41397256198616 s; attempts 1–4 = 185.3190718539845 s of the
+4,631 s carve, leaving 4,445.6809281460155 s focused + 5,577 s workspace, 0 epoch; reserve
+44,205.2293813071 s and CM4 209,210.425572227 s unchanged. Bar 571/4,422, 37/134, 4/133,
+0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners
+and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held.
+Brief 749 attempt 5 is amended and committed; dispatch is deferred to the next session under
+the user's 2026-11-22 stop instruction.

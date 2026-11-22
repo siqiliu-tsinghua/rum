@@ -3637,6 +3637,37 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held.
     Brief 749 attempt 4 dispatched to `cdx`.
 
+  - G15-CM4 continuation 106 (brief 749 attempt 4) (2026-11-22): Stage A reproduced the accepted
+    parent byte-exactly (135 rows / 270 postimages, 66/66 protected records, 12/12 peer
+    assertions per arm, cut 37 bound in both copies) and stopped at cut 38 on P2600. The
+    scheduled caller at `session.rs:549` (inside `call_unprotected_cm740_driven`, span
+    [503,553], `60983b4d…`; call-file pin `9779d8c2…`) must call
+    `eval_success_from_runtime_cm740_driven` (`outcome.rs:414`, `pub(crate)` in the private
+    `model::outcome`); `model/mod.rs:2` keeps `mod outcome;` private, the crate re-export list
+    at `:20-23` names only the ordinary converter, and the only extra `outcome` re-export is
+    the guard at `:26`. Rust 1.85 rejected the three spellings in both arms and both feature
+    modes (E0425/E0603; 12 rejected oracle probes), the seven withheld/restored controls
+    passed with 0 unexpected diagnostics and 0 test binaries, and the host library reproduced
+    E0603. Run: unit `brief-749-cdx-20261122-090319-193939`, 09:03:19–09:19 CST, rc 0, 20 GiB
+    peak 1,819,217,920 B (1.694 GiB, oom 0/0), 0 repo changes; attempt-4 report STOP (8 PASS /
+    1 FAIL / 3 NA; 2 deviations; 1 question), cumulative `report.py check 749` OK 1,024
+    citations; 107 receipts summing 113.41397256198616 s focused (0 workspace, 0 epoch);
+    attempts 1–4 = 185.3190718539845 s, leaving 4,445.6809281460155 s + 5,577 s workspace.
+    `model/mod.rs` is 752 partition row 2, preserved at sealed `d955b703…` in both arms (live
+    `ec87f29a…`; no `rum-host` item among the 66 protected records). Ruling
+    `Q749-P2600-converter-visibility` authorizes appending exactly
+    `pub(crate) use outcome::eval_success_from_runtime_cm740_driven;` to the sealed bytes —
+    postimage `f118494a…` (1,064 B) in both images, rustfmt-2024 clean, live untouched — moves
+    row 2 to re-rendered and recomputes the forecast to 144 files / 288 postimages (98
+    preserved + 37 re-rendered + 9 new), 58 cuts unchanged, with a nameability preflight over
+    all 58 cuts before the render. Scene holds: git status still 23 inherited entries, nothing
+    under `crates/` newer than dispatch, no `.git-attempts`, live pins `8d861eb5…` /
+    `ec87f29a…`, 20 offline `--locked` compiler receipts with CARGO_HOME/TARGET_DIR in the
+    scene. Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted
+    receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and
+    S10 blocked; CM5 unauthorized; 745/746 held. Brief 749 attempt 5 amended and committed;
+    dispatch deferred to the next session under the user's 2026-11-22 stop instruction.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);
