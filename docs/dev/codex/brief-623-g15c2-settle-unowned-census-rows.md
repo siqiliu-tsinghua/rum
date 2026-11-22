@@ -118549,3 +118549,53 @@ carve, leaving 1,577.1342099820176 s focused + 2,640.727502599002 s workspace, 0
 standing replays, the clean freeze from the accepted render, the twelve-block epoch, the
 carrier drives, the peels, the P0543 live passes and the workspace A/B), then Stage C, the 744
 restart, 745 and 746.
+
+### Continuation 110 — brief 754 attempt 1 stops before execution on the workspace projection; `Q754-workspace` raises the Stage B workspace allowance
+
+Attempt 1 (unit `brief-754-cdx-20261122-130758-372864`, 13:07:58–13:18:11 CST, rc 0, 20 GiB
+peak 270,782,464 B / 0.252 GiB, oom 0/0, 0 repo changes; report STOP with 5 PASS / 1 FLAGGED,
+0 deviations, 1 question, 139 citations; log 703,448 B; 3 bounded receipts charging
+5.038669232 s focused, 0 workspace, 0 epoch) ran the entry context and the workspace
+preflight, then stopped exactly on the brief's budget rule before any freeze, label, drive,
+peel, P0543 pass, workspace comparison or epoch identity. It re-verified the accepted inputs
+(table `5c3b02a3…` at 11,674,289 B, mutants `e8b3b6e4…` at 43,621 B, policy `3953aa9f…`, plus
+the sealed `copies.json` `71850b35…` and `identity.json` `c5efa506…`) and the 4,690-file crate
+scope with zero differences and zero files newer than entry, and quoted the accepted standing
+evidence (88 lines in 37 original logs; source baseline green; six supplemental composed-copy
+reds per role; provenance 749 attempt 7). The preflight priced the six required 69-target
+workspace invocations from one accepted receipt each — four c94/c95 composed runs (armed
+default 996.9275621090201 s, armed no-default 992.0111072009895 s, disabled default
+912.2428905359702 s, disabled no-default 456.68001205596374 s) and the accepted Stage A source
+pair (1,783.3981650559945 + 1,152.8743323450035 = 2,936.272497400998 s, exactly attempt-7's
+`workspace_s`) substituted for the two historical live runs — projecting 6,294.134069 s for
+the six cases and 7,115.770144 s including 821.636075 s of separately metered comparison,
+scoring, switched/native and certificate receipts, against the 5,500 s allowance. The
+target-only crosscheck (5,743.73 s of libtest time over 414 targets, excluding outer
+compilation and follow-ups) and the warm-mode sensitivity (5,758.802974 s) exceed the bar as
+well, and the preflight asserts the c94/c95 six-sum equals the recorded 7,193.264547 s; the
+raw logs are SHA-256-verified with 69 parsed target sections each. I verified every quoted
+timing against the sealed receipts and the c94 `comparison.log` (lines 16 and 29), the Stage A
+pair against the attempt-7 receipts and ledger, and the accepted input digests by my own
+hashing. Ruling `Q754-workspace` (`.temp/director/ruling-760.md`): the STOP is correct and the
+Stage B workspace allowance rises 5,500 → 8,500 s under the 2026-11-19 budget ruling — the
+projection is covered with 1,384.229856 s of margin and the c94/c95 analogue (7,193.264547 +
+821.636075 = 8,014.900622 s) with 485.099378 s; the focused pool stays 2,000 s and the epoch
+pool 16,374 s; the fresh draw becomes 422.8657900179824 s focused + 5,859.272497400998 s
+workspace + 16,374 s epoch = 22,656.13828741898 s, moving the stage reserve
+44,205.2293813071 → 21,549.09109388812 s, with unspent time returning and an actual overrun
+stopping for a new ruling; no scope is cut (all six comparisons, the seven declared skips, the
+twelve labels one each, the carrier drives and 62-row audit, the peels, the P0543 passes in
+both modes, the nine loopback refusals and the epoch identity stand), and the workspace check
+bar becomes 8,500 s. Attempt 1's report and ledger are preserved at
+`.temp/brief-754/attempt-1-report.json` (`4840876b…`, 65,965 B) and
+`.temp/brief-754/attempt-1-ledger.json` (`a7d7a507…`); attempt 2 works under
+`.temp/brief-754/attempt-2/` with the cumulative report and ledger at the root, reciting the
+5.038669232 s charge. Scene: git status still the inherited 23 entries, HEAD = origin/main =
+`fdd23056`, nothing under `crates/` newer than the dispatch, no `.git-attempts`, outside the
+scene only the dispatch log and state.md, live pins `22751919…` / `3953aa9f…` / `14bd4326…` /
+`8d861eb5…` / `a75abf18…`, `worker_git_calls=0`, no network receipt. Bar 571/4,422, 37/134,
+4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51
+owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746
+held; sealed c76–c99 stays sealed. Brief 754 is amended to attempt 2, committed and dispatched
+to `cdx` at `BRIEF_MEMORY_MAX=20G`; its gate follows, then Stage C, the 744 restart, 745 and
+746.

@@ -3790,6 +3790,41 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     twelve-block epoch, the carrier drives, the peels, the P0543 live passes and the workspace
     A/B.
 
+  - G15-CM4 continuation 110 (brief 754 attempt 1) (2026-11-22): Stage B stopped before
+    execution on the workspace preflight: the six required 69-target invocations project to
+    6,294.134069 s (four c94/c95 composed receipts + the accepted Stage A source pair
+    2,936.272497400998 s substituted for the two historical live runs) plus 821.636075 s of
+    separately metered comparison, scoring, switched/native and certificate receipts =
+    7,115.770144 s against the 5,500 s allowance; the target-only crosscheck (5,743.73 s over
+    414 targets, excluding outer compilation) and the warm-mode sensitivity (5,758.802974 s)
+    exceed the bar as well. I verified every quoted timing against the sealed c94/c95 receipts
+    and logs (armed/default 996.9275621090201, armed/no-default 992.0111072009895,
+    disabled/default 912.2428905359702, disabled/no-default 456.68001205596374, live/default
+    2,237.700056432048 at `comparison.log:16`, live/no-default 1,597.7029183930135 at `:29`)
+    and the Stage A pair (1,783.3981650559945 + 1,152.8743323450035 = 2,936.272497400998 =
+    attempt-7 `workspace_s`); the accepted inputs re-hash (`5c3b02a3…` 11,674,289 B,
+    `e8b3b6e4…` 43,621 B, `3953aa9f…`), and the STOP fired with zero workspace, epoch or label
+    work. Run: unit `brief-754-cdx-20261122-130758-372864`, 13:07:58–13:18:11 CST, rc 0, 20 GiB
+    peak 270,782,464 B (0.252 GiB, oom 0/0), 0 repo changes; report STOP (5 PASS / 1 FLAGGED,
+    0 deviations, 1 question, 139 citations); log 703,448 B; 3 receipts charging 5.038669232 s
+    focused, 0 workspace, 0 epoch. Ruling `Q754-workspace` (`.temp/director/ruling-760.md`)
+    raises the Stage B workspace allowance 5,500 → 8,500 s (projection covered with
+    1,384.229856 s margin; the c94/c95 analogue 7,193.264547 + 821.636075 = 8,014.900622 s
+    covered with 485.099378 s); focused 2,000 s and epoch 16,374 s unchanged; fresh draw
+    22,656.13828741898 s (422.8657900179824 focused + 5,859.272497400998 workspace + 16,374
+    epoch), reserve 44,205.2293813071 → 21,549.09109388812 s; no scope cut, all six
+    comparisons, seven skips, twelve labels, drives, peels, P0543 passes and the epoch identity
+    stand. Scene holds: git status still 23 inherited entries, HEAD = origin/main = `fdd23056`,
+    nothing under `crates/` newer than the dispatch, no `.git-attempts`, outside the scene only
+    the dispatch log and state.md, live pins `22751919…` / `3953aa9f…` / `14bd4326…` /
+    `8d861eb5…` / `a75abf18…`, `worker_git_calls=0`. Attempt 1's report and ledger preserved as
+    `attempt-1-report.json` (`4840876b…`, 65,965 B) and `attempt-1-ledger.json` (`a7d7a507…`).
+    Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2
+    118 Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked;
+    CM5 unauthorized; 745/746 held; sealed c76–c99 stays sealed. Brief 754 amended to attempt 2
+    (scene `.temp/brief-754/attempt-2/`, cumulative report and ledger at the root) and
+    dispatched to `cdx` at `BRIEF_MEMORY_MAX=20G`.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);

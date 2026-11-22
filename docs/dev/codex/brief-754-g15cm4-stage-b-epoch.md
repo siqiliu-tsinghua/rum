@@ -13,11 +13,25 @@ workspace A/B. The new epoch identity (trees, binaries, blocks, membership, sele
 program matrix, input pins) is issued and every count recomputed from the bytes. No class
 admission, no 744/745/746, no production change, no live-tree edit, no new catch.
 
+**Attempt 1** stopped before execution. Its workspace preflight priced the six required
+69-target invocations at 6,294.134069 s (the four c94/c95 composed receipts plus the accepted
+Stage A source pair, 2,936.272497400998 s, substituted for the two historical live runs) and
+the separately metered comparison, scoring, switched/native and certificate receipts at
+821.636075 s — 7,115.770144 s against the 5,500 s allowance; the target-only crosscheck
+(5,743.73 s of libtest time over 414 targets, excluding outer compilation) and the warm-mode
+sensitivity (5,758.802974 s) exceed the bar as well. Ruling `Q754-workspace`
+(`.temp/director/ruling-760.md`) finds the STOP correct and raises the Stage B workspace
+allowance to 8,500 s; no scope is cut. This is attempt 2. Attempt 1 re-verified the entry
+state: the five accepted input pins, the two sealed records and the 4,690-file crate scope
+with zero differences and zero files newer than entry. Re-hash them again at entry and start
+from there.
+
 ## Context pointers
 
 - Read `AGENTS.md`; brief 623's "Campaign invariants" section; rulings
   `.temp/director/ruling-759.md` (the Stage A acceptance), `ruling-757.md` and `ruling-758.md`
-  (the c107/c108 canonical ordinary arm), `ruling-754.md`…`ruling-756.md`.
+  (the c107/c108 canonical ordinary arm), `ruling-754.md`…`ruling-756.md`, and
+  `ruling-760.md` (the c110 budget ruling and the attempt-2 scene rules).
 - The accepted Stage A scene (read-only): `.temp/brief-749/attempt-7/`, especially
   `renders/one/overlays.tsv` (11,674,289 B, `5c3b02a3…`), `renders/one/mutants.tsv`
   (43,621 B, `e8b3b6e4…`, 151 rows with the new `source_schema`), `renders/one/observer-policy.tsv`
@@ -39,8 +53,11 @@ admission, no 744/745/746, no production change, no live-tree edit, no new catch
 
 ## Scope
 
-- MAY create/modify: everything under `.temp/brief-754/` (the new freeze scene, the epoch,
-  the evidence, the report).
+- MAY create/modify: everything under `.temp/brief-754/`, with this attempt confined to
+  `.temp/brief-754/attempt-2/` (the new freeze scene, the epoch, the evidence); the cumulative
+  report and ledger stay at `.temp/brief-754/report.json` and `.temp/brief-754/ledger.json`.
+  Attempt 1's root artifacts — its scripts, `logs/`, `evidence/`, `receipts/`,
+  `attempt-1-report.json` and `attempt-1-ledger.json` — are read-only.
 - MAY read: the live source tree, the accepted scenes and sealed scenes, the earlier
   `.temp/brief-*` records.
 - MUST NOT: edit the live source tree (0 tracked changes); write under any sealed or accepted
@@ -54,12 +71,12 @@ admission, no 744/745/746, no production change, no live-tree edit, no new catch
 
 1. **The standing replay before the freeze.** On the frozen copies, replay the standing
    inventories (the 68 fingerprint rows, C01/C02 in both modes, ownership, rejection census,
-   LP01 and typed slots) against the accepted source baseline. Rebase the inventory by item
-   identity for the render's deltas — the new `cm740_probe::control::Bound.live` opaque
-   callback and the 33 additional UnknownConstruct occurrences per role, diagnostic-only, with
-   owner statuses unchanged. The six supplemental composed-copy reds are the c94/c108
-   ordering-artifact class: report them, never hand-edit an inventory, never weaken a
-   predicate.
+   LP01 and typed slots) against the accepted source baseline. Re-hash the accepted entry pins
+   first, then rebase the inventory by item identity for the render's deltas — the new
+   `cm740_probe::control::Bound.live` opaque callback and the 33 additional UnknownConstruct
+   occurrences per role, diagnostic-only, with owner statuses unchanged. The six supplemental
+   composed-copy reds are the c94/c108 ordering-artifact class: report them, never hand-edit
+   an inventory, never weaken a predicate.
 2. **The clean freeze.** Compose the freeze in a new scene directory from the live snapshot
    plus the 144 overlay pins (schema `5c3b02a3…`, policy `3953aa9f…`), the nine new paths and
    the 58 render sites; the file set equals the baseline's 5,810. Verify every preimage,
@@ -123,17 +140,22 @@ admission, no 744/745/746, no production change, no live-tree edit, no new catch
 - The epoch identity complete; the live tree unchanged (git status exactly the inherited 23
   entries, no `crates/` write); the sealed scenes untouched; no epoch binary executed outside
   the scene.
-- Budget: **2,000 s focused + 5,500 s workspace + 16,374 s epoch**. The 749 pool
-  1,577.1342099820176 s focused + 2,640.727502599002 s workspace is consumed first; the fresh
-  draw is 422.8657900179824 s focused + 2,859.272497400998 s workspace + 16,374 s epoch =
-  **19,656.13828741898 s** from the stage reserve, leaving it at 24,549.09109388812 s; unspent
-  returns; a projected overrun stops for a director ruling, never a scope cut.
+- Budget: **2,000 s focused + 8,500 s workspace + 16,374 s epoch** (attempt 1 charged
+  5.038669232 s focused, 0 s workspace, 0 s epoch, leaving 1,994.961330768 s focused). The 749
+  pool remainder 1,572.0955407500176 s focused + 2,640.727502599002 s workspace is consumed
+  first; the fresh draw is 422.8657900179824 s focused + 5,859.272497400998 s workspace +
+  16,374 s epoch = **22,656.13828741898 s** from the stage reserve, leaving it at
+  21,549.09109388812 s; unspent returns; a projected overrun stops for a director ruling, never
+  a scope cut.
 
 ## Report format
 
-`rum-report/1` at `.temp/brief-754/report.json`; `changes` empty (every write is under
-`.temp/brief-754/`); sections for the freeze, the twelve labels, the drives, the peels, the
-P0543 passes, the workspace A/B, the identity and the ledger; cite lines exactly. Before
-finishing run `python3 scripts/report.py check 754` (without `--against-git`) and fix every
-PROBLEM; the final message is only `python3 scripts/report.py summary 754`. STOP at Stage B:
-no class admission, no 744/745/746, no CM5.
+`rum-report/1` at `.temp/brief-754/report.json` as the cumulative record (attempt 1's is
+preserved at `attempt-1-report.json`; the ledger is cumulative at `.temp/brief-754/ledger.json`
+with attempt 1's at `attempt-1-ledger.json`), reciting attempt 1's 5.038669232 s focused
+charge; `changes` empty (every write is under `.temp/brief-754/`); sections for the freeze, the
+twelve labels, the drives, the peels, the P0543 passes, the workspace A/B, the identity and
+the ledger; cite lines exactly. Before finishing run `python3 scripts/report.py check 754`
+(without `--against-git`) and fix every PROBLEM; the final message is only
+`python3 scripts/report.py summary 754`. STOP at Stage B: no class admission, no 744/745/746,
+no CM5.
