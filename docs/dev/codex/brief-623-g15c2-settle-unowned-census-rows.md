@@ -118885,3 +118885,36 @@ draw of 5,003.310562594052 s (standing user ruling 「预算不够就追加吧�
 Q25 design, Q25 proof, generator/source gate, deterministic render, re-freeze, fresh epoch,
 readmit/calibrate, 744 restart; 745/746 held; CM5 unauthorized; the standing state is
 unchanged.
+
+Continuation 116 — brief 757 accepted; the Q25 ownership contract is complete, zero unknown;
+the P2379 proof is ordered as brief 758. Brief 757 (design-only, `Scope: NONE`, committed
+`15f78a64`) ran on `cdx`, unit `brief-757-cdx-20261122-210216-746520`, 21:02:16–21:42:31 CST,
+rc 0, peak 364,040,192 B, 0 repo changes; report DONE (25 PASS / 1 FLAGGED `physical-proof`
+/ 3 measurements PASS / 1 deviation; check OK, 6,781 citations); scene `.temp/brief-757/` (34
+files, 4,451,821 B). Delivered the ownership model (source-authenticated one-use guest
+capability; raw sink `K:617–632`; raw driver `D:59–75` `EntryRef::Legacy`; eight concrete
+`Arc<Self>::resume` entries; queue-custody witness; driver offer plus concrete-self check;
+tentative→committed registration; one-use claimed delivery; full retirement; no default-path
+cost, no `unsafe`; shortcuts eliminated by name), the 13-row table (P0214/P0216, P1070,
+P2348/P2354, P2379/P2381/P2385/P2387/P2409/P2411/P2416/P2418 — 13 proof needed, 0 unknown, 0
+design stops), the three companions P0554/P1562/P1563 with their independent queued permits
+and resumed==queued argument, the P2379 proof fixture (ordinary/positive/withheld, A/B/C
+equal-state siblings, 17 negatives, exact `NoHit` at `records.rs:341–350`, the one-image
+limitation and deferred three-image importer), `class-97.tsv` retaining all 97 original
+decisions (66 missing-link / 18 carrier-shape / 13 stop; 84 design-carried / 13 proof
+needed) and the class-wide falsifier binding, and the proof brief with its forecast
+(1,125.171860590–3,461.374142684478480 focused s). My gate verified 1,568 full-path
+citations and 2,264 quoted evidence items line for line in the armed tree, 36/36 historical
+hashes, 20/20 Stage C packet hashes, the 200-cell pair bars, the source shapes, the fixture
+program/selection/`NoHit` clause, 42/42 pinned inputs, the scope (inherited 23 git entries,
+HEAD = `origin/main` = `15f78a64`, no writes outside the scene, no builds/executions) and
+the budget. Ruling 766 accepts the brief; Q25 stays unwaived (13 named stops, zero admitted
+receipts); `q25-proof` is authorized as brief 758 (one fresh copy, one default proof-only
+build, one bounded fixture invocation, zero importable receipts, a director gate after);
+`after-proof` is deferred to the proof gate. Budget: 2,373.758704406 s spent of 2,500,
+126.241295594 s returned; reserve 32,526.16508406417 s; brief 758 carves 3,500 s focused →
+29,026.16508406417 s, 0 workspace, 0 epoch; the later generator/source stage will record a
+fresh explicit draw if the remaining reserve is short, never a scope cut. The implementation
+line stays staged and gated: Q25 proof, generator/source gate, deterministic render,
+re-freeze, fresh epoch, readmit/calibrate, 744 restart; 745/746 held; CM5 unauthorized; the
+standing state is unchanged.

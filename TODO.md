@@ -3987,6 +3987,46 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 116 (brief 757) (2026-11-22): the Q25 raw-receiver ownership contract
+    is fully designed with zero unknown; brief 757 accepted and the isolated P2379 proof
+    ordered as brief 758. Brief 757 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`,
+    reasoning max), unit `brief-757-cdx-20261122-210216-746520`, 21:02:16–21:42:31 CST, rc 0,
+    peak 364,040,192 B (0.34 GiB, oom 0/0), 0 repo changes; report DONE (25 PASS / 1 FLAGGED
+    `physical-proof` / 3 measurements PASS / 1 deviation; check OK, 6,781 citations); scene
+    `.temp/brief-757/` (34 files, 4,451,821 B). Delivered: the ownership model (source-
+    authenticated one-use guest capability; the raw sink `K:617–632` with `Arc::new` at 626
+    and `push_back` 632; the raw driver `D:59–75` `EntryRef::Legacy` clone at 60 and
+    `frame.resume` at 75; the eight concrete `Arc<Self>::resume` entries; a queue-custody
+    witness with birth generation and independently verified suffix transfer; a driver-scoped
+    offer plus concrete-self check; tentative→committed registration; one-use claimed delivery
+    with `frame(row)`/token recheck; retirement on every terminal path; no runtime-liveness
+    extension, no default-path cost, no `unsafe`), naming and eliminating the row→type map,
+    call edge, value equality, borrowed state and cloned fixture; the 13-row table (P0214/P0216,
+    P1070, P2348/P2354, P2379/P2381/P2385/P2387/P2409/P2411/P2416/P2418 — **13 proof needed,
+    0 unknown, 0 design stops**, `PortBlocked pending approved proof`); the 3 companions
+    P0554/P1562/P1563 with exact source shapes, independent queued permits and the
+    resumed==queued argument; the proof fixture on default P2379 (ordinary/positive/withheld,
+    A/B/C equal-state siblings, **17 negatives**, exact `NoHit` at `records.rs:341–350`, the
+    one-image limitation and the deferred three-image importer); `class-97.tsv` retaining all
+    97 original decisions (66 missing-link / 18 carrier-shape / 13 stop; 84 design-carried /
+    13 proof needed); and the proof brief with its forecast (1,125.171860590–3,461.374142684478480
+    focused s). My gate verified 1,568 full-path citations and 2,264 quoted evidence items
+    line for line in the armed tree, the 36/36 historical hashes, the 20/20 Stage C packet
+    hashes, the 200-cell pair bars, the 42/42 pinned input hashes, the source shapes and the
+    fixture program/selection/`NoHit` clause, the scope (git status the inherited 23 entries,
+    HEAD = `origin/main` = `15f78a64`, no `.git-attempts`, zero writes outside the scene, no
+    builds/executions) and the budget. Ruling 766 (`.temp/director/ruling-766.md`) accepts
+    brief 757, keeps Q25 unwaived (13 named stops, zero admitted receipts), answers
+    `q25-proof` by authorizing brief 758 (one fresh copy, one default proof-only build, one
+    bounded fixture invocation, zero importable receipts) and defers `after-proof` to the
+    proof gate. Budget: 2,373.758704406 s spent of 2,500, 126.241295594 s returned; reserve
+    32,526.16508406417 s; brief 758 carves 3,500 s focused → 29,026.16508406417 s, 0
+    workspace, 0 epoch; the later generator/source stage will record a fresh explicit draw if
+    the remaining reserve is short (standing user ruling), never a scope cut. Bar 571/4,422,
+    37/134, 4/133, 0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual
+    + 0 Lost; 51 owners and five source duties Open; membership 28/3/7/113; `CHANGELOG.md` and
+    S10 blocked; CM5 unauthorized; 745/746 held; sealed c76–c99 stays sealed.
+
   - G15-CM4 continuation 115 (brief 756) (2026-11-22): the frame-authorization class is fully
     inventoried and designed; brief 756 accepted. Brief 756 ran on `cdx`, unit
     `brief-756-cdx-20261122-200211-717859`, 20:02:11–20:50:51 CST, rc 0, peak 402,591,744 B
