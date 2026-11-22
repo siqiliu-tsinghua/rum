@@ -118389,3 +118389,47 @@ Budget: attempt 4 charged 113.41397256198616 s; attempts 1–4 = 185.31907185398
 and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held.
 Brief 749 attempt 5 is amended and committed; dispatch is deferred to the next session under
 the user's 2026-11-22 stop instruction.
+
+### Continuation 107 — brief 749 attempt 5 stops at cut 49; `Q749-P0002-canonical-else` authorizes the 36-byte canonical ordinary arm
+
+Brief 749 attempt 5 ran on `cdx` (Codex CLI 0.171.0, `gpt-6.2-astra`, effort max), unit
+`brief-749-cdx-20261122-101234-230587`, 10:12:34–10:42:18 CST, rc 0, 20 GiB peak 582,180,864 B
+(0.542 GiB, oom 0/0), 0 repo changes; attempt-5 report
+`.temp/brief-749/attempt-5/report.json` (STOP; 11 PASS / 1 FAIL (`a5-cut49`) / 5 NA; 2
+deviations; 1 question); cumulative `.temp/brief-749/report.json` (STOP; `report.py check
+749` OK, 1,321 citations); 123 receipts summing exactly 67.01911845699942 s focused (0
+workspace, 0 epoch). It passed the nameability preflight on all 58 cuts (116 bindings, zero
+unresolved; cut 38 through the authorized row-2 re-export; the six structural cuts through
+their identifier bindings) and reproduced the accepted parent byte-exactly — `PARENT RENDER
+PASS rows=135 postimages=270 planned_preserved_rows=98 planned_re_render_rows=37
+planned_new_paths=9`, both `STAGE A PROFILE-TWIN REPLAY PASS ... exact_peer_assertions=12`,
+`PROTECTED ITEM REPLAY PASS declared_bodies=42 profile_return_hot_twins=24 matched=66/66`, the
+native hooks 2/2 and byte-identical across six diagnostic variants. I re-derived the table
+myself: all 135 sealed overlay rows equal the parent-render evidence on preimage, disabled and
+armed digests (zero mismatches; every hex payload hashes to its digest column), row 2 is live
+`ec87f29a…` → sealed `d955b703…` (1,000 B), row 135 is live `83d0f6a8…` → `12fa73b2…`
+(22,719 B), and the c106 postimage recomputes to `f118494a…` (1,064 B). It stopped at cut 49:
+the P0002 ordinary call at `native.rs:185` must keep the sealed 49-byte two-line `cx` /
+`.evaluate` spelling in the else arm, but the standing canonical emitter emits 36 bytes at
+that boundary; restoring the LF and twelve spaces yields exactly one rustfmt diff per copy
+(my replay: canonical/parent/withheld 0 hunks, restored-49 1 hunk, verbatim 3), while the
+typed call, arguments, evaluation order and `.and_then(CallbackValue::adopt)` continuation
+are unchanged (typed syntax digest `f7783925…` equal across literal, canonical and restored
+forms). Ruling `Q749-P0002-canonical-else` (`.temp/director/ruling-757.md`): authorize the
+exact 36-byte `cx.evaluate(values, args[0].clone())` in both images, with the driven arm
+`cx.evaluate_cm740_driven(values, args[0].clone())`; the recipe records the 49→36
+normalization and inverts byte-exactly to the live preimage; the standing format gate stays
+green in both modes; no exemption, attribute or text-position workaround; no row reclassified;
+the partition stays 144 files / 288 postimages (98 preserved + 37 re-rendered + 9 new), 58
+cuts unchanged; the attempt-5 preflight is reusable. Scene: git status still the inherited 23
+entries, HEAD = origin/main = `d4b99248`, nothing under `crates/` newer than the dispatch, no
+`.git-attempts`, writes only attempt-5 plus `attempt-4-report.json` and `report.json`, live
+pins `22751919…` / `3953aa9f…` / `14bd4326…` / `8d861eb5…`, four archived reports
+byte-identical, the disclosed external plugin file content unchanged (`983fd875…`, mtime
+only), no git/network receipts; the five nonzero receipts are the disclosed reader retries.
+Budget: attempt 5 charged 67.01911845699942 s; attempts 1–5 = 252.33819031098392 s of the
+4,631 s carve, leaving 4,378.661809689016 s focused + 5,577 s workspace, 0 epoch; reserve
+44,205.2293813071 s and CM4 209,210.425572227 s unchanged. Bar 571/4,422, 37/134, 4/133,
+0/26; pair `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners
+and five source duties Open; CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held.
+Brief 749 attempt 6 is amended and committed and dispatched to `cdx`.

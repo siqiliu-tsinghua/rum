@@ -3668,6 +3668,43 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     S10 blocked; CM5 unauthorized; 745/746 held. Brief 749 attempt 5 amended and committed;
     dispatch deferred to the next session under the user's 2026-11-22 stop instruction.
 
+  - G15-CM4 continuation 107 (brief 749 attempt 5) (2026-11-22): Stage A passed the
+    nameability preflight on all 58 cuts (116 bindings, zero unresolved; cut 38 through the
+    authorized row-2 re-export; the six structural cuts through their identifier bindings) and
+    reproduced the accepted parent byte-exactly (135 rows / 270 postimages, 98+37+9 partition,
+    66/66 protected records, 12/12 peer assertions per arm, native hooks begin/end 2/2
+    byte-identical across six variants). I re-derived the table myself: all 135 sealed overlay
+    rows equal the parent-render evidence on preimage, disabled and armed digests, with zero
+    hex failures; row 2 is live `ec87f29a…` → sealed `d955b703…` (1,000 B), row 135 is live
+    `83d0f6a8…` → `12fa73b2…` (22,719 B), and the c106 postimage recomputes to
+    `f118494a…` (1,064 B). It stopped at cut 49 on `Q749-P0002-canonical-else`: the sealed
+    parent's two-line `cx` / `.evaluate` ordinary call at `native.rs:185` is 49 bytes; the
+    standing canonical emitter emits 36 bytes at the rendered else arm; restoring only the LF
+    and twelve spaces produces exactly one rustfmt diff per copy, while the typed call,
+    arguments, evaluation order and `.and_then(CallbackValue::adopt)` continuation are
+    unchanged (typed syntax digest `f7783925…` equal across literal, canonical and restored
+    forms). Run: unit `brief-749-cdx-20261122-101234-230587`, 10:12:34–10:42:18 CST, rc 0,
+    20 GiB peak 582,180,864 B (0.542 GiB, oom 0/0), 0 repo changes; attempt-5 report STOP
+    (11 PASS / 1 FAIL (`a5-cut49`) / 5 NA; 2 deviations; 1 question), cumulative
+    `report.py check 749` OK 1,321 citations; 123 receipts summing 67.01911845699942 s focused
+    (0 workspace, 0 epoch); attempts 1–5 = 252.33819031098392 s, leaving 4,378.661809689016 s
+    + 5,577 s workspace. Ruling `Q749-P0002-canonical-else` authorizes the exact 36-byte
+    canonical invocation `cx.evaluate(values, args[0].clone())` at the P0002 else arm — same
+    typed call, driven arm `cx.evaluate_cm740_driven(values, args[0].clone())`, the recipe
+    records the 49→36 normalization and inverts to the live preimage, the standing format gate
+    stays green in both modes, no exemption/attribute/workaround — with no row reclassified,
+    the partition still 144 files / 288 postimages (98 preserved + 37 re-rendered + 9 new) and
+    58 cuts unchanged; the attempt-5 preflight is reusable. Scene holds: git status still 23
+    inherited entries, HEAD = origin/main = `d4b99248`, nothing under `crates/` newer than the
+    dispatch, no `.git-attempts`, writes only attempt-5 plus `attempt-4-report.json` and
+    `report.json`, live pins `22751919…` / `3953aa9f…` / `14bd4326…` / `8d861eb5…`, four
+    archived reports byte-identical, the disclosed external plugin file content unchanged
+    (`983fd875…`, mtime only), no git/network receipts; the five nonzero receipts are the
+    disclosed reader retries. Bar 571/4,422, 37/134, 4/133, 0/26; pair `(45,5,false)` Open at
+    zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and five source duties Open;
+    CHANGELOG.md and S10 blocked; CM5 unauthorized; 745/746 held. Brief 749 attempt 6 amended
+    and committed; dispatched to `cdx`.
+
   - G15-CM4 continuation 102 (brief 751) (2026-11-22): the resume-edge inventory stopped at
     P1142's initial edge after nineteen own dispositions (13 measured witnesses, P0339 with 30
     candidates, four resume-edge fixes P0338/P0435/P1070/P1818, and the P1142 stop);
