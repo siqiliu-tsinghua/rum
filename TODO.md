@@ -3987,6 +3987,48 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 118 (brief 759 STOP) (2026-11-22): brief 759 stopped correctly after
+    the first authorized generate failed to compile; ruling 768 authorizes the repair as brief
+    760. Attempt 1 (cdx, unit `brief-759-cdx-20261122-221917-777868`, birth
+    22:19:17.962941) died 22:28:19.213699 (541.250758 s) on Codex's safety filter after entry
+    authentication and the row audit; log archived
+    `.temp/logs/archive/cdx_brief_759.attempt-1.safety-1.log`, scene preserved
+    `.temp/brief-759-attempt-1/`. Attempt 2 (grk, unit
+    `brief-759-grk-20261122-222953-783897`, grok-4.7 xhigh, session `79fc0079-…`),
+    22:29:53–23:52:26, `status=success turns=201 cost_usd=17.086856 refused=0`, peak
+    720,887,808 B, rc 0; scene `.temp/brief-759/` (6,494 files, 338,971,296 B); report STOP
+    (2 PASS / 4 FAIL / 1 NA, 1 FLAGGED + 1 FAIL measurement, 2 deviations, 1 question
+    `path-and-budget`, 0 changes; check OK, 23 citations). Delivered: entry (the copy
+    re-created at `bd8b7548…`, 5,810 files, 0 shared inodes; labels/trees/pins/tools
+    reproduce; the brief-757 append is the only deviation), the implementation in the copy
+    (8 files: 6 modified — `lib.rs`, `core.rs`, `core/driver.rs`, `rules/cases.rs`,
+    `rules/resume_frames.rs`, `tests/suspension_oracle.rs`; 2 added —
+    `crates/rum-runtime/src/q25_ownership.rs` 29,522 B and
+    `crates/rum-stdlib/tests/suspension_oracle/q25_p2379_proof.rs` 31,944 B; `records.rs`
+    untouched at `7364f150…`), every edit with byte pre/postimages, and one authorized
+    command: fingerprints generate, exit 101, no `test result:` line, because
+    `#[path = "q25_ownership.rs"]` on `pub mod q25` inside `mod cm740_probe` (`lib.rs:6527`)
+    resolves to `crates/rum-runtime/src/cm740_probe/q25_ownership.rs` while the file is at
+    `src/q25_ownership.rs`. The other two generates, the nine validates, the proof build and
+    the fixture were not launched; all 13 dispositions Unexecuted; zero importable/admitted
+    receipts; zero changes, zero live writes; 744/745/746 untouched; CM5 unauthorized. My
+    gate: read the fingerprints log (a genuine cold build of 51 units failing at the exact
+    path), diffed the 758/759 copies (exactly the eight recorded files), re-hashed 7
+    preimages against the 758 copy and 9 postimages against the 759 copy (7/7, 9/9;
+    `records.rs` unchanged), recomputed the 759 copy (5,812 files, `e0647d43…`), read the
+    entry log, verified the scope (inherited 23 git entries, HEAD = `origin/main` =
+    `c8df9f8c`, zero live writes, no 758 writes, no live target, empty receipts; the three
+    `.git-attempts` are the grk harness's read-only probes) and the budget. Ruling 768
+    accepts the STOP; Q25 stays unwaived (13 named stops, zero admitted receipts);
+    `path-and-budget` is authorized as brief 760 (re-enter from the authenticated 759 copy
+    `e0647d43…`, copy it once, repair the module placement with at most three bounded
+    compilations, then the recorded 3 generate + 9 validate commands, one default proof-only
+    build, one bounded single-threaded fixture invocation, the 13 dispositions, zero
+    importable receipts). Budget: brief 759's true spend is 4,223.785008420 s against the
+    4,200 carve (23.785 s over, recorded); the corrected reserve is 27,086.72298936417 s;
+    brief 760 carves 5,500 s focused → 21,586.72298936417 s, 0 workspace, 0 epoch. Next:
+    brief 760's gate, then the generator/source gate, the deterministic render, the re-freeze,
+    the fresh epoch, the readmit/C10 and a further 744 restart, each gated; 745/746 held.
   - G15-CM4 continuation 117 (brief 758 STOP) (2026-11-22): brief 758 stopped correctly at the
     inventory-build gate; ruling 767 authorizes the two-mode inventory builds and continues
     the proof as brief 759. Brief 758 (`1409ddb3`) ran on `cdx`, unit

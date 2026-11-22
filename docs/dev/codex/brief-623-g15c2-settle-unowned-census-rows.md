@@ -118952,3 +118952,45 @@ dispositions, zero importable receipts). Budget: 1,215.65708628 s spent of 3,500
 27,110.50799778417 s, 0 workspace, 0 epoch. Next: brief 759's gate, then the
 generator/source gate, the deterministic render, the re-freeze, the fresh epoch, the
 readmit/C10 and a further 744 restart, each gated; 745/746 held.
+
+Continuation 118 — brief 759 stopped correctly after the first authorized generate failed to
+compile; ruling 768 authorizes the repair as brief 760 (accepted 2026-11-22). Attempt 1
+(cdx, unit `brief-759-cdx-20261122-221917-777868`, birth 22:19:17.962941) died 22:28:19.213699
+(541.250758 s) on Codex's safety filter after entry authentication and the row audit; its log
+is archived `.temp/logs/archive/cdx_brief_759.attempt-1.safety-1.log` and its scene preserved
+`.temp/brief-759-attempt-1/` (5,829 files; the copy still `bd8b7548…`; no build, receipt,
+fixture or live write). Attempt 2 (grk, unit `brief-759-grk-20261122-222953-783897`,
+grok-4.7 xhigh, session `79fc0079-…`), 22:29:53–23:52:26, `status=success turns=201
+cost_usd=17.086856 refused=0`, peak 720,887,808 B (oom 0/0), rc 0; scene `.temp/brief-759/`
+(6,494 files, 338,971,296 B); report STOP (2 PASS / 4 FAIL / 1 NA, 1 FLAGGED + 1 FAIL
+measurement, 2 deviations, 1 question `path-and-budget`, 0 changes; 23 citations). It
+delivered the entry (the copy re-created at `bd8b7548…`, 5,810 files, 0 shared inodes; the
+labels, trees, pins and tools reproduce; the known brief-757 append is the only deviation),
+the implementation in the copy (8 files: 6 modified — `lib.rs`, `core.rs`, `core/driver.rs`,
+`rules/cases.rs`, `rules/resume_frames.rs`, `tests/suspension_oracle.rs`; 2 added —
+`crates/rum-runtime/src/q25_ownership.rs` 29,522 B and
+`crates/rum-stdlib/tests/suspension_oracle/q25_p2379_proof.rs` 31,944 B; `records.rs`
+untouched at `7364f150…`), every edit with byte pre/postimages, and one authorized command:
+fingerprints generate, exit 101, no `test result:` line, because `#[path =
+"q25_ownership.rs"]` on `pub mod q25` inside `mod cm740_probe` (`lib.rs:6527`) resolves to
+`crates/rum-runtime/src/cm740_probe/q25_ownership.rs` while the file is at
+`src/q25_ownership.rs`. The other two generates, the nine validates, the proof build and the
+fixture were not launched; all 13 dispositions are Unexecuted; zero importable or admitted
+receipts; zero changes, zero live writes; 744/745/746 untouched; CM5 unauthorized. My gate
+read the fingerprints log directly (a genuine cold build of 51 units failing at the exact
+path), diffed the 758/759 copies (exactly the eight recorded files), re-hashed the 7
+preimages against the 758 copy and the 9 postimages against the 759 copy (7/7, 9/9;
+`records.rs` unchanged), recomputed the 759 copy (5,812 files, `e0647d43…`), read the entry
+log, verified the scope (inherited 23 git entries, HEAD = `origin/main` = `c8df9f8c`, zero
+live writes, no 758 writes, no live target, empty receipts; the three `.git-attempts` are the
+grk harness's read-only probes) and the budget. Ruling 768 accepts the STOP, keeps Q25
+unwaived (13 named stops, zero admitted receipts), and authorizes `path-and-budget` as brief
+760 (re-enter from the authenticated 759 copy `e0647d43…`, copy it once, repair the module
+placement with at most three bounded compilations, then the recorded 3 generate + 9 validate
+commands, one default proof-only build, one bounded single-threaded fixture invocation, the 13
+dispositions, zero importable receipts). Budget: brief 759's true spend is 4,223.785008420 s
+against the 4,200 carve (23.785 s over, recorded); the corrected reserve is
+27,086.72298936417 s; brief 760 carves 5,500 s focused → 21,586.72298936417 s, 0 workspace,
+0 epoch. Next: brief 760's gate, then the generator/source gate, the deterministic render, the
+re-freeze, the fresh epoch, the readmit/C10 and a further 744 restart, each gated; 745/746
+held.

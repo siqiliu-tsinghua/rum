@@ -248,3 +248,57 @@ copy, the contract implementation, the authorized inventory replays, the fixture
 and raw observations, the predictions versus actual outcomes, the 13 dispositions, and the
 scope; cite lines exactly. STOP at the proof gate: no live edit, no admission, no generator/
 source stage, no 744 restart, no 745/746, no CM5.
+
+## Gate c118 (2026-11-22) — brief 759 stopped correctly after the first authorized generate failed to compile; the implementation is in the copy; ruling 768 authorizes the repair as brief 760
+
+- Run: attempt 1 (cdx, unit `brief-759-cdx-20261122-221917-777868`, birth
+  22:19:17.962941) died 22:28:19.213699 (541.250758 s) on Codex's safety filter after entry
+  authentication and the row audit; log archived
+  `.temp/logs/archive/cdx_brief_759.attempt-1.safety-1.log`, scene preserved
+  `.temp/brief-759-attempt-1/` (5,829 files; copy still `bd8b7548…`; no build, receipt,
+  fixture or live write). Attempt 2 (grk, unit `brief-759-grk-20261122-222953-783897`,
+  grok-4.7 xhigh, session `79fc0079-…`), 22:29:53–23:52:26, `status=success turns=201
+  cost_usd=17.086856 refused=0`, peak 720,887,808 B (oom 0/0), rc 0; log
+  `.temp/logs/grk_brief_759.log` (6,252,662 B); scene `.temp/brief-759/` (6,494 files,
+  338,971,296 B). Report STOP: 2 PASS, 4 FAIL, 1 NA, 1 FLAGGED measurement, 1 FAIL
+  measurement, 2 deviations, 1 question (`path-and-budget`), 0 disclosures, 0 changes;
+  `report.py check 759` OK with 23 citations; budget 3,682.534250528 s spent of 4,200,
+  517.465749472 returned.
+- Delivered: the entry (the copy re-created at `bd8b7548…`, 5,810 files, 0 shared inodes; the
+  twelve labels, three trees, 45 pins and three tools reproduce; the known brief-757 append
+  is the single deviation); the implementation in the copy — 8 files (6 modified: `lib.rs`,
+  `core.rs`, `core/driver.rs`, `rules/cases.rs`, `rules/resume_frames.rs`,
+  `tests/suspension_oracle.rs`; 2 added: `crates/rum-runtime/src/q25_ownership.rs` 29,522 B
+  and `crates/rum-stdlib/tests/suspension_oracle/q25_p2379_proof.rs` 31,944 B;
+  `records.rs` untouched at `7364f150…`), every edit recorded with byte pre/postimages; one
+  authorized command run — fingerprints generate, exit 101, no `test result:` line, the exact
+  diagnostic `error: couldn't read crates/rum-runtime/src/cm740_probe/q25_ownership.rs` at
+  `lib.rs:6527` (`#[path = "q25_ownership.rs"]` on `pub mod q25` inside `mod cm740_probe`,
+  with the file at `src/q25_ownership.rs`); the other two generates, the nine validates, the
+  proof build and the fixture were not launched; the 13 dispositions are Unexecuted (P2379
+  included); zero importable and admitted receipts; zero changes, zero live writes, no
+  generator/source stage, 744/745/746 untouched, CM5 unauthorized.
+- The STOP is correct: brief 759 authorizes exactly the listed commands and makes any other
+  cargo build or test execution a director gate; the repair needs another cargo invocation,
+  and the remaining cargo upper cannot fit the leftover 517.5 s — a projected overrun stops.
+- My gate: I read the fingerprints log directly (a genuine cold build of 51 units failing at
+  the exact path, no test result line); diffed the 758 and 759 copies (exactly the eight
+  recorded files differ or are added; no inventory, manifest, policy or selection file); re-
+  hashed the 7 preimages against the 758 copy and the 9 postimages against the 759 copy
+  (7/7 and 9/9 match, `records.rs` unchanged); recomputed the 759 copy (5,812 files,
+  `e0647d43…`); read the entry log; verified the scope (inherited 23 git entries, HEAD =
+  `origin/main` = `c8df9f8c`, zero live files newer than the dispatch, no 758 writes, no live
+  target, the receipts directory empty, 0 importable and 0 admitted receipts; the three
+  `.git-attempts` entries are the grk harness's read-only probes) and the budget arithmetic;
+  the two deviations are accepted.
+- Ruling 768 accepts the STOP; **Q25 stays unwaived** (13 named stops, zero admitted
+  receipts); `path-and-budget` is authorized as **brief 760** (re-enter from the authenticated
+  759 copy `e0647d43…`, copy it once, repair the module placement with at most three bounded
+  compilations, then the recorded 3 generate + 9 validate commands, one default proof-only
+  build, one bounded single-threaded fixture invocation, the 13 dispositions, zero importable
+  receipts), carving **5,500 s focused**; brief 759's true spend is 4,223.785008420 s against
+  the 4,200 carve (23.785 s over, recorded), the corrected reserve is
+  **27,086.72298936417 s**, and after brief 760's carve it is **21,586.72298936417 s**, 0
+  workspace, 0 epoch. Next: brief 760's gate, then the generator/source gate, the
+  deterministic render, the re-freeze, the fresh epoch, the Stage C/C10 readmission and a
+  further 744 restart, each gated; 745/746 remain held.
