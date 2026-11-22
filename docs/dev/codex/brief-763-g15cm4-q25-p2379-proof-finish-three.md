@@ -267,3 +267,52 @@ copy, the two emit replays, the merge and adoption, the two check replays, the f
 execution and raw observations, the predictions versus actual outcomes, the 13 dispositions,
 and the scope; cite lines exactly. STOP at the proof gate: no live edit, no admission, no
 generator/source stage, no 744 restart, no 745/746, no CM5.
+
+## Gate c122 (2026-11-23) — STOP accepted; Q25 unwaived; brief 764 ordered
+
+Brief 763 ran on `grk` (grok-4.7, effort xhigh), unit
+`brief-763-grk-20261123-013114-864163`, session `83dcaac3-2ecc-46ca-a50c-913cf76d1045`,
+2026-11-23 01:31:14 – 01:54:59 CST (wall ≈ 1,425 s), `grk-result: status=success turns=40
+cost_usd=2.850884 refused=0`, the 20 GiB scope peaked at 2,584,285,184 B (2.41 GiB, oom 0/0),
+rc 0; log `.temp/logs/grk_brief_763.log`; scene `.temp/brief-763/` (7,752 files,
+3,802,625,178 B); `report.py check 763` OK with 96 citations; 11 PASS / 1 FAIL checks.
+Delivered and verified: the entry (762 copy 5,812 files `7dd616dc…`; eleven rows PASS; 0
+shared inodes; the 759 path absent); the two emit replays rc 101 at `production.rs:99:6` with
+`production source anchor expired` after the C01/C02 rows with rejection count 0, writing the
+fresh one-sided tables `03e54a43…`/`561aac05…`; the merge calibrated against the recorded 754
+pair (byte-identical to `fdae14fe…`), the fresh merge 18,162 B `4337950c…`, adopted over the
+copy's `promoted.tsv` with the header identical and only columns 3/4/5 differing on 2/2 rows,
+`records.rs` `7364f150…` unchanged (`SOURCE DELTA PASS files_changed=1`); the two check
+replays rc 0 with the C01/C02 rows and `test result: ok. 1 passed; 0 failed` (1163/1157
+filtered out); the release proof build rc 0 in 65.424 s (binary
+`suspension_oracle-547fa4362abc58a1`, 113,619,264 B, `50b3e842…`); the one `--list` preflight
+printing the full harness name; and the one fixture invocation rc 101 in 0.083 s, panicking
+at `q25_p2379_proof.rs:102:17` with `Q25_AST resume receiver is not an explicit typed self`
+before any trial — no `Q25_PROGRAM`, no observation, no `NoHit`; the importer deferred; all
+13 rows named stops; zero importable receipts; no second invocation and no proof edit. My
+gate reproduced the post-adoption copy identity (`0d677622…`, 5,812 files), showed the copy
+differs from the 762 copy only in `promoted.tsv`, re-derived the merge and its 754
+calibration byte-for-byte, re-derived the column proof (`{3:2, 4:2, 5:2}`, zero other cells),
+read all raw logs, and proved the mechanism from syn 2.0.117's own parser
+(`src/item.rs:1604–1721`): `self: std::sync::Arc<Self>` is stored as `FnArg::Receiver` with
+`colon_token: Some`, so the checker's `FnArg::Typed` arm can never match the intended
+signature (`resume_frames.rs:301`, `begin_concrete` at `:305`); the predicate is defective,
+the signature and trial design are correct. Scope verified (0 live newer, 0 in scenes
+758–762, receipts empty, `changes` empty). The deviation (the check commands recompiled
+`rum-stdlib` because `promoted.tsv` is `include_str!` in `promotion.rs`, under the recorded
+argv, timeouts and shared target) is accepted. Budget: focused 796.170587467 s of 2,500;
+unspent 1,703.829412533 s; reserve **23,905.35125736417 s**. Ruling 772
+(`.temp/director/ruling-772.md`) accepts the STOP, answers `receiver-arm` — the
+`FnArg::Receiver` arm with an explicit colon and the `Arc<Self>` type is the correct syn
+representation and the classifier must accept it while still rejecting bare, `&`, `&mut` and
+wrong-typed receivers, with a shipped falsifier — and orders **brief 764**: re-enter from the
+763 copy (`0d677622…`, 5,812 files), repair only the receiver classifier in
+`q25_p2379_proof.rs` plus its falsifier, at most three bounded repair compilations, no
+certificate rerun (their 763 verdicts stand), one default release proof-only build, one
+bounded single-threaded fixture with the full harness name, the 13 dispositions and zero
+importable receipts; the predictions, the source-hit clause, `records.rs`, the owner/custody
+semantics and every other predicate immutable; any other cargo invocation, any other code
+edit, or a second fixture run is a new gate. Brief 764 carves **1,800 s** (23,905.35125736417
+→ 22,105.35125736417 s), 0 workspace, 0 epoch. Next: brief 764's gate, then the
+generator/source gate, the deterministic render, the re-freeze, the fresh epoch, the Stage
+C/C10 readmission and a further 744 restart, each gated; 745/746 held.

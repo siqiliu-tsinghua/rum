@@ -119129,3 +119129,50 @@ plus the 133.009 s meter span), unspent 3,105.033 s, reserve 24,701.52184483117 
 carves 2,500 s (→ 22,201.52184483117 s), 0 workspace, 0 epoch. Next: brief 763's gate, then
 the generator/source gate, the deterministic render, the re-freeze, the fresh epoch, the
 readmit/C10 and a further 744 restart, each gated; 745/746 held.
+
+**Continuation 122 (2026-11-23) — brief 763 STOP, ruling 772.** Brief 763 ran on `grk`,
+unit `brief-763-grk-20261123-013114-864163`, session `83dcaac3-2ecc-46ca-a50c-913cf76d1045`,
+01:31:14 – 01:54:59 CST (wall ≈ 1,425 s), `status=success turns=40 cost_usd=2.850884
+refused=0`, peak 2,584,285,184 B, rc 0; scene `.temp/brief-763/` (7,752 files,
+3,802,625,178 B); `report.py check 763` OK, 96 citations; 11 PASS / 1 FAIL checks. It
+delivered and I verified: the entry (762 copy 5,812 files `7dd616dc…`; eleven rows;
+`INODE PASS compared=5865 shared_inodes=0`); the two emit replays rc 101 at
+`production.rs:99:6` with `production source anchor expired` after the C01/C02 rows with
+rejection count 0 (the accepted baseline content), writing the fresh one-sided tables
+`03e54a43…` / `561aac05…`; the merge calibrated against the recorded 754 pair
+(byte-identical to `fdae14fe…`/18,162 B), the fresh merge 18,162 B `4337950c…`, adopted by a
+single byte copy over the copy's `promoted.tsv` (header identical, 9 columns, 2/2 rows, only
+columns 3/4/5 differ, zero other cells; `records.rs` `7364f150…` unchanged; `SOURCE DELTA
+PASS files_changed=1`); the two check replays rc 0 with the C01/C02 rows and `test result:
+ok. 1 passed; 0 failed` in both modes (1163/1157 filtered out); the release proof build rc 0
+in 65.424 s (binary `suspension_oracle-547fa4362abc58a1`, 113,619,264 B, `50b3e842…`); the
+one `--list` preflight printing the full harness name; and the one fixture invocation rc 101
+in 0.083 s, panicking at `q25_p2379_proof.rs:102:17` with `Q25_AST resume receiver is not an
+explicit typed self` before any trial — no `Q25_PROGRAM`, no observation, no `NoHit`, the
+importer deferred, all 13 rows named stops, zero importable receipts, no second invocation,
+no proof edit. The mechanism, proved from syn 2.0.117's own parser
+(`src/item.rs:1604–1721`): `self: std::sync::Arc<Self>` is stored as `FnArg::Receiver` with
+`reference: None` and `colon_token: Some`, so the checker's `FnArg::Typed` arm can never
+match the intended `resume_frames.rs:301` signature (`begin_concrete` at `:305`). My gate
+also reproduced the post-adoption copy identity (`0d677622…`, 5,812 files), showed the copy
+differs from the 762 copy only in `promoted.tsv`, re-derived the merge and its calibration
+byte-for-byte, re-derived the column proof, read every raw log, and verified the scope (0
+live newer, 0 in scenes 758–762, receipts empty, `changes` empty). The deviation (the check
+commands recompiled `rum-stdlib` because `promoted.tsv` is `include_str!` into
+`promotion.rs`, under the recorded argv, timeouts and shared target) is accepted. Budget:
+focused 796.170587467 s of the 2,500 s carve; unspent 1,703.829412533 s; reserve
+23,905.35125736417 s; 0 workspace, 0 epoch. Ruling 772
+(`.temp/director/ruling-772.md`) accepts the STOP, keeps **Q25 unwaived**, answers
+`receiver-arm` — the explicit typed `FnArg::Receiver` is the correct representation, the
+classifier must accept it and still reject bare, `&`, `&mut` and wrong-typed receivers, with
+a shipped falsifier — and orders **brief 764**: re-enter from the 763 copy (`0d677622…`,
+5,812 files), repair only the receiver classifier and its falsifier in
+`q25_p2379_proof.rs`, at most three bounded repair compilations, no certificate rerun (their
+763 verdicts stand), one default release proof-only build, one bounded single-threaded
+fixture with the full harness name, the 13 dispositions and zero importable receipts; the
+predictions, the source-hit clause, `records.rs`, the owner/custody semantics and every
+other predicate immutable; any other cargo invocation, any other code edit, or a second
+fixture run is a new gate. Brief 764 carves 1,800 s focused (23,905.35125736417 →
+22,105.35125736417 s), 0 workspace, 0 epoch. Next: brief 764's gate, then the
+generator/source gate, the deterministic render, the re-freeze, the fresh epoch, the
+readmit/C10 and a further 744 restart, each gated; 745/746 held.

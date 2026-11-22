@@ -3987,6 +3987,40 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 122 (brief 763 STOP) (2026-11-23): brief 763 adopted the promoted
+    table, reproduced both certificate checks green, built the proof binary and spent the one
+    fixture invocation, which stopped in the pre-trial static classifier on a defective syn
+    arm; ruling 772 authorizes the classifier repair and one new fixture invocation as brief
+    764. Run: grk, unit `brief-763-grk-20261123-013114-864163`, session `83dcaac3-…`,
+    01:31:14–01:54:59 CST (wall ~1,425 s), `status=success turns=40 cost_usd=2.850884
+    refused=0`, peak 2,584,285,184 B, rc 0; scene `.temp/brief-763/` (7,752 files, 3.80 GB).
+    Delivered: entry (762 copy 5,812 files `7dd616dc…`; eleven rows; 0 shared inodes); emits
+    ×2 rc 101 at `production.rs:99:6` with C01/C02 rejections 0 (baseline content), fresh
+    tables `03e54a43…`/`561aac05…`; merge calibrated on the recorded 754 pair (byte-identical
+    to `fdae14fe…`), fresh merge 18,162 B `4337950c…`, adopted over `promoted.tsv` (header
+    identical, columns 3/4/5 only on 2/2 rows, `records.rs` `7364f150…` unchanged); checks ×2
+    rc 0 with `test result: ok. 1 passed` (1163/1157 filtered out); proof build rc 0 in
+    65.424 s (binary `50b3e842…`); `--list` full name; one fixture invocation rc 101 in
+    0.083 s panicking at `q25_p2379_proof.rs:102:17` with `Q25_AST resume receiver is not an
+    explicit typed self` — syn 2.0.117 stores `self: Arc<Self>` as `FnArg::Receiver` with
+    `colon_token: Some`, so the checker's `FnArg::Typed` arm can never match the intended
+    `resume_frames.rs:301` signature; no trial ran, no `NoHit`; 13 named stops; zero
+    importable receipts; no second invocation, no proof edit. My gate: post-adoption copy
+    identity `0d677622…` (5,812 files), per-file diff against the 762 copy only
+    `promoted.tsv`, merge and column proof re-derived, all raw logs read, syn parser source
+    read (`item.rs:1604–1721`), scope and budget verified (796.170587467 s of 2,500; reserve
+    23,905.35125736417 s). Ruling 772 accepts the STOP and the deviation (the check recompiled
+    `rum-stdlib` under the recorded argv because `promoted.tsv` is `include_str!`), keeps Q25
+    unwaived, answers `receiver-arm` (accept the explicit typed `FnArg::Receiver`, reject
+    bare/`&`/`&mut`/wrong types, ship the falsifier), and orders brief 764: repair only the
+    receiver classifier plus its falsifier in `q25_p2379_proof.rs`, ≤3 bounded repair
+    compilations, no certificate rerun (their 763 verdicts stand), one release proof-only
+    build, one bounded single-threaded fixture with the full harness name, the 13
+    dispositions and zero importable receipts, carving 1,800 s focused (23,905.35125736417 →
+    22,105.35125736417 s), 0 workspace, 0 epoch. Next: brief 764's gate, then the
+    generator/source gate, the deterministic render, the re-freeze, the fresh epoch, the
+    readmit/C10 and a further 744 restart, each gated; 745/746 held.
+
   - G15-CM4 continuation 121 (brief 762 STOP) (2026-11-23): brief 762 adopted the
     certificate table and reproduced the emit content exactly, then stopped correctly when the
     two certificate checks failed on the stale promoted.tsv source-anchor cells; ruling 771
