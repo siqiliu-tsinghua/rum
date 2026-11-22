@@ -3987,6 +3987,41 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 120 (brief 761 STOP) (2026-11-23): brief 761 fixed and compiled the
+    proof test, ran the authorized replays and the release build, and stopped correctly when
+    the single fixture invocation matched zero tests; ruling 770 authorizes the full-name
+    rerun and the certificate-table adoption as brief 762. Run: grk, unit
+    `brief-761-grk-20261123-002528-831170`, session `fafcd25d-…`, 00:25:28–00:55:17 CST
+    (wall ~1,789 s), `status=success turns=66 cost_usd=4.402402 refused=0`, peak
+    2,788,712,448 B, rc 0; scene `.temp/brief-761/` (9,297 files, 7.05 GB). Delivered: entry
+    (760 copy 5,812 files `abb03ca5…`; nine rows; 759 path absent; `records.rs` `7364f150…`;
+    0 shared inodes); the two repairs in one edit (`q25_p2379_proof.rs` `73d92bd0…` →
+    `0fc8d966…`, 32,082 B; clone-before-emit, in-test `set_var` removed, first-line
+    fail-closed `RUM_CM740_OMIT=="P2379"` check, env-mint and 17 negatives intact); one
+    compile rc 0 in 54.53 s; 3 generate + 9 validate (fingerprints rc 0, 68 marks
+    regenerated to `copy/target/brief-544/local-contracts.tsv`; cert emit/check both modes
+    rc 101 at `promotion.rs:27` on stale fingerprints O010/O011/O0200/O0210; discovery rc 0,
+    92/10,070 vs 90/9,956 with q25 rows; exact rc 101 identical 349/302; census rc 101
+    8,607/56,799 vs 8,566/56,509, 62 classes; LP01 rc 101 same pair, 591 vs 590 filtered;
+    typed slots rc 101 same 2/8/1, `macros=614 result=374` vs 615/375 from the replaced
+    `resume_or_suspend!` in `rules/cases.rs`); one release proof build rc 0 in 63.675 s
+    (binary `34883b9f…`); one fixture invocation with filter `q25_p2379_ownership_proof
+    --exact` ran 0 tests (592 filtered out) — the harness name is
+    `q25_p2379_proof::q25_p2379_ownership_proof`; no prediction, no `NoHit`; 13 named stops;
+    zero importable receipts; no live write. My gate: the copy source tree `918e0c38…`
+    (5,812 files, excluding the generated `target/`), the review table `85d75662…` vs the
+    source inventory `6b390887…` (68/68 rows, fingerprint column only), the binary `--list`
+    (exactly the full name), every replay delta checked against the baseline logs, scope and
+    budget verified (1,361.485376 s of 5,500; reserve 25,096.48887323717 s). Ruling 770
+    accepts the STOP, keeps Q25 unwaived, and authorizes `exact-filter` as brief 762 (the
+    mechanical adoption of the generator's table over the copy's source inventory, the four
+    certificate commands rerun to the baseline content, one release proof build, one bounded
+    single-threaded fixture invocation with the full harness name and `RUM_CM740_OMIT=P2379`,
+    the 13 dispositions, zero importable receipts), carving 3,500 s focused
+    (25,096.48887323717 → 21,596.48887323717 s), 0 workspace, 0 epoch. Next: brief 762's
+    gate, then the generator/source gate, the deterministic render, the re-freeze, the fresh
+    epoch, the readmit/C10 and a further 744 restart, each gated; 745/746 held.
+
   - G15-CM4 continuation 119 (brief 760 STOP) (2026-11-23): brief 760 stopped correctly at
     the three-compilation bound with the contract compiling; ruling 769 authorizes the two
     proof-file repairs and the remaining sequence as brief 761. Run: grk (grok-4.7 xhigh),

@@ -234,3 +234,59 @@ copy, the two proof-file repairs and the contract, the authorized inventory repl
 fixture executions and raw observations, the predictions versus actual outcomes, the 13
 dispositions, and the scope; cite lines exactly. STOP at the proof gate: no live edit, no
 admission, no generator/source stage, no 744 restart, no 745/746, no CM5.
+
+## Gate c120 (2026-11-23) — brief 761 repaired and compiled the proof test, ran the authorized replays and the release build, and stopped correctly when the single fixture invocation matched zero tests; ruling 770 authorizes the full-name rerun and the certificate-table adoption as brief 762
+
+- Run: `grk` (grok-4.7 xhigh), unit `brief-761-grk-20261123-002528-831170`, session
+  `fafcd25d-63ca-46bc-ad56-f67503866f37`, 2026-11-23 00:25:28 – 00:55:17 CST (wall ≈ 1,789 s);
+  `status=success turns=66 cost_usd=4.402402 refused=0`; peak 2,788,712,448 B (2.60 GiB,
+  oom 0/0), rc 0; log `.temp/logs/grk_brief_761.log`; scene `.temp/brief-761/` (9,297 files,
+  7,045,431,514 B). Report STOP: 2 measurements PASS, 3 deviations, 1 question
+  (`exact-filter`), `changes` empty; `report.py check 761` OK (108 citations).
+- Delivered: entry (the repaired 760 copy 5,812 files `abb03ca5…`; the nine entry rows; the 759
+  path absent; `records.rs` `7364f150…`; `INODE PASS compared=5812 shared_inodes=0`); the two
+  repairs in one edit (`q25_p2379_proof.rs` `73d92bd0…`/31,944 B → `0fc8d966…`/32,082 B —
+  clone-before-emit, in-test `set_var` removed, first-line fail-closed `RUM_CM740_OMIT ==
+  "P2379"` check, env-mint negative and 17 negatives intact, no `unsafe`); one repair
+  compilation rc 0 in 54.53 s; the 3 generate + 9 validate commands (fingerprints rc 0 and
+  `Regenerated 68 fingerprints at copy/target/brief-544/local-contracts.tsv`; certificate
+  emit/check both modes rc 101 at `promotion.rs:27:38` on stale fingerprints O010/O011/O0200/
+  O0210, an ordering artifact; discovery rc 0 with 92/10,070 vs 90/9,956 and q25 rows; exact
+  rc 101 with the identical 349/302 rows; census rc 101 at 8,607/56,799 vs 8,566/56,509, same
+  62 classes; LP01 rc 101 with the same pair and 591 vs 590 filtered; typed slots rc 101,
+  same 2 passed/8 failed, `macros=614 result=374` vs 615/375 from the replaced
+  `resume_or_suspend!` in `rules/cases.rs`); the one release proof build rc 0 in 63.675 s
+  (binary `34883b9f…`, 113,618,256 B); the one fixture invocation with the authorized filter
+  `q25_p2379_ownership_proof --exact` ran 0 tests (592 filtered out) because the harness name
+  is `q25_p2379_proof::q25_p2379_ownership_proof` (`suspension_oracle.rs:52–53`); no
+  prediction, no `NoHit`, importer deferred, 13 named stops, zero importable receipts; no
+  live write, no git, no network, no `unsafe`.
+- My gate: re-walked the 761 copy's source tree excluding the generated `target/` artifact
+  (5,812 files, `918e0c38…`); re-hashed the proof test, `records.rs` and the q25 file; listed
+  the proof-built release binary (`--list`: exactly `q25_p2379_proof::q25_p2379_ownership_proof`);
+  diffed the generator's review table (`85d75662…`, 91,646 B) against the source inventory
+  (`6b390887…`, 91,646 B) — identical header, 68/68 rows changed in the `fingerprint` column
+  only, zero other cells; read `local/contracts.rs` (the 34-file flat dependency list includes
+  the q25-edited `suspension/core.rs`, so all contract marks move); compared every replay with
+  the accepted baseline logs (fingerprints 0/0; cert emit baseline rc 101 at
+  `production.rs:99` vs replay at `promotion.rs:27`; cert check baseline rc 0 with C01/C02 vs
+  replay rc 101; discovery, exact, census, LP01 and typed slots as quoted); scope clean (0 live
+  newer, 0 in the 758/759/760 scenes, receipts empty); report check OK; budget 1,361.485376 s
+  of 5,500, 4,138.514624 s returned, reserve 25,096.48887323717 s.
+- Ruling 770 (`.temp/director/ruling-770.md`): the STOP is correct — the one authorized
+  invocation was consumed by a zero-test run caused by my filter's missing module
+  qualification; a second invocation is a gate. The record is accepted; **Q25 stays unwaived**
+  (13 named stops, zero admitted receipts). Question `exact-filter` is authorized as **brief
+  762**: re-enter from the 761 copy (source tree `918e0c38…`), mechanically adopt the
+  generator's review table over the copy's source inventory (`85d75662…` over `6b390887…`;
+  only the fingerprint column, 68/68 rows), re-run the four `local_production_acceptance`
+  certificate commands as recorded and reproduce the baseline content (emit rc 101 panic at
+  `production.rs:99`; check rc 0 with the C01/C02 rows), one default release proof-only build,
+  one bounded single-threaded fixture invocation with the full name
+  `q25_p2379_proof::q25_p2379_ownership_proof` (`--exact --nocapture --release`,
+  `RUST_TEST_THREADS=1`, `RUM_CM740_OMIT=P2379`), the 13 dispositions and zero importable
+  receipts. Budget: 3,500 s focused carved from the corrected reserve
+  (25,096.48887323717 → 21,596.48887323717 s), 0 workspace, 0 epoch; unspent returns.
+- Next: brief 762's gate follows; then the generator/source gate, the deterministic render,
+  the re-freeze, the fresh epoch, the Stage C/C10 readmission and a further 744 restart, each
+  gated; 745/746 stay held; CM5 unauthorized.
