@@ -186,9 +186,9 @@ The incidents behind each rule are in `docs/dev/director-method.md` and
   P1566/P1568 (30/30) settle Equal; P0503/P0504/P0353 are
   `NoObservableTail`; P0492 is a new Lost row (resumed
   `call.stage.prepare_arguments`; 9 DIFF / 7 SAME). **Worker routing
-  2026-11-12:** a Codex quota death asks about the 2nd Codex account;
-  `mst` only on a safety-filter refusal; both drained -> grok without asking
-  (2026-11-20 user ruling: unusable accounts make grk the default).
+  2026-11-23:** the near-term fallback is grk first, then agy (per run, with
+  the 629 fabrication guard); `mst` (GLM) returns after 2026-12-01 and the
+  order is revisited then; kimi and qcn stay the user's own budget.
 
 ## Pointers
 

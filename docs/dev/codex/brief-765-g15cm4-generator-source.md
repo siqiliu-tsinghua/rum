@@ -290,3 +290,87 @@ prices the two-mode source A/B (2,936.272 s) and the close. The scene's stop lin
 `remaining < 3× the next command sample`; `informational_stack_3x` is logged, not the stop
 line. A wrong physical identity or an unmatched historical constituent stops at its first
 failed link; do not skip ahead to a later deliverable to fit the carve.
+
+## Gate c124 (2026-11-23) — STOP accepted (sandbox refused the memory-scope wrapper); Q25 unwaived; brief 766 ordered
+
+Brief 765 ran on `grk` (grok-4.7, effort xhigh), unit
+`brief-765-grk-20261123-024036-897176`, session
+`ef3814dc-c6c3-4ddf-986e-007d97eb24f3`, 2026-11-23 02:40:36 – 04:10 CST,
+`grk-result: status=success turns=240 cost_usd=19.156664 refused=0`, the 20 GiB
+scope peaked at 432,332,800 B (oom 0/0), rc 0; log
+`.temp/logs/grk_brief_765.log`; scene `.temp/brief-765/` (5,908 files, 158 MB);
+report STOP (`changes` empty, 0 deviations, 9 PASS / 1 FAIL / 2 NA, 1
+measurement NA, question `memory-scope-bus`; `report.py check 765` green).
+
+Delivered: the entry re-authenticated (764 copy `0f8cbc32…`, 5,812 files; the
+eleven rows; `INODE PASS compared=5865 shared_inodes=0 devices=[53]`; copied
+once, no hardlinks; the 759 path absent); the four generator roots extended
+(`fn_split.py` 94,518 B `a8efcf31…`, `compose.py` 7,340 B `b8803f61…`,
+`control.rs.in` 20,970 B `a15720f9…`, `qualified_dispatch.py` 10,236 B
+`85eb4055…`, new `class_forms.py` 61,626 B `80c7b579…`; preimages and
+postimages kept); the emission into the copy only — 27 files (3 new:
+`class_lease.rs` 13,889 B `85377259…`, `class_rows.rs` 42,871 B `685909da…`
+with 97 recipes, `class_lease_fixtures.rs` 33,767 B `90d93cf4…` with 196
+tests; 24 changed, +284/−42 lines); the static validation (`GROUPS typed=50
+raw=25 synchronous=16 cursor=4 queued-success=2 unclassified=0`;
+`ZERO-UNKNOWN PASS rows=97`; 97 `ROW VALIDATE PASS`; `ORDINARY BODY PASS
+functions=840 shifted_paired=118`; `CONTROL AUTHORITY PASS
+rows=C1,G15A,G15B,Some`; `Q25 FIRST PASS
+frame=DriveStringCasesOutputResultSuspensionFrame first=begin_concrete`;
+`EMIT PASS rows=97 files=27 importable_receipts=0 rows_closed=0`; 13
+`Q25 OPEN`). Then the STOP at the first cargo command:
+`scripts/memory-scope.sh` exec'd `systemd-run --user` and the grk fence
+returned `Failed to connect to user scope bus … Operation not permitted`
+(RC 1, 0.073 s); bare cargo was not substituted; the non-admission image,
+the 194 fixtures, the inventory replays, the source A/B and the hot-path A/B
+did not start. Focused command spend 23.713 s of the 6,500 s carve; unspent
+9,576.287 s; reserve 34,876.21078847017 s; 0 workspace, 0 epoch; Q25
+unwaived, all 13 rows OPEN, zero importable receipts, no live edit, no git
+(4 fence entries are the grok harness's own probes), 744/745/746 untouched,
+CM5 unauthorized.
+
+My gate: re-walked both copies with the scene walk (`0f8cbc32…` reproduced,
+5,812 files; the post-emit copy 5,815 files
+`d0230dba0bfd38c5fdd4e7882c2c428805f19353a45efb4e071f0967d50bf01c`), proved
+the content diff is exactly 27 files with the three new hashes matching the
+emit log, counted and sampled the 97 `ROW VALIDATE` lines, read the full
+24-file diff, the new `class_lease.rs`/`class_rows.rs`/fixture file, the four
+generator-root diffs and the emitter, and verified the scope (0 live files
+outside `.temp/` newer than the dispatch, 0 in scenes 749/756/764,
+`receipts/` empty, `changes` empty). **Gate finding:** the emission does not
+parse — eight sites carry `crate::cm740_probe::if` because
+`rewrite_sync_around` replaces from the helper name and leaves the
+`ns::cm740_probe::` prefix; the epoch toolchain's rustfmt reproduces
+`error: expected identifier, found keyword 'if'`, and the indentation is not
+rustfmt-clean; the worker's custom validator does not parse expressions, so
+nothing compiled.
+
+Ruling 774 (`.temp/director/ruling-774.md`) accepts the STOP as correct (the
+role text forbids working around a sandbox refusal), records the two brief
+defects as mine — the `scripts/memory-scope.sh` rule is the director-host
+rule, while the worker already runs inside the dispatch-level 20 GiB scope
+(brief 764 built directly at `-j8`), and the 3,100 s workspace carve is below
+the scene's own stop line (stack_1x 3,116.272 s, next_3x 5,350.194 s) — keeps
+**Q25 unwaived** (13 named stops at zero admitted receipts), answers
+`memory-scope-bus` (cargo runs directly in the dispatch scope, no nested
+scope), and orders **brief 766**, the physical half: a fresh scene
+`.temp/brief-766/` from the 764 copy, the extended generator copied from
+`.temp/brief-765/generator/`, the emitter repaired so the whole helper prefix
+is consumed and no `cm740_probe::if` survives, every emitted file
+parse-checked and rustfmt-clean with `cargo fmt --check` green, the
+non-admission image built directly at `-j8` in the dispatch scope with at
+most eight bounded repair compilations, the 196 class fixtures (no
+`RUM_CM740_OMIT`), the carried Q25 contract (13 open), the standing inventory
+replays after the last covered edit and before the first acceptance suite,
+the two-mode source A/B (six cases, 414 targets, combined identity
+recomputed), the probe/falsifier checks and the required measured hot-path
+A/B. Brief 766 carves **focused 6,476.287 s + workspace 5,400 s + epoch 0**
+(34,876.21078847017 → **22,999.92378847017 s**); unspent returns; a projected
+overrun stops for a ruling, never a scope cut. Next: brief 766's gate, then
+the deterministic render, the re-freeze, the fresh epoch, the Stage C/C10
+readmission and a further 744 restart, each gated; 745 (campaign) and 746
+(acceptance) stay held. The bar stays 571/4,422, 37/134, 4/133, 0/26; the
+pair `(45,5,false)` stays Open at zero admitted receipts; C2 118 Residual +
+0 Lost; the 51 owners and five source duties Open; membership 28/3/7/113;
+`CHANGELOG.md` and S10 stay blocked; CM5 remains unauthorized; everything
+sealed (c76–c99) stays sealed.

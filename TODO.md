@@ -3987,6 +3987,35 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 124 (brief 765 STOP, memory-scope fence) (2026-11-23): brief 765
+    extended the generator, emitted the 97-row class forms into the 765 copy (27 files: 3
+    new, 24 changed; static validation green: 97 `ROW VALIDATE PASS`, groups
+    typed=50/raw=25/synchronous=16/cursor=4/queued-success=2, ZERO-UNKNOWN, ORDINARY BODY
+    PASS 840/118, CONTROL AUTHORITY, Q25 FIRST, EMIT PASS 97/27, 13 Q25 OPEN), but stopped
+    before the non-admission image: `scripts/memory-scope.sh` failed at once
+    (`systemd-run --user` → Operation not permitted) and bare cargo was not substituted.
+    Run: grk, unit `brief-765-grk-20261123-024036-897176`, session `ef3814dc-…`,
+    02:40:36–04:10 CST, `status=success turns=240 cost_usd=19.156664 refused=0`, peak
+    432,332,800 B, rc 0; scene `.temp/brief-765/` (5,908 files, 158 MB); 9 PASS / 1 FAIL /
+    2 NA, 0 deviations, question `memory-scope-bus`. My gate: entry `0f8cbc32…` reproduced
+    (5,812 files), post-emit copy 5,815 files `d0230dba…`, content diff exactly 27 files,
+    new-file hashes match, the 97 `ROW VALIDATE` lines sampled, the four root diffs and the
+    emitter read, scope clean (0 live non-.temp newer, 749/756/764 untouched, receipts
+    empty, `changes` empty), budget 23.713 s (unspent 9,576.287; reserve
+    34,876.21078847017). Gate finding: the emission does not parse — eight
+    `crate::cm740_probe::if` sites from `rewrite_sync_around` leaving the helper prefix;
+    rustfmt reproduces the error. Ruling 774 (`.temp/director/ruling-774.md`) accepts the
+    STOP, records my two brief defects (the memory-scope wrapper rule; the 3,100 s
+    workspace carve below the scene stop line), keeps Q25 unwaived, answers
+    `memory-scope-bus` (cargo runs directly in the dispatch scope; no nested scope), and
+    orders brief 766: fresh scene from the 764 copy, the extended generator, the repaired
+    emitter, parse/rustfmt gates, the image, at most eight repair compilations, the 196
+    class fixtures, the carried Q25 contract (13 open), the inventory replays, the source
+    A/B and the required hot-path A/B; STOP at the generator gate. Carve focused
+    6,476.287 s + workspace 5,400 s + epoch 0 (reserve → 22,999.92378847017 s). Next: brief
+    766's gate, then the deterministic render, the re-freeze, the fresh epoch, the
+    readmit/C10 and a further 744 restart, each gated; 745/746 held.
+
   - G15-CM4 continuation 123 (brief 764 green P2379 proof) (2026-11-23): brief 764 repaired
     the receiver classifier, built the proof binary and ran the one fixture green; ruling 773
     accepts, keeps Q25 unwaived, releases the generator/source stage, records a fresh draw of

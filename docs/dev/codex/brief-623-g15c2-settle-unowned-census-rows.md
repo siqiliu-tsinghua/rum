@@ -119242,3 +119242,60 @@ stops. Brief 765 carves focused 6,500 s + workspace 3,100 s (34,899.923788470167
 25,299.923788470167 s), epoch 0; unspent returns; a projected overrun stops for a ruling,
 never a scope cut. Next: brief 765's gate, then the deterministic render, the re-freeze, the
 fresh epoch, the Stage C/C10 readmission and a further 744 restart, each gated; 745/746 held.
+
+## Continuation 124 (2026-11-23) — brief 765 STOP, ruling 774
+
+Brief 765 ran on `grk` (grok-4.7 xhigh), unit `brief-765-grk-20261123-024036-897176`,
+session `ef3814dc-c6c3-4ddf-986e-007d97eb24f3`, 02:40:36–04:10 CST, `status=success
+turns=240 cost_usd=19.156664 refused=0`, 20 GiB peak 432,332,800 B, rc 0; scene
+`.temp/brief-765/` (5,908 files, 158 MB). It re-authenticated the 764 entry (`0f8cbc32…`,
+5,812 files, 0 shared inodes), copied and extended the four generator roots
+(`fn_split.py` `a8efcf31…`, `compose.py` `b8803f61…`, `control.rs.in` `a15720f9…`,
+`qualified_dispatch.py` `85eb4055…`, new `class_forms.py` `80c7b579…`), and emitted the
+class forms into the copy: 27 files (3 new, 24 changed), static validation green (97
+`ROW VALIDATE PASS`, `GROUPS typed=50 raw=25 synchronous=16 cursor=4 queued-success=2
+unclassified=0`, `ZERO-UNKNOWN PASS rows=97`, `ORDINARY BODY PASS functions=840
+shifted_paired=118`, `CONTROL AUTHORITY PASS rows=C1,G15A,G15B,Some`, `Q25 FIRST PASS
+frame=DriveStringCasesOutputResultSuspensionFrame first=begin_concrete`, `EMIT PASS
+rows=97 files=27 importable_receipts=0 rows_closed=0`, the 13 `Q25 OPEN` lines). It then
+stopped before the non-admission image: the brief required host cargo under
+`scripts/memory-scope.sh`, and inside the grk fence `systemd-run --user` returned
+`Failed to connect to user scope bus … Operation not permitted` (RC 1, 0.073 s); bare
+cargo was not substituted, and the fixtures, inventory replays and source A/B did not
+start. Focused command spend 23.713 s of the 6,500 s carve; unspent 9,576.287 s; reserve
+34,876.21078847017 s; zero importable receipts; no live edit; `changes` empty.
+
+My gate reproduced the entry with the scene walk (`0f8cbc32…`, 5,812 files), computed the
+post-emit copy (5,815 files, `d0230dba0bfd38c5fdd4e7882c2c428805f19353a45efb4e071f0967d50bf01c`),
+proved the content diff is exactly 27 files with the three new hashes matching the emit
+log, counted and sampled the 97 `ROW VALIDATE` lines, read the 24-file diff, the new
+`class_lease.rs`/`class_rows.rs` heads and the fixture file, read the four generator-root
+diffs, and checked the scope (0 live files outside `.temp/` newer than the dispatch; 0
+newer in scenes 749/756/764; `receipts/` empty; `changes` empty). Gate finding: the
+emitted source does not parse — eight sites carry `crate::cm740_probe::if` because
+`rewrite_sync_around` returns a replacement starting at the helper name and leaves the
+`ns::cm740_probe::` prefix; the toolchain's rustfmt reproduces `expected identifier, found
+keyword 'if'`, and the indentation is not rustfmt-clean. The worker's custom static
+validator does not parse expressions, so the defect survived; the code was never compiled.
+
+Ruling 774 (`.temp/director/ruling-774.md`) accepts the STOP as correct (the role text
+forbids working around a sandbox refusal), records the two brief defects as mine — the
+`scripts/memory-scope.sh` requirement is a director-host rule, while the worker already
+runs inside the dispatch-level 20 GiB scope, so its cargo runs directly at `-j8` as in
+brief 764; and the 3,100 s workspace carve is below the scene's own stop line (stack_1x
+3,116.272 s, next_3x 5,350.194 s) — keeps **Q25 unwaived** (all 13 rows named stops at
+zero admitted receipts), answers `memory-scope-bus`, and orders **brief 766**, the
+physical half: a fresh scene `.temp/brief-766/` from the 764 copy, the extended generator
+copied from `.temp/brief-765/generator/`, the emitter repaired so the whole helper prefix
+is consumed and no `cm740_probe::if` survives, the re-emission parse-checked by rustfmt
+and `cargo fmt --check` green, the non-admission image built directly in the dispatch scope
+with at most eight bounded repair compilations, the 196 class fixtures (97×2 + KAT +
+importer clause), the carried Q25 contract (13 open), the standing inventory replays after
+the last covered edit and before the first acceptance suite, the two-mode source A/B (six
+cases, 414 targets, combined identity recomputed), the probe/falsifier checks, and the
+measured hot-path A/B (the diff touches `eval_core`/`eval_dispatch` and the ordinary
+resume/insertion paths). Brief 766 carves focused 6,476.287 s + workspace 5,400 s + epoch
+0 (reserve → 22,999.92378847017 s); unspent returns; a projected overrun stops for a
+ruling, never a scope cut. Next: brief 766's gate, then the deterministic render, the
+re-freeze, the fresh epoch, the Stage C/C10 readmission and a further 744 restart, each
+gated; 745/746 held; CM5 unauthorized.
