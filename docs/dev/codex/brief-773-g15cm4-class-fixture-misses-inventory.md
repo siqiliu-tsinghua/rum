@@ -109,3 +109,76 @@ never a scope cut.
 entry, inventory (one per row), alignment, decision, strengthening, repair options,
 drafted brief, scope, budget; `scripts/report.py check 773` green. The summary states the
 three mechanisms in one line each, the masked-row count and the decision.
+
+## Gate c132 (2026-11-23) — brief 773 DONE and accepted: the three mechanisms are confirmed with exact loci, my c131 "15 synchronous rows" count is refuted (measured 5 return-only + 10 return-plus-neighbour, 0 exclusive off-contract), the masked assertion is quantified, and the repair decision is adopted with four amendments; brief 774 is ordered
+
+Brief 773 ran on `grk` (grok-4.7, effort xhigh), unit
+`brief-773-grk-20261123-165125-1191150`, session `226bf208-6479-4004-952d-3a915061010a`,
+2026-11-23 16:51:25 – 17:22 CST, `grk-result: status=success turns=87 cost_usd=6.400762
+refused=0`, rc 0; log `.temp/logs/grk_brief_773.log`. The report is **DONE**:
+`scripts/report.py check 773` prints `check: OK, 32 citations verified`; `changes` empty, 0
+disclosures, 0 questions, 0 deviations, 0 admitted receipts. My own walk of the 772 scene
+reproduces `12a687e2…`/5,816, the class table `8c8b2232…` (4,803,954 B), the scene
+`provenance.tsv` `965eca10…` and the fixture `3738e894…` (41,447 B), so the entry is
+re-authenticated independently of the worker's log.
+
+**The three mechanisms, confirmed from the 772 log and the scene source.** P2299: the frame is
+allocated as `rum_stdlib::schema::continuation::SchemaValidationSuspensionFrame<alloc::vec::Vec<usize>>`
+(CLASS_UNRELATED 5553, 9644, `generation=2 issuer=Legacy`); `kind_matches`
+(`class_lease.rs:117-118`) cannot match the bare recipe (`class_rows.rs:1001`) — spelling, not
+a missed route (construction `continuation.rs:33`, impl `:38`, consumer hit `:106`). C5: the
+692-branch `suspend` (`default_fallback.rs:125-135`) takes `suspend_frame::<false>` before any
+`driven()` check when `lexical_profile_enabled()` is false; the only `note_input_return` is at
+`:261-264` inside `suspend_profiled_cm740_driven` (`:237`); the observed allocation is
+`DirectDefaultFallbackFrame<false>` (2605) and the row has zero return receipts. P0492:
+`ProfiledPreparedDispatchFrame` appears exactly twice, both CLASS_INSTALL echoes (4059, 7974),
+never as `kind=`; the observed allocation is `PreparedDispatchFrame` (`call.rs:48-52`), the
+token-None arm (`timing.rs:156-158`); the profiled constructor is `call.rs:152`. All three 756
+records (`row-verdicts.log:1/40/83`, `frame-authorization.tsv:2/41/84`) name the frames the
+recipes dropped or the return the gate consumes; class.md's sixteen, transcribed verbatim,
+equals the recipe's synchronous group.
+
+**The alignment.** `ALIGN VERDICT rows=97 masked=5 wrong=0 extra=10 miss=3 contract_pass=84
+generic_frames=3 profiled_prepared_count=2 interleave=0`; `84+10+3=97`; `INTERLEAVE count=0`.
+Masked (5): P0248, P0260, P0508, P1568, P1577 pass on the Return `EvalError::InputRequired`
+only (P0248 witness 2764-2765). Extra (10): P0289, P0294, P0304, P0305, P0311, P0320, P0408,
+P0544, P0812, P1480 carry the contract return and a frame receipt of the recipe's own frame
+(P0289: 2821 frame, 2823 return + consume). `exclusive off-contract passes = 0`, so my c131
+"15 synchronous rows pass via the return while their recipe-frame allocations never match" is
+**refuted in its second clause** and replaced by the measured split. The real defect is the
+assertion's slack: `positive_receipt` (`class_lease_fixtures.rs:12-28`) pins no contract
+event, and the ten extra rows would pass on the neighbour frame receipt alone.
+
+**The decision, adopted with four amendments.** (1) Exact instantiation identity;
+`kind_matches` unchanged; P2299's recipe takes `SchemaValidationSuspensionFrame<alloc::vec::Vec<usize>>`;
+no base-name policy (it would collapse `DirectDefaultFallbackFrame<false>`/`<true>` and the
+`HashMap` default index), no short spelling (`matches_756_short=false`). (2) `contract_hit`
+pins the contract event by group; amendment: the group match is `"typed" | "raw"` with every
+other group `=> false`. (3) The flag-on run is the campaign's observation environment, cited
+from `.temp/brief-743/design/breadth.py:73-80` (`RUM_PROFILE_LEXICAL_SUBSTITUTION=1`,
+`RUM_CM740_PROFILE=on`) and the 705/739 required-switch convention; amendment: the flag-off
+workspace gate keeps brief 739's shape with the two named switch-required positives skipped,
+all other tests green, a red elsewhere a STOP. (4) The updated generator copy is the source of
+truth for the two generated files (`write_rows`/`write_fixture` canonical output equals the
+scene bytes; emission tokens equal `.temp/brief-766/evidence/class-forms.json` for all 97
+rows); amendment: no hand-edit-only path. Blast radius re-verified: the class table and
+`provenance.tsv` pin neither generated file; the 147-row overlays (`73297529…`) contain none
+of the five additions; `SOURCE SCHEMA rows=151` carries the overlays digest; the chain
+(`certificate.log:153-157`, summary `files=152 closed=152 stops=0`) moves exactly the
+`class_rows.rs` (`53e192ab…`) and `class_lease_fixtures.rs` (`3738e894…`) finals; the digest
+KAT `ba7816bf…` is `digest(b"abc")` and unaffected.
+
+**F0: none; F1: the refutation accepted; deviations: none; questions: none.** Scope:
+`SCOPE live=0 accepted=0`; no cargo, no build, no binary execution (the scene `target/` has no
+file newer than the dispatch); `git status --porcelain` still the 23 inherited entries; writes
+confined to `.temp/brief-773/`; zero importable receipts. Budget: 773 charged **0.597 s**
+(`ANALYZE ELAPSED s=0.597`) of the focused 900 s carve; 899.403 s returns; reserve
+34,556.96378847017 → **34,556.36678847017 s**; brief 774 carves **focused 6,000 s** → **28,556.36678847017 s**
+(flag-on module 900 s, generator plan 900 s, replays 900 s, certificate and diff 600 s,
+workspace 2,400 s, fmt and slack 300 s). Ruling 782 (`.temp/director/ruling-782.md`) accepts
+the report as DONE, keeps **Q25 unwaived** (13 rows, P2379 included, zero admitted receipts),
+and orders **brief 774**, the implementation: P2299's recipe suffix, the `contract_hit`
+strengthening with its falsifier test, the generator split with its plan check, the one
+flag-on class-lease module run, the receipt diff, the certificate, the flag-off workspace gate
+with the two documented skips. The c132 gate is committed and pushed; the brief 774 document
+follows in its own commit.

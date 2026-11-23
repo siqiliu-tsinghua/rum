@@ -119532,3 +119532,23 @@ Budget: 82.740 s charged of 9,000, 8,917.260 s returned, reserve 34,556.96378847
 773 (design-only zero-unknown inventory of the three misses and the positive-assertion
 coverage) carves focused 900 s -> 33,656.96378847017 s. Q25 stays unwaived; 744/745/746 held;
 CM5 unauthorized; sealed c76–c99 stays sealed.
+
+Continuation 132 (2026-11-23): brief 773 DONE and accepted. The design-only inventory
+re-authenticated the 772 scene (`12a687e2…`/5,816, class table `8c8b2232…`/4,803,954 B,
+`provenance.tsv` `965eca10…`, fixture `3738e894…`/41,447 B) and explained the three positive
+misses exactly: P2299 by the generic `type_name` spelling (`SchemaValidationSuspensionFrame<alloc::vec::Vec<usize>>`
+against the bare recipe; `kind_matches` unchanged), C5 by the flag-off arm (`lexical_profile_enabled()`
+false takes `suspend_frame::<false>` before the profiled arm that holds the only
+`note_input_return`), P0492 by the token-None arm (`PreparedDispatchFrame` instead of
+`ProfiledPreparedDispatchFrame`; two CLASS_INSTALL echoes, zero `kind=` fields). The 97-row
+alignment names 84 contract passes including 5 masked (P0248, P0260, P0508, P1568, P1577) and
+10 extra (contract return plus the recipe's own frame receipt), 3 misses, 0 wrong passes, 0
+interleave; my c131 count of 15 synchronous rows is refuted and replaced by that split, and
+the masked defect is the assertion's slack in `positive_receipt`, quantified. Ruling 782
+adopts the decision with four amendments (exact identity and the P2299 suffix; `contract_hit`
+pinning the contract event with fail-closed group matching; the flag-on run as the campaign's
+observation environment with the 739-shaped flag-off workspace gate and its two documented
+skips; the updated generator copy as the source of truth for the generated files) and orders
+brief 774, the implementation, with focused 6,000 s (reserve 34,556.36678847017 →
+28,556.36678847017 s). Q25's thirteen rows stay named stops at zero admitted receipts; 744,
+745 and 746 stay held; CM5 stays unauthorized; sealed evidence c76-c99 stays sealed.

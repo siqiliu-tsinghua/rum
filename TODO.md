@@ -3987,6 +3987,38 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 132 (brief 773 DONE: the three class-fixture misses explained, the masked
+    assertion quantified, the repair decided) (2026-11-23):
+    brief 773, design-only (`Scope: NONE`), delivered the complete zero-unknown inventory in
+    `.temp/brief-773/`: the entry re-authenticated (my own walk of `.temp/brief-772/scene`
+    gives `12a687e2…`/5,816, class table `8c8b2232…`/4,803,954 B, `provenance.tsv`
+    `965eca10…`, fixture `3738e894…`/41,447 B); P2299 misses by spelling only — the frame is
+    allocated as `SchemaValidationSuspensionFrame<alloc::vec::Vec<usize>>` and `kind_matches`
+    cannot match the bare recipe; C5 misses because `lexical_profile_enabled()` is false, so
+    `suspend` takes `suspend_frame::<false>` before the profiled arm that holds the only
+    `note_input_return`; P0492 misses because the token is None and `PreparedDispatchFrame`
+    is constructed instead of `ProfiledPreparedDispatchFrame` (two CLASS_INSTALL echoes, zero
+    `kind=` fields). The full alignment: 97 rows, 84 contract passes including 5 masked
+    (P0248, P0260, P0508, P1568, P1577 — return-only), 10 extra (contract return plus the
+    recipe's own frame receipt), 3 misses, 0 wrong, 0 interleave — my c131 count of "15
+    synchronous rows" is refuted and replaced by the measured split; the masked defect is
+    `positive_receipt`'s slack, quantified. Decision adopted with four amendments: exact
+    instantiation identity (`kind_matches` unchanged, P2299's recipe takes the type_name
+    suffix, no base-name, no short spelling); `contract_hit` pins the contract event by group
+    with `"typed" | "raw"` explicit and every other group false; the flag-on run is the
+    campaign's observation environment (743's breadth runner sets
+    `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`), and the flag-off workspace gate follows brief
+    739's required-switch shape with the two named positives skipped; the updated generator
+    copy is the source of truth for the two generated files, with no hand-edit-only path.
+    Blast radius re-verified: the class table and provenance pin neither generated file, the
+    147-row overlays contain none of the additions, the chain moves exactly the two addition
+    finals. Run: grk, unit `brief-773-grk-20261123-165125-1191150`, session `226bf208-…`,
+    16:51:25–17:22 CST, `status=success turns=87 cost_usd=6.400762 refused=0`, rc 0;
+    `report.py check 773` OK (32 citations); no deviations, no questions, no cargo (scene
+    `target/` untouched), 23 inherited git entries. Budget: 0.597 s of 900 charged, 899.403 s
+    returns, reserve 34,556.96378847017 → 34,556.36678847017 s; brief 774 carves focused
+    6,000 s → 28,556.36678847017 s. Q25 stays unwaived (13 rows, P2379 included, zero
+    admitted receipts); 744/745/746 held; CM5 unauthorized; sealed c76-c99 stays sealed.
   - G15-CM4 continuation 131 (brief 772 STOP, the class fixtures' three positive misses) (2026-11-23):
     brief 772 carried the verified scene in `.temp/brief-772/`, ran the corrected one bounded
     8-thread invocation, and got the first real class-fixture result: the loader is green
