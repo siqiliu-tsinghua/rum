@@ -3987,6 +3987,57 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 146 (the postimage inventory reconciliation ordered: brief 787,
+    design-only — the population/aliases identity and the typed-slot census, each with a
+    complete zero-unknown inventory, one disposition and a calibrated falsifier, the
+    corrected brief 784 stage C writer list, and the drafted implementation 788) (2026-11-24):
+    c145 accepts brief 786's stage-B STOP as its own rule, with corrections. Attempt 1 on
+    `grk` died at 05:59:10 after ≈840 s and $4.296202 on a 402 balance exhaustion (it had
+    installed the draft and run the armed proof tests green); I restored both images to
+    `0465ea9d…` by the 784 generator's own substitution (the regenerated sha equals the pin;
+    all four pins re-hashed to their 785 values), archived the run, and re-dispatched on
+    `agy`. Attempt 2 (`agy`, 06:00:25–06:48:02, ≈2,858 s, `status=SUCCESS`, rc 0, peak
+    2,705,973,248 B) is DONE through stage A and STOP at stage B: 55→90-citation report, 4
+    PASS + 1 FAIL checks. Stage A: draft `5835c100…` installed on armed (`f6969139…`) and
+    disabled (`0d9d1c5f…`) only; baseline/real/live keep `a3092419…`; the falsifier replay
+    prints all eight bar lines; both proof tests `2 passed; 0 failed` with the
+    `CM PROOF CONTROLS PASS controls=15` line and the Compiling line; the four host-payload
+    generators green (seven review TSVs). **F41**: the first post-install run on armed
+    silently used the preimage binary (`0 passed; 2 failed`) because `cp -p` kept the
+    draft's mtime; a touch and recompile fixed it (disclosed by the worker). Stage B stopped
+    on measured facts I reproduced: the campaign capture is 29,861 data lines over 29,828
+    raw `g.source_rows` (36 bad-width lines, 15 unsorted from multiline raw strings in
+    column 17 of `zeromq_fake_tests.rs`, empty policies/aliases) versus the committed
+    `population.tsv` `239f1a9c…`/2,431 lines/2,430 rows/20 columns (last commit `85fdf7cb`,
+    brief 738); the campaign is a diagnostic dump plus `reconcile` (`IDENTITY DELTA new=8976
+    missing=8 ambiguous_dispatch=3336 …`), not the table's generator — **F38** refutes the
+    783 plan's premise and voids brief 784's stage C `population.tsv` writer entry. The
+    inventory seal `source_auth/mod.rs:131-139` (`AuthError::Inventory`) has never been
+    exercised: zero of the 147 overlay rows is under `inventory/`. The typed-slot census on
+    armed reads `frames=461 finalizers=50 implementations=611 typed=100 macros=615 result=375
+    insert=240` against the plan's Q4 forecast 615→614/375→374 — **F39** refutes the
+    forecast; `source_baseline_matches_earned_receipt` panics at `reporting.rs:331`
+    ("recorded decoder use must be rediscovered"); the worker names Nested0431, 13 shifted
+    `#callN` ordinals and six hardcoded pin sites, to be re-derived. **F37** the report's
+    `worker` field says grk (it was agy); **F40** two refused `git merge-base` attempts at
+    06:00:31, undisclosed. Accepted deviations: the mtime fix, the premature `reconcile.rs`
+    edit restored exactly (all four pins re-hash; `reconcile=6a7096818d…` on all roles), and
+    the captures re-run on the clean post-install trees. Brief 787 (`design-only`,
+    `Scope: NONE`, stages A–E = 300/900/1,200/800/300 s) inventories both families — the
+    tables' writers/readers/semantics and every consumer's verdict, the 13 SourceIdentity
+    tests' measured failures (not the plan's attribution), the campaign's true role, the
+    seal's intent and the pipeline's intended inventory-update mechanism, the `cases.rs`
+    diff and its census consequences, each pin site's semantics, the removed decoder use and
+    the ordinals re-derived with a calibrated instrument, and the two candidate paths
+    (update-and-seal-question vs revert-the-form) — then one disposition per family with a
+    falsifier, the corrected 784 writer list, the deterministic order, and the drafted 788
+    (the implementation plus brief 784's stages B–D). Budget: 786 charged 840 + 2,858 s of
+    7,500 and returned 3,802; reserve 68.83478847017 → **3,870.83478847017 s**; 787 carves
+    focused 3,500 s (0/0) → **370.83478847017 s**. Order: 787 → 788 → the structural
+    attribution inventory → the probe and hot-path A/B completion → re-freeze → fresh epoch
+    → Stage C/C10 → 744. Q25's thirteen rows stay named stops; 744/745/746 held; CM5
+    unauthorized.
+
   - G15-CM4 continuation 145 (the proof-closure re-derivation installed, then the render-repair
     continuation ordered: brief 786 — install the drafted `proof_controls.rs` on armed and
     disabled, replay the falsifiers, prove both proof tests at 2 passed/0 failed, then run
