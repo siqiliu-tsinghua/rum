@@ -3987,6 +3987,44 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 144 (the proof-closure inventory ordered: brief 785, design-only —
+    the complete zero-unknown re-derivation plan for `validate_closure` and the source-reading
+    proof-closure family (per-site attribution, per-check dispositions and falsifiers, the
+    error precedence, the overlay cells) and the drafted continuation 786 that carries brief
+    784's stages B–D) (2026-11-24):
+    c143 accepts brief 784's STOP at the brief's own stop rule ("validate_closure failing
+    after the line update") as the correct terminal state. The run: unit
+    `brief-784-grk-20261124-034650-1609055`, session `a415406b-…`, 03:46:58–04:37:17,
+    `"duration_ms":3014104`, turns 174, cost $13.075666, memory peak 2,763,137,024 B, rc 0;
+    report STOP, 36 citations, 11 changes, 3 disclosures, 1 deviation, Q1, 4 PASS / 1 FAIL
+    checks, 5 PASS measurements. Stage A's carried state measured by me: baseline
+    `3d0b6829…`/5,842, armed `b11a687b…`/5,851 (= the proof-run tree), disabled
+    `3ed28bdd…`/5,851, real `57e3533e…`/5,851, debris 0; my path diff: armed/disabled 15
+    changed + 1 added, real 4 + 1, baseline 1 (F14), all within the brief's stage-A class;
+    armed↔disabled exactly the three arm-token files; `lib.rs` ENABLED identity true; F5
+    `406c7dc3…`/12,598 B fmt-clean on three images; Q25 1,014/381 and 1,238; stdlib
+    7 passed/0 failed and runtime 5 passed/0 failed at the carried tree; live 23 entries and
+    F14 `d17e200b…`. **F31**: the plan's closed-callers disposition covered only the first
+    array; my replication shows live/baseline pass all 18 checks while armed/disabled fail
+    exactly five after the authorized update — `build_call_dispatch_plan` 11 sites vs the
+    declared 8, the prep/opt handoff layout under the `driven()` wrapper, `lhs_from` under the
+    same wrapper, `stage_index +=` 6 (= 3 per path × the plain and driven twins now inside the
+    span), and `prepared_occ` 903/1214/1256 vs 504/767/805 (+399, count still 3); the three
+    runtime files are preimage bytes and the five were masked by the early `ClosedCallers`
+    return, so the plan's falsifier is unachievable. **Q1 answered no**: no expectation from
+    `occurrences()` on the certified expression; per-site attribution and per-path
+    restatement, one falsifier each. F32 the pair bar preceded the F5 formatting (my check
+    covers the final bytes); F33 the report's `changes` omits the image edits; F34 three
+    refused git attempts at 04:37:14. Brief 785 (design-only, `Scope: NONE`, stages A–E =
+    300/900/1,200/900/300 s) inventories the checks, attributes every postimage occurrence,
+    decides each check (re-pin / restate / named stop), designs the falsifiers, keeps
+    `ClosedCallers` → `PreparedSkip` → `Closure` and the 15 controls, plans the overlay cells
+    (`a3092419…` preimage; the re-derived file on armed/disabled; real untouched), sweeps the
+    75 names for source-reading consumers, and drafts 786 (the re-derivation + stages B–D).
+    Budget: 784 charged 3,014.104 s of its 10,200 s authorization and returned 7,185.896 s;
+    reserve 37.59878847017 → **7,223.49478847017 s**; 785 carves focused 3,600 s (0/0) →
+    **3,623.49478847017 s**.
+
   - G15-CM4 continuation 143 (the render repair ordered: brief 784 implements the plan —
     the 58 open names, the F5 split with the formatted tests file, the class_rows module, the
     cases.rs else, the Q25 formatting, the discovery and fingerprint regenerations, the
