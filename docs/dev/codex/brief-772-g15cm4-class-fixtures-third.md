@@ -106,3 +106,41 @@ overrun stops for a director ruling — more is carved, never a scope cut.
 `rum-report/1` JSON at `.temp/brief-772/report.json` via `scripts/report.py`; sections as in
 Deliverable 7; `summary` states the result, the test count, the loader verdict lines and the
 exact open facts.
+
+## Gate c131 (2026-11-23) — accepted STOP; the loader runs green, three named positive rows are red
+
+Run: `grk` (grok-4.7, effort xhigh), unit `brief-772-grk-20261123-162731-1180275`,
+session `de13e6b6-75ab-42fc-9be8-250710d7f385`, 16:27:31 – 16:45 CST, `status=success
+turns=40 cost_usd=2.964548 refused=0`, rc 0, memory peak 2.809 GB; scene
+`.temp/brief-772/`; `report.py check 772` OK, 72 citations; 12 PASS / 1 FAIL checks,
+0 deviations, 0 questions, `changes` empty.
+
+Verified: `ENTRY PASS trees=5 pins=199 q25=13 evidence=5`; my own walk of the scene gives
+`12a687e2…`/5,816, the class table `8c8b2232…`, `provenance.tsv` `965eca10…`, the loader
+diff exactly the two declared edits, every baseline consumer on `provenance()`; the gate
+passed at 8,993.239 s and the launch recheck at 8,993.157 s; the one invocation (the
+corrected command, `--no-fail-fast` at cargo level) ran once and reported `running 196
+tests` / `193 passed; 3 failed; 0 ignored; 0 measured; 592 filtered out; finished in
+22.05s`, exit 101, 75.979 s; 191 `FIXTURE VERDICT` lines and no `FIXTURE PROGRAMS`
+failure — `guest::programs()` returned Ok everywhere, so the loader's four check families
+pass on the class table. The three red rows are `FIXTURE POSITIVE_MISS` on
+`C5.default.profiled.finish`, `P0492` and `P2299` (the `assert!(committed)` at
+`class_lease_fixtures.rs:64`).
+
+Findings: **F0** the STOP is correct and the red is real; the loader is not implicated.
+**F1** first-pass mechanisms: P2299's frame is allocated but as
+`SchemaValidationSuspensionFrame<alloc::vec::Vec<usize>>`, which `kind_matches`' exact/
+`::`-suffix rule cannot match against the recipe's `SchemaValidationSuspensionFrame` (the
+756 inventory kept `<Vec<usize>`); C5's contract event is the InputRequired return at
+`default_fallback.rs:258-261`, which did not fire (its neighbouring
+`DirectDefaultFallbackFrame<false>` is also unmatched); P0492's expected
+`ProfiledPreparedDispatchFrame` appears zero times — the enabled profiled prepared stage
+is not taken or its hook is missing. **F1 also exposes a masked hole**: `positive_receipt`
+accepts any committed receipt, so 15 synchronous rows pass via the return seam while
+their recipe-frame allocations never match (P0248 demonstrates it); the positive bar must
+be strengthened, never weakened. **F2** the loader switch, the two-anchor rule and the
+class table stay validated by use.
+
+Budget: 772 charged 82.740 s of 9,000; unspent 8,917.260 s returns; reserve
+34,556.96378847017 s. Next: brief 773, the design-only zero-unknown inventory of the
+three misses and the positive-assertion coverage (focused 900 s).

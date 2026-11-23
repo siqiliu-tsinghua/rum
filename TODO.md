@@ -3987,6 +3987,35 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 131 (brief 772 STOP, the class fixtures' three positive misses) (2026-11-23):
+    brief 772 carried the verified scene in `.temp/brief-772/`, ran the corrected one bounded
+    8-thread invocation, and got the first real class-fixture result: the loader is green
+    (`guest::programs()` Ok for every case, 191 FIXTURE VERDICT lines, 0 FIXTURE PROGRAMS
+    failures, so the program-table seal, the canonical-source loop, the guest-route checks and
+    the guest-dependency branch pass on the class table), and the module is red on exactly three
+    positive rows — `193 passed; 3 failed; 0 ignored; 592 filtered out; finished in 22.05s`, exit
+    101. Run: grk, unit `brief-772-grk-20261123-162731-1180275`, session `de13e6b6-…`,
+    16:27:31–16:45 CST, `status=success turns=40 cost_usd=2.964548 refused=0`, rc 0, memory peak
+    2.809 GB; `report.py check 772` OK (72 citations); 12 PASS / 1 FAIL checks, 0 deviations, 0
+    questions. The red rows are `FIXTURE POSITIVE_MISS` on `C5.default.profiled.finish`, `P0492`
+    and `P2299` (the `assert!(committed)` at `class_lease_fixtures.rs:64`). My first-pass
+    mechanisms: P2299's frame is allocated as
+    `SchemaValidationSuspensionFrame<alloc::vec::Vec<usize>>`, which `kind_matches`' exact/`::`
+    suffix rule cannot match against the recipe's `SchemaValidationSuspensionFrame` (the 756
+    inventory kept `<Vec<usize>>`); C5's contract event is the InputRequired return at
+    `default_fallback.rs:258-261`, which did not fire (its neighbouring
+    `DirectDefaultFallbackFrame<false>` is also unmatched); P0492's expected
+    `ProfiledPreparedDispatchFrame` appears zero times — the enabled profiled prepared stage is
+    not taken or its hook is missing. The red also exposes a masked hole: `positive_receipt`
+    accepts any committed receipt, so 15 synchronous rows pass via the return seam while their
+    recipe-frame allocations never match (P0248 demonstrates it); the positive bar must be
+    strengthened, never weakened. Scope clean (0 live writes, 0 accepted-scene writes, 23
+    inherited git entries). Budget: 82.740 s (command 6.761 + invocation 75.979) of 9,000
+    charged, 8,917.260 s returned, reserve 34,556.96378847017 s; brief 773 (design-only
+    zero-unknown inventory of the three misses and the positive-assertion coverage, `Scope:
+    NONE`) carves focused 900 s -> 33,656.96378847017 s. Q25 stays unwaived (13 rows, P2379
+    included, zero admitted receipts); 744/745/746 held; CM5 unauthorized; sealed c76-c99 stays
+    sealed.
   - G15-CM4 continuation 130 (brief 771 STOP, the class fixtures' option placement) (2026-11-23):
     brief 771 carried the verified class-fixture scene in `.temp/brief-771/` (1.0 GB with
     `target/` 874 MB) and its one bounded invocation never reached a test: libtest rejected

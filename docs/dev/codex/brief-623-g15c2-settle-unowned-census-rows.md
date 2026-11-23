@@ -119510,3 +119510,25 @@ unchanged. Budget: 68.819 s (command 15.807 + invocation 53.012) charged of 9,00
 returned, reserve 34,639.70378847017 s; brief 772 (the scene carried, the corrected invocation)
 carves focused 9,000 s -> 25,639.70378847017 s. Q25 stays unwaived; 744/745/746 held; CM5
 unauthorized; sealed c76–c99 stays sealed.
+
+Continuation 131 (2026-11-23): brief 772 STOP and accepted. The corrected one invocation ran
+once on the carried scene (walk `12a687e2…`/5,816, class table `8c8b2232…`, provenance.tsv
+`965eca10…`): `running 196 tests`, `193 passed; 3 failed; 0 ignored; 592 filtered out;
+finished in 22.05s`, exit 101. The loader is green by use — `guest::programs()` returned Ok for
+every case (191 FIXTURE VERDICT lines, 0 FIXTURE PROGRAMS failures), so the program-table seal,
+the canonical-source loop, the guest-route checks and the guest-dependency branch pass on the
+class table. The three reds are `FIXTURE POSITIVE_MISS` on `C5.default.profiled.finish`, `P0492`
+and `P2299`. First-pass mechanisms: P2299's frame is allocated as
+`SchemaValidationSuspensionFrame<alloc::vec::Vec<usize>>`, which `kind_matches`' exact/`::`
+suffix rule cannot match against the recipe's `SchemaValidationSuspensionFrame` (the 756
+inventory kept `<Vec<usize>>`); C5's contract event is the InputRequired return at
+`default_fallback.rs:258-261`, which did not fire (its neighbouring
+`DirectDefaultFallbackFrame<false>` is also unmatched); P0492's expected
+`ProfiledPreparedDispatchFrame` appears zero times — the enabled profiled prepared stage is
+not taken or its hook is missing. The masked hole: `positive_receipt` accepts any committed
+receipt, so 15 synchronous rows pass via the return seam while their recipe-frame allocations
+never match (P0248 demonstrates it); the positive bar must be strengthened, never weakened.
+Budget: 82.740 s charged of 9,000, 8,917.260 s returned, reserve 34,556.96378847017 s; brief
+773 (design-only zero-unknown inventory of the three misses and the positive-assertion
+coverage) carves focused 900 s -> 33,656.96378847017 s. Q25 stays unwaived; 744/745/746 held;
+CM5 unauthorized; sealed c76–c99 stays sealed.
