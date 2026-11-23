@@ -360,3 +360,40 @@ returns. A projected overrun stops for a larger carve, never a scope cut.
 `check` must print no PROBLEM. The summary names the P2299 frame string, the environment
 variable, the predicate change, the test counts, the two moved chain finals and the two skipped
 tests.
+
+## Gate c133 (2026-11-23)
+
+STOP accepted as correct. Run: `grk` unit `brief-774-grk-20261123-173406-1207516`, session
+`5d97deff-59fc-4f1f-a372-5526e1ebb67d`, 17:34:13–18:14:21 CST, `status=success turns=117
+cost_usd=8.585254 refused=0`; report STOP, `check 774` OK, 37 citations, 6 changes (2 added, 4
+modified), 3 disclosures, 1 deviation, 0 questions.
+
+Verified from raw evidence: entry pins (`12a687e2…`/5,816; `8c8b2232…`/4,803,954 B; `965eca10…`;
+`3738e894…`/41,447 B); the plan check's five equality lines, entry delta exactly the two files,
+stable rerender; the code diff in full (P2299's one frame string; `legacy_positive_receipt`;
+verbatim `kind_matches`; `contract_hit` with the four group arms and `_ => false`; `install_line`;
+the six-case falsifier; the withheld branch); the certificate script and log (the two EDIT774
+links close, exactly the two addition finals move to `6da1dd03…`/`475d0edb…`, the three stay,
+`CHAIN SUMMARY files=152 closed=152 stops=0`, `CERTIFICATE PASS`); the fingerprint replay
+independently reproduced with a compiled Rust replica of `contracts::fingerprint`/`interface::hash`
+(scene B01 `fnv1a64:3579e03afad8546f`, live B01 `fnv1a64:6182ced468629eae`; the whole-table move
+is the designed rot guard); the one-cell self-reaching replay (302→349, identity unchanged,
+`basic.rs` byte-identical); the ownership STOP (24 missing = 11 identity-preserving pairs + 13
+new rows in `q25_ownership.rs`, `lib.rs`, `options/core.rs`, `suspension/core.rs`, all emission
+facts — the live tree has no `cm740_probe` directory at all); the third partition and the ledger
+never reached. Scope clean: live tree untouched, 23 inherited git entries, no live build, 3
+disclosed writes justified, zero importable receipts. Budget: wall 2,408 s charged of the
+focused 6,000 s carve, 3,592 s returns, reserve 28,556.36678847017 → **32,148.36678847017 s**.
+
+F0: the STOP is correct and real. F1: my brief's fingerprint sentence was wrong (whole-tree rot
+guard), and the MAY list under-enumerated the two replay targets (the worker disclosed them).
+Deviation accepted (the 749 source copy stands in for the live image; the scene is hashed
+directly and the transformations are forced by re-render).
+
+The repair is staged and mechanically validated but **not accepted**: the flag-on module run,
+the three new contract receipts, the receipt diff, the workspace gate and `cargo fmt --check`
+are unmeasured; Q25 stays unwaived. Ruling 783 orders brief 775 (design-only): the complete
+zero-unknown inventory of the scene's ownership-graph divergence (all four fact tables + the
+host-payload ledger, via a scratch copy that reaches every layer), the per-row attribution to
+the declared emission delta, the ledger dispositions, and the fail-closed reconciliation design
+with its four falsifiers; focused 3,600 s, reserve 32,148.36678847017 → 28,548.36678847017 s.

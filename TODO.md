@@ -3987,6 +3987,40 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 133 (brief 774 STOP: the repair staged and mechanically green, the
+    ownership replay stops on 13 new emission host payloads; the scene inventory is reconciled
+    first) (2026-11-23):
+    brief 774 (P2299's exact type_name suffix, `contract_hit` + falsifier, the generator split,
+    one flag-on class-lease run, receipt diff, certificate, flag-off workspace, fmt; focused
+    6,000 s) ran on grk unit `brief-774-grk-20261123-173406-1207516`, session `5d97deff-...`,
+    17:34:13-18:14:21 CST, status=success turns=117 cost_usd=8.585254; report STOP, `check 774`
+    OK with 37 citations. Verified from raw evidence: entry pins (12a687e2/5,816; 8c8b2232/4,803,954;
+    965eca10; 3738e894/41,447); the plan check's five equality lines, entry delta exactly the two
+    files, stable rerender; the code diff in full (P2299's one frame string; legacy_positive_receipt;
+    verbatim kind_matches; contract_hit with four group arms and _ => false; install_line; the
+    six-case falsifier; the withheld branch); the certificate (both EDIT774 links close, exactly
+    the two addition finals move to 6da1dd03/475d0edb, the three stay, files=152 closed=152
+    stops=0, CERTIFICATE PASS); the fingerprint replay independently reproduced with a compiled
+    Rust replica (scene B01 3579e03a, live B01 6182ced4; the whole-table move is the designed
+    rot guard; my brief's "two edited files" sentence was wrong); one self-reaching cell 302->349
+    with identity unchanged; the ownership STOP: 24 missing host-payload rows = 11 identity pairs
+    + 13 new emission facts (q25_ownership.rs around_handoff; lib.rs around/around_ok/around_some/
+    around_hit/around_ok_profile_return/Operations/impl(OperationPermit)::call/Bound.live/
+    omit_evaluation_pass; options/core.rs two cm740_driven readers; suspension/core.rs
+    insert_suspension_frame_q25), the sources not edited by this stage, the rows not written,
+    the third partition and the ledger never reached. The repair is staged and mechanically
+    validated but NOT accepted: the flag-on module, the three contract receipts, the receipt
+    diff, the workspace and fmt are unmeasured; Q25 stays unwaived. Scope clean (live untouched,
+    23 inherited entries, no live build, 3 justified disclosures); budget wall 2,408 s of the
+    focused 6,000 charged, 3,592 returns, reserve 32,148.36678847017 s. Ruling 783 orders brief
+    775, design-only (`Scope: NONE`): the complete zero-unknown inventory of the scene's
+    ownership-graph divergence (four fact tables + the host-payload ledger, reached layer by
+    layer in a scratch copy), every row paired or attributed to the declared emission delta, the
+    ledger dispositions, the fail-closed maintenance/differ design with four falsifiers, the
+    blast radius and the drafted implementation brief; focused 3,600 s, reserve 28,548.36678847017 s.
+    Q25's thirteen rows stay named stops at zero admitted receipts; 745/746 held; CM5 unauthorized;
+    sealed c76-c99 stays sealed.
+
   - G15-CM4 continuation 132 (brief 773 DONE: the three class-fixture misses explained, the masked
     assertion quantified, the repair decided) (2026-11-23):
     brief 773, design-only (`Scope: NONE`), delivered the complete zero-unknown inventory in

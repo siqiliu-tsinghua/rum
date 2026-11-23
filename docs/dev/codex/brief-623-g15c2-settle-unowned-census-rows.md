@@ -119552,3 +119552,24 @@ skips; the updated generator copy as the source of truth for the generated files
 brief 774, the implementation, with focused 6,000 s (reserve 34,556.36678847017 →
 28,556.36678847017 s). Q25's thirteen rows stay named stops at zero admitted receipts; 744,
 745 and 746 stay held; CM5 stays unauthorized; sealed evidence c76-c99 stays sealed.
+
+G15-CM4 continuation 133 (brief 774 STOP; gated): the class-fixture repair is staged in the
+carried scene and mechanically validated — P2299's recipe takes the exact
+`SchemaValidationSuspensionFrame<alloc::vec::Vec<usize>>` suffix (plan check: five equality
+lines, entry delta exactly the two generated files, stable rerender), `contract_hit` pins each
+row's own contract event by group with `_ => false`, six falsifiers watch the neighbour and
+identity rejections, and the certificate closes both EDIT774 links with exactly the two addition
+finals moving (`6da1dd03…`, `475d0edb…`; `files=152 closed=152 stops=0`). The retention
+fingerprint replay is faithfully regenerated (all 68 cells, independently reproduced with a
+compiled Rust replica of the guard), and the one self-reaching cell moves 302→349 with its
+identity unchanged. The standing ownership replay then stops correctly: 24 missing host-payload
+rows = 11 identity-preserving position moves + 13 new emission facts (the probe seam's own
+opaque inputs in `q25_ownership.rs`, `lib.rs`, `options/core.rs` and `suspension/core.rs`; the
+live tree has no `cm740_probe` directory), so the worker writes none of them and does not start
+the flag-on suite. The repair is therefore staged, not accepted; the class-fixture green, the
+three contract receipts, the receipt diff, the flag-off workspace and fmt stay unmeasured, and
+Q25 stays unwaived. Ruling 783 orders brief 775, design-only: the complete zero-unknown
+inventory of the scene's ownership-graph divergence (all four fact tables plus the
+host-payload ledger, reached layer by layer in a scratch copy), per-row attribution to the
+declared emission delta, the ledger dispositions, and the fail-closed maintenance/differ design
+with four falsifiers; focused 3,600 s (reserve 32,148.36678847017 → 28,548.36678847017 s).
