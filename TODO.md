@@ -3987,6 +3987,70 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 142 (the plan completion ordered with one measured control: brief
+    783 completes F5's full schema footprint, F13/F14/Q25's recipes, the 59-name disposition
+    map, the DAG, the run book and the drafted implementation brief, and measures the seven
+    exclusion class on the install tree — 0/5 red flag-off, 5/5 green flag-on; the
+    implementation follows) (2026-11-24):
+    c141 accepts brief 782's stages A–C from raw evidence: the five 779 trees re-hash to the
+    ruling 790 pins with debris 0; the four tables and the class table; the 147-row control
+    (`live_eq_preimage=147 … arm_token=3 column_bad=0`); the five tool copies byte-equal; the
+    arm bijection `substitution_exact=3`; the 23 inherited porcelain entries read from my own
+    c88 record. F5's object: the `cm743_route_a_falsifiers` span is 15,423 B, sha
+    `1728fe81…`, 13 `println!`, one `#[test]`, one occurrence, byte-equal to
+    `descendant.rs.in` on all five composed `lib.rs` copies (743 armed/disabled, 779
+    install/armed/disabled), absent from live (643 B); the composer is `route_a.py`
+    (`MODULE_SRC … descendant.rs.in` line 3, the `lib.rs insert route_a_module` anchor line
+    72); the two use statements, the test at install line 1,140 inside 1,062–1,423, the 9
+    standing references in 5,420 files (brief 743 ×3, brief 623 ×2, my brief 782, TODO.md ×3),
+    and the three pinned cells the move shifts (`BOUND_LIVE` `lib.rs` 496, `OPERATIONS`
+    `lib.rs` 3103, `AROUND_HANDOFF` `q25_ownership.rs` 376). F13: the generator
+    `regenerate_local_contract_fingerprints` (`contract_tests.rs:8`, writing
+    `target/brief-544/local-contracts.tsv` at 25-27, every field but the last), the
+    `fingerprint` walk (`contracts.rs:88/99`, extensions `rs`/`py`/`toml` at 106), the two
+    adopted tables' live-vs-install digests (`6b390887…`/`ead1d6de…`, `03ef55aa…`/
+    `4337950c…`). F14 at `observer_policy_tests.rs:480-482`; both Q25 files additions without
+    arm tokens; chain 152; class table 18,203 rows with zero path/sha hits. c141 accepts the
+    stage-D STOP as correct: `runtime_path_timing_start_adopted` (`timing.rs:152-161`) is
+    gated by `lexical_profile_enabled()` (`config.rs:24-47`, cold-loading
+    `RUM_PROFILE_LEXICAL_SUBSTITUTION` at `config.rs:570-575`, `state.rs:4`), the 780 arming
+    run strips every `RUM_PROFILE_*` key (`stage_d.py:88-97`, `workspace flag leaked` at
+    124-125), so the five LP-family tests panic on empty rows by construction
+    (`evaluate.total missing … []` at `lp03_phase_rows.rs:77:36`); no generator exists, no
+    ignored writer produces the rows, a live edit would go past F14, and the test's header
+    says it is never weakened. F19, my defect: the stage-D bar excluded only the nine loopback
+    refusals and ignored the project's own seven documented skips (brief 739's acceptance
+    clause, repeated 701–729 and by brief 743's CM4 acceptance: `lp03`/`lp04`/`lp05`/`lp658`
+    host eval and resume resets/`lp655`/`lp656`, the first five closed by a
+    `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` subset run, the last two the disclosed standing
+    two-arm exclusions). The corrected universe, extracted by me from the `failures:` blocks:
+    776 has 72 unique names, 780 has 74, intersection 71, union **75** = nine loopback +
+    seven documented exclusions + **59 to disposition** (56 in-776 non-excluded + the three
+    new F13 contract reds, minus the source-auth control green in 780). F20: my c139 record
+    was wrong — the 780 lp03 FAILED line is mangled by interleaved output (`… 2FAILED`), the
+    panic and failures block both name it, the corrected compare is `only_776=1 only_780=3
+    both=71`, and the c139 "73 unique reds / lp03 now green" becomes 74 = nine + 62 + three
+    with the only 776-red-gone being `cm_mutation_source_authentication_controls`. F21: three
+    refused git attempts at 02:24:07 (`branch --show-current` twice, `rev-parse HEAD` once),
+    exit 1, no mutation; the report's `disclosures: 0` omits them. Q-lp03's answer: the bar
+    moves nowhere — the five switch-gated names close by the flag-on subset run, the two
+    lp655/lp656 stay disclosed, the nine loopback pass on the host; and the workspace bar
+    becomes the standing suite (the nine skips: the seven plus the two class-lease fixtures
+    brief 780 named) with the named stops (Q25's `q25_p2379_ownership_proof`, red with
+    `Q25_SELECTOR fail-closed got=Err(NotPresent) want=Ok("P2379")` at
+    `q25_p2379_proof.rs:605`) declared, never "green except loopback" while Q25 is unwaived.
+    The order: brief 783 completes the plan (design-only plus the measured control on the
+    install tree: the three LP binaries `0 passed; 5 failed` flag-off and `5 passed; 0 failed`
+    under the flag), then the render implementation (784), the structural attribution
+    inventory (785) and the probe and hot-path A/B completion (786) on the final tree, then
+    the re-freeze, the fresh epoch, the Stage C/C10 readmission and a further 744 restart,
+    each gated. Budget: 782 charged 1,968.4 s of its 3,600 s carve (duration_ms=1968388) and
+    returned 1,631.6 s; reserve 2,068.88878847017 → 3,700.50078847017 s; 783 carves focused
+    4,500 s (A 300 / B 1,200 / C 700 / D 1,800 / E 500) + workspace 2,500 s + epoch 0 =
+    7,000 s with an explicit 3,500 s top-up from the campaign allocation (user ruling
+    2026-11-19) → 200.50078847017 s after the carve. Q25's thirteen rows stay named stops;
+    744/745/746 held; CM5 unauthorized; sealed c76–c99 stays sealed.
+
   - G15-CM4 continuation 141 (the deterministic render ordered first, as a design-only
     inventory: the four ordered fixes — F5's composed-postimage module move, F13's retention
     regeneration, F14's hermeticity, the two Q25 files' formatting — with F5's full schema
