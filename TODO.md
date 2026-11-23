@@ -3987,6 +3987,42 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 140 (the probe and hot-path A/B ordered: brief 781 re-drives brief
+    743's C94 structural comparison on the installed render's production-source scope and
+    runs the measured ordinary-path A/B — real against armed, both arms built at one path
+    with one codegen unit, a behaviour-neutral cold-referenced layout control, instruction
+    counts, 3+ runs per arm, serial and alone, the 703/708 criterion and the Callgrind Ir
+    slope probe) (2026-11-24):
+    c139 accepts brief 780's stages A–C from raw evidence — the five trees (install/armed
+    `e01d13cf…`/5,850, baseline `ac36bc81…`/5,842, disabled `9e682e49…`, real `4dd8b8a1…`),
+    the six receipts and their 147-row tables, the class table `8c8b2232…`; the corrected
+    checker copy `b87a9a3a…` differing in exactly three hunks whose removals are the seven
+    ordered lines, with `RECEIPT SELFTEST PASS glued=true corrupt=false result=true` and the
+    777 selftest directory hash-unchanged; the fresh flag-on run `197 passed; 0 failed` with
+    593 filtered recorded, the KAT, the three receipts and the exact `RECEIPT DIFF PASS
+    rows=97 lost=0 new_miss=0 withheld_bad=0 digest=PASS` — and accepts its stage D STOP as
+    correct: the workspace's 73 unique reds are my own set comparison against the 776 log —
+    nine loopback, 61 names from the 776 set, 71/71 ignored set-identical, two 776 reds now
+    green (`cm_mutation_source_authentication_controls`, `lp03_…`), and three new
+    `retention_closure::local` contract reds (F13, my ordering defect: `contracts::fingerprint`'s
+    flat rot guard hashes every `crates/**/*.{rs,py,toml}` file, so the install's five
+    declared under-`crates/` `.rs` deltas expire every contract fingerprint until
+    `local-contracts.tsv` is regenerated — the render brief's job); the one `source_auth` red
+    is the copied tree's missing `.temp/brief-743/` (F14: identical `observer_policy_tests.rs:482:48`
+    `NotFound` in the 776 reference log; the hermeticity fix closes it); the stage-D
+    instrument was wrong before it was right (F15, disclosed) and the test-created
+    `target/`/`.temp` scratch was removed with the trees hash-equal (F16, disclosed). The
+    fmt red is exactly the two Q25 carriers. The deferred 774 acceptance's workspace leg
+    stays open on those four names, all closing in the render brief. Brief 781 stages A–D:
+    entry and the C94 structural comparison (the declared `diff` set: the four 743 files'
+    named functions plus the F4 ledger delta; the four `session.rs` probe hits; `ws=0`);
+    three binaries at one path with one codegen unit (real, armed, the layout control); the
+    four-pass 120-label panel with the instruction counts and the Callgrind settlement; the
+    closure. Budget: 780 charged 3,356.6 s of its 4,100 s carve and returned 743.4 s;
+    reserve 6,140.08378847017 → 6,883.48878847017 s; 781 carves focused 4,400 s + workspace 0
+    + epoch 0 → 2,483.48878847017 s, with the render brief's top-up to be applied at its
+    carve. Q25's thirteen rows stay named stops; 744/745/746 held; CM5 unauthorized.
+
   - G15-CM4 continuation 139 (the deferred acceptance completion ordered: brief 780
     re-authenticates the 779 trees, corrects the receipt-diff checker's filtered-count pin by
     a copy with a tree-independent harness rule and its selftest arms, reruns the flag-on
