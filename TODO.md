@@ -3987,6 +3987,43 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 136 (the source A/B ordered: brief 777 builds the install tree — the
+    live tree plus the accepted emission, the class additions and provenance table, and brief
+    776's adoption — re-anchors the 147-row overlay table with exactly the `guest.rs` delta,
+    commits the fail-closed eight-row addition set with the class table among it, constructs
+    the baseline from installed bytes with the eight drift paths asserted, and runs the
+    six-case source gate; F5 and the Q25 formatting are deferred to the render brief by ruling
+    786's amendment) (2026-11-23):
+    brief 777 (implementation, staged A–F) is dispatched on grk. The install tree is a copy of
+    the live tree plus exactly 170 paths: the 147 overlays at the re-anchored table's armed
+    bytes, the eight additions (the five class files, `class-provenance.tsv`, `reconcile.rs`,
+    `emission_chain.tsv`), the twelve adopted paths, the two re-anchored tables and the new
+    `additions.tsv`. The overlay table's only content delta from the 768 artifact
+    (`73297529…`) is `guest.rs`'s postimage cells, which become the installed class-form byte
+    `1a2c5ff5…`; the mutants table is the live one with only `source_schema` replaced by the
+    new table digest. The eight drift paths stay at live bytes on both sides — the 749 source
+    copy's `5c3b02a3…` overlays table and `e8b3b6e4…` mutants table are forbidden as baseline
+    sources. The verifier's addition-set rule admits exactly the eight, fail-closed
+    (`UnlistedFile` on any extra, missing or wrong-digest addition). The six cases are
+    (default | no-default) × (real | disabled | armed), built through
+    `scripts/probe-build.py` at release / codegen-units 1 with real receipts; the six evidence
+    cases, the negative pairings and the four receipt arms are recorded verbatim. F4's ledger
+    message and F3's receipt-diff checker (substring, self-tested) land here. The deferred 774
+    acceptance is run on the install tree: one flag-on class-lease module run (`197/0`), the
+    receipt diff, the flag-off workspace with the two named skips, and `cargo fmt --check`;
+    the workspace's reds must be exactly the named inventory-regeneration class and the
+    environment's loopback refusals (the full green is the render brief's bar). F5 (the
+    `cm743_route_a_falsifiers` module leaves `lib.rs`) and the two Q25 files' formatting move
+    to the render brief: the module move shifts `lib.rs`'s line anchors and the retention
+    fingerprints, so it must land with the derived-inventory regeneration, and the render
+    brief re-runs the source gate on the final tree (ruling 786's amendment, recorded at the
+    c136 gate). Budget: focused 6,000 s + workspace 2,700 s + epoch 0, carved
+    25,869.36678847017 → 17,169.36678847017 s; component bounds 900/1,200/900/600/2,400 s;
+    unspent returns; a projected overrun stops for a ruling. Q25's thirteen rows stay named
+    stops; 744/745/746 held; CM5 unauthorized; no new `unsafe`, no default-path cost, no new
+    program/lane/selection/policy/epoch label; no git; `.temp` only; never `/tmp`; never read
+    `~/.config/ccds/api-key`.
+
   - G15-CM4 continuation 135 (brief 776 accepted through stage C: the ownership reconciliation
     is adopted in the carried scene — the fourth disposition `Local`, the 92-entry ledger, the
     chain table, and the exact inventories 61/92/10,134; stage D's STOP is accepted, the
