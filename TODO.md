@@ -3987,6 +3987,32 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 130 (brief 771 STOP, the class fixtures' option placement) (2026-11-23):
+    brief 771 carried the verified class-fixture scene in `.temp/brief-771/` (1.0 GB with
+    `target/` 874 MB) and its one bounded invocation never reached a test: libtest rejected
+    `--no-fail-fast`, which my brief placed after `--`; the flag is cargo-level and must precede
+    it. Run: grk, unit `brief-771-grk-20261123-160617-1169256`, session `6d57ac82-…`,
+    16:06:17–16:23 CST, `status=success turns=39 cost_usd=2.902466 refused=0`, rc 0, memory
+    peak 2.718 GB; `report.py check 771` OK (50 citations); 11 PASS / 1 FAIL checks, 0
+    deviations, 1 question. Delivered: entry PASS (five trees, 199 pins, 13 Q25 OPEN, five
+    evidence digests, `EMIT PASS rows=97 files=27 importable_receipts=0`); the carried scene
+    byte-identical to `.temp/brief-770/scene` (my own walk of both gives `12a687e2…`/5,816 with
+    an empty file-level diff), the class table `8c8b2232…` (4,803,954 B), `provenance.tsv`
+    `965eca10…`, the loader diff exactly the two declared edits (`guest.rs:1343` class accessor,
+    `c52` seal at 2387 on the baseline; accessor 106/114), untouched files equal to the 766
+    bytes; the gate passed at 8,984.193 s and the launch recheck at 8,906.301 s (≥ 8,884.905 s
+    and ≥ 3,488.977 s); the one invocation exit 101 in 53.012 s after a 52.83 s from-scratch
+    build (scene binary 394,353,328 B), libtest printing `error: Unrecognized option:
+    'no-fail-fast'` — 0 tests, no fixture row, no `RunFailure::Native`, attempts=1 no retry. My
+    reproduction: the binary's `--help` has no such option and running it with the flag
+    reproduces the error. F0: my brief's command defect (option placement); the fixture itself
+    has still never executed. Q1 answered: option 1 — cargo-level `--no-fail-fast` before `--`,
+    `--nocapture --test-threads=8` after; suite and 8,884.905 s timeout stand. Scope clean
+    (0 live writes, 0 accepted-scene writes, 23 inherited git entries). Budget: 68.819 s
+    (command 15.807 + invocation 53.012) of 9,000 charged, 8,931.181 s returned, reserve
+    34,639.70378847017 s; brief 772 (the scene carried, the corrected invocation) carves
+    focused 9,000 s -> 25,639.70378847017 s. Q25 stays unwaived (13 rows, P2379 included, zero
+    admitted receipts); 744/745/746 held; CM5 unauthorized; sealed c76-c99 stays sealed.
   - G15-CM4 continuation 129 (brief 770 STOP, the class fixtures' budget gate) (2026-11-23):
     brief 770 built and verified the class-fixture scene in `.temp/brief-770/` (scene 621 MB) and
     stopped correctly before the invocation: the carve focused 3,308.977 s covered neither the

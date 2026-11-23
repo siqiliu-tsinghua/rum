@@ -119493,3 +119493,20 @@ guest-dependency non-firing claim is withdrawn. Budget: 8.885 s charged, 3,300.0
 reserve 34,708.52278847017 s; brief 771 (the scene carried, one bounded 8-thread invocation)
 carves focused 9,000 s -> 25,708.52278847017 s. Q25 stays unwaived; 744/745/746 held; CM5
 unauthorized; sealed c76–c99 stays sealed.
+
+Continuation 130 (2026-11-23): brief 771 STOP and accepted. The carried class-fixture scene
+is byte-identical to `.temp/brief-770/scene` (my own walk of both gives `12a687e2…`/5,816 with
+an empty file-level diff), the class table `8c8b2232…` and `provenance.tsv` `965eca10…` hold,
+and the loader diff is exactly the two declared edits (`guest.rs:1343` class accessor with the
+c52 seal at 2387 on the baseline; the accessor at 106/114). The gate passed at 8,984.193 s and
+the launch recheck at 8,906.301 s. The one invocation exited 101 in 53.012 s after a 52.83 s
+from-scratch build (scene binary 394,353,328 B) because libtest rejected `--no-fail-fast`,
+which my brief placed after `--`; the flag is cargo-level and must precede it. My reproduction:
+the binary's `--help` has no such option and running it with the flag reproduces the error.
+F0: my brief's command defect; the fixture has still never executed one test. Q1 answered:
+option 1 — `cargo test --locked --offline -j8 --no-fail-fast -p rum-stdlib --test
+suspension_oracle class_lease -- --nocapture --test-threads=8`, suite and 8,884.905 s timeout
+unchanged. Budget: 68.819 s (command 15.807 + invocation 53.012) charged of 9,000, 8,931.181 s
+returned, reserve 34,639.70378847017 s; brief 772 (the scene carried, the corrected invocation)
+carves focused 9,000 s -> 25,639.70378847017 s. Q25 stays unwaived; 744/745/746 held; CM5
+unauthorized; sealed c76–c99 stays sealed.

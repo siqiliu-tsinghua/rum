@@ -87,3 +87,40 @@ overrun stops for a director ruling — more is carved, never a scope cut.
 `rum-report/1` JSON at `.temp/brief-771/report.json` via `scripts/report.py`; sections as in
 Deliverable 6; `summary` states the result, the test count, the loader verdict lines and the
 exact open facts.
+
+## Gate c130 (2026-11-23) — accepted STOP; the scene is exact, the invocation died on the option placement
+
+Run: `grk` (grok-4.7, effort xhigh), unit `brief-771-grk-20261123-160617-1169256`,
+session `6d57ac82-59de-4078-9e78-ac309d868c2e`, 16:06:17 – 16:23 CST,
+`status=success turns=39 cost_usd=2.902466 refused=0`, rc 0, memory peak 2.718 GB;
+scene `.temp/brief-771/` (1.0 GB with `target/` 874 MB); `report.py check 771` OK,
+50 citations; 11 PASS / 1 FAIL checks, 1 PASS measurement, 0 deviations, 1 question,
+`changes` empty.
+
+Verified: `ENTRY PASS trees=5 pins=199 q25=13 evidence=5` against the five tree digests,
+199 live pins (198 distinct), the 13 Q25 OPEN ids, the five evidence digests and
+`EMIT PASS rows=97 files=27 importable_receipts=0`; the carried scene is byte-identical
+to `.temp/brief-770/scene` — my own walk of both reproduces `12a687e2…`/5,816 with an
+empty file-level diff — the class table is `8c8b2232…` (4,803,954 B), the scene
+`provenance.tsv` `965eca10…`, and the loader diff is exactly the two declared edits
+(`guest.rs:1343` `provenance()` → `class_provenance()`, `c52` seal at 2387 still on
+`provenance()`; the accessor, baseline at 106 / class at 114), with the untouched files
+equal to the 766 bytes. The gate passed at 8,984.193 s and the launch recheck at
+8,906.301 s (≥ 8,884.905 s and ≥ 3,488.977 s). One invocation, exit 101, elapsed
+53.012 s, `attempts=1 retry=false`: the from-scratch build finished in 52.83 s and
+produced the scene binary (394,353,328 B), then libtest printed `error: Unrecognized
+option: 'no-fail-fast'` — 0 tests executed, no fixture row, no `RunFailure::Native`.
+My own reproduction: the binary's `--help` has no `--no-fail-fast`, and running it with
+the flag reproduces the error; it is a cargo flag that must precede `--`. Scope clean
+(0 live writes, 0 accepted-scene writes, 23 inherited git entries).
+
+Findings: **F0** — the STOP is correct and the cause is my brief's command: the flag
+belongs to cargo, so the corrected command is `cargo test --locked --offline -j8
+--no-fail-fast -p rum-stdlib --test suspension_oracle class_lease -- --nocapture
+--test-threads=8`. **F1** — none; the worker executed the stop rule exactly. **Q1
+answered**: option 1, the cargo-level flag before `--`; the suite and the 8,884.905 s
+timeout stand.
+
+Budget: 771 charged 68.819 s (command 15.807 + invocation 53.012) of 9,000; unspent
+8,931.181 s returns; reserve 34,639.70378847017 s. Next: brief 772, the same scene
+carried and the corrected one invocation.
