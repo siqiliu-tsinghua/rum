@@ -3987,6 +3987,39 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 139 (the deferred acceptance completion ordered: brief 780
+    re-authenticates the 779 trees, corrects the receipt-diff checker's filtered-count pin by
+    a copy with a tree-independent harness rule and its selftest arms, reruns the flag-on
+    class-lease run (`197 passed; 0 failed`, the filtered count recorded) to the exact
+    `RECEIPT DIFF PASS` line, and runs the flag-off workspace and `cargo fmt --check` with
+    every red classified) (2026-11-24):
+    c138 accepts brief 779's stages A–C from raw evidence — the install tree `e01d13cf…`/5,850
+    (its delta against the 778 carry is the one declared `TODO.md` refresh `c3decd6b…`;
+    against the 777 tree the seven paths), the baseline `ac36bc81…`/5,842 (the 147 live
+    preimages, the eight additions the complement, the six drift paths at live bytes on both
+    sides, the preimage `guest.rs`), the three images (armed `e01d13cf…`, disabled
+    `9e682e49…` at exactly the three decoded cells, real `4dd8b8a1…` = baseline ⊎ the eight),
+    the six receipts with their 147-row tables and the three negative receipts, and the
+    six-case gate green (six builds, the two exact admission lines twice each, the anchor
+    falsifier, the observer capability, the negative pairings, the six evidence cases,
+    `STAGE C ok=true`) — and accepts its stage D STOP as correct: the fresh flag-on run is
+    `197 passed; 0 failed` with **593** filtered while the checker hardcodes 592; the extra
+    test is `cm_mutation_source_gate_result` (present in the 777 install, absent from the 774
+    scene, not matching the filter) (F10, my pin); the checker's selftest also writes into
+    `.temp/brief-777/` (F11, corrected in the copy); and my brief's "seven paths against the
+    carry" wording was wrong — one path vs the carry, seven vs the 777 tree (F12). Ruling 788
+    accepts 593 and makes the bar tree-independent: `test result: ok. 197 passed; 0 failed;
+    0 ignored;` plus the 97-receipt digest, the filtered count recorded. Brief 780 stages
+    A–D: entry and re-authentication; the corrected checker copy with its three selftest arms
+    and the brief-local selftest directory; the flag-on rerun and the exact `RECEIPT DIFF
+    PASS rows=97 lost=0 new_miss=0 withheld_bad=0 digest=PASS`; the flag-off workspace with
+    the two skips and `RUM_CM740_BASELINE`, every red classified against the 776 reference
+    set, and `cargo fmt --check` red exactly on the two Q25 carriers; the four 779 tree
+    hashes unchanged. Budget: 779 charged 3,140.8 s of its focused 3,250 s and returned
+    109.2 s (workspace 2,700 unrun); reserve 10,130.92278847017 → 10,240.08378847017 s; 780
+    carves focused 1,400 s + workspace 2,700 s + epoch 0 → 6,140.08378847017 s. Q25's
+    thirteen rows stay named stops; 744/745/746 held; CM5 unauthorized.
+
   - G15-CM4 continuation 138 (the source A/B continuation, second dispatch: brief 779 carries
     brief 778's repaired install tree, refreshes `TODO.md` from live so the six drift paths
     hold at live bytes on both sides, rebuilds the baseline and the three images, and runs the
