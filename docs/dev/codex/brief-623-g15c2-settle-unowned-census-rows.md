@@ -119573,3 +119573,23 @@ inventory of the scene's ownership-graph divergence (all four fact tables plus t
 host-payload ledger, reached layer by layer in a scratch copy), per-row attribution to the
 declared emission delta, the ledger dispositions, and the fail-closed maintenance/differ design
 with four falsifiers; focused 3,600 s (reserve 32,148.36678847017 → 28,548.36678847017 s).
+
+Continuation 134 (2026-11-23) accepts brief 775 as DONE with its STOP as the correct terminal
+state: the carried scene walk is `18dca765…`/5,816 (the `12a687e2…` named in my c133 gate was
+774's pre-edit entry — a director correction), the 772→774 delta is exactly the four declared
+post-774 files, the seven tables re-hash exactly, the scratch is the carried scene plus one
+preview file, and the two tests really ran (construct 2,531 missing / 1,263 stale → 1,241 pairs
+/ 1,290 new / 22 gone; ledger 24 check-1 / 11 check-2 / 4 witness → 11 pairs / 13 new / 0
+gone), independently re-paired here. The 22 gone rows are 21 derive-list
+`PureFrameAbandon` drops (each with the explicit `FrameAbandon` impl read in the same
+postimage) and one removed `resume_or_suspend!`; the 13 new host rows are 11 public-input plus
+two `dyn Fn` storage rows whose creation sites capture a `Weak` handle (`lib.rs:600`) and a fn
+pointer (`lib.rs:3251`). All 85 new-row files are 152-chain members; the 20 files / 99 rows
+outside my brief's 76-path union are inside the chain (F2, my under-enumeration). Ruling 784
+decides the ledger's fourth disposition `Local` (probe-rooted `dyn Fn` storage, constant
+witness, bi-conditional predicate, fail-closed outside the probe root; no discovery or probe
+change), the carried 152-chain as the differ's path set materialised as
+`inventory/emission_chain.tsv`, and the named admissions (21 rewrite pairs by exact multiset,
+one deletion); brief 776 (stages A–D: reconciliation with the three-sided differ, then the
+deferred 774 acceptance) carves focused 8,100 s, reserve 30,362.36678847017 →
+22,262.36678847017 s. Q25 stays unwaived; 745/746 stay held.

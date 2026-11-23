@@ -148,3 +148,37 @@ larger carve, never a scope cut.
 must print no PROBLEM. The summary names the per-family divergence counts, the 13 new rows'
 dispositions, the reconciliation decision (the maintenance command, the differ, the four
 falsifiers), the blast radius and the drafted implementation brief's budget.
+
+## Gate c134 (2026-11-23)
+
+Accepted as DONE with the STOP as its correct terminal state. Run: unit
+`brief-775-grk-20261123-182652-1235206`, session `f3080c32-65ba-4e46-a990-5d65e9d8d17f`,
+18:26:52–18:56:38 CST, `grk-result: status=success turns=81 cost_usd=6.175872 refused=0`, rc
+0, peak 2.61 GB; report `check: OK, 45 citations verified`; 4 deviations and both questions
+accepted; 3 fenced git invocations at teardown (denied, no effect). Verified from raw
+evidence: my own walk of `.temp/brief-774/scene` is `18dca765…`/5,816 (the walk named in the
+brief, `12a687e2…`, is 774's pre-edit entry — F1, my c133 sentence was wrong), and the
+772→774 delta is exactly the four declared post-774 files (two EDIT774 finals `6da1dd03…` /
+`475d0edb…`, the replayed `self_reaching.tsv` `7eaf5dac…`, the regenerated
+`local-contracts.tsv` `c4236096…`); the seven tables re-hash exactly (`61/7eaf5dac`,
+`79/4463830e`, `2207/ce971d3e`, `3235/ef726ed8`, `3245/b7228a7c`, `179/c01b24d1`,
+`79 entries/e5fc5746`) with the class table `8c8b2232…` and provenance `965eca10…`; the
+scratch is the carried scene plus exactly one preview file and the carried scene's exit walk
+equals its entry walk; both tests really ran (self 61 exact, host 92 exact, construct
+2,531/1,263 mismatch in 7.10 s; ledger 24 check-1 / 11 check-2 / 4 witness in 7.39 s); my
+independent multiset re-pairing reproduces 1,241/1,290/22 and 11/13/0; the 13 new host rows
+are 11 public-input plus the two `dyn Fn` storage rows whose creation sites capture a `Weak`
+handle (`lib.rs:600`) and a fn pointer (`lib.rs:3251`), so the STOP is correct; the 21
+derive-list drops and the one removed `resume_or_suspend!` are declared emission edits (the
+explicit `impl FrameAbandon` was read in the same postimage); 85 new-row files are all
+152-chain members and the 20 files / 99 rows outside the 76-union are inside the chain (F2,
+my brief's under-enumeration); all seven tables are `member=false` in the chain; the live
+tree is untouched (23 inherited entries, no live build); budget 1,786 s charged of 3,600,
+1,814 s returned, reserve 28,548.36678847017 → 30,362.36678847017 s. Ruling 784 decides
+`Q-disposition` (a fourth disposition `Local`: probe-rooted `dyn Fn` payloads, constant
+witness, bi-conditional predicate, fail-closed outside the probe root — no discovery or
+probe change) and `Q-pathset` (the carried 152-chain, materialised as a new committed
+`inventory/emission_chain.tsv` with the three carried finals `6da1dd03…`/`475d0edb…`/
+`1a2c5ff5…`), admits the 21 rewrite pairs and one deletion by exact multiset, and orders
+brief 776, stages A–D (the reconciliation with the three-sided differ, then the deferred 774
+acceptance), focused 8,100 s carved 30,362.36678847017 → 22,262.36678847017 s.

@@ -3987,6 +3987,37 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 134 (brief 775 DONE: the complete zero-unknown ownership-graph
+    divergence inventory; the two `dyn Fn` rows take a fourth disposition `Local`; the differ
+    path set is the carried 152-chain; brief 776 ordered) (2026-11-23):
+    brief 775 (design-only; carried scene re-authenticated, a scratch copy for the complete
+    construct and ledger mismatches, the zero-unknown inventory, the ledger decision, the
+    fail-closed reconciliation design and a drafted implementation brief; focused 3,600 s)
+    ran on grk unit `brief-775-grk-20261123-182652-1235206`, session `f3080c32-...`,
+    18:26:52–18:56:38 CST, `status=success turns=81 cost_usd=6.175872 refused=0`, report
+    `check: OK, 45 citations verified`, verdict STOP on the two `dyn Fn` storage rows. My
+    own walks: carried scene `18dca765…`/5,816, pre-edit `12a687e2…`/5,816, delta exactly
+    the four declared post-774 files; seven tables re-hashed exactly; scratch = scene + one
+    preview file; construct 2,531 missing / 1,263 stale → 1,241 pairs / 1,290 new / 22 gone
+    (21 derive-list drops with explicit `FrameAbandon` impls read in the postimage, 1
+    removed `resume_or_suspend!`), ledger 24/11/4 → 11 pairs / 13 new / 0 gone, my own
+    multiset re-pairing reproducing the counts; the two `dyn Fn` rows' creation sites capture
+    a `Weak` handle and a fn pointer; 85 new-row files all 152-chain members, the 20 files /
+    99 rows outside my brief's 76-union inside the chain (F2); all seven tables
+    `member=false` in the chain; live untouched (23 inherited entries, no live build);
+    budget 1,786 s charged, 1,814 s returned, reserve 28,548.36678847017 →
+    30,362.36678847017 s. F1: my c133 "walk of the 774 scene = 12a687e2" was the 774 entry
+    walk; the carried walk is `18dca765…`. Ruling 784 decides `Local` (probe-rooted `dyn Fn`
+    storage, constant witness, bi-conditional predicate, fail-closed outside the probe root;
+    no discovery or probe change), the 152-chain path set materialised as
+    `inventory/emission_chain.tsv` (`6da1dd03…`/`475d0edb…`/`1a2c5ff5…` carried finals), and
+    the named admissions (21 rewrite pairs by exact multiset, one deletion); orders brief 776
+    stages A–D (reconciliation with the three-sided differ, then the deferred 774 acceptance;
+    focused 8,100 s → 22,262.36678847017 s). Bar 571/4,422, 37/134, 4/133, 0/26; pair
+    `(45,5,false)` Open at zero admitted receipts; C2 118 Residual + 0 Lost; 51 owners and
+    five source duties Open; membership 28/3/7/113; CHANGELOG.md and S10 blocked; CM5
+    unauthorized; 745/746 held; sealed c76–c99 stays sealed.
+
   - G15-CM4 continuation 133 (brief 774 STOP: the repair staged and mechanically green, the
     ownership replay stops on 13 new emission host payloads; the scene inventory is reconciled
     first) (2026-11-23):
