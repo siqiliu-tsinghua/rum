@@ -3987,6 +3987,39 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 138 (the source A/B continuation, second dispatch: brief 779 carries
+    brief 778's repaired install tree, refreshes `TODO.md` from live so the six drift paths
+    hold at live bytes on both sides, rebuilds the baseline and the three images, and runs the
+    complete six-case source gate and the deferred 774 acceptance) (2026-11-23):
+    c137 accepts brief 778's stages A–C from raw evidence — the carry copy equal
+    (`e2c8bfbe…`/5,850); the loader repair as the declared-delta KAT (the carried class form
+    plus exactly the four anchors, each occurring once, reproduces the installed `guest.rs`
+    `3decae58…` byte for byte; the install delta vs the carry is exactly the six declared
+    paths); the single writer's one content delta (`guest.rs`'s four cells; overlays
+    `2a854902…`, all 147 payloads decoding and every preimage equal to live; mutants
+    `1cab55ca…` with only the `source_schema` column moving on all 151 records; chain
+    `c2aee404…` with only the `guest.rs` row; additions `acb46cdf…` with only the chain pin;
+    the class table byte-unchanged `8c8b2232…`); the verifier controls 5 passed / 0 failed —
+    and accepts its stage D STOP as correct: my brief's stage A bar (the copy equals the 777
+    carry) and stage D bar (the six drift paths equal live) are jointly unsatisfiable for
+    `TODO.md`, because my own c137 gate commit inserted the continuation-137 entry into live
+    after the 777 snapshot (F9; the worker stopped instead of adding an undeclared seventh
+    file). Ruling 787 answers Q1: **refresh only `TODO.md`** from live onto the 779 install
+    and the baseline — an inert doc pinned by no artifact, whose stale bytes a future
+    whole-tree adoption would otherwise copy backwards over the live file. Brief 779 stages
+    A–D: entry and copy; the refresh with the six drift assertions (live on both sides, each
+    differing from the 749 source copy); the baseline (install − the eight, the 147 from
+    digest-checked live preimages, keys and content, the baseline `guest.rs` preimage) and
+    the three images (real = baseline ⊎ the eight, disabled, armed); the six-case source gate
+    ((default | no-default) × (real | disabled | armed); six builds, six receipts, the
+    validator controls on all six, the two exact admission PASS lines and the anchor
+    falsifier, the observer, the negative pairings, six complete evidence cases); and the
+    deferred 774 acceptance. Budget: brief 778 charged 2,266.1 s of its focused 5,500 s and
+    returned 3,233.9 s (workspace 2,700 s unrun); reserve 12,847.05878847017 →
+    16,080.92278847017 s; brief 779 carves focused 3,250 s + workspace 2,700 s + epoch 0 →
+    10,130.92278847017 s. Q25's thirteen rows stay named stops; 744/745/746 held; CM5
+    unauthorized.
+
   - G15-CM4 continuation 137 (the source A/B continuation ordered: brief 778 carries brief
     777's accepted install tree, repairs the class loader's capability-mode anchor — the
     workspace mode keeps `class-provenance.tsv`, the capability mode reads `provenance.tsv`;
