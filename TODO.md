@@ -3987,6 +3987,44 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 135 (brief 776 accepted through stage C: the ownership reconciliation
+    is adopted in the carried scene — the fourth disposition `Local`, the 92-entry ledger, the
+    chain table, and the exact inventories 61/92/10,134; stage D's STOP is accepted, the
+    deferred 774 acceptance's workspace/fmt gates move to the constructed baseline; the source
+    A/B ordered) (2026-11-23):
+    brief 776 (implementation, staged A–D) ran on grk unit
+    `brief-776-grk-20261123-190804-1256163`, session `262410e3-...`, 19:08:04–20:22:57 CST,
+    `status=success turns=138 cost_usd=10.03322`, rc 0, peak 10,306,478,080 B; report STOP
+    (`check: OK, 105 citations verified`). Stage A re-authenticated the scene (`18dca765…`/
+    5,816; seven tables; class table `8c8b2232…`; finals `6da1dd03…`/`475d0edb…`) and
+    reproduced the 1,241/1,290/22 and 11/13/0 replay. Stage B wrote exactly ruling 784 D1 into
+    `host_payload_ledger.rs` (read in the diff) and the 1,090-line `reconcile.rs` (three-sided
+    fail-closed differ, review-only commands, adoption command, four hermetic falsifiers
+    `4 passed; 5 ignored`, every arm watched); the chain table, independently re-derived here
+    from the 768 certificate plus three overrides, is 152 sorted unique rows and
+    `CHAIN TABLE rows=152 scene_match=152`. Stage C adopted with six `DIFFER VERDICT ok`, the
+    `LEDGER COUNTS 92/79/8/3/2`, eight byte-exact installs (`equal=true`), and the exact
+    inventories `61/92/10134` plus the ledger green; my own audit confirms 68 pairs / 11 gone /
+    24 new (11 rekeys + 11 public-input + 2 Local), exactly the four witness updates and 64
+    unchanged. Stage D: flag-on `197 passed; 0 failed` under the campaign flag with
+    `FIXTURE DIGEST_KAT PASS`; the receipt diff's single problem is the checker's `startswith`
+    line rule under parallel capture (**F3**); the fingerprint replay `changed=68 problems=0`
+    (my column check: column 19 only); the workspace exits 101 with 4,488 passed / 85 failed /
+    71 ignored — 9 environmental loopback refusals and the scene's own baseline gap
+    (`unreconciled source file: …/cm740_probe/class_rows.rs`, `Preimage`/`SourceIdentity`,
+    recursion and call-site inventories, the Q25 selector), plus **F5** the hygiene red from a
+    `#[cfg(test)]` module with `println!` in `lib.rs`; fmt is red only on the two Q25 carrier
+    files. **F4**: the ledger message lumps `Local` into "10 Unbounded" (message only). Scope:
+    exactly the 12 expected scene paths changed, the live tree untouched, 23 inherited entries
+    unchanged, 3 git attempts at teardown all denied. Budget: 4,493 s charged of 8,100;
+    3,607 s returns; reserve 22,262.36678847017 → 25,869.36678847017 s. Next: the source A/B
+    (the 147-row overlays, the fail-closed addition-set verifier extension — the class table
+    joins the five additions — and the constructed baseline with the eight drift paths), where
+    the workspace, fmt and receipt-diff gates run; then the probe/hot-path A/B, the
+    deterministic render with inventory regeneration, the re-freeze, the fresh epoch, the
+    Stage C/C10 readmission and a further 744 restart, each gated; Q25's thirteen rows stay
+    named stops; 744/745/746 held.
+
   - G15-CM4 continuation 134 (brief 775 DONE: the complete zero-unknown ownership-graph
     divergence inventory; the two `dyn Fn` rows take a fourth disposition `Local`; the differ
     path set is the carried 152-chain; brief 776 ordered) (2026-11-23):

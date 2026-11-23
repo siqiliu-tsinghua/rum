@@ -287,3 +287,52 @@ carve, never a scope cut.
 `rum-report/1` at `.temp/brief-776/report.json`, stage = the furthest stage completed (`A` to
 `D`), via `scripts/report.py`; `check` must print no PROBLEM. The summary names the stage, the
 adopted counts, the `Local` rows, the differ verdicts, and the acceptance totals.
+
+## Gate c135 (2026-11-23)
+
+Brief 776 ran on `grk` (grok-4.7, effort xhigh), unit
+`brief-776-grk-20261123-190804-1256163`, session `262410e3-467b-468b-89b2-e9414085236e`,
+19:08:04–20:22:57 CST, `status=success turns=138 cost_usd=10.03322 refused=0`, rc 0,
+`duration_ms=4474340`, peak 10,306,478,080 B (`oom=0 oom_kill=0`); report STOP
+(`check: OK, 105 citations verified`; 11 changes, 2 added / 9 modified, 1 disclosure,
+2 deviations). Accepted through stage C; stage D's STOP accepted as the correct terminal
+state for the scene.
+
+- **Stage A** re-authenticated the carried scene (walk `18dca765…`/5,816; the seven tables;
+  class table `8c8b2232…`; `provenance.tsv` `965eca10…`; finals `6da1dd03…`/`475d0edb…`) and
+  reproduced my own c134 re-pairing (`pairs=1241 new=1290 gone=22`, `11/13/0`,
+  `only_dyn_fn=true count=2`, `WITNESS rows=4`, `problems=0 ok=true`).
+- **Stage B** implements exactly ruling 784 D1 (read in the diff: `LOCAL`, `Local`, the
+  bi-conditional, the witness arm, visibility, no other change) and the 1,090-line
+  `reconcile.rs` (three-sided fail-closed differ, review commands that never install, the
+  adoption command, four hermetic falsifiers). Falsifiers: `4 passed; 0 failed; 5 ignored`
+  with every red and green arm printed. The chain table, derived independently here from the
+  768 certificate plus the three carried overrides, is 152 rows, sorted, unique, equal to the
+  staged file, and `CHAIN TABLE rows=152 scene_match=152`.
+- **Stage C** adopted: six `DIFFER VERDICT … ok`, `LEDGER COUNTS rows=92 PublicInput=79
+  Unbounded=8 Declared=3 Local=2`, eight `INSTALL … equal=true`, then `EXACT INVENTORY
+  self-reaching types: 61 rows`, `UnknownHostPayload: 92 rows`, `UnknownConstruct: 10134
+  rows`, and the ledger test green. My independent ledger audit: 68 pairs / 11 gone / 24 new
+  (11 rekeys + 11 public-input + 2 Local), exactly four cell changes (the four `Unbounded`
+  witnesses equal to the 775 `verified witness:` lines), 64 unchanged.
+- **Stage D**: flag-on `test result: ok. 197 passed; 0 failed` under
+  `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` with `FIXTURE DIGEST_KAT PASS` present; receipt diff
+  `rows=97 problems=1` where the one problem is the checker's `startswith` line rule under
+  parallel capture (**F3**; no receipt lost); fingerprint replay `changed=68 problems=0`
+  (my column check: only column 19 changed); workspace exit 101, 4,488 passed / 85 failed /
+  71 ignored — 9 environmental loopback refusals and the rest the scene's own baseline gap
+  (`unreconciled source file: crates/rum-runtime/src/cm740_probe/class_rows.rs`, source
+  identity preimages, recursion/call-site inventories), **F5** the hygiene red from a
+  `#[cfg(test)]` module with `println!` in `lib.rs`, and `Q25_SELECTOR … Err(NotPresent)`,
+  none in the 776-edited set; `cargo fmt --check` red only on `q25_ownership.rs` and
+  `q25_p2379_proof.rs`, byte-unchanged by this brief.
+- **F4**: the ledger test's printed composition lumps the 2 `Local` rows into "10 Unbounded"
+  (message only; the checks are green).
+- **Scope**: the scene's changed set is exactly the 12 expected paths; the live tree is
+  untouched (no live file newer than the dispatch; the 23 inherited entries unchanged); all
+  writes under `.temp/brief-776/` and the scene's `target/brief-775/`; 3 git invocations at
+  teardown, all denied.
+- **Budget**: 4,493 s charged of 8,100; 3,607 s returns; reserve 22,262.36678847017 →
+  25,869.36678847017 s.
+- The deferred 774 acceptance's workspace/fmt gates move to the constructed baseline; F3/F4/F5
+  are its scope. Q25's thirteen rows stay named stops; 744/745/746 stay held.

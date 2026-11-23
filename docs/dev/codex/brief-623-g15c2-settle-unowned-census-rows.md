@@ -119593,3 +119593,32 @@ change), the carried 152-chain as the differ's path set materialised as
 one deletion); brief 776 (stages A–D: reconciliation with the three-sided differ, then the
 deferred 774 acceptance) carves focused 8,100 s, reserve 30,362.36678847017 →
 22,262.36678847017 s. Q25 stays unwaived; 745/746 stay held.
+
+Continuation 135 (2026-11-23) accepts brief 776 through stage C and its stage D STOP as the
+correct terminal state for the scene. The reconciliation is adopted in the carried scene: the
+fourth disposition `Local` (exactly ruling 784 D1, read in the diff), the three-sided
+fail-closed differ with its four falsifiers watched both ways (`4 passed; 5 ignored`), the
+chain table (152 sorted unique rows; independently re-derived here from the 768 certificate
+plus the three carried overrides; `CHAIN TABLE rows=152 scene_match=152`), the byte-exact
+adoption of the six tables and the 92-entry ledger (six `DIFFER VERDICT ok`,
+`LEDGER COUNTS 92/79/8/3/2`, eight `equal=true` installs), and the exact inventories
+`EXACT INVENTORY self-reaching types: 61 rows`, `UnknownHostPayload: 92 rows`,
+`UnknownConstruct: 10134 rows` with the ledger green. My independent ledger audit: 68
+identity pairs, 11 gone, 24 new (11 rekeys + 11 public-input + 2 `Local`), exactly the four
+`Unbounded` witness updates and 64 unchanged. Stage D: flag-on `test result: ok. 197 passed;
+0 failed` under `RUM_PROFILE_LEXICAL_SUBSTITUTION=1` with `FIXTURE DIGEST_KAT PASS` present;
+the receipt diff's one problem is the checker's `startswith` rule under parallel capture
+(F3, no receipt lost); the fingerprint replay `changed=68 problems=0` (column 19 only); the
+workspace exits 101 with 4,488 passed / 85 failed / 71 ignored — nine environmental loopback
+refusals and the scene's own baseline gap (the census's `unreconciled source file:
+crates/rum-runtime/src/cm740_probe/class_rows.rs`, `Preimage`/`SourceIdentity`, recursion and
+call-site inventories, the Q25 selector), plus F5 (a `#[cfg(test)]` module with `println!`
+in `lib.rs` that the path-based hygiene rule flags); `cargo fmt --check` red only on the two
+Q25 carrier files, outside this brief's scope. F4: the ledger message lumps `Local` into
+"10 Unbounded" (message only). The deferred 774 acceptance's workspace, fmt and receipt-diff
+gates move to the constructed baseline after the source A/B, which is ordered next (the
+147-row overlays, the fail-closed addition-set verifier extension with the class table
+joining the five additions, the constructed baseline with the eight drift paths); F3/F4/F5
+are its scope. Budget: 4,493 s charged of the focused 8,100 s; 3,607 s returns; reserve
+22,262.36678847017 → 25,869.36678847017 s. Q25 stays unwaived; 744/745/746 stay held;
+everything sealed (c76–c99) stays sealed.
