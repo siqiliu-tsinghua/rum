@@ -3987,6 +3987,52 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 145 (the proof-closure re-derivation installed, then the render-repair
+    continuation ordered: brief 786 — install the drafted `proof_controls.rs` on armed and
+    disabled, replay the falsifiers, prove both proof tests at 2 passed/0 failed, then run
+    brief 784's stages B–D unchanged on the carried images) (2026-11-24):
+    c144 accepts brief 785 DONE. The run: unit `brief-785-grk-20261124-044601-1637256`,
+    session `d0ca96e1-…`, 04:46:01–05:38:44, `"duration_ms":3154660`, turns 121, cost
+    $10.719958, memory peak 1,646,587,904 B, rc 0; report DONE, 55 citations, 8 changes (all
+    under `.temp/brief-785/`), 0 disclosures, 4 deviations, no questions, 10 PASS checks,
+    3 PASS measurements, no FAIL. My re-measurements: the four pins match under the worker's
+    own `tree_hash`; the populations re-scanned — TARGET `LHS 268, CALL 625/923/989`,
+    builders exactly **10** (LHS 918, eval_call_prepare 697/715, call.rs 314/338, plan 42,
+    holding 253/256/265/276), prepared 903/1214/1256, identical on armed and disabled; my own
+    diff gives 399 inserted and 0 deleted lines before the prepared anchor (file 813 → 1,291,
+    485/7, net 478); the closure calibration reproduces live/baseline all-pass and
+    armed/disabled five-fail; armed proof tests red at entry (0 passed; 2 failed, `Closure` at
+    :19 and :187); the 75-name union and the source-reading sweep are complete (48/27, unknown
+    0). The draft `.temp/brief-785/draft/proof_controls.rs` sha `5835c100…`, rustfmt-clean;
+    my own independent transcription gives `ClosedCallers` on live/baseline/real and `Ok` on
+    armed/disabled; **my own cargo run** on a copy of the armed image with the draft installed
+    gives `2 passed; 0 failed; 788 filtered out; finished in 75.53s`, rc 0 — the draft compiles
+    and the proof closure is green. Dispositions 22 re-pin / 4 restate / 0 named stop / 0
+    weaker; the four restatements are stronger (normalized whole-argument lists accepting the
+    `driven()` wrapper, 3 + 3 per-path stage increments rejecting a count-6 pin, ordinary on
+    the plain brace body); precedence `ClosedCallers` → `PreparedSkip` → `Closure` and the 15
+    controls kept; 10 red + 1 green falsifiers with 0 mismatch; overlay plan `a3092419…`
+    preimage, armed/disabled the one re-derived file, real untouched. **F35**: three refused
+    git attempts at 05:38:44, undisclosed. **F36**: my c143 "11 builder sites" was a miscount —
+    the correct count is 10, measured by the worker and by me; the re-pin stands. Deviations
+    accepted (builders 10; the replica-based falsifiers, now closed by my cargo run; 786
+    retiring 784's `validate_closure` stop, replaced by "a proof test not at 2 passed/0 failed
+    on armed or disabled"; the 8 truncated walk names resolved same-module). Brief 786
+    (implementation, stages A–D = A 1,800 / B 1,800 / C 1,700 focused + workspace 2,200) installs
+    the one file, replays the falsifiers, proves armed and disabled, then carries brief 784's
+    stages B–D: the four per-tree target dirs, the host-payload generators, the `--nocapture`
+    campaign on armed/disabled only, F13 on four trees, both-mode `local_production_acceptance`,
+    the writers in order (147 overlays + the unconditional 13 + conditionals, additions 9, chain
+    152, the 201 class-table cells, mutants, the host-payload tsvs, the allowance), the four
+    rebuilt images, the twelve `rows=9` receipts, the six-case gate, fmt, the default-mode
+    workspace with the nine skips and exactly the ten red names, the 71 ignored, the flag-on
+    5/0 and fixtures, the F16 cleanup. Budget: 785 charged 3,154.660 s of 3,600 and returned
+    445.340 s; reserve 3,623.49478847017 → **4,068.83478847017 s**; 786 carves 7,500 s with an
+    explicit 3,500 s top-up from the campaign allocation (user ruling 2026-11-19) → reserve
+    **68.83478847017 s**. Order: 786 → 787 (structural attribution) → 788 (A/B completion) →
+    re-freeze → epoch → Stage C/C10 → 744. Q25's thirteen rows stay named stops; 744/745/746
+    held; CM5 unauthorized.
+
   - G15-CM4 continuation 144 (the proof-closure inventory ordered: brief 785, design-only —
     the complete zero-unknown re-derivation plan for `validate_closure` and the source-reading
     proof-closure family (per-site attribution, per-check dispositions and falsifiers, the
