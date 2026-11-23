@@ -3987,6 +3987,44 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 143 (the render repair ordered: brief 784 implements the plan —
+    the 58 open names, the F5 split with the formatted tests file, the class_rows module, the
+    cases.rs else, the Q25 formatting, the discovery and fingerprint regenerations, the
+    rebuilt four-tree scene with the twelve receipts, and the default-mode acceptance; the
+    nine loopback are the director's host run) (2026-11-24):
+    c142 accepts brief 783 DONE from raw evidence with corrections. My own re-derivation of
+    the failures blocks gives 776 72 / 780 74 / intersection 71 / union 75, ignored sets
+    equal at 71; my automated check finds every one of the 75 names in exactly one class
+    section of `plan.md` (§3 16, §4.1 1, §4.2 1, §4.3 10, §4.4 47), zero unknown. I re-read
+    every load-bearing locus in the install tree (class_lease include/RECIPES, hygiene's
+    `/tests/` skip, cases.rs else, receipts.rs tuples, g7 `if true` at 627, population.tsv
+    2,431 rows `239f1a9c…`, contracts.rs 88/99/106, contract_tests.rs generator, production.rs,
+    proof_controls.rs array, definition-store/resume counts, registry/recursion edges,
+    read_inventory only-left keys, logical_profile 157/194, sow.rs Err arm, overlay/additions
+    membership, descendant.rs.in 273–635) and the PATH PROBE layout. F24: the recorded switch
+    logs did not run on the install tree (hardcoded `cwd=` echo; cargo printed the live
+    paths); my own rerun on the install tree meets both bars — 0 passed/5 failed exit 101 and
+    5 passed/0 failed exit 0, install `e01d13cf…`/5,850/debris 0 after. Corrections ordered:
+    F22 the span is 1062–1424/363/−360 (the instrument's lifetime-blind brace scan; OPERATIONS
+    forecast 2743); F23 the class_rows recipe must qualify both `Recipe` and `RECIPES`
+    (`pub(super)` already grants visibility; class_rows.rs unchanged); F25 the F5 file is the
+    template body formatted (355 lines, 12,598 B, `406c7dc3…`, fmt-clean), not a pure dedent;
+    F27 bare-name `--exact` filters match zero tests (full module paths); F28 the campaign
+    needs `--nocapture`; F29 the baseline cannot compile the suspension_oracle target
+    (`class-provenance.tsv` is an addition), so the preimage is today's bytes and the campaign
+    runs on armed and disabled only; F30 one `CARGO_TARGET_DIR` per tree (a shared dir served
+    a baseline rlib to an install run, 38 `cm740_probe` errors). F26: three refused git
+    attempts at 03:30:22. Q1–Q5 decided as the plan recommends (overlay rows for expected
+    sets; `substitution_exact` 3 with the generated-delta allowlist; the compact sow needle;
+    production tuple `(461, 50, 611, 614, 374, 240)`; real not fingerprint-green). The
+    workspace acceptance is default mode only (the measured 776/780 configuration; no invented
+    no-default bar), the red bar is exactly the nine loopback refusals plus
+    `q25_p2379_ownership_proof`, and the nine run on the host at the gate. Budget: brief 783
+    charged 3,562.9 s of its 7,000 s carve and returned 3,437.1 s; reserve 200.50078847017 →
+    3,637.59878847017 s; brief 784 carves focused 4,700 s (A 1,000 / B 1,800 / C 1,700 /
+    D-fmt 200) + workspace 2,200 s + epoch 0 = 6,900 s with an explicit 3,300 s top-up from
+    the campaign allocation (user ruling 2026-11-19) → 37.59878847017 s.
+
   - G15-CM4 continuation 142 (the plan completion ordered with one measured control: brief
     783 completes F5's full schema footprint, F13/F14/Q25's recipes, the 59-name disposition
     map, the DAG, the run book and the drafted implementation brief, and measures the seven
