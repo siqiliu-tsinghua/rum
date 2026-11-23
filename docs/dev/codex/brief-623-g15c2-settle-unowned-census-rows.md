@@ -119478,3 +119478,18 @@ the six files' 766-era edits are covered by the chain and 766's certificates; th
 bytes are the 766 finals. Budget: 769 charged 11.288 s of 900, reserve 34,717.40778847017 s;
 the fixture brief carves focused 3,308.977 s -> 31,408.43078847017 s. Q25 stays unwaived;
 744/745/746 held; CM5 unauthorized; sealed c76–c99 stays sealed.
+
+Continuation 129 (2026-11-23): brief 770 STOP and accepted. The class-fixture scene is built and
+verified in `.temp/brief-770/` (scene 621 MB): the 766 tree `cce4cc03…`/5,815 pristine, the 769
+class table byte-identical `8c8b2232…`, and exactly three declared changes — the class table at
+`inventory/obligations/class-provenance.tsv`, the `class_provenance()` accessor, and
+`guest.rs:1343` `provenance()` → `class_provenance()` — with `provenance.tsv` `965eca10…`
+unchanged and the non-loader consumers on the baseline table (two anchors). The class table's
+9,029 changed rows carry only the sha256 cell (2 canonical-source / 55 guest-dependency / 8,940
+guest-route / 32 packet), and the 55 guest-dependency rows cover the `C10.prepared.profiled_consumer`
+branch on `segments.rs`. The invocation was correctly withheld: my carve (focused 3,308.977 s) was
+under the scene's `stack_1x` (3,488.977 s) and 3× the fixture sample (8,884.905 s). F1: the
+guest-dependency non-firing claim is withdrawn. Budget: 8.885 s charged, 3,300.092 s returned,
+reserve 34,708.52278847017 s; brief 771 (the scene carried, one bounded 8-thread invocation)
+carves focused 9,000 s -> 25,708.52278847017 s. Q25 stays unwaived; 744/745/746 held; CM5
+unauthorized; sealed c76–c99 stays sealed.

@@ -3987,6 +3987,32 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 129 (brief 770 STOP, the class fixtures' budget gate) (2026-11-23):
+    brief 770 built and verified the class-fixture scene in `.temp/brief-770/` (scene 621 MB) and
+    stopped correctly before the invocation: the carve focused 3,308.977 s covered neither the
+    scene's `stack_1x` (3,488.977 s with the 180 s close) nor 3× the fixture sample (8,884.905 s).
+    Run: grk, unit `brief-770-grk-20261123-154047-1158468`, session `3bdf260b-…`,
+    15:40:47–16:01 CST, `status=success turns=44 cost_usd=3.559948 refused=0`, rc 0;
+    `report.py check 770` OK (60 citations); 14 PASS / 2 FAIL checks, 2 deviations, 1 question.
+    Delivered: entry PASS (five trees, 199 pins, 13 Q25 OPEN, five evidence digests); the scene
+    copied from the 766 tree (`cce4cc03…`/5,815 pristine), the class table byte-identical
+    (`8c8b2232…`), the post-edit walk `12a687e2…`/5,816 with exactly three declared changes —
+    the class table at `inventory/obligations/class-provenance.tsv`, the `class_provenance()`
+    accessor, and `guest.rs:1343` `provenance()` → `class_provenance()` — with `provenance.tsv`
+    `965eca10…` unchanged and `provenance()` plus its non-loader consumers on the baseline
+    table (two anchors). Class-table substance: 18,203 rows, 9,029 changed rows with only the
+    sha256 cell changed (2 canonical-source / 55 guest-dependency / 8,940 guest-route / 32
+    packet); the 55 guest-dependency rows are one per `C10.prepared.profiled_consumer` program
+    on `segments.rs` `f9c7a2f9…` → `cc403f33…` with pin `73ec2ff5…`. F0: my carve was short
+    (no 180 s close, no 3× bar); the worker correctly withheld the suite. F1: the
+    ProcessPoolExecutor sandbox deviation accepted (same digests in-process); the
+    guest-dependency non-firing claim withdrawn — the predicate is `p.key.row()`, not the
+    dependency id column. Scope clean (0 live writes, 0 accepted-scene writes, 23 inherited git
+    entries). Budget: 8.885 s of 3,308.977 charged, 3,300.092 s returned, reserve
+    34,708.52278847017 s; brief 771 (the scene carried, one bounded 8-thread invocation,
+    timeout 8,884.905 s) carves focused 9,000 s -> 25,708.52278847017 s. Q25 stays unwaived
+    (13 rows, P2379 included, zero admitted receipts); 744/745/746 held; CM5 unauthorized;
+    sealed c76-c99 stays sealed.
   - G15-CM4 continuation 128 (brief 769 DONE, the declared ordinary-body certificate) (2026-11-23):
     brief 769 closed the ordinary-body allowance in `.temp/brief-769/` (17.3 MB) and was accepted
     DONE. Run: grk, unit `brief-769-grk-20261123-070834-1001906`, session `ad76b079-…`,

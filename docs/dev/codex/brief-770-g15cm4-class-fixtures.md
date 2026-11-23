@@ -111,3 +111,37 @@ for a director ruling — more is carved, never a scope cut. The scene's stop li
 `rum-report/1` JSON at `.temp/brief-770/report.json` via `scripts/report.py`; sections as in
 Deliverable 6; `summary` states the test count, the green loader verdict lines and the exact
 open facts.
+
+## Gate c129 (2026-11-23) — accepted STOP; the scene is delivered, the carve was short
+
+Run: `grk` (grok-4.7, effort xhigh), unit `brief-770-grk-20261123-154047-1158468`,
+session `3bdf260b-d4d6-4b19-9a7b-5e7b92559497`, 15:40:47 – 16:01 CST,
+`status=success turns=44 cost_usd=3.559948 refused=0`, rc 0; scene `.temp/brief-770/`
+(`scene/` 621 MB); `report.py check 770` OK, 60 citations; 14 PASS / 2 FAIL checks,
+1 PASS measurement, 2 deviations, 1 question, changes 3 (scene-only).
+
+Verified: `ENTRY PASS trees=5 pins=199 q25=13 evidence=5` against the five tree digests,
+the 13 Q25 OPEN ids and the five evidence digests; the pristine scene copy walks
+`cce4cc03…`/5,815; the class table is byte-identical to the 769 evidence (`8c8b2232…`);
+the post-edit walk is `12a687e2…`/5,816 with `added=1 removed=0 modified=2
+only_declared=true`; the scene `provenance.tsv` is `965eca10…`; my own wholesale walk of
+the 766 copy against the scene shows exactly the one added file and the two modified files
+(`coverage/bindings.rs` +8-line `class_provenance()`; `guest.rs:1343`
+`provenance()` → `class_provenance()`), with `provenance()` and its non-loader consumers
+untouched. The class table's substance: same header, 18,203 rows, 9,029 changed rows with
+the sha256 the only changed cell; kinds 2 canonical-source / 55 guest-dependency /
+8,940 guest-route / 32 packet; the 55 guest-dependency rows are one per
+`C10.prepared.profiled_consumer` program on `segments.rs` `f9c7a2f9…` → `cc403f33…` with
+pin `73ec2ff5…`, so the guest-dependency branch is covered. Scope clean (0 live writes, 0
+accepted-scene writes, 23 inherited git entries).
+
+Findings: **F0** — the STOP is correct and the cause is my carve: focused 3,308.977 s =
+image + fixture covers neither `stack_1x` (3,488.977 s with the 180 s close) nor
+`3×2,961.635 = 8,884.905 s`, so the invocation was correctly withheld; no suite ran.
+**F1** — the ProcessPoolExecutor sandbox deviation is accepted (same five digests
+in-process), and the guest-dependency non-firing claim is **withdrawn**: the predicate is
+`p.key.row()`, not the dependency id column. **Q1 answered**: the next carve is focused
+9,000 s and the invocation timeout 8,884.905 s.
+
+Budget: 770 charged 8.885 s of 3,308.977; unspent 3,300.092 s returns; reserve
+34,708.52278847017 s. Next: brief 771, the scene carried and the one bounded invocation.
