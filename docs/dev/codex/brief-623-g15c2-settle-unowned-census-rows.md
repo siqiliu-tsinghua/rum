@@ -119463,3 +119463,18 @@ drift paths asserted, or `mod.rs:211-212` fires. Budget: 768 charged 7.087 s of 
 2,992.913 s returned, reserve 34,728.69578847017 s; brief 769 carves focused 900 s ->
 33,828.69578847017 s. Q25 stays unwaived; 744/745/746 held; CM5 unauthorized; sealed
 c76–c99 stays sealed.
+
+Continuation 128 (2026-11-23): brief 769 DONE and accepted. The declared hook-site ordinary-body
+certificate closes the 759 allowance with 16 rows (12 bodies, 2 helpers, q25 module 40, proof
+31), a frozen literal with explicit `(index, text)` sets compared bidirectionally with the
+observed stops, `reproduce` exact on the kept-line sequence and the reassembled text, `SITES
+PASS bodies=12 helpers=2`, `ORDINARY PHASE PASS files=6 stops=0 allowance_rows=16`, three
+falsifiers rejected plus the 840/118 calibration, and a byte-identical re-emission of the 768
+artifact set (overlays `73297529…`, additions `78106c66…`, class-provenance `8c8b2232…`,
+mutants-reanchored `17355964…`, source_schema `3faa2999…`, inputs `aa99638d…`); an in-place
+generator rerun reproduced every substantive artifact byte-identically. Deviations accepted
+(hash-only 760 intermediate; 22→23 docs recompute; permitted log differences). F2 boundary:
+the six files' 766-era edits are covered by the chain and 766's certificates; the installed
+bytes are the 766 finals. Budget: 769 charged 11.288 s of 900, reserve 34,717.40778847017 s;
+the fixture brief carves focused 3,308.977 s -> 31,408.43078847017 s. Q25 stays unwaived;
+744/745/746 held; CM5 unauthorized; sealed c76–c99 stays sealed.

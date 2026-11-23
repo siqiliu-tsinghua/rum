@@ -3987,6 +3987,34 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 128 (brief 769 DONE, the declared ordinary-body certificate) (2026-11-23):
+    brief 769 closed the ordinary-body allowance in `.temp/brief-769/` (17.3 MB) and was accepted
+    DONE. Run: grk, unit `brief-769-grk-20261123-070834-1001906`, session `ad76b079-…`,
+    07:08:34–08:02 CST, `status=success turns=64 cost_usd=6.059252 refused=0`, oom 0/0, rc 0;
+    `report.py check 769` OK (54 citations); 51 PASS checks, 3 deviations. Delivered: the
+    declared 16-row allowance (12 bodies, 2 helpers, q25 module 40, proof 31) as a frozen
+    literal with explicit `(index, text)` sets, compared bidirectionally with the observed
+    function stops and `reproduce` exact on the kept-line sequence and the reassembled text;
+    `SITES PASS bodies=12 helpers=2`, per-site `SITE PASS`, `raw_stops` 4/3/1/3/3/0 = 14, shape
+    rules enforced (q25 references or the `pause` withhold seam, same-callee refactors, the
+    `desugar` against the literal-`Err` macro arm, named helpers with digest and line count,
+    760 `e618623c…` → `7766b20e…`); `ORDINARY PHASE PASS files=6 stops=0 allowance_rows=16`,
+    `named_new=71`; three falsifiers rejected (mutated insertion, undeclared line, deleted
+    insertion) plus the 840/118 calibration with the `sow.rs:drive_sow_matches@1440` falsifier
+    rejected; the six evidence files byte-identical to 768 (overlays `73297529…`, additions
+    `78106c66…`, class-provenance `8c8b2232…`, mutants-reanchored `17355964…`, source_schema
+    `3faa2999…` = the `73297529…` anchor, inputs `aa99638d…`), certificate/overlays/tree logs
+    byte-identical to 768,
+    152 chains, 147+5 declaration, KATs; and an in-place generator rerun that reproduced every
+    substantive artifact byte-identically. Deviations accepted: the hash-only 760 intermediate,
+    the 22→23 docs recompute, the permitted log differences. F2 boundary stated: the six files'
+    766-era edits are outside this span and covered by the chain and 766's certificates; the
+    installed bytes are the 766 finals. Scope clean (0 live writes, 0 scene writes, 23
+    inherited git entries, no build/test/git/network). Budget: 11.288 s of 900 charged,
+    888.712 s returned, reserve 34,717.40778847017 s; the fixture brief carves focused
+    3,308.977 s (the 766 fixture bound 2,961.635 s + the 347.342 s image) -> 31,408.43078847017 s.
+    Q25 stays unwaived (13 rows, P2379 included, zero admitted receipts); 744/745/746 held;
+    CM5 unauthorized; sealed c76-c99 stays sealed.
   - G15-CM4 continuation 127 (brief 768 STOP, the certified re-anchoring generator) (2026-11-23):
     brief 768 built the certified re-anchoring generator in `.temp/brief-768/` (16.9 MB) and
     was accepted STOP. Run: grk, unit `brief-768-grk-20261123-062527-985714`, session

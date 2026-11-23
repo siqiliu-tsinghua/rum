@@ -133,3 +133,40 @@ a director ruling, never a scope cut. No build is authorized. The scene's stop l
 `rum-report/1` JSON at `.temp/brief-769/report.json` via `scripts/report.py`; sections as in
 Deliverable 6; `summary` states the zero-unknown result, the artifact identities and the exact
 open facts.
+
+## Gate c128 (2026-11-23) — accepted DONE; the ordinary-body certificate closes
+
+Run: `grk` (grok-4.7, effort xhigh), unit `brief-769-grk-20261123-070834-1001906`,
+session `ad76b079-4614-4323-bc33-2a3f7e9947f2`, 07:08:34 – 08:02 CST,
+`status=success turns=64 cost_usd=6.059252 refused=0`, `oom=0 oom_kill=0`, rc 0;
+scene `.temp/brief-769/` (17.3 MB); `report.py check 769` OK, 54 citations;
+51 PASS checks, 1 PASS measurement, 3 deviations, 0 questions, changes 0.
+
+Verified: `ENTRY PASS trees=5 pins=199 drift=8 docs=23 additions_absent=5` against the
+five tree digests, the 13 Q25 OPEN ids; the `ALLOWANCE` literal (16 rows: 12 bodies, 2
+helpers, q25 module, proof) with explicit `(index, text)` sets, compared
+bidirectionally with the observed function stops (undeclared or unobserved → STOP) and
+`reproduce` exact on both the kept-line sequence and the reassembled text; the per-site
+`SITE PASS` rows and `raw_stops` 4/3/1/3/3/0 = 14; the shape rules (q25 references or
+the declared `pause` withhold seam, the two same-callee refactors, the `desugar` against
+the literal-`Err` macro arm, the named helpers with digest and line count, the q25 40 /
+proof 31 names, the 760 `e618623c…` → `7766b20e…` repair); `ORDINARY PHASE PASS
+files=6 stops=0 allowance_rows=16`, `named_new=71`; the three falsifiers rejected and
+the 840/118 calibration with the `sow.rs:drive_sow_matches@1440` falsifier rejected;
+the six evidence files byte-identical to 768's (overlays `73297529…`, additions
+`78106c66…`, class-provenance `8c8b2232…`, mutants-reanchored `17355964…`,
+`source_schema` `73297529…`, inputs `aa99638d… files=24`); `certificate.log`,
+`overlays.log` and `tree.log` byte-identical to 768's; 152 chains, 147+5 declaration,
+KATs; and an in-place generator rerun reproducing every substantive artifact
+byte-identically (only timing lines and the report spend body differ), so the evidence
+is genuine. Scope clean (0 live writes, 0 accepted-scene writes, 23 inherited git
+entries, no `.rs`, no receipts).
+
+Findings: **F0** — the certificate closes mechanically as ruling 777 required.
+**F1** — the three deviations (hash-only 760 intermediate; docs recompute 22→23 with
+this brief's own doc; the permitted log differences) are accepted. **F2** — the six
+files' 766-era edits lie outside this span and are covered by the chain and the 766
+emitter's certificates; the installed bytes are the 766 finals.
+
+Budget: 769 charged 11.288 s of 900; unspent 888.712 s returns; reserve
+34,717.40778847017 s. Q25 stays unwaived. Next: the fixture brief (focused 3,308.977 s).
