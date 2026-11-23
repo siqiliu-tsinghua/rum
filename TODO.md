@@ -3987,6 +3987,51 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 141 (the deterministic render ordered first, as a design-only
+    inventory: the four ordered fixes — F5's composed-postimage module move, F13's retention
+    regeneration, F14's hermeticity, the two Q25 files' formatting — with F5's full schema
+    footprint, the complete red-to-inventory map, the deterministic DAG and the final-tree run
+    book; the A/B completion follows on the final tree) (2026-11-24):
+    c140 accepts brief 781's stage-A entry from raw evidence — my own walker re-hashes the five
+    779 trees to their pins (`e01d13cf…`/5,850 install and armed, `ac36bc81…`/5,842 baseline,
+    `9e682e49…` disabled, `4dd8b8a1…` real) with zero debris; the four tables
+    (`2a854902…`/147, `1cab55ca…`/151, `c2aee404…`/152, `acb46cdf…`/8) and the class table
+    `8c8b2232…`; all 147 overlay rows' four cells re-hashed by me (preimage = live, armed =
+    install, disabled = the disabled image, real = the live preimage, 147/147); the five tool
+    copies byte-equal to the 749 sources; the arm bijection; `COMPARE verbatim=13474 ws=0
+    wrapper=51 dispatch=122 cold=334 facade=4 extension=136 diff=87`, `files=1256`,
+    `diff_rows=87 probe_hits=4`, `HOT MATCHED covered=21 unmatched=0 missing=0` — and accepts
+    its stage-A STOP as correct: the declared diff set cannot certify the 768/769 re-emitted
+    install tree. F17, my stale declaration, in three read ways: the "extensions only
+    reconcile.rs" bar was wrong even against the c94-era record (`CM742C88 COMPARE
+    extension=25 diff=0`; the install's 136 = those 25 + `reconcile.rs` 45 + `class_lease.rs`
+    26 + `q25_ownership.rs` 40); the ledger's four rows are a declared adopted path (entry 2 of
+    the twelve), so `entries`, `check` (+`pub(super)`) and `check_entry` carry the adopted
+    `Local` machinery beyond the exact F4 message
+    (`production_host_payload_ledger_is_complete_and_attributed equal=true`); and all 51 diff
+    paths are chain∩overlay members (the only non-chain path is the adopted ledger), the 77
+    residue being the re-emitted class form — `evaluate_in`'s bare match-scrutinee wrapper plus
+    the closure-body block and trailing comma (0 of 74 residual rows reduce through the tool's
+    own canonical rule; `strip_hot` reduces 24; two specimens read in source), and
+    `typed/adapter.rs`'s `resume` carrying the declared Q25/class-lease
+    `control::resume`/`note_typed_consumer`/driven-gate/`control::active` insertions. F18: the
+    fence log records three refused git attempts (`branch --show-current` twice, `rev-parse
+    HEAD` once), all refused at exit 1, no mutation. F5's object is corrected: the
+    `cm743_route_a_falsifiers` module exists only in the composed `lib.rs` postimages (armed
+    `e8fe11f3…`, disabled `86f4add8…`), never in live, so its move changes the composed tree and
+    the whole derived family; the c139 pipeline order is superseded — brief 782 is the
+    design-only render-repair inventory and plan (F5's move and schema footprint, F13's
+    generator/adoption/falsifiers, F14's fix, the Q25 formatting, every non-loopback red mapped
+    to its inventory with zero unknown, the DAG and the run book, the drafted implementation
+    brief 783), then the render implementation, then the structural attribution inventory (784)
+    and the probe and hot-path A/B completion (785) on the final tree, then the re-freeze, the
+    fresh epoch, the Stage C/C10 readmission and a further 744 restart, each gated. Budget: 781
+    charged 1,214.6 s of its 4,400 s carve and returned 3,185.4 s; reserve
+    2,483.48878847017 → 5,668.88878847017 s; 782 carves focused 3,600 s + workspace 0 + epoch
+    0 → 2,068.88878847017 s, and 783's carve is topped up from the campaign allocation at its
+    gate (user ruling 2026-11-19). Q25's thirteen rows stay named stops; 744/745/746 held; CM5
+    unauthorized; sealed c76–c99 stays sealed.
+
   - G15-CM4 continuation 140 (the probe and hot-path A/B ordered: brief 781 re-drives brief
     743's C94 structural comparison on the installed render's production-source scope and
     runs the measured ordinary-path A/B — real against armed, both arms built at one path
