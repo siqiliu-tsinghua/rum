@@ -3987,6 +3987,41 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 137 (the source A/B continuation ordered: brief 778 carries brief
+    777's accepted install tree, repairs the class loader's capability-mode anchor — the
+    workspace mode keeps `class-provenance.tsv`, the capability mode reads `provenance.tsv`;
+    no reseal of the class table and no change to `source()` — re-anchors the four artifacts
+    through the single writer with the declared `guest.rs` delta, rebuilds the baseline and
+    the real image (baseline ⊎ the eight additions), completes the six-case source gate and
+    runs the deferred 774 acceptance) (2026-11-23):
+    c136 accepts brief 777's stages A–D from raw evidence (the 147-row table with the single
+    `guest.rs` delta, the preimage pins equal to the live digests, my own one-constant KAT on
+    the three arm files, the mutants column, the eight additions, the baseline construction
+    with the tree hashes `e2c8bfbe…`/`93fd8ca5…` and the forbidden-source controls, the
+    173-path install delta, the disabled receipt's 147 rows, the verifier extension read in
+    full, the F4 message diff, F3's selftest) and accepts its stage E STOP as correct: the
+    copied-source admission feeds the capability's baseline originals to a loader whose seal
+    source brief 770 had switched to the class table for both modes, so
+    `programs_with_mutation` returns `SourceIdentity` on every image, outside the declared
+    negatives (F6). My real-image bar was internally contradictory — the bare baseline cannot
+    compile because the adopted `bindings.rs` `include_str!`s the class table, and the
+    verifier's own rule is `copied == baseline ⊎ additions` (F7; the worker's real image as
+    baseline ⊎ additions is accepted). My entry pins for the scene were stale: 5,816 /
+    `18dca765…` is 776's entry state, the accepted 776 final is 5,818 / `48dd8fe2…`, and the
+    worker's derived count is right (F8). Ruling 786 answers Q1: **no reseal** — the class
+    table stays the class-form anchor (`8c8b2232…`) and `provenance.tsv` the baseline anchor;
+    the loader's anchor follows its byte source, so `load_programs_with` takes the seal table
+    as a parameter, the workspace mode reads the class accessor and the capability mode reads
+    the baseline accessor; the plain-loader assertion becomes arm-aware (armed green with
+    9,060 programs, disabled `SourceIdentity`); `source()` and its route test stay untouched.
+    Brief 778 stages A–F: entry re-authentication and the copy, the loader and test repair
+    with the declared-delta KAT, the single-writer re-anchoring (overlays/mutants/chain/
+    additions), the rebuilt baseline and the real image, the complete six-case gate, and the
+    deferred 774 acceptance (F3's re-run, F4's quoted line, the workspace with the two skips,
+    `cargo fmt --check`, every red classified against the 776 reference set). Budget: focused
+    5,500 s + workspace 2,700 s + epoch 0; reserve 21,047.05878847017 → 12,847.05878847017 s.
+    Q25's thirteen rows stay named stops; 744/745/746 held; CM5 unauthorized.
+
   - G15-CM4 continuation 136 (the source A/B ordered: brief 777 builds the install tree — the
     live tree plus the accepted emission, the class additions and provenance table, and brief
     776's adoption — re-anchors the 147-row overlay table with exactly the `guest.rs` delta,
