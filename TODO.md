@@ -3987,6 +3987,43 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 155 — brief 794's first dispatch STOPped correctly at Stage B's probe
+    rule; the bar was c140's verbatim-only count, restated as a structural closure (Amendment 1)
+    and the brief resumes (2026-11-25): unit `brief-794-cdx-20261125-073227-2531368`, session
+    `01a20fe7-5456-7710-ab2d-e76b6062d86f`, 07:32:27–07:43:16, ≈646 s, rc 0, peak 347,660,288 B,
+    oom 0. Stage A green: the four tool copies byte-exact (`396d9474…`/`6f39d69b…`/`4971a553…`/
+    `0f1d3c7b…`), the classifier source `b342b07f…`, the four scratch controls
+    (SELF `files=1257 outer=13845 verbatim=13845 ws=0` with the three literal probe rows
+    recorded; BODY one diff at `evaluate_atom_fast_path`; EXTENSION one; WS `ws=1`; restoration
+    `36f578d8…`). Stage B primary (candidate `images/armed`, reference `images/real`): `COMPARE
+    verbatim=13581 ws=0 wrapper=51 dispatch=122 cold=334 facade=4 extension=25 diff=95`,
+    `files=1257` (91 HOT-DIFF + 4 NOLIVE = 95 diff rows; 25 extension rows in 7 files;
+    `COLD TWINS count=334`); `HOT MATCHED covered=21 unmatched=0 missing=0`; `PROBE SITES
+    expected=4 observed=7 outside=3 missing=0` → STOP on the brief's "any probe hit outside the
+    four". The three outside sites are `VERBATIM-PROBE` rows in two shared ownership-graph
+    files: `check_entry` (`host_payload_ledger.rs:132`; byte-identical in all four roles
+    `06cadb2c…`) and `is_local_construct` (`reconcile.rs:203`) plus the FALSIFIER d fixture
+    `reconcile_falsifier_disposition` (`reconcile.rs:1075`; the file is `additions.tsv` row 5
+    `da9bc5d6…`, absent only in baseline). Diagnosis (F63): the kept rule scans the facade and
+    verbatim branches only (`stage_a.py:262-266`, `295-298`); at c140 `check_entry` was a diff
+    and `reconcile.rs` 45 extensions, so the four facades were the whole list — on the final
+    pair the `Local` machinery is shared between the arms, so its three literal occurrences of
+    `rum_runtime::cm740_probe::` are scanned. "Exactly four" was c140's count inherited across a
+    tree change — F17's lesson applied to the probe line, not only to the diff set. The
+    director recomputed all four exit pins (baseline `fa01b3d1…`/5,842, armed `c04bbf82…`/5,851,
+    disabled `60ad65ed…`/5,851, real `d703b165…`/5,851, debris 0), re-hashed the tool copies,
+    read the calibration/primary/stop-receipt logs; the scope receipt is `git_invocations=0
+    refused_git_attempts=0 brief_attempt_log_present=false sealed_source_edits=0
+    live_source_edits=0 cargo_runs=0`, the 6,444 changed files are all under `.temp/brief-794/`,
+    and live's crates subtree is still `a7de3a76…`/4,700. Amendment 1 restates the bar as a
+    closure: the four facades required; every `VERBATIM-PROBE` row attributed in
+    `evidence/probe-attribution.tsv` with the armed/real file hashes and the exact source line;
+    `verify` gains the closure check and prints `PROBE CLOSURE facades=4 outside=3 attributed=3
+    unexplained=0`; `observe` is the raw report and exits 0. Resume at Stage B item 4 via
+    `CDX_FORK=01a20fe7-5456-7710-ab2d-e76b6062d86f`: the 120-row attribution,
+    `probe-attribution.tsv`, `stage-a-bar.md`, draft 795, the report — all in `.temp/brief-794/`,
+    the four trees read-only and re-pinned at exit. Budget: ≈646 s charged of the 4,500 s carve,
+    ≈3,854 s remain. Next: that gate, then brief 795, the probe/hot-path A/B completion.
   - G15-CM4 continuation 154 completed — R4, the director's live render commit: the sealed
     four-role release landed in live (190 crates paths), every producer replayed green there,
     and the first live suite reproduced the authoritative Stage D 4,553/10/71 (2026-11-25):

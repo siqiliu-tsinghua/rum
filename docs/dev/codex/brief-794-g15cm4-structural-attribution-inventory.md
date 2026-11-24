@@ -181,3 +181,56 @@ overrun stops for a director ruling, never a scope cut.
 `rum-report/1` at `.temp/brief-794/report.json`; every claim cites a saved log under
 `.temp/brief-794/`; no citation may point at `.temp/brief-781/` or any deleted path for a fact
 this brief must establish.
+
+## Amendment 1 (gate c155) — the probe bar restated as a structural closure; resume at Stage B item 4
+
+The first dispatch stopped correctly at Stage B's probe rule: `PROBE SITES expected=4 observed=7
+outside=3 missing=0`, the four `session.rs` facades present, and three `VERBATIM-PROBE` rows
+(`host_payload_ledger.rs check_entry` line 132; `reconcile.rs is_local_construct` line 203 and
+`reconcile_falsifier_disposition` line 1075). The worker left the copied tools byte-exact,
+filtered nothing and changed no byte of the four images; the director recomputed the four exit
+pins and the tool hashes independently.
+
+The stop is correct under the brief as written — but the bar was mine and it was wrong. The
+kept rule appends a probe hit in exactly two branches: the facade branch (`stage_a.py:262-266`)
+and the verbatim branch (`stage_a.py:295-298`). At c140 the ledger's `check_entry` was a `diff`
+row and `reconcile.rs` contributed 45 `extension` rows (the c140 report states both), so the
+verbatim branch could not fire for them and the four facade hits were the whole list. On the
+final pair those files are shared between the arms: the ledger producer is byte-identical in
+all four roles (`06cadb2c…`) and `reconcile.rs` is `additions.tsv` row 5 (`da9bc5d6…`, 37,791 B;
+armed/disabled/real, absent in baseline), so their functions classify verbatim and the tool
+scans their text. The three occurrences are literal text inside the declared `Local` machinery —
+a shape this brief already names: two carry the `Local` predicate
+(`trail.starts_with("rum_runtime::cm740_probe::") && ty.starts_with("dyn Fn")`, the definition
+of `Disposition::Local`) and the third constructs the FALSIFIER d probe-rooted `public input`
+fixture. The probe's host surface stays `crates/rum-host/src/session.rs` (overlay row 4,
+`ef78a1de…` → `7127298d…`); all other probe occurrences sit in rows the tool classifies as
+anything but verbatim (the delta's own instrumentation and its cold twins), not in shared code.
+
+F63: "exactly four hits" was c140's measurement inherited across a tree change — F17's lesson
+applied to the probe line, not only to the diff set. This amendment replaces Stage B item 3's
+probe sentence and the STOP rule "any probe hit outside the four" with a closure:
+
+- The tool's rule is unchanged and the copied tools stay byte-exact; no accept list, no exclusion.
+- The four facade hits are required, exactly as printed.
+- Every `VERBATIM-PROBE` row is attributed in `evidence/probe-attribution.tsv`
+  (`path<TAB>function<TAB>kind<TAB>shape<TAB>owner<TAB>evidence`), one row per outside site; the
+  table equals the observed outside multiset exactly; each evidence names the armed/real file
+  hashes with `byte_equal=true`, the exact source line, and the declared shape (the adopted
+  ledger's `Local` machinery; for `reconcile.rs` also `additions.tsv` row 5).
+- `verify` gains the closure check (today `check_inventory` does not test the probe set): after
+  the 120-row attribution check it requires the four facades, the exact outside table and the
+  attribution closure, and prints `PROBE CLOSURE facades=4 outside=3 attributed=3 unexplained=0`
+  alongside `ATTRIBUTION rows=120 … unexplained=0` and `C94 HOT PATH PASS … unexplained=0`.
+- `observe` is the raw report: it prints every hit and row and exits 0; `verify` is the gate. The
+  first run's STOP evidence stays untouched.
+
+Resume at Stage B item 4 (the attribution), then Stage C (`stage-a-bar.md` states the structural
+bar — counts are measured values, never bars — and the draft 795's stage A asserts the closure)
+and Stage D (the report discloses this amendment and the first STOP as accepted deviations).
+Stage B item 5 cites the c140 report's own counts (diff=87, extension=136, 45 of them
+`reconcile.rs`; `check_entry` a diff). The four trees must still pin at exit.
+
+Charged ≈646 s of the 4,500 s carve (unit `brief-794-cdx-20261125-073227-2531368`, 07:32:27–
+07:43:16, peak 347,660,288 B, oom 0); ≈3,854 s remain. Unspent returns; a projected overrun
+stops for a ruling.
