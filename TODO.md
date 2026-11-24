@@ -3987,6 +3987,45 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 148 (the census type repair, then the render-repair continuation:
+    brief 789) (2026-11-24): c147 accepts brief 788's STOP at its own Stage A step 3 as
+    correct, with corrections. The run: `agy`, one attempt, unit
+    `brief-788-agy-20261124-163052-1900144`, conversation
+    `942fb840-49c0-4ef9-9f60-efd8d2d96c10`, 16:30:52–16:50:30 CST, `duration_seconds`
+    1,170.24 (wall 1,178.9 s), `status=SUCCESS`, rc 0, peak 5,156,343,808 B, 2 refused
+    `git merge-base` probes; report STOP, `check: OK, 45 citations verified`; 25 changes (6
+    image files + 19 `.temp/brief-788/` artifacts), 2 disclosures, 0 deviations, 1 question.
+    It re-verified every carried pin and table, copied the three drafts
+    (`646ab676`/`216898eb`/`03a1b278`), installed them on armed and disabled, passed the
+    baseline census `10 passed; 0 failed; 1 ignored`, and stopped because the certified
+    `receipts.rs` `03a1b278` does not compile on armed/disabled: `facts.clone()` on
+    `facts: &Facts` while `scan.rs:104-105` declares `#[derive(Default)] pub struct Facts`
+    (E0596, exit 101). My reproductions: the post-install walk (baseline `3d0b6829`/5,842,
+    armed `f4cd8205`/5,851, disabled `7a3a2a58`/5,851, real `57e3533e`/5,851, debris 0); the
+    source read of the clone failure and rustc's own `#[derive(Clone)]` suggestion; the probe
+    (`10 passed`, production `461/50/611/615/375/240`, split `535/336/199/48` +
+    `80/39/41/34`, 79 direct twins, P0543 carrier, restored `03a1b278`); the fixed draft
+    differs from the certified draft only in that block; the 147-row table is internally
+    consistent and exactly **2** rows are stale (`lib.rs` cells `04c81035…`/`23f961e5…` vs
+    bytes `0c67b9de…`/`6325e17a…`; `cases.rs` `2d915381…` vs `646ab676…`); the closure sweep
+    (157 differing common files = 147 pinned + 10 unpinned; the 12 = those 10 +
+    `local-contracts.tsv` + `promoted.tsv`; 9 additions); `adopt_reconciled_inventory` reads
+    the stale `.temp/brief-776/emission_chain.tsv` (its `scene_match=152` cannot hold);
+    `substitution_exact=3` is the 781 arm bijection, not a receipts line. **F45** the draft's
+    clone defect; **F46** `reconcile.rs:1051`'s hardcoded `376\t51` must move with
+    `AROUND_HANDOFF`; **F47** my brief dropped `lib.rs` from the writer list (the 787 design
+    had it); **F48** the adopt bar is unsatisfiable (use the active tests + the recomputed
+    chain); **F49** the substitution_exact placement. Q1 decided: fix the type — add
+    `Clone` to `scan::Facts` on armed/disabled, keep `03a1b278` byte-identical, do not adopt
+    `receipts-fixed.rs`; the 13th row (`typed_slot_census/scan.rs`) makes the overlay table
+    **160** rows, the mutants `source_schema` follows it, the receipts are `rows=9
+    overlays=160`. Budget: 788 charged 1,178.9 s of its 6,600 s and returns 5,421.1 s; reserve
+    0.83478847017 → 5,421.93478847017 s; brief 789 carves 6,600 s with an explicit 1,179 s
+    top-up → reserve 0.93478847017 s. Order unchanged: 789 → the structural attribution
+    inventory → the probe/hot-path A/B completion → the re-freeze and fresh epoch → Stage
+    C/C10 → a further 744 restart, each gated. Q25's thirteen rows stay named stops;
+    744/745/746 held; CM5 unauthorized.
+
   - G15-CM4 continuation 147 (the postimage inventory reconciliation applied, then the
     render-repair continuation: brief 788) (2026-11-24): c146 accepts brief 787 DONE from raw
     evidence, with corrections. The run took three `agy` attempts under the 5-hour quota wall:
