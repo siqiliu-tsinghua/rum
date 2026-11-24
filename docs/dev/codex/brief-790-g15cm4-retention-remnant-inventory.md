@@ -89,7 +89,8 @@ change.`**
    adoption time or cargo skips the `include_str!` rebuild. The two `promotion_tests` and
    `production_obligations_are_exact` fail because `reconcile` validates `INVENTORY` before
    their mutation-specific reds; fixing the one cell addresses all four (prove the ordering
-   from the source and the log).
+   from the source and the log). **Superseded by Amendment 1 (below): the stale set is every
+   root row's active cell — C01 four stamps and C02 seven — not C01 alone.**
 2. **The census red is exactly one moved pin (red 2).** `census/tests.rs:176-206` pins the
    negative constructor site and five `(suffix, line, reason)` rows. Against the armed dump,
    only `("options/core.rs", 233, "method syntax")` misses: the only `method syntax` row in
@@ -253,3 +254,35 @@ next action, and the tree state. Prefer leaving the tree untouched at each check
 - No network. The only commands you run are read-only shell/Python parsing and `cargo`-free.
 - Testing Policy is a hard line (`AGENTS.md`): rum's own documented behaviour only.
 - You MUST paste the real verbatim evidence. Never fake a line.
+
+## Amendment 1 (c149, after the Stage A STOP): the certificate scope is the whole table
+
+Stage A reproduced the carried state and the three decompositions and stopped correctly at this
+brief's own rule: a C01-only repair reaches a second stale `hash=true` cell on C02, so the four
+promotion tests would still fail before their later checks. The director verified the evidence
+from the tables independently. On live, the committed `promoted.tsv` active cells differ from
+the 19:40 fresh acceptance output in four C01 stamps (`O0210`, `O011`, `O0200`, `O010`) and
+seven C02 stamps (`I01`, `I02`, `I04`, `R01`, `R02`, `B13`, `B05`); on armed, the seven C02
+stamps disagree with the installed `local-contracts.tsv` fingerprints (all seven), and the four
+C01 stamps likewise disagree with the armed F13 rows. The stale set is every root row's active
+cell, not one row.
+
+**Amended ruling R3**: the certificate repair is the whole-table adoption. For every root row
+(`certificates::roots()`: C01 and C02), in every build the gates run (the default `hash` build's
+column 4 and the `--no-default-features` build's column 5), the active cell is replaced by the
+value that same build's own `local_production_acceptance` run writes to
+`.temp/brief-546/certificates/promoted-hash-<bool>.tsv`; the other-build cell is preserved
+exactly; the adopted file's mtime is set to the adoption time (F55). The fresh value is the
+`promotion::expected` output by construction, so the adoption reconciles the table with the
+scene's contracts — it is not a hand edit, and it is not a re-earning of the certificate.
+
+**Stage A is accepted as evidence**: the four tree pins (baseline `dd7c6539…`/5,842, armed
+`d7640402…`/5,851, disabled `74d9c345…`/5,851, real `8c45350b…`/5,851, debris 0), the Stage D
+archive (70 result lines, 4,547/16/71, excluded=10, remnants=6), the 21-frame delta
+(`pure 535→514, stateful 33→54`, left-only 0), the census (both dumps 1,229 rows; both
+multiset equalities; the one pin miss, `233:58-233:68 → 405:58-405:68`), the file identities
+(5 rendered-different, 3 derived-equal, 5/8 overlay hits, 0 additions, `promoted.tsv` not an
+overlay), and the certificate tables. Do not redo Stage A beyond what the amendment changes.
+**Resume at Stage B** and continue through Stages C and D under the amended scope; the drafted
+implementation briefs must cover the whole-table adoption, both builds, and the live-side
+counterparts at the render commit.
