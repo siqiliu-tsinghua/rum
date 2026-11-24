@@ -3987,6 +3987,43 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 147 (the postimage inventory reconciliation applied, then the
+    render-repair continuation: brief 788) (2026-11-24): c146 accepts brief 787 DONE from raw
+    evidence, with corrections. The run took three `agy` attempts under the 5-hour quota wall:
+    attempt 1 died at 06:59:39 after 401.1 s (429, reset 11:00); attempt 2 at 12:14:11 after
+    4,145.9 s / 680 steps (429, reset 16:00) having completed stages A–C with both `stop=false`
+    verdicts and the stage C emissions but no report; attempt 3 — the user's choice, the same
+    conversation resumed — finished 16:05:04–16:17:37 (≈753 s, `status=SUCCESS`, rc 0,
+    `git-attempts: 0`) with the DONE report (`check: OK, 86 citations verified`; 6 checks PASS,
+    2 measurements PASS; 13 added files under `.temp/brief-787/`; the live porcelain still
+    byte-identical to the c88 record). My reproductions: the four pins and every carried table;
+    my own campaign re-run on armed (29,861 data rows, 36 bad-width, 29,825 empty
+    policies/aliases, 2,422/2,430 present, the same 8 missing keys, the verbatim
+    `IDENTITY DELTA`); my own `typed_slot_census` run (615/375/240, `2 passed; 8 failed; 1
+    ignored`, `reporting.rs:331`); my own 13-test run (`0 passed; 13 failed`); the emitted
+    `all-uses.tsv` (383,867 rows) gives plain `(535,336,199,48)` + twins `(80,39,41,34)` with
+    exactly one unmapped twin (the P0543/M0286 carrier) and 14 of the 15 shift anchors verified
+    present-post/absent-pre (the 15th, Nested0431, is the post-install expectation, fail-closed
+    in the draft); the real capture contains `P2384` `565cad82…` exactly once; the six pin
+    sites, the `LEDGER_PIN` and the three `reconcile.rs` constants (`496:19`, `2743:23`,
+    `381:51`) check out; the three drafts re-generate byte-identically and are rustfmt-clean;
+    the falsifier instrument re-runs byte-identically (`total=12 green=2 red=10 mismatch=0`);
+    the 12-row unconditional overlay list = 9 currently differing non-overlay files +
+    `coverage/bindings.rs` + the two regenerated tables (147+12=159). **F44** — the worker's
+    generated inventory is accurate but its narrative carries five stale constants that do not
+    reproduce: `typed-slot-stages.tsv` `559fb380…`/2,340 lines (real `ab8ae7e3…`/2,375),
+    `typed-slot-shapes.tsv` `d2909eb0…` (real `d2a0fb93…`), `provenance.tsv`
+    `965eca10c54bd389…` (real `965eca10f966966e…`), the `aliases.tsv` provenance line numbers
+    (real packet rows at 11127…18016), and the `cases.rs` cell kinds (1 `packet` + 200
+    `guest-route`, not "1 canonical-source"). My brief 788 carries the measured values.
+    Budget: 787 charged 401.1 + 4,145.9 + 753 s = 5,299.98 s of its 6,500 s (3,500 carve +
+    3,000 top-up) and returns 1,200.02 s; reserve 370.83478847017 → 1,570.83478847017 s; brief
+    788 carves focused 4,400 s (A 900 / B 1,800 / C 1,700) + workspace 2,200 + epoch 0 = 6,600 s
+    with an explicit 5,030 s campaign-allocation top-up → reserve 0.83478847017 s. Order: 788 →
+    the structural attribution inventory → the probe/hot-path A/B completion → the re-freeze and
+    fresh epoch → Stage C/C10 → a further 744 restart, each gated. Q25's thirteen rows stay
+    named stops; 744/745/746 held; CM5 unauthorized.
+
   - G15-CM4 continuation 146 (the postimage inventory reconciliation ordered: brief 787,
     design-only — the population/aliases identity and the typed-slot census, each with a
     complete zero-unknown inventory, one disposition and a calibrated falsifier, the
