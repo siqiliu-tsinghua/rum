@@ -286,3 +286,46 @@ the four R3 discoveries and their green rechecks, the promotion adoption, the 16
 retained selectors, the P0543 lane, the six cold primaries and both restores, the twelve receipts,
 F48, the fourteen selectors, both fmt runs, Stage D and both flag-on controls. All other bars,
 bounds, STOP rules and budgets are unchanged.
+
+## Amendment 3 (gate c152) — the nine loopback EPERM reds are the dispatch sandbox's network denial; the host replay is the authoritative Stage D
+
+The third dispatch stopped at Stage D exactly as the bar demands: the complete flag-off workspace
+returned 4,544 passed, 19 failed and 71 ignored across 70 result lines (raw exit 101), with all
+ten accepted reds present, all six named remnants green, the 71 ignores byte-equal and the
+source-auth control green. The nine extra failures are the native ZeroMQ tests, each failing at
+`native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1)` — the dispatch
+sandbox's network denial — and each is `ok` in the historical population. The same nine pass on
+the host; c135 already classified brief 776's stage-D reds as the fence's loopback, and the 789
+host driver records "the 9 zeromq loopback names pass on the host (they are sandbox-only)" with
+the 789 host Stage D green for all nine.
+
+Ruling: the nine loopback reds are declared environmental for the dispatch sandbox, by name. The
+dispatch-side Stage D population bar is: 70 result lines, 4,544 passed, 19 failed, 71 ignored,
+raw exit 101; exactly the ten accepted reds; exactly those nine extras, each with the EPERM
+cause; zero missing reds; zero other extras; zero extra, missing or differently-reasoned
+ignores; six remnants and the source-auth control green. The authoritative Stage D bar
+(4,553/10/71) is the director's host replay of the same armed bytes with the same command, lane
+environment, target isolation and thread/job counts:
+
+```
+WORKSPACE PASS passed=4553 failed=10 ignored=71 results=70 raw_exit=101
+FLAG ON PASS leg=flag-on-lp passed=3+1+1 failed=0
+FLAG ON PASS leg=flag-on-class-lease passed=197 failed=0
+FMT PASS stage=final
+FINAL TREE PASS tree=c04bbf8245a8b41c6b069f36df0c2da3785f25e7565a6938e2dff29d77a14afb files=5851 debris=0
+STAGE D HOST PASS workspace=true flag_on_lp=true flag_on_class_lease=true fmt=true zero_oom=true
+```
+
+(from `.temp/director/gate-793/host-stage-d.out`; its 71 ignored lines are byte-identical to
+`stage-d/ignored-verbatim.txt`; the workspace scope line is `max=21474836480
+peak=17456148480 oom=0 oom_kill=0 rc=101`). The worker's report keeps its own 4,544/19/71 line
+and quotes both verdicts; no assertion is weakened and no red is reclassified.
+
+Resume at the Stage D tail only: do not rerun the workspace. Reuse the calibrated `LP`/`LEASE`/
+`FMT` jobs and `flag_on()`/`shared.tree` in a tail script under `scripts/`, with the lane
+environment, `RUM_CM740_BASELINE` and `RUM_PROFILE_LEXICAL_SUBSTITUTION=1`, and run: the two
+flag-on legs (`3+1+1` passed / 0 failed and `197 passed; 0 failed`), the final `cargo fmt --all
+-- --check`, the four tree pins against `seal/sealed-trees.tsv` (debris 0), then
+`scripts/handoff.py` for the R4 handoff. Keep every existing log, run record and the STOP
+evidence; update `PROGRESS.md` and `report.json`, run `python3 scripts/report.py check 793`, and
+return the summary. All other bars, bounds, STOP rules and budgets are unchanged.
