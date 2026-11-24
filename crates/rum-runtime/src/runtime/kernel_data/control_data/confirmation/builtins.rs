@@ -238,7 +238,11 @@ impl Session {
             });
         };
 
-        let match_result = self.match_expr_owned(form, tag.clone(), SymbolExprMap::default());
+        let match_result = (if crate::cm740_probe::driven() {
+            self.match_expr_owned_cm740_driven(form, tag.clone(), SymbolExprMap::default())
+        } else {
+            self.match_expr_owned(form, tag.clone(), SymbolExprMap::default())
+        });
         crate::resume_or_suspend!(
             self,
             match_result,
@@ -393,8 +397,15 @@ impl Session {
         let raw_pattern = args[1].clone();
         let tag = confirmation_tag_from_args(args.as_ref(), 3);
         let info_expr = args.get(2).cloned();
-        let match_result =
-            self.match_expr_owned(raw_pattern.clone(), value.clone(), SymbolExprMap::default());
+        let match_result = (if crate::cm740_probe::driven() {
+            self.match_expr_owned_cm740_driven(
+                raw_pattern.clone(),
+                value.clone(),
+                SymbolExprMap::default(),
+            )
+        } else {
+            self.match_expr_owned(raw_pattern.clone(), value.clone(), SymbolExprMap::default())
+        });
 
         crate::resume_or_suspend!(
             self,

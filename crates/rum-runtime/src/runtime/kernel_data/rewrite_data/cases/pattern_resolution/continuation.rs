@@ -13,6 +13,29 @@ impl SuspensionFrame for MatcherPatternSuspensionFrame {
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> FrameAction {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_15d(self, session, outcome);
+        }
+
+        FrameAction::complete(match outcome {
+            Ok(value) => resume_matcher_pattern(session, &self, value),
+            Err(error) => Err(error),
+        })
+    }
+}
+impl MatcherPatternSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_15d(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> FrameAction {
+        if crate::cm740_probe::frame("P0936") {
+            crate::cm740_probe::hit("P0936", "OmitActualPatternParentAcceptance");
+            return FrameAction::complete(outcome);
+        }
         FrameAction::complete(match outcome {
             Ok(value) => resume_matcher_pattern(session, &self, value),
             Err(error) => Err(error),

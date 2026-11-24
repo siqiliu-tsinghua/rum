@@ -66,7 +66,11 @@ impl FrameStorage {
         control: Arc<crate::runtime::RequestInterruptState>,
     ) {
         if let Self::Profiled(queue) = self {
-            profile_queue::register_owner(control, queue);
+            (if crate::cm740_probe::driven() {
+                profile_queue::register_owner_cm740_driven(control, queue)
+            } else {
+                profile_queue::register_owner(control, queue)
+            });
         }
     }
     #[cold]
@@ -272,7 +276,11 @@ impl FrameStorage {
         self.enable_execution_context(epoch.clone());
         suffix.enable_execution_context(epoch);
         if let (Self::Profiled(a), Self::Profiled(b)) = (&mut *self, &mut *suffix) {
-            if a.append(b) {
+            if (if crate::cm740_probe::driven() {
+                a.append_cm740_driven(b)
+            } else {
+                a.append(b)
+            }) {
                 return;
             }
         }

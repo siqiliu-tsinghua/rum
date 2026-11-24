@@ -37,6 +37,10 @@ impl CountLikeFinish {
 
 impl Session {
     pub(in crate::runtime) fn eval_count(&mut self, args: &SharedArgs) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.eval_count_cm740_driven(args);
+        }
+
         let args_slice = args.as_ref();
         if args_slice.len() == 1 {
             return Ok(self.invalid_call("Count", args_slice));
@@ -59,10 +63,45 @@ impl Session {
         self.resume_count_after_target(target, args)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn eval_count_cm740_driven(
+        &mut self,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        let args_slice = args.as_ref();
+        if args_slice.len() == 1 {
+            return Ok(self.invalid_call("Count", args_slice));
+        }
+        if !(2..=4).contains(&args_slice.len()) {
+            return Ok(self.invalid_call_with_arg_range("Count", args_slice, 2, 4));
+        }
+
+        let target_result = crate::cm740_probe::around("P1595", || {
+            self.evaluate_cm740_driven(args_slice[0].clone())
+        });
+        let target = crate::resume_typed_or_suspend!(
+            self,
+            target_result,
+            ok(value) => Ok(value),
+            suspend => {
+        let args = args.clone();
+        EvalCountSuspensionFrame { args }
+        },
+        )?;
+
+        self.resume_count_after_target_cm740_driven(target, args)
+    }
+
     pub(in crate::runtime) fn eval_member_q(
         &mut self,
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.eval_member_q_cm740_driven(args);
+        }
+
         let args_slice = args.as_ref();
         if args_slice.len() == 1 {
             return Ok(self.invalid_call("MemberQ", args_slice));
@@ -85,7 +124,42 @@ impl Session {
         self.resume_member_q_after_target(target, args)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn eval_member_q_cm740_driven(
+        &mut self,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        let args_slice = args.as_ref();
+        if args_slice.len() == 1 {
+            return Ok(self.invalid_call("MemberQ", args_slice));
+        }
+        if !(2..=4).contains(&args_slice.len()) {
+            return Ok(self.invalid_call_with_arg_range("MemberQ", args_slice, 2, 4));
+        }
+
+        let target_result = crate::cm740_probe::around("P1597", || {
+            self.evaluate_cm740_driven(args_slice[0].clone())
+        });
+        let target = crate::resume_typed_or_suspend!(
+            self,
+            target_result,
+            ok(value) => Ok(value),
+            suspend => {
+        let args = args.clone();
+        EvalMemberQSuspensionFrame { args }
+        },
+        )?;
+
+        self.resume_member_q_after_target_cm740_driven(target, args)
+    }
+
     pub(in crate::runtime) fn eval_free_q(&mut self, args: &SharedArgs) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.eval_free_q_cm740_driven(args);
+        }
+
         let args_slice = args.as_ref();
         if args_slice.len() == 1 {
             return Ok(self.invalid_call("FreeQ", args_slice));
@@ -108,6 +182,37 @@ impl Session {
         self.resume_free_q_after_target(target, args)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn eval_free_q_cm740_driven(
+        &mut self,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        let args_slice = args.as_ref();
+        if args_slice.len() == 1 {
+            return Ok(self.invalid_call("FreeQ", args_slice));
+        }
+        if !(2..=4).contains(&args_slice.len()) {
+            return Ok(self.invalid_call_with_arg_range("FreeQ", args_slice, 2, 4));
+        }
+
+        let target_result = crate::cm740_probe::around("P1599", || {
+            self.evaluate_cm740_driven(args_slice[0].clone())
+        });
+        let target = crate::resume_typed_or_suspend!(
+            self,
+            target_result,
+            ok(value) => Ok(value),
+            suspend => {
+        let args = args.clone();
+        EvalFreeQSuspensionFrame { args }
+        },
+        )?;
+
+        self.resume_free_q_after_target_cm740_driven(target, args)
+    }
+
     fn resume_count_after_target(
         &mut self,
         target: Expr,
@@ -128,6 +233,29 @@ impl Session {
         self.resume_count_after_pattern(target, pattern, args)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_count_after_target_cm740_driven(
+        &mut self,
+        target: Expr,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        let pattern_result = self.resolve_matcher_pattern_expr_owned_cm740_driven(args[1].clone());
+        let pattern = crate::resume_typed_or_suspend!(
+            self,
+            pattern_result,
+            ok(value) => Ok(value),
+            suspend => {
+        let target = target.clone();
+                    let args = args.clone();
+        ResumeCountAfterTargetSuspensionFrame { target, args }
+        },
+        )?;
+
+        self.resume_count_after_pattern_cm740_driven(target, pattern, args)
+    }
+
     fn resume_count_after_pattern(
         &mut self,
         target: Expr,
@@ -135,6 +263,28 @@ impl Session {
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
         self.system_option_bool(
+            "Count",
+            "Heads",
+            false,
+            options::CountLikeOptionWorking {
+                target,
+                pattern,
+                args,
+                finish: CountLikeFinish::Count,
+            },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_count_after_pattern_cm740_driven(
+        &mut self,
+        target: Expr,
+        pattern: Expr,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        self.system_option_bool_cm740_driven(
             "Count",
             "Heads",
             false,
@@ -167,6 +317,29 @@ impl Session {
         self.resume_member_q_after_pattern(target, pattern, args)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_member_q_after_target_cm740_driven(
+        &mut self,
+        target: Expr,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        let pattern_result = self.resolve_matcher_pattern_expr_owned_cm740_driven(args[1].clone());
+        let pattern = crate::resume_typed_or_suspend!(
+            self,
+            pattern_result,
+            ok(value) => Ok(value),
+            suspend => {
+        let target = target.clone();
+                    let args = args.clone();
+        ResumeMemberQAfterTargetSuspensionFrame { target, args }
+        },
+        )?;
+
+        self.resume_member_q_after_pattern_cm740_driven(target, pattern, args)
+    }
+
     fn resume_member_q_after_pattern(
         &mut self,
         target: Expr,
@@ -174,6 +347,28 @@ impl Session {
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
         self.system_option_bool(
+            "MemberQ",
+            "Heads",
+            false,
+            options::CountLikeOptionWorking {
+                target,
+                pattern,
+                args,
+                finish: CountLikeFinish::MemberQ,
+            },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_member_q_after_pattern_cm740_driven(
+        &mut self,
+        target: Expr,
+        pattern: Expr,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        self.system_option_bool_cm740_driven(
             "MemberQ",
             "Heads",
             false,
@@ -206,6 +401,29 @@ impl Session {
         self.resume_free_q_after_pattern(target, pattern, args)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_free_q_after_target_cm740_driven(
+        &mut self,
+        target: Expr,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        let pattern_result = self.resolve_matcher_pattern_expr_owned_cm740_driven(args[1].clone());
+        let pattern = crate::resume_typed_or_suspend!(
+            self,
+            pattern_result,
+            ok(value) => Ok(value),
+            suspend => {
+        let target = target.clone();
+                    let args = args.clone();
+        ResumeFreeQAfterTargetSuspensionFrame { target, args }
+        },
+        )?;
+
+        self.resume_free_q_after_pattern_cm740_driven(target, pattern, args)
+    }
+
     fn resume_free_q_after_pattern(
         &mut self,
         target: Expr,
@@ -213,6 +431,28 @@ impl Session {
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
         self.system_option_bool(
+            "FreeQ",
+            "Heads",
+            true,
+            options::CountLikeOptionWorking {
+                target,
+                pattern,
+                args,
+                finish: CountLikeFinish::FreeQ,
+            },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_free_q_after_pattern_cm740_driven(
+        &mut self,
+        target: Expr,
+        pattern: Expr,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        self.system_option_bool_cm740_driven(
             "FreeQ",
             "Heads",
             true,
@@ -234,11 +474,61 @@ impl Session {
         defaults: CasesTraversalConfig,
         finish: CountLikeFinish,
     ) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.finish_count_like_after_pattern_cm740_driven(
+                builtin_name,
+                target,
+                pattern,
+                args,
+                defaults,
+                finish,
+            );
+        }
+
         let traversal_result =
             self.resolve_traversal_without_limit_owned(args[2..].to_vec(), defaults);
         let witness = slot_witness(&traversal_result);
         match traversal_result {
             Ok(traversal) => self.finish_count_like_after_traversal(
+                builtin_name,
+                target,
+                pattern,
+                args,
+                finish,
+                traversal,
+            ),
+            Err(EvalError::InputRequired { request }) => resume_frames::suspend_count_like_pattern(
+                self,
+                witness,
+                request,
+                builtin_name,
+                target,
+                pattern,
+                args,
+                finish,
+            ),
+            Err(error) => Err(error),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_count_like_after_pattern_cm740_driven(
+        &mut self,
+        builtin_name: &'static str,
+        target: Expr,
+        pattern: Expr,
+        args: &SharedArgs,
+        defaults: CasesTraversalConfig,
+        finish: CountLikeFinish,
+    ) -> Result<Expr, EvalError> {
+        let traversal_result = crate::cm740_probe::around("P1610", || {
+            self.resolve_traversal_without_limit_owned_cm740_driven(args[2..].to_vec(), defaults)
+        });
+        let witness = slot_witness(&traversal_result);
+        match traversal_result {
+            Ok(traversal) => self.finish_count_like_after_traversal_cm740_driven(
                 builtin_name,
                 target,
                 pattern,
@@ -269,6 +559,17 @@ impl Session {
         finish: CountLikeFinish,
         traversal: TraversalWithoutLimitResolution,
     ) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.finish_count_like_after_traversal_cm740_driven(
+                builtin_name,
+                target,
+                pattern,
+                args,
+                finish,
+                traversal,
+            );
+        }
+
         let traversal = match traversal {
             TraversalWithoutLimitResolution::Valid(traversal) => traversal,
             TraversalWithoutLimitResolution::Invalid(error) => {
@@ -281,6 +582,40 @@ impl Session {
         };
 
         let outcome_result = self.count_pattern_matches_owned(target, pattern, traversal);
+        crate::resume_typed_or_suspend!(
+            self,
+            outcome_result,
+            ok(outcome) => Ok(finish.finish(outcome.count)),
+            suspend => FinishCountLikeAfterTraversalSuspensionFrame { finish },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_count_like_after_traversal_cm740_driven(
+        &mut self,
+        builtin_name: &'static str,
+        target: Expr,
+        pattern: Expr,
+        args: &SharedArgs,
+        finish: CountLikeFinish,
+        traversal: TraversalWithoutLimitResolution,
+    ) -> Result<Expr, EvalError> {
+        let traversal = match traversal {
+            TraversalWithoutLimitResolution::Valid(traversal) => traversal,
+            TraversalWithoutLimitResolution::Invalid(error) => {
+                return Ok(self.invalid_traversal_without_limit_call(
+                    builtin_name,
+                    args.as_ref(),
+                    error,
+                ));
+            }
+        };
+
+        let outcome_result = crate::cm740_probe::around("P1613", || {
+            self.count_pattern_matches_owned_cm740_driven(target, pattern, traversal)
+        });
         crate::resume_typed_or_suspend!(
             self,
             outcome_result,
@@ -303,6 +638,25 @@ impl Session {
             current_depth: 1,
         };
         self.drive_count_pattern_matches(state, ())
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn count_pattern_matches_owned_cm740_driven(
+        &mut self,
+        expr: Expr,
+        pattern: Expr,
+        traversal: CasesTraversalConfig,
+    ) -> Result<TraversalCountOutcome, EvalError> {
+        let state = SuspendedCountTraversal {
+            walker: PostOrderTraversal::new(expr, traversal.include_heads, 0),
+            pattern,
+            traversal,
+            count: 0,
+            current_depth: 1,
+        };
+        self.drive_count_pattern_matches_cm740_driven(state, ())
     }
 
     fn drive_count_pattern_matches<
@@ -347,12 +701,70 @@ impl Session {
         ))
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn drive_count_pattern_matches_cm740_driven<
+        Route: DefinitionResumeRoute<ContinueCountTraversalSuspensionFrame>,
+    >(
+        &mut self,
+        mut state: SuspendedCountTraversal,
+        route: Route,
+    ) -> Result<TraversalCountOutcome, Route::Error> {
+        while let Some(node) = state.walker.next() {
+            state.current_depth = node.depth;
+            if state.traversal.limit_reached(state.count) {
+                return Ok(TraversalCountOutcome::new(state.count, node.depth, true));
+            }
+            if !state.traversal.levels.matches(node.level, node.depth) {
+                if crate::cm740_probe::frame("P1610") {
+                    crate::cm740_probe::hit("P1610", "OmitActualTraversalLevelExclusion");
+                } else {
+                    continue;
+                }
+            }
+
+            let match_result = crate::cm740_probe::around("P1615", || {
+                self.match_expr_owned_cm740_driven(
+                    state.pattern.clone(),
+                    node.expr,
+                    SymbolExprMap::default(),
+                )
+            });
+            let witness = slot_witness(&match_result);
+            match match_result {
+                Ok(outcome) => {
+                    state.count += usize::from(outcome.matched);
+                    if state.traversal.limit_reached(state.count) {
+                        return Ok(TraversalCountOutcome::new(state.count, node.depth, true));
+                    }
+                }
+                Err(EvalError::InputRequired { request }) => {
+                    return resume_frames::suspend_count_traversal(
+                        self, witness, request, state, route,
+                    );
+                }
+                Err(error) => return Err(Route::failure(error)),
+            }
+        }
+
+        Ok(TraversalCountOutcome::new(
+            state.count,
+            state.current_depth,
+            false,
+        ))
+    }
+
     fn resume_count_traversal<'resume>(
         &mut self,
         mut state: SuspendedCountTraversal,
         outcome: CompiledMatchOutcome,
         token: ContinueToken<'resume, ContinueCountTraversalSuspensionFrame>,
     ) -> Result<TraversalCountOutcome, ResumeStop<TraversalCountOutcome>> {
+        if crate::cm740_probe::driven() {
+            return self.resume_count_traversal_cm740_driven(state, outcome, token);
+        }
+
         state.count += usize::from(outcome.matched);
         if state.traversal.limit_reached(state.count) {
             return Ok(TraversalCountOutcome::new(
@@ -362,6 +774,30 @@ impl Session {
             ));
         }
         self.drive_count_pattern_matches(state, token)
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_count_traversal_cm740_driven<'resume>(
+        &mut self,
+        mut state: SuspendedCountTraversal,
+        outcome: CompiledMatchOutcome,
+        token: ContinueToken<'resume, ContinueCountTraversalSuspensionFrame>,
+    ) -> Result<TraversalCountOutcome, ResumeStop<TraversalCountOutcome>> {
+        if crate::cm740_probe::frame("P1615") {
+            crate::cm740_probe::hit("P1615", "OmitMatchedCountIncrement");
+        } else {
+            state.count += usize::from(outcome.matched);
+        }
+        if state.traversal.limit_reached(state.count) {
+            return Ok(TraversalCountOutcome::new(
+                state.count,
+                state.current_depth,
+                true,
+            ));
+        }
+        self.drive_count_pattern_matches_cm740_driven(state, token)
     }
 }
 

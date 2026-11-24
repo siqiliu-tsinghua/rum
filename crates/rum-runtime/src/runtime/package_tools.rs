@@ -228,12 +228,21 @@ impl Session {
             context_filters,
         };
         if overwrite {
-            return self.runtime_option_expr_for_symbol(
-                explicit_options.as_ref(),
-                &Symbol::system("DumpSave"),
-                "CompressionLevel",
-                next,
-            );
+            return (if crate::cm740_probe::driven() {
+                self.runtime_option_expr_for_symbol_cm740_driven(
+                    explicit_options.as_ref(),
+                    &Symbol::system("DumpSave"),
+                    "CompressionLevel",
+                    next,
+                )
+            } else {
+                self.runtime_option_expr_for_symbol(
+                    explicit_options.as_ref(),
+                    &Symbol::system("DumpSave"),
+                    "CompressionLevel",
+                    next,
+                )
+            });
         }
         next.persist(self)
     }

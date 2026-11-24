@@ -55,7 +55,11 @@ impl Session {
         option_exprs: Vec<Expr>,
         call_args: Vec<Expr>,
     ) -> Result<Expr, EvalError> {
-        let pattern_result = self.resolve_matcher_pattern_expr_owned(pattern_expr);
+        let pattern_result = (if crate::cm740_probe::driven() {
+            self.resolve_matcher_pattern_expr_owned_cm740_driven(pattern_expr)
+        } else {
+            self.resolve_matcher_pattern_expr_owned(pattern_expr)
+        });
         match pattern_result {
             Ok(pattern) => {
                 self.resume_delete_cases_after_pattern(target, pattern, option_exprs, call_args)
@@ -79,7 +83,11 @@ impl Session {
             .get(1)
             .expect("DeleteCases suspended call stores its pattern")
             .clone();
-        let pattern_result = self.resolve_matcher_pattern_expr_owned(pattern_expr);
+        let pattern_result = (if crate::cm740_probe::driven() {
+            self.resolve_matcher_pattern_expr_owned_cm740_driven(pattern_expr)
+        } else {
+            self.resolve_matcher_pattern_expr_owned(pattern_expr)
+        });
         match pattern_result {
             Ok(pattern) => {
                 self.resume_delete_cases_after_pattern_suspended(target, pattern, call_args)
@@ -99,16 +107,29 @@ impl Session {
         pattern: Expr,
         call_args: SharedArgs,
     ) -> Result<Expr, EvalError> {
-        self.system_option_bool(
-            "DeleteCases",
-            "Heads",
-            false,
-            options::DeleteCasesOptionWorking::Suspended {
-                target,
-                pattern,
-                call_args,
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.system_option_bool_cm740_driven(
+                "DeleteCases",
+                "Heads",
+                false,
+                options::DeleteCasesOptionWorking::Suspended {
+                    target,
+                    pattern,
+                    call_args,
+                },
+            )
+        } else {
+            self.system_option_bool(
+                "DeleteCases",
+                "Heads",
+                false,
+                options::DeleteCasesOptionWorking::Suspended {
+                    target,
+                    pattern,
+                    call_args,
+                },
+            )
+        })
     }
 
     fn resume_delete_cases_after_pattern(
@@ -118,17 +139,31 @@ impl Session {
         option_exprs: Vec<Expr>,
         call_args: Vec<Expr>,
     ) -> Result<Expr, EvalError> {
-        self.system_option_bool(
-            "DeleteCases",
-            "Heads",
-            false,
-            options::DeleteCasesOptionWorking::Owned {
-                target,
-                pattern,
-                option_exprs,
-                call_args,
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.system_option_bool_cm740_driven(
+                "DeleteCases",
+                "Heads",
+                false,
+                options::DeleteCasesOptionWorking::Owned {
+                    target,
+                    pattern,
+                    option_exprs,
+                    call_args,
+                },
+            )
+        } else {
+            self.system_option_bool(
+                "DeleteCases",
+                "Heads",
+                false,
+                options::DeleteCasesOptionWorking::Owned {
+                    target,
+                    pattern,
+                    option_exprs,
+                    call_args,
+                },
+            )
+        })
     }
 
     fn finish_delete_cases_after_resolved_traversal(

@@ -189,6 +189,59 @@ impl Session {
         result
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn evaluate_call_cm740_driven(
+        &mut self,
+        head: SharedExpr,
+        args: SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        let runtime_profile_total = runtime_path_timing_start_adopted(self, "evaluate_call.total");
+        let runtime_profile_head =
+            runtime_path_timing_start_adopted(self, "evaluate_call.head_eval");
+        let head_kind = EvaluateAtomFastPathKind::classify(self, head.as_ref());
+        let runtime_profile_fast_path =
+            runtime_path_timing_start_adopted(self, "evaluate_atom_fast_path.total");
+        let runtime_profile_kind =
+            runtime_path_timing_start_adopted(self, head_kind.profile_name());
+        // Only the evaluating-head branch needs a return boundary for the
+        // witnessed macro. Stable heads recurse directly through the shared entry.
+        let result = match head_kind {
+            EvaluateAtomFastPathKind::StableSymbol | EvaluateAtomFastPathKind::Atom => {
+                record_profile_runtime_path_timing_adopted_ok(self, runtime_profile_kind);
+                record_profile_runtime_path_timing_adopted_ok(self, runtime_profile_fast_path);
+                record_profile_runtime_path_timing_adopted_ok(self, runtime_profile_head);
+                match crate::cm740_probe::around_ok_profile_return(
+                    "P0484",
+                    "OrdinaryActualSuccessBeforeTail",
+                    || self.resume_call_after_head_cm740_driven(head, args),
+                ) {
+                    crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+                    crate::cm740_probe::OkAction::Continue(result) => result,
+                }
+            }
+            EvaluateAtomFastPathKind::UnstableSymbol | EvaluateAtomFastPathKind::Call => {
+                crate::cm740_probe::around_hit(
+                    "C3.evaluate_call.unstable_head",
+                    "ActualWholeResultAtDistinctHeadOwner",
+                    false,
+                    || {
+                        self.evaluate_unstable_call_head_cm740_driven(
+                            head,
+                            args,
+                            runtime_profile_kind,
+                            runtime_profile_fast_path,
+                            runtime_profile_head,
+                        )
+                    },
+                )
+            }
+        };
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_total, &result);
+        result
+    }
+
     fn evaluate_unstable_call_head(
         &mut self,
         head: SharedExpr,
@@ -204,6 +257,40 @@ impl Session {
         record_profile_runtime_path_timing_adopted(self, runtime_profile_head, &produced);
         match produced {
             Ok(value) => self.resume_call_after_head(value, args),
+            Err(EvalError::InputRequired { request }) => witness.suspend(
+                self,
+                request,
+                EvaluateCallSuspensionFrame {
+                    args_for_resume: args,
+                },
+            ),
+            Err(error) => Err(error),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_unstable_call_head_cm740_driven(
+        &mut self,
+        head: SharedExpr,
+        args: SharedArgs,
+        runtime_profile_kind: Option<crate::runtime::profiling::RuntimePathTimingToken>,
+        runtime_profile_fast_path: Option<crate::runtime::profiling::RuntimePathTimingToken>,
+        runtime_profile_head: Option<crate::runtime::profiling::RuntimePathTimingToken>,
+    ) -> Result<Expr, EvalError> {
+        let produced = crate::cm740_probe::around_ok(
+            "P0485",
+            "ActualTypedCarrierBeforeOuterTail",
+            false,
+            || self.evaluate_cm740_driven(head.into_owned()),
+        );
+        let witness = slot_witness(&produced);
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_kind, &produced);
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_fast_path, &produced);
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_head, &produced);
+        match produced {
+            Ok(value) => self.resume_call_after_head_cm740_driven(value, args),
             Err(EvalError::InputRequired { request }) => witness.suspend(
                 self,
                 request,
@@ -231,6 +318,45 @@ impl Session {
         let runtime_profile_dispatch =
             runtime_path_timing_start_adopted(self, "evaluate_call.dispatch");
         let result = self.resume_call_with_dispatch_plan(evaluated_head, plan, state, 0, None);
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_dispatch, &result);
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_total, &result);
+        result
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn resume_call_after_head_cm740_driven(
+        &mut self,
+        evaluated_head: impl Into<SharedExpr>,
+        args: SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        let evaluated_head = evaluated_head.into();
+        let runtime_profile_total =
+            runtime_path_timing_start_adopted(self, "evaluate_call.resume_after_head");
+        let runtime_profile_plan = runtime_path_timing_start("evaluate_call.build_dispatch_plan");
+        let plan = self.build_call_dispatch_plan(evaluated_head.as_ref());
+        record_profile_runtime_path_timing(runtime_profile_plan, RuntimeProfileOutcome::Ok);
+        let state = CallDispatchState::new(args);
+
+        let runtime_profile_dispatch =
+            runtime_path_timing_start_adopted(self, "evaluate_call.dispatch");
+        let result = match crate::cm740_probe::around_ok_profile_return(
+            "P0489",
+            "OrdinaryActualSuccessBeforeTail",
+            || {
+                self.resume_call_with_dispatch_plan_cm740_driven(
+                    evaluated_head,
+                    plan,
+                    state,
+                    0,
+                    None,
+                )
+            },
+        ) {
+            crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+            crate::cm740_probe::OkAction::Continue(result) => result,
+        };
         record_profile_runtime_path_timing_adopted(self, runtime_profile_dispatch, &result);
         record_profile_runtime_path_timing_adopted(self, runtime_profile_total, &result);
         result
@@ -326,6 +452,142 @@ impl Session {
                 plan.attributes,
                 plan.builtin_spec,
                 &mut state,
+            );
+            let witness = slot_witness(&produced);
+            record_profile_runtime_path_timing_adopted_defer_pause(
+                self,
+                runtime_profile_stage,
+                &produced,
+            );
+            return match produced {
+                Ok(value) => match value {
+                    Some(value) => Ok(value),
+                    None => {
+                        stage_index += 1;
+                        continue;
+                    }
+                },
+                Err(EvalError::InputRequired { request }) => {
+                    let failed = suspend_call_stage_with_boundary(
+                        self,
+                        evaluated_head,
+                        plan,
+                        state,
+                        stage_index,
+                        unevaluated_restore,
+                        witness,
+                        request,
+                    );
+                    pause_call_stage_at_finish(self, stage.profile_name());
+                    failed
+                }
+                Err(error) => Err(error),
+            };
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resume_call_with_dispatch_plan_cm740_driven(
+        &mut self,
+        evaluated_head: impl Into<SharedExpr>,
+        plan: CallDispatchPlan,
+        mut state: CallDispatchState,
+        mut stage_index: usize,
+        mut unevaluated_restore: Option<Box<UnevaluatedRestorePlan>>,
+    ) -> Result<Expr, EvalError> {
+        let evaluated_head = evaluated_head.into();
+        loop {
+            if stage_index >= plan.len() {
+                let final_args = match unevaluated_restore {
+                    Some(restore) => {
+                        let mut restored_args = restore.prepared_args.into_vec();
+                        for (position, wrapper) in restore.wrappers {
+                            restored_args[position] = wrapper;
+                        }
+                        self.normalize_call_args_shared(
+                            evaluated_head.as_ref(),
+                            SharedArgs::new(restored_args),
+                            plan.attributes,
+                        )
+                    }
+                    None => state.into_final_shared_args(),
+                };
+                return Ok(Expr::call_shared(evaluated_head, final_args));
+            }
+
+            let stage = plan.stage(stage_index);
+            if stage == CallDispatchStage::PrepareArguments && state.is_prepared() {
+                stage_index += 1;
+                continue;
+            }
+
+            let runtime_profile_stage =
+                runtime_path_timing_start_adopted(self, stage.profile_name());
+            if stage == CallDispatchStage::PrepareArguments {
+                let raw_args = state.take_raw_args();
+                let produced = crate::cm740_probe::around("P0492", || {
+                    self.prepare_arguments_for_call_with_unevaluated_restore_cm740_driven(
+                        evaluated_head.as_ref().clone(),
+                        plan.attributes,
+                        raw_args,
+                    )
+                });
+                let witness = slot_witness(&produced);
+                debug_assert!(unevaluated_restore.is_none());
+                unevaluated_restore = 'prepared_arguments: {
+                    let failed: Result<Expr, EvalError> = match produced {
+                        Err(EvalError::InputRequired { request }) => {
+                            let failed = suspend_prepared_stage_with_boundary(
+                                self,
+                                evaluated_head,
+                                plan.into_suspended(),
+                                state,
+                                stage_index,
+                                runtime_profile_stage,
+                                witness,
+                                request,
+                            );
+                            pause_call_stage_at_finish(self, stage.profile_name());
+                            return failed;
+                        }
+                        Err(error) => {
+                            complete_phase_error_at_finish(self, &runtime_profile_stage, &error);
+                            Err(error)
+                        }
+                        Ok(prepared) => {
+                            break 'prepared_arguments self.install_prepared_call_arguments(
+                                evaluated_head.as_ref(),
+                                plan.attributes,
+                                &mut state,
+                                prepared,
+                            );
+                        }
+                    };
+                    record_profile_runtime_path_timing(
+                        runtime_profile_stage,
+                        runtime_profile_outcome_for_expr_result(&failed),
+                    );
+                    return failed;
+                };
+                record_profile_runtime_path_timing_adopted_none(self, runtime_profile_stage);
+                stage_index += 1;
+                continue;
+            }
+            let produced = crate::cm740_probe::around_some(
+                "P0494",
+                "ActualTypedCarrierBeforeOuterTail",
+                false,
+                || {
+                    self.run_call_dispatch_stage_cm740_driven(
+                        stage,
+                        evaluated_head.as_ref(),
+                        plan.attributes,
+                        plan.builtin_spec,
+                        &mut state,
+                    )
+                },
             );
             let witness = slot_witness(&produced);
             record_profile_runtime_path_timing_adopted_defer_pause(
@@ -486,6 +748,143 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resume_suspended_call_with_dispatch_plan_cm740_driven(
+        &mut self,
+        evaluated_head: SharedExpr,
+        plan: SuspendedCallDispatchPlan,
+        mut state: CallDispatchState,
+        mut stage_index: usize,
+        mut unevaluated_restore: Option<SuspendedUnevaluatedRestorePlan>,
+    ) -> Result<Expr, EvalError> {
+        loop {
+            if stage_index >= plan.len() {
+                let terminal_restore = unevaluated_restore;
+                let final_args = match terminal_restore {
+                    Some(restore) => {
+                        let mut restored_args = restore.prepared_args.into_vec();
+                        for (position, wrapper) in restore.wrappers.iter() {
+                            restored_args[*position] = wrapper.clone();
+                        }
+                        self.normalize_call_args_shared(
+                            evaluated_head.as_ref(),
+                            SharedArgs::new(restored_args),
+                            plan.attributes,
+                        )
+                    }
+                    None => state.into_final_shared_args(),
+                };
+                return Ok(Expr::call_shared(evaluated_head, final_args));
+            }
+
+            let stage = plan.stage(stage_index);
+            if stage == CallDispatchStage::PrepareArguments && state.is_prepared() {
+                stage_index += 1;
+                continue;
+            }
+
+            let runtime_profile_stage =
+                runtime_path_timing_start_adopted(self, stage.profile_name());
+            if stage == CallDispatchStage::PrepareArguments {
+                let raw_args = state.take_raw_args();
+                let produced = self
+                    .prepare_arguments_for_call_with_unevaluated_restore_cm740_driven(
+                        evaluated_head.as_ref().clone(),
+                        plan.attributes,
+                        raw_args,
+                    );
+                let witness = slot_witness(&produced);
+                debug_assert!(unevaluated_restore.is_none());
+                unevaluated_restore = 'prepared_arguments: {
+                    let failed: Result<Expr, EvalError> = match produced {
+                        Err(EvalError::InputRequired { request }) => {
+                            let failed = suspend_resumed_prepared_stage_with_boundary(
+                                self,
+                                evaluated_head,
+                                plan,
+                                state,
+                                stage_index,
+                                runtime_profile_stage,
+                                witness,
+                                request,
+                            );
+                            pause_call_stage_at_finish(self, stage.profile_name());
+                            return failed;
+                        }
+                        Err(error) => {
+                            complete_phase_error_at_finish(self, &runtime_profile_stage, &error);
+                            Err(error)
+                        }
+                        Ok(prepared) => {
+                            break 'prepared_arguments self
+                                .install_prepared_call_arguments(
+                                    evaluated_head.as_ref(),
+                                    plan.attributes,
+                                    &mut state,
+                                    prepared,
+                                )
+                                .map(|restore| SuspendedUnevaluatedRestorePlan::freeze(*restore));
+                        }
+                    };
+                    record_profile_runtime_path_timing(
+                        runtime_profile_stage,
+                        runtime_profile_outcome_for_expr_result(&failed),
+                    );
+                    return failed;
+                };
+                record_profile_runtime_path_timing_adopted_none(self, runtime_profile_stage);
+                stage_index += 1;
+                continue;
+            }
+            let produced = crate::cm740_probe::around_some(
+                "P0498",
+                "ActualTypedCarrierBeforeOuterTail",
+                false,
+                || {
+                    self.run_call_dispatch_stage_cm740_driven(
+                        stage,
+                        evaluated_head.as_ref(),
+                        plan.attributes,
+                        plan.builtin_spec,
+                        &mut state,
+                    )
+                },
+            );
+            let witness = slot_witness(&produced);
+            record_profile_runtime_path_timing_adopted_defer_pause(
+                self,
+                runtime_profile_stage,
+                &produced,
+            );
+            return match produced {
+                Ok(value) => match value {
+                    Some(value) => Ok(value),
+                    None => {
+                        stage_index += 1;
+                        continue;
+                    }
+                },
+                Err(EvalError::InputRequired { request }) => {
+                    let failed = suspend_resumed_call_stage_with_boundary(
+                        self,
+                        evaluated_head,
+                        plan,
+                        state,
+                        stage_index,
+                        unevaluated_restore,
+                        witness,
+                        request,
+                    );
+                    pause_call_stage_at_finish(self, stage.profile_name());
+                    failed
+                }
+                Err(error) => Err(error),
+            };
+        }
+    }
+
     fn install_prepared_call_arguments(
         &mut self,
         head: &Expr,
@@ -530,6 +929,42 @@ impl Session {
         )
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_prepared_call_dispatch_frame_cm740_driven<const PROFILED: bool>(
+        &mut self,
+        evaluated_head: SharedExpr,
+        plan: SuspendedCallDispatchPlan,
+        mut state: CallDispatchState,
+        stage_index: usize,
+        outcome: Result<PreparedCallArguments, EvalError>,
+    ) -> Result<Expr, EvalError> {
+        let prepared = outcome?;
+        let restore = self
+            .install_prepared_call_arguments(
+                evaluated_head.as_ref(),
+                plan.attributes,
+                &mut state,
+                prepared,
+            )
+            .map(|restore| SuspendedUnevaluatedRestorePlan::freeze(*restore));
+        if PROFILED {
+            if crate::cm740_probe::frame("P0492") {
+                crate::cm740_probe::hit("P0492", "OmitEnabledPreparedStageCompletion");
+            } else {
+                self.logical_complete_prepared_arguments();
+            }
+        }
+        self.resume_suspended_call_with_dispatch_plan_cm740_driven(
+            evaluated_head,
+            plan,
+            state,
+            stage_index + 1,
+            restore,
+        )
+    }
+
     fn resume_suspended_call_dispatch_frame(
         &mut self,
         evaluated_head: SharedExpr,
@@ -541,13 +976,25 @@ impl Session {
     ) -> Result<Expr, EvalError> {
         match outcome? {
             Some(result) => Ok(result),
-            None => self.resume_suspended_call_with_dispatch_plan(
-                evaluated_head,
-                plan,
-                state,
-                stage_index + 1,
-                unevaluated_restore,
-            ),
+            None => {
+                (if crate::cm740_probe::driven() {
+                    self.resume_suspended_call_with_dispatch_plan_cm740_driven(
+                        evaluated_head,
+                        plan,
+                        state,
+                        stage_index + 1,
+                        unevaluated_restore,
+                    )
+                } else {
+                    self.resume_suspended_call_with_dispatch_plan(
+                        evaluated_head,
+                        plan,
+                        state,
+                        stage_index + 1,
+                        unevaluated_restore,
+                    )
+                })
+            }
         }
     }
 }
@@ -802,6 +1249,10 @@ impl TypedFrame for ProfiledPreparedDispatchFrame {
         outcome: Result<PreparedCallArguments, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_73dc(self, session, outcome, _token);
+        }
+
         TypedAction::complete(session.resume_prepared_call_dispatch_frame::<true>(
             self.prepared.evaluated_head.clone(),
             self.prepared.plan.clone(),
@@ -809,5 +1260,32 @@ impl TypedFrame for ProfiledPreparedDispatchFrame {
             self.prepared.stage_index,
             outcome,
         ))
+    }
+}
+impl ProfiledPreparedDispatchFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_73dc<'resume>(
+        self: Arc<Self>,
+        session: &mut Session,
+        outcome: Result<PreparedCallArguments, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        let result = {
+            let _cm740_producer = crate::cm740_probe::enter("C10.prepared.profiled_consumer");
+            session.resume_prepared_call_dispatch_frame_cm740_driven::<true>(
+                self.prepared.evaluated_head.clone(),
+                self.prepared.plan.clone(),
+                self.prepared.state.clone(),
+                self.prepared.stage_index,
+                outcome,
+            )
+        };
+        crate::runtime::profiling::logical::cm740_c10_arm(matches!(
+            &result,
+            Err(EvalError::InputRequired { .. })
+        ));
+        TypedAction::complete(result)
     }
 }

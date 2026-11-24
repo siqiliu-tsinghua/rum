@@ -327,6 +327,28 @@ impl Session {
         result
     }
 
+    /// Evaluates an expression to a fixed point under the current session state.
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub fn evaluate_cm740_driven(&mut self, expr: Expr) -> Result<Expr, EvalError> {
+        if self.evaluation_depth.get() == 0 {
+            return self.evaluate_at_root_cm740_driven(expr);
+        }
+        self.record_profile_evaluate_entry();
+        let runtime_profile = runtime_path_timing_start_adopted(self, "evaluate.total");
+        let result = match crate::cm740_probe::around_ok_profile_return(
+            "P1472",
+            "OrdinaryActualSuccessBeforeTail",
+            || self.evaluate_profiled_fixed_point_cm740_driven(expr),
+        ) {
+            crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+            crate::cm740_probe::OkAction::Continue(result) => result,
+        };
+        record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
+        result
+    }
+
     #[cold]
     #[inline(never)]
     fn evaluate_at_root(&mut self, expr: Expr) -> Result<Expr, EvalError> {
@@ -336,6 +358,20 @@ impl Session {
         self.record_profile_evaluate_entry();
         let runtime_profile = runtime_path_timing_start_adopted(self, "evaluate.total");
         let result = self.evaluate_profiled_fixed_point(expr);
+        record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
+        result
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_at_root_cm740_driven(&mut self, expr: Expr) -> Result<Expr, EvalError> {
+        let _entry = NativeStackEntry::enter();
+        let _scope = crate::runtime::profiling::logical::ExecutionScope::enter(self);
+        self.evaluation_depth.restore(0);
+        self.record_profile_evaluate_entry();
+        let runtime_profile = runtime_path_timing_start_adopted(self, "evaluate.total");
+        let result = self.evaluate_profiled_fixed_point_cm740_driven(expr);
         record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
         result
     }
@@ -389,6 +425,87 @@ impl Session {
                 Ok(value) => Ok(value),
                 Err(EvalError::InputRequired { request }) => {
                     return suspend_initial_evaluation_once_with_boundary(
+                        self,
+                        current,
+                        evaluation_passes,
+                        fixed_point_seen,
+                        witness,
+                        request,
+                    );
+                }
+                Err(error) => Err(error),
+            }?;
+
+            let runtime_profile_equal = runtime_path_timing_start("evaluate.fixed_point_equal");
+            let fixed_point = next == current;
+            record_profile_runtime_path_timing(runtime_profile_equal, RuntimeProfileOutcome::Ok);
+            if fixed_point {
+                return Ok(next);
+            }
+
+            let runtime_profile_update = runtime_path_timing_start("evaluate.trace_update");
+            self.push_evaluation_pass_trace(&current, &next);
+
+            current = next;
+            record_profile_runtime_path_timing(runtime_profile_update, RuntimeProfileOutcome::Ok);
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_profiled_fixed_point_cm740_driven(
+        &mut self,
+        expr: Expr,
+    ) -> Result<Expr, EvalError> {
+        let mut current = expr;
+        let mut evaluation_passes = 0;
+        let mut fixed_point_seen = Vec::new();
+
+        loop {
+            if evaluation_passes >= self.resource_limits.evaluation_pass_limit {
+                return Err(EvalError::EvaluationPassLimitExceeded {
+                    limit: self.resource_limits.evaluation_pass_limit,
+                });
+            }
+            evaluation_passes += 1;
+
+            self.enforce_active_resource_limits_for_expr(&current)?;
+            let runtime_profile_stability = runtime_path_timing_start("evaluate.stability_check");
+            let stable = self.cached_expr_is_evaluation_stable(&current);
+            record_profile_runtime_path_timing(
+                runtime_profile_stability,
+                RuntimeProfileOutcome::Ok,
+            );
+            if stable {
+                return Ok(current);
+            }
+
+            let track_cycle = should_track_evaluation_cycle(&current);
+            if track_cycle {
+                if fixed_point_seen.iter().any(|previous| previous == &current) {
+                    return Err(evaluation_cycle_error(&current));
+                }
+                fixed_point_seen.push(current.clone());
+            }
+
+            let runtime_profile_once =
+                runtime_path_timing_start_adopted(self, "evaluate.once_unstable");
+            let next_result = self
+                .evaluate_once_unstable_after_input_check_with_cycle_tracking_cm740_driven(
+                    current.clone(),
+                    track_cycle,
+                );
+            let witness = crate::runtime::kernel_api::slot_witness(&next_result);
+            record_profile_runtime_path_timing_adopted_defer_pause(
+                self,
+                runtime_profile_once,
+                &next_result,
+            );
+            let next = match next_result {
+                Ok(value) => Ok(value),
+                Err(EvalError::InputRequired { request }) => {
+                    return suspend_initial_evaluation_once_with_boundary_cm740_driven(
                         self,
                         current,
                         evaluation_passes,
@@ -496,6 +613,103 @@ impl Session {
             record_profile_runtime_path_timing(runtime_profile_update, RuntimeProfileOutcome::Ok);
         }
     }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_fixed_point_from_cm740_driven(
+        &mut self,
+        mut state: SuspendedFixedPointState,
+        next: Expr,
+        cm740_omit_equal_phase: bool,
+    ) -> Result<Expr, EvalError> {
+        // Same calls the queued loop uses at resolution.rs:403 and :410.
+        let fixed_point = if cm740_omit_equal_phase {
+            crate::cm740_probe::hit(
+                "P1476",
+                "OmitResumedEqualityPhaseWithSynchronousEventObserver",
+            );
+            next == state.current
+        } else {
+            let runtime_profile_equal = runtime_path_timing_start("evaluate.fixed_point_equal");
+            let fixed_point = next == state.current;
+            record_profile_runtime_path_timing(runtime_profile_equal, RuntimeProfileOutcome::Ok);
+            fixed_point
+        };
+        if fixed_point {
+            return Ok(next);
+        }
+
+        let runtime_profile_update = runtime_path_timing_start("evaluate.trace_update");
+        self.push_evaluation_pass_trace(&state.current, &next);
+        state.current = next;
+        record_profile_runtime_path_timing(runtime_profile_update, RuntimeProfileOutcome::Ok);
+
+        loop {
+            if state.evaluation_passes >= self.resource_limits.evaluation_pass_limit {
+                return Err(EvalError::EvaluationPassLimitExceeded {
+                    limit: self.resource_limits.evaluation_pass_limit,
+                });
+            }
+            state.evaluation_passes += 1;
+
+            self.enforce_active_resource_limits_for_expr(&state.current)?;
+            let runtime_profile_stability = runtime_path_timing_start("evaluate.stability_check");
+            let stable = self.cached_expr_is_evaluation_stable(&state.current);
+            record_profile_runtime_path_timing(
+                runtime_profile_stability,
+                RuntimeProfileOutcome::Ok,
+            );
+            if stable {
+                return Ok(state.current);
+            }
+
+            let track_cycle = should_track_evaluation_cycle(&state.current);
+            if track_cycle {
+                if state.seen.contains(&state.current) {
+                    return Err(EvalError::EvaluationCycleDetected {
+                        expr: state.current.to_string(),
+                    });
+                }
+                state.seen = state.seen.appended(state.current.clone());
+            }
+
+            crate::runtime::profiling::logical::open_logical_phase(self, "evaluate.once_unstable");
+            let next_result = crate::cm740_probe::around("P1476", || {
+                self.evaluate_once_unstable_after_input_check_with_cycle_tracking_cm740_driven(
+                    state.current.clone(),
+                    track_cycle,
+                )
+            });
+            let witness = crate::runtime::kernel_api::slot_witness(&next_result);
+            crate::runtime::profiling::logical::complete_logical_expr_defer_pause(
+                self,
+                "evaluate.once_unstable",
+                &next_result,
+            );
+            let next = match next_result {
+                Ok(value) => value,
+                Err(EvalError::InputRequired { request }) => {
+                    return suspend_resumed_evaluation_once_with_boundary_cm740_driven(
+                        self, state, witness, request,
+                    );
+                }
+                Err(error) => return Err(error),
+            };
+
+            let runtime_profile_equal = runtime_path_timing_start("evaluate.fixed_point_equal");
+            let fixed_point = next == state.current;
+            record_profile_runtime_path_timing(runtime_profile_equal, RuntimeProfileOutcome::Ok);
+            if fixed_point {
+                return Ok(next);
+            }
+
+            let runtime_profile_update = runtime_path_timing_start("evaluate.trace_update");
+            self.push_evaluation_pass_trace(&state.current, &next);
+            state.current = next;
+            record_profile_runtime_path_timing(runtime_profile_update, RuntimeProfileOutcome::Ok);
+        }
+    }
 }
 
 #[cfg(test)]
@@ -571,12 +785,56 @@ fn suspend_initial_evaluation_once_with_boundary(
 
 #[cold]
 #[inline(never)]
+#[allow(dead_code)]
+fn suspend_initial_evaluation_once_with_boundary_cm740_driven(
+    session: &mut Session,
+    current: Expr,
+    evaluation_passes: usize,
+    fixed_point_seen: Vec<Expr>,
+    witness: crate::runtime::kernel_api::SlotWitness<Expr>,
+    request: crate::runtime::RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    let _owner = crate::cm740_probe::queue_transport::source_evaluation_owner("P1470");
+    crate::runtime::profiling::logical::pause_phase_at_finish(session, "evaluate.once_unstable");
+    let result = witness.suspend_evaluation_return(
+        session,
+        request,
+        EvaluateProfiledFixedPointSuspensionFrame::freeze(
+            current,
+            evaluation_passes,
+            fixed_point_seen,
+        ),
+    );
+    result
+}
+
+#[cold]
+#[inline(never)]
 fn suspend_resumed_evaluation_once_with_boundary(
     session: &mut Session,
     state: SuspendedFixedPointState,
     witness: crate::runtime::kernel_api::SlotWitness<Expr>,
     request: crate::runtime::RuntimeInputRequest,
 ) -> Result<Expr, EvalError> {
+    crate::runtime::profiling::logical::pause_phase_at_finish(session, "evaluate.once_unstable");
+    let result = witness.suspend_evaluation_return(
+        session,
+        request,
+        ResumeFixedPointFromSuspensionFrame { state },
+    );
+    result
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn suspend_resumed_evaluation_once_with_boundary_cm740_driven(
+    session: &mut Session,
+    state: SuspendedFixedPointState,
+    witness: crate::runtime::kernel_api::SlotWitness<Expr>,
+    request: crate::runtime::RuntimeInputRequest,
+) -> Result<Expr, EvalError> {
+    let _owner = crate::cm740_probe::queue_transport::source_evaluation_owner("P1471");
     crate::runtime::profiling::logical::pause_phase_at_finish(session, "evaluate.once_unstable");
     let result = witness.suspend_evaluation_return(
         session,

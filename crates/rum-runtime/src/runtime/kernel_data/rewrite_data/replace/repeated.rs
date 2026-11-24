@@ -52,15 +52,27 @@ impl Session {
         max_iterations_expr: Option<Expr>,
         call_args: Vec<Expr>,
     ) -> Result<Expr, EvalError> {
-        self.drive_rewrite_rule_exprs_owned(
-            rules_expr.clone(),
-            RewriteRuleExprContinuation::ReplaceRepeated {
-                current,
-                rules_input: rules_expr,
-                max_iterations_expr,
-                call_args,
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.drive_rewrite_rule_exprs_owned_cm740_driven(
+                rules_expr.clone(),
+                RewriteRuleExprContinuation::ReplaceRepeated {
+                    current,
+                    rules_input: rules_expr,
+                    max_iterations_expr,
+                    call_args,
+                },
+            )
+        } else {
+            self.drive_rewrite_rule_exprs_owned(
+                rules_expr.clone(),
+                RewriteRuleExprContinuation::ReplaceRepeated {
+                    current,
+                    rules_input: rules_expr,
+                    max_iterations_expr,
+                    call_args,
+                },
+            )
+        })
     }
 
     pub(in crate::runtime) fn resume_replace_repeated_after_rule_exprs(
@@ -139,6 +151,10 @@ impl Session {
         rules: RewriteRulePlan,
         effective_limit: usize,
     ) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.replace_repeated_from_start_cm740_driven(current, rules, effective_limit);
+        }
+
         for iteration in 0..effective_limit {
             let replaced = match self.apply_replace_all_with_plan(
                 current.clone(),
@@ -157,6 +173,59 @@ impl Session {
                 }
             };
             let next = match self.evaluate(replaced) {
+                Ok(next) => next,
+                Err(error) => {
+                    return self.suspend_replace_repeated_evaluation(
+                        current,
+                        rules,
+                        iteration,
+                        effective_limit,
+                        error,
+                    );
+                }
+            };
+            if next == current {
+                return Ok(next);
+            }
+            current = next;
+        }
+        Err(EvalError::IterationLimitExceeded {
+            limit: effective_limit,
+        })
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn replace_repeated_from_start_cm740_driven(
+        &mut self,
+        mut current: Expr,
+        rules: RewriteRulePlan,
+        effective_limit: usize,
+    ) -> Result<Expr, EvalError> {
+        for iteration in 0..effective_limit {
+            let replaced = match {
+                let _cm740_producer = crate::cm740_probe::enter("P1037");
+                self.apply_replace_all_with_plan_cm740_driven(
+                    current.clone(),
+                    rules.clone(),
+                    RuleApplicationSource::ReplaceRepeated,
+                )
+            } {
+                Ok(replaced) => replaced,
+                Err(error) => {
+                    return self.suspend_replace_repeated_pass(
+                        current,
+                        rules,
+                        iteration,
+                        effective_limit,
+                        error,
+                    );
+                }
+            };
+            let next = match crate::cm740_probe::around("P1038", || {
+                self.evaluate_cm740_driven(replaced)
+            }) {
                 Ok(next) => next,
                 Err(error) => {
                     return self.suspend_replace_repeated_evaluation(
@@ -237,11 +306,19 @@ impl Session {
             });
         }
 
-        let replaced_result = self.apply_replace_all_with_plan(
-            current.clone(),
-            rules.clone(),
-            RuleApplicationSource::ReplaceRepeated,
-        );
+        let replaced_result = (if crate::cm740_probe::driven() {
+            self.apply_replace_all_with_plan_cm740_driven(
+                current.clone(),
+                rules.clone(),
+                RuleApplicationSource::ReplaceRepeated,
+            )
+        } else {
+            self.apply_replace_all_with_plan(
+                current.clone(),
+                rules.clone(),
+                RuleApplicationSource::ReplaceRepeated,
+            )
+        });
         crate::resume_or_suspend!(
             self,
             replaced_result,
@@ -509,6 +586,10 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeReplaceRepeatedLoopSu
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_46d5(self, session, outcome);
+        }
+
         #[allow(unused_mut)]
         let mut current = self.current.clone();
         #[allow(unused_mut)]
@@ -517,6 +598,42 @@ impl crate::runtime::suspension::SuspensionFrame for ResumeReplaceRepeatedLoopSu
         let mut iteration = self.iteration.clone();
         #[allow(unused_mut)]
         let mut effective_limit = self.effective_limit.clone();
+        let resumed = match outcome {
+            Ok(next) => (|| {
+                session.resume_replace_repeated_after_next(
+                    current,
+                    rules,
+                    iteration,
+                    effective_limit,
+                    next,
+                )
+            })(),
+            Err(error) => Err(error),
+        };
+        crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+impl ResumeReplaceRepeatedLoopSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_46d5(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> crate::runtime::suspension::FrameAction {
+        #[allow(unused_mut)]
+        let mut current = self.current.clone();
+        #[allow(unused_mut)]
+        let mut rules = self.rules.clone();
+        #[allow(unused_mut)]
+        let mut iteration = self.iteration.clone();
+        #[allow(unused_mut)]
+        let mut effective_limit = self.effective_limit.clone();
+        if crate::cm740_probe::frame("P1038") {
+            crate::cm740_probe::hit("P1038", "ForwardActualRepeatedPassInput");
+            return crate::runtime::suspension::FrameAction::complete(outcome);
+        }
         let resumed = match outcome {
             Ok(next) => (|| {
                 session.resume_replace_repeated_after_next(
@@ -549,6 +666,35 @@ impl crate::runtime::suspension::SuspensionFrame
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_4ca5(self, session, outcome);
+        }
+
+        let resumed = outcome.and_then(|replaced| {
+            session.resume_replace_repeated_after_replace(
+                self.current.clone(),
+                self.rules.clone(),
+                self.iteration,
+                self.effective_limit,
+                replaced,
+            )
+        });
+        crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+impl ResumeReplaceRepeatedAfterReplaceSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_4ca5(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> crate::runtime::suspension::FrameAction {
+        if crate::cm740_probe::frame("P1037") {
+            crate::cm740_probe::hit("P1037", "ForwardActualRepeatedPassInput");
+            return crate::runtime::suspension::FrameAction::complete(outcome);
+        }
         let resumed = outcome.and_then(|replaced| {
             session.resume_replace_repeated_after_replace(
                 self.current.clone(),

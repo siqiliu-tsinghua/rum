@@ -19,6 +19,7 @@ impl<I: SlotValue> SlotWitness<I> {
         request: RuntimeInputRequest,
         frame: F,
     ) -> Result<F::Output, EvalError> {
+        crate::cm740_probe::class_lease::note_typed_constructor(std::any::type_name::<F>());
         session.insert_typed_suspension_frame(frame);
         Err(EvalError::InputRequired { request })
     }

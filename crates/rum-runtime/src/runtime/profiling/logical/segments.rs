@@ -541,14 +541,25 @@ impl Segment {
             feature = "test-continuation-slots"
         ))]
         let access = crate::runtime::profiling::lease::admit();
-        self.pause_admitted(
-            #[cfg(any(
-                test,
-                feature = "test-builtin-memory-growth",
-                feature = "test-continuation-slots"
-            ))]
-            access.as_ref(),
-        )
+        (if crate::cm740_probe::driven() {
+            self.pause_admitted_cm740_driven(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                access.as_ref(),
+            )
+        } else {
+            self.pause_admitted(
+                #[cfg(any(
+                    test,
+                    feature = "test-builtin-memory-growth",
+                    feature = "test-continuation-slots"
+                ))]
+                access.as_ref(),
+            )
+        })
     }
 
     pub(in crate::runtime) fn pause_admitted(
@@ -618,6 +629,84 @@ impl Segment {
             }
         });
     }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn pause_admitted_cm740_driven(
+        &self,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        _access: Option<&crate::runtime::profiling::lease::Admitted>,
+    ) {
+        if self.completion.state.get() == SegmentState::ExplicitlyFinished {
+            if CM740_C10_ARMED.with(|armed| armed.replace(false)) {
+                eprintln!(
+                    "CM740_SOURCE_HIT row=C10.prepared.profiled_consumer phase=completed-generation-inert-pause selector=C10.prepared.profiled_consumer"
+                );
+            } else {
+                return;
+            }
+        }
+        ACTIVE.with_borrow_mut(|stack| {
+            if stack.top != Some(self.index) {
+                self.completion.epoch.fault_admitted(
+                    #[cfg(any(
+                        test,
+                        feature = "test-builtin-memory-growth",
+                        feature = "test-continuation-slots"
+                    ))]
+                    _access,
+                );
+                return;
+            }
+            let Some(active) = stack.frame_mut(self.index) else {
+                return;
+            };
+            if active.segment != self.segment || active.paused {
+                return;
+            }
+            active.park(Instant::now());
+            active.paused = true;
+            let observed = if active.restored {
+                pause_observer(
+                    #[cfg(any(
+                        test,
+                        feature = "test-builtin-memory-growth",
+                        feature = "test-continuation-slots"
+                    ))]
+                    _access,
+                    &self.completion.epoch,
+                    &active.path,
+                )
+            } else {
+                Some(&*active.path)
+            };
+            if let Some(path) = observed {
+                PAUSE_PARENT.with(|cursor| {
+                    if cursor.get() != Some((self.completion.epoch.id, path.record)) {
+                        path.pause();
+                    }
+                    let mut parent = path.parent.as_deref();
+                    let next = loop {
+                        let Some(path) = parent else {
+                            break None;
+                        };
+                        if locally_closed(&path.key) {
+                            parent = path.parent.as_deref();
+                        } else {
+                            break Some((self.completion.epoch.id, path.record));
+                        }
+                    };
+                    cursor.set(next);
+                });
+            }
+        });
+    }
+
     pub(in crate::runtime) fn end(&self) {
         #[cfg(any(
             test,
@@ -867,3 +956,21 @@ pub(super) fn running_admitted(
 
 #[cfg(test)]
 mod completion_tests;
+
+thread_local! {
+    static CM740_C10_ARMED: Cell<bool> = const { Cell::new(false) };
+}
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(in crate::runtime) fn cm740_c10_arm_cm740_driven(paused: bool) {
+    if true
+        && paused
+        && std::env::var("RUM_CM740_OMIT").as_deref() == Ok("C10.prepared.profiled_consumer")
+    {
+        CM740_C10_ARMED.with(|armed| armed.set(true));
+        eprintln!(
+            "CM740_SELECTOR_ARMED row=C10.prepared.profiled_consumer phase=profiled-consumer-InputRequired"
+        );
+    }
+}

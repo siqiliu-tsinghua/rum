@@ -77,10 +77,63 @@ pub(crate) fn eval_first(
     _head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    if rum_runtime::cm740_probe::driven() {
+        return eval_first_cm740_driven(session, _head, args);
+    }
+
     let args = args.as_ref();
     if matches!(args.len(), 1 | 2) && args.first().is_some_and(crate::lazy::is_lazy_list) {
         let expr = &args[0];
         let realized = match crate::lazy::realize_at_most(session, expr, 1) {
+            Ok(value) => value,
+            Err(error) => lazy_completion::capture(session, error, args)?,
+        };
+        let Some(realized) = realized else {
+            return Ok(Expr::call(system_expr("First"), args.to_vec()));
+        };
+        return Ok(resolve_first_like(
+            session,
+            &realized,
+            args.get(1),
+            "First",
+            "nofirst",
+            true,
+        ));
+    }
+
+    match args {
+        [expr] => Ok(resolve_first_like(
+            session, expr, None, "First", "nofirst", true,
+        )),
+        [expr, default] => Ok(resolve_first_like(
+            session,
+            expr,
+            Some(default),
+            "First",
+            "nofirst",
+            true,
+        )),
+        _ => Ok(session.invalid_call_with_arg_range("First", args, 1, 2)),
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(crate) fn eval_first_cm740_driven(
+    session: &mut Session,
+    _head: &Expr,
+    args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    let args = args.as_ref();
+    if matches!(args.len(), 1 | 2) && args.first().is_some_and(crate::lazy::is_lazy_list) {
+        let expr = &args[0];
+        let realized = match rum_runtime::cm740_probe::around_some(
+            "P2593",
+            "ActualOptionalSuccessBeforeConcreteTail",
+            true,
+            || crate::lazy::realize_at_most(session, expr, 1),
+        ) {
             Ok(value) => value,
             Err(error) => lazy_completion::capture(session, error, args)?,
         };

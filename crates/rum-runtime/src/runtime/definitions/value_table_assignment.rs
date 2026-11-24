@@ -167,6 +167,43 @@ impl Session {
         )
     }
 
+    /// Replaces one value table after validating the complete serialized table.
+    /// Invalid assignments use the dedicated `<Inspector>::setval` diagnostic.
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn replace_value_table_from_expr_cm740_driven(
+        &mut self,
+        kind: ValueTableKind,
+        target: Symbol,
+        rhs: Expr,
+    ) -> Result<Expr, EvalError> {
+        let rules = match parse_assigned_value_table(kind, target, &rhs) {
+            Ok(rules) => rules,
+            Err(message) => {
+                self.push_message(kind.inspector_name(), "setval", message);
+                return Ok(rhs);
+            }
+        };
+
+        let state = ValueTableAssignmentState {
+            kind,
+            target,
+            rhs,
+            rules: Arc::from(rules),
+            cursor: 0,
+            prepared: PreparedValueTableRuleAccumulator::default(),
+        };
+        let Some(rule) = state.rules.first() else {
+            return Ok(self.finish_prepared_value_table_assignment(state));
+        };
+
+        self.prepare_definition_lhs_cm740_driven(
+            rule.lhs.clone(),
+            DefinitionLhsPreparationContinuation::ValueTableEntry { state },
+        )
+    }
+
     pub(super) fn resume_prepared_value_table_entry(
         &mut self,
         mut state: ValueTableAssignmentState,

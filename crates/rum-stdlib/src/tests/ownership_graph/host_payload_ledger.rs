@@ -16,27 +16,30 @@ mod ownership;
 mod tests;
 
 const LEDGER: &str = include_str!("inventory/host_payload_ledger.tsv");
-const HEADER: &str = "kind\tfile\tline\tcolumn\tconstruct\tdisposition\twitness\towed_by\texternal_implementation_coverage";
+pub(super) const HEADER: &str = "kind\tfile\tline\tcolumn\tconstruct\tdisposition\twitness\towed_by\texternal_implementation_coverage";
 const OWED_BY: &str = "TODO.md#standing-engineering-debt";
-const PUBLIC_INPUT: &str = "public by-value input; owning storage sites are separate rows";
+pub(super) const PUBLIC_INPUT: &str =
+    "public by-value input; owning storage sites are separate rows";
+pub(super) const LOCAL: &str = "probe-local closure stored under rum_runtime::cm740_probe; not a by-value input; not expression-reachable";
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-enum Disposition {
+pub(super) enum Disposition {
     Declared,
     Unbounded,
     PublicInput,
+    Local,
 }
 
 #[derive(Clone)]
-struct Entry {
-    row: String,
-    disposition: Disposition,
-    witness: String,
-    owed_by: String,
-    external_implementation_coverage: String,
+pub(super) struct Entry {
+    pub(super) row: String,
+    pub(super) disposition: Disposition,
+    pub(super) witness: String,
+    pub(super) owed_by: String,
+    pub(super) external_implementation_coverage: String,
 }
 
-fn entries(text: &str) -> Result<Vec<Entry>, String> {
+pub(super) fn entries(text: &str) -> Result<Vec<Entry>, String> {
     let mut lines = text.lines();
     if lines.next() != Some(HEADER) {
         return Err("invalid host payload ledger header".into());
@@ -62,6 +65,7 @@ fn entries(text: &str) -> Result<Vec<Entry>, String> {
                 "Declared" => Disposition::Declared,
                 "Unbounded" => Disposition::Unbounded,
                 "PublicInput" => Disposition::PublicInput,
+                "Local" => Disposition::Local,
                 other => return Err(format!("unknown disposition {other}: {line}")),
             };
             Ok(Entry {
@@ -84,7 +88,7 @@ fn host_rows(discovered: &Discovery) -> BTreeMap<String, &Unknown> {
         .collect()
 }
 
-fn check(discovered: &Discovery, entries: &[Entry]) -> Result<(), String> {
+pub(super) fn check(discovered: &Discovery, entries: &[Entry]) -> Result<(), String> {
     let rows = host_rows(discovered);
     let mut seen = BTreeSet::new();
     let mut errors = Vec::new();
@@ -112,9 +116,22 @@ fn check(discovered: &Discovery, entries: &[Entry]) -> Result<(), String> {
     }
 }
 
-fn check_entry(discovered: &Discovery, row: &Unknown, entry: &Entry) -> Result<(), String> {
+pub(super) fn check_entry(
+    discovered: &Discovery,
+    row: &Unknown,
+    entry: &Entry,
+) -> Result<(), String> {
     let public_input = row.construct.starts_with("public input ");
     if public_input != (entry.disposition == Disposition::PublicInput) {
+        return Err("disposition disagrees with discovered storage/input site".into());
+    }
+    let local = row
+        .construct
+        .split_once(": opaque owned payload ")
+        .is_some_and(|(trail, ty)| {
+            trail.starts_with("rum_runtime::cm740_probe::") && ty.starts_with("dyn Fn")
+        });
+    if local != (entry.disposition == Disposition::Local) {
         return Err("disposition disagrees with discovered storage/input site".into());
     }
     if entry.disposition == Disposition::Unbounded {
@@ -129,6 +146,7 @@ fn check_entry(discovered: &Discovery, row: &Unknown, entry: &Entry) -> Result<(
         Disposition::Declared => ownership::declared_witness(discovered, row)?,
         Disposition::Unbounded => ownership::expression_witness(discovered, row)
             .map_err(|error| format!("check 3: {error}"))?,
+        Disposition::Local => LOCAL.into(),
     };
     if entry.witness != witness {
         return Err(format!(
@@ -164,11 +182,15 @@ fn production_host_payload_ledger_is_complete_and_attributed() {
         .iter()
         .filter(|entry| entry.disposition == Disposition::Declared)
         .count();
-    let unbounded = entries.len() - inputs - declared;
+    let local = entries
+        .iter()
+        .filter(|entry| entry.disposition == Disposition::Local)
+        .count();
+    let unbounded = entries.len() - inputs - declared - local;
     println!(
-        "HOST PAYLOAD LEDGER: {} rows; {} storage edges ({declared} Declared, {unbounded} Unbounded); {inputs} PublicInput",
+        "HOST PAYLOAD LEDGER: {} rows; {} storage edges ({declared} Declared, {unbounded} Unbounded, {local} Local); {inputs} PublicInput",
         entries.len(),
-        declared + unbounded
+        declared + unbounded + local
     );
     println!(
         "checks 1/2/3: complete, no stale entries, field-specific expression attribution verified"

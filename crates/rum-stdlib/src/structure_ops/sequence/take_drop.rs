@@ -26,7 +26,11 @@ pub(crate) fn eval_take(
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
     if args.first().is_some_and(crate::lazy::is_lazy_list) {
-        return eval_take_lazy_list(session, head, args);
+        return (if rum_runtime::cm740_probe::driven() {
+            eval_take_lazy_list_cm740_driven(session, head, args)
+        } else {
+            eval_take_lazy_list(session, head, args)
+        });
     }
 
     if args.len() < 2 {
@@ -79,6 +83,40 @@ fn eval_take_lazy_list(
     };
 
     let realized = match crate::lazy::realize_at_most(session, lazy_list, limit) {
+        Ok(value) => value,
+        Err(error) => lazy_completion::capture(session, error, head, args)?,
+    };
+    Ok(realized.unwrap_or_else(|| Expr::call(head.clone(), args.to_vec())))
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn eval_take_lazy_list_cm740_driven(
+    session: &mut Session,
+    head: &Expr,
+    args: &[Expr],
+) -> Result<Expr, EvalError> {
+    let [lazy_list, spec_expr] = args else {
+        return Ok(Expr::call(head.clone(), args.to_vec()));
+    };
+    let Some(spec) = parse_structural_sequence_spec(session, spec_expr) else {
+        return Ok(Expr::call(head.clone(), args.to_vec()));
+    };
+    let limit = match spec {
+        StructuralSequenceSpec::Count(count) if count >= 0 => usize::try_from(count).ok(),
+        StructuralSequenceSpec::UpTo(Some(limit)) => usize::try_from(limit).ok(),
+        _ => None,
+    };
+    let Some(limit) = limit else {
+        return Ok(invalid_take_drop_sequence_call(
+            session, "Take", "take", args,
+        ));
+    };
+
+    let realized = match rum_runtime::cm740_probe::around("P2591", || {
+        crate::lazy::realize_at_most(session, lazy_list, limit)
+    }) {
         Ok(value) => value,
         Err(error) => lazy_completion::capture(session, error, head, args)?,
     };

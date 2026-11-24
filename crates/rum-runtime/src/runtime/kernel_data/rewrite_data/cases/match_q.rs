@@ -41,7 +41,11 @@ impl Session {
         &mut self,
         expr: &Expr,
     ) -> Result<Expr, EvalError> {
-        self.resolve_matcher_pattern_expr_owned(expr.clone())
+        (if crate::cm740_probe::driven() {
+            self.resolve_matcher_pattern_expr_owned_cm740_driven(expr.clone())
+        } else {
+            self.resolve_matcher_pattern_expr_owned(expr.clone())
+        })
     }
 
     pub(in crate::runtime) fn resolve_matcher_pattern_expr_owned(
@@ -51,12 +55,26 @@ impl Session {
         self.resolve_held_matcher_pattern(expr)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resolve_matcher_pattern_expr_owned_cm740_driven(
+        &mut self,
+        expr: Expr,
+    ) -> Result<Expr, EvalError> {
+        self.resolve_held_matcher_pattern_cm740_driven(expr)
+    }
+
     fn resume_match_q_after_value(
         &mut self,
         pattern_expr: Expr,
         value: Expr,
     ) -> Result<Expr, EvalError> {
-        let pattern_result = self.resolve_matcher_pattern_expr_owned(pattern_expr);
+        let pattern_result = (if crate::cm740_probe::driven() {
+            self.resolve_matcher_pattern_expr_owned_cm740_driven(pattern_expr)
+        } else {
+            self.resolve_matcher_pattern_expr_owned(pattern_expr)
+        });
         let pattern = crate::resume_or_suspend!(
             self,
             pattern_result,
@@ -79,7 +97,11 @@ impl Session {
             return Ok(system_expr(if matched { "True" } else { "False" }));
         }
 
-        let match_result = self.match_expr_owned(pattern, value, SymbolExprMap::default());
+        let match_result = (if crate::cm740_probe::driven() {
+            self.match_expr_owned_cm740_driven(pattern, value, SymbolExprMap::default())
+        } else {
+            self.match_expr_owned(pattern, value, SymbolExprMap::default())
+        });
         crate::resume_or_suspend!(
             self,
             match_result,

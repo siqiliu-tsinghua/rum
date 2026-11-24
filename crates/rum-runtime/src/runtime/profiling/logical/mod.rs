@@ -1579,3 +1579,6 @@ pub(in crate::runtime) mod budget_witness;
 #[cfg(test)]
 #[path = "../tests/default_fallback.rs"]
 mod default_fallback;
+
+// Copied-source attribution only; never called by the test observer.
+pub(in crate::runtime) use segments::cm740_c10_arm_cm740_driven as cm740_c10_arm;

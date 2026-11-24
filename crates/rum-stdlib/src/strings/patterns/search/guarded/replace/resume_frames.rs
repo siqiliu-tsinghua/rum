@@ -2,7 +2,7 @@ use super::*;
 use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct ResumeReplaceStringValueFromCandidateSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::replace::GuardedStringReplaceRuleEvalState,
@@ -21,6 +21,20 @@ pub(super) struct ResumeReplaceStringValueFromCandidateSuspensionFrame {
     >,
 }
 
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon
+    for ResumeReplaceStringValueFromCandidateSuspensionFrame
+{
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
+}
+
 impl rum_runtime::kernel_api::SuspensionFrame
     for ResumeReplaceStringValueFromCandidateSuspensionFrame
 {
@@ -29,6 +43,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
+        let _class_row = rum_runtime::cm740_probe::class_lease::begin_row(&self);
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         #[allow(unused_mut)]
@@ -70,7 +85,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct EvaluateReplaceStringOutputSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::replace::GuardedStringReplaceRuleEvalState,
@@ -81,12 +96,25 @@ pub(super) struct EvaluateReplaceStringOutputSuspensionFrame {
     pub(super) output: crate::strings::suspended_state::PersistentStringText,
 }
 
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon for EvaluateReplaceStringOutputSuspensionFrame {
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
+}
+
 impl rum_runtime::kernel_api::SuspensionFrame for EvaluateReplaceStringOutputSuspensionFrame {
     fn resume(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
+        let _class_row = rum_runtime::cm740_probe::class_lease::begin_row(&self);
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         #[allow(unused_mut)]
@@ -119,7 +147,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for EvaluateReplaceStringOutputSus
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct ResumeSuspendedReplaceStringValueFromCandidateSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::replace::GuardedStringReplaceRuleEvalState,
@@ -136,6 +164,20 @@ pub(super) struct ResumeSuspendedReplaceStringValueFromCandidateSuspensionFrame 
             std::hash::BuildHasherDefault<rum_runtime::RuntimeCacheHasher>,
         >,
     >,
+}
+
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon
+    for ResumeSuspendedReplaceStringValueFromCandidateSuspensionFrame
+{
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
 }
 
 impl rum_runtime::kernel_api::SuspensionFrame
@@ -187,7 +229,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct EvaluateSuspendedReplaceStringOutputSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::replace::GuardedStringReplaceRuleEvalState,
@@ -196,6 +238,18 @@ pub(super) struct EvaluateSuspendedReplaceStringOutputSuspensionFrame {
     pub(super) end: usize,
     pub(super) replacements: usize,
     pub(super) output: crate::strings::suspended_state::PersistentStringText,
+}
+
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon for EvaluateSuspendedReplaceStringOutputSuspensionFrame {
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
 }
 
 impl rum_runtime::kernel_api::SuspensionFrame
@@ -238,7 +292,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct ResumeReplaceStringValuesFromIndexSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::replace::GuardedStringReplaceValuesEvalState,
@@ -246,6 +300,18 @@ pub(super) struct ResumeReplaceStringValuesFromIndexSuspensionFrame {
     pub(super) index: usize,
     pub(super) rendered:
         crate::strings::suspended_state::PersistentStringSequence<std::string::String>,
+}
+
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon for ResumeReplaceStringValuesFromIndexSuspensionFrame {
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
 }
 
 impl rum_runtime::kernel_api::SuspensionFrame
@@ -278,7 +344,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct ResumeSuspendedReplaceStringValuesFromIndexSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::guarded::replace::GuardedStringReplaceValuesEvalState,
@@ -286,6 +352,20 @@ pub(super) struct ResumeSuspendedReplaceStringValuesFromIndexSuspensionFrame {
     pub(super) index: usize,
     pub(super) rendered:
         crate::strings::suspended_state::PersistentStringSequence<std::string::String>,
+}
+
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon
+    for ResumeSuspendedReplaceStringValuesFromIndexSuspensionFrame
+{
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
 }
 
 impl rum_runtime::kernel_api::SuspensionFrame

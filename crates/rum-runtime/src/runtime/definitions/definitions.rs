@@ -70,6 +70,77 @@ impl Session {
         result
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn eval_set_cm740_driven(
+        &mut self,
+        args: &[Expr],
+    ) -> Result<Expr, EvalError> {
+        if args.len() != 2 {
+            return Ok(self.invalid_call_with_exact_arg_count("Set", args, 2));
+        }
+
+        let lhs = args[0].clone();
+        let rhs = if expr_is_self_evaluating_atom(&args[1]) {
+            let runtime_profile_rhs = runtime_path_timing_start_adopted(self, "set.rhs.evaluate");
+            record_profile_runtime_path_timing_adopted_ok(self, runtime_profile_rhs);
+            let runtime_profile_suspend =
+                runtime_path_timing_start_adopted(self, "set.rhs.suspend");
+            record_profile_runtime_path_timing_adopted_ok(self, runtime_profile_suspend);
+            args[1].clone()
+        } else {
+            let runtime_profile_rhs = runtime_path_timing_start_adopted(self, "set.rhs.evaluate");
+            let rhs_result = match crate::cm740_probe::around_ok_profile_return(
+                "P0410",
+                "ActualRhsBeforeSetStore",
+                || self.evaluate_cm740_driven(args[1].clone()),
+            ) {
+                crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+                crate::cm740_probe::OkAction::Continue(result) => result,
+            };
+            self.record_profile_runtime_path_timing_adopted_boundary(
+                runtime_profile_rhs,
+                &rhs_result,
+            );
+            let runtime_profile_suspend = self
+                .runtime_path_timing_start_adopted_forwarded::<crate::runtime::profiling::SetRhsSuspend>(&rhs_result);
+            let rhs_result = {
+                let session = &mut *self;
+                let suspended_lhs = &lhs;
+                (|| {
+                    crate::resume_typed_or_suspend!(
+                        session,
+                        rhs_result,
+                        ok(value) => Ok(value),
+                        suspend => {
+                    let lhs = suspended_lhs.clone();
+                    EvalSetSuspensionFrame { lhs }
+                    },
+                    )
+                })()
+            };
+            record_profile_runtime_path_timing_adopted_defer_pause(
+                self,
+                runtime_profile_suspend,
+                &rhs_result,
+            );
+            rhs_result?
+        };
+
+        let runtime_profile_finish = runtime_path_timing_start_adopted(self, "set.finish");
+        let result = match crate::cm740_probe::around_ok_profile_return(
+            "P0413",
+            "OrdinaryActualSuccessBeforeTail",
+            || self.resume_set_with_rhs_cm740_driven(lhs, rhs),
+        ) {
+            crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+            crate::cm740_probe::OkAction::Continue(result) => result,
+        };
+        self.record_profile_runtime_path_timing_adopted_boundary(runtime_profile_finish, &result);
+        result
+    }
+
     pub(in crate::runtime) fn eval_set_delayed(
         &mut self,
         args: &[Expr],
@@ -80,15 +151,45 @@ impl Session {
 
         let lhs = args[0].clone();
         let rhs = args[1].clone();
-        self.finish_definition_assignment("SetDelayed", lhs, rhs, true)
+        (if crate::cm740_probe::driven() {
+            self.finish_definition_assignment_cm740_driven("SetDelayed", lhs, rhs, true)
+        } else {
+            self.finish_definition_assignment("SetDelayed", lhs, rhs, true)
+        })
     }
 
     pub(in crate::runtime) fn eval_rule(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.eval_rule_cm740_driven(args);
+        }
+
         if args.len() != 2 {
             return Ok(self.invalid_call_with_exact_arg_count("Rule", args, 2));
         }
 
         let lhs_result = self.evaluate_rule_lhs(args[0].clone());
+        crate::resume_typed_or_suspend!(
+            self,
+            lhs_result,
+            ok(lhs) => self.finish_rule_lhs(lhs, args[1].clone(), false),
+            suspend => RuleLhsCompletionFrame { rhs: args[1].clone(), delayed: false },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn eval_rule_cm740_driven(
+        &mut self,
+        args: &[Expr],
+    ) -> Result<Expr, EvalError> {
+        if args.len() != 2 {
+            return Ok(self.invalid_call_with_exact_arg_count("Rule", args, 2));
+        }
+
+        let lhs_result = crate::cm740_probe::around("P0416", || {
+            self.evaluate_rule_lhs_cm740_driven(args[0].clone())
+        });
         crate::resume_typed_or_suspend!(
             self,
             lhs_result,
@@ -105,7 +206,11 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("RuleDelayed", args, 2));
         }
 
-        let lhs_result = self.evaluate_rule_lhs(args[0].clone());
+        let lhs_result = (if crate::cm740_probe::driven() {
+            self.evaluate_rule_lhs_cm740_driven(args[0].clone())
+        } else {
+            self.evaluate_rule_lhs(args[0].clone())
+        });
         crate::resume_typed_or_suspend!(
             self,
             lhs_result,
@@ -138,13 +243,47 @@ impl Session {
     }
 
     fn resume_normalize_rules(&mut self, original: Expr) -> Result<Expr, EvalError> {
-        self.drive_rewrite_rule_exprs_owned(
-            original.clone(),
-            RewriteRuleExprContinuation::NormalizeRules { original },
-        )
+        (if crate::cm740_probe::driven() {
+            self.drive_rewrite_rule_exprs_owned_cm740_driven(
+                original.clone(),
+                RewriteRuleExprContinuation::NormalizeRules { original },
+            )
+        } else {
+            self.drive_rewrite_rule_exprs_owned(
+                original.clone(),
+                RewriteRuleExprContinuation::NormalizeRules { original },
+            )
+        })
     }
 
     pub(in crate::runtime) fn resume_normalize_rules_after_rule_exprs(
+        &mut self,
+        original: Expr,
+        rule_exprs: Option<Vec<Expr>>,
+    ) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.resume_normalize_rules_after_rule_exprs_cm740_driven(original, rule_exprs);
+        }
+
+        match rule_exprs {
+            Some(rule_exprs) => {
+                let rules = self
+                    .compile_rewrite_rules_from_normalized_exprs(rule_exprs)
+                    .expect("normalized rewrite rule expressions should recompile");
+                Ok(Self::normalized_rules_expr(&rules))
+            }
+            None => Ok(self.invalid_call_with_arg_form(
+                "NormalizeRules",
+                &[original],
+                "expected a rule, a rule list, or a symbol that evaluates to rules",
+            )),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resume_normalize_rules_after_rule_exprs_cm740_driven(
         &mut self,
         original: Expr,
         rule_exprs: Option<Vec<Expr>>,
@@ -154,7 +293,12 @@ impl Session {
                 let rules = self
                     .compile_rewrite_rules_from_normalized_exprs(rule_exprs)
                     .expect("normalized rewrite rule expressions should recompile");
-                Ok(Self::normalized_rules_expr(&rules))
+                if crate::cm740_probe::frame("P0339") && rules.len() == 1 {
+                    crate::cm740_probe::hit("P0339", "OmitActualNormalizedRuleListWrapper");
+                    Ok(Self::rewrite_rule_expr(&rules[0]))
+                } else {
+                    Ok(Self::normalized_rules_expr(&rules))
+                }
             }
             None => Ok(self.invalid_call_with_arg_form(
                 "NormalizeRules",
@@ -179,6 +323,30 @@ impl Session {
         }
 
         self.finish_definition_assignment("Set", lhs, rhs, false)
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_set_with_rhs_cm740_driven(
+        &mut self,
+        lhs: Expr,
+        rhs: Expr,
+    ) -> Result<Expr, EvalError> {
+        if matches!(&lhs, Expr::Atom(Atom::Symbol(target)) if target.context() != SYSTEM_CONTEXT || !matches!(target.name(), "$ContextPath" | "$Packages" | "$Path"))
+        {
+            let runtime_profile_symbol = runtime_path_timing_start("set.try_symbol_own_value");
+            let symbol_result = self.try_set_symbol_own_value_lvalue("Set", &lhs, &rhs);
+            record_profile_runtime_path_timing(
+                runtime_profile_symbol,
+                runtime_profile_outcome_for_bool_result(&symbol_result),
+            );
+            debug_assert!(matches!(&symbol_result, Ok(true)));
+            symbol_result?;
+            return Ok(rhs);
+        }
+
+        self.finish_definition_assignment_cm740_driven("Set", lhs, rhs, false)
     }
 
     fn resume_rule_with_rhs(&mut self, lhs: Expr, rhs: Expr) -> Result<Expr, EvalError> {
@@ -355,6 +523,205 @@ impl Session {
         result
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_definition_assignment_cm740_driven(
+        &mut self,
+        symbol: &str,
+        lhs: Expr,
+        rhs: Expr,
+        delayed: bool,
+    ) -> Result<Expr, EvalError> {
+        if !delayed {
+            if is_context_path_symbol_expr(&lhs) {
+                let sym = Symbol::system("$ContextPath");
+                if !self.ensure_symbol_not_protected_for_write(symbol, &sym) {
+                    return Ok(rhs);
+                }
+                let Some(contexts) = expr_as_string_list(&rhs) else {
+                    return Ok(self.invalid_call_with_arg_form(
+                        symbol,
+                        &[lhs, rhs],
+                        "expected $ContextPath to be assigned a list of string contexts",
+                    ));
+                };
+                self.context_path = normalize_context_list(contexts);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::ContextPath,
+                );
+                self.bump_evaluation_epoch();
+                return Ok(rhs);
+            }
+
+            if is_packages_symbol_expr(&lhs) {
+                let sym = Symbol::system("$Packages");
+                if !self.ensure_symbol_not_protected_for_write(symbol, &sym) {
+                    return Ok(rhs);
+                }
+                let Some(packages) = expr_as_string_list(&rhs) else {
+                    return Ok(self.invalid_call_with_arg_form(
+                        symbol,
+                        &[lhs, rhs],
+                        "expected $Packages to be assigned a list of string contexts",
+                    ));
+                };
+                self.loaded_packages = normalize_context_list(packages);
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::LoadedPackages,
+                );
+                self.bump_evaluation_epoch();
+                return Ok(rhs);
+            }
+
+            if is_path_symbol_expr(&lhs) {
+                let sym = Symbol::system("$Path");
+                if !self.ensure_symbol_not_protected_for_write(symbol, &sym) {
+                    return Ok(rhs);
+                }
+                let Some(paths) = expr_as_string_list(&rhs) else {
+                    return Ok(self.invalid_call_with_arg_form(
+                        symbol,
+                        &[lhs, rhs],
+                        "expected $Path to be assigned a list of string paths",
+                    ));
+                };
+                self.package_search_paths =
+                    dedup_paths(paths.into_iter().map(PathBuf::from).collect());
+                self.refresh_memory_owner(
+                    crate::runtime::debug_tools::resources::MemoryOwner::PackageSearchPaths,
+                );
+                return Ok(rhs);
+            }
+
+            let runtime_profile_symbol = runtime_path_timing_start("set.try_symbol_own_value");
+            let symbol_result = self.try_set_symbol_own_value_lvalue(symbol, &lhs, &rhs);
+            record_profile_runtime_path_timing(
+                runtime_profile_symbol,
+                runtime_profile_outcome_for_bool_result(&symbol_result),
+            );
+            if symbol_result? {
+                return Ok(rhs);
+            }
+
+            if let Some(target) = self.normalize_options_target_expr(&lhs) {
+                if !self.ensure_symbol_not_protected_for_write(symbol, &target) {
+                    return Ok(rhs);
+                }
+
+                let options = match self.compile_assigned_options_from_resolved(&rhs) {
+                    Ok(options) => options,
+                    Err(error) => {
+                        return Ok(self.invalid_call_with_arg_form(
+                            symbol,
+                            &[lhs, rhs],
+                            error.message(),
+                        ));
+                    }
+                };
+
+                self.set_options_for_symbol(target, options);
+                return Ok(rhs);
+            }
+
+            if let Some((kind, target)) = self.normalize_value_table_target_expr(&lhs) {
+                if !self.ensure_symbol_not_protected_for_write(symbol, &target) {
+                    return Ok(rhs);
+                }
+
+                return self.replace_value_table_from_expr_cm740_driven(kind, target, rhs);
+            }
+
+            if let Some(target) = self.normalize_syntax_information_target_expr(&lhs) {
+                if !self.ensure_symbol_not_protected_for_write(symbol, &target) {
+                    return Ok(rhs);
+                }
+
+                let syntax_information =
+                    match self.compile_assigned_syntax_information_from_resolved(&rhs) {
+                        Ok(syntax_information) => syntax_information,
+                        Err(error) => {
+                            return Ok(self.invalid_call_with_arg_form(
+                                symbol,
+                                &[lhs, rhs],
+                                error.message(),
+                            ));
+                        }
+                    };
+
+                self.set_syntax_information_for_symbol(target, syntax_information);
+                return Ok(rhs);
+            }
+        }
+
+        if !delayed {
+            let runtime_profile_list =
+                self.runtime_path_timing_start_adopted_applicable("set.try_list_destructuring");
+            let list_result = crate::cm740_probe::around_some(
+                "P0426",
+                "ActualTypedCarrierBeforeOuterTail",
+                false,
+                || {
+                    self.try_set_list_destructuring_lvalue_cm740_driven(
+                        symbol,
+                        lhs.clone(),
+                        rhs.clone(),
+                    )
+                },
+            );
+            self.record_profile_runtime_path_timing_adopted_boundary(
+                runtime_profile_list,
+                &list_result,
+            );
+            if let Some(value) = list_result? {
+                return Ok(value);
+            }
+
+            let runtime_profile_assoc =
+                self.runtime_path_timing_start_adopted_applicable("set.try_association_lvalue");
+            let assoc_result = crate::cm740_probe::around_some(
+                "P0428",
+                "ActualTypedCarrierBeforeOuterTail",
+                false,
+                || self.try_set_association_lvalue_cm740_driven(lhs.clone(), rhs.clone()),
+            );
+            self.record_profile_runtime_path_timing_adopted_boundary(
+                runtime_profile_assoc,
+                &assoc_result,
+            );
+            if let Some(value) = assoc_result? {
+                return Ok(value);
+            }
+
+            if let Some(value) =
+                self.try_set_positional_part_lvalue_cm740_driven(lhs.clone(), rhs.clone())?
+            {
+                return Ok(value);
+            }
+        }
+
+        let runtime_profile_prepare_lhs =
+            runtime_path_timing_start_adopted(self, "set.prepare_lhs");
+        let result = match crate::cm740_probe::around_ok_profile_return(
+            "P0431",
+            "OrdinaryActualSuccessBeforeTail",
+            || {
+                self.prepare_definition_lhs_cm740_driven(
+                    lhs,
+                    DefinitionLhsPreparationContinuation::Set { rhs, delayed },
+                )
+            },
+        ) {
+            crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+            crate::cm740_probe::OkAction::Continue(result) => result,
+        };
+        self.record_profile_runtime_path_timing_adopted_boundary(
+            runtime_profile_prepare_lhs,
+            &result,
+        );
+        result
+    }
+
     pub(super) fn finish_prepared_definition_assignment(
         &mut self,
         prepared: PreparedDefinitionLhs,
@@ -475,6 +842,32 @@ impl Session {
         }
 
         self.store_list_destructuring_assignments(symbol, lhs, rhs)
+            .map(Some)
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn try_set_list_destructuring_lvalue_cm740_driven(
+        &mut self,
+        symbol: &str,
+        lhs: Expr,
+        rhs: Expr,
+    ) -> Result<Option<Expr>, EvalError> {
+        if list_expr_args(&lhs).is_none() {
+            return Ok(None);
+        }
+
+        if !list_destructuring_shapes_match(&lhs, &rhs) {
+            self.push_message(
+                symbol,
+                "shape",
+                format!("Lists {lhs} and {rhs} are not the same shape."),
+            );
+            return Ok(Some(rhs));
+        }
+
+        self.store_list_destructuring_assignments_cm740_driven(symbol, lhs, rhs)
             .map(Some)
     }
 }

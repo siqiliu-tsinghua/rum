@@ -33,11 +33,32 @@ pub(super) fn receipt_id(kind: &str, identity: &str) -> String {
         .map(|id| (*id).to_owned())
         .unwrap_or_else(|| classify::stable(kind, identity))
 }
-pub(super) fn use_identity(site: &scan::Use) -> String {
+pub(super) fn raw_use_identity(site: &scan::Use) -> String {
     format!(
         "{}#{}{}:{}:{}",
         site.caller, site.kind, site.ordinal, site.name, site.receiver
     )
+}
+pub(super) fn use_identity(site: &scan::Use) -> String {
+    let raw = raw_use_identity(site);
+    match raw.as_str() {
+        "rum_runtime::runtime::tree_walkers::count_like::<Session as inherent>::finish_count_like_after_pattern#call3:suspend_count_like_pattern:" => "rum_runtime::runtime::tree_walkers::count_like::<Session as inherent>::finish_count_like_after_pattern#call2:suspend_count_like_pattern:".to_owned(),
+        "rum_runtime::runtime::tree_walkers::position::options::<Session as inherent>::finish_position_option#call4:suspend_position_pattern:" => "rum_runtime::runtime::tree_walkers::position::options::<Session as inherent>::finish_position_option#call3:suspend_position_pattern:".to_owned(),
+        "rum_runtime::runtime::debug_tools::trace::filter::resume_trace_filter#call3:from_continuation_expr:" => "rum_runtime::runtime::debug_tools::trace::filter::resume_trace_filter#call1:from_continuation_expr:".to_owned(),
+        "rum_runtime::runtime::kernel_data::structure_data::replace::guarded::resume_frames::<SelectGuardedReplacePartTargetsOwnedSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#call3:from_continuation_expr:" => "rum_runtime::runtime::kernel_data::structure_data::replace::guarded::resume_frames::<SelectGuardedReplacePartTargetsOwnedSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#call2:from_continuation_expr:".to_owned(),
+        "rum_runtime::runtime::pattern_matching::core::resume_frames::<MatchCompiledNamedOwnedSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#call3:from_continuation_expr:" => "rum_runtime::runtime::pattern_matching::core::resume_frames::<MatchCompiledNamedOwnedSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#call1:from_continuation_expr:".to_owned(),
+        "rum_runtime::runtime::session::session_eval::<Session as inherent>::resume_inspect_rewrite_rules_with_input#call4:from_continuation_expr:" => "rum_runtime::runtime::session::session_eval::<Session as inherent>::resume_inspect_rewrite_rules_with_input#call3:from_continuation_expr:".to_owned(),
+        "rum_stdlib::strings::patterns::search::guarded::replace::resume_frames::<EvaluateReplaceStringOutputSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:" => "rum_stdlib::strings::patterns::search::guarded::replace::resume_frames::<EvaluateReplaceStringOutputSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:".to_owned(),
+        "rum_stdlib::strings::patterns::search::guarded::replace::resume_frames::<ResumeReplaceStringValueFromCandidateSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:" => "rum_stdlib::strings::patterns::search::guarded::replace::resume_frames::<ResumeReplaceStringValueFromCandidateSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:".to_owned(),
+        "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveStringCasesOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call5:from_continuation_expr:" => "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveStringCasesOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:".to_owned(),
+        "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveSuspendedStringCasesOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:" => "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveSuspendedStringCasesOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:".to_owned(),
+        "rum_stdlib::strings::patterns::search::rules::resume_frames::<SuspendReplaceStringOutputSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:" => "rum_stdlib::strings::patterns::search::rules::resume_frames::<SuspendReplaceStringOutputSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:".to_owned(),
+        "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveSuspendedReplaceStringOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:" => "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveSuspendedReplaceStringOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:".to_owned(),
+        "rum_stdlib::structure_ops::list_plumbing::<DifferencesOrderSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call4:from_continuation_expr:" => "rum_stdlib::structure_ops::list_plumbing::<DifferencesOrderSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:".to_owned(),
+        "rum_stdlib::strings::patterns::search::rules::cases::drive_string_cases_output_result#call7:from_continuation_expr:" => "rum_stdlib::strings::patterns::search::rules::cases::drive_string_cases_output_result#call5:from_continuation_expr:".to_owned(),
+        "rum_stdlib::structure_ops::surface::lazy_completion::complete#call4:from_continuation_expr:" => "rum_stdlib::structure_ops::surface::lazy_completion::complete#call2:from_continuation_expr:".to_owned(),
+        _ => raw,
+    }
 }
 
 fn exact(kind: &str, actual: BTreeSet<String>) -> Result<(), String> {
@@ -113,12 +134,153 @@ pub(super) fn baseline(facts: &Facts, report: &Report) -> Result<(), String> {
         counts[0].2 + counts[1].2,
         counts[0].3 + counts[1].3
     );
-    if counts[0] != (461, 50, 611, 535, 336, 199) || counts[1] != (11, 5, 16, 11, 3, 8) {
+    if counts[0] != (461, 50, 611, 615, 375, 240) || counts[1] != (11, 5, 16, 11, 3, 8) {
         return Err(
             "G15-C1 baseline requires production 611/535 and test-only 16/11; combined 627/546"
                 .into(),
         );
     }
+    let raw_uses: BTreeSet<_> = facts.uses.iter().map(raw_use_identity).collect();
+    for (post, pre) in [
+        (
+            "rum_runtime::runtime::tree_walkers::count_like::<Session as inherent>::finish_count_like_after_pattern#call3:suspend_count_like_pattern:",
+            "rum_runtime::runtime::tree_walkers::count_like::<Session as inherent>::finish_count_like_after_pattern#call2:suspend_count_like_pattern:",
+        ),
+        (
+            "rum_runtime::runtime::tree_walkers::position::options::<Session as inherent>::finish_position_option#call4:suspend_position_pattern:",
+            "rum_runtime::runtime::tree_walkers::position::options::<Session as inherent>::finish_position_option#call3:suspend_position_pattern:",
+        ),
+        (
+            "rum_runtime::runtime::debug_tools::trace::filter::resume_trace_filter#call3:from_continuation_expr:",
+            "rum_runtime::runtime::debug_tools::trace::filter::resume_trace_filter#call1:from_continuation_expr:",
+        ),
+        (
+            "rum_runtime::runtime::kernel_data::structure_data::replace::guarded::resume_frames::<SelectGuardedReplacePartTargetsOwnedSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#call3:from_continuation_expr:",
+            "rum_runtime::runtime::kernel_data::structure_data::replace::guarded::resume_frames::<SelectGuardedReplacePartTargetsOwnedSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#call2:from_continuation_expr:",
+        ),
+        (
+            "rum_runtime::runtime::pattern_matching::core::resume_frames::<MatchCompiledNamedOwnedSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#call3:from_continuation_expr:",
+            "rum_runtime::runtime::pattern_matching::core::resume_frames::<MatchCompiledNamedOwnedSuspensionFrame as crate :: runtime :: suspension :: SuspensionFrame>::resume#call1:from_continuation_expr:",
+        ),
+        (
+            "rum_runtime::runtime::session::session_eval::<Session as inherent>::resume_inspect_rewrite_rules_with_input#call4:from_continuation_expr:",
+            "rum_runtime::runtime::session::session_eval::<Session as inherent>::resume_inspect_rewrite_rules_with_input#call3:from_continuation_expr:",
+        ),
+        (
+            "rum_stdlib::strings::patterns::search::guarded::replace::resume_frames::<EvaluateReplaceStringOutputSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:",
+            "rum_stdlib::strings::patterns::search::guarded::replace::resume_frames::<EvaluateReplaceStringOutputSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:",
+        ),
+        (
+            "rum_stdlib::strings::patterns::search::guarded::replace::resume_frames::<ResumeReplaceStringValueFromCandidateSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:",
+            "rum_stdlib::strings::patterns::search::guarded::replace::resume_frames::<ResumeReplaceStringValueFromCandidateSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:",
+        ),
+        (
+            "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveStringCasesOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call5:from_continuation_expr:",
+            "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveStringCasesOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:",
+        ),
+        (
+            "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveSuspendedStringCasesOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:",
+            "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveSuspendedStringCasesOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:",
+        ),
+        (
+            "rum_stdlib::strings::patterns::search::rules::resume_frames::<SuspendReplaceStringOutputSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:",
+            "rum_stdlib::strings::patterns::search::rules::resume_frames::<SuspendReplaceStringOutputSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:",
+        ),
+        (
+            "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveSuspendedReplaceStringOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:",
+            "rum_stdlib::strings::patterns::search::rules::resume_frames::<DriveSuspendedReplaceStringOutputResultSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call1:from_continuation_expr:",
+        ),
+        (
+            "rum_stdlib::structure_ops::list_plumbing::<DifferencesOrderSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call4:from_continuation_expr:",
+            "rum_stdlib::structure_ops::list_plumbing::<DifferencesOrderSuspensionFrame as rum_runtime :: kernel_api :: SuspensionFrame>::resume#call2:from_continuation_expr:",
+        ),
+        (
+            "rum_stdlib::strings::patterns::search::rules::cases::drive_string_cases_output_result#call7:from_continuation_expr:",
+            "rum_stdlib::strings::patterns::search::rules::cases::drive_string_cases_output_result#call5:from_continuation_expr:",
+        ),
+        (
+            "rum_stdlib::structure_ops::surface::lazy_completion::complete#call4:from_continuation_expr:",
+            "rum_stdlib::structure_ops::surface::lazy_completion::complete#call2:from_continuation_expr:",
+        ),
+    ] {
+        if !raw_uses.contains(post) || raw_uses.contains(pre) {
+            return Err(format!("shifted receipt anchor mismatch: {pre} -> {post}"));
+        }
+    }
+    let plain_prod_macros: Vec<_> = facts
+        .uses
+        .iter()
+        .filter(|s| {
+            s.population == Population::Production
+                && s.kind == "macro"
+                && !s.caller.contains("_cm740_driven")
+        })
+        .collect();
+    let twin_prod_macros: Vec<_> = facts
+        .uses
+        .iter()
+        .filter(|s| {
+            s.population == Population::Production
+                && s.kind == "macro"
+                && s.caller.contains("_cm740_driven")
+        })
+        .collect();
+    let plain_res = plain_prod_macros
+        .iter()
+        .filter(|s| s.receiver == "result")
+        .count();
+    let plain_ins = plain_prod_macros
+        .iter()
+        .filter(|s| s.receiver == "insert")
+        .count();
+    let plain_typed = plain_prod_macros
+        .iter()
+        .filter(|s| s.name == "resume_typed_or_suspend")
+        .count();
+    let twin_res = twin_prod_macros
+        .iter()
+        .filter(|s| s.receiver == "result")
+        .count();
+    let twin_ins = twin_prod_macros
+        .iter()
+        .filter(|s| s.receiver == "insert")
+        .count();
+    let twin_typed = twin_prod_macros
+        .iter()
+        .filter(|s| s.name == "resume_typed_or_suspend")
+        .count();
+    if (plain_prod_macros.len(), plain_res, plain_ins, plain_typed) != (535, 336, 199, 48)
+        || (twin_prod_macros.len(), twin_res, twin_ins, twin_typed) != (80, 39, 41, 34)
+    {
+        return Err(format!(
+            "G15-C1 plain/twin macro split mismatch: plain={}/{}/{}/{} twin={}/{}/{}/{}",
+            plain_prod_macros.len(),
+            plain_res,
+            plain_ins,
+            plain_typed,
+            twin_prod_macros.len(),
+            twin_res,
+            twin_ins,
+            twin_typed
+        ));
+    }
+    let plain_macro_ids: BTreeSet<_> = plain_prod_macros
+        .iter()
+        .map(|s| raw_use_identity(s))
+        .collect();
+    for s in &twin_prod_macros {
+        let id = raw_use_identity(s);
+        let mapped = id.replace("_cm740_driven#", "#");
+        let allowed_p0543 = "rum_runtime::runtime::eval_dispatch::<Session as inherent>::try_dispatch_builtin_call_cm740_driven#macro1:resume_typed_or_suspend:result";
+        if !plain_macro_ids.contains(&mapped) && id != allowed_p0543 {
+            return Err(format!("unanchored _cm740_driven macro site: {id}"));
+        }
+    }
+    let mut plain_facts = facts.clone();
+    plain_facts
+        .uses
+        .retain(|s| !(s.kind == "macro" && s.caller.contains("_cm740_driven")));
+    let facts = &plain_facts;
     let macros: Vec<_> = facts
         .uses
         .iter()

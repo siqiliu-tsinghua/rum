@@ -138,6 +138,75 @@ impl<'session, 'id, M: Mode> RetentionContext<'session, 'id, M> {
         self.adopt_outcome(prefix, Ok(value))
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub fn evaluate_cm740_driven(
+        self,
+        mut prefix: RetainedValues<'id, M>,
+        expr: Expr,
+    ) -> Result<CallbackValue<'session, 'id, M>, CallbackFailure<'session, 'id, M>> {
+        // An empty, zero-capacity owner has nothing to publish on later arm.
+        // In particular C02's rule evaluation crosses with exactly this state.
+        if prefix.values.capacity() == 0 {
+            let outcome = crate::cm740_probe::around("P0001", || self.session.evaluate(expr));
+            return self.cm740_adopt_outcome_cm740_driven(
+                prefix,
+                outcome,
+                crate::cm740_probe::ordinary("P0001"),
+            );
+        }
+        // The explicit ownership bridge exists in both modes. Unarmed crosses
+        // without a weight walk, lease, or lock. A later arm can see the actual
+        // prefix, including every outer bridge in a nested callback chain.
+        let route = self
+            .session
+            .accounting_route
+            .get_or_insert_with(Default::default);
+        route.prefixes.push(ActivePrefix {
+            values: super::retained::ActiveValues::Owned(std::mem::take(&mut prefix.values)),
+            charged: M::ARMED,
+        });
+        self.session.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
+        );
+        let outcome = catch_unwind(AssertUnwindSafe(|| {
+            crate::cm740_probe::around("P0002", || self.session.evaluate(expr))
+        }));
+        let values = self
+            .session
+            .accounting_route
+            .as_mut()
+            .expect("bridge route")
+            .prefixes
+            .pop()
+            .expect("live bridge prefix")
+            .values;
+        let super::retained::ActiveValues::Owned(values) = values else {
+            unreachable!("bridge stack restores the same owner kind")
+        };
+        if crate::cm740_probe::ordinary("P0002") {
+            crate::cm740_probe::hit("P0002", "OmitActualOwnedCallbackPrefixRestoration");
+        } else {
+            prefix.values = values;
+        }
+        self.session.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::AccountingRoute,
+        );
+        let value = match outcome {
+            Ok(Ok(value)) => value,
+            Ok(Err(error)) => {
+                return Err(CallbackFailure {
+                    context: self,
+                    prefix,
+                    error,
+                });
+            }
+            Err(panic) => resume_unwind(panic),
+        };
+        self.adopt_outcome_cm740_driven(prefix, Ok(value))
+    }
+
     /// Private resume boundary: errors are terminal and retain their original
     /// payload; successful values acquire a receipt before any builder grows.
     pub(super) fn adopt_outcome(
@@ -157,6 +226,67 @@ impl<'session, 'id, M: Mode> RetentionContext<'session, 'id, M> {
         };
         let mut receipt = M::receipt(self.session);
         M::resize(&mut receipt, || Some(expr_bytes(&value)));
+        if M::ARMED {
+            if let Err(error) = self
+                .session
+                .enforce_active_memory_limit_for_projected_bytes(0)
+            {
+                return Err(CallbackFailure {
+                    context: self,
+                    prefix,
+                    error,
+                });
+            }
+        }
+        Ok(CallbackValue {
+            context: self,
+            prefix,
+            value,
+            receipt,
+        })
+    }
+
+    /// Private resume boundary: errors are terminal and retain their original
+    /// payload; successful values acquire a receipt before any builder grows.
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn adopt_outcome_cm740_driven(
+        self,
+        prefix: RetainedValues<'id, M>,
+        outcome: Result<Expr, EvalError>,
+    ) -> Result<CallbackValue<'session, 'id, M>, CallbackFailure<'session, 'id, M>> {
+        self.cm740_adopt_outcome_cm740_driven(prefix, outcome, false)
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn cm740_adopt_outcome_cm740_driven(
+        self,
+        prefix: RetainedValues<'id, M>,
+        outcome: Result<Expr, EvalError>,
+        omit_charge: bool,
+    ) -> Result<CallbackValue<'session, 'id, M>, CallbackFailure<'session, 'id, M>> {
+        let value = match outcome {
+            Ok(value) => value,
+            Err(error) => {
+                return Err(CallbackFailure {
+                    context: self,
+                    prefix,
+                    error,
+                });
+            }
+        };
+        let mut receipt = M::receipt(self.session);
+        if omit_charge {
+            crate::cm740_probe::hit(
+                "P0001",
+                "OmitEmptyPrefixCallbackReceiptResizeWithActualReceiptObserver",
+            );
+        } else {
+            M::resize(&mut receipt, || Some(expr_bytes(&value)));
+        }
         if M::ARMED {
             if let Err(error) = self
                 .session

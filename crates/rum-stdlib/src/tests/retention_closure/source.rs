@@ -114,7 +114,7 @@ fn fresh_production() -> Source {
         active_files: BTreeSet::new(),
     };
     for (file, id) in roots {
-        loader.file(&file, &id, false, false);
+        loader.file(&file, &id, false, false, false);
     }
     let missing: Vec<_> = loader
         .source
@@ -155,7 +155,7 @@ pub(super) fn fixture(files: &[(&str, &str, &str)]) -> Source {
         loader.source.files.insert((*file).into(), (*text).into());
         let id = format!("fixture::{module}");
         bind(&mut loader.source, "fixture", module, &id, None, false);
-        loader.file(file, &id, false, false);
+        loader.file(file, &id, false, false, false);
     }
     finish(loader.source)
 }
@@ -179,7 +179,7 @@ pub(super) fn test_module(mut source: Source, file: &str, module: &str) -> Sourc
     };
     let (parent, name) = module.rsplit_once("::").unwrap();
     bind(&mut loader.source, parent, name, module, None, false);
-    loader.file(file, module, false, false);
+    loader.file(file, module, false, false, false);
     let mut result = finish(loader.source);
     existing_impls.append(&mut result.impls);
     result.impls = existing_impls;
@@ -307,7 +307,7 @@ struct Loader {
 }
 
 impl Loader {
-    fn file(&mut self, file: &str, module: &str, test: bool, conditional: bool) {
+    fn file(&mut self, file: &str, module: &str, test: bool, conditional: bool, via_path: bool) {
         let canonical = normalized(Path::new(file));
         let file = canonical.as_str();
         if self.active_files.contains(file) {
@@ -336,7 +336,13 @@ impl Loader {
         };
         self.active_files.insert(file.into());
         let path = Path::new(file);
-        let dir = if matches!(
+        // A `#[path]`-declared module resolves its child modules in the directory of the
+        // file the attribute names (rustc's rule), not in a directory named after the file
+        // stem. Without this, a `mod child;` inside a `#[path = "parent.rs"]` module is
+        // reported as 0 module candidates and its file as unreconciled.
+        let dir = if via_path {
+            path.parent().unwrap().to_path_buf()
+        } else if matches!(
             path.file_stem().and_then(|s| s.to_str()),
             Some("lib" | "main" | "mod")
         ) {
@@ -408,6 +414,7 @@ impl Loader {
                                 },
                                 _ => None,
                             });
+                    let via_path = explicit.is_some();
                     let paths = if let Some(p) = explicit {
                         let normal = if matches!(
                             Path::new(file).file_stem().and_then(|s| s.to_str()),
@@ -439,7 +446,7 @@ impl Loader {
                             found.len()
                         ));
                     } else {
-                        self.file(&found[0], &child, excluded, uncertain);
+                        self.file(&found[0], &child, excluded, uncertain, via_path);
                     }
                 }
                 continue;
@@ -452,7 +459,7 @@ impl Loader {
                         if let Ok(lit) = syn::parse2::<syn::LitStr>(m.mac.tokens.clone()) {
                             let path =
                                 normalized(&Path::new(file).parent().unwrap().join(lit.value()));
-                            self.file(&path, module, true, uncertain);
+                            self.file(&path, module, true, uncertain, false);
                         }
                     }
                 }

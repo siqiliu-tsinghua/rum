@@ -199,6 +199,28 @@ impl Session {
         )
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn prepare_definition_lhs_cm740_driven(
+        &mut self,
+        lhs: Expr,
+        continuation: DefinitionLhsPreparationContinuation,
+    ) -> Result<Expr, EvalError> {
+        self.drive_definition_lhs_preparation_cm740_driven(
+            DefinitionLhsPreparationState {
+                work: DefinitionLhsPreparationWork::PrepareNode {
+                    expr: lhs,
+                    region: DefinitionLhsRegion::Root,
+                },
+                parents: DefinitionLhsParentStack::default(),
+                continuation,
+                prepared_outer_call: None,
+            },
+            (),
+        )
+    }
+
     #[doc(hidden)]
     #[cold]
     #[inline(never)]
@@ -207,10 +229,17 @@ impl Session {
         lhs: Expr,
         continuation: PreparedDefinitionLhsContinuation,
     ) -> Result<Expr, EvalError> {
-        self.prepare_definition_lhs(
-            lhs,
-            DefinitionLhsPreparationContinuation::External(continuation),
-        )
+        (if crate::cm740_probe::driven() {
+            self.prepare_definition_lhs_cm740_driven(
+                lhs,
+                DefinitionLhsPreparationContinuation::External(continuation),
+            )
+        } else {
+            self.prepare_definition_lhs(
+                lhs,
+                DefinitionLhsPreparationContinuation::External(continuation),
+            )
+        })
     }
 
     #[doc(hidden)]
@@ -227,13 +256,23 @@ impl Session {
                 wrappers: restore.wrappers.clone(),
             }
         });
-        self.resume_suspended_call_with_dispatch_plan(
-            outer_call.head.clone(),
-            outer_call.plan.clone(),
-            CallDispatchState::from_prepared(outer_call.prepared_args.clone()),
-            0,
-            unevaluated_restore,
-        )
+        (if crate::cm740_probe::driven() {
+            self.resume_suspended_call_with_dispatch_plan_cm740_driven(
+                outer_call.head.clone(),
+                outer_call.plan.clone(),
+                CallDispatchState::from_prepared(outer_call.prepared_args.clone()),
+                0,
+                unevaluated_restore,
+            )
+        } else {
+            self.resume_suspended_call_with_dispatch_plan(
+                outer_call.head.clone(),
+                outer_call.plan.clone(),
+                CallDispatchState::from_prepared(outer_call.prepared_args.clone()),
+                0,
+                unevaluated_restore,
+            )
+        })
     }
 
     #[cold]
@@ -423,6 +462,261 @@ impl Session {
                                         DefinitionLhsPreparationWork::PrepareCallArguments(call);
                                 }
                                 Err(EvalError::InputRequired { request }) => {
+                                    let _source =
+                                        crate::cm740_probe::control::source::<
+                                            DefinitionLhsPreparationSuspensionFrame,
+                                        >(&["G15B"], true);
+                                    return self.suspend_definition_lhs_preparation(
+                                        state,
+                                        DefinitionLhsAwaitedWork::CallArgument {
+                                            call,
+                                            argument,
+                                            source,
+                                        },
+                                        witness,
+                                        request,
+                                        route,
+                                    );
+                                }
+                                Err(error) => return Err(Route::failure(error)),
+                            }
+                        }
+                        CallArgumentMode::Hold | CallArgumentMode::StrippedUnevaluated => {
+                            if matches!(plan.mode, CallArgumentMode::StrippedUnevaluated) {
+                                if let Some(wrapper) = restore_wrapper {
+                                    self.record_definition_lhs_unevaluated_restore(
+                                        &mut call, argument, &plan.expr, wrapper,
+                                    );
+                                }
+                            }
+                            self.merge_definition_lhs_call_argument(&mut call, argument, plan.expr);
+                            state.work = DefinitionLhsPreparationWork::PrepareCallArguments(call);
+                        }
+                    }
+                }
+                DefinitionLhsPreparationWork::CompleteNode(value) => {
+                    let Some(parent) = state.parents.pop() else {
+                        let prepared = PreparedDefinitionLhs::new(
+                            self,
+                            value,
+                            state.prepared_outer_call.take(),
+                        );
+                        match state
+                            .continuation
+                            .resume(self, prepared)
+                            .map_err(Route::failure)?
+                        {
+                            DefinitionLhsPreparationContinuationResult::Complete(value) => {
+                                return Ok(value);
+                            }
+                            DefinitionLhsPreparationContinuationResult::PrepareNext {
+                                lhs,
+                                continuation,
+                            } => {
+                                state = DefinitionLhsPreparationState {
+                                    work: DefinitionLhsPreparationWork::PrepareNode {
+                                        expr: lhs,
+                                        region: DefinitionLhsRegion::Root,
+                                    },
+                                    parents: DefinitionLhsParentStack::default(),
+                                    continuation,
+                                    prepared_outer_call: None,
+                                };
+                                continue;
+                            }
+                        }
+                    };
+
+                    match parent {
+                        DefinitionLhsParentContext::CallArgument { mut call, argument } => {
+                            self.merge_definition_lhs_call_argument(&mut call, argument, value);
+                            state.work = DefinitionLhsPreparationWork::PrepareCallArguments(call);
+                        }
+                        DefinitionLhsParentContext::StructuralNode { mut call, source } => {
+                            merge_definition_lhs_structural_node(&mut call, source, value);
+                            self.continue_definition_lhs_structural_call(&mut state, call);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn drive_definition_lhs_preparation_cm740_driven<
+        Route: DefinitionResumeRoute<DefinitionLhsPreparationSuspensionFrame>,
+    >(
+        &mut self,
+        mut state: DefinitionLhsPreparationState,
+        route: Route,
+    ) -> Result<Expr, Route::Error> {
+        loop {
+            let work = std::mem::replace(&mut state.work, DefinitionLhsPreparationWork::Vacant);
+            match work {
+                DefinitionLhsPreparationWork::Vacant => {
+                    unreachable!("definition-lhs work is replaced only while it is being driven")
+                }
+                DefinitionLhsPreparationWork::PrepareNode { expr, region } => match expr {
+                    Expr::Atom(_)
+                        if matches!(
+                            region,
+                            DefinitionLhsRegion::Root | DefinitionLhsRegion::RawPattern
+                        ) =>
+                    {
+                        state.work = DefinitionLhsPreparationWork::CompleteNode(expr);
+                    }
+                    Expr::Atom(_) => {
+                        let source = expr;
+                        let produced =
+                            self.evaluate_definition_lhs_active_expr_cm740_driven(&source);
+                        let witness = slot_witness(&produced);
+                        match produced {
+                            Ok(value) => {
+                                state.work = DefinitionLhsPreparationWork::CompleteNode(value);
+                            }
+                            Err(EvalError::InputRequired { request }) => {
+                                return self.suspend_definition_lhs_preparation(
+                                    state,
+                                    DefinitionLhsAwaitedWork::PatternAtom { source },
+                                    witness,
+                                    request,
+                                    route,
+                                );
+                            }
+                            Err(error) => return Err(Route::failure(error)),
+                        }
+                    }
+                    Expr::Call { head, args } => {
+                        match definition_lhs_syntax_call_plan(&head, args.len(), region) {
+                            DefinitionLhsSyntaxCallPlan::Opaque => {
+                                state.work = DefinitionLhsPreparationWork::CompleteNode(
+                                    Expr::call_shared(head, args),
+                                );
+                            }
+                            DefinitionLhsSyntaxCallPlan::Structural {
+                                selection,
+                                child_region,
+                            } => {
+                                self.start_definition_lhs_structural_call(
+                                    &mut state,
+                                    head,
+                                    args,
+                                    selection,
+                                    child_region,
+                                );
+                            }
+                            DefinitionLhsSyntaxCallPlan::Ordinary
+                                if matches!(region, DefinitionLhsRegion::RawPattern) =>
+                            {
+                                self.start_definition_lhs_structural_call(
+                                    &mut state,
+                                    head,
+                                    args,
+                                    DefinitionLhsStructuralSelection::RawTree {
+                                        head_pending: true,
+                                        cursor: 0,
+                                    },
+                                    DefinitionLhsRegion::RawPattern,
+                                );
+                            }
+                            DefinitionLhsSyntaxCallPlan::Ordinary => {
+                                let capture_outer_call =
+                                    matches!(region, DefinitionLhsRegion::Root)
+                                        && state.continuation.captures_outer_call();
+                                let source_head = head.clone();
+                                let produced =
+                                    self.evaluate_definition_lhs_active_expr_cm740_driven(&head);
+                                let witness = slot_witness(&produced);
+                                match produced {
+                                    Ok(value) => {
+                                        let evaluated_head =
+                                            reuse_definition_lhs_call_head(head, value);
+                                        state.work =
+                                            DefinitionLhsPreparationWork::PrepareCallArguments(
+                                                self.definition_lhs_call_state(
+                                                    evaluated_head,
+                                                    args,
+                                                    capture_outer_call,
+                                                ),
+                                            );
+                                    }
+                                    Err(EvalError::InputRequired { request }) => {
+                                        drop(head);
+                                        return self.suspend_definition_lhs_preparation(
+                                            state,
+                                            DefinitionLhsAwaitedWork::CallHead {
+                                                source_head,
+                                                args,
+                                                capture_outer_call,
+                                            },
+                                            witness,
+                                            request,
+                                            route,
+                                        );
+                                    }
+                                    Err(error) => {
+                                        drop(head);
+                                        return Err(Route::failure(error));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                DefinitionLhsPreparationWork::PrepareCallArguments(mut call) => {
+                    let Some(raw_arg) = call.args.get(call.cursor).cloned() else {
+                        let (value, outer_call) = self.finish_definition_lhs_call(call);
+                        if let Some(outer_call) = outer_call {
+                            state.prepared_outer_call = Some(outer_call);
+                        }
+                        state.work = DefinitionLhsPreparationWork::CompleteNode(value);
+                        continue;
+                    };
+
+                    let source_index = call.cursor;
+                    let restore_wrapper = (call.outer_dispatch_plan.is_some()
+                        && unevaluated_wrapper_arg(&raw_arg).is_some())
+                    .then(|| raw_arg.clone());
+                    let plan =
+                        plan_call_argument_preparation(call.attributes, source_index, raw_arg);
+                    call.cursor += 1;
+                    let argument = DefinitionLhsCallArgumentContinuation {
+                        source_index,
+                        allow_sequence_splice: plan.allow_sequence_splice,
+                    };
+
+                    match plan.mode {
+                        CallArgumentMode::Evaluate
+                            if definition_lhs_contains_pattern_syntax(&plan.expr) =>
+                        {
+                            state
+                                .parents
+                                .push(DefinitionLhsParentContext::CallArgument { call, argument });
+                            state.work = DefinitionLhsPreparationWork::PrepareNode {
+                                expr: plan.expr,
+                                region: DefinitionLhsRegion::ActivePattern,
+                            };
+                        }
+                        CallArgumentMode::Evaluate => {
+                            let source = plan.expr;
+                            let produced =
+                                self.evaluate_definition_lhs_active_expr_cm740_driven(&source);
+                            let witness = slot_witness(&produced);
+                            match produced {
+                                Ok(value) => {
+                                    self.merge_definition_lhs_call_argument(
+                                        &mut call, argument, value,
+                                    );
+                                    state.work =
+                                        DefinitionLhsPreparationWork::PrepareCallArguments(call);
+                                }
+                                Err(EvalError::InputRequired { request }) => {
+                                    let _source =
+                                        crate::cm740_probe::control::source::<
+                                            DefinitionLhsPreparationSuspensionFrame,
+                                        >(&["G15B"], true);
                                     return self.suspend_definition_lhs_preparation(
                                         state,
                                         DefinitionLhsAwaitedWork::CallArgument {
@@ -507,6 +801,11 @@ impl Session {
         outcome: Result<Expr, EvalError>,
         token: ContinueToken<'_, DefinitionLhsPreparationSuspensionFrame>,
     ) -> Result<Expr, ResumeStop<Expr>> {
+        if crate::cm740_probe::driven() {
+            return self
+                .resume_definition_lhs_preparation_cm740_driven(state, awaited, outcome, token);
+        }
+
         let source = match &awaited {
             DefinitionLhsAwaitedWork::PatternAtom { source }
             | DefinitionLhsAwaitedWork::CallArgument { source, .. } => source,
@@ -539,8 +838,74 @@ impl Session {
         self.drive_definition_lhs_preparation(state, token)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_definition_lhs_preparation_cm740_driven(
+        &mut self,
+        mut state: DefinitionLhsPreparationState,
+        awaited: DefinitionLhsAwaitedWork,
+        outcome: Result<Expr, EvalError>,
+        token: ContinueToken<'_, DefinitionLhsPreparationSuspensionFrame>,
+    ) -> Result<Expr, ResumeStop<Expr>> {
+        let source = match &awaited {
+            DefinitionLhsAwaitedWork::PatternAtom { source }
+            | DefinitionLhsAwaitedWork::CallArgument { source, .. } => source,
+            DefinitionLhsAwaitedWork::CallHead { source_head, .. } => source_head.as_ref(),
+        };
+        let call_argument = matches!(&awaited, DefinitionLhsAwaitedWork::CallArgument { .. });
+        let from_source = call_argument
+            && crate::cm740_probe::control::emit_resumed(
+                "G15B",
+                "CallArgument.actual-resumed-child",
+            );
+        let finished = if call_argument && from_source && crate::cm740_probe::frame("G15B") {
+            crate::cm740_probe::hit("G15B", "CallArgument.finish_definition_lhs_active_expr");
+            outcome
+        } else {
+            finish_definition_lhs_active_expr(source, outcome)
+        };
+        let value = finished.map_err(ResumeStop::failure)?;
+        state.work =
+            match awaited {
+                DefinitionLhsAwaitedWork::PatternAtom { .. } => {
+                    DefinitionLhsPreparationWork::CompleteNode(value)
+                }
+                DefinitionLhsAwaitedWork::CallHead {
+                    source_head,
+                    args,
+                    capture_outer_call,
+                } => {
+                    let evaluated_head = reuse_definition_lhs_call_head(source_head, value);
+                    DefinitionLhsPreparationWork::PrepareCallArguments(
+                        self.definition_lhs_call_state(evaluated_head, args, capture_outer_call),
+                    )
+                }
+                DefinitionLhsAwaitedWork::CallArgument {
+                    mut call, argument, ..
+                } => {
+                    self.merge_definition_lhs_call_argument(&mut call, argument, value);
+                    DefinitionLhsPreparationWork::PrepareCallArguments(call)
+                }
+            };
+        self.drive_definition_lhs_preparation_cm740_driven(state, token)
+    }
+
     fn evaluate_definition_lhs_active_expr(&mut self, source: &Expr) -> Result<Expr, EvalError> {
         finish_definition_lhs_active_expr(source, self.evaluate_atom_fast_path(source.clone()))
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_definition_lhs_active_expr_cm740_driven(
+        &mut self,
+        source: &Expr,
+    ) -> Result<Expr, EvalError> {
+        finish_definition_lhs_active_expr(
+            source,
+            self.evaluate_atom_fast_path_cm740_driven(source.clone()),
+        )
     }
 
     fn definition_lhs_call_state(

@@ -9,10 +9,17 @@ impl Session {
         }
 
         if args.len() > 2 {
-            return self.eval_option_syntax(
-                Expr::call(system_expr("List"), args[2..].to_vec()),
-                options::MonitorOptionWorking::syntax(args),
-            );
+            return (if crate::cm740_probe::driven() {
+                self.eval_option_syntax_cm740_driven(
+                    Expr::call(system_expr("List"), args[2..].to_vec()),
+                    options::MonitorOptionWorking::syntax(args),
+                )
+            } else {
+                self.eval_option_syntax(
+                    Expr::call(system_expr("List"), args[2..].to_vec()),
+                    options::MonitorOptionWorking::syntax(args),
+                )
+            });
         }
         options::read_evaluation_monitor(self, args, None)
     }

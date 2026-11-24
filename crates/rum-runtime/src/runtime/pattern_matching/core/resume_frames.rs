@@ -197,6 +197,48 @@ impl crate::runtime::suspension::SuspensionFrame for MatchCompiledNamedOwnedSusp
         _session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_1da2(self, _session, outcome);
+        }
+
+        #[allow(unused_mut)]
+        let mut name = self.name.clone();
+        #[allow(unused_mut)]
+        let mut value = self.value.clone();
+        let resumed = match outcome {
+            Ok(resumed_value) => {
+                let outcome = <CompiledMatchOutcome as crate::runtime::suspension::ContinuationValue>::from_continuation_expr(resumed_value);
+                (|| -> Result<CompiledMatchOutcome, EvalError> {
+            if !outcome.matched {
+                return Ok(outcome);
+            }
+
+            let mut bindings = outcome.bindings;
+            Ok(match_outcome(
+                bind_pattern_name(&name, value.clone(), &mut bindings),
+                bindings,
+            ))
+        })()
+                    .map(|value| <CompiledMatchOutcome as crate::runtime::suspension::ContinuationValue>::into_continuation_expr(value))
+            }
+            Err(error) => Err(error),
+        };
+        crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+impl MatchCompiledNamedOwnedSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_1da2(
+        self: std::sync::Arc<Self>,
+        _session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> crate::runtime::suspension::FrameAction {
+        if crate::cm740_probe::frame("P1193") {
+            crate::cm740_probe::hit("P1193", "ForwardActualMatchBeforeNamedBinding");
+            return crate::runtime::suspension::FrameAction::complete(outcome);
+        }
         #[allow(unused_mut)]
         let mut name = self.name.clone();
         #[allow(unused_mut)]

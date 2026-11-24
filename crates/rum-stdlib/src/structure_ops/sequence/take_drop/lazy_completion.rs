@@ -20,6 +20,26 @@ impl SuspensionFrame for TakeLazyCompletionFrame {
         _session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> FrameAction {
+        if rum_runtime::cm740_probe::driven() {
+            return Self::resume_cm740_driven_260(self, _session, outcome);
+        }
+
+        FrameAction::complete(complete(&self, outcome))
+    }
+}
+impl TakeLazyCompletionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_260(
+        self: Arc<Self>,
+        _session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> FrameAction {
+        if rum_runtime::cm740_probe::frame("P2591") {
+            rum_runtime::cm740_probe::hit("P2591", "ActualAttachedInputBeforeLazyCompletionDecode");
+            return FrameAction::complete(outcome);
+        }
         FrameAction::complete(complete(&self, outcome))
     }
 }

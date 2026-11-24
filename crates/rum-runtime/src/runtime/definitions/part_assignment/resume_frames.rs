@@ -21,7 +21,15 @@ impl TypedFrame for FinishPositionalPartSelectorEvaluationSuspensionFrame {
         let rhs = self.rhs.clone();
         let resumed = (|| {
             let evaluated_selectors = outcome?;
-            session.finish_positional_part_assignment(owner, evaluated_selectors, rhs)
+            if crate::cm740_probe::driven() {
+                session.finish_positional_part_assignment_cm740_driven(
+                    owner,
+                    evaluated_selectors,
+                    rhs,
+                )
+            } else {
+                session.finish_positional_part_assignment(owner, evaluated_selectors, rhs)
+            }
         })();
         TypedAction::complete(resumed)
     }

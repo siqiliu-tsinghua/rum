@@ -79,6 +79,10 @@ impl TypedFrame for DispatchExceptionHandlersOwnedSuspensionFrame1 {
         outcome: Result<CompiledMatchOutcome, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_975(self, session, outcome, _token);
+        }
+
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         let resumed = (|| {
@@ -86,6 +90,34 @@ impl TypedFrame for DispatchExceptionHandlersOwnedSuspensionFrame1 {
             session.resume_suspended_exception_guard_outcome(state, outcome, (), ())
         })();
         TypedAction::complete_work(resumed)
+    }
+}
+impl DispatchExceptionHandlersOwnedSuspensionFrame1 {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_975<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        if crate::cm740_probe::frame("P0767") {
+            crate::cm740_probe::hit("P0767", "OmitActualExceptionRhsGuardDispatch");
+            return TypedAction::complete(match outcome {
+                Ok(_) => Err(EvalError::ExceptionThrown {
+                    exception: self.state.exception.clone(),
+                }),
+                Err(error) => Err(error),
+            });
+        }
+        #[allow(unused_mut)]
+        let mut state = self.state.clone();
+        let resumed = (|| {
+            let outcome = outcome.map_err(ResumeStop::failure)?;
+            session.resume_suspended_exception_guard_outcome_cm740_driven(state, outcome, (), ())
+        })();
+        TypedAction::complete_work_cm740_driven(resumed)
     }
 }
 
@@ -105,6 +137,10 @@ impl TypedFrame for DispatchExceptionHandlersOwnedSuspensionFrame2 {
         outcome: Result<CompiledMatchOutcome, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_e2d(self, session, outcome, _token);
+        }
+
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         let resumed = (|| {
@@ -112,6 +148,34 @@ impl TypedFrame for DispatchExceptionHandlersOwnedSuspensionFrame2 {
             session.resume_suspended_exception_match_outcome(state, outcome, (), ())
         })();
         TypedAction::complete_work(resumed)
+    }
+}
+impl DispatchExceptionHandlersOwnedSuspensionFrame2 {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_e2d<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        if crate::cm740_probe::frame("P0765") {
+            crate::cm740_probe::hit("P0765", "OmitActualExceptionDispatch");
+            return TypedAction::complete(match outcome {
+                Ok(_) => Err(EvalError::ExceptionThrown {
+                    exception: self.state.exception.clone(),
+                }),
+                Err(error) => Err(error),
+            });
+        }
+        #[allow(unused_mut)]
+        let mut state = self.state.clone();
+        let resumed = (|| {
+            let outcome = outcome.map_err(ResumeStop::failure)?;
+            session.resume_suspended_exception_match_outcome_cm740_driven(state, outcome, (), ())
+        })();
+        TypedAction::complete_work_cm740_driven(resumed)
     }
 }
 
@@ -131,6 +195,10 @@ impl TypedFrame for DispatchSuspendedExceptionHandlersSuspensionFrame {
         outcome: Result<CompiledMatchOutcome, EvalError>,
         token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_1330(self, session, outcome, token);
+        }
+
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         let resumed = (|| {
@@ -138,6 +206,34 @@ impl TypedFrame for DispatchSuspendedExceptionHandlersSuspensionFrame {
             session.resume_suspended_exception_match_outcome(state, outcome, token, ())
         })();
         TypedAction::complete_work(resumed)
+    }
+}
+impl DispatchSuspendedExceptionHandlersSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_1330<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        if crate::cm740_probe::frame("P0769") {
+            crate::cm740_probe::hit("P0769", "OmitActualExceptionDispatch");
+            return TypedAction::complete(match outcome {
+                Ok(_) => Err(EvalError::ExceptionThrown {
+                    exception: self.state.exception.clone(),
+                }),
+                Err(error) => Err(error),
+            });
+        }
+        #[allow(unused_mut)]
+        let mut state = self.state.clone();
+        let resumed = (|| {
+            let outcome = outcome.map_err(ResumeStop::failure)?;
+            session.resume_suspended_exception_match_outcome_cm740_driven(state, outcome, token, ())
+        })();
+        TypedAction::complete_work_cm740_driven(resumed)
     }
 }
 
@@ -157,6 +253,10 @@ impl TypedFrame for ResumeSuspendedExceptionMatchOutcomeSuspensionFrame {
         outcome: Result<CompiledMatchOutcome, EvalError>,
         token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_1839(self, session, outcome, token);
+        }
+
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         let resumed = (|| {
@@ -164,6 +264,34 @@ impl TypedFrame for ResumeSuspendedExceptionMatchOutcomeSuspensionFrame {
             session.resume_suspended_exception_guard_outcome(state, outcome, (), token)
         })();
         TypedAction::complete_work(resumed)
+    }
+}
+impl ResumeSuspendedExceptionMatchOutcomeSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_1839<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        if crate::cm740_probe::frame("P0773") {
+            crate::cm740_probe::hit("P0773", "OmitActualExceptionRhsGuardDispatch");
+            return TypedAction::complete(match outcome {
+                Ok(_) => Err(EvalError::ExceptionThrown {
+                    exception: self.state.exception.clone(),
+                }),
+                Err(error) => Err(error),
+            });
+        }
+        #[allow(unused_mut)]
+        let mut state = self.state.clone();
+        let resumed = (|| {
+            let outcome = outcome.map_err(ResumeStop::failure)?;
+            session.resume_suspended_exception_guard_outcome_cm740_driven(state, outcome, (), token)
+        })();
+        TypedAction::complete_work_cm740_driven(resumed)
     }
 }
 

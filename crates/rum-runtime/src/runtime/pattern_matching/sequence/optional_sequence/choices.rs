@@ -142,6 +142,47 @@ impl Session {
         self.drive_sequence_choice_result(sequence_result, state, rest_values)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime::pattern_matching::sequence) fn match_compiled_sequence_choices_cm740_driven(
+        &mut self,
+        spec: CompiledSequencePattern,
+        rest_patterns: Vec<MatcherArg>,
+        value_args: Vec<Expr>,
+        bindings: SymbolExprMap,
+        consume: usize,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let min_rest = min_required_matcher_arg_count(&rest_patterns);
+        let Some(max_len) = max_sequence_consume(&spec, min_rest, value_args.len()) else {
+            return Ok(match_outcome(false, bindings));
+        };
+        if !(spec.min_len..=max_len).contains(&consume) {
+            return Ok(match_outcome(false, bindings));
+        }
+
+        let consumed_values = value_args.iter().take(consume).cloned().collect::<Vec<_>>();
+        let rest_values = value_args.iter().skip(consume).cloned().collect::<Vec<_>>();
+        let state = SequenceChoiceState {
+            flat_head: None,
+            spec,
+            rest_patterns,
+            value_args,
+            snapshot: bindings.clone(),
+            consume,
+            max_len,
+        };
+        let sequence_result =
+            crate::cm740_probe::around_hit("P1238", "OmitSequenceChoiceFinish", false, || {
+                self.match_compiled_sequence_pattern_owned_cm740_driven(
+                    state.spec.clone(),
+                    consumed_values,
+                    bindings,
+                )
+            });
+        self.drive_sequence_choice_result_cm740_driven(sequence_result, state, rest_values)
+    }
+
     pub(in crate::runtime::pattern_matching::sequence) fn match_compiled_flat_sequence_choices(
         &mut self,
         flat_head: Expr,
@@ -178,6 +219,48 @@ impl Session {
         self.drive_sequence_choice_result(sequence_result, state, rest_values)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime::pattern_matching::sequence) fn match_compiled_flat_sequence_choices_cm740_driven(
+        &mut self,
+        flat_head: Expr,
+        spec: CompiledSequencePattern,
+        rest_patterns: Vec<MatcherArg>,
+        value_args: Vec<Expr>,
+        bindings: SymbolExprMap,
+        consume: usize,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let min_rest = min_required_matcher_arg_count(&rest_patterns);
+        let Some(max_len) = max_sequence_consume(&spec, min_rest, value_args.len()) else {
+            return Ok(match_outcome(false, bindings));
+        };
+        if !(spec.min_len..=max_len).contains(&consume) {
+            return Ok(match_outcome(false, bindings));
+        }
+
+        let consumed_values = value_args.iter().take(consume).cloned().collect::<Vec<_>>();
+        let rest_values = value_args.iter().skip(consume).cloned().collect::<Vec<_>>();
+        let state = SequenceChoiceState {
+            flat_head: Some(flat_head),
+            spec,
+            rest_patterns,
+            value_args,
+            snapshot: bindings.clone(),
+            consume,
+            max_len,
+        };
+        let sequence_result =
+            crate::cm740_probe::around_hit("P1240", "OmitSequenceChoiceFinish", false, || {
+                self.match_compiled_sequence_pattern_owned_cm740_driven(
+                    state.spec.clone(),
+                    consumed_values,
+                    bindings,
+                )
+            });
+        self.drive_sequence_choice_result_cm740_driven(sequence_result, state, rest_values)
+    }
+
     fn drive_sequence_choice_result(
         &mut self,
         result: Result<CompiledMatchOutcome, EvalError>,
@@ -186,6 +269,28 @@ impl Session {
     ) -> Result<CompiledMatchOutcome, EvalError> {
         match result {
             Ok(outcome) => self.finish_sequence_choice(state, rest_values, outcome),
+            Err(EvalError::InputRequired { request }) => {
+                let state = SuspendedSequenceChoiceState::freeze(state);
+                let rest_values = SharedArgs::new(rest_values);
+                crate::resume_or_suspend!(insert self, DriveSequenceChoiceResultSuspensionFrame { state, rest_values });
+                crate::resume_or_suspend!(insert self, ContinueSequenceChoiceResultFrame);
+                Err(EvalError::InputRequired { request })
+            }
+            Err(error) => Err(error),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn drive_sequence_choice_result_cm740_driven(
+        &mut self,
+        result: Result<CompiledMatchOutcome, EvalError>,
+        state: SequenceChoiceState,
+        rest_values: Vec<Expr>,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        match result {
+            Ok(outcome) => self.finish_sequence_choice_cm740_driven(state, rest_values, outcome),
             Err(EvalError::InputRequired { request }) => {
                 let state = SuspendedSequenceChoiceState::freeze(state);
                 let rest_values = SharedArgs::new(rest_values);
@@ -233,6 +338,45 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_sequence_choice_cm740_driven(
+        &mut self,
+        state: SequenceChoiceState,
+        rest_values: Vec<Expr>,
+        outcome: CompiledMatchOutcome,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if !outcome.matched {
+            return self.retry_sequence_choice_cm740_driven(state);
+        }
+
+        let rest_result = if let Some(flat_head) = state.flat_head.clone() {
+            self.match_compiled_args_with_flat_head_owned_cm740_driven(
+                state.rest_patterns.clone(),
+                rest_values,
+                outcome.bindings,
+                flat_head,
+            )
+        } else {
+            self.match_compiled_args_owned_cm740_driven(
+                state.rest_patterns.clone(),
+                rest_values,
+                outcome.bindings,
+            )
+        };
+        match rest_result {
+            Ok(outcome) => self.finish_sequence_choice_rest_cm740_driven(state, outcome),
+            Err(EvalError::InputRequired { request }) => {
+                let state = SuspendedSequenceChoiceState::freeze(state);
+                crate::resume_or_suspend!(insert self, FinishSequenceChoiceSuspensionFrame { state });
+                crate::resume_or_suspend!(insert self, ContinueSequenceChoiceRestFrame);
+                Err(EvalError::InputRequired { request })
+            }
+            Err(error) => Err(error),
+        }
+    }
+
     fn finish_sequence_choice_rest(
         &mut self,
         state: SequenceChoiceState,
@@ -242,6 +386,21 @@ impl Session {
             Ok(outcome)
         } else {
             self.retry_sequence_choice(state)
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_sequence_choice_rest_cm740_driven(
+        &mut self,
+        state: SequenceChoiceState,
+        outcome: CompiledMatchOutcome,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if outcome.matched {
+            Ok(outcome)
+        } else {
+            self.retry_sequence_choice_cm740_driven(state)
         }
     }
 
@@ -269,6 +428,42 @@ impl Session {
             )
         } else {
             self.match_compiled_sequence_choices(
+                state.spec,
+                state.rest_patterns,
+                state.value_args,
+                state.snapshot,
+                next_consume,
+            )
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn retry_sequence_choice_cm740_driven(
+        &mut self,
+        state: SequenceChoiceState,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let Some(next_consume) = next_sequence_consume(
+            state.spec.greediness,
+            state.consume,
+            state.spec.min_len,
+            state.max_len,
+        ) else {
+            return Ok(match_outcome(false, state.snapshot));
+        };
+
+        if let Some(flat_head) = state.flat_head {
+            self.match_compiled_flat_sequence_choices_cm740_driven(
+                flat_head,
+                state.spec,
+                state.rest_patterns,
+                state.value_args,
+                state.snapshot,
+                next_consume,
+            )
+        } else {
+            self.match_compiled_sequence_choices_cm740_driven(
                 state.spec,
                 state.rest_patterns,
                 state.value_args,

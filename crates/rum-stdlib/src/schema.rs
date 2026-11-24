@@ -59,7 +59,11 @@ fn finish_schema_errors(
         Err(message) => return Ok(fail_schema(session, "SchemaErrors", message)),
     };
 
-    start_validation(session, SchemaMode::Errors, value, schema, options)
+    (if rum_runtime::cm740_probe::driven() {
+        start_validation_cm740_driven(session, SchemaMode::Errors, value, schema, options)
+    } else {
+        start_validation(session, SchemaMode::Errors, value, schema, options)
+    })
 }
 
 pub(crate) fn eval_conform_schema(
@@ -106,7 +110,11 @@ fn finish_conform_schema(
         Err(message) => return Ok(fail_schema(session, "ConformSchema", message)),
     };
 
-    start_validation(session, SchemaMode::Conform, value, schema, options)
+    (if rum_runtime::cm740_probe::driven() {
+        start_validation_cm740_driven(session, SchemaMode::Conform, value, schema, options)
+    } else {
+        start_validation(session, SchemaMode::Conform, value, schema, options)
+    })
 }
 
 fn start_validation(
@@ -128,6 +136,37 @@ fn start_validation(
         schema: schema.clone(),
     };
     match schema_drive(session, &mut state, task) {
+        Ok(value) => finish_validation(session, state, value),
+        Err(error) => suspend_validation(session, state, error),
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn start_validation_cm740_driven(
+    session: &mut Session,
+    mode: SchemaMode,
+    value: &Expr,
+    schema: &Expr,
+    options: state::SchemaOptions,
+) -> Result<Expr, EvalError> {
+    let _c16_route = rum_runtime::cm740_probe::enter(match &mode {
+        SchemaMode::Conform => "C7.route.SchemaMode-Conform",
+        SchemaMode::Errors => "C7.route.SchemaMode-Errors",
+    });
+    let mut state = SchemaState {
+        mode,
+        options,
+        stack: Vec::new(),
+        path: SchemaPath::root(),
+        errors: Vec::new(),
+    };
+    let task = SchemaTask::Visit {
+        value: value.clone(),
+        schema: schema.clone(),
+    };
+    match rum_runtime::cm740_probe::around("P2299", || schema_drive(session, &mut state, task)) {
         Ok(value) => finish_validation(session, state, value),
         Err(error) => suspend_validation(session, state, error),
     }

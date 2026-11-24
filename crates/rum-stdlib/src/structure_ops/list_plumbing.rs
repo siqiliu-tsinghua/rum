@@ -9,6 +9,10 @@ pub(crate) fn eval_differences(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    if rum_runtime::cm740_probe::driven() {
+        return eval_differences_cm740_driven(session, head, args);
+    }
+
     let args = args.as_ref();
     let (list, order) = match args {
         [list] => (list, 1),
@@ -28,6 +32,49 @@ pub(crate) fn eval_differences(
     let mut current = items.to_vec();
     for iteration in 0..order {
         current = match successive_differences(session, &current) {
+            Ok(row) => row,
+            Err(error) => {
+                return suspend_differences_order(session, order - iteration - 1, error);
+            }
+        };
+        if current.is_empty() {
+            break;
+        }
+    }
+
+    session.enforce_generated_element_limit_for_count(current.len())?;
+    Ok(Expr::call(system_expr(heads::structure::LIST), current))
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(crate) fn eval_differences_cm740_driven(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    let args = args.as_ref();
+    let (list, order) = match args {
+        [list] => (list, 1),
+        [list, order_expr] => {
+            let Some(order) = expr_as_non_negative_usize(order_expr) else {
+                return Ok(invalid_differences_order_call(session, args));
+            };
+            (list, order)
+        }
+        _ => return Ok(session.invalid_call_with_arg_range("Differences", args, 1, 2)),
+    };
+
+    let Some(items) = list_items(list) else {
+        return Ok(Expr::call(head.clone(), args.to_vec()));
+    };
+
+    let mut current = items.to_vec();
+    for iteration in 0..order {
+        current = match rum_runtime::cm740_probe::around("P2544", || {
+            successive_differences_cm740_driven(session, &current)
+        }) {
             Ok(row) => row,
             Err(error) => {
                 return suspend_differences_order(session, order - iteration - 1, error);
@@ -81,6 +128,33 @@ fn differences_from_order(
     Ok(Expr::call(system_expr(heads::structure::LIST), current))
 }
 
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn differences_from_order_cm740_driven(
+    session: &mut Session,
+    mut current: Vec<Expr>,
+    order: usize,
+) -> Result<Expr, EvalError> {
+    for iteration in 0..order {
+        let result = successive_differences_cm740_driven(session, &current);
+        current = rum_runtime::resume_or_suspend!(
+            session,
+            result,
+            ok(value) => Ok(value),
+            suspend => DifferencesOrderSuspensionFrame {
+                remaining_order: order - iteration - 1,
+            },
+        )?;
+        if current.is_empty() {
+            break;
+        }
+    }
+
+    session.enforce_generated_element_limit_for_count(current.len())?;
+    Ok(Expr::call(system_expr(heads::structure::LIST), current))
+}
+
 #[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
 struct DifferencesOrderSuspensionFrame {
     remaining_order: usize,
@@ -92,9 +166,37 @@ impl rum_runtime::kernel_api::SuspensionFrame for DifferencesOrderSuspensionFram
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
+        if rum_runtime::cm740_probe::driven() {
+            return Self::resume_cm740_driven_a8f(self, session, outcome);
+        }
+
         use rum_runtime::kernel_api::ContinuationValue;
         let resumed = outcome.and_then(|row| {
             differences_from_order(
+                session,
+                Vec::<Expr>::from_continuation_expr(row),
+                self.remaining_order,
+            )
+        });
+        rum_runtime::kernel_api::FrameAction::complete(resumed)
+    }
+}
+impl DifferencesOrderSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_a8f(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> rum_runtime::kernel_api::FrameAction {
+        use rum_runtime::kernel_api::ContinuationValue;
+        if rum_runtime::cm740_probe::frame("P2544") {
+            rum_runtime::cm740_probe::hit("P2544", "ForwardActualDifferencesFrameInput");
+            return rum_runtime::kernel_api::FrameAction::complete(outcome);
+        }
+        let resumed = outcome.and_then(|row| {
+            differences_from_order_cm740_driven(
                 session,
                 Vec::<Expr>::from_continuation_expr(row),
                 self.remaining_order,
@@ -149,6 +251,32 @@ fn successive_differences(session: &mut Session, items: &[Expr]) -> Result<Vec<E
     let mut differences = Vec::with_capacity(items.len() - 1);
     for pair in items.windows(2) {
         let value = match difference_expr(session, &pair[0], &pair[1]) {
+            Ok(value) => value,
+            Err(error) => {
+                return suspend_differences_row(session, items, differences, error);
+            }
+        };
+        differences.push(value);
+    }
+    Ok(differences)
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn successive_differences_cm740_driven(
+    session: &mut Session,
+    items: &[Expr],
+) -> Result<Vec<Expr>, EvalError> {
+    if items.len() < 2 {
+        return Ok(Vec::new());
+    }
+
+    let mut differences = Vec::with_capacity(items.len() - 1);
+    for pair in items.windows(2) {
+        let value = match rum_runtime::cm740_probe::around("P2547", || {
+            difference_expr(session, &pair[0], &pair[1])
+        }) {
             Ok(value) => value,
             Err(error) => {
                 return suspend_differences_row(session, items, differences, error);
@@ -220,7 +348,38 @@ impl rum_runtime::kernel_api::SuspensionFrame for DifferencesRowSuspensionFrame 
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
+        if rum_runtime::cm740_probe::driven() {
+            return Self::resume_cm740_driven_1a4d(self, session, outcome);
+        }
+
         use rum_runtime::kernel_api::ContinuationValue;
+        let resumed = outcome.and_then(|value| {
+            differences_after_pair(
+                session,
+                &self.items,
+                self.next_pair,
+                &self.differences,
+                value,
+            )
+            .map(ContinuationValue::into_continuation_expr)
+        });
+        rum_runtime::kernel_api::FrameAction::complete(resumed)
+    }
+}
+impl DifferencesRowSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_1a4d(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> rum_runtime::kernel_api::FrameAction {
+        use rum_runtime::kernel_api::ContinuationValue;
+        if rum_runtime::cm740_probe::frame("P2547") {
+            rum_runtime::cm740_probe::hit("P2547", "ForwardActualDifferencesFrameInput");
+            return rum_runtime::kernel_api::FrameAction::complete(outcome);
+        }
         let resumed = outcome.and_then(|value| {
             differences_after_pair(
                 session,

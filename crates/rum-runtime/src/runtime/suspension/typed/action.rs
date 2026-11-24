@@ -70,6 +70,22 @@ impl<O: SlotValue> TypedAction<O> {
         }
     }
 
+    /// Complete a non-deferred helper, preserving a same-frame token stop.
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn complete_work_cm740_driven(work: Result<O, ResumeStop<O>>) -> Self {
+        match work {
+            Ok(value) => Self::complete(Ok(value)),
+            Err(stop) => {
+                if let Action::Complete(outcome) = &stop.action.inner {
+                    crate::cm740_probe::queue_transport::source_observe_join_result(outcome);
+                }
+                stop.action
+            }
+        }
+    }
+
     pub fn finish_work<T, F: SlotFinalizer<Output = O>>(
         work: Result<T, ResumeStop<O>>,
         finish: impl FnOnce(T) -> F,

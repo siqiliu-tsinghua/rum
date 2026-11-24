@@ -151,6 +151,65 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn run_call_dispatch_stage_cm740_driven<S>(
+        &mut self,
+        stage: CallDispatchStage,
+        head: &Expr,
+        attributes: AttributeSet,
+        builtin_spec: Option<S>,
+        state: &mut CallDispatchState,
+    ) -> Result<Option<Expr>, EvalError>
+    where
+        S: CallBuiltinSpec,
+    {
+        match stage {
+            CallDispatchStage::SpecialForm => {
+                self.try_dispatch_builtin_call_cm740_driven(builtin_spec, head, state.raw_args())
+            }
+            CallDispatchStage::PrepareArguments => {
+                unreachable!("argument preparation is handled before generic dispatch")
+            }
+            CallDispatchStage::Listable => {
+                match self.dispatch_listable_stage(head, state.prepared_args(), attributes)? {
+                    ThreadingDispatch::NotApplicable => Ok(None),
+                    ThreadingDispatch::Threaded(threaded) => {
+                        let threaded_result = self.evaluate_cm740_driven(threaded);
+                        crate::resume_typed_or_suspend!(
+                            self,
+                            threaded_result,
+                            ok(value) => Ok(Some(value)),
+                            suspend => RunCallDispatchStageSuspensionFrame::threaded_call(),
+                        )
+                    }
+                    ThreadingDispatch::Mismatch => Ok(Some(Expr::call(
+                        head.clone(),
+                        state.prepared_args().to_vec(),
+                    ))),
+                }
+            }
+            CallDispatchStage::UpValues => self.try_apply_up_values_cm740_driven(
+                state.prepared_definition_lookup(head, attributes),
+            ),
+            CallDispatchStage::DownValues => self.try_apply_down_values_cm740_driven(
+                state.prepared_definition_lookup(head, attributes),
+            ),
+            CallDispatchStage::SubValues => self.try_apply_sub_values_cm740_driven(
+                state.prepared_definition_lookup(head, attributes),
+            ),
+            CallDispatchStage::OrdinaryBuiltin => self.try_dispatch_builtin_call_cm740_driven(
+                builtin_spec,
+                head,
+                state.prepared_shared_args(),
+            ),
+            CallDispatchStage::Function => {
+                self.try_apply_function_cm740_driven(head, state.prepared_args())
+            }
+        }
+    }
+
     pub(super) fn try_dispatch_builtin_call<S>(
         &mut self,
         builtin_spec: Option<S>,
@@ -219,6 +278,107 @@ impl Session {
         )
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn try_dispatch_builtin_call_cm740_driven<S>(
+        &mut self,
+        builtin_spec: Option<S>,
+        head: &Expr,
+        args: &SharedArgs,
+    ) -> Result<Option<Expr>, EvalError>
+    where
+        S: CallBuiltinSpec,
+    {
+        let Some(spec) = builtin_spec else {
+            return Ok(None);
+        };
+        let Some(handler) = spec.handler() else {
+            return Ok(None);
+        };
+        let capability = spec.capability();
+
+        if !self.capability_policy.is_unrestricted() && !self.capability_policy.allows(capability) {
+            if self.value_q_refuses_capability(capability) {
+                // `ValueQ` consumes every non-input error. Cancellation is a
+                // private terminal signal here and never reaches the host.
+                return Err(EvalError::Cancelled);
+            }
+            return Ok(Some(self.sandbox_denied_builtin(head, spec)));
+        }
+
+        let builtin_symbol = expr_as_symbol(head).copied();
+        if let Some(symbol) = builtin_symbol {
+            self.record_profile_builtin_application(&symbol);
+        }
+        let profile_builtin_start = builtin_symbol
+            .and_then(|symbol| self.builtin_timing_start_adopted(&symbol, args.len()));
+        if !builtin_memory_growth_test_enabled() {
+            let result = crate::cm740_probe::around("P0543", || {
+                self.run_builtin_handler(handler, head, args)
+            });
+            // CM4 copied carrier: omit this producer's pause-accounting tail only.
+            if true
+                && std::env::var("RUM_CM740_OMIT").as_deref() == Ok("P0543")
+                && builtin_symbol.is_some_and(|symbol| symbol.name() == "Input")
+                && matches!(&result, Err(EvalError::InputRequired { .. }))
+            {
+                eprintln!(
+                    "CM740_SOURCE_HIT row=P0543 phase=unchecked-InputRequired selector=P0543"
+                );
+                return crate::resume_typed_or_suspend!(
+                    self,
+                    result,
+                    ok(value) => Ok(Some(value)),
+                    suspend => RunCallDispatchStageSuspensionFrame::unchecked_builtin(),
+                );
+            }
+            return self.finish_builtin_dispatch_cm740_driven(
+                result,
+                profile_builtin_start,
+                RunCallDispatchStageSuspensionFrame::unchecked_builtin,
+                |_, result| result.map(Some),
+            );
+        }
+
+        let projection_count_before = self.builtin_memory_projection_count.get();
+        let result = if crate::cm740_probe::driven() {
+            let _class_guard = crate::cm740_probe::enter("P0544");
+            let class_produced = (|| self.run_builtin_handler(handler, head, args))();
+            if crate::cm740_probe::class_lease::wants_input_return("P0544") {
+                if let Err(crate::EvalError::InputRequired { .. }) = &class_produced {
+                    _class_guard.input_return(&class_produced);
+                    crate::cm740_probe::class_lease::note_input_return("P0544", 0);
+                }
+            }
+            class_produced
+        } else {
+            (|| self.run_builtin_handler(handler, head, args))()
+        };
+        self.finish_builtin_dispatch_cm740_driven(
+            result,
+            profile_builtin_start,
+            || {
+                RunCallDispatchStageSuspensionFrame::builtin(
+                    spec.name(),
+                    spec.memory_growth(),
+                    args.clone(),
+                    projection_count_before,
+                )
+            },
+            |session, result| {
+                session.validate_builtin_memory_growth_slow(
+                    spec.name(),
+                    spec.memory_growth(),
+                    args,
+                    projection_count_before,
+                    &result,
+                );
+                result.map(Some)
+            },
+        )
+    }
+
     #[inline(always)]
     fn finish_builtin_dispatch(
         &mut self,
@@ -230,6 +390,33 @@ impl Session {
         finish: impl FnOnce(&mut Self, Result<Expr, EvalError>) -> Result<Option<Expr>, EvalError>,
     ) -> Result<Option<Expr>, EvalError> {
         self.record_profile_builtin_timing_adopted_boundary(profile_builtin_start, &produced);
+        crate::resume_typed_or_suspend!(
+            self,
+            produced,
+            ok(value) => finish(self, Ok(value)),
+            suspend => freeze(),
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_builtin_dispatch_cm740_driven(
+        &mut self,
+        produced: Result<Expr, EvalError>,
+        profile_builtin_start: Option<
+            crate::runtime::profiling::control_builtin::AdoptedBuiltinTimingToken,
+        >,
+        freeze: impl FnOnce() -> RunCallDispatchStageSuspensionFrame,
+        finish: impl FnOnce(&mut Self, Result<Expr, EvalError>) -> Result<Option<Expr>, EvalError>,
+    ) -> Result<Option<Expr>, EvalError> {
+        if crate::cm740_probe::frame("P0544")
+            && matches!(&produced, Err(EvalError::InputRequired { .. }))
+        {
+            crate::cm740_probe::hit("P0544", "OmitActualCheckedBuiltinPauseAccountingBoundary");
+        } else {
+            self.record_profile_builtin_timing_adopted_boundary(profile_builtin_start, &produced);
+        }
         crate::resume_typed_or_suspend!(
             self,
             produced,

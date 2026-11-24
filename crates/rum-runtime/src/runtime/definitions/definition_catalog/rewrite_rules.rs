@@ -165,7 +165,11 @@ impl Session {
             );
         }
 
-        self.resolve_matcher_pattern_expr_owned(candidate)
+        (if crate::cm740_probe::driven() {
+            self.resolve_matcher_pattern_expr_owned_cm740_driven(candidate)
+        } else {
+            self.resolve_matcher_pattern_expr_owned(candidate)
+        })
     }
 
     pub(in crate::runtime) fn compile_cases_spec_from_resolved_expr(
@@ -193,6 +197,25 @@ impl Session {
         )
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resolve_rewrite_rule_exprs_owned_cm740_driven(
+        &mut self,
+        expr: Expr,
+    ) -> Result<Option<Vec<Expr>>, EvalError> {
+        let resolved_result =
+            crate::cm740_probe::around("P0338", || self.evaluate_cm740_driven(expr));
+        crate::resume_typed_or_suspend!(
+            self,
+            resolved_result,
+            ok(resolved) => { let session = self; (|| {
+                    Ok(session.normalize_rewrite_rule_exprs_from_resolved_cm740_driven(&resolved))
+                })() },
+            suspend => ResolveRewriteRuleExprsOwnedSuspensionFrame,
+        )
+    }
+
     pub(in crate::runtime) fn drive_rewrite_rule_exprs_owned(
         &mut self,
         expr: Expr,
@@ -209,12 +232,37 @@ impl Session {
         )
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn drive_rewrite_rule_exprs_owned_cm740_driven(
+        &mut self,
+        expr: Expr,
+        continuation: RewriteRuleExprContinuation,
+    ) -> Result<Expr, EvalError> {
+        let resolved_rule_exprs_result = crate::cm740_probe::around("P0339", || {
+            self.resolve_rewrite_rule_exprs_owned_cm740_driven(expr)
+        });
+        crate::resume_typed_or_suspend!(
+            self,
+            resolved_rule_exprs_result,
+            ok(rule_exprs) => { let session = self; (|| {
+                    continuation.resume(session, rule_exprs)
+                })() },
+            suspend => DriveRewriteRuleExprsOwnedSuspensionFrame { continuation },
+        )
+    }
+
     pub(in crate::runtime) fn drive_rewrite_rule_infos_owned(
         &mut self,
         expr: Expr,
         continuation: RewriteRuleInfoContinuation,
     ) -> Result<Option<Vec<RewriteRuleInfo>>, EvalError> {
-        let resolved_rule_exprs_result = self.resolve_rewrite_rule_exprs_owned(expr);
+        let resolved_rule_exprs_result = (if crate::cm740_probe::driven() {
+            self.resolve_rewrite_rule_exprs_owned_cm740_driven(expr)
+        } else {
+            self.resolve_rewrite_rule_exprs_owned(expr)
+        });
         crate::resume_typed_or_suspend!(
             self,
             resolved_rule_exprs_result,
@@ -248,6 +296,34 @@ impl Session {
             rules
                 .into_iter()
                 .map(|rule| Self::rewrite_rule_expr(&rule))
+                .collect()
+        })
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn normalize_rewrite_rule_exprs_from_resolved_cm740_driven(
+        &self,
+        resolved: &Expr,
+    ) -> Option<Vec<Expr>> {
+        normalize_rewrite_rules(resolved).map(|rules| {
+            rules
+                .into_iter()
+                .map(|rule| {
+                    if crate::cm740_probe::frame("P0338") && !rule.guards.is_empty() {
+                        crate::cm740_probe::hit(
+                            "P0338",
+                            "OmitActualNormalizedRuleGuardReattachment",
+                        );
+                        Expr::call(
+                            system_expr(if rule.delayed { "RuleDelayed" } else { "Rule" }),
+                            vec![rule.lhs, rule.rhs],
+                        )
+                    } else {
+                        Self::rewrite_rule_expr(&rule)
+                    }
+                })
                 .collect()
         })
     }
@@ -371,7 +447,11 @@ impl TypedFrame for ResolveRewriteRuleExprsOwnedSuspensionFrame {
             Err(error) => return TypedAction::complete(Err(error)),
         };
         TypedAction::complete((|| {
-            Ok(session.normalize_rewrite_rule_exprs_from_resolved(&resolved))
+            Ok(if crate::cm740_probe::driven() {
+                session.normalize_rewrite_rule_exprs_from_resolved_cm740_driven(&resolved)
+            } else {
+                session.normalize_rewrite_rule_exprs_from_resolved(&resolved)
+            })
         })())
     }
 }

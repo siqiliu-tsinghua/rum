@@ -11,8 +11,13 @@ pub struct FrameChain<I: SlotValue, O: SlotValue> {
 }
 
 pub(super) fn start<I: SlotValue, F: TypedFrame<Input = I>>(first: F) -> FrameChain<I, F::Output> {
+    let erased = erase(first);
+    crate::cm740_probe::class_lease::remember_concrete_kind(
+        std::sync::Arc::as_ptr(&erased) as *const () as usize,
+        std::any::type_name::<F>(),
+    );
     FrameChain {
-        frames: vec![erase(first)],
+        frames: vec![erased],
         ends: PhantomData,
     }
 }
@@ -24,13 +29,22 @@ impl<I: SlotValue, O: SlotValue> FrameChain<I, O> {
         request: RuntimeInputRequest,
     ) -> Result<O, EvalError> {
         for frame in self.frames {
-            session.insert_typed_erased_frame(frame);
+            let kind =
+                crate::cm740_probe::class_lease::concrete_kind_for(std::sync::Arc::as_ptr(&frame)
+                    as *const ()
+                    as usize);
+            session.insert_typed_erased_frame_kind(frame, kind);
         }
         Err(EvalError::InputRequired { request })
     }
 
     pub fn then<F: TypedFrame<Input = O>>(mut self, next: F) -> FrameChain<I, F::Output> {
-        self.frames.push(erase(next));
+        let erased = erase(next);
+        crate::cm740_probe::class_lease::remember_concrete_kind(
+            std::sync::Arc::as_ptr(&erased) as *const () as usize,
+            std::any::type_name::<F>(),
+        );
+        self.frames.push(erased);
         FrameChain {
             frames: self.frames,
             ends: PhantomData,

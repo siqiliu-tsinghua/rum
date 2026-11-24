@@ -210,11 +210,19 @@ impl Session {
             .skip(consume)
             .cloned()
             .collect::<Vec<_>>();
-        let sequence_result = self.match_compiled_sequence_pattern_owned(
-            state.spec.clone(),
-            consumed_values,
-            state.bindings.clone(),
-        );
+        let sequence_result = (if crate::cm740_probe::driven() {
+            self.match_compiled_sequence_pattern_owned_cm740_driven(
+                state.spec.clone(),
+                consumed_values,
+                state.bindings.clone(),
+            )
+        } else {
+            self.match_compiled_sequence_pattern_owned(
+                state.spec.clone(),
+                consumed_values,
+                state.bindings.clone(),
+            )
+        });
         match sequence_result {
             Ok(outcome) => self.finish_sequence_choice_collection(state, rest_values, outcome),
             Err(EvalError::InputRequired { request }) => {

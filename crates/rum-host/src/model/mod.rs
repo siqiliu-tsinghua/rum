@@ -22,3 +22,6 @@ pub(crate) use outcome::{
     synthesized_host_failure,
 };
 pub(crate) use requests::completeness_status;
+
+pub(crate) use outcome::cm740_output_scope_cm740_driven as cm740_output_scope;
+pub(crate) use outcome::eval_success_from_runtime_cm740_driven;

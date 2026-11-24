@@ -86,8 +86,15 @@ impl Session {
         rules: &[RewriteRule],
         source: RuleApplicationSource,
     ) -> Result<Expr, EvalError> {
-        let outcome_result =
-            self.apply_replace_all_owned(expr, RewriteRulePlan::from_slice(rules), source);
+        let outcome_result = (if crate::cm740_probe::driven() {
+            self.apply_replace_all_owned_cm740_driven(
+                expr,
+                RewriteRulePlan::from_slice(rules),
+                source,
+            )
+        } else {
+            self.apply_replace_all_owned(expr, RewriteRulePlan::from_slice(rules), source)
+        });
         crate::resume_typed_or_suspend!(
             self,
             outcome_result,
@@ -103,6 +110,24 @@ impl Session {
         source: RuleApplicationSource,
     ) -> Result<Expr, EvalError> {
         let outcome_result = self.apply_replace_all_owned(expr, rules, source);
+        crate::resume_typed_or_suspend!(
+            self,
+            outcome_result,
+            ok(outcome) => Ok(outcome.expr),
+            suspend => ApplyReplaceAllWithPlanSuspensionFrame,
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn apply_replace_all_with_plan_cm740_driven(
+        &mut self,
+        expr: Expr,
+        rules: RewriteRulePlan,
+        source: RuleApplicationSource,
+    ) -> Result<Expr, EvalError> {
+        let outcome_result = self.apply_replace_all_owned_cm740_driven(expr, rules, source);
         crate::resume_typed_or_suspend!(
             self,
             outcome_result,
@@ -136,6 +161,30 @@ impl Session {
         self.apply_rules_once_from_list(expr, normalized_expr, rules, source, cursor, ())
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn apply_rewrite_rule_plan_once_cm740_driven(
+        &mut self,
+        expr: Expr,
+        rules: RewriteRulePlan,
+        source: RuleApplicationSource,
+    ) -> Result<Option<Expr>, EvalError> {
+        let normalized_expr = self.normalize_match_expr(&expr);
+        // Replace and ReplaceAt build this indexed, Arc-backed plan once per
+        // traversal; their cloneable applier carries the same plan across
+        // targets and suspension frames.
+        let cursor = rules.start_scan(&normalized_expr);
+        self.apply_rules_once_from_list_cm740_driven(
+            expr,
+            normalized_expr,
+            rules,
+            source,
+            cursor,
+            (),
+        )
+    }
+
     fn apply_replace_all_owned(
         &mut self,
         expr: Expr,
@@ -165,6 +214,49 @@ impl Session {
         }
 
         self.drive_replace_all_traversal(
+            ReplaceAllTraversalState {
+                work: vec![ReplaceAllTraversalWork::Visit(expr)],
+                completed: Vec::new(),
+                rules,
+                source,
+            },
+            (),
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn apply_replace_all_owned_cm740_driven(
+        &mut self,
+        expr: Expr,
+        rules: RewriteRulePlan,
+        source: RuleApplicationSource,
+    ) -> Result<ReplaceAllTraversalOutcome, EvalError> {
+        if matches!(expr, Expr::Atom(_)) {
+            let replace_result = crate::cm740_probe::around("P0278", || {
+                self.apply_rewrite_rule_plan_once_cm740_driven(expr.clone(), rules.clone(), source)
+            });
+            let witness = slot_witness(&replace_result);
+            return match replace_result {
+                Ok(Some(replaced)) => Ok(ReplaceAllTraversalOutcome {
+                    expr: replaced,
+                    changed: true,
+                }),
+                Ok(None) => Ok(ReplaceAllTraversalOutcome {
+                    expr,
+                    changed: false,
+                }),
+                Err(EvalError::InputRequired { request }) => {
+                    resume_frames::suspend_replace_all_atom(
+                        self, witness, request, expr, rules, source,
+                    )
+                }
+                Err(error) => Err(error),
+            };
+        }
+
+        self.drive_replace_all_traversal_cm740_driven(
             ReplaceAllTraversalState {
                 work: vec![ReplaceAllTraversalWork::Visit(expr)],
                 completed: Vec::new(),
@@ -261,6 +353,97 @@ impl Session {
             .expect("ReplaceAll traversal completes its root"))
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn drive_replace_all_traversal_cm740_driven<
+        Route: DefinitionResumeRoute<ApplyReplaceAllOwnedSuspensionFrame>,
+    >(
+        &mut self,
+        mut state: ReplaceAllTraversalState,
+        route: Route,
+    ) -> Result<ReplaceAllTraversalOutcome, Route::Error> {
+        while let Some(work) = state.work.pop() {
+            match work {
+                ReplaceAllTraversalWork::Visit(expr) => {
+                    let replace_result = crate::cm740_probe::around("P0281", || {
+                        self.apply_rewrite_rule_plan_once_cm740_driven(
+                            expr.clone(),
+                            state.rules.clone(),
+                            state.source,
+                        )
+                    });
+                    let witness = slot_witness(&replace_result);
+                    match replace_result {
+                        Ok(replaced) => {
+                            self.finish_replace_all_visit(&mut state, expr, replaced);
+                        }
+                        Err(EvalError::InputRequired { request }) => {
+                            return resume_frames::suspend_replace_all_traversal(
+                                self, witness, request, state, expr, route,
+                            );
+                        }
+                        Err(error) => return Err(Route::failure(error)),
+                    }
+                }
+                ReplaceAllTraversalWork::FinishCall {
+                    original_head,
+                    original_args,
+                    rewrite_args,
+                } => {
+                    let rewritten_child_count =
+                        1 + rewrite_args.iter().filter(|rewrite| **rewrite).count();
+                    let first_child = state
+                        .completed
+                        .len()
+                        .checked_sub(rewritten_child_count)
+                        .expect("ReplaceAll traversal results remain balanced");
+                    let mut children = state.completed.split_off(first_child).into_iter();
+                    let head_outcome = children
+                        .next()
+                        .expect("ReplaceAll call traversal completes its head");
+                    let mut changed = head_outcome.changed;
+                    let head = head_outcome.expr;
+                    let mut rewritten_args = Vec::with_capacity(original_args.len());
+                    for (index, original_arg) in original_args.iter().enumerate() {
+                        if rewrite_args[index] {
+                            let outcome = children
+                                .next()
+                                .expect("ReplaceAll call traversal completes each selected arg");
+                            changed |= outcome.changed;
+                            if outcome.changed {
+                                self.append_changed_rewrite_argument(
+                                    &head,
+                                    &mut rewritten_args,
+                                    outcome.expr,
+                                );
+                            } else {
+                                rewritten_args.push(outcome.expr);
+                            }
+                        } else {
+                            rewritten_args.push(original_arg.clone());
+                        }
+                    }
+                    debug_assert!(children.next().is_none());
+                    let expr = if changed {
+                        Expr::call(head, rewritten_args)
+                    } else {
+                        Expr::call_shared(original_head, original_args)
+                    };
+                    state
+                        .completed
+                        .push(ReplaceAllTraversalOutcome { expr, changed });
+                }
+            }
+        }
+
+        debug_assert_eq!(state.completed.len(), 1);
+        Ok(state
+            .completed
+            .pop()
+            .expect("ReplaceAll traversal completes its root"))
+    }
+
     fn resume_replace_all_traversal<'resume>(
         &mut self,
         mut state: ReplaceAllTraversalState,
@@ -269,7 +452,11 @@ impl Session {
         token: ContinueToken<'resume, ApplyReplaceAllOwnedSuspensionFrame>,
     ) -> Result<ReplaceAllTraversalOutcome, ResumeStop<ReplaceAllTraversalOutcome>> {
         self.finish_replace_all_visit(&mut state, expr, replaced);
-        self.drive_replace_all_traversal(state, token)
+        (if crate::cm740_probe::driven() {
+            self.drive_replace_all_traversal_cm740_driven(state, token)
+        } else {
+            self.drive_replace_all_traversal(state, token)
+        })
     }
 
     fn finish_replace_all_visit(
@@ -432,6 +619,84 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn apply_rules_once_from_list_cm740_driven<
+        Route: DefinitionResumeRoute<ApplyRulesOnceFromListSuspensionFrame>,
+    >(
+        &mut self,
+        expr: Expr,
+        normalized_expr: Expr,
+        rules: RewriteRulePlan,
+        source: RuleApplicationSource,
+        mut cursor: RewriteRuleScanCursor,
+        route: Route,
+    ) -> Result<Option<Expr>, Route::Error> {
+        loop {
+            let Some(index) = rules.next_rule_index(&mut cursor) else {
+                return Ok(None);
+            };
+            let Some(rule) = rules.get(index) else {
+                return Ok(None);
+            };
+            let would_reject = !self.definition_lhs_could_match_candidate(
+                &rule.lhs,
+                &rule.matcher,
+                &normalized_expr,
+            );
+            record_profile_rewrite_rule_prefilter_candidate(would_reject);
+            if would_reject {
+                continue;
+            }
+            let matcher = rule.matcher.clone();
+
+            let match_result = crate::cm740_probe::around("P0284", || {
+                self.match_compiled_owned_cm740_driven(
+                    matcher,
+                    normalized_expr.clone(),
+                    SymbolExprMap::default(),
+                )
+            });
+            let witness = slot_witness(&match_result);
+            let outcome = match match_result {
+                Ok(outcome) => outcome,
+                Err(EvalError::InputRequired { request }) => {
+                    return resume_frames::suspend_rewrite_rule_match(
+                        self,
+                        witness,
+                        request,
+                        expr,
+                        normalized_expr,
+                        rules,
+                        source,
+                        cursor,
+                        index,
+                        would_reject,
+                        route,
+                    );
+                }
+                Err(error) => return Err(Route::failure(error)),
+            };
+            record_profile_rewrite_rule_match_outcome(would_reject, outcome.matched);
+
+            if !outcome.matched {
+                continue;
+            }
+
+            let rule = rules
+                .get(index)
+                .expect("rewrite rule should still exist after match");
+            let replaced = substitute_rule_bindings_for_rhs(
+                &rule.rhs,
+                &outcome.bindings,
+                rule.rhs_may_splice_without_bindings,
+            );
+            self.push_rule_applied_trace(source, &expr, &rule.lhs, &replaced);
+            return Ok(Some(replaced));
+        }
+    }
+
     fn finish_suspended_rewrite_rule_match<'resume>(
         &mut self,
         state: SuspendedRewriteRuleMatch,
@@ -442,6 +707,18 @@ impl Session {
         outcome: CompiledMatchOutcome,
         token: ContinueToken<'resume, ApplyRulesOnceFromListSuspensionFrame>,
     ) -> Result<Option<Expr>, ResumeStop<Option<Expr>>> {
+        if crate::cm740_probe::driven() {
+            return self.finish_suspended_rewrite_rule_match_cm740_driven(
+                state,
+                source,
+                cursor,
+                index,
+                would_reject,
+                outcome,
+                token,
+            );
+        }
+
         record_profile_rewrite_rule_match_outcome(would_reject, outcome.matched);
         if !outcome.matched {
             return self.apply_rules_once_from_list(
@@ -463,6 +740,49 @@ impl Session {
             &outcome.bindings,
             rule.rhs_may_splice_without_bindings,
         );
+        self.push_rule_applied_trace(source, &state.expr, &rule.lhs, &replaced);
+        Ok(Some(replaced))
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_suspended_rewrite_rule_match_cm740_driven<'resume>(
+        &mut self,
+        state: SuspendedRewriteRuleMatch,
+        source: RuleApplicationSource,
+        cursor: RewriteRuleScanCursor,
+        index: usize,
+        would_reject: bool,
+        outcome: CompiledMatchOutcome,
+        token: ContinueToken<'resume, ApplyRulesOnceFromListSuspensionFrame>,
+    ) -> Result<Option<Expr>, ResumeStop<Option<Expr>>> {
+        record_profile_rewrite_rule_match_outcome(would_reject, outcome.matched);
+        if !outcome.matched {
+            return self.apply_rules_once_from_list_cm740_driven(
+                state.expr,
+                state.normalized_expr,
+                state.rules,
+                source,
+                cursor,
+                token,
+            );
+        }
+
+        let rule = state
+            .rules
+            .get(index)
+            .expect("rewrite rule should still exist for resumed match");
+        let replaced = if crate::cm740_probe::frame("P0284") {
+            crate::cm740_probe::hit("P0284", "OmitActualRewriteBindingSubstitution");
+            rule.rhs.clone()
+        } else {
+            substitute_rule_bindings_for_rhs(
+                &rule.rhs,
+                &outcome.bindings,
+                rule.rhs_may_splice_without_bindings,
+            )
+        };
         self.push_rule_applied_trace(source, &state.expr, &rule.lhs, &replaced);
         Ok(Some(replaced))
     }

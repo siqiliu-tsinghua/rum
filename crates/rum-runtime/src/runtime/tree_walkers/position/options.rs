@@ -37,6 +37,10 @@ impl Session {
         args: &SharedArgs,
         include_heads: bool,
     ) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.finish_position_option_cm740_driven(target, pattern, args, include_heads);
+        }
+
         let mut defaults = CasesTraversalConfig::default_position();
         defaults.include_heads = include_heads;
         let traversal_result = self.resolve_position_traversal_owned(args[2..].to_vec(), defaults);
@@ -45,6 +49,33 @@ impl Session {
             Ok(traversal) => {
                 self.finish_position_after_resolved_traversal(target, pattern, traversal, args)
             }
+            Err(EvalError::InputRequired { request }) => {
+                suspend_position_pattern(self, witness, request, target, pattern, args)
+            }
+            Err(error) => Err(error),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_position_option_cm740_driven(
+        &mut self,
+        target: Expr,
+        pattern: Expr,
+        args: &SharedArgs,
+        include_heads: bool,
+    ) -> Result<Expr, EvalError> {
+        let mut defaults = CasesTraversalConfig::default_position();
+        defaults.include_heads = include_heads;
+        let traversal_result = crate::cm740_probe::around("P1621", || {
+            self.resolve_position_traversal_owned_cm740_driven(args[2..].to_vec(), defaults)
+        });
+        let witness = slot_witness(&traversal_result);
+        match traversal_result {
+            Ok(traversal) => self.finish_position_after_resolved_traversal_cm740_driven(
+                target, pattern, traversal, args,
+            ),
             Err(EvalError::InputRequired { request }) => {
                 suspend_position_pattern(self, witness, request, target, pattern, args)
             }

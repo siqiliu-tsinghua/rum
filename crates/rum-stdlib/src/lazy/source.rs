@@ -9,6 +9,10 @@ pub(super) fn pull_source(
     session: &mut Session,
     ctx: &mut PullContext,
 ) -> Result<Option<Expr>, EvalError> {
+    if rum_runtime::cm740_probe::driven() {
+        return pull_source_cm740_driven(source, session, ctx);
+    }
+
     match source {
         PullSource::Range { current, step } => {
             ctx.charge_source_pull()?;
@@ -63,6 +67,85 @@ pub(super) fn pull_source(
             ctx.charge_source_pull()?;
             let value = current.clone();
             let answer = match session.evaluate(Expr::call(function.clone(), vec![value.clone()])) {
+                Ok(answer) => answer,
+                Err(error) => {
+                    return Err(ctx.await_callback(error, AwaitCursor::Nest { yield_value: value }));
+                }
+            };
+            ctx.observe_cancellation()?;
+            *current = answer;
+            Ok(Some(value))
+        }
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(super) fn pull_source_cm740_driven(
+    source: &mut PullSource,
+    session: &mut Session,
+    ctx: &mut PullContext,
+) -> Result<Option<Expr>, EvalError> {
+    match source {
+        PullSource::Range { current, step } => {
+            ctx.charge_source_pull()?;
+            let value = Expr::rational(current.clone());
+            *current = current.add(step);
+            Ok(Some(value))
+        }
+        PullSource::Permutations { current, exhausted } => {
+            if *exhausted {
+                return Ok(None);
+            }
+            ctx.charge_source_pull()?;
+            let permutation = Expr::call(system_expr("List"), current.clone());
+            *exhausted = !next_permutation(current);
+            Ok(Some(permutation))
+        }
+        PullSource::Subsets { elements, k, combo } => {
+            if *k > elements.len() {
+                return Ok(None);
+            }
+            ctx.charge_source_pull()?;
+            let subset = Expr::call(
+                system_expr("List"),
+                combo.iter().map(|index| elements[*index].clone()).collect(),
+            );
+            advance_subset_cursor(elements.len(), k, combo);
+            Ok(Some(subset))
+        }
+        PullSource::Tuples {
+            inner_lists,
+            digits,
+            exhausted,
+        } => {
+            if *exhausted {
+                return Ok(None);
+            }
+            ctx.charge_source_pull()?;
+            let tuple = Expr::call(
+                system_expr("List"),
+                inner_lists
+                    .iter()
+                    .zip(digits.iter())
+                    .map(|(list, digit)| {
+                        list_items(list).expect("tuple factors were validated")[*digit].clone()
+                    })
+                    .collect(),
+            );
+            *exhausted = advance_tuple_cursor(inner_lists, digits);
+            Ok(Some(tuple))
+        }
+        PullSource::NestList { function, current } => {
+            ctx.charge_source_pull()?;
+            let value = current.clone();
+            let answer = match rum_runtime::cm740_probe::around_ok(
+                "P2137",
+                "ActualTypedCarrierBeforeOuterTail",
+                false,
+                || session.evaluate(Expr::call(function.clone(), vec![value.clone()])),
+            ) {
                 Ok(answer) => answer,
                 Err(error) => {
                     return Err(ctx.await_callback(error, AwaitCursor::Nest { yield_value: value }));

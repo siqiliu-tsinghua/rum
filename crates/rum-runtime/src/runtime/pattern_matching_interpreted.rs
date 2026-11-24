@@ -41,7 +41,7 @@ impl Session {
             } else {
                 let snapshot = outcome.bindings.clone();
                 let bindings = outcome.bindings;
-                self.evaluate_guard_owned(condition, bindings, snapshot, None)
+                (if crate::cm740_probe::driven() { self.evaluate_guard_owned_cm740_driven(condition, bindings, snapshot, None) } else { self.evaluate_guard_owned(condition, bindings, snapshot, None) })
             }
             },
             suspend => MatchConditionInterpretedFrame { condition },
@@ -352,20 +352,37 @@ impl Session {
         }
 
         if let Some(entries) = pattern_key_value_pattern_entries(&pattern) {
-            return self.match_compiled_key_value_pattern_owned(
-                entries
-                    .into_iter()
-                    .map(|entry| {
-                        (
-                            compile_matcher(&entry.key),
-                            compile_matcher(&entry.value),
-                            entry.delayed,
-                        )
-                    })
-                    .collect(),
-                value,
-                bindings,
-            );
+            return (if crate::cm740_probe::driven() {
+                self.match_compiled_key_value_pattern_owned_cm740_driven(
+                    entries
+                        .into_iter()
+                        .map(|entry| {
+                            (
+                                compile_matcher(&entry.key),
+                                compile_matcher(&entry.value),
+                                entry.delayed,
+                            )
+                        })
+                        .collect(),
+                    value,
+                    bindings,
+                )
+            } else {
+                self.match_compiled_key_value_pattern_owned(
+                    entries
+                        .into_iter()
+                        .map(|entry| {
+                            (
+                                compile_matcher(&entry.key),
+                                compile_matcher(&entry.value),
+                                entry.delayed,
+                            )
+                        })
+                        .collect(),
+                    value,
+                    bindings,
+                )
+            });
         }
 
         if let Some((inner, condition)) = pattern_condition(&pattern) {
@@ -436,7 +453,11 @@ impl Session {
         bindings: SymbolExprMap,
     ) -> Result<CompiledMatchOutcome, EvalError> {
         let compiled_args = compile_matcher_args(&pattern_head, &pattern_args);
-        self.match_compiled_args_owned(compiled_args, value_args, bindings)
+        (if crate::cm740_probe::driven() {
+            self.match_compiled_args_owned_cm740_driven(compiled_args, value_args, bindings)
+        } else {
+            self.match_compiled_args_owned(compiled_args, value_args, bindings)
+        })
     }
 }
 

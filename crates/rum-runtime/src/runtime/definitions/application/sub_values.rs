@@ -59,6 +59,58 @@ impl Session {
         self.try_apply_sub_values_from_symbol(candidate, normalized_candidate, symbol, 0, ())
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn try_apply_sub_values_cm740_driven(
+        &mut self,
+        identity: PreparedDefinitionLookup<'_>,
+    ) -> Result<Option<Expr>, EvalError> {
+        let head = identity.head();
+        let args = identity.args();
+        let attributes = identity.attributes();
+        let runtime_profile_head = runtime_path_timing_start("sub_values.base_head_lookup");
+        let Some(symbol) = base_head_symbol_of_nested_call(head).cloned() else {
+            record_profile_runtime_path_timing(runtime_profile_head, RuntimeProfileOutcome::None);
+            return Ok(None);
+        };
+        record_profile_runtime_path_timing(runtime_profile_head, RuntimeProfileOutcome::Some);
+
+        let runtime_profile_definition = runtime_path_timing_start("sub_values.definition_lookup");
+        let Some(definition) = self.definitions.get(&symbol) else {
+            record_profile_runtime_path_timing(
+                runtime_profile_definition,
+                RuntimeProfileOutcome::None,
+            );
+            return Ok(None);
+        };
+
+        if definition.sub_values.is_empty() {
+            record_profile_runtime_path_timing(
+                runtime_profile_definition,
+                RuntimeProfileOutcome::None,
+            );
+            return Ok(None);
+        }
+        record_profile_runtime_path_timing(runtime_profile_definition, RuntimeProfileOutcome::Some);
+
+        let runtime_profile_candidate = runtime_path_timing_start("sub_values.candidate_build");
+        let candidate = Expr::call_with_shared_args(head.clone(), args.clone());
+        record_profile_runtime_path_timing(runtime_profile_candidate, RuntimeProfileOutcome::Ok);
+        let runtime_profile_normalize = runtime_path_timing_start("sub_values.normalize_candidate");
+        let normalized_candidate =
+            self.normalize_definition_candidate_for_matching(&candidate, attributes);
+        record_profile_runtime_path_timing(runtime_profile_normalize, RuntimeProfileOutcome::Ok);
+
+        self.try_apply_sub_values_from_symbol_cm740_driven(
+            candidate,
+            normalized_candidate,
+            symbol,
+            0,
+            (),
+        )
+    }
+
     /// Walks the sub-value candidates one per loop iteration instead of
     /// recursing per candidate, so a wide sub-value list no longer grows the
     /// native stack.
@@ -247,6 +299,237 @@ impl Session {
         }
     }
 
+    /// Walks the sub-value candidates one per loop iteration instead of
+    /// recursing per candidate, so a wide sub-value list no longer grows the
+    /// native stack.
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn try_apply_sub_values_from_symbol_cm740_driven<
+        Route: DefinitionResumeRoute<TryApplySubValuesFromSymbolSuspensionFrame>,
+    >(
+        &mut self,
+        candidate: Expr,
+        normalized_candidate: Expr,
+        symbol: Symbol,
+        mut index: usize,
+        route: Route,
+    ) -> Result<Option<Expr>, Route::Error> {
+        loop {
+            let runtime_profile_value = runtime_path_timing_start("sub_values.value_lookup");
+            let Some(sub_value) = self
+                .definitions
+                .get(&symbol)
+                .and_then(|definition| definition.sub_values.get(index))
+            else {
+                record_profile_runtime_path_timing(
+                    runtime_profile_value,
+                    RuntimeProfileOutcome::None,
+                );
+                return Ok(None);
+            };
+            record_profile_runtime_path_timing(runtime_profile_value, RuntimeProfileOutcome::Some);
+
+            record_profile_definition_dispatch_candidate("sub_value", &symbol);
+            let runtime_profile_prefilter = runtime_path_timing_start("sub_values.prefilter");
+            let prefilter_start = definition_dispatch_timing_start();
+            let could_match = self.definition_lhs_could_match_candidate(
+                &sub_value.lhs,
+                &sub_value.matcher,
+                &normalized_candidate,
+            );
+            record_profile_definition_dispatch_phase_timing(
+                "sub_value",
+                &symbol,
+                "prefilter",
+                prefilter_start,
+            );
+            record_profile_runtime_path_timing(
+                runtime_profile_prefilter,
+                RuntimeProfileOutcome::Ok,
+            );
+            if !could_match {
+                record_profile_definition_dispatch_prefilter_skip("sub_value", &symbol);
+                index += 1;
+                continue;
+            }
+
+            let runtime_profile_fast_match = runtime_path_timing_start("sub_values.fast_match");
+            let fast_match_start = definition_dispatch_timing_start();
+            let fast_outcome = if sub_value.matcher_attribute_revision == self.attribute_revision {
+                self.try_fast_definition_match_compiled(&sub_value.matcher, &normalized_candidate)
+            } else {
+                self.try_fast_definition_match(
+                    &sub_value.lhs,
+                    &sub_value.guards,
+                    &normalized_candidate,
+                )
+            };
+            record_profile_definition_dispatch_phase_timing(
+                "sub_value",
+                &symbol,
+                "fast_match",
+                fast_match_start,
+            );
+            record_profile_runtime_path_timing(
+                runtime_profile_fast_match,
+                runtime_profile_outcome_for_optional_fast_match(&fast_outcome),
+            );
+            if let Some(outcome) = fast_outcome {
+                record_profile_definition_dispatch_fast_outcome(
+                    "sub_value",
+                    &symbol,
+                    outcome.matched,
+                );
+                if !outcome.matched {
+                    index += 1;
+                    continue;
+                }
+
+                let lhs = sub_value.lhs.clone();
+                let option_scope = self.option_value_scope_for_definition(&lhs, &candidate);
+                let rhs = {
+                    let _profile_rhs_source = expression_rebuild_source_symbol(symbol);
+                    let runtime_profile_rhs_substitution =
+                        runtime_path_timing_start("sub_values.rhs_substitution");
+                    let rhs_substitution_start = definition_dispatch_timing_start();
+                    let rhs = substitute_rule_bindings_for_rhs(
+                        &sub_value.rhs,
+                        &outcome.bindings,
+                        sub_value.rhs_may_splice_without_bindings,
+                    );
+                    record_profile_definition_dispatch_phase_timing(
+                        "sub_value",
+                        &symbol,
+                        "rhs_substitution",
+                        rhs_substitution_start,
+                    );
+                    record_profile_runtime_path_timing(
+                        runtime_profile_rhs_substitution,
+                        RuntimeProfileOutcome::Ok,
+                    );
+                    rhs
+                };
+                let trace_rhs = rhs.clone();
+                self.push_rule_applied_trace(
+                    RuleApplicationSource::SubValue,
+                    &candidate,
+                    &lhs,
+                    &trace_rhs,
+                );
+                self.record_profile_sub_value_application(&symbol);
+                let _profile_definition_source = evaluation_profile_definition_source(symbol);
+                let profile_rule_start =
+                    self.definition_rule_timing_start_adopted("sub_value_rhs_eval", &symbol, index);
+                let result = {
+                    let _guard = crate::cm740_probe::enter("P0304");
+                    let actual =
+                        self.evaluate_definition_application_rhs_cm740_driven(option_scope, rhs);
+                    if crate::cm740_probe::class_lease::wants_input_return("P0304") {
+                        if let Err(crate::EvalError::InputRequired { .. }) = &actual {
+                            _guard.input_return(&actual);
+                            crate::cm740_probe::class_lease::note_input_return("P0304", 0);
+                        }
+                    }
+
+                    if crate::cm740_probe::frame("P0304") {
+                        crate::cm740_probe::hit("P0304", "OmitActualDefinitionRuleAccounting");
+                        return actual.map_err(Route::failure);
+                    }
+                    actual
+                };
+                record_profile_definition_rule_timing_adopted(
+                    "sub_value_rhs_eval",
+                    &symbol,
+                    index,
+                    profile_rule_start,
+                    result.is_ok(),
+                    &result,
+                );
+                return result.map_err(Route::failure);
+            }
+
+            let matcher_is_current =
+                sub_value.matcher_attribute_revision == self.attribute_revision;
+            let cached_matcher = matcher_is_current.then(|| sub_value.matcher.clone());
+            let application = SuspendedSubValueApplication {
+                candidate,
+                normalized_candidate,
+                symbol,
+                index,
+                lhs: sub_value.lhs.clone(),
+                rhs: sub_value.rhs.clone(),
+                rhs_may_splice_without_bindings: sub_value.rhs_may_splice_without_bindings,
+            };
+            let matcher = cached_matcher.unwrap_or_else(|| {
+                self.compile_down_value_matcher(&application.lhs, &sub_value.guards)
+            });
+            let runtime_profile_compiled_matcher =
+                runtime_path_timing_start_adopted(self, "sub_values.compiled_matcher");
+            let compiled_matcher_start = definition_dispatch_timing_start();
+            let match_result = if crate::cm740_probe::driven() {
+                let _class_guard = crate::cm740_probe::enter("P0305");
+                let class_produced = (|| {
+                    self.match_compiled_owned_cm740_driven(
+                        matcher,
+                        application.normalized_candidate.clone(),
+                        SymbolExprMap::default(),
+                    )
+                })();
+                if crate::cm740_probe::class_lease::wants_input_return("P0305") {
+                    if let Err(crate::EvalError::InputRequired { .. }) = &class_produced {
+                        _class_guard.input_return(&class_produced);
+                        crate::cm740_probe::class_lease::note_input_return("P0305", 0);
+                    }
+                }
+                class_produced
+            } else {
+                (|| {
+                    self.match_compiled_owned_cm740_driven(
+                        matcher,
+                        application.normalized_candidate.clone(),
+                        SymbolExprMap::default(),
+                    )
+                })()
+            };
+            let witness = slot_witness(&match_result);
+            record_profile_definition_dispatch_phase_timing(
+                "sub_value",
+                &symbol,
+                "compiled_matcher",
+                compiled_matcher_start,
+            );
+            if crate::cm740_probe::frame("P0305") {
+                crate::cm740_probe::hit("P0305", "OmitActualCompiledMatcherAccounting");
+            } else {
+                record_profile_runtime_path_timing_adopted(
+                    self,
+                    runtime_profile_compiled_matcher,
+                    &match_result,
+                );
+            }
+
+            match match_result {
+                Ok(outcome) => {
+                    return self.finish_suspended_sub_value_application_cm740_driven(
+                        application,
+                        outcome,
+                        route,
+                    );
+                }
+                Err(EvalError::InputRequired { request }) => {
+                    return self.suspend_sub_value_application(
+                        application,
+                        witness,
+                        request,
+                        route,
+                    );
+                }
+                Err(error) => return Err(Route::failure(error)),
+            }
+        }
+    }
+
     #[cold]
     #[inline(never)]
     fn suspend_sub_value_application<
@@ -335,6 +618,94 @@ impl Session {
         );
         result.map_err(Route::failure)
     }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_suspended_sub_value_application_cm740_driven<
+        Route: DefinitionResumeRoute<TryApplySubValuesFromSymbolSuspensionFrame>,
+    >(
+        &mut self,
+        application: SuspendedSubValueApplication,
+        outcome: CompiledMatchOutcome,
+        route: Route,
+    ) -> Result<Option<Expr>, Route::Error> {
+        record_profile_definition_dispatch_matcher_outcome(
+            "sub_value",
+            &application.symbol,
+            outcome.matched,
+        );
+        if !outcome.matched {
+            return self.try_apply_sub_values_from_symbol_cm740_driven(
+                application.candidate,
+                application.normalized_candidate,
+                application.symbol,
+                application.index + 1,
+                route,
+            );
+        }
+
+        let _profile_rhs_source = expression_rebuild_source_symbol(application.symbol);
+        let runtime_profile_rhs_substitution =
+            runtime_path_timing_start("sub_values.rhs_substitution");
+        let rhs_substitution_start = definition_dispatch_timing_start();
+        let rhs = substitute_rule_bindings_for_rhs(
+            &application.rhs,
+            &outcome.bindings,
+            application.rhs_may_splice_without_bindings,
+        );
+        record_profile_definition_dispatch_phase_timing(
+            "sub_value",
+            &application.symbol,
+            "rhs_substitution",
+            rhs_substitution_start,
+        );
+        record_profile_runtime_path_timing(
+            runtime_profile_rhs_substitution,
+            RuntimeProfileOutcome::Ok,
+        );
+        let option_scope =
+            self.option_value_scope_for_definition(&application.lhs, &application.candidate);
+        let trace_rhs = rhs.clone();
+        self.push_rule_applied_trace(
+            RuleApplicationSource::SubValue,
+            &application.candidate,
+            &application.lhs,
+            &trace_rhs,
+        );
+        self.record_profile_sub_value_application(&application.symbol);
+        let _profile_definition_source = evaluation_profile_definition_source(application.symbol);
+        let profile_rule_start = self.definition_rule_timing_start_adopted(
+            "sub_value_rhs_eval",
+            &application.symbol,
+            application.index,
+        );
+        let result = {
+            let _guard = crate::cm740_probe::enter("P0311");
+            let actual = self.evaluate_definition_application_rhs_cm740_driven(option_scope, rhs);
+            if crate::cm740_probe::class_lease::wants_input_return("P0311") {
+                if let Err(crate::EvalError::InputRequired { .. }) = &actual {
+                    _guard.input_return(&actual);
+                    crate::cm740_probe::class_lease::note_input_return("P0311", 0);
+                }
+            }
+
+            if crate::cm740_probe::frame("P0311") {
+                crate::cm740_probe::hit("P0311", "OmitActualDefinitionRuleAccounting");
+                return actual.map_err(Route::failure);
+            }
+            actual
+        };
+        record_profile_definition_rule_timing_adopted(
+            "sub_value_rhs_eval",
+            &application.symbol,
+            application.index,
+            profile_rule_start,
+            result.is_ok(),
+            &result,
+        );
+        result.map_err(Route::failure)
+    }
 }
 
 #[cfg(test)]
@@ -359,11 +730,63 @@ impl TypedFrame for TryApplySubValuesFromSymbolSuspensionFrame {
         outcome: Result<CompiledMatchOutcome, EvalError>,
         token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Option<Expr>> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_3a04(self, session, outcome, token);
+        }
+
         let application = self.application.clone();
         let resumed = (|| {
             let outcome = outcome.map_err(ResumeStop::failure)?;
             session.finish_suspended_sub_value_application(application, outcome, token)
         })();
         TypedAction::complete_work(resumed)
+    }
+}
+impl TryApplySubValuesFromSymbolSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_3a04<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Option<Expr>> {
+        let application = self.application.clone();
+        let resumed = (|| {
+            let outcome = match outcome.map_err(ResumeStop::failure) {
+                Ok(value) => value,
+                Err(error) => return (Err(error), None),
+            };
+            {
+                let _cm740_producer = crate::cm740_probe::enter("P0312");
+                let _cm742_issued =
+                    crate::cm740_probe::queue_transport::source_capture_scope(&_cm740_producer);
+                let _cm742_resumed = session.finish_suspended_sub_value_application_cm740_driven(
+                    application,
+                    outcome,
+                    token,
+                );
+                (_cm742_resumed, _cm742_issued)
+            }
+        })();
+        {
+            let (_cm742_resumed, _cm742_issued) = resumed;
+            let mut _cm742_issuer =
+                crate::cm740_probe::queue_transport::CompletionIssuer::default();
+            let _cm742_ticket = _cm742_issuer.retain(_cm742_issued);
+            match crate::cm740_probe::queue_transport::source_join_owner_at(
+                std::mem::take(&mut _cm742_issuer),
+                _cm742_ticket,
+            ) {
+                Some(_owner) => {
+                    _owner.source_expect_result();
+                    let _cm742_action = TypedAction::complete_work_cm740_driven(_cm742_resumed);
+                    _owner.source_finish_result();
+                    _cm742_action
+                }
+                None => TypedAction::complete_work_cm740_driven(_cm742_resumed),
+            }
+        }
     }
 }

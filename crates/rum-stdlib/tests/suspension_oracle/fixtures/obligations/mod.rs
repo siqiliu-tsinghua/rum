@@ -3,6 +3,7 @@ pub(crate) mod boundaries;
 pub(crate) mod guest;
 pub(crate) mod native;
 pub(crate) mod proof_controls;
+pub(crate) mod semantic_controls;
 
 // Compile the canonical loader at the same module depth so its fixture
 // references retain their original meaning. There is no second resolver.

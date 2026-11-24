@@ -124,7 +124,11 @@ impl Session {
         target: Expr,
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
-        let pattern_result = self.resolve_matcher_pattern_expr_owned(args[1].clone());
+        let pattern_result = (if crate::cm740_probe::driven() {
+            self.resolve_matcher_pattern_expr_owned_cm740_driven(args[1].clone())
+        } else {
+            self.resolve_matcher_pattern_expr_owned(args[1].clone())
+        });
         let pattern = crate::resume_typed_or_suspend!(
             self,
             pattern_result,
@@ -145,19 +149,68 @@ impl Session {
         pattern: Expr,
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
-        self.system_option_bool(
-            "Position",
-            "Heads",
-            true,
-            options::PositionOptionWorking {
-                target,
-                pattern,
-                args,
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.system_option_bool_cm740_driven(
+                "Position",
+                "Heads",
+                true,
+                options::PositionOptionWorking {
+                    target,
+                    pattern,
+                    args,
+                },
+            )
+        } else {
+            self.system_option_bool(
+                "Position",
+                "Heads",
+                true,
+                options::PositionOptionWorking {
+                    target,
+                    pattern,
+                    args,
+                },
+            )
+        })
     }
 
     fn finish_position_after_resolved_traversal(
+        &mut self,
+        target: Expr,
+        pattern: Expr,
+        traversal: CasesTraversalResolution,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.finish_position_after_resolved_traversal_cm740_driven(
+                target, pattern, traversal, args,
+            );
+        }
+
+        let traversal = match traversal {
+            CasesTraversalResolution::Valid(traversal) => traversal,
+            CasesTraversalResolution::Invalid(error) => {
+                return Ok(self.invalid_cases_traversal_call("Position", args.as_ref(), error));
+            }
+        };
+
+        if traversal.limit_reached(0) {
+            return Ok(Expr::call(system_expr("List"), Vec::new()));
+        }
+
+        let positions_result = self.collect_positions_owned(target, pattern, traversal);
+        crate::resume_typed_or_suspend!(
+            self,
+            positions_result,
+            ok(outcome) => Ok(Expr::call(system_expr("List"), outcome.positions)),
+            suspend => FinishPositionAfterResolvedTraversalSuspensionFrame,
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_position_after_resolved_traversal_cm740_driven(
         &mut self,
         target: Expr,
         pattern: Expr,
@@ -175,7 +228,9 @@ impl Session {
             return Ok(Expr::call(system_expr("List"), Vec::new()));
         }
 
-        let positions_result = self.collect_positions_owned(target, pattern, traversal);
+        let positions_result = crate::cm740_probe::around("P1636", || {
+            self.collect_positions_owned_cm740_driven(target, pattern, traversal)
+        });
         crate::resume_typed_or_suspend!(
             self,
             positions_result,
@@ -232,12 +287,76 @@ impl Session {
         ))
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn collect_positions_owned_cm740_driven(
+        &mut self,
+        expr: Expr,
+        pattern: Expr,
+        traversal: CasesTraversalConfig,
+    ) -> Result<PositionCollectionOutcome, EvalError> {
+        let mut walker = PostOrderPathTraversal::new(expr, traversal.include_heads, 0);
+        let mut positions = Vec::new();
+        let mut current_depth = 1;
+
+        while let Some(node) = walker.next() {
+            current_depth = node.depth;
+            if traversal.limit_reached(positions.len()) {
+                return Ok(PositionCollectionOutcome::new(positions, node.depth, true));
+            }
+            if !traversal.levels.matches(node.level, node.depth) {
+                if crate::cm740_probe::frame("P1621") {
+                    crate::cm740_probe::hit("P1621", "OmitActualTraversalLevelExclusion");
+                } else {
+                    continue;
+                }
+            }
+
+            let match_result = crate::cm740_probe::around("P1637", || {
+                self.match_expr_owned_cm740_driven(
+                    pattern.clone(),
+                    node.expr,
+                    SymbolExprMap::default(),
+                )
+            });
+            let witness = slot_witness(&match_result);
+            match match_result {
+                Ok(outcome) => {
+                    if outcome.matched {
+                        positions.push(walker.position_expr(node.path));
+                        if traversal.limit_reached(positions.len()) {
+                            return Ok(PositionCollectionOutcome::new(positions, node.depth, true));
+                        }
+                    }
+                }
+                Err(EvalError::InputRequired { request }) => {
+                    return resume_frames::suspend_position_collection(
+                        self, witness, request, walker, pattern, traversal, positions, node.path,
+                        node.depth,
+                    );
+                }
+                Err(error) => return Err(error),
+            }
+        }
+
+        Ok(PositionCollectionOutcome::new(
+            positions,
+            current_depth,
+            false,
+        ))
+    }
+
     fn resume_position_traversal<'resume>(
         &mut self,
         mut state: SuspendedPositionTraversal,
         outcome: CompiledMatchOutcome,
         token: ContinueToken<'resume, ContinuePositionTraversalSuspensionFrame>,
     ) -> Result<PositionCollectionOutcome, ResumeStop<PositionCollectionOutcome>> {
+        if crate::cm740_probe::driven() {
+            return self.resume_position_traversal_cm740_driven(state, outcome, token);
+        }
+
         if outcome.matched {
             state.positions = state
                 .positions
@@ -251,6 +370,39 @@ impl Session {
             }
         }
         self.drive_suspended_position_traversal(state, token)
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_position_traversal_cm740_driven<'resume>(
+        &mut self,
+        mut state: SuspendedPositionTraversal,
+        outcome: CompiledMatchOutcome,
+        token: ContinueToken<'resume, ContinuePositionTraversalSuspensionFrame>,
+    ) -> Result<PositionCollectionOutcome, ResumeStop<PositionCollectionOutcome>> {
+        let omit_position_append = if crate::cm740_probe::frame("P1637") {
+            crate::cm740_probe::hit("P1637", "OmitMatchedPositionAppend");
+            true
+        } else if crate::cm740_probe::frame("P1640") {
+            crate::cm740_probe::hit("P1640", "OmitMatchedPositionAppend");
+            true
+        } else {
+            false
+        };
+        if outcome.matched && !omit_position_append {
+            state.positions = state
+                .positions
+                .appended(state.walker.position_expr(state.current_path));
+            if state.traversal.limit_reached(state.positions.len()) {
+                return Ok(PositionCollectionOutcome::new(
+                    state.positions.into_vec(),
+                    state.current_depth,
+                    true,
+                ));
+            }
+        }
+        self.drive_suspended_position_traversal_cm740_driven(state, token)
     }
 
     fn drive_suspended_position_traversal<'resume>(
@@ -273,6 +425,66 @@ impl Session {
             }
             let match_result =
                 self.match_expr_owned(state.pattern.clone(), node.expr, SymbolExprMap::default());
+            let witness = slot_witness(&match_result);
+            match match_result {
+                Ok(outcome) => {
+                    if outcome.matched {
+                        state.positions = state
+                            .positions
+                            .appended(state.walker.position_expr(node.path));
+                        if state.traversal.limit_reached(state.positions.len()) {
+                            return Ok(PositionCollectionOutcome::new(
+                                state.positions.into_vec(),
+                                node.depth,
+                                true,
+                            ));
+                        }
+                    }
+                }
+                Err(EvalError::InputRequired { request }) => {
+                    return resume_frames::suspend_position_traversal(
+                        self, witness, request, state, token,
+                    );
+                }
+                Err(error) => return Err(ResumeStop::failure(error)),
+            }
+        }
+
+        Ok(PositionCollectionOutcome::new(
+            state.positions.into_vec(),
+            state.current_depth,
+            false,
+        ))
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn drive_suspended_position_traversal_cm740_driven<'resume>(
+        &mut self,
+        mut state: SuspendedPositionTraversal,
+        token: ContinueToken<'resume, ContinuePositionTraversalSuspensionFrame>,
+    ) -> Result<PositionCollectionOutcome, ResumeStop<PositionCollectionOutcome>> {
+        while let Some(node) = state.walker.next() {
+            state.current_path = node.path;
+            state.current_depth = node.depth;
+            if state.traversal.limit_reached(state.positions.len()) {
+                return Ok(PositionCollectionOutcome::new(
+                    state.positions.into_vec(),
+                    node.depth,
+                    true,
+                ));
+            }
+            if !state.traversal.levels.matches(node.level, node.depth) {
+                continue;
+            }
+            let match_result = crate::cm740_probe::around("P1640", || {
+                self.match_expr_owned_cm740_driven(
+                    state.pattern.clone(),
+                    node.expr,
+                    SymbolExprMap::default(),
+                )
+            });
             let witness = slot_witness(&match_result);
             match match_result {
                 Ok(outcome) => {

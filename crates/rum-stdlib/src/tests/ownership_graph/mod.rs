@@ -24,6 +24,7 @@ mod fixtures;
 mod graph;
 mod host_payload_ledger;
 mod model;
+mod reconcile;
 mod resolve;
 mod source;
 

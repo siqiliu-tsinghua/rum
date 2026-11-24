@@ -360,7 +360,11 @@ impl Session {
         };
 
         let runtime_profile_item = runtime_path_timing_start("compound.item.evaluate");
-        let current_result = self.evaluate(current);
+        let current_result = if crate::cm740_probe::driven() {
+            self.evaluate_cm740_driven(current)
+        } else {
+            self.evaluate(current)
+        };
         self.record_profile_runtime_path_timing_adopted_boundary(
             runtime_profile_item,
             &current_result,
@@ -463,8 +467,11 @@ impl Session {
 
         let pattern = args[index].clone();
         let branch = args[index + 1].clone();
-        let match_result =
-            self.match_expr_owned(pattern, subject.clone(), SymbolExprMap::default());
+        let match_result = (if crate::cm740_probe::driven() {
+            self.match_expr_owned_cm740_driven(pattern, subject.clone(), SymbolExprMap::default())
+        } else {
+            self.match_expr_owned(pattern, subject.clone(), SymbolExprMap::default())
+        });
 
         match match_result {
             Ok(outcome) => {
@@ -488,7 +495,11 @@ impl Session {
         matched: bool,
     ) -> Result<Expr, EvalError> {
         if matched {
-            self.evaluate(branch)
+            if crate::cm740_probe::driven() {
+                self.evaluate_cm740_driven(branch)
+            } else {
+                self.evaluate(branch)
+            }
         } else {
             self.resume_switch_from_index(args, subject, index + 2)
         }

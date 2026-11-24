@@ -135,7 +135,11 @@ fn resume_truth_aggregate_from_index(
 ) -> Result<Expr, EvalError> {
     while let Some(part) = parts.get(index).cloned() {
         let call = Expr::call(criterion.clone(), vec![part]);
-        let value = match session.evaluate(call) {
+        let value = match if rum_runtime::cm740_probe::driven() {
+            session.evaluate_cm740_driven(call)
+        } else {
+            session.evaluate(call)
+        } {
             Ok(value) => value,
             Err(EvalError::InputRequired { request }) => {
                 return rum_runtime::resume_or_suspend!(

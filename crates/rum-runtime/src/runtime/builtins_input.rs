@@ -81,7 +81,11 @@ impl Session {
             Err(error) => return Ok(self.invalid_input_options_call("InputString", args, error)),
         };
 
-        self.drive_input_request(request)
+        (if crate::cm740_probe::driven() {
+            self.drive_input_request_cm740_driven(request)
+        } else {
+            self.drive_input_request(request)
+        })
     }
 
     pub(super) fn eval_input(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -90,7 +94,11 @@ impl Session {
             Err(error) => return Ok(self.invalid_input_options_call("Input", args, error)),
         };
 
-        let text_result = self.drive_input_request(request);
+        let text_result = (if crate::cm740_probe::driven() {
+            self.drive_input_request_cm740_driven(request)
+        } else {
+            self.drive_input_request(request)
+        });
         let text = crate::resume_or_suspend!(
             self,
             text_result,
@@ -244,6 +252,34 @@ impl Session {
         }
 
         self.begin_input_suspension(request.clone());
+
+        Err(EvalError::InputRequired { request })
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn drive_input_request_cm740_driven(
+        &mut self,
+        request: RuntimeInputRequest,
+    ) -> Result<Expr, EvalError> {
+        if !self.queued_input_responses.is_empty() {
+            if self.pending_suspension_generation().is_some() {
+                self.abandon_pending_suspension(AbandonReason::SupersededOrQueuedInputDiscard);
+            }
+            let value = self
+                .queued_input_responses
+                .pop_front()
+                .expect("a checked queued input response should remain available");
+            self.refresh_memory_owner(
+                crate::runtime::debug_tools::resources::MemoryOwner::QueuedInputResponses,
+            );
+            return Ok(Expr::string(value));
+        }
+
+        self.begin_input_suspension_cm740_driven(request.clone());
+        crate::cm740_probe::pause(&request.prompt);
+        crate::cm740_probe::queue_transport::source_pause_installed();
 
         Err(EvalError::InputRequired { request })
     }

@@ -1,5 +1,15 @@
 mod capture_output;
 mod driver;
+mod duration_parity;
+mod negative_controls;
+mod observer_class_tests;
+mod observer_receipts;
+mod receipts;
+mod records;
+mod schema;
+mod semantic_records;
+pub(crate) mod source_auth;
+mod source_worker;
 use super::{
     catalog::{self, CatalogError},
     descriptors::{Checks, Fixture, Pause, accept},

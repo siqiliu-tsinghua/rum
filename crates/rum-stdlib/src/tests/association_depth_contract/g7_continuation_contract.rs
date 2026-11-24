@@ -35,9 +35,11 @@ fn sow_recursion_scanner_per_file_and_combined() {
         [
             "Session::eval_sow",
             "Session::drive_sow_matches",
+            "Session::drive_sow_matches_cm740_driven",
             "SowMatchSuspensionFrame::resume",
             "suspend_sow_match",
             "resume_sow_match",
+            "resume_sow_match_cm740_driven",
         ]
         .into()
     );
@@ -60,6 +62,11 @@ fn sow_recursion_scanner_per_file_and_combined() {
         "charge_reap_occurrence",
         "FrameAction::complete",
         "CompiledMatchOutcome::from_continuation_expr",
+        "crate::cm740_probe::around",
+        "match_expr_owned_cm740_driven",
+        "crate::cm740_probe::driven",
+        "crate::cm740_probe::frame",
+        "crate::cm740_probe::hit",
     ];
     for (caller, calls) in &graph {
         for callee in calls {
@@ -284,7 +291,7 @@ fn assert_continuation_edges(source: &str) {
     );
     assert!(
         bodies["resume"].contains(
-            "Ok(value)=>resume_sow_match(session,&self.state,value),Err(error)=>Err(error)"
+            "{FrameAction::complete(matchoutcome{Ok(value)=>{(ifcrate::cm740_probe::driven(){resume_sow_match_cm740_driven(session,&self.state,value)}else{resume_sow_match(session,&self.state,value)})}Err(error)=>Err(error),})}"
         ),
         "error resumes do not copy or commit"
     );
@@ -363,13 +370,13 @@ fn trace_flat_call_graph_and_outbound_boundaries() {
     trace_acyclic(&sources);
     let combined = sources.values().cloned().collect::<Vec<_>>().join("\n");
     let graph = flat_walk_call_graph(&combined);
-    let owned = "Session::filter_trace_result Session::drive_trace_filter Session::finish_trace_filter_root append_child suspend_trace_filter resume_trace_filter CandidateWork::current CandidateWork::take_candidate select_candidates start_leaf LeafWork::apply_match LeafWork::next_field PatternWork::pattern_count PatternWork::pattern_at Session::match_trace_leaf finish_leaf LevelWork::from_items LevelWork::freeze_level TraceFilterLevel::thaw_level FilterWork::freeze_filter TraceFilterState::thaw_filter EvalStructuredTraceCaptureExprSuspensionFrame::resume EvalStructuredTraceCaptureExprSuspensionFrame::abandon EvalStructuredTraceCaptureExprSuspensionFrame::output_boundary TraceFilterSuspensionFrame::resume";
+    let owned = "Session::filter_trace_result Session::drive_trace_filter Session::finish_trace_filter_root append_child suspend_trace_filter resume_trace_filter CandidateWork::current CandidateWork::take_candidate select_candidates start_leaf LeafWork::apply_match LeafWork::next_field PatternWork::pattern_count PatternWork::pattern_at Session::match_trace_leaf finish_leaf LevelWork::from_items LevelWork::freeze_level TraceFilterLevel::thaw_level FilterWork::freeze_filter TraceFilterState::thaw_filter EvalStructuredTraceCaptureExprSuspensionFrame::resume EvalStructuredTraceCaptureExprSuspensionFrame::abandon EvalStructuredTraceCaptureExprSuspensionFrame::output_boundary TraceFilterSuspensionFrame::resume Session::drive_trace_filter_cm740_driven Session::match_trace_leaf_cm740_driven TraceFilterSuspensionFrame::abandon resume_trace_filter_cm740_driven";
     assert_eq!(
         graph.keys().map(String::as_str).collect::<BTreeSet<_>>(),
         owned.split_whitespace().collect(),
         "closed trace functions"
     );
-    let outbound = "Ok Err Some is_system_symbol_name Expr::call_shared Expr::call into_vec Vec::new take next push std::mem::replace pop render_structured_trace_lines push_print is_empty len Expr::call_with_shared_args system_expr clone resume_or_suspend! CompiledMatchOutcome::from_continuation_expr as_ref as_slice first CasesLevelSpec::range is_some collect_level_parts_owned into_iter trace_detail_underlying_exprs is_none unwrap_trace_hold push_unique_trace_item normalize_trace_patterns matches! expect vec! push_unique_trace_expr match_expr_owned SymbolExprMap::default collect map iter finish_structured_trace_capture_expr crate::runtime::suspension::FrameAction::complete restore_trace_capture CandidateWork::Single CandidateWork::Parts TraceFilterCandidates::Single TraceFilterCandidates::Parts PatternWork::Parts OutputBoundary::trace";
+    let outbound = "Ok Err Some is_system_symbol_name Expr::call_shared Expr::call into_vec Vec::new take next push std::mem::replace pop render_structured_trace_lines push_print is_empty len Expr::call_with_shared_args system_expr clone resume_or_suspend! CompiledMatchOutcome::from_continuation_expr as_ref as_slice first CasesLevelSpec::range is_some collect_level_parts_owned into_iter trace_detail_underlying_exprs is_none unwrap_trace_hold push_unique_trace_item normalize_trace_patterns matches! expect vec! push_unique_trace_expr match_expr_owned SymbolExprMap::default collect map iter finish_structured_trace_capture_expr crate::runtime::suspension::FrameAction::complete restore_trace_capture CandidateWork::Single CandidateWork::Parts TraceFilterCandidates::Single TraceFilterCandidates::Parts PatternWork::Parts OutputBoundary::trace crate::cm740_probe::around crate::cm740_probe::driven crate::cm740_probe::enter match_expr_owned_cm740_driven crate::cm740_probe::frame crate::cm740_probe::hit crate::cm740_probe::class_lease::begin_row";
     for (caller, calls) in graph {
         for callee in calls {
             assert!(

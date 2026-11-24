@@ -60,6 +60,10 @@ impl TypedFrame for ApplyReplaceAllOwnedSuspensionFrame {
         outcome: Result<Option<Expr>, EvalError>,
         token: ContinueToken<'resume, Self>,
     ) -> TypedAction<ReplaceAllTraversalOutcome> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_71e(self, session, outcome, token);
+        }
+
         let expr = self.expr.clone();
         let state = self.state.clone();
         let resumed = match outcome {
@@ -67,6 +71,37 @@ impl TypedFrame for ApplyReplaceAllOwnedSuspensionFrame {
             Err(error) => Err(ResumeStop::failure(error)),
         };
         TypedAction::complete_work(resumed)
+    }
+}
+impl ApplyReplaceAllOwnedSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_71e<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Option<Expr>, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<ReplaceAllTraversalOutcome> {
+        let outcome = if crate::cm740_probe::frame("P0278") {
+            crate::cm740_probe::hit("P0278", "OmitActualReplacementAdoption");
+            outcome.map(|replacement| replacement.map(|_actual_replacement| self.expr.clone()))
+        } else {
+            outcome
+        };
+        let outcome = if crate::cm740_probe::frame("P0281") {
+            crate::cm740_probe::hit("P0281", "OmitActualReplacementAdoption");
+            outcome.map(|replacement| replacement.map(|_actual_replacement| self.expr.clone()))
+        } else {
+            outcome
+        };
+        let expr = self.expr.clone();
+        let state = self.state.clone();
+        let resumed = match outcome {
+            Ok(outcome) => session.resume_replace_all_traversal(state, expr, outcome, token),
+            Err(error) => Err(ResumeStop::failure(error)),
+        };
+        TypedAction::complete_work_cm740_driven(resumed)
     }
 }
 

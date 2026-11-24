@@ -255,7 +255,11 @@ impl Session {
         delayed: bool,
         heads: ReplacePartHeadsMode,
     ) -> Result<Vec<ReplacePartTarget>, EvalError> {
-        let pattern_result = self.resolve_matcher_pattern_expr_owned(pattern_expr);
+        let pattern_result = (if crate::cm740_probe::driven() {
+            self.resolve_matcher_pattern_expr_owned_cm740_driven(pattern_expr)
+        } else {
+            self.resolve_matcher_pattern_expr_owned(pattern_expr)
+        });
         match pattern_result {
             Ok(resolved_pattern) => self.finish_replace_part_pattern_resolution(
                 expr,
@@ -286,8 +290,11 @@ impl Session {
         };
 
         let position = replace_part_position_expr(&path);
-        let match_result =
-            self.match_expr_owned(pattern.clone(), position, SymbolExprMap::default());
+        let match_result = (if crate::cm740_probe::driven() {
+            self.match_expr_owned_cm740_driven(pattern.clone(), position, SymbolExprMap::default())
+        } else {
+            self.match_expr_owned(pattern.clone(), position, SymbolExprMap::default())
+        });
         match match_result {
             Ok(outcome) => {
                 if outcome.matched {
@@ -447,8 +454,15 @@ impl Session {
                 return Ok(SuspendedReplacePartTargetsCompletion(state.collected));
             };
             let position = replace_part_position_expr(&path);
-            let match_result =
-                self.match_expr_owned(state.pattern.clone(), position, SymbolExprMap::default());
+            let match_result = (if crate::cm740_probe::driven() {
+                self.match_expr_owned_cm740_driven(
+                    state.pattern.clone(),
+                    position,
+                    SymbolExprMap::default(),
+                )
+            } else {
+                self.match_expr_owned(state.pattern.clone(), position, SymbolExprMap::default())
+            });
             match match_result {
                 Ok(outcome) => {
                     if outcome.matched {

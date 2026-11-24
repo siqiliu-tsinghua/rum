@@ -36,6 +36,16 @@ pub(super) fn suspend_realization(
     error: EvalError,
 ) -> EvalError {
     if let EvalError::InputRequired { .. } = &error {
+        if rum_runtime::cm740_probe::class_lease::wants_cursor() {
+            let class_discriminant = match ctx.pending.as_deref() {
+                Some(AwaitCursor::Nest { .. }) => "Nest",
+                Some(AwaitCursor::Map { .. }) => "Map",
+                Some(AwaitCursor::Select { .. }) => "Select",
+                Some(AwaitCursor::Fold { .. }) => "Fold",
+                None => "None",
+            };
+            rum_runtime::cm740_probe::class_lease::note_cursor_discriminant(class_discriminant);
+        }
         let Some(cursor) = ctx.pending.take() else {
             return invalid_cursor();
         };
@@ -56,6 +66,10 @@ impl SuspensionFrame for LazyRealizeSuspensionFrame {
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> FrameAction {
+        if rum_runtime::cm740_probe::driven() {
+            return Self::resume_cm740_driven_671(self, session, outcome);
+        }
+
         let answer = match outcome {
             Ok(answer) => answer,
             Err(error) => return FrameAction::complete(Err(error)),
@@ -63,10 +77,83 @@ impl SuspensionFrame for LazyRealizeSuspensionFrame {
         FrameAction::complete(resume_realization(&self, session, answer))
     }
 }
+impl LazyRealizeSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_671(
+        self: Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> FrameAction {
+        if rum_runtime::cm740_probe::frame("P2132")
+            && matches!(&self.cursor, AwaitCursor::Nest { .. })
+        {
+            rum_runtime::cm740_probe::hit("P2132", "ForwardActualLazyCallbackBeforeTail");
+            return FrameAction::complete(outcome);
+        }
+        if rum_runtime::cm740_probe::frame("P2133")
+            && matches!(&self.cursor, AwaitCursor::Map { .. })
+        {
+            rum_runtime::cm740_probe::hit("P2133", "ForwardActualLazyCallbackBeforeTail");
+            return FrameAction::complete(outcome);
+        }
+        if rum_runtime::cm740_probe::frame("P2134")
+            && matches!(&self.cursor, AwaitCursor::Select { .. })
+        {
+            rum_runtime::cm740_probe::hit("P2134", "ForwardActualLazyCallbackBeforeTail");
+            return FrameAction::complete(outcome);
+        }
+        if rum_runtime::cm740_probe::frame("P2135")
+            && matches!(&self.cursor, AwaitCursor::Fold { .. })
+        {
+            rum_runtime::cm740_probe::hit("P2135", "ForwardActualLazyCallbackBeforeTail");
+            return FrameAction::complete(outcome);
+        }
+        let answer = match outcome {
+            Ok(answer) => answer,
+            Err(error) => return FrameAction::complete(Err(error)),
+        };
+        FrameAction::complete(resume_realization_cm740_driven(&self, session, answer))
+    }
+}
 
 #[cold]
 #[inline(never)]
 fn resume_realization(
+    frame: &LazyRealizeSuspensionFrame,
+    session: &mut Session,
+    answer: Expr,
+) -> Result<Expr, EvalError> {
+    let mut ctx = PullContext::restore(session, frame.limits);
+    // Vec Clone iterates. No stage owns another node. Both frozen and working
+    // owners remain live here; root tracing does not discharge retention costs.
+    let (mut machine, mut items, cursor) = working_copy(frame);
+    let cursor = apply_answer(&mut machine, cursor, answer, &ctx)?;
+    match drive_items(
+        &mut machine,
+        session,
+        &mut ctx,
+        &mut items,
+        frame.budget,
+        cursor,
+    ) {
+        Ok(()) => Ok(Some(Expr::call(system_expr("List"), items)).into_continuation_expr()),
+        Err(error) => Err(suspend_realization(
+            session,
+            machine,
+            items,
+            frame.budget,
+            ctx,
+            error,
+        )),
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_realization_cm740_driven(
     frame: &LazyRealizeSuspensionFrame,
     session: &mut Session,
     answer: Expr,

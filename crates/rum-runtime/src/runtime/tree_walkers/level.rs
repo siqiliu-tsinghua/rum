@@ -11,12 +11,21 @@ impl Session {
             return Ok(self.invalid_call_with_arg_range("Level", args, 2, 4));
         }
 
-        self.system_option_bool(
-            "Level",
-            "Heads",
-            false,
-            options::LevelOptionWorking { args },
-        )
+        (if crate::cm740_probe::driven() {
+            self.system_option_bool_cm740_driven(
+                "Level",
+                "Heads",
+                false,
+                options::LevelOptionWorking { args },
+            )
+        } else {
+            self.system_option_bool(
+                "Level",
+                "Heads",
+                false,
+                options::LevelOptionWorking { args },
+            )
+        })
     }
 }
 

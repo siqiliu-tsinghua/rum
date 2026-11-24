@@ -303,6 +303,24 @@ const RAW_SITES: &[(&str, &str, &str, usize)] = &[
         1,
     ),
     (
+        "rum-runtime/src/runtime/options/core.rs",
+        "option_rule_expr_for_symbol_cm740_driven",
+        "resolve_option_entry_value",
+        1,
+    ),
+    (
+        "rum-runtime/src/runtime/options/core.rs",
+        "runtime_option_expr_for_symbol_cm740_driven",
+        "raw_option_value_for_symbol",
+        1,
+    ),
+    (
+        "rum-runtime/src/runtime/options/core.rs",
+        "system_option_bool_cm740_driven",
+        "option_value_for_symbol",
+        1,
+    ),
+    (
         "rum-runtime/src/runtime/options/builtins.rs",
         "resolve_option_value_scalar",
         "resolve_option_entry_value",

@@ -26,7 +26,13 @@ pub(crate) fn eval_operate(
         [operator, level_expr] if expr_as_non_negative_usize(level_expr).is_some() => Ok(
             unary_operator_form_with_tail("Operate", operator.clone(), level_expr.clone()),
         ),
-        [operator, expr] => session.evaluate(operate_on_head_level(expr, operator, 1)),
+        [operator, expr] => {
+            if rum_runtime::cm740_probe::driven() {
+                session.evaluate_cm740_driven(operate_on_head_level(expr, operator, 1))
+            } else {
+                session.evaluate(operate_on_head_level(expr, operator, 1))
+            }
+        }
         [operator, expr, level_expr] => {
             let Some(level) = expr_as_non_negative_usize(level_expr) else {
                 return Ok(session.invalid_call_with_arg_form(

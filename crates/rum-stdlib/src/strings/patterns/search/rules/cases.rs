@@ -44,19 +44,35 @@ pub(in super::super) fn collect_string_cases_with_rule_evaluation(
         ExactStringCaseSpec::Patterns(_) => None,
     };
 
-    resume_collect_string_cases_from_index(
-        session,
-        StringCasesRuleEvalState {
-            chars,
-            spec: spec.clone(),
-            max_matches,
-            config,
-            literal_matches,
-            literal_match_index: 0,
-        },
-        0,
-        Vec::new(),
-    )
+    (if rum_runtime::cm740_probe::driven() {
+        resume_collect_string_cases_from_index_cm740_driven(
+            session,
+            StringCasesRuleEvalState {
+                chars,
+                spec: spec.clone(),
+                max_matches,
+                config,
+                literal_matches,
+                literal_match_index: 0,
+            },
+            0,
+            Vec::new(),
+        )
+    } else {
+        resume_collect_string_cases_from_index(
+            session,
+            StringCasesRuleEvalState {
+                chars,
+                spec: spec.clone(),
+                max_matches,
+                config,
+                literal_matches,
+                literal_match_index: 0,
+            },
+            0,
+            Vec::new(),
+        )
+    })
 }
 
 pub(in super::super) fn collect_string_cases_values_with_rule_evaluation_expr(
@@ -143,6 +159,94 @@ fn resume_collect_string_cases_from_index(
                         end,
                         matches,
                         output_result,
+                        None,
+                    );
+                }
+
+                if index == state.chars.len() {
+                    break;
+                }
+                index += 1;
+            }
+        }
+    }
+
+    Ok(matches)
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_collect_string_cases_from_index_cm740_driven(
+    session: &mut Session,
+    state: StringCasesRuleEvalState,
+    mut index: usize,
+    mut matches: Vec<Expr>,
+) -> Result<Vec<Expr>, EvalError> {
+    if state.literal_matches.is_some() {
+        return resume_collect_literal_string_cases_cm740_driven(session, state, matches);
+    }
+
+    while index <= state.chars.len() && matches.len() < state.max_matches {
+        match &state.spec {
+            ExactStringCaseSpec::Patterns(patterns) => {
+                if let Some((_pattern_index, match_state)) = best_pattern_match_at_with_bindings(
+                    patterns,
+                    &state.chars,
+                    index,
+                    state.config.match_config,
+                ) {
+                    matches.push(Expr::string(pattern_match_text(
+                        &state.chars[index..match_state.end],
+                    )));
+                    let Some(next_index) = next_string_match_index(
+                        index,
+                        match_state.end,
+                        state.chars.len(),
+                        state.config.overlaps,
+                    ) else {
+                        break;
+                    };
+                    index = next_index;
+                } else {
+                    if index == state.chars.len() {
+                        break;
+                    }
+                    index += 1;
+                }
+            }
+            ExactStringCaseSpec::Rules(rules) => {
+                if let Some((output_expr, end, bindings)) = rules.iter().find_map(|rule| {
+                    best_pattern_match_state(
+                        &rule.pattern,
+                        &state.chars,
+                        index,
+                        state.config.match_config,
+                    )
+                    .map(|match_state| {
+                        let output_expr = match &rule.output {
+                            ExactStringCaseOutput::Immediate(expr)
+                            | ExactStringCaseOutput::Delayed(expr) => expr.clone(),
+                        };
+                        (output_expr, match_state.end, match_state.bindings)
+                    })
+                }) {
+                    let (output_result, handoff) =
+                        rum_runtime::cm740_probe::q25::around_handoff("P2379", || {
+                            evaluate_string_rule_output_expr_result(
+                                session,
+                                &output_expr,
+                                &bindings,
+                            )
+                        });
+                    return drive_string_cases_output_result(
+                        session,
+                        state,
+                        index,
+                        end,
+                        matches,
+                        output_result,
+                        handoff,
                     );
                 }
 
@@ -189,7 +293,46 @@ fn resume_collect_literal_string_cases(
     };
     let output_result =
         evaluate_string_rule_output_expr_result(session, &output_expr, &SymbolExprMap::default());
-    drive_string_cases_output_result(session, state, start, end, matches, output_result)
+    drive_string_cases_output_result(session, state, start, end, matches, output_result, None)
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_collect_literal_string_cases_cm740_driven(
+    session: &mut Session,
+    mut state: StringCasesRuleEvalState,
+    matches: Vec<Expr>,
+) -> Result<Vec<Expr>, EvalError> {
+    if matches.len() >= state.max_matches {
+        return Ok(matches);
+    }
+
+    let next_match = state
+        .literal_matches
+        .as_ref()
+        .and_then(|ranges| ranges.get(state.literal_match_index))
+        .copied();
+    let Some((start, end)) = next_match else {
+        return Ok(matches);
+    };
+    state.literal_match_index += 1;
+
+    let ExactStringCaseSpec::Rules(rules) = &state.spec else {
+        unreachable!("literal rule matching requires a rule specification");
+    };
+    let rule = rules
+        .first()
+        .expect("literal case matching requires one rule");
+    let output_expr = match &rule.output {
+        ExactStringCaseOutput::Immediate(expr) | ExactStringCaseOutput::Delayed(expr) => {
+            expr.clone()
+        }
+    };
+    let output_result = rum_runtime::cm740_probe::around("P2381", || {
+        evaluate_string_rule_output_expr_result(session, &output_expr, &SymbolExprMap::default())
+    });
+    drive_string_cases_output_result(session, state, start, end, matches, output_result, None)
 }
 
 fn drive_string_cases_output_result(
@@ -199,33 +342,59 @@ fn drive_string_cases_output_result(
     end: usize,
     matches: Vec<Expr>,
     output_result: Result<Expr, EvalError>,
+    handoff: Option<rum_runtime::cm740_probe::q25::Handoff>,
 ) -> Result<Vec<Expr>, EvalError> {
     match output_result {
         Ok(output) => {
+            drop(handoff);
             resume_collect_string_cases_with_output(session, state, index, end, matches, output)
         }
         Err(EvalError::InputRequired { request }) => {
             let literal_match_index = state.literal_match_index;
             let state = FrozenStringValue::freeze(state);
             let matches = PersistentStringSequence::freeze(matches);
-            rum_runtime::resume_or_suspend!(
-                session,
-                Err(EvalError::InputRequired { request }),
-                ok(output_expr) => { let output = <rum_core::Expr as rum_runtime::kernel_api::ContinuationValue>::from_continuation_expr(output_expr); (|| {
-                                resume_suspended_collect_string_cases_with_output(
-                                    session,
-                                    state,
-                                    index,
-                                    end,
-                                    literal_match_index,
-                                    matches,
-                                    output,
-                                )
-                            })() },
-                suspend => DriveStringCasesOutputResultSuspensionFrame { state, index, end, literal_match_index, matches },
-            )
+            if let Some(handoff) = handoff {
+                let frame = DriveStringCasesOutputResultSuspensionFrame {
+                    state,
+                    index,
+                    end,
+                    literal_match_index,
+                    matches,
+                };
+                session.insert_suspension_frame_q25(frame, handoff);
+                Err(EvalError::InputRequired { request })
+            } else {
+                rum_runtime::resume_or_suspend!(
+                    session,
+                    Err(EvalError::InputRequired { request }),
+                    ok(output_expr) => {
+                        let output = <rum_core::Expr as rum_runtime::kernel_api::ContinuationValue>::from_continuation_expr(output_expr);
+                        (|| {
+                            resume_suspended_collect_string_cases_with_output(
+                                session,
+                                state,
+                                index,
+                                end,
+                                literal_match_index,
+                                matches,
+                                output,
+                            )
+                        })()
+                    },
+                    suspend => DriveStringCasesOutputResultSuspensionFrame {
+                        state,
+                        index,
+                        end,
+                        literal_match_index,
+                        matches,
+                    },
+                )
+            }
         }
-        Err(error) => Err(error),
+        Err(error) => {
+            drop(handoff);
+            Err(error)
+        }
     }
 }
 
@@ -346,6 +515,129 @@ fn resume_suspended_collect_string_cases_from_index(
     Ok(matches.to_vec())
 }
 
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_suspended_collect_string_cases_from_index_cm740_driven(
+    session: &mut Session,
+    state: FrozenStringValue<StringCasesRuleEvalState>,
+    mut index: usize,
+    mut literal_match_index: usize,
+    mut matches: PersistentStringSequence<Expr>,
+) -> Result<Vec<Expr>, EvalError> {
+    let fixed = state.as_ref();
+    if fixed.literal_matches.is_some() {
+        if matches.len() >= fixed.max_matches {
+            return Ok(matches.to_vec());
+        }
+        let next_match = fixed
+            .literal_matches
+            .as_ref()
+            .and_then(|ranges| ranges.get(literal_match_index))
+            .copied();
+        let Some((start, end)) = next_match else {
+            return Ok(matches.to_vec());
+        };
+        literal_match_index += 1;
+
+        let ExactStringCaseSpec::Rules(rules) = &fixed.spec else {
+            unreachable!("literal rule matching requires a rule specification");
+        };
+        let rule = rules
+            .first()
+            .expect("literal case matching requires one rule");
+        let output_expr = match &rule.output {
+            ExactStringCaseOutput::Immediate(expr) | ExactStringCaseOutput::Delayed(expr) => {
+                expr.clone()
+            }
+        };
+        let output_result = rum_runtime::cm740_probe::around("P2385", || {
+            evaluate_string_rule_output_expr_result(
+                session,
+                &output_expr,
+                &SymbolExprMap::default(),
+            )
+        });
+        return drive_suspended_string_cases_output_result(
+            session,
+            state,
+            start,
+            end,
+            literal_match_index,
+            matches,
+            output_result,
+        );
+    }
+
+    while index <= fixed.chars.len() && matches.len() < fixed.max_matches {
+        match &fixed.spec {
+            ExactStringCaseSpec::Patterns(patterns) => {
+                if let Some((_pattern_index, match_state)) = best_pattern_match_at_with_bindings(
+                    patterns,
+                    &fixed.chars,
+                    index,
+                    fixed.config.match_config,
+                ) {
+                    matches = matches.appended(Expr::string(pattern_match_text(
+                        &fixed.chars[index..match_state.end],
+                    )));
+                    let Some(next_index) = next_string_match_index(
+                        index,
+                        match_state.end,
+                        fixed.chars.len(),
+                        fixed.config.overlaps,
+                    ) else {
+                        break;
+                    };
+                    index = next_index;
+                } else {
+                    if index == fixed.chars.len() {
+                        break;
+                    }
+                    index += 1;
+                }
+            }
+            ExactStringCaseSpec::Rules(rules) => {
+                if let Some((output_expr, end, bindings)) = rules.iter().find_map(|rule| {
+                    best_pattern_match_state(
+                        &rule.pattern,
+                        &fixed.chars,
+                        index,
+                        fixed.config.match_config,
+                    )
+                    .map(|match_state| {
+                        let output_expr = match &rule.output {
+                            ExactStringCaseOutput::Immediate(expr)
+                            | ExactStringCaseOutput::Delayed(expr) => expr.clone(),
+                        };
+                        (output_expr, match_state.end, match_state.bindings)
+                    })
+                }) {
+                    let output_result = rum_runtime::cm740_probe::around("P2387", || {
+                        evaluate_string_rule_output_expr_result(session, &output_expr, &bindings)
+                    });
+                    return drive_suspended_string_cases_output_result(
+                        session,
+                        state,
+                        index,
+                        end,
+                        literal_match_index,
+                        matches,
+                        output_result,
+                    );
+                }
+
+                if index == fixed.chars.len() {
+                    break;
+                }
+                index += 1;
+            }
+        }
+    }
+
+    Ok(matches.to_vec())
+}
+
 #[allow(clippy::too_many_arguments)]
 fn drive_suspended_string_cases_output_result(
     session: &mut Session,
@@ -395,6 +687,18 @@ pub(super) fn resume_suspended_collect_string_cases_with_output(
     matches: PersistentStringSequence<Expr>,
     output: Expr,
 ) -> Result<Vec<Expr>, EvalError> {
+    if rum_runtime::cm740_probe::driven() {
+        return resume_suspended_collect_string_cases_with_output_cm740_driven(
+            session,
+            state,
+            index,
+            end,
+            literal_match_index,
+            matches,
+            output,
+        );
+    }
+
     let matches = matches.appended(output);
     let Some(next_index) = next_string_match_index(
         index,
@@ -406,6 +710,52 @@ pub(super) fn resume_suspended_collect_string_cases_with_output(
     };
 
     resume_suspended_collect_string_cases_from_index(
+        session,
+        state,
+        next_index,
+        literal_match_index,
+        matches,
+    )
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(super) fn resume_suspended_collect_string_cases_with_output_cm740_driven(
+    session: &mut Session,
+    state: FrozenStringValue<StringCasesRuleEvalState>,
+    index: usize,
+    end: usize,
+    literal_match_index: usize,
+    matches: PersistentStringSequence<Expr>,
+    output: Expr,
+) -> Result<Vec<Expr>, EvalError> {
+    let matches = if rum_runtime::cm740_probe::q25::consume_append(
+        "P2379",
+        "OmitActualStringCaseAppend",
+        &output,
+    ) {
+        rum_runtime::cm740_probe::hit("P2379", "OmitActualStringCaseAppend");
+        matches
+    } else if let Some(row) = ["P2381", "P2385", "P2387"]
+        .into_iter()
+        .find(|row| rum_runtime::cm740_probe::frame(row))
+    {
+        rum_runtime::cm740_probe::hit(row, "OmitActualStringCaseAppend");
+        matches
+    } else {
+        matches.appended(output)
+    };
+    let Some(next_index) = next_string_match_index(
+        index,
+        end,
+        state.as_ref().chars.len(),
+        state.as_ref().config.overlaps,
+    ) else {
+        return Ok(matches.to_vec());
+    };
+
+    resume_suspended_collect_string_cases_from_index_cm740_driven(
         session,
         state,
         next_index,
@@ -429,7 +779,11 @@ fn resume_collect_string_cases_with_output(
         return Ok(matches);
     };
 
-    resume_collect_string_cases_from_index(session, state, next_index, matches)
+    (if rum_runtime::cm740_probe::driven() {
+        resume_collect_string_cases_from_index_cm740_driven(session, state, next_index, matches)
+    } else {
+        resume_collect_string_cases_from_index(session, state, next_index, matches)
+    })
 }
 
 /// Collects one string per loop iteration instead of recursing per string.

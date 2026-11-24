@@ -104,15 +104,27 @@ impl Session {
         heads_option_exprs: Vec<Expr>,
         call_args: Vec<Expr>,
     ) -> Result<Expr, EvalError> {
-        self.drive_rewrite_rule_exprs_owned(
-            rules_expr,
-            RewriteRuleExprContinuation::Replace {
-                target,
-                levels_expr,
-                heads_option_exprs,
-                call_args,
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.drive_rewrite_rule_exprs_owned_cm740_driven(
+                rules_expr,
+                RewriteRuleExprContinuation::Replace {
+                    target,
+                    levels_expr,
+                    heads_option_exprs,
+                    call_args,
+                },
+            )
+        } else {
+            self.drive_rewrite_rule_exprs_owned(
+                rules_expr,
+                RewriteRuleExprContinuation::Replace {
+                    target,
+                    levels_expr,
+                    heads_option_exprs,
+                    call_args,
+                },
+            )
+        })
     }
 
     pub(in crate::runtime) fn resume_replace_after_rule_exprs(
@@ -136,18 +148,33 @@ impl Session {
             .expect("normalized rewrite rule expressions should recompile");
         let rule_plan = Self::shared_rewrite_rule_plan(rules);
 
-        self.system_option_bool(
-            "Replace",
-            "Heads",
-            false,
-            options::ReplaceOptionWorking {
-                target,
-                rule_plan,
-                levels_expr,
-                heads_option_exprs,
-                call_args,
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.system_option_bool_cm740_driven(
+                "Replace",
+                "Heads",
+                false,
+                options::ReplaceOptionWorking {
+                    target,
+                    rule_plan,
+                    levels_expr,
+                    heads_option_exprs,
+                    call_args,
+                },
+            )
+        } else {
+            self.system_option_bool(
+                "Replace",
+                "Heads",
+                false,
+                options::ReplaceOptionWorking {
+                    target,
+                    rule_plan,
+                    levels_expr,
+                    heads_option_exprs,
+                    call_args,
+                },
+            )
+        })
     }
 
     fn finish_replace_heads_resolution(
@@ -229,7 +256,11 @@ impl Session {
             return Ok(Some(bool_expr(default)));
         }
 
-        let resolved_result = self.resolve_argument_exprs_owned(option_exprs);
+        let resolved_result = (if crate::cm740_probe::driven() {
+            self.resolve_argument_exprs_owned_cm740_driven(option_exprs)
+        } else {
+            self.resolve_argument_exprs_owned(option_exprs)
+        });
         crate::resume_or_suspend!(
             self,
             resolved_result,
@@ -303,11 +334,19 @@ impl Session {
             replace_expr_depth(&expr)
         };
         if levels.matches(level, depth) {
-            let replaced_result = self.apply_rewrite_rule_plan_once(
-                expr.clone(),
-                rule_plan.clone(),
-                RuleApplicationSource::Replace,
-            );
+            let replaced_result = (if crate::cm740_probe::driven() {
+                self.apply_rewrite_rule_plan_once_cm740_driven(
+                    expr.clone(),
+                    rule_plan.clone(),
+                    RuleApplicationSource::Replace,
+                )
+            } else {
+                self.apply_rewrite_rule_plan_once(
+                    expr.clone(),
+                    rule_plan.clone(),
+                    RuleApplicationSource::Replace,
+                )
+            });
             return crate::resume_or_suspend!(
                 self,
                 replaced_result,

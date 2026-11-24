@@ -52,12 +52,21 @@ impl Session {
         name: &'static str,
         output: TraceOutput,
     ) -> Result<Expr, EvalError> {
-        self.system_option_bool(
-            name,
-            "Heads",
-            false,
-            options::TraceOptionWorking { args, name, output },
-        )
+        (if crate::cm740_probe::driven() {
+            self.system_option_bool_cm740_driven(
+                name,
+                "Heads",
+                false,
+                options::TraceOptionWorking { args, name, output },
+            )
+        } else {
+            self.system_option_bool(
+                name,
+                "Heads",
+                false,
+                options::TraceOptionWorking { args, name, output },
+            )
+        })
     }
 
     fn eval_structured_trace_capture_expr(

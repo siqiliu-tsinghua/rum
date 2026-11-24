@@ -753,7 +753,7 @@ const EXPECTED_RECURSION: &[(&str, &str, &str, usize, &str)] = &[
 ];
 
 fn expected_declared_production_recursion() -> Vec<DeclaredRecursiveEdge> {
-    EXPECTED_RECURSION
+    let mut rows = EXPECTED_RECURSION
         .iter()
         .map(
             |(path, caller, callee, count, declaration)| DeclaredRecursiveEdge {
@@ -766,7 +766,19 @@ fn expected_declared_production_recursion() -> Vec<DeclaredRecursiveEdge> {
                 declaration,
             },
         )
-        .collect()
+        .collect::<Vec<_>>();
+    for (path, caller, callee, count) in super::registry::CM740_TARGET_EDGES {
+        rows.push(DeclaredRecursiveEdge {
+            edge: RecursiveEdge {
+                path: (*path).to_string(),
+                caller: (*caller).to_string(),
+                callee: (*callee).to_string(),
+                count: *count,
+            },
+            declaration: "delete-missing-target-bounded-front",
+        });
+    }
+    rows
 }
 
 pub(super) fn declared_production_recursion() -> Vec<DeclaredRecursiveEdge> {

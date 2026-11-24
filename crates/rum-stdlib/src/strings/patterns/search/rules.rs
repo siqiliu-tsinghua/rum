@@ -56,20 +56,37 @@ pub(super) fn replace_string_value_with_rules(
         _ => None,
     };
 
-    resume_replace_string_value_from_index(
-        session,
-        StringReplaceRuleEvalState {
-            chars,
-            rules: rules.to_vec(),
-            max_replacements,
-            config,
-            literal_matches,
-            literal_match_index: 0,
-        },
-        0,
-        0,
-        String::new(),
-    )
+    (if rum_runtime::cm740_probe::driven() {
+        resume_replace_string_value_from_index_cm740_driven(
+            session,
+            StringReplaceRuleEvalState {
+                chars,
+                rules: rules.to_vec(),
+                max_replacements,
+                config,
+                literal_matches,
+                literal_match_index: 0,
+            },
+            0,
+            0,
+            String::new(),
+        )
+    } else {
+        resume_replace_string_value_from_index(
+            session,
+            StringReplaceRuleEvalState {
+                chars,
+                rules: rules.to_vec(),
+                max_replacements,
+                config,
+                literal_matches,
+                literal_match_index: 0,
+            },
+            0,
+            0,
+            String::new(),
+        )
+    })
 }
 
 pub(super) fn replace_string_values_with_rules_expr(
@@ -150,6 +167,67 @@ fn resume_replace_string_value_from_index(
     Ok(output)
 }
 
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_replace_string_value_from_index_cm740_driven(
+    session: &mut Session,
+    state: StringReplaceRuleEvalState,
+    mut index: usize,
+    replacements: usize,
+    mut output: String,
+) -> Result<String, EvalError> {
+    if state.literal_matches.is_some() {
+        return resume_replace_literal_string_from_index_cm740_driven(
+            session,
+            state,
+            index,
+            replacements,
+            output,
+        );
+    }
+
+    while index <= state.chars.len() {
+        if replacements >= state.max_replacements {
+            output.extend(state.chars[index..].iter());
+            return Ok(output);
+        }
+
+        if let Some((output_expr, end, bindings)) = state.rules.iter().find_map(|rule| {
+            best_pattern_match_state(&rule.pattern, &state.chars, index, state.config).map(
+                |match_state| {
+                    let output_expr = match &rule.replacement {
+                        ExactStringReplacementValue::Immediate(expr)
+                        | ExactStringReplacementValue::Delayed(expr) => expr.clone(),
+                    };
+                    (output_expr, match_state.end, match_state.bindings)
+                },
+            )
+        }) {
+            let rendered_result = rum_runtime::cm740_probe::around("P2409", || {
+                evaluate_string_rule_output_expr_result(session, &output_expr, &bindings)
+            });
+            return drive_replace_string_output_result(
+                session,
+                state,
+                index,
+                end,
+                replacements,
+                output,
+                rendered_result,
+            );
+        }
+
+        if index == state.chars.len() {
+            break;
+        }
+        output.push(state.chars[index]);
+        index += 1;
+    }
+
+    Ok(output)
+}
+
 fn resume_replace_literal_string_from_index(
     session: &mut Session,
     mut state: StringReplaceRuleEvalState,
@@ -185,6 +263,56 @@ fn resume_replace_literal_string_from_index(
     };
     let rendered_result =
         evaluate_string_rule_output_expr_result(session, &output_expr, &SymbolExprMap::default());
+    drive_replace_string_output_result(
+        session,
+        state,
+        start,
+        end,
+        replacements,
+        output,
+        rendered_result,
+    )
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_replace_literal_string_from_index_cm740_driven(
+    session: &mut Session,
+    mut state: StringReplaceRuleEvalState,
+    index: usize,
+    replacements: usize,
+    mut output: String,
+) -> Result<String, EvalError> {
+    if replacements >= state.max_replacements {
+        output.extend(state.chars[index..].iter());
+        return Ok(output);
+    }
+
+    let next_match = state
+        .literal_matches
+        .as_ref()
+        .and_then(|matches| matches.get(state.literal_match_index))
+        .copied();
+    let Some((start, end)) = next_match else {
+        output.extend(state.chars[index..].iter());
+        return Ok(output);
+    };
+    debug_assert!(start >= index);
+    output.extend(state.chars[index..start].iter());
+    state.literal_match_index += 1;
+
+    let rule = state
+        .rules
+        .first()
+        .expect("literal replacement matching requires one rule");
+    let output_expr = match &rule.replacement {
+        ExactStringReplacementValue::Immediate(expr)
+        | ExactStringReplacementValue::Delayed(expr) => expr.clone(),
+    };
+    let rendered_result = rum_runtime::cm740_probe::around("P2411", || {
+        evaluate_string_rule_output_expr_result(session, &output_expr, &SymbolExprMap::default())
+    });
     drive_replace_string_output_result(
         session,
         state,
@@ -352,6 +480,109 @@ fn resume_suspended_replace_string_value_from_index(
     Ok(output.to_string())
 }
 
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_suspended_replace_string_value_from_index_cm740_driven(
+    session: &mut Session,
+    state: FrozenStringValue<StringReplaceRuleEvalState>,
+    mut index: usize,
+    replacements: usize,
+    mut literal_match_index: usize,
+    mut output: PersistentStringText,
+) -> Result<String, EvalError> {
+    let fixed = state.as_ref();
+    if fixed.literal_matches.is_some() {
+        if replacements >= fixed.max_replacements {
+            return Ok(output
+                .appended(fixed.chars[index..].iter().collect::<String>())
+                .to_string());
+        }
+
+        let next_match = fixed
+            .literal_matches
+            .as_ref()
+            .and_then(|matches| matches.get(literal_match_index))
+            .copied();
+        let Some((start, end)) = next_match else {
+            return Ok(output
+                .appended(fixed.chars[index..].iter().collect::<String>())
+                .to_string());
+        };
+        debug_assert!(start >= index);
+        output = output.appended(fixed.chars[index..start].iter().collect::<String>());
+        literal_match_index += 1;
+
+        let rule = fixed
+            .rules
+            .first()
+            .expect("literal replacement matching requires one rule");
+        let output_expr = match &rule.replacement {
+            ExactStringReplacementValue::Immediate(expr)
+            | ExactStringReplacementValue::Delayed(expr) => expr.clone(),
+        };
+        let rendered_result = rum_runtime::cm740_probe::around("P2416", || {
+            evaluate_string_rule_output_expr_result(
+                session,
+                &output_expr,
+                &SymbolExprMap::default(),
+            )
+        });
+        return drive_suspended_replace_string_output_result(
+            session,
+            state,
+            start,
+            end,
+            replacements,
+            literal_match_index,
+            output,
+            rendered_result,
+        );
+    }
+
+    while index <= fixed.chars.len() {
+        if replacements >= fixed.max_replacements {
+            return Ok(output
+                .appended(fixed.chars[index..].iter().collect::<String>())
+                .to_string());
+        }
+
+        if let Some((output_expr, end, bindings)) = fixed.rules.iter().find_map(|rule| {
+            best_pattern_match_state(&rule.pattern, &fixed.chars, index, fixed.config).map(
+                |match_state| {
+                    let output_expr = match &rule.replacement {
+                        ExactStringReplacementValue::Immediate(expr)
+                        | ExactStringReplacementValue::Delayed(expr) => expr.clone(),
+                    };
+                    (output_expr, match_state.end, match_state.bindings)
+                },
+            )
+        }) {
+            let rendered_result = rum_runtime::cm740_probe::around("P2418", || {
+                evaluate_string_rule_output_expr_result(session, &output_expr, &bindings)
+            });
+            return drive_suspended_replace_string_output_result(
+                session,
+                state,
+                index,
+                end,
+                replacements,
+                literal_match_index,
+                output,
+                rendered_result,
+            );
+        }
+
+        if index == fixed.chars.len() {
+            break;
+        }
+        output = output.appended(fixed.chars[index].to_string());
+        index += 1;
+    }
+
+    Ok(output.to_string())
+}
+
 #[allow(clippy::too_many_arguments)]
 fn drive_suspended_replace_string_output_result(
     session: &mut Session,
@@ -406,6 +637,19 @@ fn resume_suspended_replace_string_value_with_output(
     output: PersistentStringText,
     rendered_expr: Expr,
 ) -> Result<String, EvalError> {
+    if rum_runtime::cm740_probe::driven() {
+        return resume_suspended_replace_string_value_with_output_cm740_driven(
+            session,
+            state,
+            index,
+            end,
+            replacements,
+            literal_match_index,
+            output,
+            rendered_expr,
+        );
+    }
+
     let rendered = expr_as_string(&rendered_expr)
         .map(str::to_owned)
         .unwrap_or_else(|| rendered_expr.to_string());
@@ -423,6 +667,54 @@ fn resume_suspended_replace_string_value_with_output(
     };
 
     resume_suspended_replace_string_value_from_index(
+        session,
+        state,
+        next_index,
+        replacements + 1,
+        literal_match_index,
+        output,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_suspended_replace_string_value_with_output_cm740_driven(
+    session: &mut Session,
+    state: FrozenStringValue<StringReplaceRuleEvalState>,
+    index: usize,
+    end: usize,
+    replacements: usize,
+    literal_match_index: usize,
+    output: PersistentStringText,
+    rendered_expr: Expr,
+) -> Result<String, EvalError> {
+    let rendered = expr_as_string(&rendered_expr)
+        .map(str::to_owned)
+        .unwrap_or_else(|| rendered_expr.to_string());
+    let mut output = if let Some(row) = ["P2409", "P2411", "P2416", "P2418"]
+        .into_iter()
+        .find(|row| rum_runtime::cm740_probe::frame(row))
+    {
+        rum_runtime::cm740_probe::hit(row, "OmitActualReplacementAppend");
+        output
+    } else {
+        output.appended(rendered)
+    };
+    let fixed = state.as_ref();
+
+    let next_index = if end == index {
+        if index == fixed.chars.len() {
+            return Ok(output.to_string());
+        }
+        output = output.appended(fixed.chars[index].to_string());
+        index + 1
+    } else {
+        end
+    };
+
+    resume_suspended_replace_string_value_from_index_cm740_driven(
         session,
         state,
         next_index,
@@ -456,7 +748,17 @@ fn resume_replace_string_value_with_output(
         end
     };
 
-    resume_replace_string_value_from_index(session, state, next_index, replacements + 1, output)
+    (if rum_runtime::cm740_probe::driven() {
+        resume_replace_string_value_from_index_cm740_driven(
+            session,
+            state,
+            next_index,
+            replacements + 1,
+            output,
+        )
+    } else {
+        resume_replace_string_value_from_index(session, state, next_index, replacements + 1, output)
+    })
 }
 
 /// Renders one string per loop iteration instead of recursing per string.

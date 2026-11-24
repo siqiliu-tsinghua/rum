@@ -26,14 +26,25 @@ impl TypedFrame for FinishHeldAssociationPartSelectorEvaluationSuspensionFrame {
         let spec = self.spec.clone();
         let resumed = (|| {
             let evaluated_selectors = outcome?;
-            finish_held_association_part_mutation(
-                session,
-                operation,
-                target_expr,
-                target,
-                evaluated_selectors,
-                spec,
-            )
+            if rum_runtime::cm740_probe::driven() {
+                finish_held_association_part_mutation_cm740_driven(
+                    session,
+                    operation,
+                    target_expr,
+                    target,
+                    evaluated_selectors,
+                    spec,
+                )
+            } else {
+                finish_held_association_part_mutation(
+                    session,
+                    operation,
+                    target_expr,
+                    target,
+                    evaluated_selectors,
+                    spec,
+                )
+            }
         })();
         TypedAction::complete(resumed)
     }

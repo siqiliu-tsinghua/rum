@@ -94,8 +94,36 @@ impl TypedFrame for FinishPositionAfterResolvedTraversalSuspensionFrame {
         outcome: Result<PositionCollectionOutcome, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_beb(self, _session, outcome, _token);
+        }
+
         let resumed = match outcome {
             Ok(outcome) => Ok(Expr::call(system_expr("List"), outcome.positions)),
+            Err(error) => Err(error),
+        };
+        TypedAction::complete(resumed)
+    }
+}
+impl FinishPositionAfterResolvedTraversalSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_beb<'resume>(
+        self: std::sync::Arc<Self>,
+        _session: &mut Session,
+        outcome: Result<PositionCollectionOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        let resumed = match outcome {
+            Ok(mut outcome) => {
+                if crate::cm740_probe::frame("P1636") && outcome.positions.len() == 1 {
+                    crate::cm740_probe::hit("P1636", "OmitActualPositionListEmission");
+                    Ok(outcome.positions.pop().expect("one real collected path"))
+                } else {
+                    Ok(Expr::call(system_expr("List"), outcome.positions))
+                }
+            }
             Err(error) => Err(error),
         };
         TypedAction::complete(resumed)

@@ -311,7 +311,12 @@ fn resume_accumulate_from_index(
         let Some(item) = sequence.value_at(index) else {
             return Ok(sequence.render_with_values(accumulated));
         };
-        let value = match session.evaluate(Expr::call(system_expr("Plus"), vec![current, item])) {
+        let plus_expr = Expr::call(system_expr("Plus"), vec![current, item]);
+        let value = match if rum_runtime::cm740_probe::driven() {
+            session.evaluate_cm740_driven(plus_expr)
+        } else {
+            session.evaluate(plus_expr)
+        } {
             Ok(value) => value,
             Err(EvalError::InputRequired { request }) => {
                 return rum_runtime::resume_or_suspend!(
@@ -349,7 +354,12 @@ fn resume_suspended_accumulate_from_index(
         let Some(item) = sequence.value_at(index) else {
             return Ok(sequence.render_with_values(accumulated.to_vec()));
         };
-        let value = match session.evaluate(Expr::call(system_expr("Plus"), vec![current, item])) {
+        let plus_expr = Expr::call(system_expr("Plus"), vec![current, item]);
+        let value = match if rum_runtime::cm740_probe::driven() {
+            session.evaluate_cm740_driven(plus_expr)
+        } else {
+            session.evaluate(plus_expr)
+        } {
             Ok(value) => value,
             Err(EvalError::InputRequired { request }) => {
                 return rum_runtime::resume_or_suspend!(

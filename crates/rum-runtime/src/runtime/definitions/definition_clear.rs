@@ -13,12 +13,23 @@ impl Session {
 
     pub(in crate::runtime) fn eval_unset(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
         match args {
-            [target] => self.prepare_definition_lhs(
-                target.clone(),
-                DefinitionLhsPreparationContinuation::Unset {
-                    source: target.clone(),
-                },
-            ),
+            [target] => {
+                (if crate::cm740_probe::driven() {
+                    self.prepare_definition_lhs_cm740_driven(
+                        target.clone(),
+                        DefinitionLhsPreparationContinuation::Unset {
+                            source: target.clone(),
+                        },
+                    )
+                } else {
+                    self.prepare_definition_lhs(
+                        target.clone(),
+                        DefinitionLhsPreparationContinuation::Unset {
+                            source: target.clone(),
+                        },
+                    )
+                })
+            }
             _ => Ok(self.invalid_call_with_exact_arg_count("Unset", args, 1)),
         }
     }

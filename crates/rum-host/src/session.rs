@@ -455,6 +455,10 @@ impl HostSession {
     }
 
     fn call_unprotected(&mut self, head: &str, args: &[HostTyped]) -> HostEvalOutcome {
+        if rum_runtime::cm740_probe::driven() {
+            return self.call_unprotected_cm740_driven(head, args);
+        }
+
         match self.session.finish_cancelled_pending_evaluation_request() {
             Ok(Some(response)) => {
                 return HostEvalOutcome::Success(eval_success_from_runtime(response));
@@ -496,6 +500,62 @@ impl HostSession {
         let expr = Expr::call(Expr::Atom(Atom::Symbol(head)), expr_args);
         match self.session.eval_expr_request(expr) {
             Ok(response) => HostEvalOutcome::Success(eval_success_from_runtime(response)),
+            Err(failure) => eval_failure_from_runtime(failure),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn call_unprotected_cm740_driven(&mut self, head: &str, args: &[HostTyped]) -> HostEvalOutcome {
+        match self.session.finish_cancelled_pending_evaluation_request() {
+            Ok(Some(response)) => {
+                return HostEvalOutcome::Success(eval_success_from_runtime(response));
+            }
+            Ok(None) => {}
+            Err(failure) => return eval_failure_from_runtime(failure),
+        }
+        if let Err(failure) = self.session.reject_overlapping_evaluation_request() {
+            return eval_failure_from_runtime(failure);
+        }
+
+        if head.trim().is_empty() {
+            return HostEvalOutcome::Failure(synthesized_host_failure(
+                HostFailureCode::Other,
+                "call head must not be empty",
+            ));
+        }
+
+        let Some(head) = self.session.resolve_symbol_name(head, true) else {
+            return HostEvalOutcome::Failure(synthesized_host_failure(
+                HostFailureCode::Other,
+                format!("unable to resolve call head: {head:?}"),
+            ));
+        };
+
+        let mut expr_args = Vec::with_capacity(args.len());
+        for (index, arg) in args.iter().enumerate() {
+            match arg.to_expr(&self.session) {
+                Ok(expr) => expr_args.push(expr),
+                Err(message) => {
+                    return HostEvalOutcome::Failure(synthesized_host_failure(
+                        HostFailureCode::Other,
+                        format!("call argument at index {index} is invalid: {message}"),
+                    ));
+                }
+            }
+        }
+
+        let expr = Expr::call(Expr::Atom(Atom::Symbol(head)), expr_args);
+        match rum_runtime::cm740_probe::around("P2600", || self.session.eval_expr_request(expr)) {
+            Ok(response) => {
+                let _output = crate::model::cm740_output_scope("P2600");
+                HostEvalOutcome::Success(if rum_runtime::cm740_probe::driven() {
+                    crate::model::eval_success_from_runtime_cm740_driven(response)
+                } else {
+                    eval_success_from_runtime(response)
+                })
+            }
             Err(failure) => eval_failure_from_runtime(failure),
         }
     }
@@ -864,5 +924,31 @@ mod tests {
                 .as_deref()
                 .is_some_and(|text| text.contains("poisoned"))
         );
+    }
+}
+
+impl HostSession {
+    /// Instrumentation seam for the generated carrier probe.
+    #[doc(hidden)]
+    pub fn cm740_enter(row: &'static str) -> rum_runtime::cm740_probe::Guard {
+        rum_runtime::cm740_probe::enter(row)
+    }
+
+    /// Instrumentation seam for the generated carrier probe.
+    #[doc(hidden)]
+    pub fn cm740_ordinary(row: &str) -> bool {
+        rum_runtime::cm740_probe::ordinary(row)
+    }
+
+    /// Instrumentation seam for the generated carrier probe.
+    #[doc(hidden)]
+    pub fn cm740_hit(row: &str, phase: &str) {
+        rum_runtime::cm740_probe::hit(row, phase);
+    }
+
+    /// Instrumentation seam for the generated carrier probe.
+    #[doc(hidden)]
+    pub fn cm740_driven() -> bool {
+        rum_runtime::cm740_probe::driven()
     }
 }

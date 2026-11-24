@@ -204,9 +204,15 @@ impl Session {
                     return Err(EvalError::ExceptionThrown { exception });
                 };
                 let type_chain = self.exception_type_chain(&type_name);
-                self.dispatch_exception_handlers_owned(
-                    exception, payload, type_chain, handlers, 0, 0,
-                )
+                (if crate::cm740_probe::driven() {
+                    self.dispatch_exception_handlers_owned_cm740_driven(
+                        exception, payload, type_chain, handlers, 0, 0,
+                    )
+                } else {
+                    self.dispatch_exception_handlers_owned(
+                        exception, payload, type_chain, handlers, 0, 0,
+                    )
+                })
             }
             Err(error) => Err(error),
         }
@@ -236,7 +242,11 @@ impl Session {
                     handler_index: 0,
                     ancestor_index: 0,
                 };
-                self.dispatch_suspended_exception_handlers(state, (), ())
+                (if crate::cm740_probe::driven() {
+                    self.dispatch_suspended_exception_handlers_cm740_driven(state, (), ())
+                } else {
+                    self.dispatch_suspended_exception_handlers(state, (), ())
+                })
             }
             Err(error) => Err(ResumeStop::failure(error)),
         }
@@ -344,6 +354,99 @@ impl Session {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn dispatch_exception_handlers_owned_cm740_driven(
+        &mut self,
+        exception: Expr,
+        payload: Expr,
+        type_chain: Vec<String>,
+        handlers: Vec<ExceptionHandler>,
+        mut handler_index: usize,
+        mut ancestor_index: usize,
+    ) -> Result<Expr, EvalError> {
+        loop {
+            let Some(handler) = handlers.get(handler_index) else {
+                return Err(EvalError::ExceptionThrown { exception });
+            };
+            if ancestor_index >= type_chain.len() {
+                handler_index += 1;
+                ancestor_index = 0;
+                continue;
+            }
+
+            let candidate = exception_expr(&type_chain[ancestor_index], payload.clone());
+            let match_result = crate::cm740_probe::around("P0765", || {
+                self.match_expr_owned_cm740_driven(
+                    handler.pattern.clone(),
+                    candidate,
+                    SymbolExprMap::default(),
+                )
+            });
+            let witness = slot_witness(&match_result);
+            match match_result {
+                Ok(outcome) => {
+                    if !outcome.matched {
+                        ancestor_index += 1;
+                        continue;
+                    }
+                    if handler.guards.is_empty() {
+                        return self.evaluate_exception_handler_rhs(handler, outcome.bindings);
+                    }
+
+                    let false_bindings = outcome.bindings.clone();
+                    let guard_result = crate::cm740_probe::around("P0767", || {
+                        self.evaluate_guard_sequence_owned_cm740_driven(
+                            handler.guards.clone(),
+                            outcome.bindings,
+                            false_bindings,
+                            None,
+                        )
+                    });
+                    let witness = slot_witness(&guard_result);
+                    match guard_result {
+                        Ok(outcome) if outcome.matched => {
+                            return self.evaluate_exception_handler_rhs(handler, outcome.bindings);
+                        }
+                        Ok(_) => {
+                            ancestor_index += 1;
+                        }
+                        Err(EvalError::InputRequired { request }) => {
+                            return resume_frames::suspend_exception_handlers_owned_guard(
+                                self,
+                                exception,
+                                payload,
+                                type_chain,
+                                handlers,
+                                handler_index,
+                                ancestor_index,
+                                witness,
+                                request,
+                            );
+                        }
+                        Err(error) => return Err(error),
+                    }
+                }
+                Err(EvalError::InputRequired { request }) => {
+                    return resume_frames::suspend_exception_handlers_owned_match(
+                        self,
+                        exception,
+                        payload,
+                        type_chain,
+                        handlers,
+                        handler_index,
+                        ancestor_index,
+                        witness,
+                        request,
+                    );
+                }
+                Err(error) => return Err(error),
+            }
+        }
+    }
+
     fn dispatch_suspended_exception_handlers<MatchRoute, GuardRoute>(
         &mut self,
         mut state: SuspendedExceptionDispatch,
@@ -380,6 +483,70 @@ impl Session {
                         continue;
                     }
                     return self.resume_suspended_exception_match_outcome(
+                        state,
+                        outcome,
+                        match_route,
+                        guard_route,
+                    );
+                }
+                Err(EvalError::InputRequired { request }) => {
+                    return resume_frames::suspend_suspended_exception_handlers(
+                        self,
+                        state,
+                        witness,
+                        request,
+                        match_route,
+                    );
+                }
+                Err(error) => return Err(ResumeStop::failure(error)),
+            }
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn dispatch_suspended_exception_handlers_cm740_driven<MatchRoute, GuardRoute>(
+        &mut self,
+        mut state: SuspendedExceptionDispatch,
+        match_route: MatchRoute,
+        guard_route: GuardRoute,
+    ) -> Result<Expr, ResumeStop<Expr>>
+    where
+        MatchRoute: ExceptionResumeRoute<DispatchSuspendedExceptionHandlersSuspensionFrame>,
+        GuardRoute: ExceptionResumeRoute<ResumeSuspendedExceptionMatchOutcomeSuspensionFrame>,
+    {
+        loop {
+            let Some(handler) = state.handlers.get(state.handler_index) else {
+                return Err(ResumeStop::failure(EvalError::ExceptionThrown {
+                    exception: state.exception,
+                }));
+            };
+            if state.ancestor_index >= state.type_chain.len() {
+                state.handler_index += 1;
+                state.ancestor_index = 0;
+                continue;
+            }
+
+            let candidate = exception_expr(
+                &state.type_chain[state.ancestor_index],
+                state.payload.clone(),
+            );
+            let match_result = crate::cm740_probe::around("P0769", || {
+                self.match_expr_owned_cm740_driven(
+                    handler.pattern.clone(),
+                    candidate,
+                    SymbolExprMap::default(),
+                )
+            });
+            let witness = slot_witness(&match_result);
+            match match_result {
+                Ok(outcome) => {
+                    if !outcome.matched {
+                        state.ancestor_index += 1;
+                        continue;
+                    }
+                    return self.resume_suspended_exception_match_outcome_cm740_driven(
                         state,
                         outcome,
                         match_route,
@@ -451,6 +618,66 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_suspended_exception_match_outcome_cm740_driven<MatchRoute, GuardRoute>(
+        &mut self,
+        mut state: SuspendedExceptionDispatch,
+        outcome: CompiledMatchOutcome,
+        match_route: MatchRoute,
+        guard_route: GuardRoute,
+    ) -> Result<Expr, ResumeStop<Expr>>
+    where
+        MatchRoute: ExceptionResumeRoute<DispatchSuspendedExceptionHandlersSuspensionFrame>,
+        GuardRoute: ExceptionResumeRoute<ResumeSuspendedExceptionMatchOutcomeSuspensionFrame>,
+    {
+        if !outcome.matched {
+            state.ancestor_index += 1;
+            return self.dispatch_suspended_exception_handlers_cm740_driven(
+                state,
+                match_route,
+                guard_route,
+            );
+        }
+
+        let handler = &state.handlers[state.handler_index];
+        if handler.guards.is_empty() {
+            return self
+                .evaluate_exception_handler_rhs(handler, outcome.bindings)
+                .map_err(ResumeStop::failure);
+        }
+
+        let false_bindings = outcome.bindings.clone();
+        let guard_result = crate::cm740_probe::around("P0773", || {
+            self.evaluate_guard_sequence_owned_cm740_driven(
+                handler.guards.clone(),
+                outcome.bindings,
+                false_bindings,
+                None,
+            )
+        });
+        let witness = slot_witness(&guard_result);
+        match guard_result {
+            Ok(outcome) => self.resume_suspended_exception_guard_outcome_cm740_driven(
+                state,
+                outcome,
+                match_route,
+                guard_route,
+            ),
+            Err(EvalError::InputRequired { request }) => {
+                resume_frames::suspend_suspended_exception_match_outcome(
+                    self,
+                    state,
+                    witness,
+                    request,
+                    guard_route,
+                )
+            }
+            Err(error) => Err(ResumeStop::failure(error)),
+        }
+    }
+
     fn resume_suspended_exception_guard_outcome<MatchRoute, GuardRoute>(
         &mut self,
         mut state: SuspendedExceptionDispatch,
@@ -469,6 +696,30 @@ impl Session {
         } else {
             state.ancestor_index += 1;
             self.dispatch_suspended_exception_handlers(state, match_route, guard_route)
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_suspended_exception_guard_outcome_cm740_driven<MatchRoute, GuardRoute>(
+        &mut self,
+        mut state: SuspendedExceptionDispatch,
+        outcome: CompiledMatchOutcome,
+        match_route: MatchRoute,
+        guard_route: GuardRoute,
+    ) -> Result<Expr, ResumeStop<Expr>>
+    where
+        MatchRoute: ExceptionResumeRoute<DispatchSuspendedExceptionHandlersSuspensionFrame>,
+        GuardRoute: ExceptionResumeRoute<ResumeSuspendedExceptionMatchOutcomeSuspensionFrame>,
+    {
+        if outcome.matched {
+            let handler = &state.handlers[state.handler_index];
+            self.evaluate_exception_handler_rhs(handler, outcome.bindings)
+                .map_err(ResumeStop::failure)
+        } else {
+            state.ancestor_index += 1;
+            self.dispatch_suspended_exception_handlers_cm740_driven(state, match_route, guard_route)
         }
     }
 

@@ -202,7 +202,11 @@ impl Session {
         &mut self,
         input: impl Into<String>,
     ) -> Result<Option<Vec<RewriteRuleInfo>>, EvalError> {
-        let resumed = self.resume_suspended_evaluation(input);
+        let resumed = (if crate::cm740_probe::driven() {
+            self.resume_suspended_evaluation_cm740_driven(input)
+        } else {
+            self.resume_suspended_evaluation(input)
+        });
         if self.has_continuation_fault() {
             return Err(self.continuation_fault_outcome(resumed));
         }
@@ -269,7 +273,11 @@ impl Session {
                     TopLevelEvalInput::Parsed(syntax) => syntax,
                 };
                 let expr = self.lower_syntax_expr(&syntax)?;
-                self.evaluate(expr)
+                (if crate::cm740_probe::driven() {
+                    self.evaluate_cm740_driven(expr)
+                } else {
+                    self.evaluate(expr)
+                })
             };
             if self.has_continuation_fault() {
                 return Err(self.continuation_fault_outcome(result));

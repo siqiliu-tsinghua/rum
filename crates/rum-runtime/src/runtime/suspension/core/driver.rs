@@ -45,6 +45,7 @@ impl Session {
             // while the consumer remains rooted at the front of the queue.
             match dispatch_frame {
                 EntryRef::EvaluationReturn => {
+                    crate::cm740_probe::q25::note_front_kind("EvaluationReturn");
                     #[cfg(test)]
                     self.record_context_for_test("return");
                     outcome = self.complete_evaluation_return(outcome)?;
@@ -65,6 +66,7 @@ impl Session {
                     let input = match outcome {
                         Ok(Slot::Value(value)) => Ok(value),
                         Ok(actual) => {
+                            crate::cm740_probe::q25::retire_decode_fault();
                             return Err(self.record_slot_fault(DecodeFailure {
                                 expected: std::any::type_name::<Expr>(),
                                 actual,
@@ -72,6 +74,8 @@ impl Session {
                         }
                         Err(error) => Err(error),
                     };
+                    let _q25_offer = crate::cm740_probe::q25::offer_front(&frame, input.is_ok());
+                    crate::cm740_probe::class_lease::note_legacy_front(&frame);
                     let action = frame.resume(self, input);
                     let completed_frame = self
                         .resuming_suspension
@@ -81,7 +85,9 @@ impl Session {
                     self.refresh_memory_owner(
                         crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
                     );
+                    let q25_disposed = Arc::as_ptr(&completed_frame) as *const () as usize;
                     drop(completed_frame);
+                    crate::cm740_probe::q25::note_disposed(q25_disposed);
 
                     outcome = match action {
                         FrameAction::Complete(outcome) => outcome.map(Slot::Value),
@@ -102,6 +108,7 @@ impl Session {
                     };
                 }
                 EntryRef::Typed(frame) => {
+                    crate::cm740_probe::q25::note_front_kind("Typed");
                     let frame = Arc::clone(frame);
                     #[cfg(test)]
                     self.record_context_for_test("frame");
@@ -168,7 +175,11 @@ impl Session {
                 self.refresh_memory_owner(
                     crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
                 );
-                nested.append(&mut suffix);
+                (if crate::cm740_probe::driven() {
+                    nested.append_cm740_driven(&mut suffix)
+                } else {
+                    nested.append(&mut suffix)
+                });
                 self.pending_input_request = Some(request.clone());
                 self.refresh_memory_owner(
                     crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,

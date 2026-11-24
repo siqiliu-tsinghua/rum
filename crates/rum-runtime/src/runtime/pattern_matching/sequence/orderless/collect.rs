@@ -190,18 +190,35 @@ impl Session {
         };
 
         let match_result = if let Some(flat_head) = state.flat_head.clone() {
-            self.match_compiled_orderless_flat_selected_values_owned(
-                flat_head,
-                state.pattern.clone(),
-                choice.selected_values,
-                state.bindings.clone(),
-            )
+            (if crate::cm740_probe::driven() {
+                self.match_compiled_orderless_flat_selected_values_owned_cm740_driven(
+                    flat_head,
+                    state.pattern.clone(),
+                    choice.selected_values,
+                    state.bindings.clone(),
+                )
+            } else {
+                self.match_compiled_orderless_flat_selected_values_owned(
+                    flat_head,
+                    state.pattern.clone(),
+                    choice.selected_values,
+                    state.bindings.clone(),
+                )
+            })
         } else {
-            self.match_compiled_orderless_selected_values_owned(
-                state.pattern.clone(),
-                choice.selected_values,
-                state.bindings.clone(),
-            )
+            (if crate::cm740_probe::driven() {
+                self.match_compiled_orderless_selected_values_owned_cm740_driven(
+                    state.pattern.clone(),
+                    choice.selected_values,
+                    state.bindings.clone(),
+                )
+            } else {
+                self.match_compiled_orderless_selected_values_owned(
+                    state.pattern.clone(),
+                    choice.selected_values,
+                    state.bindings.clone(),
+                )
+            })
         };
         match match_result {
             Ok(outcome) => {

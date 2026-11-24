@@ -70,6 +70,75 @@ impl Session {
         self.evaluate_symbol_after_autoload(symbol)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn evaluate_symbol_cm740_driven(
+        &mut self,
+        symbol: Symbol,
+    ) -> Result<Expr, EvalError> {
+        if symbol.context() == SYSTEM_CONTEXT {
+            match symbol.name() {
+                "$Context" => return Ok(Expr::string(self.current_context.clone())),
+                "$ContextPath" => {
+                    let contexts = self
+                        .context_path
+                        .iter()
+                        .cloned()
+                        .map(Expr::string)
+                        .collect::<Vec<_>>();
+                    return Ok(Expr::call(system_expr("List"), contexts));
+                }
+                "$Packages" => {
+                    let packages = self
+                        .loaded_packages
+                        .iter()
+                        .cloned()
+                        .map(Expr::string)
+                        .collect::<Vec<_>>();
+                    return Ok(Expr::call(system_expr("List"), packages));
+                }
+                "$InputFileName" => {
+                    return Ok(Expr::string(
+                        self.load_stack
+                            .last()
+                            .map(|path| path.display().to_string())
+                            .unwrap_or_default(),
+                    ));
+                }
+                "$Path" => {
+                    let paths = self
+                        .package_search_paths
+                        .iter()
+                        .map(|path| Expr::string(path.display().to_string()))
+                        .collect::<Vec<_>>();
+                    return Ok(Expr::call(system_expr("List"), paths));
+                }
+                "$MessageList" => {
+                    let messages = self.current_message_list();
+                    return Ok(Expr::call(system_expr("List"), messages));
+                }
+                _ => {}
+            }
+        }
+
+        if self.declared_stubs.contains(&symbol)
+            && !self
+                .loaded_packages
+                .iter()
+                .any(|loaded| loaded == symbol.context())
+        {
+            let outcome = self.eval_needs(&[Expr::string(symbol.context().to_string())]);
+            return crate::resume_or_suspend!(
+                self, outcome,
+                ok(value) => self.finish_declared_stub_load_cm740_driven(symbol, value),
+                suspend => crate::runtime::builtins_context_loader::DeclaredStubLoadFrame { symbol },
+            );
+        }
+
+        self.evaluate_symbol_after_autoload_cm740_driven(symbol)
+    }
+
     pub(in crate::runtime) fn finish_declared_stub_load(
         &mut self,
         symbol: Symbol,
@@ -84,6 +153,23 @@ impl Session {
         self.evaluate_symbol_after_autoload(symbol)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn finish_declared_stub_load_cm740_driven(
+        &mut self,
+        symbol: Symbol,
+        load_result: Expr,
+    ) -> Result<Expr, EvalError> {
+        if !self.capability_policy.is_unrestricted()
+            && !self.capability_policy.allows(Capability::FileRead)
+        {
+            debug_assert!(is_system_symbol_name(&load_result, "$Failed"));
+            return Ok(load_result);
+        }
+        self.evaluate_symbol_after_autoload_cm740_driven(symbol)
+    }
+
     #[inline(always)]
     fn evaluate_symbol_after_autoload(&mut self, symbol: Symbol) -> Result<Expr, EvalError> {
         if let Some(value) = self.definitions.get(&symbol).and_then(|definition| {
@@ -96,6 +182,28 @@ impl Session {
             own_value_read(&definition.delayed_own_value, &definition.own_value_guards)
         }) {
             return self.evaluate_stored_own_value(symbol, value, true);
+        }
+
+        self.evaluate_symbol_after_stored_own_value(symbol)
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_symbol_after_autoload_cm740_driven(
+        &mut self,
+        symbol: Symbol,
+    ) -> Result<Expr, EvalError> {
+        if let Some(value) = self.definitions.get(&symbol).and_then(|definition| {
+            own_value_read(&definition.own_value, &definition.own_value_guards)
+        }) {
+            return self.evaluate_stored_own_value_cm740_driven(symbol, value, false);
+        }
+
+        if let Some(value) = self.definitions.get(&symbol).and_then(|definition| {
+            own_value_read(&definition.delayed_own_value, &definition.own_value_guards)
+        }) {
+            return self.evaluate_stored_own_value_cm740_driven(symbol, value, true);
         }
 
         self.evaluate_symbol_after_stored_own_value(symbol)
@@ -137,6 +245,47 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_stored_own_value_cm740_driven(
+        &mut self,
+        symbol: Symbol,
+        value: OwnValueRead,
+        delayed: bool,
+    ) -> Result<Expr, EvalError> {
+        match value {
+            OwnValueRead::Unguarded(value) => {
+                self.evaluate_accepted_own_value_cm740_driven(&symbol, value, delayed)
+            }
+            OwnValueRead::Guarded { body, guards } => {
+                let symbol_expr = Expr::Atom(Atom::Symbol(symbol));
+                let option_scope =
+                    self.option_value_scope_for_definition(&symbol_expr, &symbol_expr);
+                let guard_result = crate::cm740_probe::around("P0527", || {
+                    self.evaluate_guard_sequence_owned_cm740_driven(
+                        guards,
+                        SymbolExprMap::default(),
+                        SymbolExprMap::default(),
+                        option_scope,
+                    )
+                });
+                crate::resume_typed_or_suspend!(
+                    self,
+                    guard_result,
+                    ok(outcome) => { let session = self; (|| {
+                                    if outcome.matched {
+                                        session.evaluate_accepted_own_value_cm740_driven(&symbol, body, delayed)
+                                    } else {
+                                        session.evaluate_symbol_after_stored_own_value(symbol)
+                                    }
+                                })() },
+                    suspend => EvaluateStoredOwnValueSuspensionFrame { symbol, body, delayed },
+                )
+            }
+        }
+    }
+
     fn evaluate_accepted_own_value(
         &mut self,
         symbol: &Symbol,
@@ -148,6 +297,25 @@ impl Session {
         }
         if delayed {
             self.evaluate_definition_rhs(None, value)
+        } else {
+            self.evaluate_own_value(value)
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_accepted_own_value_cm740_driven(
+        &mut self,
+        symbol: &Symbol,
+        value: Expr,
+        delayed: bool,
+    ) -> Result<Expr, EvalError> {
+        if matches!(&value, Expr::Atom(Atom::Symbol(value_symbol)) if value_symbol == symbol) {
+            return Ok(value);
+        }
+        if delayed {
+            self.evaluate_definition_rhs_cm740_driven(None, value)
         } else {
             self.evaluate_own_value(value)
         }
@@ -318,6 +486,10 @@ impl crate::runtime::suspension::TypedFrame for EvaluateStoredOwnValueSuspension
         outcome: Result<CompiledMatchOutcome, EvalError>,
         _token: crate::runtime::suspension::ContinueToken<'resume, Self>,
     ) -> crate::runtime::suspension::TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_2b63(self, session, outcome, _token);
+        }
+
         #[allow(unused_mut)]
         let mut symbol = self.symbol.clone();
         #[allow(unused_mut)]
@@ -328,6 +500,39 @@ impl crate::runtime::suspension::TypedFrame for EvaluateStoredOwnValueSuspension
             Ok(outcome) => (|| -> Result<rum_core::Expr, EvalError> {
                 if outcome.matched {
                     session.evaluate_accepted_own_value(&symbol, body, delayed)
+                } else {
+                    session.evaluate_symbol_after_stored_own_value(symbol)
+                }
+            })(),
+            Err(error) => Err(error),
+        };
+        crate::runtime::suspension::TypedAction::complete(resumed)
+    }
+}
+impl EvaluateStoredOwnValueSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_2b63<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        _token: crate::runtime::suspension::ContinueToken<'resume, Self>,
+    ) -> crate::runtime::suspension::TypedAction<Expr> {
+        #[allow(unused_mut)]
+        let mut symbol = self.symbol.clone();
+        #[allow(unused_mut)]
+        let mut body = self.body.clone();
+        #[allow(unused_mut)]
+        let mut delayed = self.delayed.clone();
+        let resumed = match outcome {
+            Ok(outcome) => (|| -> Result<rum_core::Expr, EvalError> {
+                if outcome.matched {
+                    if crate::cm740_probe::frame("P0527") {
+                        crate::cm740_probe::hit("P0527", "OmitAcceptedOwnValueBodyEvaluation");
+                        return Ok(body);
+                    }
+                    session.evaluate_accepted_own_value_cm740_driven(&symbol, body, delayed)
                 } else {
                     session.evaluate_symbol_after_stored_own_value(symbol)
                 }

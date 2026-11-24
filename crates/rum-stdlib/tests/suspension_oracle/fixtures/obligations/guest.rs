@@ -1317,6 +1317,24 @@ fn phases(
 }
 
 fn load_programs() -> BindingResult<BTreeMap<String, Program>> {
+    let seals = crate::oracle::obligations::bindings::class_provenance()?;
+    load_programs_with(&seals, &|path| {
+        std::fs::read(crate::oracle::coverage::source::workspace().join(path))
+            .map_err(|_| BindingError::SourceIdentity)
+    })
+}
+
+pub(crate) fn programs_with_mutation<A: crate::oracle::mutations::source_auth::Arm>(
+    source: &crate::oracle::mutations::source_auth::AuthenticatedSource<A>,
+) -> BindingResult<Arc<BTreeMap<String, Program>>> {
+    let seals = crate::oracle::obligations::bindings::provenance()?;
+    load_programs_with(&seals, &|path| source.source(path)).map(Arc::new)
+}
+
+fn load_programs_with(
+    seals: &[Vec<&'static str>],
+    source_bytes: &impl Fn(&str) -> BindingResult<Vec<u8>>,
+) -> BindingResult<BTreeMap<String, Program>> {
     let table = include_str!("../../inventory/obligations/programs.tsv");
     if table.lines().next()
         != Some(
@@ -1325,7 +1343,6 @@ fn load_programs() -> BindingResult<BTreeMap<String, Program>> {
     {
         return Err(BindingError::Inventory);
     }
-    let seals = crate::oracle::obligations::bindings::provenance()?;
     let seal: Vec<_> = seals
         .iter()
         .filter(|r| r[0] == "program-table" && r[1] == "programs")
@@ -1335,10 +1352,7 @@ fn load_programs() -> BindingResult<BTreeMap<String, Program>> {
     }
     for source in seals.iter().filter(|r| r[0] == "canonical-source") {
         if source[5] != crate::oracle::obligations::bindings::LEDGER_PIN
-            || content_digest(
-                &std::fs::read(crate::oracle::coverage::source::workspace().join(source[2]))
-                    .map_err(|_| BindingError::SourceIdentity)?,
-            ) != source[3]
+            || content_digest(&source_bytes(source[2])?) != source[3]
         {
             return Err(BindingError::SourceIdentity);
         }
@@ -1425,10 +1439,7 @@ fn load_programs() -> BindingResult<BTreeMap<String, Program>> {
             {
                 return Err(BindingError::SourceIdentity);
             }
-            let source = crate::oracle::coverage::source::workspace().join(route[0][2]);
-            if content_digest(&std::fs::read(source).map_err(|_| BindingError::SourceIdentity)?)
-                != route[0][3]
-            {
+            if content_digest(&source_bytes(route[0][2])?) != route[0][3] {
                 return Err(BindingError::SourceIdentity);
             }
             format!("{chain};{}@{}", route[0][2], route[0][3])
@@ -1541,12 +1552,7 @@ fn load_programs() -> BindingResult<BTreeMap<String, Program>> {
                 || dependencies[0][2]
                     != "crates/rum-runtime/src/runtime/profiling/logical/segments.rs"
                 || dependencies[0][5] != crate::oracle::obligations::bindings::LEDGER_PIN
-                || content_digest(
-                    &std::fs::read(
-                        crate::oracle::coverage::source::workspace().join(dependencies[0][2]),
-                    )
-                    .map_err(|_| BindingError::SourceIdentity)?,
-                ) != dependencies[0][3]
+                || content_digest(&source_bytes(dependencies[0][2])?) != dependencies[0][3]
             {
                 return Err(BindingError::SourceIdentity);
             }
@@ -1915,6 +1921,25 @@ pub(crate) fn session(program: &Program) -> HostSession {
 }
 
 pub(crate) fn run(program: &Program, queued: bool) -> Result<RunObservation, RunFailure> {
+    run_observed(program, queued, None)
+}
+
+/// Alternative observation requires a schema-admitted, authenticated armed row.
+/// Ordinary callers always execute the original quiescence assertion below.
+pub(crate) fn run_with_mutation_observer(
+    program: &Program,
+    queued: bool,
+    observer: &crate::oracle::mutations::source_auth::MutationObserver<'_>,
+) -> Result<RunObservation, RunFailure> {
+    observer.check(program).map_err(|_| RunFailure::Program)?;
+    run_observed(program, queued, Some(observer))
+}
+
+fn run_observed(
+    program: &Program,
+    queued: bool,
+    mutation: Option<&crate::oracle::mutations::source_auth::MutationObserver<'_>>,
+) -> Result<RunObservation, RunFailure> {
     if adapter_program(program) {
         return run_adapter(program, queued);
     }
@@ -1947,6 +1972,7 @@ pub(crate) fn run(program: &Program, queued: bool) -> Result<RunObservation, Run
         }
     }
     rum_runtime::test_logical_profile_reset(&lease);
+    rum_runtime::cm740_probe::begin(queued, "CM740-GUEST");
     let mut output = start(program, &mut session, &program.source);
     let mut pauses = Vec::new();
     if !queued {
@@ -1967,6 +1993,7 @@ pub(crate) fn run(program: &Program, queued: bool) -> Result<RunObservation, Run
     if matches!(output, HostEvalOutcome::InputRequired(_)) {
         return Err(RunFailure::PauseCount);
     }
+    rum_runtime::cm740_probe::end();
     let timeout = native::timeout_event(program.key.row())
         .map(|event| (event, session.actual_owns_eval_timeout()));
     let native = observer.snapshot();
@@ -1997,7 +2024,19 @@ pub(crate) fn run(program: &Program, queued: bool) -> Result<RunObservation, Run
             [*bytes as u64, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ));
     }
-    rum_runtime::Session::logical_profile_test_assert_quiescent();
+    if let Some(permission) = mutation {
+        permission.check(program).map_err(|_| RunFailure::Program)?;
+        // All values above were captured from this execution, at the ordinary
+        // capture point. The epoch fault is never the row's predicate.
+        println!(
+            "CM740_OBSERVER_CAPTURE row={} queued={queued} native_rows={} pauses={} before_quiescence=true",
+            program.key.row(),
+            counters.len(),
+            pauses.len()
+        );
+    } else {
+        rum_runtime::Session::logical_profile_test_assert_quiescent();
+    }
     let checkpoint_snapshot =
         (checkpoint.is_some() || timeout.is_some()).then(|| session.snapshot_to_bytes());
     let checkpoint_fresh = checkpoint.map(|_| session.eval("1+1"));
@@ -2214,6 +2253,7 @@ fn run_adapter(program: &Program, queued: bool) -> Result<RunObservation, RunFai
     }
     // The sealed handoff is outside this epoch. No historical probe is imported.
     rum_runtime::Session::logical_profile_test_reset(&lease);
+    rum_runtime::cm740_probe::begin(queued, "CM740-GUEST");
     let code = handoff.is_none().then_some(program.source.as_str());
     let (mut terminal, mut sample) = crate::adapter_facade::observed_worker::observe_segment(
         &mut session,
@@ -2245,6 +2285,7 @@ fn run_adapter(program: &Program, queued: bool) -> Result<RunObservation, RunFai
             );
         }
     }
+    rum_runtime::cm740_probe::end();
     let counters = sample.ok_or(RunFailure::Native)?;
     let output = adapter_output(terminal.clone());
     let native = observer.snapshot();
@@ -2538,6 +2579,22 @@ fn cm_receipt_observers_callable() {
 
 /// Comparison view only: receipts keep the original host observations. The
 /// frozen fixture supplies the paths; every other field and event stays exact.
+pub(crate) fn mutation_disabled_duration_comparison(
+    program: &Program,
+    output: &HostEvalOutcome,
+) -> Result<HostEvalOutcome, RunFailure> {
+    if !matches!(program.key.row(), "P0492" | "P0515") {
+        return Err(RunFailure::Program);
+    }
+    let Some(fixture) = program.canonical.as_ref().map(|f| &f.0) else {
+        return Ok(output.clone());
+    };
+    if !fixture.duration_paths.is_empty() && !declared_duration(&program.key, fixture) {
+        return Err(RunFailure::Program);
+    }
+    Ok(host_duration_comparison(output, &fixture.duration_paths))
+}
+
 fn host_duration_comparison(
     output: &crate::HostEvalOutcome,
     paths: &[Vec<usize>],

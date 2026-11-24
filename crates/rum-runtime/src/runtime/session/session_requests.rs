@@ -216,7 +216,11 @@ impl Session {
         &mut self,
         input: &str,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
-        self.eval_request_admitted(input, None)
+        (if crate::cm740_probe::driven() {
+            self.eval_request_admitted_cm740_driven(input, None)
+        } else {
+            self.eval_request_admitted(input, None)
+        })
     }
 
     fn eval_request_admitted(
@@ -247,6 +251,45 @@ impl Session {
         self.finish_accepted_value_request(result, owner)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn eval_request_admitted_cm740_driven(
+        &mut self,
+        input: &str,
+        installed: Option<NonZeroU64>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
+            return Ok(cancelled);
+        }
+        self.reject_overlapping_evaluation_request()?;
+        let promoted = self.activate_pending_accepted_request()?;
+        self.begin_top_level_interrupt_budget();
+        let owner = admission_owner(installed, promoted);
+        let checkpoint = RequestCheckpoint::new(self);
+        let reported = ReportedOutput::at(checkpoint.mark);
+        if self.cancels_owned_request(owner) {
+            return self.finish_cancelled_active_request(checkpoint, reported, owner);
+        }
+        let result = (|| {
+            let parsed = parse_with_diagnostics(input).map_err(request_syntax_failure)?;
+            let expr = self.lower_syntax_expr(parsed.syntax()).map_err(|err| {
+                self.finish_request_failure(checkpoint, ReportedOutput::at(checkpoint.mark), err)
+            })?;
+
+            crate::cm740_probe::around("P1562", || {
+                self.eval_expr_request_from_checkpoint_cm740_driven(
+                    expr, checkpoint, reported, owner,
+                )
+            })
+        })();
+        if crate::cm740_probe::ordinary("P1562") {
+            crate::cm740_probe::hit("P1562", "OmitAcceptedRequestTerminalRetirement");
+            return result;
+        }
+        self.finish_accepted_value_request(result, owner)
+    }
+
     /// Evaluates an already-built expression through the top-level request protocol.
     ///
     /// The expression is evaluated as-is: no lowering pass runs, so callers are
@@ -255,7 +298,11 @@ impl Session {
         &mut self,
         expr: Expr,
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
-        self.eval_expr_request_admitted(expr, None)
+        (if crate::cm740_probe::driven() {
+            self.eval_expr_request_admitted_cm740_driven(expr, None)
+        } else {
+            self.eval_expr_request_admitted(expr, None)
+        })
     }
 
     fn eval_expr_request_admitted(
@@ -280,6 +327,37 @@ impl Session {
         self.finish_accepted_value_request(result, owner)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn eval_expr_request_admitted_cm740_driven(
+        &mut self,
+        expr: Expr,
+        installed: Option<NonZeroU64>,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        if let Some(cancelled) = self.finish_cancelled_pending_evaluation_request()? {
+            return Ok(cancelled);
+        }
+        self.reject_overlapping_evaluation_request()?;
+        let promoted = self.activate_pending_accepted_request()?;
+        self.begin_top_level_interrupt_budget();
+        let owner = admission_owner(installed, promoted);
+        let checkpoint = RequestCheckpoint::new(self);
+        let reported = ReportedOutput::at(checkpoint.mark);
+        if self.cancels_owned_request(owner) {
+            return self.finish_cancelled_active_request(checkpoint, reported, owner);
+        }
+
+        let result = crate::cm740_probe::around("P1563", || {
+            self.eval_expr_request_from_checkpoint_cm740_driven(expr, checkpoint, reported, owner)
+        });
+        if crate::cm740_probe::ordinary("P1563") {
+            crate::cm740_probe::hit("P1563", "OmitAcceptedRequestTerminalRetirement");
+            return result;
+        }
+        self.finish_accepted_value_request(result, owner)
+    }
+
     /// Evaluates source text under a previously accepted request identity.
     pub fn eval_accepted_request(
         &mut self,
@@ -288,7 +366,11 @@ impl Session {
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         let installed = Some(accepted.generation());
         self.install_accepted_request(accepted)?;
-        self.eval_request_admitted(input, installed)
+        (if crate::cm740_probe::driven() {
+            self.eval_request_admitted_cm740_driven(input, installed)
+        } else {
+            self.eval_request_admitted(input, installed)
+        })
     }
 
     /// Evaluates an expression under a previously accepted request identity.
@@ -299,7 +381,11 @@ impl Session {
     ) -> Result<SessionEvalResponse, SessionRequestFailure> {
         let installed = Some(accepted.generation());
         self.install_accepted_request(accepted)?;
-        self.eval_expr_request_admitted(expr, installed)
+        (if crate::cm740_probe::driven() {
+            self.eval_expr_request_admitted_cm740_driven(expr, installed)
+        } else {
+            self.eval_expr_request_admitted(expr, installed)
+        })
     }
 
     fn eval_expr_request_from_checkpoint(
@@ -322,6 +408,50 @@ impl Session {
         };
         self.current_message_list_checkpoint = previous_message_list_checkpoint;
         self.current_message_list_dirty = previous_message_list_dirty;
+        let (value, termination) = match finalized {
+            Ok(finalized) => finalized,
+            Err(EvalError::InputRequired { .. }) => {
+                return Err(
+                    self.finish_input_required_request(PendingRequest::Resumable(PendingReport {
+                        mark: checkpoint.mark,
+                        owner,
+                        reported,
+                    })),
+                );
+            }
+            Err(err) => return Err(self.finish_request_failure(checkpoint, reported, err)),
+        };
+
+        Ok(self.finish_reported_success(checkpoint, reported, value, termination))
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn eval_expr_request_from_checkpoint_cm740_driven(
+        &mut self,
+        expr: Expr,
+        checkpoint: RequestCheckpoint,
+        reported: ReportedOutput,
+        owner: ReportOwner,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        let previous_message_list_checkpoint = self
+            .current_message_list_checkpoint
+            .replace(checkpoint.mark);
+        let previous_message_list_dirty =
+            std::mem::replace(&mut self.current_message_list_dirty, false);
+        let outcome = crate::cm740_probe::around("P1566", || self.evaluate_cm740_driven(expr));
+        let finalized = if self.has_continuation_fault() {
+            Err(self.continuation_fault_outcome(outcome))
+        } else {
+            self.finalize_top_level_eval_value(outcome, checkpoint.mark)
+        };
+        if crate::cm740_probe::ordinary("P1566") {
+            crate::cm740_probe::hit("P1566", "OmitActualMessageCheckpointRestore");
+        } else {
+            self.current_message_list_checkpoint = previous_message_list_checkpoint;
+            self.current_message_list_dirty = previous_message_list_dirty;
+        }
         let (value, termination) = match finalized {
             Ok(finalized) => finalized,
             Err(EvalError::InputRequired { .. }) => {
@@ -367,7 +497,11 @@ impl Session {
                 return Err(no_suspended_evaluation_failure());
             }
         };
-        let result = self.resume_eval_request_from_checkpoint(input.into(), pending);
+        let result = (if crate::cm740_probe::driven() {
+            self.resume_eval_request_from_checkpoint_cm740_driven(input.into(), pending)
+        } else {
+            self.resume_eval_request_from_checkpoint(input.into(), pending)
+        });
         self.package_eval_request_outcome(result)
     }
 
@@ -424,6 +558,97 @@ impl Session {
         };
         self.current_message_list_checkpoint = previous_message_list_checkpoint;
         self.current_message_list_dirty = previous_message_list_dirty;
+        match finalized {
+            Ok((value, termination)) => {
+                Ok(self.finish_reported_success(checkpoint, reported, value, termination))
+            }
+            Err(EvalError::InputRequired { .. }) => Err(self.finish_input_required_request(
+                PendingRequest::Resumable(PendingReport {
+                    mark: checkpoint.mark,
+                    owner,
+                    reported,
+                }),
+            )),
+            Err(err @ EvalError::Syntax { .. }) => {
+                Err(self.finish_completed_request_failure(checkpoint, reported, Some(&input), err))
+            }
+            Err(err) => Err(self.finish_request_failure(checkpoint, reported, err)),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_eval_request_from_checkpoint_cm740_driven(
+        &mut self,
+        input: String,
+        pending: PendingReport,
+    ) -> Result<SessionEvalResponse, SessionRequestFailure> {
+        let checkpoint = RequestCheckpoint { mark: pending.mark };
+        let owner = pending.owner;
+        let reported = pending.reported;
+        let previous_message_list_checkpoint = self
+            .current_message_list_checkpoint
+            .replace(checkpoint.mark);
+        let previous_message_list_dirty = std::mem::replace(
+            &mut self.current_message_list_dirty,
+            self.messages.has_after(checkpoint.mark),
+        );
+        let outcome = if crate::cm740_probe::driven() {
+            let _class_guard = crate::cm740_probe::enter("P1568");
+            let class_produced =
+                (|| self.resume_suspended_evaluation_cm740_driven(input.clone()))();
+            if crate::cm740_probe::class_lease::wants_input_return("P1568") {
+                if let Err(crate::EvalError::InputRequired { .. }) = &class_produced {
+                    _class_guard.input_return(&class_produced);
+                    crate::cm740_probe::class_lease::note_input_return("P1568", 0);
+                }
+            }
+            class_produced
+        } else {
+            (|| self.resume_suspended_evaluation_cm740_driven(input.clone()))()
+        };
+        let outcome = match outcome {
+            Err(error @ EvalError::InputRequired { .. }) => {
+                if self.cancels_owned_request(owner) {
+                    self.store_pending_request(PendingRequest::Resumable(PendingReport {
+                        mark: checkpoint.mark,
+                        owner,
+                        reported,
+                    }));
+                    return self
+                        .finish_cancelled_pending_evaluation_request()?
+                        .ok_or_else(|| SessionRequestFailure {
+                            error: SessionRequestError::Other {
+                                message: "cancelled suspension was not available for abandonment"
+                                    .to_string(),
+                            },
+                            messages: Vec::new(),
+                            prints: Vec::new(),
+                            trace: Vec::new(),
+                        });
+                }
+                Err(error)
+            }
+            outcome => {
+                if self.finish_report_owner_ticket(owner) {
+                    Err(EvalError::Cancelled)
+                } else {
+                    outcome
+                }
+            }
+        };
+        let finalized = if self.has_continuation_fault() {
+            Err(self.continuation_fault_outcome(outcome))
+        } else {
+            self.finalize_top_level_eval_value(outcome, checkpoint.mark)
+        };
+        if crate::cm740_probe::frame("P1568") {
+            crate::cm740_probe::hit("P1568", "OmitActualMessageCheckpointRestore");
+        } else {
+            self.current_message_list_checkpoint = previous_message_list_checkpoint;
+            self.current_message_list_dirty = previous_message_list_dirty;
+        }
         match finalized {
             Ok((value, termination)) => {
                 Ok(self.finish_reported_success(checkpoint, reported, value, termination))

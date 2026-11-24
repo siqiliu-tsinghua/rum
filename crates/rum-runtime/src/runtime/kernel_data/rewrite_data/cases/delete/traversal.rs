@@ -20,7 +20,11 @@ impl Session {
         }
 
         let match_result = if traversal.levels.matches(level, depth) {
-            self.match_expr_owned(pattern, expr.clone(), SymbolExprMap::default())
+            (if crate::cm740_probe::driven() {
+                self.match_expr_owned_cm740_driven(pattern, expr.clone(), SymbolExprMap::default())
+            } else {
+                self.match_expr_owned(pattern, expr.clone(), SymbolExprMap::default())
+            })
         } else {
             Ok(CompiledMatchOutcome {
                 matched: false,

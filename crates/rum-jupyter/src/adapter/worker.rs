@@ -336,7 +336,11 @@ fn spawn_worker(
         }
 
         let outcome = match catch_unwind(AssertUnwindSafe(|| {
-            run_segment(&mut session, segment, &cancel)
+            (if rum_host::HostSession::cm740_driven() {
+                run_segment_cm740_driven(&mut session, segment, &cancel)
+            } else {
+                run_segment(&mut session, segment, &cancel)
+            })
         })) {
             Ok(outcome) => outcome,
             Err(payload) => KernelExecuteOutcome::Failure(worker_panic_failure(&*payload)),
@@ -352,6 +356,10 @@ fn run_segment(
     mut segment: ExecuteSegment,
     cancel: &HostCancelHandle,
 ) -> KernelExecuteOutcome {
+    if rum_host::HostSession::cm740_driven() {
+        return run_segment_cm740_driven(session, segment, cancel);
+    }
+
     loop {
         let outcome = match segment {
             ExecuteSegment::Eval { code, allow_stdin } => {
@@ -387,6 +395,78 @@ fn run_segment(
                 super::input_retirement::retire_input_request(session, cancel, suspension)
             }
         };
+        return host_outcome_to_kernel(outcome);
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn run_segment_cm740_driven(
+    session: &mut HostSession,
+    mut segment: ExecuteSegment,
+    cancel: &HostCancelHandle,
+) -> KernelExecuteOutcome {
+    loop {
+        let cm740_row = match &segment {
+            ExecuteSegment::Eval { .. } => "P2611",
+            ExecuteSegment::Resume { .. } => "P2612",
+            _ => "",
+        };
+        let outcome = match segment {
+            ExecuteSegment::Eval { code, allow_stdin } => {
+                let outcome = {
+                    let _cm740_producer = rum_host::HostSession::cm740_enter("P2611");
+                    session.eval(HostEvalRequest::new(code))
+                };
+                if !allow_stdin {
+                    if let HostEvalOutcome::InputRequired(suspension) = outcome {
+                        // Continue on this worker: retirement can run guest cleanup.
+                        // Nothing from the suspension has been emitted yet.
+                        segment = ExecuteSegment::RetireInput { suspension };
+                        continue;
+                    }
+                }
+                outcome
+            }
+            ExecuteSegment::Resume { input } => {
+                let _cm740_producer = rum_host::HostSession::cm740_enter("P2612");
+                session.resume_with_input(input)
+            }
+            ExecuteSegment::CancelInput => {
+                // Cancellation consumes the suspended request before new source.
+                // Re-enter once here because retirement can run guest cleanup.
+                cancel.cancel();
+                let outcome = session.eval("");
+                assert!(
+                    matches!(&outcome,
+                        HostEvalOutcome::Success(response)
+                            if response.termination == Some(HostTerminationReason::Cancelled))
+                        || matches!(&outcome,
+                        HostEvalOutcome::Failure(failure)
+                            if failure.code == HostFailureCode::Cancelled),
+                    "host input cancellation did not retire its request: {outcome:?}"
+                );
+                outcome
+            }
+            ExecuteSegment::RetireInput { suspension } => {
+                super::input_retirement::retire_input_request(session, cancel, suspension)
+            }
+        };
+        if rum_host::HostSession::cm740_ordinary(cm740_row) {
+            match outcome {
+                HostEvalOutcome::Success(response)
+                    if response.termination == Some(HostTerminationReason::Cancelled) =>
+                {
+                    rum_host::HostSession::cm740_hit(
+                        cm740_row,
+                        "ForwardActualCancelledSuccessBeforeNormalization",
+                    );
+                    return KernelExecuteOutcome::Success(response);
+                }
+                other => return host_outcome_to_kernel(other),
+            }
+        }
         return host_outcome_to_kernel(outcome);
     }
 }

@@ -48,9 +48,21 @@ impl crate::runtime::suspension::FrameAbandon for EvalStructuredTraceCaptureExpr
     }
 }
 
-#[derive(rum_derive::FrameRootTrace, rum_derive::PureFrameAbandon)]
+#[derive(rum_derive::FrameRootTrace)]
 pub(super) struct TraceFilterSuspensionFrame {
     pub(super) state: filter::TraceFilterState,
+}
+
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl crate::runtime::suspension::FrameAbandon for TraceFilterSuspensionFrame {
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut crate::runtime::suspension::AbandonmentContext<'_>,
+    ) -> crate::runtime::suspension::FrameAbandonAction {
+        crate::runtime::suspension::FrameAbandonAction::Discard
+    }
 }
 
 impl crate::runtime::suspension::SuspensionFrame for TraceFilterSuspensionFrame {
@@ -59,6 +71,7 @@ impl crate::runtime::suspension::SuspensionFrame for TraceFilterSuspensionFrame 
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
+        let _class_row = crate::cm740_probe::class_lease::begin_row(&self);
         crate::runtime::suspension::FrameAction::complete(match outcome {
             Ok(value) => filter::resume_trace_filter(session, &self.state, value),
             Err(error) => Err(error),

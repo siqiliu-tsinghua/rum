@@ -78,6 +78,82 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn try_apply_function_cm740_driven(
+        &mut self,
+        head: &Expr,
+        args: &[Expr],
+    ) -> Result<Option<Expr>, EvalError> {
+        let applied = if let Some(function) = parse_function(head) {
+            match function {
+                FunctionSpec::SlotBased { body, .. } => substitute_slots(body, args),
+                FunctionSpec::Explicit { params, body, .. } => {
+                    if args.len() < params.len() {
+                        self.push_message(
+                            "Function",
+                            "argx",
+                            format!(
+                                "expected at least {} argument(s), got {}",
+                                params.len(),
+                                args.len()
+                            ),
+                        );
+                        return Ok(Some(Expr::call(head.clone(), args.to_vec())));
+                    }
+
+                    let bindings = params.into_iter().zip(args.iter().cloned()).collect();
+                    substitute_lexical_bindings(body, &bindings, &BTreeSet::new())
+                }
+            }
+        } else if let Some(composition) = parse_composition(head) {
+            apply_composition_to_args(&composition, args)
+        } else if let Some(status) = classify_status_object_call(head, args) {
+            return self.apply_status_function_cm740_driven(head, status);
+        } else if let Some(value) = self.apply_association_to_args(head, args) {
+            value
+        } else if let Some(invalid_key_application) =
+            self.invalid_callable_key_application(head, args)
+        {
+            return Ok(Some(invalid_key_application));
+        } else if let Some(wrapper) = apply_callable_operator_wrapper_to_args(head, args) {
+            wrapper
+        } else if let Some(symbol) = invalid_callable_operator_wrapper_argx_symbol(head, args) {
+            self.push_message(
+                symbol,
+                "argx",
+                format!(
+                    "{head} called with {} arguments; 1 argument is expected.",
+                    args.len()
+                ),
+            );
+            return Ok(Some(Expr::call(head.clone(), args.to_vec())));
+        } else if let Some(wrapper) = apply_callable_failsafe_wrapper_to_args(head, args) {
+            wrapper
+        } else {
+            return Ok(None);
+        };
+
+        let runtime_profile_evaluate = runtime_path_timing_start("function.apply.evaluate");
+        let applied_result = self.evaluate_cm740_driven(applied);
+        self.finish_profile_runtime_path_timing_adopted_boundary(
+            &runtime_profile_evaluate,
+            &applied_result,
+        );
+        let outcome = crate::resume_or_suspend!(
+            self,
+            applied_result,
+            ok(value) => Ok(value),
+            suspend => TryApplyFunctionSuspensionFrame,
+        );
+
+        match outcome {
+            Err(EvalError::InputRequired { request }) => Err(EvalError::InputRequired { request }),
+            outcome => self.finish_function_application(outcome).map(Some),
+        }
+    }
+
     fn finish_function_application(
         &mut self,
         outcome: Result<Expr, EvalError>,

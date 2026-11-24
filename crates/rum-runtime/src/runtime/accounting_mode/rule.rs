@@ -108,9 +108,15 @@ pub(in crate::runtime) fn evaluate_rule(
 }
 
 fn evaluate_in<M: Mode>(session: &mut Session, name: &Expr, rhs: &Expr) -> Result<Expr, EvalError> {
-    scoped::<M, _>(session, |cx, empty| match cx.evaluate(empty, rhs.clone()) {
-        Ok(value) => value.into_rule(name),
-        Err(failure) => Ok(failure.suspend_rule(name)),
+    scoped::<M, _>(session, |cx, empty| {
+        match if crate::cm740_probe::driven() {
+            cx.evaluate_cm740_driven(empty, rhs.clone())
+        } else {
+            cx.evaluate(empty, rhs.clone())
+        } {
+            Ok(value) => value.into_rule(name),
+            Err(failure) => Ok(failure.suspend_rule(name)),
+        }
     })
 }
 

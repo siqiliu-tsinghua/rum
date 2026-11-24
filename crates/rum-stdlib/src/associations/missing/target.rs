@@ -131,7 +131,11 @@ fn delete_missing_at_target_level_with_front_depth(
         return Ok(None);
     };
 
-    let traversal = drive_owned_target_cursor(session, cursor, remaining_call_depth);
+    let traversal = (if rum_runtime::cm740_probe::driven() {
+        drive_owned_target_cursor_cm740_driven(session, cursor, remaining_call_depth)
+    } else {
+        drive_owned_target_cursor(session, cursor, remaining_call_depth)
+    });
     finish_bounded_target_traversal(session, traversal).map(Some)
 }
 
@@ -146,6 +150,24 @@ fn drive_owned_target_cursor(
         }
         OwnedTargetCursor::Association(cursor) => {
             drive_owned_association_cursor(session, cursor, remaining_call_depth)
+        }
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn drive_owned_target_cursor_cm740_driven(
+    session: &mut Session,
+    cursor: OwnedTargetCursor,
+    remaining_call_depth: usize,
+) -> TargetTraversalResult {
+    match cursor {
+        OwnedTargetCursor::List(cursor) => {
+            drive_owned_list_cursor_cm740_driven(session, cursor, remaining_call_depth)
+        }
+        OwnedTargetCursor::Association(cursor) => {
+            drive_owned_association_cursor_cm740_driven(session, cursor, remaining_call_depth)
         }
     }
 }
@@ -208,6 +230,95 @@ fn drive_owned_list_cursor(
         }
 
         match drive_owned_target_cursor(session, child, remaining_call_depth - 1) {
+            Ok(TargetTraversal::Complete(value)) => {
+                cursor.kept.push(value);
+                cursor.index += 1;
+            }
+            Ok(TargetTraversal::Exhausted(mut continuation)) => {
+                continuation.push_parent(finish_list_child_work(freeze_owned_list_cursor(cursor)));
+                return Ok(TargetTraversal::Exhausted(continuation));
+            }
+            Err(TargetTraversalError::InputRequired {
+                error,
+                mut continuation,
+            }) => {
+                continuation.push_parent(finish_list_child_work(freeze_owned_list_cursor(cursor)));
+                return Err(TargetTraversalError::InputRequired {
+                    error,
+                    continuation,
+                });
+            }
+            Err(error @ TargetTraversalError::Evaluation(_)) => return Err(error),
+        }
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn drive_owned_list_cursor_cm740_driven(
+    session: &mut Session,
+    mut cursor: OwnedListCursor,
+    remaining_call_depth: usize,
+) -> TargetTraversalResult {
+    loop {
+        let Some(item) = cursor.items.get(cursor.index).cloned() else {
+            return Ok(TargetTraversal::Complete(Expr::call(
+                system_expr("List"),
+                cursor.kept,
+            )));
+        };
+
+        if cursor.level == 1 {
+            if !rule_like_expr_has_missing_value(&item)
+                && !contains_missing_within(&item, cursor.scan)
+            {
+                cursor.kept.push(item);
+            }
+            cursor.index += 1;
+            continue;
+        }
+
+        let child = if let Some(items) = list_items(&item) {
+            Some(OwnedTargetCursor::List(OwnedListCursor {
+                items: items.to_vec(),
+                level: cursor.level - 1,
+                scan: cursor.scan,
+                index: 0,
+                kept: Vec::new(),
+            }))
+        } else {
+            association_entry_forms_from_expr(&item).map(|entries| {
+                OwnedTargetCursor::Association(OwnedAssociationCursor {
+                    entries,
+                    level: cursor.level - 1,
+                    scan: cursor.scan,
+                    index: 0,
+                    kept: Vec::new(),
+                })
+            })
+        };
+
+        let Some(child) = child else {
+            cursor.kept.push(item);
+            cursor.index += 1;
+            continue;
+        };
+
+        if remaining_call_depth == 0 {
+            let active = freeze_owned_target_cursor(child);
+            let parent = freeze_owned_list_cursor(cursor);
+            let mut continuation = TargetContinuation::starting(active);
+            continuation.push_parent(finish_list_child_work(parent));
+            return Ok(TargetTraversal::Exhausted(continuation));
+        }
+
+        match rum_runtime::cm740_probe::around_hit(
+            "P1804",
+            "ForwardActualChildBeforeParentTail",
+            false,
+            || drive_owned_target_cursor_cm740_driven(session, child, remaining_call_depth - 1),
+        ) {
             Ok(TargetTraversal::Complete(value)) => {
                 cursor.kept.push(value);
                 cursor.index += 1;
@@ -329,6 +440,149 @@ fn drive_owned_association_cursor(
         }
 
         match drive_owned_target_cursor(session, child, remaining_call_depth - 1) {
+            Ok(TargetTraversal::Complete(value)) => {
+                entry.value = value;
+                cursor.kept.push(entry);
+                cursor.index += 1;
+            }
+            Ok(TargetTraversal::Exhausted(mut continuation)) => {
+                continuation.push_parent(finish_association_child_work(
+                    freeze_owned_association_cursor(cursor),
+                    entry,
+                ));
+                return Ok(TargetTraversal::Exhausted(continuation));
+            }
+            Err(TargetTraversalError::InputRequired {
+                error,
+                mut continuation,
+            }) => {
+                continuation.push_parent(finish_association_child_work(
+                    freeze_owned_association_cursor(cursor),
+                    entry,
+                ));
+                return Err(TargetTraversalError::InputRequired {
+                    error,
+                    continuation,
+                });
+            }
+            Err(error @ TargetTraversalError::Evaluation(_)) => return Err(error),
+        }
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn drive_owned_association_cursor_cm740_driven(
+    session: &mut Session,
+    mut cursor: OwnedAssociationCursor,
+    remaining_call_depth: usize,
+) -> TargetTraversalResult {
+    loop {
+        let Some(mut entry) = cursor.entries.get(cursor.index).cloned() else {
+            return Ok(TargetTraversal::Complete(
+                render_association_entry_forms_preserving_heads(cursor.kept),
+            ));
+        };
+
+        if is_missing_expr(&entry.value) {
+            cursor.index += 1;
+            continue;
+        }
+
+        if cursor.level == 1 {
+            if !entry.delayed {
+                if !contains_missing_within(&entry.value, cursor.scan) {
+                    cursor.kept.push(entry);
+                }
+                cursor.index += 1;
+                continue;
+            }
+
+            let predicate = entry.value.clone();
+            match rum_runtime::cm740_probe::around("P1805", || session.evaluate(predicate)) {
+                Ok(value) => {
+                    if rum_runtime::cm740_probe::ordinary("P1805") {
+                        rum_runtime::cm740_probe::hit(
+                            "P1805",
+                            "OmitRetainedAssociationEntryAppend",
+                        );
+                    } else if !is_missing_expr(&value)
+                        && !contains_missing_within(&value, cursor.scan)
+                    {
+                        cursor.kept.push(entry);
+                    }
+                    cursor.index += 1;
+                    continue;
+                }
+                Err(error @ EvalError::InputRequired { .. }) => {
+                    let continuation =
+                        TargetContinuation::starting(finish_association_predicate_work(
+                            freeze_owned_association_cursor(cursor),
+                            entry,
+                        ));
+                    return Err(TargetTraversalError::InputRequired {
+                        error,
+                        continuation,
+                    });
+                }
+                Err(error) => return Err(TargetTraversalError::Evaluation(error)),
+            }
+        }
+
+        if entry.delayed {
+            entry.value = delete_missing_delayed_wrapper(
+                entry.value,
+                DeleteMissingMode::Target {
+                    level: DeleteMissingDepth::Finite(cursor.level - 1),
+                    scan: cursor.scan,
+                },
+            );
+            cursor.kept.push(entry);
+            cursor.index += 1;
+            continue;
+        }
+
+        let child = if let Some(items) = list_items(&entry.value) {
+            Some(OwnedTargetCursor::List(OwnedListCursor {
+                items: items.to_vec(),
+                level: cursor.level - 1,
+                scan: cursor.scan,
+                index: 0,
+                kept: Vec::new(),
+            }))
+        } else {
+            association_entry_forms_from_expr(&entry.value).map(|entries| {
+                OwnedTargetCursor::Association(OwnedAssociationCursor {
+                    entries,
+                    level: cursor.level - 1,
+                    scan: cursor.scan,
+                    index: 0,
+                    kept: Vec::new(),
+                })
+            })
+        };
+
+        let Some(child) = child else {
+            cursor.kept.push(entry);
+            cursor.index += 1;
+            continue;
+        };
+
+        if remaining_call_depth == 0 {
+            let active = freeze_owned_target_cursor(child);
+            let parent = freeze_owned_association_cursor(cursor);
+            let mut continuation = TargetContinuation::starting(active);
+            continuation.push_parent(finish_association_child_work(parent, entry));
+            return Ok(TargetTraversal::Exhausted(continuation));
+        }
+
+        match rum_runtime::cm740_probe::around_hit(
+            "P1806",
+            "ForwardActualChildBeforeParentTail",
+            false,
+            || drive_owned_target_cursor_cm740_driven(session, child, remaining_call_depth - 1),
+        ) {
             Ok(TargetTraversal::Complete(value)) => {
                 entry.value = value;
                 cursor.kept.push(entry);
@@ -717,17 +971,31 @@ mod tests {
     fn target_front_handoff_carries_live_cursors_and_completed_prefixes() {
         let mut bounded_session = core_session();
         let bounded_fixture = mixed_fixture(&mut bounded_session);
-        let bounded = drive_owned_target_cursor(
-            &mut bounded_session,
-            OwnedTargetCursor::List(OwnedListCursor {
-                items: list_items(&bounded_fixture).unwrap().to_vec(),
-                level: 3,
-                scan: DeleteMissingDepth::Finite(0),
-                index: 0,
-                kept: Vec::new(),
-            }),
-            0,
-        );
+        let bounded = (if rum_runtime::cm740_probe::driven() {
+            drive_owned_target_cursor_cm740_driven(
+                &mut bounded_session,
+                OwnedTargetCursor::List(OwnedListCursor {
+                    items: list_items(&bounded_fixture).unwrap().to_vec(),
+                    level: 3,
+                    scan: DeleteMissingDepth::Finite(0),
+                    index: 0,
+                    kept: Vec::new(),
+                }),
+                0,
+            )
+        } else {
+            drive_owned_target_cursor(
+                &mut bounded_session,
+                OwnedTargetCursor::List(OwnedListCursor {
+                    items: list_items(&bounded_fixture).unwrap().to_vec(),
+                    level: 3,
+                    scan: DeleteMissingDepth::Finite(0),
+                    index: 0,
+                    kept: Vec::new(),
+                }),
+                0,
+            )
+        });
         match bounded {
             Ok(TargetTraversal::Exhausted(continuation)) => {
                 assert!(continuation.work_len() > 0, "handoff must carry live work");
@@ -738,17 +1006,31 @@ mod tests {
 
         let mut front_session = core_session();
         let front_fixture = mixed_fixture(&mut front_session);
-        let front_bounded = drive_owned_target_cursor(
-            &mut front_session,
-            OwnedTargetCursor::List(OwnedListCursor {
-                items: list_items(&front_fixture).unwrap().to_vec(),
-                level: 3,
-                scan: DeleteMissingDepth::Finite(0),
-                index: 0,
-                kept: Vec::new(),
-            }),
-            RECURSIVE_DELETE_MISSING_TARGET_DEPTH,
-        );
+        let front_bounded = (if rum_runtime::cm740_probe::driven() {
+            drive_owned_target_cursor_cm740_driven(
+                &mut front_session,
+                OwnedTargetCursor::List(OwnedListCursor {
+                    items: list_items(&front_fixture).unwrap().to_vec(),
+                    level: 3,
+                    scan: DeleteMissingDepth::Finite(0),
+                    index: 0,
+                    kept: Vec::new(),
+                }),
+                RECURSIVE_DELETE_MISSING_TARGET_DEPTH,
+            )
+        } else {
+            drive_owned_target_cursor(
+                &mut front_session,
+                OwnedTargetCursor::List(OwnedListCursor {
+                    items: list_items(&front_fixture).unwrap().to_vec(),
+                    level: 3,
+                    scan: DeleteMissingDepth::Finite(0),
+                    index: 0,
+                    kept: Vec::new(),
+                }),
+                RECURSIVE_DELETE_MISSING_TARGET_DEPTH,
+            )
+        });
         assert!(matches!(front_bounded, Ok(TargetTraversal::Complete(_))));
 
         let mut tail_session = core_session();
@@ -801,17 +1083,31 @@ mod tests {
             )
             .unwrap();
 
-        let first_result = match drive_owned_association_cursor(
-            &mut session,
-            OwnedAssociationCursor {
-                entries: association_entry_forms_from_expr(&first).unwrap(),
-                level: 1,
-                scan: DeleteMissingDepth::Finite(0),
-                index: 0,
-                kept: Vec::new(),
-            },
-            RECURSIVE_DELETE_MISSING_TARGET_DEPTH,
-        ) {
+        let first_result = match (if rum_runtime::cm740_probe::driven() {
+            drive_owned_association_cursor_cm740_driven(
+                &mut session,
+                OwnedAssociationCursor {
+                    entries: association_entry_forms_from_expr(&first).unwrap(),
+                    level: 1,
+                    scan: DeleteMissingDepth::Finite(0),
+                    index: 0,
+                    kept: Vec::new(),
+                },
+                RECURSIVE_DELETE_MISSING_TARGET_DEPTH,
+            )
+        } else {
+            drive_owned_association_cursor(
+                &mut session,
+                OwnedAssociationCursor {
+                    entries: association_entry_forms_from_expr(&first).unwrap(),
+                    level: 1,
+                    scan: DeleteMissingDepth::Finite(0),
+                    index: 0,
+                    kept: Vec::new(),
+                },
+                RECURSIVE_DELETE_MISSING_TARGET_DEPTH,
+            )
+        }) {
             Ok(TargetTraversal::Complete(value)) => value,
             Ok(TargetTraversal::Exhausted(_)) => panic!("shallow prefix must complete"),
             Err(_) => panic!("prefix callback must not suspend"),
@@ -821,17 +1117,31 @@ mod tests {
             "List[firstRan]"
         );
 
-        let continuation = drive_owned_list_cursor(
-            &mut session,
-            OwnedListCursor {
-                items: vec![first, second],
-                level: 2,
-                scan: DeleteMissingDepth::Finite(0),
-                index: 1,
-                kept: vec![first_result],
-            },
-            0,
-        );
+        let continuation = (if rum_runtime::cm740_probe::driven() {
+            drive_owned_list_cursor_cm740_driven(
+                &mut session,
+                OwnedListCursor {
+                    items: vec![first, second],
+                    level: 2,
+                    scan: DeleteMissingDepth::Finite(0),
+                    index: 1,
+                    kept: vec![first_result],
+                },
+                0,
+            )
+        } else {
+            drive_owned_list_cursor(
+                &mut session,
+                OwnedListCursor {
+                    items: vec![first, second],
+                    level: 2,
+                    scan: DeleteMissingDepth::Finite(0),
+                    index: 1,
+                    kept: vec![first_result],
+                },
+                0,
+            )
+        });
         let continuation = match continuation {
             Ok(TargetTraversal::Exhausted(continuation)) => continuation,
             Ok(TargetTraversal::Complete(_)) => panic!("front zero must exhaust after the prefix"),

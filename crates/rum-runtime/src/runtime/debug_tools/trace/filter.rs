@@ -34,7 +34,11 @@ impl Session {
             current: LevelWork::from_items(args.into_vec()),
             parents: Vec::new(),
         };
-        self.drive_trace_filter(work, None)
+        (if crate::cm740_probe::driven() {
+            self.drive_trace_filter_cm740_driven(work, None)
+        } else {
+            self.drive_trace_filter(work, None)
+        })
     }
 
     fn drive_trace_filter(
@@ -74,6 +78,58 @@ impl Session {
                 }
             };
             let matched = match self.match_trace_leaf(&work, &mut leaf) {
+                Ok(matched) => matched,
+                Err(EvalError::InputRequired { request }) => {
+                    return suspend_trace_filter(self, work, leaf, request);
+                }
+                Err(error) => return Err(error),
+            };
+            finish_leaf(&mut work, leaf, matched);
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn drive_trace_filter_cm740_driven(
+        &mut self,
+        mut work: FilterWork,
+        mut pending: Option<LeafWork>,
+    ) -> Result<Expr, EvalError> {
+        loop {
+            let mut leaf = if let Some(leaf) = pending.take() {
+                leaf
+            } else {
+                loop {
+                    match work.current.remaining.next() {
+                        Some(Expr::Call { head, args }) if is_system_symbol_name(&head, "List") => {
+                            let child = LevelWork::from_items(args.into_vec());
+                            work.parents
+                                .push(std::mem::replace(&mut work.current, child));
+                        }
+                        Some(item) => {
+                            if let Some(leaf) = start_leaf(&mut work, item) {
+                                break leaf;
+                            }
+                        }
+                        None => {
+                            let Some(mut parent) = work.parents.pop() else {
+                                let trace = Expr::call(system_expr("List"), work.current.emitted);
+                                return self.finish_trace_filter_root(
+                                    trace,
+                                    work.mode,
+                                    work.original_value,
+                                );
+                            };
+                            append_child(&mut parent.emitted, work.current.emitted);
+                            work.current = parent;
+                        }
+                    }
+                }
+            };
+            let matched = match crate::cm740_probe::around("P0216", || {
+                self.match_trace_leaf_cm740_driven(&work, &mut leaf)
+            }) {
                 Ok(matched) => matched,
                 Err(EvalError::InputRequired { request }) => {
                     return suspend_trace_filter(self, work, leaf, request);
@@ -138,6 +194,10 @@ pub(super) fn resume_trace_filter(
     frozen: &TraceFilterState,
     value: Expr,
 ) -> Result<Expr, EvalError> {
+    if crate::cm740_probe::driven() {
+        return resume_trace_filter_cm740_driven(session, frozen, value);
+    }
+
     let outcome = CompiledMatchOutcome::from_continuation_expr(value);
     let (mut work, mut leaf) = frozen.thaw_filter();
     let pending = if leaf.apply_match(outcome.matched, work.mode == TraceOutput::Detail) {
@@ -147,4 +207,29 @@ pub(super) fn resume_trace_filter(
         Some(leaf)
     };
     session.drive_trace_filter(work, pending)
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(super) fn resume_trace_filter_cm740_driven(
+    session: &mut Session,
+    frozen: &TraceFilterState,
+    value: Expr,
+) -> Result<Expr, EvalError> {
+    let outcome = CompiledMatchOutcome::from_continuation_expr(value);
+    let (mut work, mut leaf) = frozen.thaw_filter();
+    let pending = if leaf.apply_match(outcome.matched, work.mode == TraceOutput::Detail) {
+        if crate::cm740_probe::frame("P0214") {
+            crate::cm740_probe::hit("P0214", "OmitMatchedTraceLeafEmission");
+        } else if crate::cm740_probe::frame("P0216") {
+            crate::cm740_probe::hit("P0216", "OmitMatchedTraceLeafEmission");
+        } else {
+            finish_leaf(&mut work, leaf, true);
+        }
+        None
+    } else {
+        Some(leaf)
+    };
+    session.drive_trace_filter_cm740_driven(work, pending)
 }

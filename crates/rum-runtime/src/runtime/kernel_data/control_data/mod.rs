@@ -72,7 +72,13 @@ impl Session {
             ControlDataBuiltin::AbortProtect => self.eval_abort_protect(args),
             ControlDataBuiltin::Assert => self.eval_assert(args),
             ControlDataBuiltin::Break => self.eval_break(head, args),
-            ControlDataBuiltin::Catch => self.eval_catch(args),
+            ControlDataBuiltin::Catch => {
+                if crate::cm740_probe::driven() {
+                    self.eval_catch_cm740_driven(args)
+                } else {
+                    self.eval_catch(args)
+                }
+            }
             ControlDataBuiltin::CatchExceptions => self.eval_catch_exceptions(args),
             ControlDataBuiltin::CheckAbort => self.eval_check_abort(args),
             ControlDataBuiltin::CompoundExpression => self.eval_compound_expression(args),

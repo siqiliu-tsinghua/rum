@@ -4,11 +4,34 @@ use super::registry::*;
 use crate::runtime::suspension::ContinuationValue;
 
 impl LegacyCodec for Option<Expr> {
-    fn old_encode(self, _: CodecKey) -> Expr {
+    fn old_encode(self, _cm740_arg1: CodecKey) -> Expr {
+        if crate::cm740_probe::driven() {
+            return Self::old_encode_cm740_driven_e9(self, _cm740_arg1);
+        }
+
         <Self as ContinuationValue>::into_continuation_expr(self)
     }
     fn old_decode(expr: Expr, _: CodecKey) -> Result<Self, Expr> {
         Ok(<Self as ContinuationValue>::from_continuation_expr(expr))
+    }
+}
+trait Cm740Twin_d6a94754bea6a896 {
+    fn old_encode_cm740_driven_e9(self, _: CodecKey) -> Expr;
+}
+impl Cm740Twin_d6a94754bea6a896 for Option<Expr> {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn old_encode_cm740_driven_e9(self, _: CodecKey) -> Expr {
+        if crate::runtime::suspension::typed::adapter::cm740_option_route::is_active()
+            && crate::cm740_probe::frame("Some")
+        {
+            if let Some(value) = self {
+                crate::cm740_probe::hit("Some", "actual-option-output-encode");
+                return value;
+            }
+        }
+        <Self as ContinuationValue>::into_continuation_expr(self)
     }
 }
 

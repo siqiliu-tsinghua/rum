@@ -48,3 +48,9 @@ fn runner_scan_middle_and_twice() {
 
 #[path = "suspension_oracle/completed_segments.rs"]
 mod completed_segments;
+
+#[path = "suspension_oracle/class_lease_fixtures.rs"]
+mod class_lease_fixtures;
+
+#[path = "suspension_oracle/q25_p2379_proof.rs"]
+mod q25_p2379_proof;

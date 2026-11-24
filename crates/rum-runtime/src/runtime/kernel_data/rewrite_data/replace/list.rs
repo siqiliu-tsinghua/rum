@@ -95,14 +95,25 @@ impl Session {
         max_results: Option<usize>,
         call_args: Vec<Expr>,
     ) -> Result<Expr, EvalError> {
-        self.drive_rewrite_rule_exprs_owned(
-            rules_expr,
-            RewriteRuleExprContinuation::ReplaceList {
-                target,
-                max_results,
-                call_args,
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.drive_rewrite_rule_exprs_owned_cm740_driven(
+                rules_expr,
+                RewriteRuleExprContinuation::ReplaceList {
+                    target,
+                    max_results,
+                    call_args,
+                },
+            )
+        } else {
+            self.drive_rewrite_rule_exprs_owned(
+                rules_expr,
+                RewriteRuleExprContinuation::ReplaceList {
+                    target,
+                    max_results,
+                    call_args,
+                },
+            )
+        })
     }
 
     pub(in crate::runtime) fn resume_replace_list_after_rule_exprs(

@@ -140,7 +140,12 @@ fn callback_charge(
         .accounting_context()
         .expect("P0001 caller is inside MemoryConstrained")
         .with_retention(|cx, empty| {
-            let callback = cx.evaluate(empty, args[0].clone()).map(|value| {
+            let callback = if rum_runtime::cm740_probe::driven() {
+                cx.evaluate_cm740_driven(empty, args[0].clone())
+            } else {
+                cx.evaluate(empty, args[0].clone())
+            }
+            .map(|value| {
                 observe(value.actual_receipt_bytes(), "callback-value");
                 value
             });
@@ -181,9 +186,12 @@ fn retained_prefix(
     session.with_unarmed_retention(|mut cx, mut values| {
         cx.push(&mut values, Expr::small_integer(101))?;
         cx.push(&mut values, Expr::small_integer(103))?;
-        match cx
-            .evaluate(values, args[0].clone())
-            .and_then(CallbackValue::adopt)
+        match if rum_runtime::cm740_probe::driven() {
+            cx.evaluate_cm740_driven(values, args[0].clone())
+        } else {
+            cx.evaluate(values, args[0].clone())
+        }
+        .and_then(CallbackValue::adopt)
         {
             Ok((cx, values)) => cx.finish_list(values),
             Err(failure) => Ok(failure.suspend(|| PrefixFinish)),
@@ -289,6 +297,7 @@ pub(crate) fn run_accepted_request(
         }
     }
     rum_runtime::test_logical_profile_reset(&lease);
+    rum_runtime::cm740_probe::begin(queued, "CM740-NATIVE");
     let (mut output, _handle) = start_accepted_request(&mut session, program, &program.source)?;
     let mut pauses = Vec::new();
     if !queued {
@@ -329,6 +338,7 @@ pub(crate) fn run_accepted_request(
             0,
         ],
     ));
+    rum_runtime::cm740_probe::end();
     Session::logical_profile_test_assert_quiescent();
     let projections = ["{log,scope}", "DownValues[f]", "UpValues[f]"]
         .map(|source| request_outcome(session.eval_request(source)))
@@ -381,6 +391,7 @@ pub(crate) fn run_resuming_driver(
         }
     }
     rum_runtime::test_logical_profile_reset(&lease);
+    rum_runtime::cm740_probe::begin(queued, "CM740-NATIVE");
     let output = session.eval_request(&program.source);
     // Each sample is a direct executing-thread read immediately after the
     // request returns, including intermediate pauses and terminal completion.
@@ -423,6 +434,7 @@ pub(crate) fn run_resuming_driver(
         .into(),
         maximum,
     ));
+    rum_runtime::cm740_probe::end();
     Session::logical_profile_test_assert_quiescent();
     let projections = ["{log,scope}", "DownValues[f]", "UpValues[f]"]
         .map(|source| request_outcome(session.eval_request(source)))

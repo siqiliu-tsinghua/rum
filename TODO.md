@@ -3987,6 +3987,32 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 154 completed — R4, the director's live render commit: the sealed
+    four-role release landed in live (190 crates paths), every producer replayed green there,
+    and the first live suite reproduced the authoritative Stage D 4,553/10/71 (2026-11-25):
+    pre-install measurement found live's `crates/` vs the sealed armed tree differing in exactly
+    190 paths (165 overlay rows + 9 additions + `additions.tsv` + 15 carried/regenerated/adopted
+    files; 0 live-only; 4,510 shared files byte-equal; every overlay blob and addition sha
+    matched the seal; 162/165 live preimages equal with the three documented exceptions), and the
+    23 inherited WIP entries were archived to `.temp/director/r4/pre-install/wip/` before the
+    install. `RELEASE INSTALLED paths=190 add=10 mod=180`; delta 0; live's crates subtree equals
+    the sealed armed subtree (`a7de3a76…`, 4,700 files); the two production-body anchors in
+    `options/core.rs` (`214:5-230:6`, `396:5-410:6`) verified. Live's own F13 replay reproduced
+    `5d27e91b…` (68 records/18 cells/68 fingerprints) with the F55 adoption stamped and the
+    controls green; the four ownership producers reproduced the seven tables byte-exact
+    (61/92/92/10,135) and the 152-member chain `0e508bb4…`; both promotion configurations passed
+    with zero rejections, the canonical merge left `promoted.tsv` at `51b693ec…`, a second fresh
+    emission was byte-identical (`R3 RECHECK PASS`), and the live-scene seal re-emitted
+    `57e9acbd…` with mutants `e9940d5d…`, additions `243dc0cf…` and a matching `source_schema`
+    cell (the independent reconstruction agreed). First live suite: `FMT PASS`; `WORKSPACE PASS
+    passed=4553 failed=10 ignored=71 results=70 raw_exit=101` with the ten accepted reds exact
+    and the 71 ignores exact (peak 17,388,060,672 B, oom 0); flag-on legs `3+1+1/0` and
+    `197/0`; `SUITE PASS`. No dependency, no `unsafe`, no tag; ruling 806; release commit
+    (177 tracked files +27,777/−2,938 plus the 23 untracked entries). Next: the standing order —
+    structural attribution inventory → probe/hot-path A/B → re-freeze/fresh epoch → Stage C/C10 →
+    a further 744 restart, each gated; the user's 2026-11-25 note: trial `deslop-please` after
+    R4 on one crate with a baseline and a falsifier (memory `deslop-please-trial`); clean-temp
+    `--apply` is unblocked, dry run reported first.
   - G15-CM4 continuation 153 completed — brief 793 gated DONE: the sealed four-role release and
     the R4 handoff accepted; the director's host replay is the authoritative Stage D, the
     Amendment 3 tail is green on both flag-on legs, fmt and the four pins (2026-11-25): the third

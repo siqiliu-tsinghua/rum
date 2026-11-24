@@ -191,7 +191,11 @@ pub(in crate::runtime) fn builtin_set(
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
-    session.eval_set(args)
+    if crate::cm740_probe::driven() {
+        session.eval_set_cm740_driven(args)
+    } else {
+        session.eval_set(args)
+    }
 }
 
 pub(in crate::runtime) fn builtin_add_to(
@@ -398,7 +402,11 @@ pub(in crate::runtime) fn builtin_module(
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
     let args = args.as_ref();
-    session.eval_module(args)
+    if crate::cm740_probe::driven() {
+        session.eval_module_cm740_driven(args)
+    } else {
+        session.eval_module(args)
+    }
 }
 
 pub(in crate::runtime) fn builtin_define_package(

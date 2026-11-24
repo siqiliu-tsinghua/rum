@@ -113,7 +113,11 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("AddTo", args, 2));
         };
 
-        self.eval_held_update_operation(HeldUpdateOperation::AddTo, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::AddTo, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::AddTo, args)
+        })
     }
 
     pub(in crate::runtime) fn eval_subtract_from(
@@ -127,7 +131,11 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("SubtractFrom", args, 2));
         };
 
-        self.eval_held_update_operation(HeldUpdateOperation::SubtractFrom, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::SubtractFrom, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::SubtractFrom, args)
+        })
     }
 
     pub(in crate::runtime) fn eval_times_by(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -138,7 +146,11 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("TimesBy", args, 2));
         };
 
-        self.eval_held_update_operation(HeldUpdateOperation::TimesBy, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::TimesBy, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::TimesBy, args)
+        })
     }
 
     pub(in crate::runtime) fn eval_divide_by(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -149,7 +161,11 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("DivideBy", args, 2));
         };
 
-        self.eval_held_update_operation(HeldUpdateOperation::DivideBy, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::DivideBy, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::DivideBy, args)
+        })
     }
 
     pub(in crate::runtime) fn eval_apply_to(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -160,7 +176,11 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("ApplyTo", args, 2));
         };
 
-        self.eval_held_update_operation(HeldUpdateOperation::ApplyTo, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::ApplyTo, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::ApplyTo, args)
+        })
     }
 
     pub(in crate::runtime) fn eval_append_to(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -175,7 +195,11 @@ impl Session {
             return Ok(updated);
         }
 
-        self.eval_held_update_operation(HeldUpdateOperation::AppendTo, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::AppendTo, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::AppendTo, args)
+        })
     }
 
     pub(in crate::runtime) fn eval_prepend_to(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -186,7 +210,11 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("PrependTo", args, 2));
         };
 
-        self.eval_held_update_operation(HeldUpdateOperation::PrependTo, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::PrependTo, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::PrependTo, args)
+        })
     }
 
     pub(in crate::runtime) fn eval_increment(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
@@ -194,14 +222,22 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("Increment", args, 1));
         };
 
-        self.eval_held_update_operation(HeldUpdateOperation::Increment, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::Increment, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::Increment, args)
+        })
     }
 
     pub(in crate::runtime) fn eval_decrement(&mut self, args: &[Expr]) -> Result<Expr, EvalError> {
         let [_target_expr] = args else {
             return Ok(self.invalid_call_with_exact_arg_count("Decrement", args, 1));
         };
-        self.eval_held_update_operation(HeldUpdateOperation::Decrement, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::Decrement, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::Decrement, args)
+        })
     }
 
     pub(in crate::runtime) fn eval_pre_increment(
@@ -211,7 +247,11 @@ impl Session {
         let [_target_expr] = args else {
             return Ok(self.invalid_call_with_exact_arg_count("PreIncrement", args, 1));
         };
-        self.eval_held_update_operation(HeldUpdateOperation::PreIncrement, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::PreIncrement, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::PreIncrement, args)
+        })
     }
 
     pub(in crate::runtime) fn eval_pre_decrement(
@@ -221,7 +261,11 @@ impl Session {
         let [_target_expr] = args else {
             return Ok(self.invalid_call_with_exact_arg_count("PreDecrement", args, 1));
         };
-        self.eval_held_update_operation(HeldUpdateOperation::PreDecrement, args)
+        (if crate::cm740_probe::driven() {
+            self.eval_held_update_operation_cm740_driven(HeldUpdateOperation::PreDecrement, args)
+        } else {
+            self.eval_held_update_operation(HeldUpdateOperation::PreDecrement, args)
+        })
     }
 
     fn eval_held_update_operation(
@@ -238,6 +282,24 @@ impl Session {
         self.finish_held_update_operation(operation, target, current, args)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn eval_held_update_operation_cm740_driven(
+        &mut self,
+        operation: HeldUpdateOperation,
+        args: &[Expr],
+    ) -> Result<Expr, EvalError> {
+        let target_expr = &args[0];
+        let (target, current) = match crate::cm740_probe::around("P0394", || {
+            self.current_held_update_value_cm740_driven(operation, target_expr, args)
+        })? {
+            HeldUpdateCurrent::Ready { target, current } => (target, current),
+            HeldUpdateCurrent::Immediate(value) => return Ok(value),
+        };
+        self.finish_held_update_operation_cm740_driven(operation, target, current, args)
+    }
+
     fn current_held_update_value(
         &mut self,
         operation: HeldUpdateOperation,
@@ -251,6 +313,48 @@ impl Session {
 
         if let Some((target, selector_exprs)) = normalize_part_update_target(target_expr) {
             let evaluated_result = self.evaluate_part_selectors_owned(selector_exprs);
+            let witness = slot_witness(&evaluated_result);
+            return match evaluated_result {
+                Ok(evaluated_selectors) => Ok(self.current_part_held_update_value(
+                    operator,
+                    target,
+                    &evaluated_selectors,
+                    args,
+                )),
+                Err(EvalError::InputRequired { request }) => {
+                    resume_frames::suspend_held_part_selectors(
+                        self, operation, target, args, witness, request,
+                    )
+                }
+                Err(error) => Err(error),
+            };
+        }
+
+        self.push_held_update_rvalue_message(operator, target_expr);
+        Ok(HeldUpdateCurrent::Immediate(Expr::call(
+            system_expr(operator),
+            args.to_vec(),
+        )))
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn current_held_update_value_cm740_driven(
+        &mut self,
+        operation: HeldUpdateOperation,
+        target_expr: &Expr,
+        args: &[Expr],
+    ) -> Result<HeldUpdateCurrent, EvalError> {
+        let operator = operation.name();
+        if let Some(target) = self.normalize_symbol_target_expr(target_expr, true) {
+            return Ok(self.current_symbol_held_update_value(operator, target, args));
+        }
+
+        if let Some((target, selector_exprs)) = normalize_part_update_target(target_expr) {
+            let evaluated_result = crate::cm740_probe::around("P0396", || {
+                self.evaluate_part_selectors_owned_cm740_driven(selector_exprs)
+            });
             let witness = slot_witness(&evaluated_result);
             return match evaluated_result {
                 Ok(evaluated_selectors) => Ok(self.current_part_held_update_value(
@@ -394,7 +498,16 @@ impl Session {
             args.as_ref(),
         ) {
             HeldUpdateCurrent::Ready { target, current } => {
-                self.finish_held_update_operation(operation, target, current, args.as_ref())
+                (if crate::cm740_probe::driven() {
+                    self.finish_held_update_operation_cm740_driven(
+                        operation,
+                        target,
+                        current,
+                        args.as_ref(),
+                    )
+                } else {
+                    self.finish_held_update_operation(operation, target, current, args.as_ref())
+                })
             }
             HeldUpdateCurrent::Immediate(value) => Ok(value),
         }
@@ -488,6 +601,97 @@ impl Session {
         self.finish_held_update(operator, target, update, return_value)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_held_update_operation_cm740_driven(
+        &mut self,
+        operation: HeldUpdateOperation,
+        target: HeldUpdateTarget,
+        current: Expr,
+        args: &[Expr],
+    ) -> Result<Expr, EvalError> {
+        let operator = operation.name();
+        let (update, return_value) = match operation {
+            HeldUpdateOperation::AddTo => (
+                Expr::call(system_expr("Plus"), vec![current, args[1].clone()]),
+                HeldUpdateReturn::Updated,
+            ),
+            HeldUpdateOperation::SubtractFrom => (
+                Expr::call(system_expr("Subtract"), vec![current, args[1].clone()]),
+                HeldUpdateReturn::Updated,
+            ),
+            HeldUpdateOperation::TimesBy => (
+                Expr::call(system_expr("Times"), vec![current, args[1].clone()]),
+                HeldUpdateReturn::Updated,
+            ),
+            HeldUpdateOperation::DivideBy => (
+                Expr::call(system_expr("Divide"), vec![current, args[1].clone()]),
+                HeldUpdateReturn::Updated,
+            ),
+            HeldUpdateOperation::ApplyTo => (
+                Expr::call(args[1].clone(), vec![current]),
+                HeldUpdateReturn::Updated,
+            ),
+            HeldUpdateOperation::AppendTo | HeldUpdateOperation::PrependTo => {
+                let Expr::Call {
+                    head,
+                    args: current_args,
+                } = current
+                else {
+                    let held_call = Expr::call(system_expr(operator), args.to_vec());
+                    self.push_message(
+                        operator,
+                        "normal",
+                        format!("Nonatomic expression expected at position 1 in {held_call}."),
+                    );
+                    return Ok(held_call);
+                };
+                let mut current_args = Expr::unwrap_shared_args(current_args);
+                if operation == HeldUpdateOperation::AppendTo {
+                    current_args.push(args[1].clone());
+                } else {
+                    current_args.insert(0, args[1].clone());
+                }
+                (
+                    Expr::Call {
+                        head,
+                        args: SharedArgs::new(current_args),
+                    },
+                    HeldUpdateReturn::Updated,
+                )
+            }
+            HeldUpdateOperation::Increment
+            | HeldUpdateOperation::Decrement
+            | HeldUpdateOperation::PreIncrement
+            | HeldUpdateOperation::PreDecrement => {
+                let delta = match operation {
+                    HeldUpdateOperation::Increment | HeldUpdateOperation::PreIncrement => 1,
+                    HeldUpdateOperation::Decrement | HeldUpdateOperation::PreDecrement => -1,
+                    _ => unreachable!("matched increment operation"),
+                };
+                let return_value = match operation {
+                    HeldUpdateOperation::Increment | HeldUpdateOperation::Decrement => {
+                        HeldUpdateReturn::Previous(current.clone())
+                    }
+                    HeldUpdateOperation::PreIncrement | HeldUpdateOperation::PreDecrement => {
+                        HeldUpdateReturn::Updated
+                    }
+                    _ => unreachable!("matched increment operation"),
+                };
+                (
+                    Expr::call(
+                        system_expr("Plus"),
+                        vec![current, Expr::integer(BigInt::from(delta))],
+                    ),
+                    return_value,
+                )
+            }
+        };
+
+        self.finish_held_update_cm740_driven(operator, target, update, return_value)
+    }
+
     fn push_invalid_part_target_selector_messages(&mut self, offender: &Expr) {
         let detail = format!("The expression {offender} cannot be used as a part specification.");
         self.push_message("Part", "pkspec1", detail.clone());
@@ -525,6 +729,34 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_held_update_cm740_driven(
+        &mut self,
+        operator: &'static str,
+        target: HeldUpdateTarget,
+        update: Expr,
+        return_value: HeldUpdateReturn,
+    ) -> Result<Expr, EvalError> {
+        let updated_result = self.evaluate_cm740_driven(update);
+        let witness = slot_witness(&updated_result);
+        match updated_result {
+            Ok(updated) => {
+                self.store_held_update_cm740_driven(operator, target, updated, return_value)
+            }
+            Err(EvalError::InputRequired { request }) => resume_frames::suspend_held_update(
+                self,
+                operator,
+                target,
+                return_value,
+                witness,
+                request,
+            ),
+            Err(error) => Err(error),
+        }
+    }
+
     fn store_held_update(
         &mut self,
         operator: &'static str,
@@ -544,6 +776,79 @@ impl Session {
             return Ok(current);
         }
 
+        match target {
+            HeldUpdateTarget::Symbol(symbol) => {
+                let definition = self.definitions.entry(symbol).or_default();
+                definition.own_value = Some(updated.clone());
+                definition.delayed_own_value = None;
+                self.bump_evaluation_epoch_for_symbol(&symbol);
+            }
+            HeldUpdateTarget::Part {
+                symbol,
+                current_target,
+                selection_shape,
+                distribute_updates,
+                paths,
+            } => {
+                let mut updated_target = current_target;
+                let replacements = bulk_part_update_replacements(
+                    &paths,
+                    &selection_shape,
+                    updated.clone(),
+                    distribute_updates,
+                );
+                for (path, updated_part) in replacements {
+                    updated_target = replace_exact_path(updated_target, &path, updated_part);
+                }
+                let definition = self.definitions.entry(symbol).or_default();
+                definition.own_value = Some(updated_target);
+                definition.delayed_own_value = None;
+                self.bump_evaluation_epoch_for_symbol(&symbol);
+            }
+        }
+
+        Ok(match return_value {
+            HeldUpdateReturn::Updated => updated,
+            HeldUpdateReturn::Previous(value) => value,
+        })
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn store_held_update_cm740_driven(
+        &mut self,
+        operator: &'static str,
+        target: HeldUpdateTarget,
+        updated: Expr,
+        return_value: HeldUpdateReturn,
+    ) -> Result<Expr, EvalError> {
+        let owner = match &target {
+            HeldUpdateTarget::Symbol(symbol) | HeldUpdateTarget::Part { symbol, .. } => symbol,
+        };
+        if !self.ensure_symbol_not_protected_for_write(operator, owner) {
+            let current = self
+                .definitions
+                .get(owner)
+                .and_then(|definition| definition.own_value.clone())
+                .unwrap_or_else(|| Expr::Atom(Atom::Symbol(owner.clone())));
+            return Ok(current);
+        }
+
+        if crate::cm740_probe::frame("P0394") {
+            crate::cm740_probe::hit("P0394", "OmitActualHeldUpdateStore");
+            return Ok(match return_value {
+                HeldUpdateReturn::Updated => updated,
+                HeldUpdateReturn::Previous(value) => value,
+            });
+        }
+        if crate::cm740_probe::frame("P0396") {
+            crate::cm740_probe::hit("P0396", "OmitActualHeldUpdateStore");
+            return Ok(match return_value {
+                HeldUpdateReturn::Updated => updated,
+                HeldUpdateReturn::Previous(value) => value,
+            });
+        }
         match target {
             HeldUpdateTarget::Symbol(symbol) => {
                 let definition = self.definitions.entry(symbol).or_default();

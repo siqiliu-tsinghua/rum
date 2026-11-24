@@ -309,7 +309,38 @@ impl Session {
         exprs: Vec<Expr>,
         defaults: CasesTraversalConfig,
     ) -> Result<CasesTraversalResolution, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.resolve_cases_traversal_owned_cm740_driven(exprs, defaults);
+        }
+
         let resolved_exprs_result = self.resolve_argument_exprs_owned(exprs);
+        crate::resume_typed_or_suspend!(
+            self,
+            resolved_exprs_result,
+            ok(resolved_exprs) => { let session = self; (|| {
+                    Ok(
+                        match session.compile_cases_traversal_from_resolved_exprs(&resolved_exprs, defaults)
+                        {
+                            Ok(config) => CasesTraversalResolution::Valid(config),
+                            Err(error) => CasesTraversalResolution::Invalid(error),
+                        },
+                    )
+                })() },
+            suspend => ResolveCasesTraversalOwnedSuspensionFrame { defaults },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resolve_cases_traversal_owned_cm740_driven(
+        &mut self,
+        exprs: Vec<Expr>,
+        defaults: CasesTraversalConfig,
+    ) -> Result<CasesTraversalResolution, EvalError> {
+        let resolved_exprs_result = crate::cm740_probe::around("P0348", || {
+            self.resolve_argument_exprs_owned_cm740_driven(exprs)
+        });
         crate::resume_typed_or_suspend!(
             self,
             resolved_exprs_result,
@@ -332,7 +363,39 @@ impl Session {
         cursor: usize,
         defaults: CasesTraversalConfig,
     ) -> Result<CasesTraversalResolution, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.resolve_cases_traversal_shared_from_cm740_driven(exprs, cursor, defaults);
+        }
+
         let resolved_exprs_result = self.resolve_argument_exprs_shared_from(exprs, cursor);
+        crate::resume_typed_or_suspend!(
+            self,
+            resolved_exprs_result,
+            ok(resolved_exprs) => { let session = self; (|| {
+                    Ok(
+                        match session.compile_cases_traversal_from_resolved_exprs(&resolved_exprs, defaults)
+                        {
+                            Ok(config) => CasesTraversalResolution::Valid(config),
+                            Err(error) => CasesTraversalResolution::Invalid(error),
+                        },
+                    )
+                })() },
+            suspend => ResolveCasesTraversalOwnedSuspensionFrame { defaults },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resolve_cases_traversal_shared_from_cm740_driven(
+        &mut self,
+        exprs: SharedArgs,
+        cursor: usize,
+        defaults: CasesTraversalConfig,
+    ) -> Result<CasesTraversalResolution, EvalError> {
+        let resolved_exprs_result = crate::cm740_probe::around("P0349", || {
+            self.resolve_argument_exprs_shared_from_cm740_driven(exprs, cursor)
+        });
         crate::resume_typed_or_suspend!(
             self,
             resolved_exprs_result,
@@ -372,12 +435,68 @@ impl Session {
         )
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resolve_position_traversal_owned_cm740_driven(
+        &mut self,
+        exprs: Vec<Expr>,
+        defaults: CasesTraversalConfig,
+    ) -> Result<CasesTraversalResolution, EvalError> {
+        let resolved_exprs_result = crate::cm740_probe::around("P0350", || {
+            self.resolve_argument_exprs_owned_cm740_driven(exprs)
+        });
+        crate::resume_typed_or_suspend!(
+            self,
+            resolved_exprs_result,
+            ok(resolved_exprs) => { let session = self; (|| {
+                    Ok(
+                        match session
+                            .compile_position_traversal_from_resolved_exprs(&resolved_exprs, defaults)
+                        {
+                            Ok(config) => CasesTraversalResolution::Valid(config),
+                            Err(error) => CasesTraversalResolution::Invalid(error),
+                        },
+                    )
+                })() },
+            suspend => ResolvePositionTraversalOwnedSuspensionFrame { defaults },
+        )
+    }
+
     pub(in crate::runtime) fn resolve_traversal_without_limit_owned(
         &mut self,
         exprs: Vec<Expr>,
         defaults: CasesTraversalConfig,
     ) -> Result<TraversalWithoutLimitResolution, EvalError> {
         let resolved_exprs_result = self.resolve_argument_exprs_owned(exprs);
+        crate::resume_typed_or_suspend!(
+            self,
+            resolved_exprs_result,
+            ok(resolved_exprs) => { let session = self; (|| {
+                    Ok(
+                        match session
+                            .compile_traversal_without_limit_from_resolved_exprs(&resolved_exprs, defaults)
+                        {
+                            Ok(config) => TraversalWithoutLimitResolution::Valid(config),
+                            Err(error) => TraversalWithoutLimitResolution::Invalid(error),
+                        },
+                    )
+                })() },
+            suspend => ResolveTraversalWithoutLimitOwnedSuspensionFrame { defaults },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resolve_traversal_without_limit_owned_cm740_driven(
+        &mut self,
+        exprs: Vec<Expr>,
+        defaults: CasesTraversalConfig,
+    ) -> Result<TraversalWithoutLimitResolution, EvalError> {
+        let resolved_exprs_result = crate::cm740_probe::around("P0351", || {
+            self.resolve_argument_exprs_owned_cm740_driven(exprs)
+        });
         crate::resume_typed_or_suspend!(
             self,
             resolved_exprs_result,
@@ -411,6 +530,10 @@ impl TypedFrame for ResolveCasesTraversalOwnedSuspensionFrame {
         outcome: Result<Vec<Expr>, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<CasesTraversalResolution> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_411d(self, session, outcome, _token);
+        }
+
         #[allow(unused_mut)]
         let mut defaults = self.defaults.clone();
         let resolved_exprs = match outcome {
@@ -422,6 +545,45 @@ impl TypedFrame for ResolveCasesTraversalOwnedSuspensionFrame {
                 match session.compile_cases_traversal_from_resolved_exprs(&resolved_exprs, defaults)
                 {
                     Ok(config) => CasesTraversalResolution::Valid(config),
+                    Err(error) => CasesTraversalResolution::Invalid(error),
+                },
+            )
+        })())
+    }
+}
+impl ResolveCasesTraversalOwnedSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_411d<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Vec<Expr>, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<CasesTraversalResolution> {
+        #[allow(unused_mut)]
+        let mut defaults = self.defaults.clone();
+        let resolved_exprs = match outcome {
+            Ok(resolved_exprs) => resolved_exprs,
+            Err(error) => return TypedAction::complete(Err(error)),
+        };
+        TypedAction::complete((|| {
+            Ok(
+                match session.compile_cases_traversal_from_resolved_exprs(&resolved_exprs, defaults)
+                {
+                    Ok(config) => {
+                        CasesTraversalResolution::Valid(if crate::cm740_probe::frame("P0348") {
+                            crate::cm740_probe::hit("P0348", "OmitResolvedTraversalOverrides");
+                            self.defaults.clone()
+                        } else {
+                            if crate::cm740_probe::frame("P0349") {
+                                crate::cm740_probe::hit("P0349", "OmitResolvedTraversalOverrides");
+                                self.defaults.clone()
+                            } else {
+                                config
+                            }
+                        })
+                    }
                     Err(error) => CasesTraversalResolution::Invalid(error),
                 },
             )
@@ -444,6 +606,10 @@ impl TypedFrame for ResolvePositionTraversalOwnedSuspensionFrame {
         outcome: Result<Vec<Expr>, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<CasesTraversalResolution> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_46d4(self, session, outcome, _token);
+        }
+
         #[allow(unused_mut)]
         let mut defaults = self.defaults.clone();
         let resolved_exprs = match outcome {
@@ -456,6 +622,41 @@ impl TypedFrame for ResolvePositionTraversalOwnedSuspensionFrame {
                     .compile_position_traversal_from_resolved_exprs(&resolved_exprs, defaults)
                 {
                     Ok(config) => CasesTraversalResolution::Valid(config),
+                    Err(error) => CasesTraversalResolution::Invalid(error),
+                },
+            )
+        })())
+    }
+}
+impl ResolvePositionTraversalOwnedSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_46d4<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Vec<Expr>, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<CasesTraversalResolution> {
+        #[allow(unused_mut)]
+        let mut defaults = self.defaults.clone();
+        let resolved_exprs = match outcome {
+            Ok(resolved_exprs) => resolved_exprs,
+            Err(error) => return TypedAction::complete(Err(error)),
+        };
+        TypedAction::complete((|| {
+            Ok(
+                match session
+                    .compile_position_traversal_from_resolved_exprs(&resolved_exprs, defaults)
+                {
+                    Ok(config) => {
+                        CasesTraversalResolution::Valid(if crate::cm740_probe::frame("P0350") {
+                            crate::cm740_probe::hit("P0350", "OmitResolvedTraversalOverrides");
+                            self.defaults.clone()
+                        } else {
+                            config
+                        })
+                    }
                     Err(error) => CasesTraversalResolution::Invalid(error),
                 },
             )
@@ -478,6 +679,10 @@ impl TypedFrame for ResolveTraversalWithoutLimitOwnedSuspensionFrame {
         outcome: Result<Vec<Expr>, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<TraversalWithoutLimitResolution> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_4c25(self, session, outcome, _token);
+        }
+
         #[allow(unused_mut)]
         let mut defaults = self.defaults.clone();
         let resolved_exprs = match outcome {
@@ -490,6 +695,41 @@ impl TypedFrame for ResolveTraversalWithoutLimitOwnedSuspensionFrame {
                     .compile_traversal_without_limit_from_resolved_exprs(&resolved_exprs, defaults)
                 {
                     Ok(config) => TraversalWithoutLimitResolution::Valid(config),
+                    Err(error) => TraversalWithoutLimitResolution::Invalid(error),
+                },
+            )
+        })())
+    }
+}
+impl ResolveTraversalWithoutLimitOwnedSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_4c25<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Vec<Expr>, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<TraversalWithoutLimitResolution> {
+        #[allow(unused_mut)]
+        let mut defaults = self.defaults.clone();
+        let resolved_exprs = match outcome {
+            Ok(resolved_exprs) => resolved_exprs,
+            Err(error) => return TypedAction::complete(Err(error)),
+        };
+        TypedAction::complete((|| {
+            Ok(
+                match session
+                    .compile_traversal_without_limit_from_resolved_exprs(&resolved_exprs, defaults)
+                {
+                    Ok(config) => TraversalWithoutLimitResolution::Valid(
+                        if crate::cm740_probe::frame("P0351") {
+                            crate::cm740_probe::hit("P0351", "OmitResolvedTraversalOverrides");
+                            self.defaults.clone()
+                        } else {
+                            config
+                        },
+                    ),
                     Err(error) => TraversalWithoutLimitResolution::Invalid(error),
                 },
             )

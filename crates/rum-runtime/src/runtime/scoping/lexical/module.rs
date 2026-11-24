@@ -82,6 +82,91 @@ impl Session {
         result
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn eval_module_cm740_driven(
+        &mut self,
+        args: &[Expr],
+    ) -> Result<Expr, EvalError> {
+        self.record_profile_eval_module_entry();
+        let eval_cache_profile_start =
+            evaluation_cache_profile_source_timing_start("eval_module_by_source");
+
+        if args.len() != 2 {
+            return Ok(self.invalid_call_with_exact_arg_count("Module", args, 2));
+        }
+
+        let runtime_profile_compile = runtime_path_timing_start("module.compile_bindings");
+        let config_result = self.compile_scoped_call_from_raw_args(args);
+        record_profile_runtime_path_timing(
+            runtime_profile_compile,
+            if config_result.is_ok() {
+                RuntimeProfileOutcome::Ok
+            } else {
+                RuntimeProfileOutcome::Error
+            },
+        );
+        let config = match config_result {
+            Ok(config) => config,
+            Err(error) => {
+                return Ok(self.invalid_call_with_arg_form("Module", args, error.message()));
+            }
+        };
+        let items = config.items;
+
+        let mut renames = SymbolExprMap::default();
+
+        let runtime_profile_allocate = runtime_path_timing_start("module.allocate_fresh_symbols");
+        for (symbol, _) in &items {
+            renames.insert(
+                symbol.clone(),
+                Expr::Atom(Atom::Symbol(self.allocate_fresh_symbol(symbol))),
+            );
+        }
+        record_profile_runtime_path_timing(runtime_profile_allocate, RuntimeProfileOutcome::Ok);
+
+        let gensyms: Vec<Symbol> = renames
+            .values()
+            .filter_map(|expr| expr_as_symbol(expr).cloned())
+            .collect();
+        let activation_depth = self.module_activations.len();
+        let side_table_stamp = self.current_side_table_stamp();
+        self.module_activations.push(ModuleActivation {
+            gensyms,
+            escaped: false,
+            side_table_stamp,
+        });
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ModuleActivations,
+        );
+
+        let runtime_profile_total = runtime_path_timing_start("module.eval.total");
+        let result = match crate::cm740_probe::around_ok_profile_return(
+            "P1507",
+            "OrdinaryActualSuccessBeforeTail",
+            || {
+                self.resume_module_initializers(
+                    items,
+                    args[1].clone(),
+                    renames,
+                    activation_depth,
+                    0,
+                    None,
+                )
+            },
+        ) {
+            crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+            crate::cm740_probe::OkAction::Continue(result) => result,
+        };
+        record_profile_eval_module_by_source(
+            eval_cache_profile_start,
+            runtime_profile_total.is_some(),
+        );
+        self.record_profile_runtime_path_timing_adopted_boundary(runtime_profile_total, &result);
+        result
+    }
+
     fn resume_module_initializers(
         &mut self,
         items: Vec<(Symbol, Option<Expr>)>,

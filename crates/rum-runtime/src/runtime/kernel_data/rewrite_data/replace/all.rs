@@ -177,6 +177,8 @@ impl Session {
         witness: SlotWitness<Expr>,
         request: RuntimeInputRequest,
     ) -> Result<Expr, EvalError> {
+        let _source =
+            crate::cm740_probe::control::source::<ReplaceAllApplicationFrame>(&["C1"], true);
         witness.suspend(self, request, ReplaceAllApplicationFrame)
     }
 
@@ -187,6 +189,8 @@ impl Session {
         witness: SlotWitness<Expr>,
         request: RuntimeInputRequest,
     ) -> Result<Expr, EvalError> {
+        let _source =
+            crate::cm740_probe::control::source::<ReplaceAllUnheldApplicationFrame>(&["C1"], true);
         witness.suspend(self, request, ReplaceAllUnheldApplicationFrame)
     }
 }

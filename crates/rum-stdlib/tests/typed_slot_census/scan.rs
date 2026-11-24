@@ -101,7 +101,7 @@ pub struct Implementation {
     pub scope: String,
     pub trait_path: String,
 }
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct Facts {
     pub functions: Vec<Function>,
     pub uses: Vec<Use>,

@@ -1,0 +1,2 @@
+scope	promotion	owner	before_hash	after_hash	rows	tuple_duties	source_duties	losses_removed	crosswalks	certificates	receipt
+synthetic	synthetic-CM740	synthetic-owner	c9549baa8dacdd2a66c10a9b658d13124ad5a9e77fe7f1d53d78ed13dc9c78ae	5bb47860ba06b784a6cc2645c98ab611ae62f39f2a225f820773a2813dc94801	synthetic-pair-1;synthetic-pair-2;synthetic-proof;synthetic-value	synthetic-tuple-duty	synthetic-source-duty	synthetic-loss	synthetic-crosswalk	synthetic-duty-certificate;synthetic-row-certificate	97b20d091a9a4ed639c15479a1bbdd26a9c0f14f822e0bfbe0f9785f34a5823f

@@ -10,7 +10,9 @@ const FILES: &[(&str, &[&str])] = &[
         "definitions/rule_lhs.rs",
         &[
             "Session::evaluate_rule_lhs",
+            "Session::evaluate_rule_lhs_cm740_driven",
             "Session::drive_rule_lhs",
+            "Session::drive_rule_lhs_cm740_driven",
             "Session::suspend_rule_lhs",
             "rule_lhs_inert_pattern",
             "rule_lhs_policy",
@@ -26,9 +28,11 @@ const FILES: &[(&str, &[&str])] = &[
         "definitions/rule_lhs/continuation.rs",
         &[
             "RulePatternSuspensionFrame::resume",
+            "RulePatternSuspensionFrame::resume_cm740_driven_185",
             "resume_rule_pattern",
             "rule_lhs_working_copy",
             "RuleLhsCompletionFrame::resume",
+            "RuleLhsCompletionFrame::resume_cm740_driven_77e",
         ],
     ),
     (
@@ -39,7 +43,9 @@ const FILES: &[(&str, &[&str])] = &[
         "kernel_data/rewrite_data/cases/pattern_resolution.rs",
         &[
             "Session::resolve_held_matcher_pattern",
+            "Session::resolve_held_matcher_pattern_cm740_driven",
             "Session::drive_matcher_pattern",
+            "Session::drive_matcher_pattern_cm740_driven",
             "Session::suspend_matcher_pattern",
             "accept_matcher_pattern_value",
             "contains_pattern_syntax",
@@ -54,6 +60,7 @@ const FILES: &[(&str, &[&str])] = &[
         "kernel_data/rewrite_data/cases/pattern_resolution/continuation.rs",
         &[
             "MatcherPatternSuspensionFrame::resume",
+            "MatcherPatternSuspensionFrame::resume_cm740_driven_15d",
             "resume_matcher_pattern",
             "matcher_pattern_working_copy",
         ],
@@ -157,6 +164,14 @@ const OUTBOUND: &[&str] = &[
     "unreachable!",
     "debug_assert_eq!",
     "resume_or_suspend!",
+    "crate::cm740_probe::driven",
+    "crate::cm740_probe::frame",
+    "crate::cm740_probe::hit",
+    "crate::runtime::kernel_api::TypedAction::complete",
+    "TypedAction::complete_work_cm740_driven",
+    "crate::cm740_probe::around",
+    "evaluate_cm740_driven",
+    "resume_call_from_prepared_args_cm740_driven",
 ];
 fn assert_outbound(source: &str) {
     let graph = flat_walk_call_graph(source);

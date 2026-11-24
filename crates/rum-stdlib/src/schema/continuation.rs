@@ -43,7 +43,13 @@ impl SuspensionFrame for SchemaValidationSuspensionFrame<Vec<usize>> {
     ) -> FrameAction {
         match outcome {
             Err(error) => FrameAction::complete(Err(error)),
-            Ok(answer) => FrameAction::complete(resume_validation(&self, session, answer)),
+            Ok(answer) => FrameAction::complete(
+                (if rum_runtime::cm740_probe::driven() {
+                    resume_validation_cm740_driven(&self, session, answer)
+                } else {
+                    resume_validation(&self, session, answer)
+                }),
+            ),
         }
     }
 }
@@ -70,6 +76,39 @@ fn resume_validation(
     };
     match schema_drive(session, &mut state, task) {
         Ok(value) => finish_validation(session, state, value),
+        Err(error) => suspend_validation(session, state, error),
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_validation_cm740_driven(
+    frame: &SchemaValidationSuspensionFrame<Vec<usize>>,
+    session: &mut Session,
+    answer: Expr,
+) -> Result<Expr, EvalError> {
+    // Each Vec clones iteratively over a fixed-depth type graph. Expr handles
+    // share their subtrees; neither the queued owner nor its suffix is stolen.
+    let mut state = frame.state.clone();
+    let task = match frame.pending.clone() {
+        SchemaAwait::Leaf { value, schema } => {
+            finish_leaf(&mut state, &value, &schema, &answer);
+            SchemaTask::ChildDone { value }
+        }
+        SchemaAwait::Default { spec } => SchemaTask::Visit {
+            value: answer,
+            schema: spec,
+        },
+    };
+    match schema_drive(session, &mut state, task) {
+        Ok(value) => {
+            if rum_runtime::cm740_probe::frame("P2299") {
+                rum_runtime::cm740_probe::hit("P2299", "ForwardActualSchemaValueBeforeFinish");
+                return Ok(value);
+            }
+            finish_validation(session, state, value)
+        }
         Err(error) => suspend_validation(session, state, error),
     }
 }

@@ -94,6 +94,37 @@ impl Session {
             Err(error) => suspend_option_read(self, error, OptionSyntaxDecode, next),
         }
     }
+
+    /// Evaluates option syntax and completes its consumer without replaying it.
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn eval_option_syntax_cm740_driven<C: OptionReadContinuation<Expr>>(
+        &mut self,
+        syntax: Expr,
+        next: C,
+    ) -> Result<Expr, EvalError> {
+        match {
+            let _c5_guard = crate::cm740_probe::enter("P1155");
+            let _c6_route = crate::cm740_probe::enter(std::any::type_name::<C>());
+            let c5_child = self.evaluate_cm740_driven(syntax);
+            if crate::cm740_probe::ordinary("P1155") {
+                match c5_child {
+                    Ok(c5_value) => {
+                        crate::cm740_probe::hit("P1155", "ActualTypedCarrierBeforeOuterTail");
+                        return Ok(c5_value);
+                    }
+                    other => other,
+                }
+            } else {
+                c5_child
+            }
+        } {
+            Ok(value) => next.finish(self, value),
+            Err(error) => suspend_option_read(self, error, OptionSyntaxDecode, next),
+        }
+    }
 }
 
 #[derive(FrameRootTrace, rum_derive::PureFrameAbandon)]

@@ -204,6 +204,10 @@ pub(crate) fn eval_normal(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    if rum_runtime::cm740_probe::driven() {
+        return eval_normal_cm740_driven(session, head, args);
+    }
+
     let args = args.as_ref();
     if args.is_empty() || args.len() > 3 {
         return Ok(session.invalid_call_with_message(
@@ -217,6 +221,49 @@ pub(crate) fn eval_normal(
     if let [expr] = args {
         if crate::lazy::is_lazy_list(expr) {
             let realized = match crate::lazy::realize_all(session, expr) {
+                Ok(value) => value,
+                Err(error) => lazy_completion::capture(session, error, head, args)?,
+            };
+            return Ok(realized.unwrap_or_else(|| Expr::call(head.clone(), args.to_vec())));
+        }
+    }
+
+    match args {
+        [expr] => Ok(normalize_association_expr(expr)),
+        [expr, target] => {
+            if normal_target_matches_association(target) {
+                return Ok(normalize_association_expr(expr));
+            }
+
+            Ok(expr.clone())
+        }
+        _ => Ok(Expr::call(head.clone(), args.to_vec())),
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(crate) fn eval_normal_cm740_driven(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    let args = args.as_ref();
+    if args.is_empty() || args.len() > 3 {
+        return Ok(session.invalid_call_with_message(
+            "Normal",
+            args,
+            "argb",
+            normal_arg_count_message(args.len()),
+        ));
+    }
+
+    if let [expr] = args {
+        if crate::lazy::is_lazy_list(expr) {
+            let realized = match rum_runtime::cm740_probe::around("P1708", || {
+                crate::lazy::realize_all(session, expr)
+            }) {
                 Ok(value) => value,
                 Err(error) => lazy_completion::capture(session, error, head, args)?,
             };

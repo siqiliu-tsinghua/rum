@@ -773,6 +773,76 @@ impl Session {
         Ok(Some(value))
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn try_set_association_lvalue_cm740_driven(
+        &mut self,
+        lhs: Expr,
+        rhs: Expr,
+    ) -> Result<Option<Expr>, EvalError> {
+        let Some(target) = self.normalize_association_set_lvalue_target(&lhs) else {
+            return Ok(None);
+        };
+
+        let direct_preflight = target.is_direct_single_key_shape()
+            && self.association_lvalue_has_valid_direct_proof(target.symbol());
+        if !direct_preflight && self.association_lvalue_current(target.symbol()).is_none() {
+            return Ok(None);
+        }
+
+        if !self.ensure_symbol_not_protected_for_write("Set", target.symbol()) {
+            return Ok(Some(rhs));
+        }
+
+        let value = match target {
+            AssociationSetLValueTarget::FunctionCall { symbol, selectors } => self
+                .resume_association_set_lvalue_selector_evaluation(
+                    symbol,
+                    selectors,
+                    rhs,
+                    Vec::new(),
+                    0,
+                )?,
+            AssociationSetLValueTarget::Part { symbol, selectors } => {
+                let direct_single_key = matches!(
+                    selectors.as_slice(),
+                    [selector] if explicit_association_key_selector(selector).is_some()
+                );
+                let evaluated_result = crate::cm740_probe::around("P0554", || {
+                    self.evaluate_part_selectors_owned_cm740_driven(selectors)
+                });
+                let witness = slot_witness(&evaluated_result);
+                let evaluated_selectors = match evaluated_result {
+                    Ok(evaluated_selectors) => evaluated_selectors,
+                    Err(EvalError::InputRequired { request }) => {
+                        return resume_frames::suspend_association_set_part_selectors(
+                            self,
+                            symbol,
+                            direct_single_key,
+                            rhs,
+                            witness,
+                            request,
+                        )
+                        .map(Some);
+                    }
+                    Err(error) => return Err(error),
+                };
+                if crate::cm740_probe::ordinary("P0554") {
+                    crate::cm740_probe::hit("P0554", "OmitAssociationPartStoreAfterSelectors");
+                    return Ok(Some(rhs));
+                }
+                self.finish_association_set_part_lvalue(
+                    symbol,
+                    direct_single_key,
+                    evaluated_selectors,
+                    rhs,
+                )?
+            }
+        };
+        Ok(Some(value))
+    }
+
     fn normalize_association_set_lvalue_target(
         &self,
         lhs: &Expr,
@@ -872,6 +942,52 @@ impl Session {
             };
 
             let selector_result = self.evaluate(selector.clone());
+            let witness = slot_witness(&selector_result);
+            match selector_result {
+                Ok(selector) => {
+                    state.evaluated = state.evaluated.appended(selector);
+                    state.cursor += 1;
+                }
+                Err(EvalError::InputRequired { request }) => {
+                    return resume_frames::suspend_suspended_association_set_lvalue(
+                        self, state, witness, request, route,
+                    );
+                }
+                Err(error) => return Err(Route::failure(error)),
+            }
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_suspended_association_set_lvalue_cm740_driven<Route>(
+        &mut self,
+        mut state: SuspendedAssociationSetLValue,
+        selector: Expr,
+        route: Route,
+    ) -> Result<Expr, Route::Error>
+    where
+        Route: DefinitionResumeRoute<ResumeSuspendedAssociationSetLvalueSuspensionFrame>,
+    {
+        state.evaluated = state.evaluated.appended(selector);
+        state.cursor += 1;
+
+        loop {
+            let Some(selector) = state.selectors.get(state.cursor) else {
+                return self
+                    .finish_association_set_function_lvalue(
+                        state.symbol,
+                        state.selectors.as_ref(),
+                        state.evaluated.into_vec(),
+                        state.rhs,
+                    )
+                    .map_err(Route::failure);
+            };
+
+            let selector_result = crate::cm740_probe::around("P0558", || {
+                self.evaluate_cm740_driven(selector.clone())
+            });
             let witness = slot_witness(&selector_result);
             match selector_result {
                 Ok(selector) => {

@@ -92,13 +92,34 @@ impl Session {
         )
     }
 
+    /// Evaluates Part selectors exactly once from left to right.
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn evaluate_part_selectors_owned_cm740_driven(
+        &mut self,
+        selector_exprs: Vec<Expr>,
+    ) -> Result<EvaluatedPartSelectors, EvalError> {
+        let evaluated_result = self.resolve_argument_exprs_owned_cm740_driven(selector_exprs);
+        crate::resume_typed_or_suspend!(
+            self,
+            evaluated_result,
+            ok(values) => Ok(EvaluatedPartSelectors::from_evaluated(values)),
+            suspend => FinishEvaluatedPartSelectorsSuspensionFrame,
+        )
+    }
+
     /// Evaluates Part selectors exactly once for a downstream builtin family.
     #[doc(hidden)]
     pub fn evaluate_part_selectors_owned_for_builtin(
         &mut self,
         selector_exprs: Vec<Expr>,
     ) -> Result<EvaluatedPartSelectors, EvalError> {
-        self.evaluate_part_selectors_owned(selector_exprs)
+        (if crate::cm740_probe::driven() {
+            self.evaluate_part_selectors_owned_cm740_driven(selector_exprs)
+        } else {
+            self.evaluate_part_selectors_owned(selector_exprs)
+        })
     }
 }
 

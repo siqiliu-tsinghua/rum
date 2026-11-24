@@ -40,6 +40,10 @@ pub(crate) fn eval_dot(
     head: &Expr,
     args: &SharedArgs,
 ) -> Result<Expr, EvalError> {
+    if rum_runtime::cm740_probe::driven() {
+        return eval_dot_cm740_driven(session, head, args);
+    }
+
     let Some((first, rest)) = args.split_first() else {
         return Ok(Expr::call(head.clone(), Vec::new()));
     };
@@ -53,6 +57,46 @@ pub(crate) fn eval_dot(
     let mut remaining = rest.iter();
     while let Some(next) = remaining.next() {
         let result = match compute_inner(session, "Dot", &times, &current, next, &plus) {
+            Ok(result) => result,
+            Err(error) => {
+                return suspend_dot(session, head, args, args.len() - remaining.len(), error);
+            }
+        };
+        let Some(result) = result else {
+            return Ok(Expr::call(head.clone(), args.to_vec()));
+        };
+        current = result;
+    }
+
+    Ok(current)
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(crate) fn eval_dot_cm740_driven(
+    session: &mut Session,
+    head: &Expr,
+    args: &SharedArgs,
+) -> Result<Expr, EvalError> {
+    let Some((first, rest)) = args.split_first() else {
+        return Ok(Expr::call(head.clone(), Vec::new()));
+    };
+    if rest.is_empty() {
+        return Ok(first.clone());
+    }
+
+    let times = system_expr("Times");
+    let plus = system_expr("Plus");
+    let mut current = first.clone();
+    let mut remaining = rest.iter();
+    while let Some(next) = remaining.next() {
+        let result = match rum_runtime::cm740_probe::around_some(
+            "P1937",
+            "ActualTypedCarrierBeforeOuterTail",
+            false,
+            || compute_inner(session, "Dot", &times, &current, next, &plus),
+        ) {
             Ok(result) => result,
             Err(error) => {
                 return suspend_dot(session, head, args, args.len() - remaining.len(), error);
@@ -176,11 +220,21 @@ pub(crate) fn eval_array_filter(
     };
     match padding_expr.cloned() {
         Some(expr) => next.finish(session, Some(expr)),
-        None => session.option_rule_expr_for_symbol(
-            &Symbol::system("ArrayFilter"),
-            &Symbol::system("Padding"),
-            next,
-        ),
+        None => {
+            if rum_runtime::cm740_probe::driven() {
+                session.option_rule_expr_for_symbol_cm740_driven(
+                    &Symbol::system("ArrayFilter"),
+                    &Symbol::system("Padding"),
+                    next,
+                )
+            } else {
+                session.option_rule_expr_for_symbol(
+                    &Symbol::system("ArrayFilter"),
+                    &Symbol::system("Padding"),
+                    next,
+                )
+            }
+        }
     }
 }
 

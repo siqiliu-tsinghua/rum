@@ -54,6 +54,58 @@ impl Session {
             .map(Some)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn try_set_positional_part_lvalue_cm740_driven(
+        &mut self,
+        lhs: Expr,
+        rhs: Expr,
+    ) -> Result<Option<Expr>, EvalError> {
+        let Expr::Call { head, args } = &lhs else {
+            return Ok(None);
+        };
+        if !is_system_symbol_name(head, "Part") {
+            return Ok(None);
+        }
+
+        let Some((owner, selectors)) = args.split_first() else {
+            self.push_positional_part_assignment_argform(
+                "expected Part assignment to have a symbol owner and at least one selector",
+            );
+            return Ok(Some(rhs));
+        };
+        let Some(owner) = expr_as_symbol(owner).copied() else {
+            self.push_positional_part_assignment_argform(format!(
+                "expected Part assignment owner to be a symbol, got {owner}",
+            ));
+            return Ok(Some(rhs));
+        };
+        if selectors.is_empty() {
+            self.push_positional_part_assignment_argform(
+                "expected Part assignment to have at least one selector",
+            );
+            return Ok(Some(rhs));
+        }
+
+        let evaluated_result = crate::cm740_probe::around("P0435", || {
+            self.evaluate_part_selectors_owned_cm740_driven(selectors.to_vec())
+        });
+        let witness = slot_witness(&evaluated_result);
+        let evaluated_selectors = match evaluated_result {
+            Ok(evaluated_selectors) => evaluated_selectors,
+            Err(EvalError::InputRequired { request }) => {
+                return resume_frames::suspend_positional_part_selectors(
+                    self, owner, rhs, witness, request,
+                )
+                .map(Some);
+            }
+            Err(error) => return Err(error),
+        };
+        self.finish_positional_part_assignment_cm740_driven(owner, evaluated_selectors, rhs)
+            .map(Some)
+    }
+
     fn finish_positional_part_assignment(
         &mut self,
         owner: Symbol,
@@ -128,6 +180,114 @@ impl Session {
             return Ok(rhs);
         }
 
+        if self.try_direct_positional_part_assignment(&owner, path, &rhs)? {
+            return Ok(rhs);
+        }
+
+        // No evaluator call occurs from the structural rebuild through the
+        // store. This generic COW-safe rebuild remains the fallback whenever
+        // the direct route cannot prove an unobservable environment.
+        let Some(current) = self
+            .definitions
+            .get(&owner)
+            .and_then(|definition| definition.own_value.clone())
+        else {
+            self.push_positional_part_assignment_argform(format!(
+                "expected Part assignment owner {} to have a current List value",
+                owner
+            ));
+            return Ok(rhs);
+        };
+        let updated = replace_exact_path(current, path, rhs.clone());
+        self.installed_system_own_values.remove(&owner);
+        let definition = self.definitions.entry(owner).or_default();
+        definition.own_value = Some(updated);
+        definition.delayed_own_value = None;
+        self.bump_evaluation_epoch_for_symbol(&owner);
+        Ok(rhs)
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_positional_part_assignment_cm740_driven(
+        &mut self,
+        owner: Symbol,
+        evaluated_selectors: EvaluatedPartSelectors,
+        rhs: Expr,
+    ) -> Result<Expr, EvalError> {
+        // Selector evaluation can reassign, clear, protect, or remove the
+        // owner. Re-fetch every target fact only after the final callback.
+        if !self.ensure_symbol_not_protected_for_write("Set", &owner) {
+            return Ok(rhs);
+        }
+        if self.removed_symbols.contains(&owner) {
+            self.push_positional_part_assignment_argform(format!(
+                "Part assignment owner {} has been removed",
+                owner
+            ));
+            return Ok(rhs);
+        }
+        let Some(current) = self
+            .definitions
+            .get(&owner)
+            .and_then(|definition| definition.own_value.as_ref())
+        else {
+            self.push_positional_part_assignment_argform(format!(
+                "expected Part assignment owner {} to have a current List value",
+                owner
+            ));
+            return Ok(rhs);
+        };
+
+        if let Some(selector) = evaluated_selectors
+            .as_slice()
+            .iter()
+            .find(|selector| !is_positive_machine_integer_selector(selector))
+        {
+            self.push_positional_part_assignment_argform(format!(
+                "expected a positive machine-sized integer Part selector, got {selector}",
+            ));
+            return Ok(rhs);
+        }
+
+        let Some(paths) =
+            exact_position_paths_from_part_target_selector_exprs(current, &evaluated_selectors)
+        else {
+            self.push_positional_part_assignment_argform(
+                "expected an exact positive integer Part path",
+            );
+            return Ok(rhs);
+        };
+        let [path] = paths.as_slice() else {
+            let current_for_message = current.clone();
+            if !self.push_existing_part_selection_failure_messages(
+                &current_for_message,
+                &evaluated_selectors,
+            ) {
+                self.push_positional_part_assignment_argform(
+                    "the requested Part path does not exist",
+                );
+            }
+            return Ok(rhs);
+        };
+        if path.len() != evaluated_selectors.len() {
+            self.push_positional_part_assignment_argform(
+                "expected one exact position for each Part selector",
+            );
+            return Ok(rhs);
+        }
+        if let Err(non_list) = plain_list_ancestors_at_exact_path(current, path) {
+            self.push_positional_part_assignment_argform(format!(
+                "expected a plain List at every level of the Part path, got {non_list}",
+            ));
+            return Ok(rhs);
+        }
+
+        if crate::cm740_probe::frame("P0435") {
+            crate::cm740_probe::hit("P0435", "OmitActualPositionalStore");
+            return Ok(rhs);
+        }
         if self.try_direct_positional_part_assignment(&owner, path, &rhs)? {
             return Ok(rhs);
         }

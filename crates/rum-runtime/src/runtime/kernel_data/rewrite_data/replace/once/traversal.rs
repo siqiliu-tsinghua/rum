@@ -70,11 +70,19 @@ impl Session {
                 ReplaceTraversalWork::Visit { expr, level } => {
                     let depth = replace_expr_depth_for_heads(&expr, state.include_heads);
                     if state.levels.matches(level, depth) {
-                        let replaced_result = self.apply_rewrite_rule_plan_once(
-                            expr.clone(),
-                            state.rule_plan.clone(),
-                            RuleApplicationSource::Replace,
-                        );
+                        let replaced_result = (if crate::cm740_probe::driven() {
+                            self.apply_rewrite_rule_plan_once_cm740_driven(
+                                expr.clone(),
+                                state.rule_plan.clone(),
+                                RuleApplicationSource::Replace,
+                            )
+                        } else {
+                            self.apply_rewrite_rule_plan_once(
+                                expr.clone(),
+                                state.rule_plan.clone(),
+                                RuleApplicationSource::Replace,
+                            )
+                        });
                         match replaced_result {
                             Ok(replaced) => {
                                 self.finish_replace_traversal_visit(

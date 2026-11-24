@@ -8,7 +8,11 @@ impl Session {
     pub(in crate::runtime) fn eval_assert(&mut self, args: &SharedArgs) -> Result<Expr, EvalError> {
         let test = args.first().cloned();
 
-        let function_result = self.evaluate(system_expr("$AssertFunction"));
+        let function_result = if crate::cm740_probe::driven() {
+            self.evaluate_cm740_driven(system_expr("$AssertFunction"))
+        } else {
+            self.evaluate(system_expr("$AssertFunction"))
+        };
         let function = crate::resume_typed_or_suspend!(
             self,
             function_result,

@@ -73,6 +73,10 @@ impl TypedFrame for ResumeSuspendedAssociationSetLvalueSuspensionFrame {
         outcome: Result<Expr, EvalError>,
         token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_9f9(self, session, outcome, token);
+        }
+
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         let resumed = (|| {
@@ -80,6 +84,29 @@ impl TypedFrame for ResumeSuspendedAssociationSetLvalueSuspensionFrame {
             session.resume_suspended_association_set_lvalue(state, selector, token)
         })();
         TypedAction::complete_work(resumed)
+    }
+}
+impl ResumeSuspendedAssociationSetLvalueSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_9f9<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        if crate::cm740_probe::frame("P0558") {
+            crate::cm740_probe::hit("P0558", "ForwardActualSelectorBeforeStore");
+            return TypedAction::complete(outcome);
+        }
+        #[allow(unused_mut)]
+        let mut state = self.state.clone();
+        let resumed = (|| {
+            let selector = outcome.map_err(crate::runtime::kernel_api::ResumeStop::failure)?;
+            session.resume_suspended_association_set_lvalue_cm740_driven(state, selector, token)
+        })();
+        TypedAction::complete_work_cm740_driven(resumed)
     }
 }
 

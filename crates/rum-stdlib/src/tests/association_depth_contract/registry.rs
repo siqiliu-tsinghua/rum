@@ -5,6 +5,33 @@
 
 use super::DeclaredRecursiveEdge;
 
+pub(super) const CM740_TARGET_EDGES: &[(&str, &str, &str, usize)] = &[
+    (
+        "crates/rum-stdlib/src/associations/missing/target.rs",
+        "drive_owned_association_cursor_cm740_driven",
+        "drive_owned_target_cursor_cm740_driven",
+        1,
+    ),
+    (
+        "crates/rum-stdlib/src/associations/missing/target.rs",
+        "drive_owned_list_cursor_cm740_driven",
+        "drive_owned_target_cursor_cm740_driven",
+        1,
+    ),
+    (
+        "crates/rum-stdlib/src/associations/missing/target.rs",
+        "drive_owned_target_cursor_cm740_driven",
+        "drive_owned_association_cursor_cm740_driven",
+        1,
+    ),
+    (
+        "crates/rum-stdlib/src/associations/missing/target.rs",
+        "drive_owned_target_cursor_cm740_driven",
+        "drive_owned_list_cursor_cm740_driven",
+        1,
+    ),
+];
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Mechanism {
     NoProportionalDescent,

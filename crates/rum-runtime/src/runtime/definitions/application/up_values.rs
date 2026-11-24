@@ -53,6 +53,53 @@ impl Session {
         self.try_apply_up_values_from_list(candidate, normalized_candidate, up_values, 0, None)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn try_apply_up_values_cm740_driven(
+        &mut self,
+        identity: PreparedDefinitionLookup<'_>,
+    ) -> Result<Option<Expr>, EvalError> {
+        let head = identity.head();
+        let args = identity.args();
+        let attributes = identity.attributes();
+        if !self.has_up_value_definitions {
+            return Ok(None);
+        }
+
+        let mut up_values = Vec::new();
+        let args_slice = args.as_ref();
+
+        for symbol in collect_upvalue_candidate_symbols(args_slice) {
+            let Some(definition) = self.definitions.get(&symbol) else {
+                continue;
+            };
+            up_values.extend(
+                definition
+                    .up_values
+                    .iter()
+                    .cloned()
+                    .map(|up_value| (symbol, up_value)),
+            );
+        }
+
+        if up_values.is_empty() {
+            return Ok(None);
+        }
+
+        let candidate = Expr::call_with_shared_args(head.clone(), args.clone());
+        let normalized_candidate =
+            self.normalize_definition_candidate_for_matching(&candidate, attributes);
+
+        self.try_apply_up_values_from_list_cm740_driven(
+            candidate,
+            normalized_candidate,
+            up_values,
+            0,
+            None,
+        )
+    }
+
     /// Walks the up-value candidates one per loop iteration instead of
     /// recursing per candidate, so a wide up-value list no longer grows the
     /// native stack. `pending` carries an already-computed matcher outcome
@@ -211,6 +258,218 @@ impl Session {
                 normalized_candidate.clone(),
                 SymbolExprMap::default(),
             );
+            let witness = slot_witness(&match_result);
+            record_profile_definition_dispatch_phase_timing(
+                "up_value",
+                &symbol,
+                "compiled_matcher",
+                compiled_matcher_start,
+            );
+
+            match match_result {
+                Ok(outcome) => pending = Some(outcome),
+                Err(EvalError::InputRequired { request }) => {
+                    return self.suspend_up_value_scan_from_owned(
+                        candidate,
+                        normalized_candidate,
+                        up_values,
+                        index,
+                        witness,
+                        request,
+                    );
+                }
+                Err(error) => return Err(error),
+            }
+        }
+    }
+
+    /// Walks the up-value candidates one per loop iteration instead of
+    /// recursing per candidate, so a wide up-value list no longer grows the
+    /// native stack. `pending` carries an already-computed matcher outcome
+    /// across a suspension resume, so the outcome is merged exactly once per
+    /// candidate on both the live and the resumed paths.
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn try_apply_up_values_from_list_cm740_driven(
+        &mut self,
+        candidate: Expr,
+        normalized_candidate: Expr,
+        up_values: Vec<(Symbol, UpValue)>,
+        mut index: usize,
+        mut pending: Option<CompiledMatchOutcome>,
+    ) -> Result<Option<Expr>, EvalError> {
+        loop {
+            let Some((symbol, up_value)) = up_values.get(index) else {
+                return Ok(None);
+            };
+            let symbol = *symbol;
+
+            if let Some(outcome) = pending.take() {
+                record_profile_definition_dispatch_matcher_outcome(
+                    "up_value",
+                    &symbol,
+                    outcome.matched,
+                );
+                if !outcome.matched {
+                    index += 1;
+                    continue;
+                }
+
+                let rhs_substitution_start = definition_dispatch_timing_start();
+                let substituted = substitute_rule_bindings_for_rhs(
+                    &up_value.rhs,
+                    &outcome.bindings,
+                    up_value.rhs_may_splice_without_bindings,
+                );
+                record_profile_definition_dispatch_phase_timing(
+                    "up_value",
+                    &symbol,
+                    "rhs_substitution",
+                    rhs_substitution_start,
+                );
+                let option_scope =
+                    self.option_value_scope_for_definition(&up_value.lhs, &candidate);
+                self.push_rule_applied_trace(
+                    RuleApplicationSource::UpValue,
+                    &candidate,
+                    &up_value.lhs,
+                    &substituted,
+                );
+                let profile_rule_start =
+                    self.definition_rule_timing_start_adopted("up_value_rhs_eval", &symbol, index);
+                let result = match crate::cm740_probe::around_ok_profile_return(
+                    "P0314",
+                    "OrdinaryActualSuccessBeforeTail",
+                    || {
+                        self.evaluate_definition_application_rhs_cm740_driven(
+                            option_scope,
+                            substituted,
+                        )
+                    },
+                ) {
+                    crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+                    crate::cm740_probe::OkAction::Continue(result) => result,
+                };
+                record_profile_definition_rule_timing_adopted(
+                    "up_value_rhs_eval",
+                    &symbol,
+                    index,
+                    profile_rule_start,
+                    result.is_ok(),
+                    &result,
+                );
+                return result;
+            }
+
+            record_profile_definition_dispatch_candidate("up_value", &symbol);
+            let prefilter_start = definition_dispatch_timing_start();
+            let could_match = self.definition_lhs_could_match_candidate(
+                &up_value.lhs,
+                &up_value.matcher,
+                &normalized_candidate,
+            );
+            record_profile_definition_dispatch_phase_timing(
+                "up_value",
+                &symbol,
+                "prefilter",
+                prefilter_start,
+            );
+            if !could_match {
+                record_profile_definition_dispatch_prefilter_skip("up_value", &symbol);
+                index += 1;
+                continue;
+            }
+
+            let fast_match_start = definition_dispatch_timing_start();
+            let fast_outcome = if up_value.matcher_attribute_revision == self.attribute_revision {
+                self.try_fast_definition_match_compiled(&up_value.matcher, &normalized_candidate)
+            } else {
+                self.try_fast_definition_match(
+                    &up_value.lhs,
+                    &up_value.guards,
+                    &normalized_candidate,
+                )
+            };
+            record_profile_definition_dispatch_phase_timing(
+                "up_value",
+                &symbol,
+                "fast_match",
+                fast_match_start,
+            );
+            if let Some(outcome) = fast_outcome {
+                record_profile_definition_dispatch_fast_outcome(
+                    "up_value",
+                    &symbol,
+                    outcome.matched,
+                );
+                if !outcome.matched {
+                    index += 1;
+                    continue;
+                }
+
+                let (lhs, substituted) = {
+                    let rhs_substitution_start = definition_dispatch_timing_start();
+                    let substituted = substitute_rule_bindings_for_rhs(
+                        &up_value.rhs,
+                        &outcome.bindings,
+                        up_value.rhs_may_splice_without_bindings,
+                    );
+                    record_profile_definition_dispatch_phase_timing(
+                        "up_value",
+                        &symbol,
+                        "rhs_substitution",
+                        rhs_substitution_start,
+                    );
+                    (up_value.lhs.clone(), substituted)
+                };
+                let option_scope = self.option_value_scope_for_definition(&lhs, &candidate);
+                self.push_rule_applied_trace(
+                    RuleApplicationSource::UpValue,
+                    &candidate,
+                    &lhs,
+                    &substituted,
+                );
+                let profile_rule_start =
+                    self.definition_rule_timing_start_adopted("up_value_rhs_eval", &symbol, index);
+                let result = match crate::cm740_probe::around_ok_profile_return(
+                    "P0315",
+                    "OrdinaryActualSuccessBeforeTail",
+                    || {
+                        self.evaluate_definition_application_rhs_cm740_driven(
+                            option_scope,
+                            substituted,
+                        )
+                    },
+                ) {
+                    crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+                    crate::cm740_probe::OkAction::Continue(result) => result,
+                };
+                record_profile_definition_rule_timing_adopted(
+                    "up_value_rhs_eval",
+                    &symbol,
+                    index,
+                    profile_rule_start,
+                    result.is_ok(),
+                    &result,
+                );
+                return result;
+            }
+
+            let up_value = up_value.clone();
+            let matcher = if up_value.matcher_attribute_revision == self.attribute_revision {
+                up_value.matcher.clone()
+            } else {
+                self.compile_down_value_matcher(&up_value.lhs, &up_value.guards)
+            };
+            let compiled_matcher_start = definition_dispatch_timing_start();
+            let match_result = crate::cm740_probe::around("P0316", || {
+                self.match_compiled_owned_cm740_driven(
+                    matcher,
+                    normalized_candidate.clone(),
+                    SymbolExprMap::default(),
+                )
+            });
             let witness = slot_witness(&match_result);
             record_profile_definition_dispatch_phase_timing(
                 "up_value",
@@ -422,6 +681,186 @@ impl Session {
             }
         }
     }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_suspended_up_value_scan_cm740_driven(
+        &mut self,
+        mut state: SuspendedUpValueScan,
+        mut outcome: CompiledMatchOutcome,
+        token: ContinueToken<'_, TryApplyUpValuesFromListSuspensionFrame>,
+    ) -> Result<Option<Expr>, ResumeStop<Option<Expr>>> {
+        loop {
+            let Some((symbol, up_value)) = state.up_values.get(state.index) else {
+                return Ok(None);
+            };
+            let symbol = *symbol;
+
+            record_profile_definition_dispatch_matcher_outcome(
+                "up_value",
+                &symbol,
+                outcome.matched,
+            );
+            if outcome.matched {
+                let rhs_substitution_start = definition_dispatch_timing_start();
+                let substituted = if let Some(row) = ["P0316", "P0321"]
+                    .into_iter()
+                    .find(|row| crate::cm740_probe::frame(row))
+                {
+                    crate::cm740_probe::hit(row, "OmitActualUpValueBindingSubstitution");
+                    up_value.rhs.clone()
+                } else {
+                    substitute_rule_bindings_for_rhs(
+                        &up_value.rhs,
+                        &outcome.bindings,
+                        up_value.rhs_may_splice_without_bindings,
+                    )
+                };
+                record_profile_definition_dispatch_phase_timing(
+                    "up_value",
+                    &symbol,
+                    "rhs_substitution",
+                    rhs_substitution_start,
+                );
+                let option_scope =
+                    self.option_value_scope_for_definition(&up_value.lhs, &state.candidate);
+                self.push_rule_applied_trace(
+                    RuleApplicationSource::UpValue,
+                    &state.candidate,
+                    &up_value.lhs,
+                    &substituted,
+                );
+                let profile_rule_start = self.definition_rule_timing_start_adopted(
+                    "up_value_rhs_eval",
+                    &symbol,
+                    state.index,
+                );
+                let result = {
+                    let _guard = crate::cm740_probe::enter("P0320");
+                    let actual = self.evaluate_definition_application_rhs_cm740_driven(
+                        option_scope,
+                        substituted,
+                    );
+                    if crate::cm740_probe::class_lease::wants_input_return("P0320") {
+                        if let Err(crate::EvalError::InputRequired { .. }) = &actual {
+                            _guard.input_return(&actual);
+                            crate::cm740_probe::class_lease::note_input_return("P0320", 0);
+                        }
+                    }
+
+                    if crate::cm740_probe::frame("P0320") {
+                        crate::cm740_probe::hit("P0320", "OmitActualDefinitionRuleAccounting");
+                        return actual.map_err(ResumeStop::failure);
+                    }
+                    actual
+                };
+                record_profile_definition_rule_timing_adopted(
+                    "up_value_rhs_eval",
+                    &symbol,
+                    state.index,
+                    profile_rule_start,
+                    result.is_ok(),
+                    &result,
+                );
+                return result.map_err(ResumeStop::failure);
+            }
+            state.index += 1;
+
+            loop {
+                let Some((symbol, up_value)) = state.up_values.get(state.index) else {
+                    return Ok(None);
+                };
+                let symbol = *symbol;
+
+                record_profile_definition_dispatch_candidate("up_value", &symbol);
+                let prefilter_start = definition_dispatch_timing_start();
+                let could_match = self.definition_lhs_could_match_candidate(
+                    &up_value.lhs,
+                    &up_value.matcher,
+                    &state.normalized_candidate,
+                );
+                record_profile_definition_dispatch_phase_timing(
+                    "up_value",
+                    &symbol,
+                    "prefilter",
+                    prefilter_start,
+                );
+                if !could_match {
+                    record_profile_definition_dispatch_prefilter_skip("up_value", &symbol);
+                    state.index += 1;
+                    continue;
+                }
+
+                let fast_match_start = definition_dispatch_timing_start();
+                let fast_outcome = if up_value.matcher_attribute_revision == self.attribute_revision
+                {
+                    self.try_fast_definition_match_compiled(
+                        &up_value.matcher,
+                        &state.normalized_candidate,
+                    )
+                } else {
+                    self.try_fast_definition_match(
+                        &up_value.lhs,
+                        &up_value.guards,
+                        &state.normalized_candidate,
+                    )
+                };
+                record_profile_definition_dispatch_phase_timing(
+                    "up_value",
+                    &symbol,
+                    "fast_match",
+                    fast_match_start,
+                );
+                if let Some(fast_outcome) = fast_outcome {
+                    record_profile_definition_dispatch_fast_outcome(
+                        "up_value",
+                        &symbol,
+                        fast_outcome.matched,
+                    );
+                    outcome = fast_outcome;
+                    break;
+                }
+
+                let matcher = if up_value.matcher_attribute_revision == self.attribute_revision {
+                    up_value.matcher.clone()
+                } else {
+                    self.compile_down_value_matcher(&up_value.lhs, &up_value.guards)
+                };
+                let compiled_matcher_start = definition_dispatch_timing_start();
+                let match_result = crate::cm740_probe::around("P0321", || {
+                    self.match_compiled_owned_cm740_driven(
+                        matcher,
+                        state.normalized_candidate.clone(),
+                        SymbolExprMap::default(),
+                    )
+                });
+                let witness = slot_witness(&match_result);
+                record_profile_definition_dispatch_phase_timing(
+                    "up_value",
+                    &symbol,
+                    "compiled_matcher",
+                    compiled_matcher_start,
+                );
+
+                match match_result {
+                    Ok(next_outcome) => {
+                        outcome = next_outcome;
+                        break;
+                    }
+                    Err(EvalError::InputRequired { request }) => {
+                        return Err(token.suspend(
+                            self,
+                            witness,
+                            request,
+                            TryApplyUpValuesFromListSuspensionFrame { state },
+                        ));
+                    }
+                    Err(error) => return Err(ResumeStop::failure(error)),
+                }
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -445,11 +884,60 @@ impl TypedFrame for TryApplyUpValuesFromListSuspensionFrame {
         outcome: Result<CompiledMatchOutcome, EvalError>,
         token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Option<Expr>> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_4353(self, session, outcome, token);
+        }
+
         let state = self.state.clone();
         let resumed = (|| {
             let outcome = outcome.map_err(ResumeStop::failure)?;
             session.resume_suspended_up_value_scan(state, outcome, token)
         })();
         TypedAction::complete_work(resumed)
+    }
+}
+impl TryApplyUpValuesFromListSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_4353<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<CompiledMatchOutcome, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Option<Expr>> {
+        let state = self.state.clone();
+        let resumed = (|| {
+            let outcome = match outcome.map_err(ResumeStop::failure) {
+                Ok(value) => value,
+                Err(error) => return (Err(error), None),
+            };
+            {
+                let _cm740_producer = crate::cm740_probe::enter("P0323");
+                let _cm742_issued =
+                    crate::cm740_probe::queue_transport::source_capture_scope(&_cm740_producer);
+                let _cm742_resumed =
+                    session.resume_suspended_up_value_scan_cm740_driven(state, outcome, token);
+                (_cm742_resumed, _cm742_issued)
+            }
+        })();
+        {
+            let (_cm742_resumed, _cm742_issued) = resumed;
+            let mut _cm742_issuer =
+                crate::cm740_probe::queue_transport::CompletionIssuer::default();
+            let _cm742_ticket = _cm742_issuer.retain(_cm742_issued);
+            match crate::cm740_probe::queue_transport::source_join_owner_at(
+                std::mem::take(&mut _cm742_issuer),
+                _cm742_ticket,
+            ) {
+                Some(_owner) => {
+                    _owner.source_expect_result();
+                    let _cm742_action = TypedAction::complete_work_cm740_driven(_cm742_resumed);
+                    _owner.source_finish_result();
+                    _cm742_action
+                }
+                None => TypedAction::complete_work_cm740_driven(_cm742_resumed),
+            }
+        }
     }
 }

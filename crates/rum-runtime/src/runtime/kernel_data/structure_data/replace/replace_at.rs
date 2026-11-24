@@ -89,14 +89,25 @@ impl Session {
         paths: Vec<Vec<isize>>,
         call_args: Vec<Expr>,
     ) -> Result<Expr, EvalError> {
-        self.drive_rewrite_rule_exprs_owned(
-            rules_expr,
-            RewriteRuleExprContinuation::ReplaceAt {
-                target,
-                paths,
-                call_args,
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.drive_rewrite_rule_exprs_owned_cm740_driven(
+                rules_expr,
+                RewriteRuleExprContinuation::ReplaceAt {
+                    target,
+                    paths,
+                    call_args,
+                },
+            )
+        } else {
+            self.drive_rewrite_rule_exprs_owned(
+                rules_expr,
+                RewriteRuleExprContinuation::ReplaceAt {
+                    target,
+                    paths,
+                    call_args,
+                },
+            )
+        })
     }
 
     pub(in crate::runtime) fn resume_replace_at_after_rule_exprs(
@@ -137,11 +148,19 @@ impl Session {
             return self.replace_at_paths_owned(expr, paths, rule_plan, index + 1);
         };
 
-        let replaced_result = self.apply_rewrite_rule_plan_once(
-            part,
-            rule_plan.clone(),
-            RuleApplicationSource::ReplaceAt,
-        );
+        let replaced_result = (if crate::cm740_probe::driven() {
+            self.apply_rewrite_rule_plan_once_cm740_driven(
+                part,
+                rule_plan.clone(),
+                RuleApplicationSource::ReplaceAt,
+            )
+        } else {
+            self.apply_rewrite_rule_plan_once(
+                part,
+                rule_plan.clone(),
+                RuleApplicationSource::ReplaceAt,
+            )
+        });
         match replaced_result {
             Ok(replaced) => {
                 let expr = match replaced {
@@ -185,11 +204,19 @@ impl Session {
                 state.index += 1;
                 continue;
             };
-            let replaced_result = self.apply_rewrite_rule_plan_once(
-                part,
-                state.rule_plan.clone(),
-                RuleApplicationSource::ReplaceAt,
-            );
+            let replaced_result = (if crate::cm740_probe::driven() {
+                self.apply_rewrite_rule_plan_once_cm740_driven(
+                    part,
+                    state.rule_plan.clone(),
+                    RuleApplicationSource::ReplaceAt,
+                )
+            } else {
+                self.apply_rewrite_rule_plan_once(
+                    part,
+                    state.rule_plan.clone(),
+                    RuleApplicationSource::ReplaceAt,
+                )
+            });
             match replaced_result {
                 Ok(Some(replaced)) => {
                     state.expr = replace_exact_path(state.expr, &path, replaced);

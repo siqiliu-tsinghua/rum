@@ -329,3 +329,21 @@ flag-on legs (`3+1+1` passed / 0 failed and `197 passed; 0 failed`), the final `
 `scripts/handoff.py` for the R4 handoff. Keep every existing log, run record and the STOP
 evidence; update `PROGRESS.md` and `report.json`, run `python3 scripts/report.py check 793`, and
 return the summary. All other bars, bounds, STOP rules and budgets are unchanged.
+
+## Director gate (c154) — R4: the live render commit
+
+Ruling 806. The sealed four-role release landed in the working tree: 190 crates paths (165
+overlay rows, 9 additions, `additions.tsv`, 15 carried/regenerated/adopted files; 10 adds and
+180 modifications, 0 live-only), after measuring that everything else in `crates/` was
+byte-equal and archiving the 23 inherited WIP entries to `.temp/director/r4/pre-install/wip/`.
+Live's crates subtree now equals the sealed armed subtree (`a7de3a76…`, 4,700 files) and the
+recomputed delta is 0. Live's own replays: F13 `5d27e91b…` (68 records/18 cells/68 fingerprints)
+with the F55 adoption stamped; the seven ownership tables byte-exact (61/92/92/10,135) and the
+152-member chain `0e508bb4…`; both promotion configurations zero-rejection, the canonical merge
+left `promoted.tsv` at `51b693ec…`, the second fresh emission byte-identical; the live-scene
+seal re-emitted `57e9acbd…` with mutants `e9940d5d…`, additions `243dc0cf…` and the same
+`source_schema` cell, and the independent reconstruction agreed. The first live suite reproduced
+the authoritative Stage D: `FMT PASS`, `WORKSPACE PASS passed=4553 failed=10 ignored=71
+results=70 raw_exit=101` (the ten accepted reds and 71 ignores exact by name; peak
+17,388,060,672 B, oom 0), flag-on legs `3+1+1/0` and `197/0`, `SUITE PASS`. The release is
+committed with TODO.md; no dependency, no `unsafe`, no tag.

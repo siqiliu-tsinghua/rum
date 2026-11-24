@@ -86,8 +86,15 @@ impl Session {
                         let flat_head = value_head.as_ref().clone();
                         let value_head = value_head.into_owned();
                         let value_args = value_args.into_vec();
-                        let head_result =
-                            self.match_compiled_owned(*head, value_head, SymbolExprMap::default());
+                        let head_result = (if crate::cm740_probe::driven() {
+                            self.match_compiled_owned_cm740_driven(
+                                *head,
+                                value_head,
+                                SymbolExprMap::default(),
+                            )
+                        } else {
+                            self.match_compiled_owned(*head, value_head, SymbolExprMap::default())
+                        });
                         match head_result {
                             Ok(outcome) => self.finish_replace_list_call_head_match(
                                 args, value_args, flat_head, orderless, flat, outcome,
@@ -126,8 +133,15 @@ impl Session {
                 }
             }
             other => {
-                let match_result =
-                    self.match_compiled_owned(other, normalized_target, SymbolExprMap::default());
+                let match_result = (if crate::cm740_probe::driven() {
+                    self.match_compiled_owned_cm740_driven(
+                        other,
+                        normalized_target,
+                        SymbolExprMap::default(),
+                    )
+                } else {
+                    self.match_compiled_owned(other, normalized_target, SymbolExprMap::default())
+                });
                 crate::resume_or_suspend!(
                     self,
                     match_result,
@@ -206,12 +220,21 @@ impl Session {
                 return Ok(accepted);
             };
             let false_bindings = current.clone();
-            let guard_result = self.evaluate_guard_sequence_owned(
-                guards.clone(),
-                current,
-                false_bindings,
-                option_scope.clone(),
-            );
+            let guard_result = (if crate::cm740_probe::driven() {
+                self.evaluate_guard_sequence_owned_cm740_driven(
+                    guards.clone(),
+                    current,
+                    false_bindings,
+                    option_scope.clone(),
+                )
+            } else {
+                self.evaluate_guard_sequence_owned(
+                    guards.clone(),
+                    current,
+                    false_bindings,
+                    option_scope.clone(),
+                )
+            });
 
             match guard_result {
                 Ok(outcome) => pending = Some(outcome),

@@ -26,6 +26,22 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn evaluate_once_unstable_after_input_check_with_cycle_tracking_cm740_driven(
+        &mut self,
+        expr: Expr,
+        track_cycle: bool,
+    ) -> Result<Expr, EvalError> {
+        if self.current_memory_limit.is_some() {
+            let mode = self.ensure_accounting_shadow();
+            self.evaluate_once_in_accounting_mode_cm740_driven(expr, track_cycle, mode)
+        } else {
+            self.evaluate_once_in_accounting_mode_cm740_driven(expr, track_cycle, Unarmed)
+        }
+    }
+
     fn evaluate_once_in_accounting_mode<M: AccountingMode>(
         &mut self,
         expr: Expr,
@@ -73,6 +89,100 @@ impl Session {
         self.evaluation_depth.enter_level(evaluation_depth);
         let shadow_stack = mode.stack_push(track_cycle);
         let result = self.evaluate_inner_unstable(expr);
+        self.evaluation_depth.leave_level(evaluation_depth);
+        if track_cycle {
+            if M::ARMED {
+                self.pop_accounted_evaluation_entry(stack_payload);
+            } else if matches!(&result, Err(EvalError::InputRequired { .. }))
+                && self.current_memory_limit.is_some()
+            {
+                // This frame predates a local arming that survived suspension.
+                self.pop_cold_armed_evaluation_entry();
+            } else {
+                self.evaluation_stack.pop();
+            }
+        }
+        drop(shadow_stack);
+        match result {
+            Ok(value) => {
+                self.enforce_active_resource_limits_for_expr(&value)?;
+                Ok(value)
+            }
+            Err(error) => Err(error),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_once_in_accounting_mode_cm740_driven<M: AccountingMode>(
+        &mut self,
+        expr: Expr,
+        track_cycle: bool,
+        mode: M,
+    ) -> Result<Expr, EvalError> {
+        let evaluation_depth = self.evaluation_depth.get();
+        if self.interrupt_armed {
+            self.poll_host_interrupt_if_due()?;
+        }
+        if track_cycle
+            && self
+                .evaluation_stack
+                .iter()
+                .any(|active| active.epoch == self.evaluation_epoch && active.expr == expr)
+        {
+            return Err(EvalError::EvaluationCycleDetected {
+                expr: expr.to_string(),
+            });
+        }
+
+        if evaluation_depth >= self.resource_limits.recursion_limit {
+            return Err(EvalError::RecursionLimitExceeded {
+                limit: self.resource_limits.recursion_limit,
+            });
+        }
+        if self.evaluation_depth.native_check_due(evaluation_depth) {
+            self.poll_native_stack_limit()?;
+        }
+
+        let stack_payload = if track_cycle {
+            let entry = EvaluationStackEntry {
+                expr: expr.clone(),
+                epoch: self.evaluation_epoch,
+            };
+            if M::ARMED {
+                self.push_accounted_evaluation_entry(entry)
+            } else {
+                self.evaluation_stack.push(entry);
+                0
+            }
+        } else {
+            0
+        };
+        self.evaluation_depth.enter_level(evaluation_depth);
+        let shadow_stack = mode.stack_push(track_cycle);
+        let result = if crate::cm740_probe::driven() {
+            let _class_guard = crate::cm740_probe::enter("P0508");
+            let class_produced = (|| self.evaluate_inner_unstable_cm740_driven(expr))();
+            if crate::cm740_probe::class_lease::wants_input_return("P0508") {
+                if let Err(crate::EvalError::InputRequired { .. }) = &class_produced {
+                    _class_guard.input_return(&class_produced);
+                    crate::cm740_probe::class_lease::note_input_return("P0508", 0);
+                }
+            }
+            class_produced
+        } else {
+            (|| self.evaluate_inner_unstable_cm740_driven(expr))()
+        };
+        if crate::cm740_probe::frame("P0508")
+            && matches!(&result, Err(EvalError::InputRequired { .. }))
+        {
+            crate::cm740_probe::hit(
+                "P0508",
+                "OmitPausedEvaluationRetirementWithRequestStateObserver",
+            );
+            return result;
+        }
         self.evaluation_depth.leave_level(evaluation_depth);
         if track_cycle {
             if M::ARMED {
@@ -165,6 +275,56 @@ impl Session {
         result
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn evaluate_inner_unstable_cm740_driven(
+        &mut self,
+        expr: Expr,
+    ) -> Result<Expr, EvalError> {
+        let runtime_profile_total =
+            runtime_path_timing_start_adopted(self, "evaluate_inner_unstable.total");
+        let result = match expr {
+            Expr::Atom(Atom::Symbol(symbol)) => {
+                let runtime_profile =
+                    runtime_path_timing_start_adopted(self, "evaluate_inner_unstable.symbol");
+                let result = match crate::cm740_probe::around_ok_profile_return(
+                    "P0509",
+                    "OrdinaryActualSuccessBeforeTail",
+                    || self.evaluate_symbol_cm740_driven(symbol),
+                ) {
+                    crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+                    crate::cm740_probe::OkAction::Continue(result) => result,
+                };
+                record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
+                result
+            }
+            Expr::Call { head, args } => {
+                let runtime_profile =
+                    runtime_path_timing_start_adopted(self, "evaluate_inner_unstable.call");
+                let result = match crate::cm740_probe::around_ok_profile_return(
+                    "P0511",
+                    "OrdinaryActualSuccessBeforeTail",
+                    || self.evaluate_call_cm740_driven(head.clone(), args),
+                ) {
+                    crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+                    crate::cm740_probe::OkAction::Continue(result) => result,
+                };
+                record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
+                result
+            }
+            other => {
+                let runtime_profile =
+                    runtime_path_timing_start_adopted(self, "evaluate_inner_unstable.atom");
+                let result = Ok(other);
+                record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
+                result
+            }
+        };
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_total, &result);
+        result
+    }
+
     pub(super) fn evaluate_atom_fast_path(&mut self, expr: Expr) -> Result<Expr, EvalError> {
         let kind = EvaluateAtomFastPathKind::classify(self, &expr);
         let runtime_profile_total =
@@ -174,6 +334,35 @@ impl Session {
             EvaluateAtomFastPathKind::StableSymbol | EvaluateAtomFastPathKind::Atom => Ok(expr),
             EvaluateAtomFastPathKind::UnstableSymbol | EvaluateAtomFastPathKind::Call => {
                 self.evaluate(expr)
+            }
+        };
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_kind, &result);
+        record_profile_runtime_path_timing_adopted(self, runtime_profile_total, &result);
+        result
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn evaluate_atom_fast_path_cm740_driven(
+        &mut self,
+        expr: Expr,
+    ) -> Result<Expr, EvalError> {
+        let kind = EvaluateAtomFastPathKind::classify(self, &expr);
+        let runtime_profile_total =
+            runtime_path_timing_start_adopted(self, "evaluate_atom_fast_path.total");
+        let runtime_profile_kind = runtime_path_timing_start_adopted(self, kind.profile_name());
+        let result = match kind {
+            EvaluateAtomFastPathKind::StableSymbol | EvaluateAtomFastPathKind::Atom => Ok(expr),
+            EvaluateAtomFastPathKind::UnstableSymbol | EvaluateAtomFastPathKind::Call => {
+                match crate::cm740_probe::around_ok_profile_return(
+                    "P0515",
+                    "OrdinaryActualSuccessBeforeTail",
+                    || self.evaluate_cm740_driven(expr),
+                ) {
+                    crate::cm740_probe::OkAction::ReturnOk(value) => return Ok(value),
+                    crate::cm740_probe::OkAction::Continue(result) => result,
+                }
             }
         };
         record_profile_runtime_path_timing_adopted(self, runtime_profile_kind, &result);

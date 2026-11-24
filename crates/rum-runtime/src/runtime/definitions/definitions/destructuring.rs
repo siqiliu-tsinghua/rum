@@ -95,6 +95,37 @@ impl Session {
         self.drive_list_destructuring(symbol, rhs, work, ())
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn store_list_destructuring_assignments_cm740_driven(
+        &mut self,
+        symbol: &str,
+        lhs: Expr,
+        rhs: Expr,
+    ) -> Result<Expr, EvalError> {
+        let Expr::Call { args: lhs, .. } = lhs else {
+            unreachable!("destructuring entry requires a list");
+        };
+        let Expr::Call {
+            args: rhs_items, ..
+        } = &rhs
+        else {
+            unreachable!("destructuring shape checked before store");
+        };
+        let work = DestructuringWork {
+            current: DestructuringCursor {
+                lhs,
+                rhs: rhs_items.clone(),
+                next: 0,
+            },
+            parent: None,
+            parents: Vec::new(),
+            pending_leaf: false,
+        };
+        self.drive_list_destructuring_cm740_driven(symbol, rhs, work, ())
+    }
+
     fn drive_list_destructuring<Route: DefinitionResumeRoute<DestructuringSuspensionFrame>>(
         &mut self,
         symbol: &str,
@@ -104,6 +135,42 @@ impl Session {
     ) -> Result<Expr, Route::Error> {
         while let Some((lhs, rhs)) = work.next_leaf() {
             let produced = self.finish_definition_assignment(symbol, lhs, rhs, false);
+            let witness = slot_witness(&produced);
+            match produced {
+                Ok(_) => work.complete_leaf(),
+                Err(EvalError::InputRequired { request }) => {
+                    return suspend_destructuring(
+                        self,
+                        symbol,
+                        original_rhs,
+                        work,
+                        witness,
+                        request,
+                        route,
+                    );
+                }
+                Err(error) => return Err(Route::failure(error)),
+            }
+        }
+        Ok(original_rhs)
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn drive_list_destructuring_cm740_driven<
+        Route: DefinitionResumeRoute<DestructuringSuspensionFrame>,
+    >(
+        &mut self,
+        symbol: &str,
+        original_rhs: Expr,
+        mut work: DestructuringWork,
+        route: Route,
+    ) -> Result<Expr, Route::Error> {
+        while let Some((lhs, rhs)) = work.next_leaf() {
+            let produced = crate::cm740_probe::around("P0403", || {
+                self.finish_definition_assignment_cm740_driven(symbol, lhs, rhs, false)
+            });
             let witness = slot_witness(&produced);
             match produced {
                 Ok(_) => work.complete_leaf(),
@@ -142,7 +209,31 @@ impl TypedFrame for DestructuringSuspensionFrame {
         outcome: Result<Expr, EvalError>,
         token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_1212(self, session, outcome, token);
+        }
+
         TypedAction::complete_work(match outcome {
+            Ok(_) => resume_destructuring(session, &self, token),
+            Err(error) => Err(ResumeStop::failure(error)),
+        })
+    }
+}
+impl DestructuringSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_1212<'resume>(
+        self: Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+        token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        if crate::cm740_probe::frame("P0403") {
+            crate::cm740_probe::hit("P0403", "ForwardActualDestructuringLeafBeforeSuffix");
+            return TypedAction::complete(outcome);
+        }
+        TypedAction::complete_work_cm740_driven(match outcome {
             Ok(_) => resume_destructuring(session, &self, token),
             Err(error) => Err(ResumeStop::failure(error)),
         })

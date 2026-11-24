@@ -27,6 +27,61 @@ impl Session {
         }
     }
 
+    /// Reads a boolean system option and completes its builtin through `next`.
+    ///
+    /// Delayed values run at this read position. A suspended read freezes only
+    /// its continuation; ordinary success and errors do not freeze call data.
+    /// Callers must return this result as their tail, so later guest work belongs
+    /// in the continuation rather than after an unframed `?`.
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub fn system_option_bool_cm740_driven<C: OptionReadContinuation<bool>>(
+        &mut self,
+        symbol_name: &str,
+        option_name: &str,
+        fallback: bool,
+        next: C,
+    ) -> Result<Expr, EvalError> {
+        match {
+            let _c5_guard = crate::cm740_probe::enter("P1139");
+            let _c6_route = crate::cm740_probe::enter(std::any::type_name::<C>());
+            let _c7_route = crate::cm740_probe::enter(match symbol_name {
+                "Trace" => "C7.route.TraceOptionWorking",
+                "Replace" => "C7.route.ReplaceOptionWorking",
+                "Count" => "C7.route.CountLikeOptionWorking.Count",
+                "MemberQ" => "C7.route.CountLikeOptionWorking.MemberQ",
+                "FreeQ" => "C7.route.CountLikeOptionWorking.FreeQ",
+                "Position" => "C7.route.PositionOptionWorking",
+                "Level" => "C7.route.LevelOptionWorking",
+                "Depth" => "C7.route.DepthOptionWorking",
+                _ => "C7.route.source-callsite",
+            });
+            let c5_child = self.option_value_for_symbol(
+                &Symbol::system(symbol_name),
+                &Symbol::system(option_name),
+            );
+            if crate::cm740_probe::ordinary("P1139") {
+                match c5_child {
+                    Ok(Some(c5_value)) => {
+                        crate::cm740_probe::hit("P1139", "ActualTypedCarrierBeforeOuterTail");
+                        return Ok(c5_value);
+                    }
+                    other => other,
+                }
+            } else {
+                c5_child
+            }
+        } {
+            Ok(Some(value)) => next.finish(self, is_system_symbol_name(&value, "True")),
+            Ok(None) => next.finish(self, fallback),
+            Err(error) => {
+                read_phase::suspend_option_read(self, error, read_phase::BoolOptionDecode, next)
+            }
+        }
+    }
+
     pub(in crate::runtime) fn options_for_symbol(&self, symbol: &Symbol) -> SymbolOptions {
         self.options
             .get(symbol)
@@ -94,6 +149,59 @@ impl Session {
             option: option.clone(),
         };
         match self.resolve_option_entry_value(&entry) {
+            Ok(value) => next.finish(self, decoder.decode(value)),
+            Err(error) => read_phase::suspend_option_read(self, error, decoder, next),
+        }
+    }
+
+    /// Reads a rule-valued option and completes its builtin through `next`.
+    ///
+    /// The requested symbol is retained for the Rule's left-hand side, including
+    /// when lookup matches an entry by name. Absence completes with `None`.
+    /// Return this reader as the calling phase's tail; delayed values can suspend.
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub fn option_rule_expr_for_symbol_cm740_driven<C: OptionReadContinuation<Option<Expr>>>(
+        &mut self,
+        symbol: &Symbol,
+        option: &Symbol,
+        next: C,
+    ) -> Result<Expr, EvalError> {
+        let options = self.options_for_symbol(symbol);
+        let entry = options
+            .entry(option)
+            .or_else(|| options.entry_by_name(option.name()))
+            .cloned();
+
+        let Some(entry) = entry else {
+            return next.finish(self, None);
+        };
+        let decoder = read_phase::RuleOptionDecode {
+            option: option.clone(),
+        };
+        match {
+            let _c5_guard = crate::cm740_probe::enter("P1142");
+            let _c6_route = crate::cm740_probe::enter(std::any::type_name::<C>());
+            let _c7_route = crate::cm740_probe::enter(match symbol.name() {
+                "CheckAbort" => "C7.route.CheckAbortOptionWorking",
+                "ArrayFilter" => "C7.route.ArrayFilterOptionWorking",
+                _ => "C7.route.source-callsite",
+            });
+            let c5_child = self.resolve_option_entry_value(&entry);
+            if crate::cm740_probe::ordinary("P1142") {
+                match c5_child {
+                    Ok(c5_value) => {
+                        crate::cm740_probe::hit("P1142", "ActualTypedCarrierBeforeOuterTail");
+                        return Ok(c5_value);
+                    }
+                    other => other,
+                }
+            } else {
+                c5_child
+            }
+        } {
             Ok(value) => next.finish(self, decoder.decode(value)),
             Err(error) => read_phase::suspend_option_read(self, error, decoder, next),
         }
@@ -191,6 +299,70 @@ impl Session {
             next.finish(self, Some(value))
         } else {
             match self.evaluate(value) {
+                Ok(value) => next.finish(self, Some(value)),
+                Err(error) => read_phase::suspend_option_read(
+                    self,
+                    error,
+                    read_phase::RuntimeOptionDecode,
+                    next,
+                ),
+            }
+        }
+    }
+
+    /// Reads one runtime option at its current phase, then completes `next`.
+    /// Runtime RuleDelayed values stay held; ordinary values are evaluated.
+    /// Explicit options are the caller's snapshot; defaults are looked up now.
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn runtime_option_expr_for_symbol_cm740_driven<
+        C: OptionReadContinuation<Option<Expr>>,
+    >(
+        &mut self,
+        explicit: Option<&SymbolOptions>,
+        target: &Symbol,
+        option_name: &str,
+        next: C,
+    ) -> Result<Expr, EvalError> {
+        let Some((value, delayed)) =
+            self.raw_option_value_for_symbol(explicit, target, option_name)
+        else {
+            return next.finish(self, None);
+        };
+
+        if delayed {
+            next.finish(self, Some(value))
+        } else {
+            match {
+                let _c5_guard = crate::cm740_probe::enter("P1147");
+                let _c6_route = crate::cm740_probe::enter(std::any::type_name::<C>());
+                let _c7_route = crate::cm740_probe::enter(match (target.name(), option_name) {
+                    ("Monitor", "EvaluationMonitor") => "C7.route.MonitorOptionWorking.Evaluation",
+                    ("Monitor", "StepMonitor") => "C7.route.MonitorOptionWorking.Step",
+                    ("TestReport", "SameTest") => "C7.route.TestReportOptionWorking.SameTest",
+                    ("TestReport", "TimeConstraint") => "C7.route.TestReportOptionWorking.Time",
+                    ("TestReport", "MemoryConstraint") => "C7.route.TestReportOptionWorking.Memory",
+                    ("Names", "SpellingCorrection") => "C7.route.NamesOptionWorking.Spelling",
+                    ("Names", "ResolveContextAliases") => "C7.route.NamesOptionWorking.Aliases",
+                    ("Names", "IgnoreCase") => "C7.route.NamesOptionWorking.IgnoreCase",
+                    ("DumpSave", "CompressionLevel") => "C7.route.PersistOptionWorking",
+                    _ => "C7.route.source-callsite",
+                });
+                let c5_child = self.evaluate_cm740_driven(value);
+                if crate::cm740_probe::ordinary("P1147") {
+                    match c5_child {
+                        Ok(c5_value) => {
+                            crate::cm740_probe::hit("P1147", "ActualTypedCarrierBeforeOuterTail");
+                            return Ok(c5_value);
+                        }
+                        other => other,
+                    }
+                } else {
+                    c5_child
+                }
+            } {
                 Ok(value) => next.finish(self, Some(value)),
                 Err(error) => read_phase::suspend_option_read(
                     self,

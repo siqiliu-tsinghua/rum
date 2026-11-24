@@ -100,11 +100,19 @@ impl Session {
             ));
         }
 
-        self.option_rule_expr_for_symbol(
-            &Symbol::system("CheckAbort"),
-            &Symbol::system("PropagateAborts"),
-            options::CheckAbortOptionWorking { args },
-        )
+        (if crate::cm740_probe::driven() {
+            self.option_rule_expr_for_symbol_cm740_driven(
+                &Symbol::system("CheckAbort"),
+                &Symbol::system("PropagateAborts"),
+                options::CheckAbortOptionWorking { args },
+            )
+        } else {
+            self.option_rule_expr_for_symbol(
+                &Symbol::system("CheckAbort"),
+                &Symbol::system("PropagateAborts"),
+                options::CheckAbortOptionWorking { args },
+            )
+        })
     }
 
     fn resume_check_abort_with_propagation(

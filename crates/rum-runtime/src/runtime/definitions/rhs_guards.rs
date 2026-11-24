@@ -121,6 +121,34 @@ impl Session {
 
     #[cold]
     #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn match_compiled_definition_condition_owned_cm740_driven(
+        &mut self,
+        matcher: DefinitionConditionMatcher,
+        value: Expr,
+        bindings: SymbolExprMap,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let DefinitionConditionMatcher { inner, lhs, guards } = matcher;
+        let option_scope = self.option_value_scope_for_definition(&lhs, &value);
+        let inner_result = crate::cm740_probe::around("P0442", || {
+            self.match_compiled_owned_cm740_driven(inner, value, bindings)
+        });
+        let witness = slot_witness(&inner_result);
+        match inner_result {
+            Ok(outcome) => self.finish_definition_condition_match_owned_cm740_driven(
+                guards,
+                option_scope,
+                outcome,
+            ),
+            Err(EvalError::InputRequired { request }) => {
+                self.suspend_definition_condition_match(guards, option_scope, witness, request)
+            }
+            Err(error) => Err(error),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
     fn suspend_definition_condition_match(
         &mut self,
         guards: Box<[Expr]>,
@@ -153,6 +181,28 @@ impl Session {
         self.evaluate_guard_sequence_owned(guards, outcome.bindings, false_bindings, option_scope)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_definition_condition_match_owned_cm740_driven(
+        &mut self,
+        guards: Box<[Expr]>,
+        option_scope: Option<OptionValueScope>,
+        outcome: CompiledMatchOutcome,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if !outcome.matched {
+            return Ok(outcome);
+        }
+
+        let false_bindings = outcome.bindings.clone();
+        self.evaluate_guard_sequence_owned_cm740_driven(
+            guards,
+            outcome.bindings,
+            false_bindings,
+            option_scope,
+        )
+    }
+
     pub(in crate::runtime) fn evaluate_guard_owned(
         &mut self,
         guard: Expr,
@@ -161,6 +211,25 @@ impl Session {
         option_scope: Option<OptionValueScope>,
     ) -> Result<CompiledMatchOutcome, EvalError> {
         self.evaluate_owned_guards(
+            OwnedGuards::One(guard),
+            bindings,
+            false_bindings,
+            option_scope,
+            0,
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn evaluate_guard_owned_cm740_driven(
+        &mut self,
+        guard: Expr,
+        bindings: SymbolExprMap,
+        false_bindings: SymbolExprMap,
+        option_scope: Option<OptionValueScope>,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        self.evaluate_owned_guards_cm740_driven(
             OwnedGuards::One(guard),
             bindings,
             false_bindings,
@@ -185,6 +254,25 @@ impl Session {
         )
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn evaluate_guard_sequence_owned_cm740_driven(
+        &mut self,
+        guards: Box<[Expr]>,
+        bindings: SymbolExprMap,
+        false_bindings: SymbolExprMap,
+        option_scope: Option<OptionValueScope>,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        self.evaluate_owned_guards_cm740_driven(
+            OwnedGuards::Many(guards),
+            bindings,
+            false_bindings,
+            option_scope,
+            0,
+        )
+    }
+
     pub(in crate::runtime) fn evaluate_guard_sequence_readonly_suspended(
         &mut self,
         guards: SharedArgs,
@@ -192,6 +280,26 @@ impl Session {
         option_scope: Option<OptionValueScope>,
     ) -> Result<bool, EvalError> {
         self.evaluate_readonly_suspended_guards(
+            SuspendedReadonlyGuardEvaluation {
+                guards,
+                bindings,
+                option_scope,
+                index: 0,
+            },
+            (),
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn evaluate_guard_sequence_readonly_suspended_cm740_driven(
+        &mut self,
+        guards: SharedArgs,
+        bindings: FrozenMatchBindings,
+        option_scope: Option<OptionValueScope>,
+    ) -> Result<bool, EvalError> {
+        self.evaluate_readonly_suspended_guards_cm740_driven(
             SuspendedReadonlyGuardEvaluation {
                 guards,
                 bindings,
@@ -221,6 +329,53 @@ impl Session {
             Ok(result) => {
                 if is_system_symbol_name(&result, heads::structure::TRUE) {
                     self.evaluate_owned_guards(
+                        guards,
+                        bindings,
+                        false_bindings,
+                        option_scope,
+                        index + 1,
+                    )
+                } else {
+                    Ok(guard_outcome(false, false_bindings))
+                }
+            }
+            Err(EvalError::InputRequired { request }) => self.suspend_owned_guards(
+                guards,
+                bindings,
+                false_bindings,
+                option_scope,
+                index,
+                witness,
+                request,
+            ),
+            Err(error) => Err(error),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_owned_guards_cm740_driven(
+        &mut self,
+        guards: OwnedGuards,
+        bindings: SymbolExprMap,
+        false_bindings: SymbolExprMap,
+        option_scope: Option<OptionValueScope>,
+        index: usize,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let Some(guard) = guards.get(index) else {
+            return Ok(guard_outcome(true, bindings));
+        };
+
+        let guard_expr = substitute_bindings(guard, &bindings);
+        let guard_result = crate::cm740_probe::around("P0450", || {
+            self.evaluate_with_option_value_scope(option_scope.clone(), guard_expr)
+        });
+        let witness = slot_witness(&guard_result);
+        match guard_result {
+            Ok(result) => {
+                if is_system_symbol_name(&result, heads::structure::TRUE) {
+                    self.evaluate_owned_guards_cm740_driven(
                         guards,
                         bindings,
                         false_bindings,
@@ -285,6 +440,28 @@ impl Session {
         self.evaluate_suspended_guards_deferred(state, route)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_suspended_guard_deferred_cm740_driven<Route>(
+        &mut self,
+        mut state: SuspendedGuardEvaluation,
+        result: Expr,
+        route: Route,
+    ) -> Result<SuspendedGuardCompletion, Route::Error>
+    where
+        Route: DefinitionResumeRoute<EvaluateOwnedGuardsSuspensionFrame>,
+    {
+        if !is_system_symbol_name(&result, heads::structure::TRUE) {
+            return Ok(SuspendedGuardCompletion {
+                matched: false,
+                bindings: state.false_bindings,
+            });
+        }
+        state.index += 1;
+        self.evaluate_suspended_guards_deferred_cm740_driven(state, route)
+    }
+
     fn evaluate_suspended_guards_deferred<Route>(
         &mut self,
         state: SuspendedGuardEvaluation,
@@ -306,6 +483,38 @@ impl Session {
         let witness = slot_witness(&guard_result);
         match guard_result {
             Ok(result) => self.resume_suspended_guard_deferred(state, result, route),
+            Err(EvalError::InputRequired { request }) => {
+                self.suspend_deferred_guards(state, witness, request, route)
+            }
+            Err(error) => Err(Route::failure(error)),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_suspended_guards_deferred_cm740_driven<Route>(
+        &mut self,
+        state: SuspendedGuardEvaluation,
+        route: Route,
+    ) -> Result<SuspendedGuardCompletion, Route::Error>
+    where
+        Route: DefinitionResumeRoute<EvaluateOwnedGuardsSuspensionFrame>,
+    {
+        let Some(guard) = state.guards.get(state.index) else {
+            return Ok(SuspendedGuardCompletion {
+                matched: true,
+                bindings: state.bindings,
+            });
+        };
+
+        let guard_expr = substitute_bindings(guard, state.bindings.as_map());
+        let guard_result = crate::cm740_probe::around("P0455", || {
+            self.evaluate_with_option_value_scope(state.option_scope.clone(), guard_expr)
+        });
+        let witness = slot_witness(&guard_result);
+        match guard_result {
+            Ok(result) => self.resume_suspended_guard_deferred_cm740_driven(state, result, route),
             Err(EvalError::InputRequired { request }) => {
                 self.suspend_deferred_guards(state, witness, request, route)
             }
@@ -357,6 +566,38 @@ impl Session {
             Ok(result) if is_system_symbol_name(&result, heads::structure::TRUE) => {
                 state.index += 1;
                 self.evaluate_readonly_suspended_guards(state, route)
+            }
+            Ok(_) => Ok(false),
+            Err(EvalError::InputRequired { request }) => {
+                self.suspend_readonly_guards(state, witness, request, route)
+            }
+            Err(error) => Err(Route::failure(error)),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn evaluate_readonly_suspended_guards_cm740_driven<Route>(
+        &mut self,
+        mut state: SuspendedReadonlyGuardEvaluation,
+        route: Route,
+    ) -> Result<bool, Route::Error>
+    where
+        Route: DefinitionResumeRoute<EvaluateReadonlySuspendedGuardsSuspensionFrame>,
+    {
+        let Some(guard) = state.guards.get(state.index) else {
+            return Ok(true);
+        };
+        let guard_expr = substitute_bindings(guard, state.bindings.as_map());
+        let guard_result = crate::cm740_probe::around("P0459", || {
+            self.evaluate_with_option_value_scope(state.option_scope.clone(), guard_expr)
+        });
+        let witness = slot_witness(&guard_result);
+        match guard_result {
+            Ok(result) if is_system_symbol_name(&result, heads::structure::TRUE) => {
+                state.index += 1;
+                self.evaluate_readonly_suspended_guards_cm740_driven(state, route)
             }
             Ok(_) => Ok(false),
             Err(EvalError::InputRequired { request }) => {

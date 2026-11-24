@@ -360,7 +360,11 @@ impl ProfileQueue {
         } else if !self.return_inserted() {
             false
         } else {
-            self.publish_evaluation_pass_after_return()
+            (if crate::cm740_probe::driven() {
+                self.publish_evaluation_pass_after_return_cm740_driven()
+            } else {
+                self.publish_evaluation_pass_after_return()
+            })
         }
     }
     /// Enabled-only frontier: the resource-check event is already appended,
@@ -401,6 +405,76 @@ impl ProfileQueue {
             None,
         )
     }
+
+    /// Enabled-only frontier: the resource-check event is already appended,
+    /// and the witnessed fixed-point consumer has not been pushed yet.
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn publish_evaluation_pass_after_return_cm740_driven(&mut self) -> bool {
+        let _cm742_namespace = self
+            .epoch
+            .as_ref()
+            .filter(|epoch| epoch.is_valid())
+            .and_then(|epoch| {
+                let owners = owners().lock().unwrap();
+                owners
+                    .iter()
+                    .find(|owner| {
+                        Arc::ptr_eq(&owner.root, &self.root) && Arc::ptr_eq(&owner.epoch, epoch)
+                    })
+                    .map(|owner| {
+                        crate::cm740_probe::queue_transport::Namespace::new(
+                            Arc::as_ptr(&self.root) as usize,
+                            Arc::as_ptr(epoch) as usize,
+                            Arc::as_ptr(&owner.control) as usize,
+                        )
+                    })
+            });
+        if crate::cm740_probe::queue_transport::omit_evaluation_pass(
+            crate::cm740_probe::queue_transport::publication_receiver(
+                self,
+                _cm742_namespace,
+                _cm742_namespace,
+            ),
+        ) {
+            return true;
+        }
+        let Some(epoch) = self.epoch.as_ref().filter(|e| e.is_valid()).cloned() else {
+            return true;
+        };
+        let control = {
+            let owners = owners().lock().unwrap();
+            owners
+                .iter()
+                .find(|owner| {
+                    Arc::ptr_eq(&owner.root, &self.root) && Arc::ptr_eq(&owner.epoch, &epoch)
+                })
+                .map(|owner| Arc::clone(&owner.control))
+        };
+        let Some(control) = control else {
+            return true;
+        };
+        let Some(boundary) =
+            crate::runtime::profiling::logical::take_evaluation_pass_boundary(&epoch, &control)
+        else {
+            return true;
+        };
+        let Some(context) = Context::capture(&epoch) else {
+            return false;
+        };
+        self.add(
+            Cell {
+                kind: Kind::Boundary(boundary),
+                context: Some(context),
+                deferred: false,
+            },
+            self.frontier(),
+            None,
+        )
+    }
+
     // Only the existing Profiled typed-push arm calls this after success.
     // The registry identifies this queue; foreign controls stay stashed.
     #[cold]
@@ -651,6 +725,77 @@ impl ProfileQueue {
         true
     }
 
+    /// Only the existing profiled append edge reaches this frontier. The
+    /// ordinary queue/driver never calls it or loads another profiling flag.
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn publish_deferred_definitions_before_join_cm740_driven(&mut self) -> bool {
+        let _cm742_namespace = self
+            .epoch
+            .as_ref()
+            .filter(|epoch| epoch.is_valid())
+            .and_then(|epoch| {
+                let owners = owners().lock().unwrap();
+                owners
+                    .iter()
+                    .find(|owner| {
+                        Arc::ptr_eq(&owner.root, &self.root) && Arc::ptr_eq(&owner.epoch, epoch)
+                    })
+                    .map(|owner| {
+                        crate::cm740_probe::queue_transport::Namespace::new(
+                            Arc::as_ptr(&self.root) as usize,
+                            Arc::as_ptr(epoch) as usize,
+                            Arc::as_ptr(&owner.control) as usize,
+                        )
+                    })
+            });
+        if crate::cm740_probe::queue_transport::omit_join(_cm742_namespace) {
+            return true;
+        }
+        let Some(epoch) = self
+            .epoch
+            .as_ref()
+            .filter(|epoch| epoch.is_valid())
+            .cloned()
+        else {
+            return true;
+        };
+        let control = {
+            let owners = owners().lock().unwrap();
+            owners
+                .iter()
+                .find(|owner| {
+                    Arc::ptr_eq(&owner.root, &self.root) && Arc::ptr_eq(&owner.epoch, &epoch)
+                })
+                .map(|owner| Arc::clone(&owner.control))
+        };
+        let Some(control) = control else {
+            return true;
+        };
+        while let Some(boundary) =
+            crate::runtime::profiling::logical::completion::take_deferred_definition_boundary(
+                &epoch, &control,
+            )
+        {
+            let Some(context) = Context::capture(&epoch) else {
+                return false;
+            };
+            if !self.add(
+                Cell {
+                    kind: Kind::Boundary(boundary),
+                    context: Some(context),
+                    deferred: false,
+                },
+                self.frontier(),
+                None,
+            ) {
+                return false;
+            }
+        }
+        true
+    }
+
     pub(super) fn append(&mut self, suffix: &mut Self) -> bool {
         // All pause-after-push insertions finish before the driver joins queues.
         // Unclaimed insertion handles must not be inherited by a later owner.
@@ -697,6 +842,76 @@ impl ProfileQueue {
         self.guest.entries.append(&mut suffix.guest.entries);
         true
     }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn append_cm740_driven(&mut self, suffix: &mut Self) -> bool {
+        // All pause-after-push insertions finish before the driver joins queues.
+        // Unclaimed insertion handles must not be inherited by a later owner.
+        self.inserted_consumer = None;
+        suffix.inserted_consumer = None;
+        if self.arena.is_none() || suffix.arena.is_none() {
+            self.retire_diagnostics();
+            suffix.retire_diagnostics();
+            self.guest.entries.append(&mut suffix.guest.entries);
+            return true;
+        }
+
+        if !self
+            .epoch
+            .as_ref()
+            .zip(suffix.epoch.as_ref())
+            .is_some_and(|(a, b)| Arc::ptr_eq(a, b))
+            || !self
+                .arena
+                .as_ref()
+                .zip(suffix.arena.as_ref())
+                .is_some_and(|(a, b)| Arc::ptr_eq(a, b))
+        {
+            self.epoch.as_ref().unwrap().fault();
+            suffix.epoch.as_ref().unwrap().fault();
+            return false;
+        }
+        if !self.epoch.as_ref().is_some_and(|e| e.is_valid()) {
+            return false;
+        }
+        // The nested RHS recovery is already in this queue. Publish at its
+        // tail before joining the carried suffix, while both owners are live.
+        let _cm742_namespace = self
+            .epoch
+            .as_ref()
+            .filter(|epoch| epoch.is_valid())
+            .and_then(|epoch| {
+                let owners = owners().lock().unwrap();
+                owners
+                    .iter()
+                    .find(|owner| {
+                        Arc::ptr_eq(&owner.root, &self.root) && Arc::ptr_eq(&owner.epoch, epoch)
+                    })
+                    .map(|owner| {
+                        crate::cm740_probe::queue_transport::Namespace::new(
+                            Arc::as_ptr(&self.root) as usize,
+                            Arc::as_ptr(epoch) as usize,
+                            Arc::as_ptr(&owner.control) as usize,
+                        )
+                    })
+            });
+        crate::cm740_probe::queue_transport::source_observe_append_queue(self, _cm742_namespace);
+        if !self.publish_deferred_definitions_before_join_cm740_driven() {
+            return false;
+        }
+        let mut own = self.root.lock().unwrap();
+        let mut other = suffix.root.lock().unwrap();
+        let mut data = self.arena.as_ref().unwrap().data.lock().unwrap();
+        *own = data.join(*own, *other);
+        *other = None;
+        drop(data);
+        drop(other);
+        drop(own);
+        self.guest.entries.append(&mut suffix.guest.entries);
+        true
+    }
 }
 impl Drop for ProfileQueue {
     fn drop(&mut self) {
@@ -708,7 +923,11 @@ impl Drop for ProfileQueue {
         let _registration = if let Some((access, registration)) =
             crate::runtime::profiling::lease::admit_generation(self.lease_generation())
         {
-            unregister_root_admitted(&access, &self.root);
+            (if crate::cm740_probe::driven() {
+                unregister_root_admitted_cm740_driven(&access, &self.root)
+            } else {
+                unregister_root_admitted(&access, &self.root)
+            });
             // Cell drops may admit independently; retain only the registration.
             drop(access);
             Some(registration)
@@ -781,6 +1000,56 @@ pub(in crate::runtime) fn register_owner(
     tests::observe_registration();
 }
 
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(in crate::runtime) fn register_owner_cm740_driven(
+    control: Arc<crate::runtime::RequestInterruptState>,
+    queue: &ProfileQueue,
+) {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = crate::runtime::profiling::lease::admit() else {
+        return;
+    };
+    let (Some(arena), Some(epoch)) = (queue.arena.clone(), queue.epoch.clone()) else {
+        return;
+    };
+    let _cm742_namespace = crate::cm740_probe::queue_transport::Namespace::new(
+        Arc::as_ptr(&queue.root) as usize,
+        Arc::as_ptr(&epoch) as usize,
+        Arc::as_ptr(&control) as usize,
+    );
+    crate::cm740_probe::queue_transport::retire_control(Arc::as_ptr(&control) as usize);
+    crate::runtime::profiling::logical::set_hooks_admitted(
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        &access,
+        attach_boundary_admitted,
+        clear_owners_admitted,
+        unregister_control_admitted,
+    );
+    #[cfg(test)]
+    tests::pause_registration();
+    let mut owners = owners().lock().unwrap();
+    owners.retain(|owner| !Arc::ptr_eq(&owner.control, &control));
+    owners.push(OwnerReg {
+        control,
+        root: Arc::clone(&queue.root),
+        arena,
+        epoch,
+    });
+    crate::cm740_probe::queue_transport::source_observe_registration(queue, _cm742_namespace);
+    #[cfg(test)]
+    tests::observe_registration();
+}
+
 fn clear_owners_admitted(
     #[cfg(any(
         test,
@@ -789,6 +1058,21 @@ fn clear_owners_admitted(
     ))]
     _access: &crate::runtime::profiling::lease::Admitted,
 ) {
+    owners().lock().unwrap().clear();
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn clear_owners_admitted_cm740_driven(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+) {
+    crate::cm740_probe::queue_transport::clear_registry();
     owners().lock().unwrap().clear();
 }
 
@@ -801,6 +1085,25 @@ fn unregister_control_admitted(
     _access: &crate::runtime::profiling::lease::Admitted,
     control: &Arc<crate::runtime::RequestInterruptState>,
 ) {
+    owners()
+        .lock()
+        .unwrap()
+        .retain(|owner| !Arc::ptr_eq(&owner.control, control));
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn unregister_control_admitted_cm740_driven(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    control: &Arc<crate::runtime::RequestInterruptState>,
+) {
+    crate::cm740_probe::queue_transport::retire_control(Arc::as_ptr(control) as usize);
     owners()
         .lock()
         .unwrap()
@@ -821,15 +1124,27 @@ fn unregister_root(root: &Arc<Mutex<Option<CellId>>>) {
     let Some(access) = crate::runtime::profiling::lease::admit() else {
         return;
     };
-    unregister_root_admitted(
-        #[cfg(any(
-            test,
-            feature = "test-builtin-memory-growth",
-            feature = "test-continuation-slots"
-        ))]
-        &access,
-        root,
-    )
+    (if crate::cm740_probe::driven() {
+        unregister_root_admitted_cm740_driven(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            root,
+        )
+    } else {
+        unregister_root_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+            root,
+        )
+    })
 }
 
 fn unregister_root_admitted(
@@ -841,6 +1156,25 @@ fn unregister_root_admitted(
     _access: &crate::runtime::profiling::lease::Admitted,
     root: &Arc<Mutex<Option<CellId>>>,
 ) {
+    owners()
+        .lock()
+        .unwrap()
+        .retain(|owner| !Arc::ptr_eq(&owner.root, root));
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn unregister_root_admitted_cm740_driven(
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    _access: &crate::runtime::profiling::lease::Admitted,
+    root: &Arc<Mutex<Option<CellId>>>,
+) {
+    crate::cm740_probe::queue_transport::retire_root(Arc::as_ptr(root) as usize);
     owners()
         .lock()
         .unwrap()

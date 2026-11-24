@@ -48,6 +48,41 @@ impl Session {
         )
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn resolve_held_matcher_pattern_cm740_driven(
+        &mut self,
+        expr: Expr,
+    ) -> Result<Expr, EvalError> {
+        let root = strip_hold_pattern(&expr);
+        if let Expr::Call { head, .. } = root {
+            if matches_pattern_head(head) {
+                return Ok(self.normalize_match_expr(root));
+            }
+        }
+        if !contains_pattern_syntax(root) {
+            return match self.evaluate_cm740_driven(root.clone()) {
+                Ok(value) => Ok(self.normalize_match_expr(&value)),
+                Err(error @ EvalError::InputRequired { .. }) => self.suspend_matcher_pattern(
+                    MatcherPatternState { stack: Vec::new() },
+                    None,
+                    Some(root),
+                    error,
+                ),
+                Err(error) => Err(error),
+            };
+        }
+        // Both root base cases returned above: the driver will push a child.
+        self.drive_matcher_pattern_cm740_driven(
+            MatcherPatternState {
+                stack: Vec::with_capacity(4),
+            },
+            MatcherPatternStep::Structural { expr: root.clone() },
+            Some(root),
+        )
+    }
+
     #[inline(never)]
     fn drive_matcher_pattern(
         &mut self,
@@ -77,6 +112,75 @@ impl Session {
                 }
                 MatcherPatternStep::Visit(expr) if !contains_pattern_syntax(&expr) => {
                     match self.evaluate(expr) {
+                        Ok(value) => value,
+                        Err(error @ EvalError::InputRequired { .. }) => {
+                            return self.suspend_matcher_pattern(state, None, root, error);
+                        }
+                        Err(error) => return Err(error),
+                    }
+                }
+                MatcherPatternStep::Visit(expr) | MatcherPatternStep::Structural { expr } => {
+                    match expr {
+                        Expr::Call { head, args } if !matches_pattern_head(&head) => {
+                            step = MatcherPatternStep::Visit(head.as_ref().clone());
+                            state.stack.push(MatcherPatternWork {
+                                original_head: head.as_ref().clone(),
+                                prefix: Vec::with_capacity(args.len()),
+                                original_args: args,
+                                resolved_head: None,
+                                next: 0,
+                            });
+                            continue;
+                        }
+                        // The policy is selected from raw syntax. Recognized
+                        // pattern calls, including their operands, stay opaque.
+                        value => value,
+                    }
+                }
+            };
+            let destination = state.destination();
+            // Every path, including a resumed root, normalizes here once. An
+            // ordinary root need not make an acceptance/Done round trip first.
+            if matches!(destination, MatcherPatternDestination::Root) {
+                return Ok(self.normalize_match_expr(&value));
+            }
+            step = accept_matcher_pattern_value(&mut state, destination, value);
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn drive_matcher_pattern_cm740_driven(
+        &mut self,
+        mut state: MatcherPatternState,
+        mut step: MatcherPatternStep,
+        root: Option<&Expr>,
+    ) -> Result<Expr, EvalError> {
+        loop {
+            let value = match step {
+                MatcherPatternStep::Done(value) => value,
+                MatcherPatternStep::PreparedCall { head, args } => {
+                    // The call's work record is already popped. The callee owns the
+                    // moved arguments; only the parent and destination survive input.
+                    match crate::cm740_probe::around("P0936", || {
+                        self.resume_call_from_prepared_args_cm740_driven(head, args)
+                    }) {
+                        Ok(value) => value,
+                        Err(error @ EvalError::InputRequired { .. }) => {
+                            let destination = state.destination();
+                            return self.suspend_matcher_pattern(
+                                state,
+                                Some(MatcherPatternAwait::PreparedCall { destination }),
+                                None,
+                                error,
+                            );
+                        }
+                        Err(error) => return Err(error),
+                    }
+                }
+                MatcherPatternStep::Visit(expr) if !contains_pattern_syntax(&expr) => {
+                    match self.evaluate_cm740_driven(expr) {
                         Ok(value) => value,
                         Err(error @ EvalError::InputRequired { .. }) => {
                             return self.suspend_matcher_pattern(state, None, root, error);

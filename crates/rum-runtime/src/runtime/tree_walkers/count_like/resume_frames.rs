@@ -16,12 +16,38 @@ impl TypedFrame for EvalCountSuspensionFrame {
         outcome: Result<Expr, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_157(self, session, outcome, _token);
+        }
+
         let args = self.args.clone();
         let resumed = match outcome {
             Ok(target) => session.resume_count_after_target(target, &args),
             Err(error) => Err(error),
         };
         TypedAction::complete_work(resumed.map_err(ResumeStop::failure))
+    }
+}
+impl EvalCountSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_157<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        if crate::cm740_probe::frame("P1595") {
+            crate::cm740_probe::hit("P1595", "ForwardActualTargetBeforeTraversal");
+            return TypedAction::complete(outcome);
+        }
+        let args = self.args.clone();
+        let resumed = match outcome {
+            Ok(target) => session.resume_count_after_target_cm740_driven(target, &args),
+            Err(error) => Err(error),
+        };
+        TypedAction::complete_work_cm740_driven(resumed.map_err(ResumeStop::failure))
     }
 }
 
@@ -40,12 +66,38 @@ impl TypedFrame for EvalMemberQSuspensionFrame {
         outcome: Result<Expr, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_505(self, session, outcome, _token);
+        }
+
         let args = self.args.clone();
         let resumed = match outcome {
             Ok(target) => session.resume_member_q_after_target(target, &args),
             Err(error) => Err(error),
         };
         TypedAction::complete_work(resumed.map_err(ResumeStop::failure))
+    }
+}
+impl EvalMemberQSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_505<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        if crate::cm740_probe::frame("P1597") {
+            crate::cm740_probe::hit("P1597", "ForwardActualTargetBeforeTraversal");
+            return TypedAction::complete(outcome);
+        }
+        let args = self.args.clone();
+        let resumed = match outcome {
+            Ok(target) => session.resume_member_q_after_target_cm740_driven(target, &args),
+            Err(error) => Err(error),
+        };
+        TypedAction::complete_work_cm740_driven(resumed.map_err(ResumeStop::failure))
     }
 }
 
@@ -64,12 +116,38 @@ impl TypedFrame for EvalFreeQSuspensionFrame {
         outcome: Result<Expr, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_8b2(self, session, outcome, _token);
+        }
+
         let args = self.args.clone();
         let resumed = match outcome {
             Ok(target) => session.resume_free_q_after_target(target, &args),
             Err(error) => Err(error),
         };
         TypedAction::complete_work(resumed.map_err(ResumeStop::failure))
+    }
+}
+impl EvalFreeQSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_8b2<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        if crate::cm740_probe::frame("P1599") {
+            crate::cm740_probe::hit("P1599", "ForwardActualTargetBeforeTraversal");
+            return TypedAction::complete(outcome);
+        }
+        let args = self.args.clone();
+        let resumed = match outcome {
+            Ok(target) => session.resume_free_q_after_target_cm740_driven(target, &args),
+            Err(error) => Err(error),
+        };
+        TypedAction::complete_work_cm740_driven(resumed.map_err(ResumeStop::failure))
     }
 }
 
@@ -205,6 +283,34 @@ impl TypedFrame for FinishCountLikeAfterTraversalSuspensionFrame {
         outcome: Result<TraversalCountOutcome, EvalError>,
         _token: ContinueToken<'resume, Self>,
     ) -> TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_1c3b(self, _session, outcome, _token);
+        }
+
+        let finish = self.finish;
+        let resumed = match outcome {
+            Ok(outcome) => Ok(finish.finish(outcome.count)),
+            Err(error) => Err(error),
+        };
+        TypedAction::complete(resumed)
+    }
+}
+impl FinishCountLikeAfterTraversalSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_1c3b<'resume>(
+        self: std::sync::Arc<Self>,
+        _session: &mut Session,
+        outcome: Result<TraversalCountOutcome, EvalError>,
+        _token: ContinueToken<'resume, Self>,
+    ) -> TypedAction<Expr> {
+        if crate::cm740_probe::frame("P1613") {
+            crate::cm740_probe::hit("P1613", "OmitCountToBooleanProjection");
+            return TypedAction::complete(
+                outcome.map(|actual| Expr::integer(BigInt::from(actual.count))),
+            );
+        }
         let finish = self.finish;
         let resumed = match outcome {
             Ok(outcome) => Ok(finish.finish(outcome.count)),

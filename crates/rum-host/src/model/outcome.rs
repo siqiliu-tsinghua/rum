@@ -408,6 +408,34 @@ pub(crate) fn eval_success_from_runtime(response: SessionEvalResponse) -> HostEv
     }
 }
 
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(crate) fn eval_success_from_runtime_cm740_driven(
+    response: SessionEvalResponse,
+) -> HostEvalSuccess {
+    let text = render_to_string_expr(
+        &response.value,
+        ToStringFormat::CanonicalHoldFormTransparent,
+    );
+    let typed = host_typed_from_expr(&response.value);
+    let value = HostValue { text, typed };
+    let termination = response.termination.map(Into::into);
+    let messages = host_messages(response.messages);
+    let prints = response.prints;
+    let trace = host_trace(response.trace);
+    let outputs = structured_outputs_cm740_driven(Some(&value), &messages, &prints, &trace);
+
+    HostEvalSuccess {
+        value,
+        termination,
+        messages,
+        prints,
+        trace,
+        outputs,
+    }
+}
+
 pub(crate) fn eval_failure_from_runtime(failure: SessionRequestFailure) -> HostEvalOutcome {
     if let SessionRequestError::InputRequired { request } = &failure.error {
         let request = request.clone().into();
@@ -428,6 +456,31 @@ pub(crate) fn eval_failure_from_runtime(failure: SessionRequestFailure) -> HostE
     HostEvalOutcome::Failure(host_failure_from_runtime(failure))
 }
 
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(crate) fn eval_failure_from_runtime_cm740_driven(
+    failure: SessionRequestFailure,
+) -> HostEvalOutcome {
+    if let SessionRequestError::InputRequired { request } = &failure.error {
+        let request = request.clone().into();
+        let messages = host_messages(failure.messages);
+        let prints = failure.prints;
+        let trace = host_trace(failure.trace);
+        let outputs = structured_outputs_cm740_driven(None, &messages, &prints, &trace);
+
+        return HostEvalOutcome::InputRequired(HostInputSuspension {
+            request,
+            messages,
+            prints,
+            trace,
+            outputs,
+        });
+    }
+
+    HostEvalOutcome::Failure(host_failure_from_runtime_cm740_driven(failure))
+}
+
 pub(crate) fn host_failure_from_runtime(failure: SessionRequestFailure) -> HostFailure {
     let code = failure_code(&failure.error);
     let exit_status = match &failure.error {
@@ -443,6 +496,39 @@ pub(crate) fn host_failure_from_runtime(failure: SessionRequestFailure) -> HostF
     let prints = failure.prints;
     let trace = host_trace(failure.trace);
     let outputs = structured_outputs(None, &messages, &prints, &trace);
+
+    HostFailure {
+        code,
+        exit_status,
+        message,
+        syntax_rendered,
+        messages,
+        prints,
+        trace,
+        outputs,
+    }
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(crate) fn host_failure_from_runtime_cm740_driven(
+    failure: SessionRequestFailure,
+) -> HostFailure {
+    let code = failure_code(&failure.error);
+    let exit_status = match &failure.error {
+        SessionRequestError::Exit { code } => Some(*code),
+        _ => None,
+    };
+    let syntax_rendered = match &failure.error {
+        SessionRequestError::Syntax(diagnostic) => Some(diagnostic.rendered.clone()),
+        _ => None,
+    };
+    let message = failure.error.to_string();
+    let messages = host_messages(failure.messages);
+    let prints = failure.prints;
+    let trace = host_trace(failure.trace);
+    let outputs = structured_outputs_cm740_driven(None, &messages, &prints, &trace);
 
     HostFailure {
         code,
@@ -745,6 +831,50 @@ fn structured_outputs(
     outputs
 }
 
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn structured_outputs_cm740_driven(
+    value: Option<&HostValue>,
+    messages: &[HostMessage],
+    prints: &[String],
+    trace: &[HostTraceEvent],
+) -> Vec<HostStructuredOutput> {
+    let mut outputs = Vec::new();
+
+    outputs.extend(prints.iter().cloned().map(|text| HostStructuredOutput {
+        kind: HostStructuredOutputKind::Print,
+        text,
+    }));
+    outputs.extend(messages.iter().map(|message| HostStructuredOutput {
+        kind: HostStructuredOutputKind::Message,
+        text: format!("{}::{}: {}", message.symbol, message.tag, message.text),
+    }));
+    outputs.extend(trace.iter().map(|event| HostStructuredOutput {
+        kind: HostStructuredOutputKind::Trace,
+        text: format!("{event:?}"),
+    }));
+
+    if let Some(value) = value {
+        if CM740_OUTPUT_ROW
+            .get()
+            .is_some_and(rum_runtime::cm740_probe::ordinary)
+        {
+            rum_runtime::cm740_probe::hit(
+                CM740_OUTPUT_ROW.get().unwrap(),
+                "OmitActualStructuredResultPush",
+            );
+        } else {
+            outputs.push(HostStructuredOutput {
+                kind: HostStructuredOutputKind::Result,
+                text: value.text.clone(),
+            });
+        }
+    }
+
+    outputs
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -844,5 +974,29 @@ mod tests {
         for (error, expected) in cases {
             assert_eq!(failure_code(&error), expected, "{error:?}");
         }
+    }
+}
+
+std::thread_local! { static CM740_OUTPUT_ROW: std::cell::Cell<Option<&'static str>> = const { std::cell::Cell::new(None) }; }
+pub(crate) struct CM740OutputScope(Option<&'static str>);
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(crate) fn cm740_output_scope_cm740_driven(row: &'static str) -> CM740OutputScope {
+    CM740OutputScope(CM740_OUTPUT_ROW.replace(Some(row)))
+}
+impl Drop for CM740OutputScope {
+    fn drop(&mut self) {
+        if rum_runtime::cm740_probe::driven() {
+            Self::drop_cm740_driven_7704(self)
+        }
+    }
+}
+impl CM740OutputScope {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn drop_cm740_driven_7704(&mut self) {
+        CM740_OUTPUT_ROW.set(self.0);
     }
 }

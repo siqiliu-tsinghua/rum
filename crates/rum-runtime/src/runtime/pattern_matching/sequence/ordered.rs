@@ -45,6 +45,45 @@ impl Session {
 
     #[cold]
     #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn match_compiled_ordered_args_iter_owned_cm740_driven(
+        &mut self,
+        mut pattern_args: std::vec::IntoIter<MatcherArg>,
+        mut value_args: std::vec::IntoIter<Expr>,
+        mut bindings: SymbolExprMap,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        loop {
+            let Some(pattern_arg) = pattern_args.next() else {
+                return Ok(match_outcome(value_args.len() == 0, bindings));
+            };
+            let MatcherArg::Single(pattern) = pattern_arg else {
+                return self.match_compiled_arg_and_rest_owned_cm740_driven(
+                    pattern_arg,
+                    pattern_args.collect(),
+                    value_args.collect(),
+                    bindings,
+                );
+            };
+            let Some(value) = value_args.next() else {
+                return Ok(match_outcome(false, bindings));
+            };
+
+            match self.match_compiled_owned_cm740_driven(pattern, value, bindings) {
+                Ok(outcome) if outcome.matched => bindings = outcome.bindings,
+                Ok(outcome) => return Ok(outcome),
+                Err(error) => {
+                    return self.resume_match_compiled_ordered_args_iter_owned(
+                        error,
+                        pattern_args,
+                        value_args,
+                    );
+                }
+            }
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
     fn resume_match_compiled_ordered_args_iter_owned(
         &mut self,
         error: EvalError,
@@ -91,7 +130,11 @@ impl Session {
                 return Ok(Vec::new());
             };
 
-            match self.match_compiled_owned(pattern, value, bindings) {
+            match (if crate::cm740_probe::driven() {
+                self.match_compiled_owned_cm740_driven(pattern, value, bindings)
+            } else {
+                self.match_compiled_owned(pattern, value, bindings)
+            }) {
                 Ok(outcome) if outcome.matched => bindings = outcome.bindings,
                 Ok(_) => return Ok(Vec::new()),
                 Err(error) => {

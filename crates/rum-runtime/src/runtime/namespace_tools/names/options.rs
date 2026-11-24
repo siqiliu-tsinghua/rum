@@ -52,7 +52,21 @@ impl NamesOptionWorking<'_> {
             NamesOptionStage::Aliases => "ResolveContextAliases",
             NamesOptionStage::IgnoreCase => "IgnoreCase",
         };
-        session.runtime_option_expr_for_symbol(self.explicit, &Symbol::system("Names"), name, self)
+        if crate::cm740_probe::driven() {
+            session.runtime_option_expr_for_symbol_cm740_driven(
+                self.explicit,
+                &Symbol::system("Names"),
+                name,
+                self,
+            )
+        } else {
+            session.runtime_option_expr_for_symbol(
+                self.explicit,
+                &Symbol::system("Names"),
+                name,
+                self,
+            )
+        }
     }
 }
 

@@ -215,6 +215,26 @@ impl SuspendedEvaluation {
         self.frames.append(&mut suffix.frames);
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn append_cm740_driven(&mut self, suffix: &mut Self) {
+        crate::cm740_probe::q25::transfer_suffix(suffix.generation.0, self.generation.0);
+        let _cm742_append = crate::cm740_probe::queue_transport::source_append(self.generation.0);
+        if let (Some(_cm742_actual), FrameStorage::Profiled(_cm742_queue)) =
+            (_cm742_append.as_ref(), &self.frames)
+        {
+            crate::cm740_probe::queue_transport::source_bind_append_queue(
+                _cm742_actual,
+                &**_cm742_queue,
+            );
+        }
+        self.frames.append(&mut suffix.frames);
+        if let Some(_cm742_actual) = _cm742_append.as_ref() {
+            crate::cm740_probe::queue_transport::source_finish_append_call(_cm742_actual);
+        }
+    }
+
     pub(in crate::runtime) fn trace_frame_roots(&self, visitor: &mut dyn FrameRootVisitor) {
         self.guest_form_environment.trace_roots(visitor);
         self.frames.visit(|frame| frame.trace_roots(visitor));
@@ -538,6 +558,52 @@ impl Session {
 
     #[cold]
     #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn begin_input_suspension_cm740_driven(
+        &mut self,
+        request: RuntimeInputRequest,
+    ) {
+        #[cfg(test)]
+        self.record_context_for_test("pause");
+        let active_stack = self.evaluation_stack.clone();
+
+        let guest_form_environment = self.capture_guest_form_environment();
+        let _cm742_install = crate::cm740_probe::queue_transport::source_installing();
+        let _cm742_generation = self.suspension_access().install(request, active_stack);
+        if let Some(_cm742_guard) = _cm742_install.as_ref() {
+            _cm742_guard.source_generation(_cm742_generation.0);
+        }
+        let pending = self
+            .pending_suspension
+            .as_mut()
+            .expect("just installed input owner");
+        pending.guest_form_environment = guest_form_environment;
+        if crate::runtime::profiling::logical::resume_profile_configured() {
+            Self::enable_pending_profile(&mut pending.frames);
+            let _cm742_control = Arc::clone(&self.request_interrupt_control.borrow());
+            if let (Some(_cm742_guard), FrameStorage::Profiled(_cm742_queue)) =
+                (_cm742_install.as_ref(), &pending.frames)
+            {
+                _cm742_guard.source_expect_registration(
+                    &**_cm742_queue,
+                    Arc::as_ptr(&_cm742_control) as usize,
+                );
+                pending.frames.register_profile_owner(_cm742_control);
+                _cm742_guard.source_finish_registration(&**_cm742_queue);
+            } else {
+                pending.frames.register_profile_owner(_cm742_control);
+            }
+        }
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+        );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
+        );
+    }
+
+    #[cold]
+    #[inline(never)]
     fn enable_pending_profile(frames: &mut FrameStorage) {
         frames.enable_execution_context(crate::runtime::profiling::logical::resume_profile_epoch());
     }
@@ -558,7 +624,62 @@ impl Session {
             .pending_suspension
             .as_mut()
             .expect("input suspension should be initialized before frames are pushed");
-        suspension.push_back(context, Arc::new(frame));
+        let frame = Arc::new(frame);
+        let kind = std::any::type_name::<F>();
+        let generation = suspension.generation.0;
+        let class_addr = Arc::as_ptr(&frame) as *const () as usize;
+        crate::cm740_probe::record_descendant_frame(&frame, kind, generation);
+        suspension.push_back(context, frame);
+        crate::cm740_probe::q25::note_physical_insert(kind, generation, "Legacy");
+        crate::cm740_probe::class_lease::note_allocation(class_addr, kind, generation, "Legacy");
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
+        );
+    }
+
+    /// Q25 registration at the common raw insertion. The handoff is still alive
+    /// here, so the concrete `Arc<F>` can be bound before either guard drops.
+    #[doc(hidden)]
+    #[cold]
+    #[inline(never)]
+    pub fn insert_suspension_frame_q25<F>(
+        &mut self,
+        frame: F,
+        handoff: crate::cm740_probe::q25::Handoff,
+    ) where
+        F: SuspensionFrame,
+    {
+        let context = self.resume_context();
+        let suspension = self
+            .pending_suspension
+            .as_mut()
+            .expect("input suspension should be initialized before frames are pushed");
+        let frame = Arc::new(frame);
+        let addr = Arc::as_ptr(&frame) as *const () as usize;
+        let kind = std::any::type_name::<F>();
+        let generation = suspension.generation.0;
+        // Generic clone/downgrade do not unsized-coerce their arguments.
+        // The annotated temporary is Arc<F>, then the block tail coerces it.
+        // Drop that temporary so the logged strong count stays the concrete Arc's.
+        let frame_dyn: Arc<dyn SuspensionFrame> = {
+            let concrete: Arc<F> = Arc::clone(&frame);
+            concrete
+        };
+        let weak: std::sync::Weak<dyn SuspensionFrame> = Arc::downgrade(&frame_dyn);
+        drop(frame_dyn);
+        crate::cm740_probe::q25::commit_allocation(
+            addr,
+            kind,
+            std::any::TypeId::of::<F>(),
+            generation,
+            weak,
+            Arc::strong_count(&frame),
+            Arc::weak_count(&frame),
+            handoff,
+        );
+        crate::cm740_probe::class_lease::note_allocation(addr, kind, generation, "Q25");
+        crate::cm740_probe::record_descendant_frame(&frame, kind, generation);
+        suspension.push_back(context, frame);
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
         );
@@ -581,19 +702,36 @@ impl Session {
         &mut self,
         frame: F,
     ) {
-        self.insert_typed_erased_frame(erase(frame));
+        self.insert_typed_erased_frame_named(erase(frame), std::any::type_name::<F>());
     }
 
     pub(in crate::runtime::suspension) fn insert_typed_erased_frame(
         &mut self,
         frame: Arc<dyn ErasedFrame>,
     ) {
+        self.insert_typed_erased_frame_named(frame, "dyn ErasedFrame");
+    }
+
+    pub(in crate::runtime::suspension) fn insert_typed_erased_frame_kind(
+        &mut self,
+        frame: Arc<dyn ErasedFrame>,
+        kind: &'static str,
+    ) {
+        self.insert_typed_erased_frame_named(frame, kind);
+    }
+
+    fn insert_typed_erased_frame_named(&mut self, frame: Arc<dyn ErasedFrame>, kind: &'static str) {
         let context = self.resume_context();
-        self.pending_suspension
+        let suspension = self
+            .pending_suspension
             .as_mut()
-            .expect("input suspension should be initialized before frames are pushed")
-            .frames
-            .push_back_typed(context, frame);
+            .expect("input suspension should be initialized before frames are pushed");
+        let generation = suspension.generation.0;
+        crate::cm740_probe::record_descendant_frame(&frame, kind, generation);
+        let class_addr = Arc::as_ptr(&frame) as *const () as usize;
+        suspension.frames.push_back_typed(context, frame);
+        crate::cm740_probe::q25::note_physical_insert(kind, generation, "Typed");
+        crate::cm740_probe::class_lease::note_allocation(class_addr, kind, generation, "Typed");
         self.refresh_memory_owner(
             crate::runtime::debug_tools::resources::MemoryOwner::PendingSuspension,
         );
@@ -637,6 +775,16 @@ impl Session {
         input: impl Into<String>,
     ) -> Result<Expr, EvalError> {
         self.resume_suspended_slot::<Expr>(input)
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resume_suspended_evaluation_cm740_driven(
+        &mut self,
+        input: impl Into<String>,
+    ) -> Result<Expr, EvalError> {
+        self.resume_suspended_slot_cm740_driven::<Expr>(input)
     }
 
     #[inline(always)]
@@ -695,6 +843,108 @@ impl Session {
 
         self.replace_accounted_evaluation_stack(saved_stack);
         self.evaluation_depth = saved_depth;
+
+        match result {
+            Err(fault) => {
+                if let Some(displaced) = displaced_guest_environment {
+                    displaced.restore(self);
+                }
+                Err(fault.into_error())
+            }
+            Ok(Ok(value)) => {
+                self.finish_completed_resumption();
+                Ok(value)
+            }
+            Ok(Err(EvalError::InputRequired { request })) => {
+                debug_assert!(self.resuming_suspension.is_none());
+                if let Some(displaced) = displaced_guest_environment {
+                    displaced.restore(self);
+                }
+                Err(EvalError::InputRequired { request })
+            }
+            Ok(Err(error)) => {
+                self.finish_completed_resumption();
+                Err(error)
+            }
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime::suspension) fn resume_suspended_slot_cm740_driven<O: SlotValue>(
+        &mut self,
+        input: impl Into<String>,
+    ) -> Result<O, EvalError> {
+        let _entry = NativeStackEntry::enter();
+        debug_assert!(
+            self.resuming_suspension.is_none(),
+            "a Session resumes only one suspended evaluation at a time"
+        );
+        self.resuming_suspension = Some(
+            self.take_accounted_pending_suspension_for_resume()
+                .expect("resume requires a pending suspended evaluation"),
+        );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+        );
+        let active_stack = std::mem::take(
+            &mut self
+                .resuming_suspension
+                .as_mut()
+                .expect("resuming suspension was just installed")
+                .active_stack,
+        );
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::ResumingSuspension,
+        );
+        let saved_stack = self.replace_accounted_evaluation_stack(active_stack);
+        // The first queue cell restores its independently captured logical depth.
+        let saved_depth = self.evaluation_depth;
+        self.pending_input_request = None;
+        self.refresh_memory_owner(
+            crate::runtime::debug_tools::resources::MemoryOwner::PendingInputRequest,
+        );
+        let previous_guest_form = self.guest_form;
+        let displaced_guest_environment = if let Some(environment) = self
+            .resuming_suspension
+            .as_mut()
+            .expect("resuming owner is installed")
+            .guest_form_environment
+            .take()
+        {
+            Some(environment.install_for_resume(self))
+        } else {
+            None
+        };
+        let outcome = Ok(Slot::Value(Expr::string(input.into())));
+
+        let result = if crate::cm740_probe::driven() {
+            let _class_guard = crate::cm740_probe::enter("P1577");
+            let class_produced = (|| self.drive_resuming_frames::<O>(outcome))();
+            if crate::cm740_probe::class_lease::wants_input_return("P1577") {
+                if let Ok(Err(crate::EvalError::InputRequired { .. })) = &class_produced {
+                    if let Ok(class_inner) = &class_produced {
+                        _class_guard.input_return(class_inner);
+                        crate::cm740_probe::class_lease::note_input_return("P1577", 0);
+                    }
+                }
+            }
+            class_produced
+        } else {
+            (|| self.drive_resuming_frames::<O>(outcome))()
+        };
+        if result.is_err() {
+            self.unwind_continuation_fault();
+        }
+        self.guest_form = previous_guest_form;
+
+        if crate::cm740_probe::frame("P1577") {
+            crate::cm740_probe::hit("P1577", "OmitResumingDriverSavedEvaluationStateRestore");
+        } else {
+            self.replace_accounted_evaluation_stack(saved_stack);
+            self.evaluation_depth = saved_depth;
+        }
 
         match result {
             Err(fault) => {

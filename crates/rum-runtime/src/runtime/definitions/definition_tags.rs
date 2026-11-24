@@ -6,6 +6,10 @@ use crate::runtime::suspension::trace::{FrameRootTrace, FrameRootVisitor};
 
 impl Session {
     pub(in crate::runtime) fn eval_up_set(&mut self, args: &SharedArgs) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.eval_up_set_cm740_driven(args);
+        }
+
         let [lhs, rhs] = args.as_ref() else {
             return Ok(self.invalid_call_with_exact_arg_count("UpSet", args.as_ref(), 2));
         };
@@ -25,6 +29,33 @@ impl Session {
         self.prepare_up_set_assignment(lhs, rhs, false)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn eval_up_set_cm740_driven(
+        &mut self,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        let [lhs, rhs] = args.as_ref() else {
+            return Ok(self.invalid_call_with_exact_arg_count("UpSet", args.as_ref(), 2));
+        };
+
+        let lhs = lhs.clone();
+        let rhs_result =
+            crate::cm740_probe::around("P0369", || self.evaluate_cm740_driven(rhs.clone()));
+        let rhs = crate::resume_typed_or_suspend!(
+            self,
+            rhs_result,
+            ok(value) => Ok(value),
+            suspend => {
+                let lhs = lhs.clone();
+                EvalUpSetSuspensionFrame { lhs }
+            },
+        )?;
+
+        self.prepare_up_set_assignment_cm740_driven(lhs, rhs, false)
+    }
+
     pub(in crate::runtime) fn eval_up_set_delayed(
         &mut self,
         args: &SharedArgs,
@@ -33,13 +64,21 @@ impl Session {
             return Ok(self.invalid_call_with_exact_arg_count("UpSetDelayed", args.as_ref(), 2));
         };
 
-        self.prepare_up_set_assignment(lhs.clone(), rhs.clone(), true)
+        (if crate::cm740_probe::driven() {
+            self.prepare_up_set_assignment_cm740_driven(lhs.clone(), rhs.clone(), true)
+        } else {
+            self.prepare_up_set_assignment(lhs.clone(), rhs.clone(), true)
+        })
     }
 
     pub(in crate::runtime) fn eval_tag_set(
         &mut self,
         args: &SharedArgs,
     ) -> Result<Expr, EvalError> {
+        if crate::cm740_probe::driven() {
+            return self.eval_tag_set_cm740_driven(args);
+        }
+
         let args_slice = args.as_ref();
         if args_slice.len() != 3 {
             return Ok(self.invalid_call_with_exact_arg_count("TagSet", args_slice, 3));
@@ -68,6 +107,43 @@ impl Session {
         self.prepare_tag_set_assignment(tag, args.clone(), rhs, false)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn eval_tag_set_cm740_driven(
+        &mut self,
+        args: &SharedArgs,
+    ) -> Result<Expr, EvalError> {
+        let args_slice = args.as_ref();
+        if args_slice.len() != 3 {
+            return Ok(self.invalid_call_with_exact_arg_count("TagSet", args_slice, 3));
+        }
+
+        // The explicit tag is normalized before any user code in the rhs or
+        // lhs, preserving TagSet's established sequencing contract.
+        let tag = match self.normalize_tag_target(&args_slice[0]) {
+            Ok(tag) => tag,
+            Err(error) => {
+                return Ok(self.invalid_call_with_arg_form("TagSet", args_slice, error.message()));
+            }
+        };
+
+        let rhs_result = crate::cm740_probe::around("P0372", || {
+            self.evaluate_cm740_driven(args_slice[2].clone())
+        });
+        let rhs = crate::resume_typed_or_suspend!(
+            self,
+            rhs_result,
+            ok(value) => Ok(value),
+            suspend => {
+                let args = args.clone();
+                let tag = tag;
+                EvalTagSetSuspensionFrame { args, tag }
+            },
+        )?;
+        self.prepare_tag_set_assignment_cm740_driven(tag, args.clone(), rhs, false)
+    }
+
     pub(in crate::runtime) fn eval_tag_set_delayed(
         &mut self,
         args: &SharedArgs,
@@ -88,7 +164,16 @@ impl Session {
             }
         };
 
-        self.prepare_tag_set_assignment(tag, args.clone(), args_slice[2].clone(), true)
+        (if crate::cm740_probe::driven() {
+            self.prepare_tag_set_assignment_cm740_driven(
+                tag,
+                args.clone(),
+                args_slice[2].clone(),
+                true,
+            )
+        } else {
+            self.prepare_tag_set_assignment(tag, args.clone(), args_slice[2].clone(), true)
+        })
     }
 
     pub(in crate::runtime) fn eval_tag_unset(
@@ -115,13 +200,23 @@ impl Session {
             return Ok(system_expr("Null"));
         }
 
-        self.prepare_definition_lhs(
-            args_slice[1].clone(),
-            DefinitionLhsPreparationContinuation::TagUnset {
-                tag,
-                args: args.clone(),
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.prepare_definition_lhs_cm740_driven(
+                args_slice[1].clone(),
+                DefinitionLhsPreparationContinuation::TagUnset {
+                    tag,
+                    args: args.clone(),
+                },
+            )
+        } else {
+            self.prepare_definition_lhs(
+                args_slice[1].clone(),
+                DefinitionLhsPreparationContinuation::TagUnset {
+                    tag,
+                    args: args.clone(),
+                },
+            )
+        })
     }
 
     fn prepare_up_set_assignment(
@@ -131,6 +226,21 @@ impl Session {
         delayed: bool,
     ) -> Result<Expr, EvalError> {
         self.prepare_definition_lhs(
+            lhs,
+            DefinitionLhsPreparationContinuation::UpSet { rhs, delayed },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn prepare_up_set_assignment_cm740_driven(
+        &mut self,
+        lhs: Expr,
+        rhs: Expr,
+        delayed: bool,
+    ) -> Result<Expr, EvalError> {
+        self.prepare_definition_lhs_cm740_driven(
             lhs,
             DefinitionLhsPreparationContinuation::UpSet { rhs, delayed },
         )
@@ -148,6 +258,31 @@ impl Session {
             .expect("validated TagSet arguments retain their lhs")
             .clone();
         self.prepare_definition_lhs(
+            lhs,
+            DefinitionLhsPreparationContinuation::TagSet {
+                tag,
+                args,
+                rhs,
+                delayed,
+            },
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn prepare_tag_set_assignment_cm740_driven(
+        &mut self,
+        tag: Symbol,
+        args: SharedArgs,
+        rhs: Expr,
+        delayed: bool,
+    ) -> Result<Expr, EvalError> {
+        let lhs = args
+            .get(1)
+            .expect("validated TagSet arguments retain their lhs")
+            .clone();
+        self.prepare_definition_lhs_cm740_driven(
             lhs,
             DefinitionLhsPreparationContinuation::TagSet {
                 tag,
@@ -265,8 +400,33 @@ impl crate::runtime::kernel_api::TypedFrame for EvalUpSetSuspensionFrame {
         outcome: Result<Expr, EvalError>,
         _token: crate::runtime::kernel_api::ContinueToken<'resume, Self>,
     ) -> crate::runtime::kernel_api::TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_217e(self, session, outcome, _token);
+        }
+
         let resumed = match outcome {
             Ok(rhs) => session.prepare_up_set_assignment(self.lhs.clone(), rhs, false),
+            Err(error) => Err(error),
+        };
+        crate::runtime::kernel_api::TypedAction::complete(resumed)
+    }
+}
+impl EvalUpSetSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_217e<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+        _token: crate::runtime::kernel_api::ContinueToken<'resume, Self>,
+    ) -> crate::runtime::kernel_api::TypedAction<Expr> {
+        if crate::cm740_probe::frame("P0369") {
+            crate::cm740_probe::hit("P0369", "ActualAttachedRhsInputBeforeDefinitionStore");
+            return crate::runtime::kernel_api::TypedAction::complete(outcome);
+        }
+        let resumed = match outcome {
+            Ok(rhs) => session.prepare_up_set_assignment_cm740_driven(self.lhs.clone(), rhs, false),
             Err(error) => Err(error),
         };
         crate::runtime::kernel_api::TypedAction::complete(resumed)
@@ -289,8 +449,38 @@ impl crate::runtime::kernel_api::TypedFrame for EvalTagSetSuspensionFrame {
         outcome: Result<Expr, EvalError>,
         _token: crate::runtime::kernel_api::ContinueToken<'resume, Self>,
     ) -> crate::runtime::kernel_api::TypedAction<Expr> {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_2553(self, session, outcome, _token);
+        }
+
         let resumed = match outcome {
             Ok(rhs) => session.prepare_tag_set_assignment(self.tag, self.args.clone(), rhs, false),
+            Err(error) => Err(error),
+        };
+        crate::runtime::kernel_api::TypedAction::complete(resumed)
+    }
+}
+impl EvalTagSetSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_2553<'resume>(
+        self: std::sync::Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+        _token: crate::runtime::kernel_api::ContinueToken<'resume, Self>,
+    ) -> crate::runtime::kernel_api::TypedAction<Expr> {
+        if crate::cm740_probe::frame("P0372") {
+            crate::cm740_probe::hit("P0372", "ActualAttachedRhsInputBeforeDefinitionStore");
+            return crate::runtime::kernel_api::TypedAction::complete(outcome);
+        }
+        let resumed = match outcome {
+            Ok(rhs) => session.prepare_tag_set_assignment_cm740_driven(
+                self.tag,
+                self.args.clone(),
+                rhs,
+                false,
+            ),
             Err(error) => Err(error),
         };
         crate::runtime::kernel_api::TypedAction::complete(resumed)

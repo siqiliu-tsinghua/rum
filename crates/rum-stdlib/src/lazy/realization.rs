@@ -27,3 +27,27 @@ pub(super) fn drive_items(
     };
     drive_machine(machine, session, ctx, items, budget, boundary, carried)
 }
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+pub(super) fn drive_items_cm740_driven(
+    machine: &mut PullMachine,
+    session: &mut Session,
+    ctx: &mut PullContext,
+    items: &mut Vec<Expr>,
+    budget: PullBudget,
+    cursor: DriveCursor,
+) -> Result<(), EvalError> {
+    if budget.reached(items.len()) {
+        return Ok(());
+    }
+    let (boundary, carried) = match cursor {
+        DriveCursor::Down { at } => (at, None),
+        DriveCursor::Up { boundary, result } => match result {
+            Some(value) => (boundary, Some(value)),
+            None => return exhausted(machine, boundary),
+        },
+    };
+    drive_machine(machine, session, ctx, items, budget, boundary, carried)
+}

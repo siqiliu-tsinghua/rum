@@ -108,6 +108,25 @@ impl Session {
         })
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime::pattern_matching::sequence) fn match_compiled_orderless_optional_choices_cm740_driven(
+        &mut self,
+        spec: CompiledOptionalPattern,
+        rest_patterns: Vec<MatcherArg>,
+        value_args: Vec<Expr>,
+        bindings: SymbolExprMap,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        self.match_orderless_optional_choices_cm740_driven(OrderlessOptionalState {
+            flat_head: None,
+            spec,
+            rest_patterns,
+            value_args,
+            bindings,
+        })
+    }
+
     pub(in crate::runtime::pattern_matching::sequence) fn match_compiled_orderless_flat_optional_choices(
         &mut self,
         flat_head: Expr,
@@ -117,6 +136,26 @@ impl Session {
         bindings: SymbolExprMap,
     ) -> Result<CompiledMatchOutcome, EvalError> {
         self.match_orderless_optional_choices(OrderlessOptionalState {
+            flat_head: Some(flat_head),
+            spec,
+            rest_patterns,
+            value_args,
+            bindings,
+        })
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime::pattern_matching::sequence) fn match_compiled_orderless_flat_optional_choices_cm740_driven(
+        &mut self,
+        flat_head: Expr,
+        spec: CompiledOptionalPattern,
+        rest_patterns: Vec<MatcherArg>,
+        value_args: Vec<Expr>,
+        bindings: SymbolExprMap,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        self.match_orderless_optional_choices_cm740_driven(OrderlessOptionalState {
             flat_head: Some(flat_head),
             spec,
             rest_patterns,
@@ -161,6 +200,45 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn match_orderless_optional_choices_cm740_driven(
+        &mut self,
+        state: OrderlessOptionalState,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if state.value_args.is_empty() {
+            return self.match_orderless_optional_omission_cm740_driven(state);
+        }
+
+        let present_result = if let Some(flat_head) = state.flat_head.clone() {
+            self.match_compiled_orderless_flat_arg_choices_owned_cm740_driven(
+                flat_head,
+                (*state.spec.inner).clone(),
+                state.rest_patterns.clone(),
+                state.value_args.clone(),
+                state.bindings.clone(),
+            )
+        } else {
+            self.match_compiled_orderless_arg_choices_owned_cm740_driven(
+                (*state.spec.inner).clone(),
+                state.rest_patterns.clone(),
+                state.value_args.clone(),
+                state.bindings.clone(),
+            )
+        };
+        match present_result {
+            Ok(outcome) => self.finish_orderless_optional_present_cm740_driven(state, outcome),
+            Err(EvalError::InputRequired { request }) => {
+                let state = SuspendedOrderlessOptionalState::freeze(state);
+                crate::resume_or_suspend!(insert self, MatchOrderlessOptionalChoicesSuspensionFrame { state });
+                crate::resume_or_suspend!(insert self, ContinueOrderlessOptionalFrame);
+                Err(EvalError::InputRequired { request })
+            }
+            Err(error) => Err(error),
+        }
+    }
+
     fn finish_orderless_optional_present(
         &mut self,
         state: OrderlessOptionalState,
@@ -173,6 +251,21 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_orderless_optional_present_cm740_driven(
+        &mut self,
+        state: OrderlessOptionalState,
+        outcome: CompiledMatchOutcome,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if outcome.matched {
+            Ok(outcome)
+        } else {
+            self.match_orderless_optional_omission_cm740_driven(state)
+        }
+    }
+
     fn match_orderless_optional_omission(
         &mut self,
         state: OrderlessOptionalState,
@@ -180,6 +273,29 @@ impl Session {
         let default_result = self.resolve_optional_default_expr_owned(state.spec.default.clone());
         match default_result {
             Ok(default_expr) => self.finish_orderless_optional_default(state, default_expr),
+            Err(EvalError::InputRequired { request }) => {
+                let state = SuspendedOrderlessOptionalState::freeze(state);
+                crate::resume_or_suspend!(insert self, MatchOrderlessOptionalOmissionSuspensionFrame { state });
+                crate::resume_or_suspend!(insert self, ContinueOrderlessOptionalFrame);
+                Err(EvalError::InputRequired { request })
+            }
+            Err(error) => Err(error),
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn match_orderless_optional_omission_cm740_driven(
+        &mut self,
+        state: OrderlessOptionalState,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let default_result =
+            self.resolve_optional_default_expr_owned_cm740_driven(state.spec.default.clone());
+        match default_result {
+            Ok(default_expr) => {
+                self.finish_orderless_optional_default_cm740_driven(state, default_expr)
+            }
             Err(EvalError::InputRequired { request }) => {
                 let state = SuspendedOrderlessOptionalState::freeze(state);
                 crate::resume_or_suspend!(insert self, MatchOrderlessOptionalOmissionSuspensionFrame { state });
@@ -225,6 +341,46 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_orderless_optional_default_cm740_driven(
+        &mut self,
+        state: OrderlessOptionalState,
+        default_expr: Option<Expr>,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let Some(default_expr) = default_expr else {
+            return Ok(match_outcome(false, state.bindings));
+        };
+
+        let default_result = if let Some(flat_head) = state.flat_head.clone() {
+            self.match_compiled_orderless_flat_selected_values_owned_cm740_driven(
+                flat_head,
+                (*state.spec.inner).clone(),
+                optional_default_values(default_expr),
+                state.bindings.clone(),
+            )
+        } else {
+            self.match_compiled_orderless_selected_values_owned_cm740_driven(
+                (*state.spec.inner).clone(),
+                optional_default_values(default_expr),
+                state.bindings.clone(),
+            )
+        };
+        match default_result {
+            Ok(outcome) => {
+                self.finish_orderless_optional_default_match_cm740_driven(state, outcome)
+            }
+            Err(EvalError::InputRequired { request }) => {
+                let state = SuspendedOrderlessOptionalState::freeze(state);
+                crate::resume_or_suspend!(insert self, FinishOrderlessOptionalDefaultSuspensionFrame { state });
+                crate::resume_or_suspend!(insert self, ContinueOrderlessOptionalFrame);
+                Err(EvalError::InputRequired { request })
+            }
+            Err(error) => Err(error),
+        }
+    }
+
     fn finish_orderless_optional_default_match(
         &mut self,
         state: OrderlessOptionalState,
@@ -243,6 +399,34 @@ impl Session {
             )
         } else {
             self.match_compiled_orderless_args_owned(
+                state.rest_patterns,
+                state.value_args,
+                outcome.bindings,
+            )
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_orderless_optional_default_match_cm740_driven(
+        &mut self,
+        state: OrderlessOptionalState,
+        outcome: CompiledMatchOutcome,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if !outcome.matched {
+            return Ok(outcome);
+        }
+
+        if let Some(flat_head) = state.flat_head {
+            self.match_compiled_orderless_args_with_flat_head_owned_cm740_driven(
+                state.rest_patterns,
+                state.value_args,
+                outcome.bindings,
+                flat_head,
+            )
+        } else {
+            self.match_compiled_orderless_args_owned_cm740_driven(
                 state.rest_patterns,
                 state.value_args,
                 outcome.bindings,
@@ -338,7 +522,11 @@ impl Session {
         &mut self,
         state: OrderlessOptionalState,
     ) -> Result<Vec<SymbolExprMap>, EvalError> {
-        let default_result = self.resolve_optional_default_expr_owned(state.spec.default.clone());
+        let default_result = (if crate::cm740_probe::driven() {
+            self.resolve_optional_default_expr_owned_cm740_driven(state.spec.default.clone())
+        } else {
+            self.resolve_optional_default_expr_owned(state.spec.default.clone())
+        });
         match default_result {
             Ok(default_expr) => {
                 self.finish_orderless_optional_collection_default(state, default_expr)
@@ -363,18 +551,35 @@ impl Session {
         };
 
         let default_result = if let Some(flat_head) = state.flat_head.clone() {
-            self.match_compiled_orderless_flat_selected_values_owned(
-                flat_head,
-                (*state.spec.inner).clone(),
-                optional_default_values(default_expr),
-                state.bindings.clone(),
-            )
+            (if crate::cm740_probe::driven() {
+                self.match_compiled_orderless_flat_selected_values_owned_cm740_driven(
+                    flat_head,
+                    (*state.spec.inner).clone(),
+                    optional_default_values(default_expr),
+                    state.bindings.clone(),
+                )
+            } else {
+                self.match_compiled_orderless_flat_selected_values_owned(
+                    flat_head,
+                    (*state.spec.inner).clone(),
+                    optional_default_values(default_expr),
+                    state.bindings.clone(),
+                )
+            })
         } else {
-            self.match_compiled_orderless_selected_values_owned(
-                (*state.spec.inner).clone(),
-                optional_default_values(default_expr),
-                state.bindings.clone(),
-            )
+            (if crate::cm740_probe::driven() {
+                self.match_compiled_orderless_selected_values_owned_cm740_driven(
+                    (*state.spec.inner).clone(),
+                    optional_default_values(default_expr),
+                    state.bindings.clone(),
+                )
+            } else {
+                self.match_compiled_orderless_selected_values_owned(
+                    (*state.spec.inner).clone(),
+                    optional_default_values(default_expr),
+                    state.bindings.clone(),
+                )
+            })
         };
         match default_result {
             Ok(outcome) => self.finish_orderless_optional_collection_match(state, outcome),
@@ -429,6 +634,25 @@ impl Session {
         })
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime::pattern_matching::sequence) fn match_compiled_orderless_optional_omission_owned_cm740_driven(
+        &mut self,
+        spec: CompiledOptionalPattern,
+        rest_patterns: Vec<MatcherArg>,
+        value_args: Vec<Expr>,
+        bindings: SymbolExprMap,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        self.match_orderless_optional_omission_cm740_driven(OrderlessOptionalState {
+            flat_head: None,
+            spec,
+            rest_patterns,
+            value_args,
+            bindings,
+        })
+    }
+
     pub(in crate::runtime::pattern_matching::sequence) fn match_compiled_orderless_flat_optional_omission_owned(
         &mut self,
         flat_head: Expr,
@@ -438,6 +662,26 @@ impl Session {
         bindings: SymbolExprMap,
     ) -> Result<CompiledMatchOutcome, EvalError> {
         self.match_orderless_optional_omission(OrderlessOptionalState {
+            flat_head: Some(flat_head),
+            spec,
+            rest_patterns,
+            value_args,
+            bindings,
+        })
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime::pattern_matching::sequence) fn match_compiled_orderless_flat_optional_omission_owned_cm740_driven(
+        &mut self,
+        flat_head: Expr,
+        spec: CompiledOptionalPattern,
+        rest_patterns: Vec<MatcherArg>,
+        value_args: Vec<Expr>,
+        bindings: SymbolExprMap,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        self.match_orderless_optional_omission_cm740_driven(OrderlessOptionalState {
             flat_head: Some(flat_head),
             spec,
             rest_patterns,

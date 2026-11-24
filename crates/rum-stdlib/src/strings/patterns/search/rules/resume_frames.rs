@@ -2,7 +2,7 @@ use super::*;
 use rum_runtime::kernel_api::{AbandonmentContext, FrameAbandon, FrameAbandonAction};
 use rum_runtime::kernel_api::{FrameRootTrace, FrameRootVisitor};
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct SuspendReplaceStringOutputSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::rules::StringReplaceRuleEvalState,
@@ -14,12 +14,25 @@ pub(super) struct SuspendReplaceStringOutputSuspensionFrame {
     pub(super) output: crate::strings::suspended_state::PersistentStringText,
 }
 
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon for SuspendReplaceStringOutputSuspensionFrame {
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
+}
+
 impl rum_runtime::kernel_api::SuspensionFrame for SuspendReplaceStringOutputSuspensionFrame {
     fn resume(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
+        let _class_row = rum_runtime::cm740_probe::class_lease::begin_row(&self);
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         #[allow(unused_mut)]
@@ -55,7 +68,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for SuspendReplaceStringOutputSusp
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct DriveSuspendedReplaceStringOutputResultSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::rules::StringReplaceRuleEvalState,
@@ -67,6 +80,20 @@ pub(super) struct DriveSuspendedReplaceStringOutputResultSuspensionFrame {
     pub(super) output: crate::strings::suspended_state::PersistentStringText,
 }
 
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon
+    for DriveSuspendedReplaceStringOutputResultSuspensionFrame
+{
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
+}
+
 impl rum_runtime::kernel_api::SuspensionFrame
     for DriveSuspendedReplaceStringOutputResultSuspensionFrame
 {
@@ -75,6 +102,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
+        let _class_row = rum_runtime::cm740_probe::class_lease::begin_row(&self);
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         #[allow(unused_mut)]
@@ -110,7 +138,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct ResumeReplaceStringValuesFromIndexSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::rules::StringReplaceValuesEvalState,
@@ -118,6 +146,18 @@ pub(super) struct ResumeReplaceStringValuesFromIndexSuspensionFrame {
     pub(super) index: usize,
     pub(super) rendered:
         crate::strings::suspended_state::PersistentStringSequence<std::string::String>,
+}
+
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon for ResumeReplaceStringValuesFromIndexSuspensionFrame {
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
 }
 
 impl rum_runtime::kernel_api::SuspensionFrame
@@ -150,7 +190,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct ResumeSuspendedReplaceStringValuesFromIndexSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::rules::StringReplaceValuesEvalState,
@@ -158,6 +198,20 @@ pub(super) struct ResumeSuspendedReplaceStringValuesFromIndexSuspensionFrame {
     pub(super) index: usize,
     pub(super) rendered:
         crate::strings::suspended_state::PersistentStringSequence<std::string::String>,
+}
+
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon
+    for ResumeSuspendedReplaceStringValuesFromIndexSuspensionFrame
+{
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
 }
 
 impl rum_runtime::kernel_api::SuspensionFrame
@@ -190,7 +244,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct DriveStringCasesOutputResultSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::rules::StringCasesRuleEvalState,
@@ -201,12 +255,68 @@ pub(super) struct DriveStringCasesOutputResultSuspensionFrame {
     pub(super) matches: crate::strings::suspended_state::PersistentStringSequence<rum_core::Expr>,
 }
 
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon for DriveStringCasesOutputResultSuspensionFrame {
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::cm740_probe::q25::retire_abandon(
+            std::sync::Arc::as_ptr(&self) as *const () as usize
+        );
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
+}
+
+fn challenge_equal_siblings(origin: &std::sync::Arc<DriveStringCasesOutputResultSuspensionFrame>) {
+    let sibling = |source: &DriveStringCasesOutputResultSuspensionFrame| {
+        std::sync::Arc::new(DriveStringCasesOutputResultSuspensionFrame {
+            state: source.state.clone(),
+            index: source.index,
+            end: source.end,
+            literal_match_index: source.literal_match_index,
+            matches: source.matches.clone(),
+        })
+    };
+    let left = sibling(origin);
+    let right = sibling(origin);
+    let fields_equal = origin.index == left.index
+        && origin.end == left.end
+        && origin.literal_match_index == left.literal_match_index
+        && origin.index == right.index
+        && std::ptr::eq(origin.state.as_ref(), left.state.as_ref())
+        && std::ptr::eq(origin.state.as_ref(), right.state.as_ref())
+        && origin.matches.len() == left.matches.len()
+        && left.matches.len() == right.matches.len()
+        && !std::ptr::eq(
+            std::sync::Arc::as_ptr(origin),
+            std::sync::Arc::as_ptr(&left),
+        )
+        && !std::ptr::eq(
+            std::sync::Arc::as_ptr(origin),
+            std::sync::Arc::as_ptr(&right),
+        )
+        && !std::ptr::eq(
+            std::sync::Arc::as_ptr(&left),
+            std::sync::Arc::as_ptr(&right),
+        );
+    rum_runtime::cm740_probe::q25::reject_equal_siblings(origin, &left, &right, fields_equal);
+}
+
 impl rum_runtime::kernel_api::SuspensionFrame for DriveStringCasesOutputResultSuspensionFrame {
     fn resume(
         self: std::sync::Arc<Self>,
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
+        let _q25_claim = rum_runtime::cm740_probe::q25::begin_concrete(&self);
+        let _class_row = rum_runtime::cm740_probe::class_lease::begin_row(&self);
+
+        if rum_runtime::cm740_probe::q25::siblings_mode() {
+            challenge_equal_siblings(&self);
+        }
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         #[allow(unused_mut)]
@@ -239,7 +349,7 @@ impl rum_runtime::kernel_api::SuspensionFrame for DriveStringCasesOutputResultSu
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct DriveSuspendedStringCasesOutputResultSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::rules::StringCasesRuleEvalState,
@@ -250,6 +360,20 @@ pub(super) struct DriveSuspendedStringCasesOutputResultSuspensionFrame {
     pub(super) matches: crate::strings::suspended_state::PersistentStringSequence<rum_core::Expr>,
 }
 
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon
+    for DriveSuspendedStringCasesOutputResultSuspensionFrame
+{
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
+}
+
 impl rum_runtime::kernel_api::SuspensionFrame
     for DriveSuspendedStringCasesOutputResultSuspensionFrame
 {
@@ -258,6 +382,7 @@ impl rum_runtime::kernel_api::SuspensionFrame
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> rum_runtime::kernel_api::FrameAction {
+        let _class_row = rum_runtime::cm740_probe::class_lease::begin_row(&self);
         #[allow(unused_mut)]
         let mut state = self.state.clone();
         #[allow(unused_mut)]
@@ -290,13 +415,27 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct ResumeCollectStringCasesValuesFromIndexSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::rules::StringCasesValuesEvalState,
     >,
     pub(super) index: usize,
     pub(super) outputs: crate::strings::suspended_state::PersistentStringSequence<rum_core::Expr>,
+}
+
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon
+    for ResumeCollectStringCasesValuesFromIndexSuspensionFrame
+{
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
 }
 
 impl rum_runtime::kernel_api::SuspensionFrame
@@ -329,13 +468,27 @@ impl rum_runtime::kernel_api::SuspensionFrame
     }
 }
 
-#[derive(rum_runtime::kernel_api::FrameRootTrace, rum_runtime::kernel_api::PureFrameAbandon)]
+#[derive(rum_runtime::kernel_api::FrameRootTrace)]
 pub(super) struct ResumeSuspendedCollectStringCasesValuesFromIndexSuspensionFrame {
     pub(super) state: crate::strings::suspended_state::FrozenStringValue<
         crate::strings::patterns::search::rules::StringCasesValuesEvalState,
     >,
     pub(super) index: usize,
     pub(super) outputs: crate::strings::suspended_state::PersistentStringSequence<rum_core::Expr>,
+}
+
+// CM4 copied carrier: actual one-use retirement before the
+// unconditional Discard (Q26/Q27 substitution render; the derive
+// expansion is unconditional Discard).
+impl rum_runtime::kernel_api::FrameAbandon
+    for ResumeSuspendedCollectStringCasesValuesFromIndexSuspensionFrame
+{
+    fn abandon(
+        self: ::std::sync::Arc<Self>,
+        _context: &mut rum_runtime::kernel_api::AbandonmentContext<'_>,
+    ) -> rum_runtime::kernel_api::FrameAbandonAction {
+        rum_runtime::kernel_api::FrameAbandonAction::Discard
+    }
 }
 
 impl rum_runtime::kernel_api::SuspensionFrame

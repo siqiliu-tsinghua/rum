@@ -184,14 +184,25 @@ pub(crate) fn eval_associate_to(
     };
 
     if let Some((target, selector_exprs)) = normalize_part_mutation_target(session, target_expr) {
-        return eval_held_association_part_mutation(
-            session,
-            AssociationPartMutationOperation::AssociateTo,
-            target_expr.clone(),
-            target,
-            selector_exprs,
-            spec.clone(),
-        );
+        return (if rum_runtime::cm740_probe::driven() {
+            eval_held_association_part_mutation_cm740_driven(
+                session,
+                AssociationPartMutationOperation::AssociateTo,
+                target_expr.clone(),
+                target,
+                selector_exprs,
+                spec.clone(),
+            )
+        } else {
+            eval_held_association_part_mutation(
+                session,
+                AssociationPartMutationOperation::AssociateTo,
+                target_expr.clone(),
+                target,
+                selector_exprs,
+                spec.clone(),
+            )
+        });
     }
 
     if is_non_symbol_atom(target_expr) {
@@ -217,6 +228,12 @@ fn resume_associate_to_after_target_preparation(
     prepared: PreparedDefinitionLhs,
     call_args: SharedArgs,
 ) -> Result<Expr, EvalError> {
+    if rum_runtime::cm740_probe::driven() {
+        return resume_associate_to_after_target_preparation_cm740_driven(
+            session, prepared, call_args,
+        );
+    }
+
     if let Some(target_symbol) =
         session.protected_or_known_prepared_definition_target_symbol(&prepared)
     {
@@ -232,6 +249,45 @@ fn resume_associate_to_after_target_preparation(
     }
 
     let target_result = session.evaluate_prepared_definition_lhs(&prepared);
+    rum_runtime::resume_typed_or_suspend!(
+        session,
+        target_result,
+        ok(expr) => finish_associate_to_value(session, call_args, prepared, expr),
+        suspend => EvalAssociateToSuspensionFrame {
+            args: call_args,
+            prepared,
+        },
+    )
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_associate_to_after_target_preparation_cm740_driven(
+    session: &mut Session,
+    prepared: PreparedDefinitionLhs,
+    call_args: SharedArgs,
+) -> Result<Expr, EvalError> {
+    if let Some(target_symbol) =
+        session.protected_or_known_prepared_definition_target_symbol(&prepared)
+    {
+        session.push_message(
+            "AssociateTo",
+            "wrsym",
+            format!("Symbol {target_symbol} is Protected."),
+        );
+        return Ok(Expr::call(
+            system_expr("AssociateTo"),
+            call_args.as_ref().to_vec(),
+        ));
+    }
+
+    let _class_span = rum_runtime::cm740_probe::enter("P1814");
+    let target_result = session.evaluate_prepared_definition_lhs(&prepared);
+    if target_result.is_ok() && rum_runtime::cm740_probe::ordinary("P1814") {
+        rum_runtime::cm740_probe::hit("P1814", "ActualTypedCarrierBeforeOuterTail");
+    }
+    rum_runtime::cm740_probe::class_lease::note_queued_span("P1814");
     rum_runtime::resume_typed_or_suspend!(
         session,
         target_result,
@@ -307,14 +363,25 @@ pub(crate) fn eval_key_drop_from(
     };
 
     if let Some((target, selector_exprs)) = normalize_part_mutation_target(session, target_expr) {
-        return eval_held_association_part_mutation(
-            session,
-            AssociationPartMutationOperation::KeyDropFrom,
-            target_expr.clone(),
-            target,
-            selector_exprs,
-            key_spec.clone(),
-        );
+        return (if rum_runtime::cm740_probe::driven() {
+            eval_held_association_part_mutation_cm740_driven(
+                session,
+                AssociationPartMutationOperation::KeyDropFrom,
+                target_expr.clone(),
+                target,
+                selector_exprs,
+                key_spec.clone(),
+            )
+        } else {
+            eval_held_association_part_mutation(
+                session,
+                AssociationPartMutationOperation::KeyDropFrom,
+                target_expr.clone(),
+                target,
+                selector_exprs,
+                key_spec.clone(),
+            )
+        });
     }
 
     if association_entries_from_expr(target_expr).is_some() {
@@ -360,7 +427,38 @@ fn resume_key_drop_from_after_target_preparation(
     prepared: PreparedDefinitionLhs,
     call_args: SharedArgs,
 ) -> Result<Expr, EvalError> {
+    if rum_runtime::cm740_probe::driven() {
+        return resume_key_drop_from_after_target_preparation_cm740_driven(
+            session, prepared, call_args,
+        );
+    }
+
     let target_result = session.evaluate_prepared_definition_lhs(&prepared);
+    rum_runtime::resume_typed_or_suspend!(
+        session,
+        target_result,
+        ok(expr) => finish_key_drop_from_value(session, call_args, prepared, expr),
+        suspend => EvalKeyDropFromSuspensionFrame {
+            args: call_args,
+            prepared,
+        },
+    )
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn resume_key_drop_from_after_target_preparation_cm740_driven(
+    session: &mut Session,
+    prepared: PreparedDefinitionLhs,
+    call_args: SharedArgs,
+) -> Result<Expr, EvalError> {
+    let _class_span = rum_runtime::cm740_probe::enter("P1817");
+    let target_result = session.evaluate_prepared_definition_lhs(&prepared);
+    if target_result.is_ok() && rum_runtime::cm740_probe::ordinary("P1817") {
+        rum_runtime::cm740_probe::hit("P1817", "ActualTypedCarrierBeforeOuterTail");
+    }
+    rum_runtime::cm740_probe::class_lease::note_queued_span("P1817");
     rum_runtime::resume_typed_or_suspend!(
         session,
         target_result,
@@ -540,6 +638,32 @@ fn eval_held_association_part_mutation(
     )
 }
 
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn eval_held_association_part_mutation_cm740_driven(
+    session: &mut Session,
+    operation: AssociationPartMutationOperation,
+    target_expr: Expr,
+    target: Symbol,
+    selector_exprs: Vec<Expr>,
+    spec: Expr,
+) -> Result<Expr, EvalError> {
+    let evaluated_result = rum_runtime::cm740_probe::around("P1818", || {
+        session.evaluate_part_selectors_owned_for_builtin(selector_exprs)
+    });
+    rum_runtime::resume_typed_or_suspend!(
+        session,
+        evaluated_result,
+        ok(evaluated_selectors) => finish_held_association_part_mutation_cm740_driven(
+            session, operation, target_expr, target, evaluated_selectors, spec,
+        ),
+        suspend => FinishHeldAssociationPartSelectorEvaluationSuspensionFrame {
+            operation, target_expr, target, spec,
+        },
+    )
+}
+
 fn finish_held_association_part_mutation(
     session: &mut Session,
     operation: AssociationPartMutationOperation,
@@ -667,6 +791,148 @@ fn finish_held_association_part_mutation(
     }
 
     session.store_immediate_symbol_own_value(target, updated_target.clone());
+
+    let value = match operation.result() {
+        HeldAssociationPartMutationResult::UpdatedTarget => updated_target,
+        HeldAssociationPartMutationResult::UpdatedPart => selected_result,
+    };
+    Ok(value)
+}
+
+#[cold]
+#[inline(never)]
+#[allow(dead_code)]
+fn finish_held_association_part_mutation_cm740_driven(
+    session: &mut Session,
+    operation: AssociationPartMutationOperation,
+    target_expr: Expr,
+    target: Symbol,
+    selector_exprs: EvaluatedPartSelectors,
+    spec: Expr,
+) -> Result<Expr, EvalError> {
+    let operator = operation.name();
+    let mut evaluated_target_args = Vec::with_capacity(selector_exprs.as_slice().len() + 1);
+    evaluated_target_args.push(Expr::Atom(Atom::Symbol(target)));
+    evaluated_target_args.extend_from_slice(selector_exprs.as_slice());
+    let evaluated_target_expr = Expr::call(system_expr("Part"), evaluated_target_args);
+    let held_call = vec![evaluated_target_expr, spec.clone()];
+
+    if !session.ensure_symbol_not_protected_for_write(operator, &target) {
+        return Ok(Expr::call(system_expr(operator), held_call));
+    }
+
+    let Some(current) = session.definition_own_value(&target) else {
+        return Ok(invalid_missing_part_mutation_target(
+            session,
+            operation,
+            &target_expr,
+            &held_call,
+        ));
+    };
+
+    let Some(paths) = exact_position_paths_from_part_selector_exprs(&current, &selector_exprs)
+    else {
+        if let Some(offender) = invalid_part_selector_expr(&selector_exprs) {
+            let detail =
+                format!("The expression {offender} cannot be used as a part specification.");
+            session.push_message("Part", "pkspec1", detail.clone());
+            session.push_message("Set", "pkspec1", detail);
+            return Ok(Expr::call(system_expr(operator), held_call));
+        }
+        return Ok(invalid_missing_part_mutation_target(
+            session,
+            operation,
+            &target_expr,
+            &held_call,
+        ));
+    };
+
+    if operation == AssociationPartMutationOperation::KeyDropFrom
+        && !part_target_selectors_are_exact_leaf_path(&selector_exprs)
+    {
+        return Ok(session.invalid_call_with_message(
+            operator,
+            &held_call,
+            "invak",
+            invalid_association_message(&target_expr),
+        ));
+    }
+
+    if paths.is_empty() {
+        let part_failure = failed_exact_part_selector_path(&current, selector_exprs.as_slice());
+        if operation == AssociationPartMutationOperation::AssociateTo {
+            if let Some((key, target)) =
+                missing_key_in_exact_part_selector_path(&current, selector_exprs.as_slice())
+            {
+                session.push_message(
+                    "AssociateTo",
+                    "keynx",
+                    format!("Key {key} does not exist in {target}."),
+                );
+            } else if let Some(ExactPartSelectorFailure::PartW { part, target }) = part_failure {
+                session.push_message("AssociateTo", "partw", partw_message(&part, &target));
+            }
+            return Ok(Expr::call(system_expr(operator), held_call));
+        }
+
+        if operation == AssociationPartMutationOperation::KeyDropFrom {
+            match part_failure {
+                Some(ExactPartSelectorFailure::PartW { part, target }) => {
+                    session.push_message("Part", "partw", partw_message(&part, &target));
+                }
+                Some(ExactPartSelectorFailure::PartD { part }) => {
+                    session.push_message("Part", "partd", partd_message(&part));
+                }
+                None => {}
+            }
+            return Ok(session.invalid_call_with_message(
+                operator,
+                &held_call,
+                "invak",
+                invalid_association_message(&target_expr),
+            ));
+        }
+    }
+
+    let mut replacements = Vec::with_capacity(paths.len());
+    for path in paths {
+        let Some(part) = exact_expr_at_path(&current, &path) else {
+            return Ok(Expr::call(system_expr(operator), held_call));
+        };
+        let Some(updated_part) = operation.mutate(part.clone(), spec.clone()) else {
+            let invalid_expr = match operation.result() {
+                HeldAssociationPartMutationResult::UpdatedTarget => part,
+                HeldAssociationPartMutationResult::UpdatedPart => target_expr,
+            };
+            return Ok(session.invalid_call_with_message(
+                operator,
+                &held_call,
+                "invak",
+                invalid_association_message(&invalid_expr),
+            ));
+        };
+        replacements.push((path, updated_part));
+    }
+
+    let selected_result = replacements
+        .first()
+        .map(|(_, updated_part)| updated_part.clone())
+        .unwrap_or_else(|| Expr::call(system_expr(operator), held_call.clone()));
+
+    let mut updated_target = current;
+    for (path, updated_part) in replacements {
+        updated_target = replace_exact_path(updated_target, &path, updated_part);
+    }
+
+    if !session.ensure_symbol_not_protected_for_write(operator, &target) {
+        return Ok(Expr::call(system_expr(operator), held_call));
+    }
+
+    if rum_runtime::cm740_probe::frame("P1818") {
+        rum_runtime::cm740_probe::hit("P1818", "OmitActualAssociationPartStore");
+    } else {
+        session.store_immediate_symbol_own_value(target, updated_target.clone());
+    }
 
     let value = match operation.result() {
         HeldAssociationPartMutationResult::UpdatedTarget => updated_target,

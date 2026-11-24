@@ -152,6 +152,45 @@ impl Session {
             }
         }
     }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn match_trace_leaf_cm740_driven(
+        &mut self,
+        work: &FilterWork,
+        leaf: &mut LeafWork,
+    ) -> Result<bool, EvalError> {
+        loop {
+            let Some(candidate) = leaf.candidates.current() else {
+                if leaf.next_field(work) {
+                    continue;
+                }
+                return Ok(false);
+            };
+            let matched = if work.pattern.is_none() {
+                true
+            } else if leaf.patterns.pattern_count() == 0 {
+                false
+            } else {
+                // The driver owns work and leaf across this one may-suspend edge.
+                {
+                    let _cm740_producer = crate::cm740_probe::enter("P0214");
+                    self.match_expr_owned_cm740_driven(
+                        leaf.patterns
+                            .pattern_at(leaf.pattern_index, work.pattern.as_ref())
+                            .clone(),
+                        candidate.clone(),
+                        SymbolExprMap::default(),
+                    )
+                }?
+                .matched
+            };
+            if leaf.apply_match(matched, work.mode == TraceOutput::Detail) {
+                return Ok(true);
+            }
+        }
+    }
 }
 
 #[inline(always)]

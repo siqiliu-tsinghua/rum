@@ -212,7 +212,7 @@ fn prepared_store_and_removal_call_site_inventory_is_closed() {
         call_inventory(&workspace, &files, ".store_immediate_symbol_own_value("),
         vec![(
             "crates/rum-stdlib/src/associations/mutation.rs".to_string(),
-            2
+            3
         )]
     );
     assert_eq!(

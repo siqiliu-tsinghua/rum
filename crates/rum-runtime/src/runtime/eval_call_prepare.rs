@@ -383,6 +383,160 @@ impl Session {
         result
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn prepare_arguments_for_call_with_unevaluated_restore_cm740_driven(
+        &mut self,
+        head: Expr,
+        attributes: AttributeSet,
+        args: SharedArgs,
+    ) -> Result<PreparedCallArguments, EvalError> {
+        let runtime_profile = runtime_path_timing_start_adopted(self, "prepare_arguments.total");
+        let this = &mut *self;
+        let result = (|| {
+            let sequence_hold = attributes.sequence_hold();
+            let list_drops_nothing = is_system_symbol_name(&head, heads::structure::LIST);
+            let mut built: Option<Vec<Expr>> = None;
+            let mut unevaluated_restores: Option<Vec<(usize, Expr)>> = None;
+
+            for index in 0..args.len() {
+                let runtime_profile_plan = runtime_path_timing_start("prepare_arguments.plan_arg");
+                let raw_arg = args[index].clone();
+                let plan = plan_call_argument_preparation(attributes, index, raw_arg.clone());
+                record_profile_runtime_path_timing(runtime_profile_plan, RuntimeProfileOutcome::Ok);
+
+                let prepared_arg = match plan.mode {
+                    CallArgumentMode::Evaluate => {
+                        let allow_sequence_splice = plan.allow_sequence_splice;
+                        let runtime_profile_evaluate = runtime_path_timing_start_adopted(
+                            this,
+                            "prepare_arguments.evaluate_arg",
+                        );
+                        let evaluated_result = this.evaluate_atom_fast_path_cm740_driven(plan.expr);
+                        record_profile_runtime_path_timing_adopted(
+                            this,
+                            runtime_profile_evaluate,
+                            &evaluated_result,
+                        );
+                        'argument_value: {
+                            return crate::resume_typed_or_suspend!(
+                                &mut *this,
+                                evaluated_result,
+                                ok(value) => break 'argument_value value,
+                                suspend => PrepareArgumentsForCallWithUnevaluatedRestoreSuspensionFrame::freeze(
+                                    head, attributes, args, index, built.take(),
+                                    unevaluated_restores, allow_sequence_splice,
+                                ),
+                            );
+                        }
+                    }
+                    CallArgumentMode::Hold => plan.expr,
+                    CallArgumentMode::StrippedUnevaluated => {
+                        let splices = prepared_argument_splices(
+                            &plan.expr,
+                            plan.allow_sequence_splice,
+                            sequence_hold,
+                        );
+                        let drops_nothing = list_drops_nothing
+                            && prepared_list_argument_drops_nothing(
+                                &plan.expr,
+                                plan.allow_sequence_splice,
+                                sequence_hold,
+                            );
+                        if !splices && !drops_nothing {
+                            let prepared_position = built.as_ref().map_or(index, Vec::len);
+                            unevaluated_restores
+                                .get_or_insert_with(Vec::new)
+                                .push((prepared_position, raw_arg));
+                        }
+                        plan.expr
+                    }
+                };
+
+                let splices = prepared_argument_splices(
+                    &prepared_arg,
+                    plan.allow_sequence_splice,
+                    sequence_hold,
+                );
+                let drops_nothing = list_drops_nothing
+                    && prepared_list_argument_drops_nothing(
+                        &prepared_arg,
+                        plan.allow_sequence_splice,
+                        sequence_hold,
+                    );
+                let changed = splices || drops_nothing || prepared_arg != args[index];
+
+                match (built.as_mut(), changed) {
+                    (None, false) => {}
+                    (None, true) => {
+                        let mut prepared_args = args[..index].to_vec();
+                        let runtime_profile_append =
+                            runtime_path_timing_start("prepare_arguments.append_arg");
+                        if list_drops_nothing {
+                            append_prepared_list_argument(
+                                &mut prepared_args,
+                                prepared_arg,
+                                plan.allow_sequence_splice,
+                                sequence_hold,
+                            );
+                        } else {
+                            append_prepared_argument(
+                                &mut prepared_args,
+                                prepared_arg,
+                                plan.allow_sequence_splice,
+                                sequence_hold,
+                            );
+                        }
+                        record_profile_runtime_path_timing(
+                            runtime_profile_append,
+                            RuntimeProfileOutcome::Ok,
+                        );
+                        built = Some(prepared_args);
+                    }
+                    (Some(prepared_args), _) => {
+                        let runtime_profile_append =
+                            runtime_path_timing_start("prepare_arguments.append_arg");
+                        if list_drops_nothing {
+                            append_prepared_list_argument(
+                                prepared_args,
+                                prepared_arg,
+                                plan.allow_sequence_splice,
+                                sequence_hold,
+                            );
+                        } else {
+                            append_prepared_argument(
+                                prepared_args,
+                                prepared_arg,
+                                plan.allow_sequence_splice,
+                                sequence_hold,
+                            );
+                        }
+                        record_profile_runtime_path_timing(
+                            runtime_profile_append,
+                            RuntimeProfileOutcome::Ok,
+                        );
+                    }
+                }
+            }
+
+            let evaluated_args = built.map(SharedArgs::new).unwrap_or(args);
+            let unevaluated_restore = unevaluated_restores.map(|wrappers| {
+                Box::new(UnevaluatedRestorePlan {
+                    prepared_args: evaluated_args.clone(),
+                    wrappers,
+                })
+            });
+
+            Ok(PreparedCallArguments {
+                evaluated_args,
+                unevaluated_restore,
+            })
+        })();
+        record_profile_runtime_path_timing_adopted(self, runtime_profile, &result);
+        result
+    }
+
     fn resume_suspended_call_after_argument<'resume>(
         &mut self,
         mut state: SuspendedCallArgumentPreparation,
@@ -431,7 +585,11 @@ impl Session {
                     let allow_sequence_splice = plan.allow_sequence_splice;
                     let runtime_profile_evaluate =
                         runtime_path_timing_start_adopted(self, "prepare_arguments.evaluate_arg");
-                    let evaluated_result = self.evaluate_atom_fast_path(plan.expr);
+                    let evaluated_result = (if crate::cm740_probe::driven() {
+                        self.evaluate_atom_fast_path_cm740_driven(plan.expr)
+                    } else {
+                        self.evaluate_atom_fast_path(plan.expr)
+                    });
                     record_profile_runtime_path_timing_adopted(
                         self,
                         runtime_profile_evaluate,
@@ -514,6 +672,23 @@ impl Session {
         )
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn resume_call_from_prepared_args_cm740_driven(
+        &mut self,
+        head: Expr,
+        prepared_args: Vec<Expr>,
+    ) -> Result<Expr, EvalError> {
+        self.resume_call_from_prepared_args_with_unevaluated_restore_cm740_driven(
+            head,
+            PreparedCallArguments {
+                evaluated_args: SharedArgs::new(prepared_args),
+                unevaluated_restore: None,
+            },
+        )
+    }
+
     fn resume_call_from_prepared_args_with_unevaluated_restore(
         &mut self,
         head: Expr,
@@ -527,6 +702,30 @@ impl Session {
         ));
 
         self.resume_call_with_dispatch_plan(head, plan, state, 0, prepared.unevaluated_restore)
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_call_from_prepared_args_with_unevaluated_restore_cm740_driven(
+        &mut self,
+        head: Expr,
+        prepared: PreparedCallArguments,
+    ) -> Result<Expr, EvalError> {
+        let plan = self.build_call_dispatch_plan(&head);
+        let state = CallDispatchState::from_prepared(self.normalize_call_args_shared(
+            &head,
+            prepared.evaluated_args,
+            plan.attributes,
+        ));
+
+        self.resume_call_with_dispatch_plan_cm740_driven(
+            head,
+            plan,
+            state,
+            0,
+            prepared.unevaluated_restore,
+        )
     }
 }
 

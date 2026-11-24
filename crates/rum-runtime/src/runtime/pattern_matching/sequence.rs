@@ -327,6 +327,77 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn match_compiled_arg_and_rest_owned_cm740_driven(
+        &mut self,
+        pattern: MatcherArg,
+        rest_patterns: Vec<MatcherArg>,
+        value_args: Vec<Expr>,
+        bindings: SymbolExprMap,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        match pattern {
+            MatcherArg::Sequence(spec) => {
+                let Some(start) = initial_sequence_consume(&spec, &rest_patterns, &value_args)
+                else {
+                    return Ok(match_outcome(false, bindings));
+                };
+
+                self.match_compiled_sequence_choices_cm740_driven(
+                    spec,
+                    rest_patterns,
+                    value_args,
+                    bindings,
+                    start,
+                )
+            }
+            MatcherArg::Optional(spec) => self.match_compiled_optional_choices_cm740_driven(
+                spec,
+                rest_patterns,
+                value_args,
+                bindings,
+            ),
+            MatcherArg::PatternSequenceGroup(items)
+            | MatcherArg::OrderlessPatternSequenceGroup(items) => {
+                let mut expanded = items;
+                expanded.extend(rest_patterns);
+                self.match_compiled_args_owned_cm740_driven(expanded, value_args, bindings)
+            }
+            MatcherArg::Single(pattern) => {
+                let mut value_iter = value_args.into_iter();
+                let Some(value) = value_iter.next() else {
+                    return Ok(match_outcome(false, bindings));
+                };
+                let rest_values = value_iter.collect::<Vec<_>>();
+
+                let pattern_result =
+                    self.match_compiled_owned_cm740_driven(pattern, value, bindings);
+                match pattern_result {
+                    Ok(outcome) => {
+                        if !outcome.matched {
+                            Ok(outcome)
+                        } else {
+                            self.match_compiled_args_owned_cm740_driven(
+                                rest_patterns,
+                                rest_values,
+                                outcome.bindings,
+                            )
+                        }
+                    }
+                    Err(EvalError::InputRequired { request }) => {
+                        let rest_patterns = FrozenMatcherSequence::freeze(rest_patterns);
+                        let rest_values = SharedArgs::new(rest_values);
+                        crate::resume_or_suspend!(insert self, MatchCompiledArgAndRestOwnedSuspensionFrame { rest_patterns, rest_values });
+                        crate::resume_or_suspend!(insert self, ContinueMatchCompiledArgAndRestFrame);
+                        Err(EvalError::InputRequired { request })
+                    }
+                    Err(error) => Err(error),
+                }
+            }
+        }
+    }
+
     fn match_compiled_flat_arg_and_rest_owned(
         &mut self,
         flat_head: Expr,
@@ -391,6 +462,73 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn match_compiled_flat_arg_and_rest_owned_cm740_driven(
+        &mut self,
+        flat_head: Expr,
+        pattern: MatcherArg,
+        rest_patterns: Vec<MatcherArg>,
+        value_args: Vec<Expr>,
+        bindings: SymbolExprMap,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        match pattern {
+            MatcherArg::Sequence(spec) => {
+                let Some(start) = initial_sequence_consume(&spec, &rest_patterns, &value_args)
+                else {
+                    return Ok(match_outcome(false, bindings));
+                };
+
+                self.match_compiled_flat_sequence_choices_cm740_driven(
+                    flat_head,
+                    spec,
+                    rest_patterns,
+                    value_args,
+                    bindings,
+                    start,
+                )
+            }
+            MatcherArg::Optional(spec) => self.match_compiled_flat_optional_choices_cm740_driven(
+                flat_head,
+                spec,
+                rest_patterns,
+                value_args,
+                bindings,
+            ),
+            MatcherArg::PatternSequenceGroup(items)
+            | MatcherArg::OrderlessPatternSequenceGroup(items) => {
+                let mut expanded = items;
+                expanded.extend(rest_patterns);
+                self.match_compiled_args_with_flat_head_owned_cm740_driven(
+                    expanded, value_args, bindings, flat_head,
+                )
+            }
+            MatcherArg::Single(pattern) => {
+                let min_rest = min_required_matcher_arg_count(&rest_patterns);
+                let Some(max_consume) = value_args.len().checked_sub(min_rest) else {
+                    return Ok(match_outcome(false, bindings));
+                };
+                if max_consume == 0 {
+                    return Ok(match_outcome(false, bindings));
+                }
+
+                let one_identity = matches!(&flat_head, Expr::Atom(Atom::Symbol(s))
+                    if self.attribute_set_for_symbol(s).contains(Attribute::OneIdentity));
+                self.match_compiled_flat_single_choices_owned_cm740_driven(
+                    flat_head,
+                    one_identity,
+                    pattern,
+                    rest_patterns,
+                    value_args,
+                    bindings,
+                    1,
+                    max_consume,
+                )
+            }
+        }
+    }
+
     fn match_compiled_flat_single_choices_owned(
         &mut self,
         flat_head: Expr,
@@ -403,6 +541,33 @@ impl Session {
         max_consume: usize,
     ) -> Result<CompiledMatchOutcome, EvalError> {
         self.match_flat_single_choice(FlatSingleChoiceState {
+            flat_head,
+            one_identity,
+            pattern,
+            rest_patterns,
+            value_args,
+            bindings,
+            consume,
+            max_consume,
+            wrapped: false,
+        })
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn match_compiled_flat_single_choices_owned_cm740_driven(
+        &mut self,
+        flat_head: Expr,
+        one_identity: bool,
+        pattern: MatcherNode,
+        rest_patterns: Vec<MatcherArg>,
+        value_args: Vec<Expr>,
+        bindings: SymbolExprMap,
+        consume: usize,
+        max_consume: usize,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        self.match_flat_single_choice_cm740_driven(FlatSingleChoiceState {
             flat_head,
             one_identity,
             pattern,
@@ -456,6 +621,52 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn match_flat_single_choice_cm740_driven(
+        &mut self,
+        state: FlatSingleChoiceState,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let selected_value = if state.wrapped {
+            Expr::call(state.flat_head.clone(), vec![state.value_args[0].clone()])
+        } else {
+            flat_match_value(
+                &state.flat_head,
+                state
+                    .value_args
+                    .iter()
+                    .take(state.consume)
+                    .cloned()
+                    .collect(),
+            )
+        };
+        let rest_values = state
+            .value_args
+            .iter()
+            .skip(state.consume)
+            .cloned()
+            .collect::<Vec<_>>();
+        let pattern_result = self.match_compiled_owned_cm740_driven(
+            state.pattern.clone(),
+            selected_value,
+            state.bindings.clone(),
+        );
+        match pattern_result {
+            Ok(outcome) => {
+                self.finish_flat_single_pattern_cm740_driven(state, rest_values, outcome)
+            }
+            Err(EvalError::InputRequired { request }) => {
+                let state = SuspendedFlatSingleChoiceState::freeze(state);
+                let rest_values = SharedArgs::new(rest_values);
+                crate::resume_or_suspend!(insert self, MatchFlatSingleChoiceSuspensionFrame { state, rest_values });
+                crate::resume_or_suspend!(insert self, ContinueFlatSinglePatternFrame);
+                Err(EvalError::InputRequired { request })
+            }
+            Err(error) => Err(error),
+        }
+    }
+
     fn finish_flat_single_pattern(
         &mut self,
         mut state: FlatSingleChoiceState,
@@ -485,6 +696,38 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_flat_single_pattern_cm740_driven(
+        &mut self,
+        mut state: FlatSingleChoiceState,
+        rest_values: Vec<Expr>,
+        outcome: CompiledMatchOutcome,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if !outcome.matched {
+            state.bindings = outcome.bindings;
+            return self.advance_flat_single_choice_cm740_driven(state);
+        }
+
+        let rest_result = self.match_compiled_args_with_flat_head_owned_cm740_driven(
+            state.rest_patterns.clone(),
+            rest_values,
+            outcome.bindings,
+            state.flat_head.clone(),
+        );
+        match rest_result {
+            Ok(outcome) => self.finish_flat_single_rest_cm740_driven(state, outcome),
+            Err(EvalError::InputRequired { request }) => {
+                let state = SuspendedFlatSingleChoiceState::freeze(state);
+                crate::resume_or_suspend!(insert self, FinishFlatSinglePatternSuspensionFrame { state });
+                crate::resume_or_suspend!(insert self, ContinueFlatSingleRestFrame);
+                Err(EvalError::InputRequired { request })
+            }
+            Err(error) => Err(error),
+        }
+    }
+
     fn finish_flat_single_rest(
         &mut self,
         state: FlatSingleChoiceState,
@@ -494,6 +737,21 @@ impl Session {
             Ok(outcome)
         } else {
             self.advance_flat_single_choice(state)
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn finish_flat_single_rest_cm740_driven(
+        &mut self,
+        state: FlatSingleChoiceState,
+        outcome: CompiledMatchOutcome,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if outcome.matched {
+            Ok(outcome)
+        } else {
+            self.advance_flat_single_choice_cm740_driven(state)
         }
     }
 
@@ -510,6 +768,27 @@ impl Session {
         state.consume += 1;
         if state.consume <= state.max_consume {
             self.match_flat_single_choice(state)
+        } else {
+            Ok(match_outcome(false, state.bindings))
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn advance_flat_single_choice_cm740_driven(
+        &mut self,
+        mut state: FlatSingleChoiceState,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if !state.wrapped && state.consume == 1 && !state.one_identity {
+            state.wrapped = true;
+            return self.match_flat_single_choice_cm740_driven(state);
+        }
+
+        state.wrapped = false;
+        state.consume += 1;
+        if state.consume <= state.max_consume {
+            self.match_flat_single_choice_cm740_driven(state)
         } else {
             Ok(match_outcome(false, state.bindings))
         }
@@ -559,7 +838,11 @@ impl Session {
                 };
                 let rest_values = value_iter.collect::<Vec<_>>();
 
-                let pattern_result = self.match_compiled_owned(pattern, value, bindings);
+                let pattern_result = (if crate::cm740_probe::driven() {
+                    self.match_compiled_owned_cm740_driven(pattern, value, bindings)
+                } else {
+                    self.match_compiled_owned(pattern, value, bindings)
+                });
                 match pattern_result {
                     Ok(outcome) => {
                         if !outcome.matched {
@@ -706,11 +989,19 @@ impl Session {
             .skip(state.consume)
             .cloned()
             .collect::<Vec<_>>();
-        let pattern_result = self.match_compiled_owned(
-            state.pattern.clone(),
-            selected_value,
-            state.bindings.clone(),
-        );
+        let pattern_result = (if crate::cm740_probe::driven() {
+            self.match_compiled_owned_cm740_driven(
+                state.pattern.clone(),
+                selected_value,
+                state.bindings.clone(),
+            )
+        } else {
+            self.match_compiled_owned(
+                state.pattern.clone(),
+                selected_value,
+                state.bindings.clone(),
+            )
+        });
         match pattern_result {
             Ok(outcome) => self.finish_flat_single_collection_pattern(state, rest_values, outcome),
             Err(EvalError::InputRequired { request }) => {

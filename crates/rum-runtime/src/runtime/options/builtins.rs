@@ -86,7 +86,15 @@ impl Session {
                     return Ok(self.invalid_call_with_arg_range("OptionValue", args, 2, 3));
                 };
 
-                self.resolve_option_value_query(scope.target, Some(scope.explicit), &query)
+                (if crate::cm740_probe::driven() {
+                    self.resolve_option_value_query_cm740_driven(
+                        scope.target,
+                        Some(scope.explicit),
+                        &query,
+                    )
+                } else {
+                    self.resolve_option_value_query(scope.target, Some(scope.explicit), &query)
+                })
             }
             [target_expr, option_expr] => {
                 let Some(target) = self.normalize_symbol_target_expr(target_expr, true) else {
@@ -107,7 +115,11 @@ impl Session {
                     }
                 };
 
-                self.resolve_option_value_query(target, None, &query)
+                (if crate::cm740_probe::driven() {
+                    self.resolve_option_value_query_cm740_driven(target, None, &query)
+                } else {
+                    self.resolve_option_value_query(target, None, &query)
+                })
             }
             [target_expr, explicit_expr, option_expr] => {
                 let Some(target) = self.normalize_symbol_target_expr(target_expr, true) else {
@@ -246,7 +258,11 @@ impl Session {
             }
         };
 
-        self.resolve_option_value_query(target, Some(explicit), query)
+        (if crate::cm740_probe::driven() {
+            self.resolve_option_value_query_cm740_driven(target, Some(explicit), query)
+        } else {
+            self.resolve_option_value_query(target, Some(explicit), query)
+        })
     }
 
     fn resolve_option_value_query(
@@ -268,6 +284,44 @@ impl Session {
                         original.clone(),
                         *name,
                     ) {
+                        Ok(value) => value,
+                        Err(error) => {
+                            return self
+                                .suspend_option_values(target, explicit, items, values, error);
+                        }
+                    };
+                    values.push(value);
+                }
+                Ok(Expr::call(system_expr("List"), values))
+            }
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resolve_option_value_query_cm740_driven(
+        &mut self,
+        target: Symbol,
+        explicit: Option<SymbolOptions>,
+        query: &OptionValueQuery,
+    ) -> Result<Expr, EvalError> {
+        match query {
+            OptionValueQuery::Single { original, name } => {
+                self.resolve_option_value_scalar(target, explicit, original.clone(), *name)
+            }
+            OptionValueQuery::Many(items) => {
+                let mut values = Vec::with_capacity(items.len());
+                for (original, name) in items {
+                    let value = match {
+                        let _cm740_producer = crate::cm740_probe::enter("P1132");
+                        self.resolve_option_value_scalar(
+                            target,
+                            explicit.clone(),
+                            original.clone(),
+                            *name,
+                        )
+                    } {
                         Ok(value) => value,
                         Err(error) => {
                             return self
@@ -571,6 +625,36 @@ impl crate::runtime::suspension::SuspensionFrame for OptionValuesSuspensionFrame
         session: &mut Session,
         outcome: Result<Expr, EvalError>,
     ) -> crate::runtime::suspension::FrameAction {
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_4e1d(self, session, outcome);
+        }
+
+        let resumed = outcome.and_then(|value| {
+            session.resume_option_values_after_scalar(
+                self.target,
+                self.explicit.clone(),
+                &self.items,
+                self.next_index,
+                &self.values,
+                value,
+            )
+        });
+        crate::runtime::suspension::FrameAction::complete(resumed)
+    }
+}
+impl OptionValuesSuspensionFrame {
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_4e1d(
+        self: Arc<Self>,
+        session: &mut Session,
+        outcome: Result<Expr, EvalError>,
+    ) -> crate::runtime::suspension::FrameAction {
+        if crate::cm740_probe::frame("P1132") {
+            crate::cm740_probe::hit("P1132", "ForwardActualScalarBeforeOptionListTail");
+            return crate::runtime::suspension::FrameAction::complete(outcome);
+        }
         let resumed = outcome.and_then(|value| {
             session.resume_option_values_after_scalar(
                 self.target,

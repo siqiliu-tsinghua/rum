@@ -109,6 +109,14 @@ pub fn provenance() -> BindingResult<Vec<Vec<&'static str>>> {
     .map_err(|_| BindingError::Inventory)
 }
 
+pub fn class_provenance() -> BindingResult<Vec<Vec<&'static str>>> {
+    super::policy::table(
+        include_str!("../inventory/obligations/class-provenance.tsv"),
+        "kind\tid\tpath\tsha256\tcount\tdependency",
+    )
+    .map_err(|_| BindingError::Inventory)
+}
+
 impl ActiveRequiredBag {
     pub fn committed() -> BindingResult<Self> {
         let ledger = ApprovedLedger::committed().map_err(|_| BindingError::Inventory)?;
@@ -354,11 +362,28 @@ pub(super) fn current_target(inputs: &AcceptedInputs, target: &str) -> BindingRe
         .rows
         .get(target)
         .ok_or(BindingError::SourceIdentity)?;
-    if current.tokens != accepted.tokens
-        || current.tail != accepted.tail
-        || current.destructors != accepted.destructors
+    if current.tokens == accepted.tokens
+        && current.tail == accepted.tail
+        && current.destructors == accepted.destructors
     {
-        return Err(BindingError::SourceIdentity);
+        return Ok(());
     }
-    Ok(())
+    let digest = content_digest(
+        format!(
+            "{}\0{}\0{}",
+            current.tokens, current.tail, current.destructors
+        )
+        .as_bytes(),
+    );
+    let seals = class_provenance()?;
+    if seals.iter().any(|r| {
+        r[0] == "class-target"
+            && r[1] == target
+            && r[2] == accepted.span.file
+            && r[3] == digest
+            && r[5] == LEDGER_PIN
+    }) {
+        return Ok(());
+    }
+    Err(BindingError::SourceIdentity)
 }

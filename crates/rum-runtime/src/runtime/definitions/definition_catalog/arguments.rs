@@ -66,6 +66,10 @@ struct SuspendedArgumentResolution {
     cursor: usize,
     resolved: ResolvedArgumentAccumulator,
 }
+thread_local! {
+    static CM740_ARG_FLAG_STACK: std::cell::RefCell<Vec<(bool, bool)>> =
+        const { std::cell::RefCell::new(Vec::new()) };
+}
 
 impl Session {
     pub(in crate::runtime) fn resolve_argument_exprs_owned(
@@ -73,6 +77,16 @@ impl Session {
         exprs: Vec<Expr>,
     ) -> Result<Vec<Expr>, EvalError> {
         self.resolve_argument_exprs_from_cursor(exprs, 0, Vec::new())
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resolve_argument_exprs_owned_cm740_driven(
+        &mut self,
+        exprs: Vec<Expr>,
+    ) -> Result<Vec<Expr>, EvalError> {
+        self.resolve_argument_exprs_from_cursor_cm740_driven(exprs, 0, Vec::new())
     }
 
     fn resolve_argument_exprs_from_cursor(
@@ -100,6 +114,39 @@ impl Session {
                         cursor,
                         resolved: ResolvedArgumentAccumulator::freeze(resolved),
                     },
+                },
+            )?;
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resolve_argument_exprs_from_cursor_cm740_driven(
+        &mut self,
+        exprs: Vec<Expr>,
+        mut cursor: usize,
+        mut resolved: Vec<Expr>,
+    ) -> Result<Vec<Expr>, EvalError> {
+        loop {
+            let Some(expr) = exprs.get(cursor) else {
+                return Ok(resolved);
+            };
+
+            crate::resume_typed_or_suspend!(
+                self,
+                crate::cm740_probe::around("P0325", || self.evaluate_cm740_driven(expr.clone())),
+                ok(value) => {
+                    resolved.push(value);
+                    cursor += 1;
+                    Ok(())
+                },
+                suspend => ResolveArgumentExprsFromCursorSuspensionFrame {
+                    suspended: { CM740_ARG_FLAG_STACK.with(|flags| flags.borrow_mut().push((false, false))); SuspendedArgumentResolution {
+                        exprs: SharedArgs::new(exprs),
+                        cursor,
+                        resolved: ResolvedArgumentAccumulator::freeze(resolved),
+                    } },
                 },
             )?;
         }
@@ -135,12 +182,49 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn resolve_argument_exprs_shared_from_cm740_driven(
+        &mut self,
+        exprs: SharedArgs,
+        mut cursor: usize,
+    ) -> Result<Vec<Expr>, EvalError> {
+        let mut resolved = Vec::new();
+        loop {
+            let Some(expr) = exprs.get(cursor) else {
+                return Ok(resolved);
+            };
+
+            crate::resume_typed_or_suspend!(
+                self,
+                crate::cm740_probe::around("P0326", || self.evaluate_cm740_driven(expr.clone())),
+                ok(value) => {
+                    resolved.push(value);
+                    cursor += 1;
+                    Ok(())
+                },
+                suspend => ResolveArgumentExprsFromCursorSuspensionFrame {
+                    suspended: { CM740_ARG_FLAG_STACK.with(|flags| flags.borrow_mut().push((true, false))); SuspendedArgumentResolution {
+                        exprs,
+                        cursor,
+                        resolved: ResolvedArgumentAccumulator::freeze(resolved),
+                    } },
+                },
+            )?;
+        }
+    }
+
     fn resume_suspended_argument_resolution<'resume>(
         &mut self,
         mut state: SuspendedArgumentResolution,
         value: Expr,
         token: ContinueToken<'resume, ResolveArgumentExprsFromCursorSuspensionFrame>,
     ) -> Result<ResolvedArgumentAccumulator, ResumeStop<Vec<Expr>>> {
+        if crate::cm740_probe::driven() {
+            return self.resume_suspended_argument_resolution_cm740_driven(state, value, token);
+        }
+
         state.resolved = state.resolved.appended(value);
         state.cursor += 1;
 
@@ -159,6 +243,55 @@ impl Session {
                     state.cursor += 1;
                 }
                 Err(EvalError::InputRequired { request }) => {
+                    return Err(token.suspend(
+                        self,
+                        witness,
+                        request,
+                        ResolveArgumentExprsFromCursorSuspensionFrame { suspended: state },
+                    ));
+                }
+                Err(error) => return Err(ResumeStop::failure(error)),
+            }
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_suspended_argument_resolution_cm740_driven<'resume>(
+        &mut self,
+        mut state: SuspendedArgumentResolution,
+        value: Expr,
+        token: ContinueToken<'resume, ResolveArgumentExprsFromCursorSuspensionFrame>,
+    ) -> Result<ResolvedArgumentAccumulator, ResumeStop<Vec<Expr>>> {
+        let (cm740_shared, cm740_next_argument) =
+            CM740_ARG_FLAG_STACK.with(|flags| flags.borrow_mut().pop().unwrap_or((false, false)));
+        let row = if cm740_shared { "P0326" } else { "P0325" };
+        if cm740_next_argument && crate::cm740_probe::frame(row) {
+            crate::cm740_probe::hit(row, "OmitActualResumedArgumentAppend");
+        } else {
+            state.resolved = state.resolved.appended(value);
+        }
+        state.cursor += 1;
+
+        loop {
+            let Some(expr) = state.exprs.get(state.cursor) else {
+                return Ok(state.resolved);
+            };
+
+            let evaluated_result =
+                crate::cm740_probe::around(row, || self.evaluate_cm740_driven(expr.clone()));
+            let witness: SlotWitness<
+                <ResolveArgumentExprsFromCursorSuspensionFrame as TypedFrame>::Input,
+            > = slot_witness(&evaluated_result);
+            match evaluated_result {
+                Ok(value) => {
+                    state.resolved = state.resolved.appended(value);
+                    state.cursor += 1;
+                }
+                Err(EvalError::InputRequired { request }) => {
+                    CM740_ARG_FLAG_STACK
+                        .with(|flags| flags.borrow_mut().push((cm740_shared, true)));
                     return Err(token.suspend(
                         self,
                         witness,

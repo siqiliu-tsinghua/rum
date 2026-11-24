@@ -60,9 +60,15 @@ impl Session {
                 targets
                     .retain(|target| target.state == GuardedReplacePartTargetState::PendingGuard);
                 let remaining = targets.len();
-                return self.select_guarded_replace_part_targets_owned(
-                    expr, rules, targets, remaining, None,
-                );
+                return (if crate::cm740_probe::driven() {
+                    self.select_guarded_replace_part_targets_owned_cm740_driven(
+                        expr, rules, targets, remaining, None,
+                    )
+                } else {
+                    self.select_guarded_replace_part_targets_owned(
+                        expr, rules, targets, remaining, None,
+                    )
+                });
             };
 
             let Some(position_spec) = rule.position_specs.get(position_spec_index).cloned() else {
@@ -83,7 +89,11 @@ impl Session {
                     position_spec_index += 1;
                 }
                 ReplacePartPositionSpec::Pattern(pattern_expr) => {
-                    let pattern_result = self.resolve_matcher_pattern_expr_owned(pattern_expr);
+                    let pattern_result = (if crate::cm740_probe::driven() {
+                        self.resolve_matcher_pattern_expr_owned_cm740_driven(pattern_expr)
+                    } else {
+                        self.resolve_matcher_pattern_expr_owned(pattern_expr)
+                    });
                     return match pattern_result {
                         Ok(pattern) => self.plan_guarded_replace_part_pattern_targets_owned(
                             expr,
@@ -184,8 +194,15 @@ impl Session {
             }
 
             let position = replace_part_position_expr(&targets[index].path);
-            let match_result =
-                self.match_expr_owned(pattern.clone(), position, SymbolExprMap::default());
+            let match_result = (if crate::cm740_probe::driven() {
+                self.match_expr_owned_cm740_driven(
+                    pattern.clone(),
+                    position,
+                    SymbolExprMap::default(),
+                )
+            } else {
+                self.match_expr_owned(pattern.clone(), position, SymbolExprMap::default())
+            });
             match match_result {
                 Ok(outcome) => pending = Some(outcome),
                 Err(EvalError::InputRequired { request }) => {
@@ -279,6 +296,79 @@ impl Session {
 
     #[cold]
     #[inline(never)]
+    #[allow(dead_code)]
+    fn select_guarded_replace_part_targets_owned_cm740_driven(
+        &mut self,
+        expr: Expr,
+        rules: Vec<ReplacePartRule>,
+        mut targets: Vec<GuardedReplacePartTarget>,
+        mut remaining: usize,
+        mut pending: Option<CompiledMatchOutcome>,
+    ) -> Result<Expr, EvalError> {
+        // Later rules have priority at a contested position. Walking the
+        // rule-major target vector backward lets an accepting later rule claim
+        // the position before any earlier guard at that position is run. A
+        // candidate advances only after its one guard outcome is recorded, so
+        // suspension cannot replay it and duplicate position specs cannot run
+        // it twice.
+        loop {
+            if let Some(outcome) = pending.take() {
+                let index = remaining - 1;
+                targets[index].state = if outcome.matched {
+                    GuardedReplacePartTargetState::Accepted
+                } else {
+                    GuardedReplacePartTargetState::Inactive
+                };
+                remaining -= 1;
+                continue;
+            }
+
+            if remaining == 0 {
+                let plan = build_guarded_replace_plan_from_targets(targets, &rules);
+                return self.apply_replace_plan_owned(expr, plan);
+            }
+
+            let index = remaining - 1;
+            let claimed_by_later_rule = targets[index + 1..].iter().any(|later| {
+                later.state == GuardedReplacePartTargetState::Accepted
+                    && later.path == targets[index].path
+            });
+            if claimed_by_later_rule {
+                targets[index].state = GuardedReplacePartTargetState::Inactive;
+                remaining -= 1;
+                continue;
+            }
+
+            let target = &targets[index];
+            let rule = &rules[target.rule_index];
+            if rule.guards.is_empty() {
+                targets[index].state = GuardedReplacePartTargetState::Accepted;
+                remaining -= 1;
+                continue;
+            }
+
+            let guard_result = crate::cm740_probe::around("P1070", || {
+                self.evaluate_guard_sequence_owned_cm740_driven(
+                    rule.guards.clone(),
+                    target.bindings.clone(),
+                    target.bindings.clone(),
+                    target.option_scope.clone(),
+                )
+            });
+            match guard_result {
+                Ok(outcome) => pending = Some(outcome),
+                Err(EvalError::InputRequired { request }) => {
+                    return self.suspend_guarded_replace_part_selection_owned(
+                        expr, rules, targets, remaining, request,
+                    );
+                }
+                Err(error) => return Err(error),
+            }
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
     fn suspend_guarded_replace_part_selection_owned(
         &mut self,
         expr: Expr,
@@ -304,15 +394,27 @@ impl Session {
         loop {
             let Some(rule) = state.rules.as_slice().get(state.rule_index) else {
                 let remaining = state.targets.len();
-                return self.select_guarded_replace_part_targets_suspended(
-                    SuspendedGuardedReplacePartSelection {
-                        expr: state.expr,
-                        rules: state.rules,
-                        targets: state.targets,
-                        remaining,
-                    },
-                    None,
-                );
+                return (if crate::cm740_probe::driven() {
+                    self.select_guarded_replace_part_targets_suspended_cm740_driven(
+                        SuspendedGuardedReplacePartSelection {
+                            expr: state.expr,
+                            rules: state.rules,
+                            targets: state.targets,
+                            remaining,
+                        },
+                        None,
+                    )
+                } else {
+                    self.select_guarded_replace_part_targets_suspended(
+                        SuspendedGuardedReplacePartSelection {
+                            expr: state.expr,
+                            rules: state.rules,
+                            targets: state.targets,
+                            remaining,
+                        },
+                        None,
+                    )
+                });
             };
             let Some(position_spec) = rule.position_specs.get(state.position_spec_index).cloned()
             else {
@@ -335,7 +437,11 @@ impl Session {
                     state.position_spec_index += 1;
                 }
                 ReplacePartPositionSpec::Pattern(pattern_expr) => {
-                    let pattern_result = self.resolve_matcher_pattern_expr_owned(pattern_expr);
+                    let pattern_result = (if crate::cm740_probe::driven() {
+                        self.resolve_matcher_pattern_expr_owned_cm740_driven(pattern_expr)
+                    } else {
+                        self.resolve_matcher_pattern_expr_owned(pattern_expr)
+                    });
                     return match pattern_result {
                         Ok(pattern) => {
                             self.plan_guarded_replace_part_pattern_targets_suspended(state, pattern)
@@ -410,8 +516,15 @@ impl Session {
             }
 
             let position = replace_part_position_expr(state.planning.targets.path(state.index));
-            let match_result =
-                self.match_expr_owned(state.pattern.clone(), position, SymbolExprMap::default());
+            let match_result = (if crate::cm740_probe::driven() {
+                self.match_expr_owned_cm740_driven(
+                    state.pattern.clone(),
+                    position,
+                    SymbolExprMap::default(),
+                )
+            } else {
+                self.match_expr_owned(state.pattern.clone(), position, SymbolExprMap::default())
+            });
             match match_result {
                 Ok(outcome) => pending = Some(outcome),
                 Err(EvalError::InputRequired { request }) => {
@@ -478,6 +591,82 @@ impl Session {
             let option_scope = state.targets.option_scope(index);
             let guard_result =
                 self.evaluate_guard_sequence_readonly_suspended(guards, bindings, option_scope);
+            match guard_result {
+                Ok(matched) => pending = Some(matched),
+                Err(EvalError::InputRequired { request }) => {
+                    crate::resume_or_suspend!(insert self, SelectGuardedReplacePartTargetsSuspendedSuspensionFrame { state });
+                    return Err(EvalError::InputRequired { request });
+                }
+                Err(error) => return Err(error),
+            }
+        }
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn select_guarded_replace_part_targets_suspended_cm740_driven(
+        &mut self,
+        mut state: SuspendedGuardedReplacePartSelection,
+        mut pending: Option<bool>,
+    ) -> Result<Expr, EvalError> {
+        loop {
+            if let Some(matched) = pending.take() {
+                let index = state.remaining - 1;
+                if crate::cm740_probe::frame("P1070") {
+                    crate::cm740_probe::hit("P1070", "OmitActualGuardedTargetAcceptance");
+                } else {
+                    state.targets.set_state(
+                        index,
+                        if matched {
+                            GuardedReplacePartTargetState::Accepted
+                        } else {
+                            GuardedReplacePartTargetState::Inactive
+                        },
+                    );
+                }
+                state.remaining -= 1;
+                continue;
+            }
+
+            if state.remaining == 0 {
+                let plan = state.targets.build_plan(state.rules.as_slice());
+                return self.apply_replace_plan_owned(state.expr, plan);
+            }
+            let index = state.remaining - 1;
+            if state.targets.state(index) != GuardedReplacePartTargetState::PendingGuard {
+                state.remaining -= 1;
+                continue;
+            }
+            let claimed_by_later_rule = (index + 1..state.targets.len()).any(|later| {
+                state.targets.state(later) == GuardedReplacePartTargetState::Accepted
+                    && state.targets.path(later) == state.targets.path(index)
+            });
+            if claimed_by_later_rule {
+                state
+                    .targets
+                    .set_state(index, GuardedReplacePartTargetState::Inactive);
+                state.remaining -= 1;
+                continue;
+            }
+
+            let rule_index = state.targets.rule_index(index);
+            let rule = &state.rules.as_slice()[rule_index];
+            if rule.guards.is_empty() {
+                state
+                    .targets
+                    .set_state(index, GuardedReplacePartTargetState::Accepted);
+                state.remaining -= 1;
+                continue;
+            }
+            let guards = SharedArgs::new(rule.guards.to_vec());
+            let bindings = state.targets.frozen_bindings(index);
+            let option_scope = state.targets.option_scope(index);
+            let guard_result = self.evaluate_guard_sequence_readonly_suspended_cm740_driven(
+                guards,
+                bindings,
+                option_scope,
+            );
             match guard_result {
                 Ok(matched) => pending = Some(matched),
                 Err(EvalError::InputRequired { request }) => {

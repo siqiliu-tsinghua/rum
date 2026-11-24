@@ -105,16 +105,29 @@ impl Session {
     ) -> Result<Expr, EvalError> {
         let spec =
             FrozenRewriteValue::freeze(self.compile_cases_spec_from_resolved_expr(resolved_spec));
-        self.system_option_bool(
-            "Cases",
-            "Heads",
-            false,
-            options::CasesOptionWorking::Suspended {
-                target,
-                spec,
-                call_args,
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.system_option_bool_cm740_driven(
+                "Cases",
+                "Heads",
+                false,
+                options::CasesOptionWorking::Suspended {
+                    target,
+                    spec,
+                    call_args,
+                },
+            )
+        } else {
+            self.system_option_bool(
+                "Cases",
+                "Heads",
+                false,
+                options::CasesOptionWorking::Suspended {
+                    target,
+                    spec,
+                    call_args,
+                },
+            )
+        })
     }
 
     fn resume_cases_after_resolved_spec(
@@ -125,17 +138,31 @@ impl Session {
         call_args: Vec<Expr>,
     ) -> Result<Expr, EvalError> {
         let spec = self.compile_cases_spec_from_resolved_expr(resolved_spec);
-        self.system_option_bool(
-            "Cases",
-            "Heads",
-            false,
-            options::CasesOptionWorking::Owned {
-                target,
-                spec,
-                option_exprs,
-                call_args,
-            },
-        )
+        (if crate::cm740_probe::driven() {
+            self.system_option_bool_cm740_driven(
+                "Cases",
+                "Heads",
+                false,
+                options::CasesOptionWorking::Owned {
+                    target,
+                    spec,
+                    option_exprs,
+                    call_args,
+                },
+            )
+        } else {
+            self.system_option_bool(
+                "Cases",
+                "Heads",
+                false,
+                options::CasesOptionWorking::Owned {
+                    target,
+                    spec,
+                    option_exprs,
+                    call_args,
+                },
+            )
+        })
     }
 
     #[inline(always)]
@@ -342,16 +369,31 @@ impl Session {
 
         match spec {
             CasesSpec::Pattern(pattern) => {
-                let match_result =
-                    self.match_expr_owned(pattern.clone(), expr.clone(), SymbolExprMap::default());
+                let match_result = (if crate::cm740_probe::driven() {
+                    self.match_expr_owned_cm740_driven(
+                        pattern.clone(),
+                        expr.clone(),
+                        SymbolExprMap::default(),
+                    )
+                } else {
+                    self.match_expr_owned(pattern.clone(), expr.clone(), SymbolExprMap::default())
+                });
                 self.finish_cases_pattern_match(match_result, expr)
             }
             CasesSpec::Rule(rule) => {
-                let match_result = self.match_compiled_owned(
-                    rule.matcher.clone(),
-                    normalized_expr,
-                    SymbolExprMap::default(),
-                );
+                let match_result = (if crate::cm740_probe::driven() {
+                    self.match_compiled_owned_cm740_driven(
+                        rule.matcher.clone(),
+                        normalized_expr,
+                        SymbolExprMap::default(),
+                    )
+                } else {
+                    self.match_compiled_owned(
+                        rule.matcher.clone(),
+                        normalized_expr,
+                        SymbolExprMap::default(),
+                    )
+                });
                 match match_result {
                     Ok(outcome) => self.finish_cases_rule_match(rule, outcome),
                     Err(EvalError::InputRequired { request }) => {
@@ -375,16 +417,31 @@ impl Session {
         let normalized_expr = self.normalize_match_expr(&expr);
         match spec.as_ref() {
             CasesSpec::Pattern(pattern) => {
-                let match_result =
-                    self.match_expr_owned(pattern.clone(), expr.clone(), SymbolExprMap::default());
+                let match_result = (if crate::cm740_probe::driven() {
+                    self.match_expr_owned_cm740_driven(
+                        pattern.clone(),
+                        expr.clone(),
+                        SymbolExprMap::default(),
+                    )
+                } else {
+                    self.match_expr_owned(pattern.clone(), expr.clone(), SymbolExprMap::default())
+                });
                 self.finish_cases_pattern_match(match_result, expr)
             }
             CasesSpec::Rule(rule) => {
-                let match_result = self.match_compiled_owned(
-                    rule.matcher.clone(),
-                    normalized_expr,
-                    SymbolExprMap::default(),
-                );
+                let match_result = (if crate::cm740_probe::driven() {
+                    self.match_compiled_owned_cm740_driven(
+                        rule.matcher.clone(),
+                        normalized_expr,
+                        SymbolExprMap::default(),
+                    )
+                } else {
+                    self.match_compiled_owned(
+                        rule.matcher.clone(),
+                        normalized_expr,
+                        SymbolExprMap::default(),
+                    )
+                });
                 match match_result {
                     Ok(outcome) => self.finish_cases_rule_match(rule, outcome),
                     Err(EvalError::InputRequired { request }) => {

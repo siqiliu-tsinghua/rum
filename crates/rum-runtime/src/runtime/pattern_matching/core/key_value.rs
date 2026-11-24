@@ -14,6 +14,24 @@ impl Session {
         self.match_compiled_key_value_pattern_entries_owned(entries, candidates, bindings)
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(in crate::runtime) fn match_compiled_key_value_pattern_owned_cm740_driven(
+        &mut self,
+        entries: Vec<(MatcherNode, MatcherNode, bool)>,
+        value: Expr,
+        bindings: SymbolExprMap,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let Some(candidates) = keyed_entry_forms_from_expr(&value) else {
+            return Ok(match_outcome(false, bindings));
+        };
+
+        self.match_compiled_key_value_pattern_entries_owned_cm740_driven(
+            entries, candidates, bindings,
+        )
+    }
+
     fn match_compiled_key_value_pattern_entries_owned(
         &mut self,
         entries: Vec<(MatcherNode, MatcherNode, bool)>,
@@ -25,6 +43,30 @@ impl Session {
         };
 
         self.match_compiled_key_value_pattern_choice_owned(
+            key_pattern,
+            value_pattern,
+            delayed,
+            entries.into_iter().skip(1).collect(),
+            candidates,
+            bindings,
+            0,
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn match_compiled_key_value_pattern_entries_owned_cm740_driven(
+        &mut self,
+        entries: Vec<(MatcherNode, MatcherNode, bool)>,
+        candidates: Vec<AssociationEntryForm>,
+        bindings: SymbolExprMap,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let Some((key_pattern, value_pattern, delayed)) = entries.first().cloned() else {
+            return Ok(match_outcome(true, bindings));
+        };
+
+        self.match_compiled_key_value_pattern_choice_owned_cm740_driven(
             key_pattern,
             value_pattern,
             delayed,
@@ -85,6 +127,64 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn match_compiled_key_value_pattern_choice_owned_cm740_driven(
+        &mut self,
+        key_pattern: MatcherNode,
+        value_pattern: MatcherNode,
+        delayed: bool,
+        remaining_entries: Vec<(MatcherNode, MatcherNode, bool)>,
+        candidates: Vec<AssociationEntryForm>,
+        bindings: SymbolExprMap,
+        candidate_index: usize,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        let Some(candidate) = candidates.get(candidate_index).cloned() else {
+            return Ok(match_outcome(false, bindings));
+        };
+
+        if candidate.delayed != delayed {
+            return self.match_compiled_key_value_pattern_choice_owned_cm740_driven(
+                key_pattern,
+                value_pattern,
+                delayed,
+                remaining_entries,
+                candidates,
+                bindings,
+                candidate_index + 1,
+            );
+        }
+        let candidate_key = candidate.key;
+        let candidate_value = candidate.value;
+        let state = KeyValueChoiceState {
+            key_pattern,
+            value_pattern,
+            delayed,
+            remaining_entries,
+            candidates,
+            candidate_index,
+        };
+
+        let key_result = self.match_compiled_owned_cm740_driven(
+            state.key_pattern.clone(),
+            candidate_key,
+            bindings,
+        );
+        match key_result {
+            Ok(outcome) => {
+                self.finish_key_value_key_match_cm740_driven(state, candidate_value, outcome)
+            }
+            Err(EvalError::InputRequired { request }) => {
+                let state = SuspendedKeyValueChoice::freeze(state);
+                crate::resume_or_suspend!(insert self, MatchCompiledKeyValuePatternChoiceOwnedSuspensionFrame { state, candidate_value });
+                crate::resume_or_suspend!(insert self, ContinueKeyValueKeyMatchFrame);
+                Err(EvalError::InputRequired { request })
+            }
+            Err(error) => Err(error),
+        }
+    }
+
     pub(super) fn finish_key_value_key_match(
         &mut self,
         state: KeyValueChoiceState,
@@ -120,6 +220,44 @@ impl Session {
         }
     }
 
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn finish_key_value_key_match_cm740_driven(
+        &mut self,
+        state: KeyValueChoiceState,
+        candidate_value: Expr,
+        outcome: CompiledMatchOutcome,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if !outcome.matched {
+            return self.match_compiled_key_value_pattern_choice_owned_cm740_driven(
+                state.key_pattern,
+                state.value_pattern,
+                state.delayed,
+                state.remaining_entries,
+                state.candidates,
+                outcome.bindings,
+                state.candidate_index + 1,
+            );
+        }
+
+        let value_result = self.match_compiled_owned_cm740_driven(
+            state.value_pattern.clone(),
+            candidate_value,
+            outcome.bindings,
+        );
+        match value_result {
+            Ok(outcome) => self.finish_key_value_value_match_cm740_driven(state, outcome),
+            Err(EvalError::InputRequired { request }) => {
+                let state = SuspendedKeyValueChoice::freeze(state);
+                crate::resume_or_suspend!(insert self, FinishKeyValueKeyMatchSuspensionFrame { state });
+                crate::resume_or_suspend!(insert self, ContinueKeyValueValueMatchFrame);
+                Err(EvalError::InputRequired { request })
+            }
+            Err(error) => Err(error),
+        }
+    }
+
     pub(super) fn finish_key_value_value_match(
         &mut self,
         mut state: KeyValueChoiceState,
@@ -139,6 +277,34 @@ impl Session {
 
         state.candidates.remove(state.candidate_index);
         self.match_compiled_key_value_pattern_entries_owned(
+            state.remaining_entries,
+            state.candidates,
+            outcome.bindings,
+        )
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    pub(super) fn finish_key_value_value_match_cm740_driven(
+        &mut self,
+        mut state: KeyValueChoiceState,
+        outcome: CompiledMatchOutcome,
+    ) -> Result<CompiledMatchOutcome, EvalError> {
+        if !outcome.matched {
+            return self.match_compiled_key_value_pattern_choice_owned_cm740_driven(
+                state.key_pattern,
+                state.value_pattern,
+                state.delayed,
+                state.remaining_entries,
+                state.candidates,
+                outcome.bindings,
+                state.candidate_index + 1,
+            );
+        }
+
+        state.candidates.remove(state.candidate_index);
+        self.match_compiled_key_value_pattern_entries_owned_cm740_driven(
             state.remaining_entries,
             state.candidates,
             outcome.bindings,
