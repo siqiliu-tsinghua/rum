@@ -3987,6 +3987,50 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 150 completed — brief 791 gated DONE: the four byte-exact render
+    substitution postimages accepted; brief 792 dispatched (2026-11-25): brief 791
+    (`docs/dev/codex/brief-791-g15cm4-render-substitution-postimages.md`, `0f830d6a`) ran on
+    `cdx` (unit `brief-791-cdx-20261125-004022-2225176`, session
+    `01a20e6e-0e39-7493-814a-7b7916c2ca5e`, 00:40:22–00:58:40, ≈1,098.5 s, rc 0, peak
+    692,154,368 B, oom 0, `gpt-6.2-astra` max, 16G scope) and returned **DONE** (12 PASS / 3
+    FLAGGED — scope-scan diagnostics, settled / 1 NA; 0 deviations; 0 questions; `check: OK, 205
+    citations verified`; 6 files — the four postimages, `manifest.tsv` and `report.json` — all
+    under `.temp/brief-791/`; one disclosure, the dispatcher's own transcript). The director
+    verified every bar itself: the four postimages hash to the exact pins
+    (`216ae720…`/173,656 B, `b59e0ede…`/40,719 B, `4a76c2f5…`/21,829 B, `67be9610…`/1,010 B)
+    while live and the armed/disabled scene copies still carry the preimages (`930333ee…`/176,541,
+    `210f9cd3…`/37,834, `007a6a46…`/21,829, `6dcfaa9f…`/982); `frame_root_trace.rs` gains exactly
+    the 21 `frame-delta.tsv` entries (+21/−0) and `STATEFUL_FRAME_ABANDON_TYPES` = sorted(pre ∪
+    delta); `derived_inventory.rs` loses exactly those 21 (0/−21) and `PURE_FRAME_ABANDON_TYPES`
+    = pre minus delta with order preserved; the partition is 568 names, 514/54, sorted, unique,
+    disjoint, and the independent 1,042-entry `DERIVED_FRAME_ROOT_TRACE_TYPES` array is
+    byte-identical; the census postimage differs by exactly the one 3-byte `233`→`405` region at
+    physical line 188, with the report's both 1,229-row dumps' multisets identical and the control
+    pins (constructor 0, RET001 and the four other pinned sites 1 each) intact; `Cargo.toml`
+    differs by exactly the one inserted 28-byte `sha2 = { workspace = true }` line at physical
+    line 29 between rum-runtime and syn, parses as TOML with only that dev-dependency added, and
+    `[features]` unchanged; `manifest.tsv`'s 4 rows match the actual bytes, roles armed+disabled;
+    the two reconstruction routes (archived arrays' intersection/union and the seven diff hunks)
+    agree byte-for-byte; scope is the 23 inherited live entries plus the two untracked briefs
+    792/793, nothing else. Budget: 791 charged ≈1,098.5 s of its 1,200 s carve → 101.5 s
+    returned; reserve 805.83478847017 → 907.33478847017 s; 792's 2,400 s carve is topped up by
+    1,492.66521152983 s → 0; 793's 9,600 s carve is topped up by 9,600 s → 0 at
+    `BRIEF_MEMORY_MAX=22G`. Brief 792 (`docs/dev/codex/brief-792-g15cm4-adoption-seal-tools.md`)
+    is committed and dispatched to `cdx` (default 16G, no cargo, writes only `.temp/brief-792/`):
+    `adopt.py` (F13 plus the strict R3 whole-table adoption with freshness/mtime/atomic install),
+    `seal.py` (the five new paths including the manifest, the refreshed local-contracts row, 165
+    rows, the measured SHA as its only source, the mutant cell-7 rebind), and the `gate/` adapters
+    (165 / 9 / 71 / the ten reds / the plain no-default preflight expected success / `197 passed;
+    0 failed`), calibrated on the 160-row writer identity, the 762 merge positive `4337950c…`,
+    the wrong-anchor refusal and the negative fixtures. Order: 792 → 793 (four fresh trees, the
+    four installs on both arms, the F58-order replays, both production reviews per arm with the
+    plain no-default preflight now passing, the whole-table adoption, the 165-row seal, the lane,
+    12 receipts / 23 minima, F48 2/0, the 14-test gate 14/0, fmt, armed Stage D target **4,553
+    passed / 10 failed / 71 ignored** with the ten exclusion names and the six remnant names
+    green; the R4 handoff) → the director's live render commit → the standing order. Q25's
+    thirteen rows stay named stops; 744/745/746 held; CM5 unauthorized; the agy window stays
+    saved (carbon, effort high); `cdx` remains the worker (quota death → stop and ask).
+
   - G15-CM4 continuation 149 completed — brief 790 gated DONE: the retention-line remnant's
     complete repair plan, with Q-build and Q-seal decided and the three implementation briefs
     ordered (2026-11-25): the user's ruling after c148 ("好，那就开下一任务吧，用 cdx。") set the
