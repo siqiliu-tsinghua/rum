@@ -190,10 +190,16 @@ exact generated role bytes for R4.
 
 ## Checkpointing and STOP rules
 
-Use `scripts/memory-scope.sh <unique-793-unit> 20G` and `scripts/run-bounded.py --timeout <seconds> --`
-for every long run. The 789 bounds: 400 s per local producer, 1,800 s for the lane, 12,600 s for
-all six-case legs with bounded children, 1,500 s for F48, 3,000 s for the 14 tests, 5,400 s for
-the workspace, 900/1,200 s for the flag-on lanes, 300 s for fmt. Run heavy commands serially.
+Run every long command inside the enclosing dispatch scope (the dispatcher caps the worker at
+22 GiB) and bound it with `scripts/run-bounded.py --timeout <seconds> --`; do **not** create a
+nested `systemd-run`/`memory-scope.sh` scope — the sandbox denies the user-scope bus (gate c151's
+STOP: `runs/armed/preflight/raw.log`, `Failed to connect to user scope bus`). The 792 adapter now
+inherits any enclosing cgroup whose `memory.max` is at least 20 GiB and records
+`# inherited-scope: unit=… max=<actual> peak=… oom=0 oom_kill=0 rc=…`; a run with no such scope
+is a STOP. Keep the recorded peak and OOM counters in the report. The 789 bounds: 400 s per local
+producer, 1,800 s for the lane, 12,600 s for all six-case legs with bounded children, 1,500 s for
+F48, 3,000 s for the 14 tests, 5,400 s for the workspace, 900/1,200 s for the flag-on lanes,
+300 s for fmt. Run heavy commands serially.
 Keep the replay logs and the generated files before cleanup, twice for the two R3 rounds.
 Checkpoint pins, commands, completed gates, tree state and the exact next action after each phase.
 
@@ -219,6 +225,26 @@ return its summary.
 
 ## Budget
 
-9,600 s, dispatched with `BRIEF_MEMORY_MAX=22G` (the acceptance and Stage D run at 20G inside the
-worker scope; Stage D's carried peak is 18.48 GB). A shortfall is topped up explicitly per the
-standing 2026-11-19 ruling.
+9,600 s, dispatched with `BRIEF_MEMORY_MAX=22G` (the acceptance and Stage D run inside the
+dispatch's 22 GiB scope, inherited and recorded by the adapter — no nested scope; Stage D's
+carried peak is 18.48 GB). A shortfall is topped up explicitly per the standing 2026-11-19 ruling.
+
+## Amendment 1 (gate c151) — inherit the dispatch scope; resume at the preflight
+
+The first dispatch correctly STOPped before Cargo started: the 792 scope binding demanded a
+cgroup whose `memory.max` equals exactly 20 GiB and otherwise asked `scripts/memory-scope.sh` for a
+nested `systemd-run --user` unit, which the sandbox denies (`runs/armed/preflight/raw.log`). The
+director amended `.temp/brief-792/tools/memory.py` (a scratch tool, disclosed): it now inherits any
+enclosing cgroup with `memory.max >= 20 GiB`, records the actual max together with peak/OOM
+counters, and refuses anything smaller; the verifier accepts any recorded max of at least 20 GiB
+with `oom=0 oom_kill=0 rc=<raw rc>`. Its unit fixtures still pass (the 16 GiB line is refused; a
+22 GiB line is accepted; an OOM or a mismatched rc is refused), and all six 792 calibration
+drivers were rerun green.
+
+Resume here, keeping the STOP evidence untouched: the four fresh trees are already verified and
+pinned (`preflight-stop-trees.tsv`: baseline/disabled/real at input, armed `928086…` with only
+`crates/rum-stdlib/Cargo.toml` changed), the start checkpoint is `start-ns`, and the first
+preflight attempt stays as evidence. Continue at `PROGRESS.md`'s documented command with a fresh
+`--out .temp/brief-793/runs/armed/preflight-02`; do not re-copy the trees or re-install the
+manifest. From then on every state inherits the dispatch scope exactly as above. The bars, bounds,
+STOP rules and budgets of the brief are otherwise unchanged.
