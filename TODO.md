@@ -3987,6 +3987,53 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 151 completed — brief 792 gated DONE: the adoption, seal and gate tools
+    accepted and calibrated; brief 793 dispatched (2026-11-25): brief 792
+    (`docs/dev/codex/brief-792-g15cm4-adoption-seal-tools.md`, `416dc504`) ran on `cdx` (unit
+    `brief-792-cdx-20261125-010153-2234162`, session `01a20e81-be22-7a52-a8bd-741a66807606`,
+    01:01:53–01:36:02, ≈2,049.9 s, rc 0, peak 562,765,824 B, oom 0, 16G scope) and returned
+    **DONE** (12 PASS, 0 deviations, 0 questions; `check: OK, 257 citations verified`; 45 files —
+    `tools/{adopt.py,seal.py,gate/,run_tree.py,closure.py,memory.py,overlay_digest.py,shared.py}`,
+    `calibration/`, logs, `coverage.tsv`, `gate-paths.jsonl`, `input-hashes.tsv`, `PROGRESS.md`,
+    `report.json` — all under `.temp/brief-792/`; 0 disclosures; no native run or production
+    emission). The director reproduced every control in `.temp/brief-792-director/` (the package
+    copied so its root anchors still point at the repo; each driver bounded at 600 s): the writer
+    reproduces the carried 160-row overlay table byte-identically (12,998,760 B) and all 151
+    mutant cells with all eight cells intact; the archived 762 merge positive is exactly
+    `4337950c5b5e5f2a26f94d4aee66aacc0263a62b732d34b74e3021d1182dbbc7`; all seven negative
+    fixtures refuse (762 wrong anchor, missing review, wrong inactive marker,
+    previous-invocation pair, swapped-role metadata, stale 762 output, stale F13 generator) with
+    the installed bytes and mtime unchanged, and the F13 fixture keeps records 68, identity
+    fields 0–17, generator bytes exact, F55 re-read, with a changed identity field refused; the
+    seal fixture is 165 sorted unique rows = 159 carried + 5 new + 1 refreshed, 151 mutants
+    rebound, external schema cell 64 hex + LF, idempotent with a zero-write second publication,
+    physical positions 115/116/124/155/156/157, prefix 13,010,812 B `f8611b19…` and suffix
+    937,815 B `2e62047c…` independently equal, byte closure 5,842/5,851/5,851/5,851 (330
+    decoded, 3 substitutions, 2 generated differences, 9 addition pins), class/chain
+    2,422/8/20,625/152/4-4; the twelve 7-field receipt shapes and 23 exact minima pass with the
+    short-by-one refusal and every receipt negative fires under the 165/9 guards; the Stage D
+    fixture accepts 70 summaries/4,553/10 named reds/71 ignores/6 green remnants and refuses 3
+    wrong sets; F48's two selectors and the 14 selectors are all named; the flag-on leg enforces
+    `3+1+1/0` and `197/0` by count and exit; coverage is 343 sorted unique keys (165 overlay
+    paths, 12 receipt names, 23 minima, 71 ignores, 16 red/remnant names); the path plan is 44
+    dry CLI invocations with 0 native runs, the probe-session fixture holding the exclusive lock,
+    the producer plan with the plain no-default preflight expected success and 0 aux features,
+    the source-gate plan (6 cold primaries, 2 disabled restores, 32 stable invocations, 5
+    negative pairings per configuration, 12 receipts, 23 minima) and the acceptance plan (lane 9,
+    F48 2, focused 14, fmt 2, no-fail-fast workspace, flag-on bars). Scope: `git status` = the 23
+    inherited live entries + the one untracked brief 793; no git attempt. Budget: 792 charged
+    ≈2,049.9 s of 2,400 → 350.1 s returned → reserve 350.1 s; 793 carves 9,600 s (explicit
+    top-up 9,249.9 s) → 0 at `BRIEF_MEMORY_MAX=22G`. Order: 793 (the giant run: four fresh trees
+    under `.temp/brief-793/images/`, the four postimages installed on both arms after the plain
+    no-default preflight succeeds, the F58-order standing replays, both production reviews per
+    arm with the strict merge and F55 adoption, the 165-row seal with the measured SHA, the
+    P0543 lane with 9 manifests, six cold primaries + 12 receipts + 23 minima + the six-case
+    gate, F48 2/0, the 14-test gate 14/0, fmt, armed Stage D target **4,553 passed / 10 failed /
+    71 ignored** with the ten accepted reds and the six remnants green; the R4 handoff) → the
+    director's live render commit → the standing order. Q25's thirteen rows stay named stops;
+    744/745/746 held; CM5 unauthorized; the agy window stays saved (carbon, effort high); `cdx`
+    remains the worker (quota death → stop and ask).
+
   - G15-CM4 continuation 150 completed — brief 791 gated DONE: the four byte-exact render
     substitution postimages accepted; brief 792 dispatched (2026-11-25): brief 791
     (`docs/dev/codex/brief-791-g15cm4-render-substitution-postimages.md`, `0f830d6a`) ran on
