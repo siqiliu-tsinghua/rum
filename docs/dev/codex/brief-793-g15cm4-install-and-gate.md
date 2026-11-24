@@ -93,14 +93,22 @@ exact generated role bytes for R4.
      and require its 1/0 line and every recorded falsifier. 400 s bounds
      (`f13_refresh.py:37–66`). Record the actual resulting role SHA-256 (it supersedes the design's
      predicted `a444b850…`/`7c9c615a…`).
-   - **Ownership replay**: the four `tests::ownership_graph::reconcile::*` maintenance selectors
+   - **Ownership replay** (armed is the authored role): the four
+     `tests::ownership_graph::reconcile::*` maintenance selectors
      (`regenerate_self_reaching_inventory`, `regenerate_host_payload_inventory`,
      `regenerate_unknown_construct_inventory`, `regenerate_host_payload_ledger_review`) with
      `--ignored --exact --nocapture`; archive the seven review copies in `target/brief-775/`;
      compare the seven digests with `standing-inputs.tsv`, 61 self-reaching, 92 hosts, 10,135
      constructs and 92 ledger data rows; recompute all 152 chain pins against the final armed
-     files and compare the chain on armed/disabled/real. The ignored legacy adoption reads a
-     different chain reference and is outside F48.
+     files and compare the chain on armed/disabled/real. The seven tables and the chain are one
+     armed-authored inventory installed as common bytes on all roles: on disabled and real the
+     installed tables and `emission_chain.tsv` must be byte-identical to armed's
+     (`unknown_macros.tsv` `843215…`, chain `0e508bb4…`). A disabled regeneration is a
+     diagnostic, never installed and never a bar: it must differ from the armed review only in
+     `unknown_macros.tsv`, where exactly the two `cfg!` rows at `lib.rs:27:32` and `lib.rs:27:51`
+     are absent (3,725 macros / 10,133 constructs against armed's 3,727/10,135), the declared
+     input-arm difference (`ENABLED = !cfg!(disabled) && !cfg!(live)` vs `false`). The ignored
+     legacy adoption reads a different chain reference and is outside F48.
    - **Class and producers**: `oracle::obligations::tests::obligations_discovery_campaign` in the
      `suspension_oracle` integration target with `--ignored --exact --nocapture`; capture every
      20-field record; require the 2,422 class digests on both arms, the exact eight absent keys
@@ -248,3 +256,33 @@ preflight attempt stays as evidence. Continue at `PROGRESS.md`'s documented comm
 `--out .temp/brief-793/runs/armed/preflight-02`; do not re-copy the trees or re-install the
 manifest. From then on every state inherits the dispatch scope exactly as above. The bars, bounds,
 STOP rules and budgets of the brief are otherwise unchanged.
+
+## Amendment 2 (gate c151) — the ownership inventory is armed-authored; the disabled difference is the declared arm switch
+
+The resumed dispatch correctly STOPped at the disabled ownership comparison. On armed all seven
+review digests equal the installed tables and `standing-inputs.tsv` (61 self-reaching, 92 hosts,
+92 ledger rows, 3,727 macros, 10,135 constructs; `unknown_macros.tsv` `843215…`), both F13 replays
+passed with their 68 records and 18 identity cells, the plain no-default preflight passed in the
+inherited 22 GiB scope (`Finished in 42.80s`, peak 3,038,380,032 B, oom 0), and all 152 chain pins
+and the three installed chain copies verify (`0e508bb4…`). On disabled six of the seven digests
+match and `unknown_macros.tsv` has 3,725 rows (10,133 constructs) against the pinned 3,727: the
+two absent rows are `UnknownConstruct` at `crates/rum-runtime/src/lib.rs:27:32` and `27:51`, the
+`cfg!(disabled)`/`cfg!(live)` invocations present in the armed `ENABLED` expression and absent
+from the disabled literal `false`.
+
+Ruling: the seven tables and the chain are a single **armed-authored** inventory installed as
+common bytes on all roles — exactly what the historical writer did (one armed output per
+inventory, installed on four roles). The replay bar is therefore the armed one; on disabled and
+real the installed tables and `emission_chain.tsv` must be byte-identical to armed's, and the
+disabled regeneration stays a diagnostic that is never installed and never becomes a bar: it may
+differ from the armed review only in `unknown_macros.tsv`, by exactly those two declared rows
+(3,725/10,133). No review is installed from the disabled run and no inventory is hand-edited. The
+question `disabled-ownership` is answered this way (option 1, with the diagnostic framing).
+
+Resume from the ownership checkpoint: keep both arms' producers and all review copies as
+evidence, keep the installed tables and chain untouched, record the disabled diagnostic exactly
+as above, and continue at the class discovery and LP01 controls on both arms, the typed slots,
+the four R3 discoveries and their green rechecks, the promotion adoption, the 165-row seal, the
+retained selectors, the P0543 lane, the six cold primaries and both restores, the twelve receipts,
+F48, the fourteen selectors, both fmt runs, Stage D and both flag-on controls. All other bars,
+bounds, STOP rules and budgets are unchanged.
