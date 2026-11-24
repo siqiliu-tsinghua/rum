@@ -3987,6 +3987,68 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 153 completed — brief 793 gated DONE: the sealed four-role release and
+    the R4 handoff accepted; the director's host replay is the authoritative Stage D, the
+    Amendment 3 tail is green on both flag-on legs, fmt and the four pins (2026-11-25): the third
+    dispatch (unit `brief-793-cdx-20261125-015833-2263444`, session
+    `01a20eb5-9fc0-7101-afb8-17ff1bfcafbe`, `gpt-6.2-astra` max, 01:58:33–03:54:23, ≈6,950 s,
+    rc 0, peak 17,447,137,280 B, oom 0, 22G scope) executed the whole brief and STOPped
+    correctly at Stage D: 4,544 passed / 19 failed / 71 ignored over 70 result lines (raw exit
+    101) — the ten accepted reds exact, the six named remnants green, the 71 ignored lines
+    byte-equal, source-auth green, and exactly nine native ZeroMQ loopback `EPERM` extras
+    (`native ZeroMQ test cannot bind loopback: Operation not permitted (os error 1)`), the
+    dispatch sandbox's network denial, each historically `ok`. Ruling 804 declares them
+    environmental by name, fixes the dispatch-side bar at 4,544/19/71 with exactly those nine,
+    and makes the director's host replay of the same armed bytes authoritative: `HOST COPY PASS
+    tree=c04bbf82…/5,851`; `SCOPE workspace … max=21474836480 peak=17456148480 oom=0 rc=101`;
+    `WORKSPACE PASS passed=4553 failed=10 ignored=71 results=70 raw_exit=101` (2,235 s; the ten
+    reds exact; the 71 ignored lines byte-identical to `stage-d/ignored-verbatim.txt`; six
+    remnants green); `FLAG ON PASS leg=flag-on-lp passed=3+1+1 failed=0` (24.2 s);
+    `FLAG ON PASS leg=flag-on-class-lease passed=197 failed=0` (70.3 s); `FMT PASS stage=final`;
+    `FINAL TREE PASS tree=c04bbf82…/5,851 debris=0`; `STAGE D HOST PASS … zero_oom=true` — the
+    driver `.temp/director/gate-793/run_host_stage_d.py` reusing the calibrated
+    `run_stage_d.workspace()`/`flag_on()`. Amendment 3 (`0fc447c9`, +43 lines) resumed the tail:
+    unit `brief-793-cdx-20261125-043832-2429504` (fork of `01a20eb5-…`,
+    04:38:32–04:48:35, ≈603 s, rc 0, peak 3,205,083,136 B, oom 0) re-verified both archived
+    workspaces (`DISPATCH WORKSPACE PASS passed=4544 failed=19 ignored=71 results=70 raw_exit=101
+    accepted_reds=10 loopback_EPERM=9 missing_reds=0 other_extras=0 remnants_green=6
+    source_auth_green=true`; `HOST AND DISPATCH IGNORES PASS lines=71
+    byte_identical_by_name=true` — the first audit compared file order and is preserved;
+    `HOST ARCHIVE PASS measured_workspaces=2 host_native_loopback_passed=9 raw_receipts=4`), ran
+    the two flag-on legs in the inherited 22G scope (`3+1+1`/0; `197 passed; 0 failed; 593
+    filtered out`), the final fmt, and re-pinned all four sealed trees: baseline
+    `fa01b3d1…`/5,842, disabled `60ad65ed…`/5,851, armed `c04bbf82…`/5,851, real
+    `d703b165…`/5,851, debris 0 → `STAGE D TAIL PASS flag_on_lp=true
+    flag_on_class_lease=true fmt=true four_pins=true zero_oom=true`. The R4 handoff:
+    `R4 HANDOFF PASS four_roles=4 rendered_files=5 postimages=4 generated_tables=2
+    overlay_sha256=57e9acbd01500435ed830dc575de79b4ac038a0cf6fbcd524cc289fea28c61ea`; `R4 TREE`
+    rows bind the before/after pins and 2/8/8/2 changed paths; `R4 GENERATED PASS` per edited
+    role (armed local-contracts `5d27e91b…`, promoted `51b693ec…`; disabled `5952bd25…`,
+    `7c5b7a5c…`; four feature cells; rendered anchors `214:5-230:6`, `396:5-410:6`);
+    `R4 SNAPSHOTS PASS roles=4 manifest_rows=92 copied_files=90 declared_baseline_absences=2
+    changed_paths=20 overlay_sha256=57e9acbd… mutants_sha256=e9940d5d…`. The director verified
+    every bar: the four pins recompute; the 90 snapshot files reproduce the sealed role bytes
+    (`verify_r4.py` rerun green); the report is DONE (28/28 checks PASS, 3 measurements, 6
+    accepted deviations — the two Amendments, the LP01 scratch-counter header, the pre-791
+    typed archives, Amendment 3, the tail's index-order audit — 0 questions, `check: OK, 2431
+    citations verified`); no live file was touched (`find crates -newermt` → 0; `git status`
+    still exactly the 23 inherited WIP entries; no `.git-attempts`). Budget: 793 ≈7,832 +
+    ≈603 = ≈8,435 s of 9,600 → 1,165 s remain. R4 material (handoff, D4 of ruling 805): the four
+    postimages `216ae720…`/173,656, `b59e0ede…`/40,719, `4a76c2f5…`/21,829, `67be9610…`/1,010;
+    the five rendered production inputs; the two role-specific generated tables; the seven
+    ownership tables and the 152-row chain `0e508bb4…`; the seals `57e9acbd…`, `e9940d5d…`,
+    `243dc0cf…`, class `626eb3d4…`; the measured overlay SHA and its `source_schema` cell.
+    Next: the director's live render commit (R4 — the release lands in live; the delta measured
+    today is exactly 190 crates paths: the 165 overlay rows, the 9 additions, `additions.tsv`
+    and the 16 carried/regenerated/adopted files, every other crates file byte-equal — then
+    live's own F13/ownership replays and both production reviews must reproduce the sealed role
+    bytes, the F55 adoption, the seal re-emitting `57e9acbd…`, and live's first suite), then the
+    standing order (structural attribution inventory → probe/hot-path A/B completion → re-freeze
+    and fresh epoch → Stage C/C10 → a further 744 restart, each gated). Q25's thirteen rows stay
+    named stops; 744/745/746 held; CM5 unauthorized; the agy window stays saved (carbon, effort
+    high); `cdx` remains the worker (quota death → stop and ask); clean-temp stays dry-run only
+    until R4 lands.
+
   - G15-CM4 continuation 151 completed — brief 792 gated DONE: the adoption, seal and gate tools
     accepted and calibrated; brief 793 dispatched (2026-11-25): brief 792
     (`docs/dev/codex/brief-792-g15cm4-adoption-seal-tools.md`, `416dc504`) ran on `cdx` (unit
