@@ -3987,6 +3987,76 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 149 completed — brief 790 gated DONE: the retention-line remnant's
+    complete repair plan, with Q-build and Q-seal decided and the three implementation briefs
+    ordered (2026-11-25): the user's ruling after c148 ("好，那就开下一任务吧，用 cdx。") set the
+    six named open retention remnants of brief 789's Stage D as the task, design-only first.
+    Brief 790 (`docs/dev/codex/brief-790-g15cm4-retention-remnant-inventory.md`, `9cddf846`;
+    Amendment 1 `cd6e954d`) ran twice on `cdx`. Stage A (session
+    `01a20e3e-1385-7881-91aa-49bde9d3a26a`, 23:47:58–23:56:20, ≈502 s, `check: OK, 199
+    citations`) reproduced every carried measurement and returned a correct STOP: the C01-only
+    certificate scope is falsified because C02's active cell carries seven stale contract stamps
+    too — the director verified all eleven (C01 `O0210`/`O011`/`O0200`/`O010`; C02 `I01`/`I02`/
+    `I04`/`R01`/`R02`/`B13`/`B05`) against the 19:40 live review and the armed F13 table, and
+    issued Amendment 1 (whole-table adoption of every root row, both builds, the other-build cell
+    preserved, F55 mtime; Stage A accepted as evidence; resume at Stage B). The `CDX_FORK`
+    resume (unit `brief-790-cdx-20261124-235816-2205101`, session
+    `01a20e47-80ad-7772-b4ca-23596224d618`, 23:58:18–00:30:02, 1,904.4 s, rc 0, peak
+    556,113,920 B, oom 0) completed Stages B–D **DONE** (19 PASS / 1 FLAGGED settled / 0
+    deviations / 2 questions decided; `check: OK, 446 citations`; 30 files all under
+    `.temp/brief-790/`; live tree 23 entries; HEAD == origin/main == `cd6e954d`; no git attempt).
+    The director's independent verification: the three Rust postimages are byte-exact (applying
+    `artifact-substitutions.diff` to scratch copies of the three live/armed-identical preimages
+    gives `b59e0ede…`/40,719 B, `216ae720…`/173,656 B, `4a76c2f5…`/21,829 B); the added/deleted
+    sets are exactly the 21 `frame-delta.tsv` names plus the census line, each of the 21 with an
+    armed manual `FrameAbandon` and a FrameRootTrace derive, 568 total, 514/54; the census edit
+    is the unique row at `census/tests.rs:188` (233→405); the live committed cells differ from
+    the fresh review in exactly the four C01 + seven C02 stamps; the armed scene's `promoted.tsv`
+    already carries the rendered anchors (214/396), so only the active cells are stale; the pin
+    cascade is complete (164-row layout with four new rows and the refreshed local-contracts row,
+    mutants 151/column 7, receipts 12 + 23 minima, ignored 71, class 2,422/8/20,625
+    (`626eb3d4…`), chain 152, allowance 4/4, LP01 875/8, typed slots, 13 standing tables with
+    zero literal hits for the three edited paths). **Q-build decided — the dev-dependency fix,
+    not the aux feature**: the design found `reconcile.rs` (an addition, `da9bc5d6…`) imports
+    `sha2` unconditionally while sha2 is optional under the default `hash` feature; I watched the
+    plain `cargo test --offline --locked -j8 -p rum-stdlib --lib --no-default-features --no-run`
+    fail with exactly one error on a scratch copy of the armed scene (E0432 `unresolved import
+    sha2` at `ownership_graph/reconcile.rs:10:5`, rc 101, 2,480,332,800 B peak) and watched the
+    one-line `sha2 = { workspace = true }` insertion in `[dev-dependencies]` (manifest
+    `6dcfaa9f…`/982 B → `67be9610…`/1,010 B) make the identical `--locked` command pass (rc 0,
+    "Finished `test` profile … in 25.67s", 2,781,818,880 B peak). The aux route
+    (`--no-default-features --features sha2/compress`) is refused: it would leave the standing
+    `director-gate.py step_certificates` nohash leg unable to compile on any post-render tree.
+    Consequences: `crates/rum-stdlib/Cargo.toml` becomes a **fifth new overlay row** with
+    identical arm postimages (baseline/real keep the preimage); the overlay set is **165 rows**;
+    every arm F13 fingerprint changes (the manifest is in `contracts.rs`'s DEPENDENCIES list and
+    its recursive `crates/` scan), so the design's predicted F13 postimages
+    (`a444b850…`/`7c9c615a…`) and prefix/suffix digests are superseded cross-checks, never bars;
+    the promoted cells' `build-inputs` stamp changes in both builds and all four cells are
+    freshly earned anyway; the receipts' required overlay count is 165; the live render commit
+    installs the same line. **Q-seal decided**: the final 165-row table's SHA-256 is measured at
+    sealing (mutants `source_schema` = the same 64 lowercase hex + LF; `overlay_digest.py
+    --emissions` reproduces it; a second full emission is byte-identical); no pre-frozen value —
+    the design's 164-row physical positions are superseded by the manifest row. Budget: brief
+    790's carve 3,600 s — charged ≈502 + 1,904.4 = 2,406.4 s, returned 1,193.6 s; reserve
+    812.23478847017 → 2,005.83478847017 s; brief 791 carves 1,200 s → 805.83478847017 s; 792
+    carves 2,400 s (explicit top-up 1,594.16521152983 s) → 0; 793 carves 9,600 s (explicit
+    top-up 9,600 s) → 0, dispatched with `BRIEF_MEMORY_MAX=22G` (the acceptance/Stage D run at
+    20G inside the worker scope; Stage D's carried peak is 18.48 GB). Order: brief 791 (the four
+    byte-exact postimages + the manifest TSV under `.temp/brief-791/`; static, no cargo) → 792
+    (adopt.py/seal.py/gate adapters under `.temp/brief-792/`, calibrated against the archived 762
+    reviews, the carried 160-row table, the wrong-anchor refusal and the negative fixtures) → 793
+    (four fresh candidate trees, the four installs on both arms, the F58-order replays, both
+    production review builds with the plain no-default preflight now passing, the whole-table
+    adoption per arm, the 165-row seal, the P0543 lane, the 12 receipts / six-case gate, F48 2/0,
+    the 14-test gate 14/0, fmt, and armed Stage D target **4,553 passed / 10 failed / 71
+    ignored** with the ten exclusion names and the six remnant names green; the R4 handoff) →
+    the director's live render commit (its own F13/ownership replays and both live production
+    reviews) → the standing order (structural attribution inventory → probe/hot-path A/B
+    completion → re-freeze and fresh epoch → Stage C/C10 → a further 744 restart, each gated).
+    Q25's thirteen rows stay named stops; 744/745/746 held; CM5 unauthorized; the agy window
+    stays saved (carbon, effort high); `cdx` remains the worker (quota death → stop and ask).
+
   - G15-CM4 continuation 148 completed — brief 789 under director implementation (2026-11-24):
     after the third 5-hour wall (weekly readout 24.84%) the user ruled the agy window saved for
     other hard problems and, with no worker available, that the director implements this task
