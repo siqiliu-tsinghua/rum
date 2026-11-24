@@ -3987,6 +3987,61 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 148 completed — brief 789 under director implementation (2026-11-24):
+    after the third 5-hour wall (weekly readout 24.84%) the user ruled the agy window saved for
+    other hard problems and, with no worker available, that the director implements this task
+    to completion (the next task goes to cdx). Attempt 1 (agy, 17:01:13–17:37:41, 2,188.7 s,
+    rc 3 on the 429) had Stage A green (`scan.rs` `d65e082a`, three census bars 10/0/1, the
+    carried tuple and split) and the Stage B stop on the pinned `bindings.rs` `216898eb`
+    (E0609 `accepted.location.file`). Corrections: **F50** the corrected certified bindings
+    draft `25ea77fa` (`accepted.span.file`); **F51** the population is **2,422 / 8 absent** —
+    P2384 `565cad82` is absent because the render's 759 Q25 handoff parameter moves the
+    consumer's signature digest (the 787 restoration claim is falsified; the same call site now
+    keys `fd675a82`), so the seal set is 2,422; **F52** the P0543 lane is required for
+    `cm_p0543_receipts_exact`; **F53** the LP01 producers are the measured eight paths;
+    **F54** the baseline image cannot compile `--lib` (the reconcile addition is absent by
+    design), so F13/promoted run on armed/disabled/real/live; **F55** the adoption must set the
+    adopted file's mtime or cargo skips the `include_str!` rebuild (the "stale B03" red);
+    **F56** the live tree and the images never share a `CARGO_TARGET_DIR`; **F57** the live
+    F13 legs run without run_cargo (its live-tree guard) with the default `./target`;
+    **F58** the writers precede the promoted acceptance (the reconciled host-payload tables);
+    **F59** the promoted-cell regeneration is unachievable (the retention scanner's `#[path]`
+    gap on the images; the live `promotion::reconcile` reference-set red) — the carried
+    `promoted.tsv` stays and gets no overlay row; **F60** the plan-4.3 class_rows reachability
+    repair landed (the scanner's `#[path]` child-dir rule; `source.rs` `7c082614` on
+    armed/disabled; the plan falsifier holds; the retention module 42/17 → 46/4; `source.rs`
+    is the **160th** overlay row), and the census frontier pairing is clean (armed vs live
+    dumps both 1,231 rows, identical `(kind, file, reason)` multiset — the census red is stale
+    position pins); **F61** the acceptance runs at a 20G scope (the 14G run OOMed with
+    `oom_kill=2` and a truncated ignored sum). The gates: Stage B campaign green with the
+    corrected bar; LP01 `d60dcf9a` (875 rows / 8 producers); F13 regen/adopt/replay green on
+    four trees; Stage C writers ok=true (chain `0e508bb4` 152 armed-digest rows; the 7
+    host-payload tables; class-provenance `626eb3d4` 20,625 data rows / 2,422 class-target
+    rows / 201 cells; overlays `b059dbac` **160 rows** with closure 160 = 160 and the arm
+    bijection 3/3/3/3; mutants `921f3b55` with `source_schema` = the overlay sha; additions
+    `243dc0cf` 9 rows; allowance 4/4); F48 bar `2 passed; 0 failed` (61/92/10,135 rows; ledger
+    92); the P0543 lane `ffd96bc1`; the 14-test focused gate `ok. 14 passed; 0 failed`
+    (1,211.66 s); the 12 receipts / six-case source_auth gate `STAGE C ok=true` (160 overlay
+    lines per receipt; rows=160 / rows=9; all evidence minima; six cases); `cargo fmt` green;
+    **Stage D** `passed=4547 failed=16 ignored=71` (peak 18.48 GB, oom=0) — the 16 reds are the
+    plan's 10 accepted exclusions (7 documented skips + 2 class_lease skips + q25; the 9
+    zeromq loopback names pass on this host) and the **6 named open retention remnants**
+    (`frame_root_trace::suspension_protocol_repository_invariants_hold`; the census position
+    re-baseline; `local_production_acceptance` and the two promotion_tests, the
+    certificate/reconcile family; `production_obligations_are_exact`), handed to the next
+    task; flag-on LP `5 passed; 0 failed`; flag-on class_lease `197 passed; 0 failed`. Final
+    pins after F16 cleanup (debris 0): baseline `dd7c6539`/5,842, armed `d7640402`/5,851,
+    disabled `74d9c345`/5,851, real `8c45350b`/5,851; live 23 inherited entries, local-contracts
+    `b856f630` (the F13 live regeneration). Budget: 789's carve 6,600 s — attempt 1 charged
+    2,188.7 s, the remaining 4,411.3 s unspent (the director's implementation does not draw
+    the worker carve); the campaign reserve 0.93478847017 s unchanged. The next task (cdx) is
+    the retention-line remnant (design-only first: the census re-baseline via the source-diff
+    pairing, the promotion certificate/reconcile family, `frame_root_trace`); then the
+    structural attribution inventory → the probe/hot-path A/B completion → the re-freeze and
+    fresh epoch → Stage C/C10 → a further 744 restart, each gated. Q25's thirteen rows stay
+    named stops; 744/745/746 held; CM5 unauthorized; the agy window stays saved and carbon is
+    the next agy dispatch's model (effort high).
+
   - G15-CM4 continuation 148 (the census type repair, then the render-repair continuation:
     brief 789) (2026-11-24): c147 accepts brief 788's STOP at its own Stage A step 3 as
     correct, with corrections. The run: `agy`, one attempt, unit
