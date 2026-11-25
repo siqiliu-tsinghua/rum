@@ -1,26 +1,33 @@
 # Brief 799 — G15-CM4: the armed residual family and the whole-panel capture qualification (design-only)
 
 Status: design-only, `Scope: NONE — no source change`. Dispatched after ruling 827 (gate c175);
-Amendment 1 after ruling 828 (gate c176); Amendment 2 after ruling 829 (gate c177). Both prior
-attempts stopped in Stage A on defects in this brief, not in the evidence: Amendment 1 fixed the
+Amendment 1 after ruling 828 (gate c176); Amendment 2 after ruling 829 (gate c177); Amendment 3
+after ruling 830 (gate c178). The first two attempts stopped in Stage A on defects in this brief,
+not in the evidence: Amendment 1 fixed the
 negative-family count, the unguarded label's two sites, the flag-formation PC count and a
 presumed calibration; Amendment 2 fixes the three cost labels (the body rows are **self** Ir; the
 inclusive costs are the incoming-edge sums), the allocation population ("the one unstable family"
 is true only among the eight largest positive families), and a leftover "58 PCs" wording, and it
-refines the STOP rule below. Amendments are marked "(Amendment 2)" or "(Amendment 1)" where they
-apply. Both stopped attempts' scratch is retained under `.temp/brief-799/` (the first attempt's
-`evidence-index.json`, `entry-verdicts.log`, `pinned-files.log`, `index-final.log`,
-`bar-pin-lines.log`; the second's `a1-*` pin checks and `e1-*` verification); you may re-verify
-and reuse it, but every pin you cite must be re-read.
+refines the STOP rule below. **Amendment 3 accepts the Amendment 2 attempt's Stage B
+source-attribution STOP as correct, applies the four `brief_defects` it recorded, carries the
+allocation family as measured non-systematic variation (removing its STOP power), and replaces
+the all-nonzero-body assignment bar with the decision-relevant ≥10,000 bar.** Amendments are
+marked "(Amendment 1)", "(Amendment 2)" or "(Amendment 3)" where they apply. All three attempts'
+scratch is retained under `.temp/brief-799/` (the first attempt's `evidence-index.json`,
+`entry-verdicts.log`, `pinned-files.log`, `index-final.log`, `bar-pin-lines.log`; the second's
+`a1-*` pin checks and `e1-*` verification; the third's `a2-*` checks, logs and
+`family-inventory.tsv`); you may re-verify and reuse it, but every pin you cite must be re-read.
+Amendment 3's carve: B.4 200 s / C 700 s / D 1,000 s / E 400 s = 2,300 s.
 Every statement here is a pinned input from the retained evidence; the STOP rule below governs
 identity and decision-changing mismatches.
 
 ## Goal
 
-Produce one reviewable, zero-unknown plan that (a) explains every one of the 1,743 measured bodies
-and 93 families of the armed-vs-real residual (+37,644,521 translated Ir, +36,180,466 disjoint
-non-gate; +38,126,375 native), attributing each to its exact source construct with `path:line`
-evidence and pricing it at its measured multiplicity; (b) classifies each family as a
+Produce one reviewable, zero-unknown plan that (a) explains all 93 families and every body row
+carrying a material difference (|Δ| ≥ 10,000) of the armed-vs-real residual (+37,644,521
+translated Ir, +36,180,466 disjoint non-gate; +38,126,375 native), attributing each to its exact
+source construct with `path:line` evidence and pricing it at its measured multiplicity, with the
+remaining rows aggregated by family mechanism and their bound printed (Amendment 3); (b) classifies each family as a
 default-path violation of the hard line, a required class-form cost, or a measurement artifact —
 with source proof, never assumption; (c) adjudicates the `stringreplace-pattern-unguarded` result
 (16 Ir per iteration against the written bar of 8) from the dispatch structure and states the
@@ -90,24 +97,29 @@ no build and start no capture.
 - Translated whole-panel (population `quarantine-diagnostic`): base 16,464,292,914 / new
   16,501,937,435 / control 16,454,397,896 (attempt 1); new−base +37,644,521 = publication checks
   1,464,055 + disjoint non-gate 36,180,466; control−base −9,895,018; 1,743 bodies, 93 families,
-  354 nonzero new rows, zero unknown rows.
+  354 nonzero new rows. The 798 classifier's `unknown` field covers publication groups only (an
+  unapplied family sum or an unproven reached publication site); causal source assignment is this
+  brief's separate bar — Amendment 3, from the recorded defect and `a3_whole.py:44,127`.
 - Gate: 38 reached sites, 2,594 references, 8 unvisited copies, 366,893 visits, 1,464,055 Ir
   (4.0/visit; `kernel_data/rewrite_data/cases/delete.rs:142` = 3). Short probes: 24/24 per label,
   `exclusive_Ir_per_visit=4` at `guarded/replace.rs:38` and `:775` in all draws, typed 4+3,
   slow/lexical self Ir 0, perturbator 0.
 - Family leaders: `eval_core` +11,786,999 (`evaluate_inner_unstable` +11,795,606 self Ir over
   base/new/control visits 1,055,174/1,055,154/1,055,196, the two body rows +11,680,078 and
-  +115,528; +11.19/visit as the per-arm mean 249.25 → 260.44; opcode class "lexical profiler flag
+  +115,528; +11.19/visit on the displayed rates (249.25 → 260.44; the unrounded difference is
+  11.183761852440 — 11.18 if rounded at the end; Amendment 3); opcode class "lexical profiler flag
   address formation" +14,124,585 vs control +33; flag-formation PCs 33/33/57 base/control/new per
   `residual-family-proof.json` `flag_formation_PCs`, i.e. 24 extra PCs in `new` — not 58: the 58
   is the `pattern-unguarded` absolute new price per iteration, 5 base + 53 delta (Amendment 1);
   qualified per-iteration prices +19/+19/+53/+21 vs both controls); `definitions` +9,725,686
   (`collect_upvalue_candidate_symbols` 665,503 new-only visits, **self** +52,180,871 Ir,
-  incoming-edge **inclusive** 2,063,338,931 Ir over its two `try_apply_up_values` callers —
-  Amendment 2); `allocation and reclamation` +7,482,626
+  incoming-edge **inclusive** 2,063,338,931 Ir from two recording contexts at one physical caller
+  PC `0x965d0c` (caller symbols `try_apply_up_values` and `try_apply_up_values'2`) — Amendment 3);
+  `allocation and reclamation` +7,482,626
   (range [−3,922,868, +8,302,460]; control [−8,648,385, −3,121,525]); `pattern_matching` +6,273,782
   (`BindingSnapshot::capture` 426,421 new-only, self +33,261,184, incoming-edge inclusive
-  141,432,726 over its two `match_compiled_owned` callers — Amendment 2); `scoping` +2,100,570
+  141,432,726 from two recording contexts at one physical caller PC `0xad2d1e` (caller symbols
+  `match_compiled_owned` and `match_compiled_owned'2`) — Amendment 3); `scoping` +2,100,570
   (`resume_module_initializers` 5,157 new-only); the `drop_in_place<eval_set_cm740_driven::{{closure}}>`
   body 397,600 new-only visits (self +6,361,600, incoming-edge inclusive 14,313,600 from
   `association_lvalue_current` — Amendment 2); then `kernel_data` +1,277,282,
@@ -168,22 +180,37 @@ evidence per field), and the narrative in the report's `sections`:
    `control` execute 0, whether the edge is behind any flag or unconditional in `armed`, the
    per-visit inclusive/exclusive cost, and whether it is the class form's required semantic work
    (observation/driven evaluation) or an avoidable default-path cost — with the source proof.
-3. **The allocation family.** Explain its sign instability across the retained attempts: 19 of
-   the 92 disjoint non-gate families have ranges that cross zero over the nine new−base contrasts
-   (`all-attempt-family-contrasts.tsv`); allocation is the only one among the eight largest
-   positive families (`a3_localize.py:111–112`), with range [−3,922,868, +8,302,460] and control
-   [−8,648,385, −3,121,525] — the next-largest crossing family is `rum_core::expr` at
-   [−310,866, +943,263] and `evaluation_cache` at [−1,549,867, +564,980]. Explain which
-   allocation sites move, and whether the movement is downstream of families 1–2 or independent
-   (allocator-layout coupling). Name the retained evidence rows (Amendment 2).
-4. **The remainder.** Assign every nonzero body of the 1,743-row table and every nonzero family,
-   including the small positives and all seventeen negatives (19 positive / 57 zero / 17 negative
-   families totalling −3,722,338; the reducer's `fam[-12:]` display hides `call_preparation` −480,
-   `model` −460, `substitution` −210, `alloc::string` −30 and `std::sys` −3, which sum to −1,183)
-   — Amendment 1 — to one of the constructs above, the
-   loader, or a named measurement artifact — no anonymous balancing cell. State the zero-unknown
-   result (`bodies assigned = 1,743`, `families = 93`, `unassigned = 0`) or STOP naming the exact
-   missing measurement.
+3. **The allocation family — carried as non-systematic variation (Amendment 3).** The family's
+   per-arm totals over the nine retained whole-panel attempts are base 890,743,346 / 889,934,889 /
+   889,923,512; new 898,225,972 / 887,510,376 / 886,820,478; control 882,094,961 / 885,302,469 /
+   886,801,987 (`all-attempt-family-contrasts.tsv`, the allocation row's `every_attempt` field;
+   verify these nine numbers and the per-pairing range). Two of the three new attempts lie below
+   every base attempt; the control arm — a one-file layout patch with no class-form source change
+   — lies below both arms throughout; the new arm's own spread (11,405,494) exceeds the attempt-1
+   new−base delta (+7,482,626); and the empty-head branch counts move by tens of thousands with
+   identical request counts (11,321,292±600 calls, 39,023 requests >1,024 B in every run;
+   `a2-allocation-conditions.log`, `a2-condition-proof.log`, `a2-allocator-branch.log`). The
+   family is therefore **not a repair target and does not STOP this design**: carry the
+   nine-pairing range [−3,922,868, +8,302,460] as a measured noise term into the repair plan and
+   the re-measurement design, and do not re-open the ordered allocation/free trace here (the
+   successor measurement is specified in the Amendment 2 report's allocation section; it would be
+   commissioned only if the repaired panel's residual re-enters this family). The 19-of-92
+   sign-crossing census stands (allocation is the only large positive one among the eight largest;
+   the next-largest crossing families are `rum_core::expr` at [−310,866, +943,263] and
+   `evaluation_cache` at [−1,549,867, +564,980]).
+4. **The remainder — the decision-relevant assignment bar (Amendment 3; 200 s).** Assign every
+   body row whose |`new_minus_base`| or |`control_minus_base`| is at least 10,000 — 112 rows over
+   the 1,743-row table, carrying 37,659,664 / −9,973,234; verify both counts and both sums from
+   `quarantine-diagnostic-whole-bodies.tsv` — individually to one of the constructs above, the
+   carried allocation family, the loader, or a named measurement artifact, with `path:line` or a
+   retained-evidence file:line — no anonymous balancing cell. Assign the remaining 1,631 rows
+   (|Δ| < 10,000; sums −15,143 new and +78,216 control; max |Δ| 9,912) as an aggregate by family
+   mechanism, printing the aggregate and its bound. State the result as `rows_individually=112
+   rows_aggregate=1631 unassigned=0 dust_new=−15143 dust_control=+78216` (with the family table's
+   `family_unassigned=0` over all 1,743 memberships), or STOP naming the exact missing measurement
+   for any row ≥10,000 that cannot be assigned. The seventeen negatives stay named as in the
+   Amendment 1 text (19 positive / 57 zero / 17 negative families; −3,722,338; the five hidden
+   −1,183).
 
 ## Stage C — the bar and the capture rule (700 s)
 
@@ -221,28 +248,53 @@ evidence per field), and the narrative in the report's `sections`:
      must be rejected) and a green calibration (a quiet window admitted), with the exact recipe and
      the expected verdict lines. If the rule needs a per-pid sampler, specify it.
 3. **Re-measurement design.** Specify the post-repair A/B: the fresh signed hardware envelope
-   (nine draws, CPU 14), the three qualified whole-panel captures under the new rule, the
-   translated/native reconciliations, the 12 timing panels and the 144 label profiles reuse/redo
-   decision, and the disposition sheet. State the exact STOP conditions.
+   (nine draws, CPU 14, medians — the decision rule), the three qualified whole-panel captures
+   under the new rule, the translated/native reconciliations, the 12 timing panels and the 144
+   label profiles reuse/redo decision, and the disposition sheet. State the exact STOP conditions.
+   The translated reconciliation must report the nine-pairing range (or the median pairing), never
+   a single attempt pairing: the retained nine whole receipts give a translated panel delta range
+   of +25,281,671 .. +39,027,090 across the new×base pairings (verify from the nine receipts'
+   `total` fields), and the carried allocation family alone spans [−3,922,868, +8,302,460] over
+   those pairings. State how the decision absorbs that term — the hardware envelope's medians are
+   the decision; the translated decomposition reports the range — and do not re-open the allocator
+   trace in this design (Amendment 3).
 
-## Stage D — the repair plan and the drafted briefs (600 s)
+## Stage D — the classification completion, the repair plan and the drafted briefs (1,000 s)
 
-1. The repair plan, ordered by family, each with: the exact code shape to change (`path:line`), the
+1. **The classification completion (Amendment 3).** For `eval_core`, `definitions`,
+   `pattern_matching`, `scoping` and the paired `drop` rows, finish the required-vs-avoidable
+   classification with source proof:
+   - the evaluator's four candidates from Stage B item 1: state the isolated same-profile build
+     experiment that alone can price them (both arms built at one path with one codegen unit; the
+     candidate shapes; the falsifier that the flag still works when set) — the Amendment 2 attempt
+     established that neither a permanently-false atomic nor an unconditional out-of-line call is
+     semantics-preserving, so the experiment is the deliverable, not an assumed saving;
+   - what makes `collect_upvalue_candidate_symbols` and `BindingSnapshot::capture` standalone
+     symbols in `armed` and inlined in `real`/`baseline` — the source or attribute difference with
+     `path:line`, and whether restoring the inlined shape is semantics-preserving (the call counts
+     per site are identical across arms; the deltas +8,972,494 and +6,273,782 are consistent with
+     call overhead, but that is a hypothesis until the source proof);
+   - the net of each re-billing pair (`scoping`/`builtin_adapters` −43,841; the paired closure
+     drop +6,361,600 / −6,361,600 at 16 self Ir per drop), with proof;
+   - the carried allocation family as stated in Stage B item 3 — no allocation repair is priced.
+2. The repair plan, ordered by family, each with: the exact code shape to change (`path:line`), the
    "must not change" list (captured behavior, order of execution, observable rows, the gate's 4 Ir
    per visit, the typed 4+3, the falsifiers), the expected per-visit saving and its evidence, the
    interaction with the other families (e.g., whether removing the flag formation also removes an
    upstream driver of the new-only bodies), and the isolation falsifier — including the class-wide
    falsifier: the repaired armed build's whole-panel delta must land inside the repaired control
    interval, with the resumed path equal to the queued path (rum against rum).
-2. The combined expected delta: new translated and native, with the residual that would remain if
-   any family is a required class-form cost. If any family is required, state the exact user
-   decision that would be needed — do not assume it.
-3. Draft the follow-up implementation briefs in `TEMPLATE.md` shape (one per stage), naming files,
+3. The combined expected delta: new translated and native, over the nine-pairing range, with the
+   residual that would remain if any family is a required class-form cost and the carried
+   allocation noise term. If any family is required, state the exact user decision that would be
+   needed — do not assume it.
+4. Draft the follow-up implementation briefs in `TEMPLATE.md` shape (one per stage), naming files,
    functions, the gate tests, the standing-inventory replays (retention fingerprints, ownership,
    LP01, typed-slot, rejection census), the workspace gate, and the instruments' standing
-   exclusions (the 637 label exclusion, the 0.069595 s provenance and its replacement).
+   exclusions (the 637 label exclusion, the 0.069595 s provenance and its replacement). The first
+   drafted stage is the evaluator's isolated same-profile experiment.
 
-## Stage E — verification and handoff (300 s)
+## Stage E — verification and handoff (400 s)
 
 Re-read every cited line in its log (or the retained evidence file), check the inventory's row
 counts and sums against the 1,743-row table, verify no live edit occurred (the tree is as found;
@@ -254,8 +306,10 @@ paths.
 
 - `python3 -B scripts/run-bounded.py --timeout 20 -- python3 scripts/report.py check 799` — every
   cited line verbatim, no FAIL hidden, the verdict agrees with the rows.
-- The family rows' `new_minus_base` must sum to +37,644,521, and the body assignment must cover
-  all 1,743 retained body rows with `unassigned = 0`; print both check lines.
+- The family rows' `new_minus_base` must sum to +37,644,521; the body assignment must cover every
+  row with |Δ| ≥ 10,000 individually and the remaining rows as an aggregate with its bound, with
+  the family table covering all 1,743 memberships and `family_unassigned = 0`; print the
+  assignment line and the dust line (Amendment 3).
 - No source change: `Scope: NONE`. If the plan requires a build or a capture, name it and STOP;
   the director owns that dispatch.
 
@@ -273,8 +327,9 @@ paths.
   `inclusive_Ir` over the incoming call edges), and "the one unstable family", true only among
   the eight largest positive families; Amendment 2 pre-corrects these, but the rule covers any
   further instance (Amendment 2);
-- any body or family that cannot be assigned to a construct from the retained evidence (name the
-  exact missing measurement);
+- any body row ≥10,000 or family that cannot be assigned to a construct from the retained
+  evidence (name the exact missing measurement); the carried allocation family (Stage B item 3)
+  is declared carried by this amendment and is not a STOP;
 - any claim without `path:line` or a retained-evidence file:line;
 - a classification that rests on assumption (e.g., "probably the profiler") rather than source
   proof;
