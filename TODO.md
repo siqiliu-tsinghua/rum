@@ -3987,6 +3987,37 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 160 — brief 796 is DONE: Amendment 2 re-validates the revised bars from
+    the retained raw profiles, the runtime publication gate is adopted, and brief 797
+    (implement, re-render, R4) is ordered at a 17,000 s carve (2026-11-25): unit
+    `brief-796-cdx-20261125-101853-2622953` (fork of `01a2104e-…`, `gpt-6.2-astra` max,
+    10:18:53–10:40:13, ≈1,280 s dispatch wall, rc 0, peak 622,653,440 B, oom 0; `check 796
+    --stage amendment2` OK 864 citations; DONE, 15 checks = 14 PASS + 1 NA standing inventories,
+    12 measurements, 8 questions; canonical `report.json` still `ebaa8a42…` (OK 225) and
+    `report-amendment1.json` `124af7a3…` (OK 725), both in the 13,365-file entry manifest and
+    unchanged at exit). Reproduced independently: the two readers calibrate at `0x1ed380` /
+    `0x1ee4be` (4 instructions); raw Callgrind totals 4,535,650 → 5,617,301 = 21,633.02
+    Ir/iteration (draw 1), median 21,644.56; the retained binary at `0x6e239b` is
+    `lea # f65180 PUBLISHED; mov; test; jne`; typed 4+3=7 at 350/700 entries; forced-watch 111
+    slow Ir/visit at both sites; callback raw totals 4,581,308 → 4,597,524 = +16,216 (0.354%);
+    ledger 26 lines / 1,741 B / `a2c48c90…`. Stage D decision: adopt (a) runtime publication
+    (six balanced lifetimes, relaxed load at every independent check, cold TLS predicate behind
+    `#[cold] #[inline(never)]`, no predicate cached across a callback); reject (b) the
+    compile-time flip (it would zero release driven measurement) and (c) hoisting (the mid-request
+    Print callback installs between two guarded StringReplace iterations: false,true,true); LTO
+    stays deferred. The drafts are gated (`DRAFT TEMPLATE PASS` 96/62, `CASCADE DRAFT PASS
+    direct_files=5 overlay_rows=5,109 additions=1,3,9 overlays=165 additions_total=9
+    class=2422/20625 chain=152 F13=68 postimages=4 snapshot=92/90 R4=190
+    projected_attribution=121`, `AB DRAFT PASS arms=3 selected_labels=4 minimum_profiles=96
+    eligible=119`); the five direct files are overlay rows 5/109 + additions 1/3/9 (ruling 811's
+    "5 direct overlay rows" corrected). Scope: 0 files outside `.temp/brief-796/` (only the
+    dispatch log), git clean, four roles equal entry/exit, prior evidence pinned, no
+    git/network/epoch/reseal/R4. Amendment 2's carve 1,400 s: C 211.39/300, D 674.49/700,
+    closeout 374.67/400, scope 1,260.55/1,400; 139.45 returned → pool 1,231.45. Brief 797
+    carves 17,000 s = 1,231.45 returned + 15,768.55 top-up (focused 11,000: A 1,000 / B 2,800 /
+    C 4,800 / worker D 400 / director R4 leg 2,000; workspace 6,000: worker 2,800 / director
+    3,200). Brief 798 (2,800 s proposal) is held for dispatch after 797's authenticated R4.
+
   - G15-CM4 continuation 159 — brief 796's Stage C STOP is correct against the declared bar; the
     fast-check bar is revised to the codebase's own cold-load cost (4 instructions per check,
     address formation included) and Stage D proceeds under it (2026-11-25): unit
