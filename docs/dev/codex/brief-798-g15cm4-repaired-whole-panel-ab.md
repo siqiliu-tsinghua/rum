@@ -10,6 +10,13 @@ stale Amendment 5-era working root. This amendment corrects the scene root and t
 wording below; everything else stands. The stopped attempt charged 4.946 s, so the remaining
 carve is 2,795.054 s (A 195.054 / B 600 / C 550 / D 1,200 / E 250).
 
+**Amendment 2 (ruling 825, gate c173).** Stage A then passed on the corrected scene root — four
+role pins zero-difference, 11 certificate pins, the four classifier lines verbatim — and the base
+arm built clean (`06d0d7b4…`), but this brief located three 796 attribution inputs one directory
+too low. They live at `.temp/brief-796/evidence/`, byte-equal to the producer's
+`accepted-input-pins.json`; the paths and pins below are corrected. That attempt charged
+93.001 s (total 97.946 s), so the remaining carve is 2,702.054 s.
+
 The four successor roles are sealed, the runtime publication gate is rendered into them, and the
 R4 package is installed in live. This brief measures the final release against its base and its
 layout control: it decides whether the repaired gate recovers the complete 795 hot panel within
@@ -68,8 +75,9 @@ When this brief is done, in `.temp/brief-798/` only:
   canonical.sha256}`, and the saved binaries `.temp/brief-795/bins/{base,new,control}`.
 - The 796 full-panel instruments and historical attribution:
   `.temp/brief-796/scratch/amendment1/{fullpanel.py,panel_reduce.py}`,
+  `.temp/brief-796/evidence/{panel-sites.tsv,occurrences-initial.tsv,panel-windows.json}` and
   `.temp/brief-796/evidence/amendment1/{whole-panel-sites.tsv,whole-panel-reconciliation.json,
-  panel-gate-entries.json,panel-sites.tsv,occurrences-initial.tsv,panel-windows.json}`.
+  panel-gate-entries.json}`.
 - The final 797 performance evidence: `.temp/brief-797/performance/evidence/{repaired-cli-slopes
   .json,repaired-typed-slopes.json,repaired-all-adapter-entries.tsv,forced-watch-cli-slopes.json,
   callback-profile.json,driven-ordered-ledger.txt,forced-install.json}`.
@@ -118,6 +126,7 @@ When this brief is done, in `.temp/brief-798/` only:
 | `probe-selection.json` | `e141a5ae78f81dae2b4ca14aed38bd4e6e15efdd18b531c13a8eeb296c969941` |
 | `timing-reduction.json` | `e4524e0b496bf21eee2b3ef432914f1df90d84de50e4dd5f22ec1c186af3d579` |
 | `hardware-summary.json` | `2da59248bc4a12b3465549b12e6eca741e54edfd466231370bf41d0b76991ca2` |
+| 796 attribution inputs | `panel-sites.tsv` `c22ea8e341f75cd5762893963858b2a023d39ef5b6b134011d2332481d4b621f`; `occurrences-initial.tsv` `8e95c733372a162e233031cf28ebea80f8e81e7c8ab2afcbb511d7aa67fe9341`; `panel-windows.json` `c81dc16e98c6d7bfb7b55e6de1811efbca9b4c860284ee4ed0de1e7080b25d79` (all under `.temp/brief-796/evidence/`) |
 | 795 `control.patch` | `04a56f3945e0520b650027ce8aaf855694d4e1abd28f18695d15b15457a39484` |
 | 795 `harness.patch` | `5f146c3bdf40f8f5495157d3ad281604c4925501b83e848ab15734c353e22c2e` |
 | 795 saved binaries | base `c3e50ede12a0fc80e21fcc8a447cc377d87627f3bdab6f0d070ae57e6bdd5e85`, new `561f2817a8489347ae3f4d389ddac9c6bc0bd028f758531bd09f94894e471ff8`, control `f300ea2dad962c8f379ac2e0cb6f657f46725f04e5cd8df6a03c471cba351dd6` (historical references only; never measured as a 798 arm) |
@@ -366,8 +375,9 @@ from `real` in anything but the one declared patch file.
 ## Budget
 
 Focused **2,800 s** (A 200 / B 600 / C 550 / D 1,200 / E 250) + workspace **0** + epoch **0** =
-**2,800 s**; the stopped Stage A attempt charged 4.946 s, leaving **2,795.054 s** for Amendment 1
-(A 195.054 / B 600 / C 550 / D 1,200 / E 250). Funded by brief 797's returned remainder (5,906.190 s: B 922.685, C 2,571.517,
+**2,800 s**; the two stopped attempts charged 4.946 s and 93.001 s (total 97.946 s), leaving
+**2,702.054 s** for Amendment 2. The stage carves A 195.054 / B 600 / C 550 / D 1,200 / E 250
+stay guidance; the total is binding. Funded by brief 797's returned remainder (5,906.190 s: B 922.685, C 2,571.517,
 D workspace 1,373.277, D focused 385.071, director R4 247.051, unallocated 406.589); the 798
 carve consumes 2,800 s of it and the rest stays unspent. The same-shape basis: 795 used 23.308 s
 for the classifier verification, 201.055 s for three builds, 19.311 s for twelve timing panels,
