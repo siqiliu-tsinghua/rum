@@ -3987,6 +3987,51 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 156 — brief 794 DONE: the final-tree attribution closes with zero
+    unknown and the probe bar is a structural closure; brief 795 issued (2026-11-25): the
+    Amendment 1 resume (unit `brief-794-cdx-20261125-075055-2541224`, fork of `01a20fe7-…`,
+    session `01a20ff8-…`, 07:50:55–08:10:44, ≈1,189 s dispatch wall, worker-measured
+    1,115.8 s, rc 0, peak 276,508,672 B, oom 0) completed stages B.4–D. The director reran
+    `verify` (rc 0) and the audit and reproduced every line: the four ENTRY and EXIT pins
+    (`fa01b3d1…`/5,842, `c04bbf82…`/5,851, `60ad65ed…`/5,851, `d703b165…`/5,851, debris 0);
+    `COMPARE verbatim=13581 ws=0 wrapper=51 dispatch=122 cold=334 facade=4 extension=25
+    diff=95`, `files=1257`, `COLD TWINS count=334`, `HOT MATCHED covered=21 unmatched=0
+    missing=0`; `PROBE SITES expected=4 observed=7 outside=3 missing=0`; `ATTRIBUTION
+    rows=120 reported_rows=120 diff=95 extension=25 shapes=26 sha256=280e9ee3… unexplained=0`;
+    `PROBE CLOSURE facades=4 outside=3 attributed=3 unexplained=0`; `C94 HOT PATH PASS …
+    unexplained=0`. `AUDIT PASS raw_identity=true original_stop_preserved=true
+    row_occurrences_bound=true negative_controls=5`: the 175-line raw observation is
+    byte-identical across the first STOP log, the amended observe and the verify; the ten
+    first-STOP logs are archived byte-identical; the three classifier functions are textually
+    identical to the archived driver; the c140 decomposition 87 = 83 common + 4 now-verbatim,
+    +12 new = 95, and 136 = 25 + 111 shared-addition extensions (45 `reconcile.rs` + 26
+    `class_lease.rs` + 40 `q25_ownership.rs`); the five in-memory controls reject
+    missing/duplicate/forged evidence with zero filesystem inventory edits. The attribution
+    evidence: `attribution.tsv` `280e9ee3…`/120 rows (my own multiset check equals the observed
+    95+25; 26 shapes, 14 owners; every row binds an `overlays.tsv` data row, the armed file
+    sha, the real-preimage equality, both span ranges/shas and the chain row where present; I
+    recomputed three witnesses — `evaluate_in` 109-121 `a4761e39…`,
+    `insert_suspension_frame_q25` 639-686 `89d0ab68…`, `outcome.rs drop` 989-993 `667e2f5d…` —
+    all match) and `probe-attribution.tsv` `a98f1bfe…`/3 rows (the ledger `check_entry` 132
+    `06cadb2c…` all-role-identical; `reconcile.rs is_local_construct` 203 and
+    `reconcile_falsifier_disposition` 1075, `additions.tsv` row 5 `da9bc5d6…`/37,791 B). The
+    seal re-verifies the seven tables and role facts (`SEAL PASS overlays=165
+    real_preimages=164 role_specific_real_F13=1 additions=9 carried=15 postimages_791=4
+    chain=152 class_targets=2422 mutants=151`; the arm delta is exactly the three source
+    switches + F13 + promoted). The `stage-a-bar.md` and the complete 795 draft are in
+    `.temp/brief-794/`. Exit pins equal entry pins; live crates still `a7de3a76…`/4,700; the
+    scope receipt is 0 git invocations/refused attempts/source edits/cargo/workspace/epoch;
+    6,484 changed files all under `.temp/brief-794/`; `report.py check 794` verifies 397
+    citations (DONE, 17 PASS, 1 FLAGGED = the worker's own SELF-harness extra condition, 1 NA
+    = standing inventories; 3 deviations, 0 questions). Budget: 4,500 s carve, 1,835 s charged
+    (dispatch wall; the worker measured 1,761.8), 2,665 s returned. Brief 795 is issued: the
+    A/B completion (stage A this closure; stage B three one-codegen-unit release builds at one
+    stable path with the 703/708 cold-referenced layout control; stage C twelve interleaved
+    panels, `perf stat` 3+ per arm, the Callgrind Ir slopes at 50/100; stage D the verdict),
+    carve 4,400 s = 2,665 returned + 1,735 top-up. The 794 instrument's inputs (`brief-781`
+    `stage_a.py`/`report.json`, `brief-790/frame-delta.tsv`, `brief-791/manifest.tsv`, the four
+    793 images) are read-only and must survive. Clean-temp dry run: 4.4 G prunable (brief-786
+    subdirectories, gate-785), nothing the 795 instrument reads.
   - G15-CM4 continuation 155 — brief 794's first dispatch STOPped correctly at Stage B's probe
     rule; the bar was c140's verbatim-only count, restated as a structural closure (Amendment 1)
     and the brief resumes (2026-11-25): unit `brief-794-cdx-20261125-073227-2531368`, session
