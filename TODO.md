@@ -3987,6 +3987,44 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 168 — brief 797's Amendment 7 Stage B.4 STOP is correct: the retained
+    promotion selector consumes the B.6 promotion inventory and the shared additions manifest
+    follows the chain, so the retained block moves after the seal and the baseline delta is
+    corrected (2026-11-25): ruling 820 (`.temp/director/ruling-820.md`). Amendment 7 unit
+    `brief-797-cdx-20261125-162219-2825623` (fork of `01a21099-…`, `gpt-6.2-astra` max,
+    16:22:19–16:48, 1,499.405 s charged; rc 0, peak 6,334,115,840 B, oom 0; `check 797 --stage
+    amendment7` OK 484 citations; 16 checks = 10 PASS + 1 FLAGGED + 2 FAIL + 1 NA; 3
+    measurements = 2 PASS + 1 NA; 3 deviations; 2 questions `promotion-order`/`baseline-additions`;
+    verdict STOP; seven earlier reports pinned `0b4b3bfb…`/`dafd90f3…`/`cadeed35…`/`1add9c95…`/
+    `0692606f…`/`b0c84042…`/`ce148d5e…`, the run wrote `report-amendment7.json` `6a5eadc2…`
+    (2,300,341 B); scope git-clean, 5,479 changes under `.temp/brief-797/`, 0 disclosures).
+    Credited: real F13 provenance PASS (`626149bc…`, scene-rooted `amendment6/target-real`, F55
+    adopted, 68 records/18 cells/62 falsifiers; four c165 seals reauthenticated); the class
+    discoveries reproduce `d183c38e…` (29,907 records, capture `c7bf6393…`, 0 added/0 removed, two
+    falsifiers); ownership 4/0/0 both arms; class negatives 3/0/0, LP01 6/0/0 + 1/0/0, typed
+    source 1/0/0; checkpoints B.2 `4a183f4e…`, B.3-class `4485a70c…`, exit
+    `checkpoint-B.4-stop.json` `5044a801…`. The STOP: `production_inventory_rejects_removed_
+    redirected_stale_and_omitted_evidence` fails at its line-207 positive check (`stale or omitted
+    instance certificate C01 hash=true`, `mutations_executed=0`), because the installed
+    `promoted.tsv` is the 793 parent's `51b693ec…` with the four pre-change direct stamps
+    (O010/O011/O0200/O0210); the fresh stamps equal the current F13 fingerprints
+    (`790f4a7f…`/`9fd4f504…`/`68fc527e…`/`dfbf9222…`), and Amendment 5's proven order ran the
+    promotions at 13:26/13:29, the seal at 13:32:39–13:33:37, and the retained block at
+    13:47/13:54 against the sealed images. The second leg: the shared additions manifest
+    (`6dd0ebb9…`) row 4 records the chain (`b6f78bf6…`→`130f3040…` on the armed `lib.rs`
+    `17aa979d…`→`54638ed1…`), so baseline's delta is {overlays, mutants, additions} (my D3 clause
+    was wrong), real's is {overlays, mutants, chain, additions}, the arms' is the seven observed
+    {lib.rs, F13, promoted, chain, additions, mutants, overlays}, and the class table is
+    byte-identical `d183c38e…` (the c166 allowance unused); the baseline row4-only counterfactual
+    is `b6a27d01…`/5,842. Ruling: the retained block runs after B.7 against the sealed images, the
+    corrected deltas and predicted pins replace the baseline clause, and checkpoints run only
+    after all native producers end (the c168 race `candidate debris at images/armed: {'.temp'}`,
+    retry green, recorded). Budget: charged 1,499.405, cumulative 16,710.883; B remaining
+    2,688.725; the remaining B plan 1,514.1 (B.5 ~1 + B.6 617 + B.7 58 + retained 818.086 +
+    checkpoints ~20), margin 1,174.6, no top-up; C 5,231.719, D worker 389.635 + 2,322.449,
+    director R4 5,200. Amendment 8 resumes from `checkpoint-B.4-stop` and replays B.5–B.7, the
+    retained block, Stages C–D and the R4 handoff.
+
   - G15-CM4 continuation 167 — brief 797's Amendment 6 Stage B.2 STOP is correct: the c165
     whole-tree control pins cannot survive the mandatory row-5 refresh of the shared overlay table,
     so the seal bar becomes file-level and fail-closed, the real F13 re-runs in a scene-rooted

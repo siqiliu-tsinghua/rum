@@ -876,3 +876,68 @@ pass `python3 scripts/report.py check 797 --stage amendment7`. All writes stay u
 D 4,300, director 3,200). Charged so far 15,211.478; remaining after the top-up: B 4,188.130,
 C 5,231.719, D worker 389.635 + 2,322.449, director 5,200. Unspent returns; a projected overrun
 stops for a ruling, never a scope cut.
+
+## Amendment 8 (gate c168)
+
+The Amendment 7 run (unit `brief-797-cdx-20261125-162219-2825623`, 16:22:19–16:48, 1,499.405 s
+charged; `report-amendment7.json` `6a5eadc2…`) recovered the real F13, reproduced the class
+tables, and finished the ownership and B.4 producers, then correctly STOPped on the retained
+promotion selector: its positive check consumes the B.6 promotion inventory, which is still the
+793 parent's, and the shared additions manifest's chain row changes in every role. Ruling 820
+accepts the stop, moves the retained block after the seal, and corrects the baseline delta.
+
+**Order — the Amendment 5 proven order.** Entry from the `checkpoint-B.4-stop` state
+(`checkpoint-B.4-stop.json` `5044a801…`). B.5's chain (152 members, one changed member, `lib.rs`)
+and nine additions (row 4 = the chain, `ed54d95e…`; row 7 = `d183c38e…`; nine stays nine; one SHA
+in every role that holds them; the two independent projections agree) → checkpoint B.5 → B.6's
+promotions on both arms in both configurations (the four native runs per arm, the two F55
+adoptions, the R3 rechecks and cell deltas, the two rejection censuses, the four stale
+certificates archived) → checkpoint B.6 → B.7's seal, mutants, role pins, `overlay_digest.py`,
+the independent rerender and idempotence → the retained block against the sealed images, which is
+where the 818.086 s replay belongs: the seven selectors per arm, the no-default variants and the
+typed-full (10/0/1, 8,172 outputs, 15 identical raw reports), each with its prior pin and
+falsifiers, the mutation groups restored 15/15 and 6/6; their archive stays in the excluded
+`.temp/brief-546/` → Stage C's bars, the 26-line/1,741-byte `a2c48c90…` ledger, the 122-row scene
+and its closure line, the source-auth gate, F48 2/0, the fourteen selectors 14/0 and fmt → Stage
+D's workspace through the proxy driver (the six compiler tests green by name, the hygiene test
+green, exactly the two added passing names, 4,555/10/71 after the authoritative loopback
+reconciliation), the final flag-on LP 3+1+1/0 and class 197/0, final fmt and the R4 handoff. The
+seal precedes the retained block because the selectors consume the final overlay and mutant
+tables; the retained writes never touch a role tree.
+
+**Seal bar — corrected baseline clause.** The declared carrier refresh is unchanged (the four
+rows `lib.rs`, `adapter.rs`, `local-contracts.tsv`, `promoted.tsv`; row 5 must equal the
+recomputed `0b161f07…`; any other overlay row change is a STOP). Against the c165 seals
+(`31b1d674…`/5,842, `9f2d0bfc…`/5,851, `b91b4d76…`/5,851, `df7ad0ef…`/5,851):
+
+- `delta(baseline)` is exactly `{overlays.tsv, mutants.tsv, additions.tsv}` — the shared additions
+  manifest follows the chain's row 4; the row4-only baseline counterfactual is `b6a27d01…`/5,842;
+- `delta(real)` is exactly `{overlays.tsv, mutants.tsv, emission_chain.tsv, additions.tsv}`;
+- `delta(armed) == delta(disabled)` stays within `{lib.rs, local-contracts.tsv, promoted.tsv,
+  emission_chain.tsv, additions.tsv, class-provenance.tsv, overlays.tsv, mutants.tsv}` and must
+  contain `{lib.rs, local-contracts.tsv, promoted.tsv, emission_chain.tsv, additions.tsv,
+  overlays.tsv, mutants.tsv}` (the seven observed at the stop);
+- the class table is byte-identical to `d183c38e…` (the c166 allowance is unused this round); any
+  movement is the allowed two named test rows only, otherwise a STOP;
+- every changed path's bytes equal the independent reconstruction (`overlay_digest.py`), no other
+  path changes, and `predicted(role) = tree(c165_role, overrides={p: new bytes})` over that role's
+  delta must equal the final seal for all four roles; a mismatch is a STOP;
+- fresh complete release pins are recorded, and every shared table carries the same SHA in every
+  role that holds it.
+
+**Checkpoint discipline.** Checkpoints run only after all native producers end. The c168 first
+ownership checkpoint refused on `candidate debris at images/armed: {'.temp'}` while the LP01
+native job was live; the retry was green. Record both attempts and the reason.
+
+**Report.** Continue in session `01a21099-0601-7271-8f24-952473a7c14a` from the
+`checkpoint-B.4-stop` state; write `report-amendment8.json`, pin the eight earlier reports
+(`0b4b3bfb…`, `dafd90f3…`, `cadeed35…`, `1add9c95…`, `0692606f…`, `b0c84042…`, `ce148d5e…`,
+`6a5eadc2…`), and pass `python3 scripts/report.py check 797 --stage amendment8`. All writes stay
+under `.temp/brief-797/`; no git, no tag, no network; one Cargo dev-dependency line at most; no
+new `unsafe` in `rum-core`/`rum-runtime`.
+
+**Budget.** Charged so far 16,710.883; Stage B remaining **2,688.725**; the remaining B plan is
+B.5 ~1 + B.6 617 + B.7 58 + the retained block 818.086 + checkpoints ~20 = 1,514.1, a margin of
+1,174.6; no top-up. The carve stays **33,350 s** = focused 25,850 (A 1,400, A2 1,500, B 10,500,
+C 9,900; worker D 550; director R4 2,000) + workspace 7,500 (worker D 4,300, director 3,200).
+Unspent returns; a projected overrun stops for a ruling, never a scope cut.
