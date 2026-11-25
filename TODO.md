@@ -4026,6 +4026,46 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     and the clean closeout (`report-amendment9.json`, nine reports pinned, `check --stage
     amendment9`).
 
+  - G15-CM4 continuation 170 — brief 797's Amendment 9 DONE: the complete workspace rerun hits
+    the exact 4,555/10/71 bar, the final flag-on LP/class-lease/fmt gates and the R4 handoff are
+    green, and the director R4 install is ordered at 5,200 s (2026-11-25): ruling 822
+    (`.temp/director/ruling-822.md`). Amendment 9 unit
+    `brief-797-cdx-20261125-190050-2945563` (fork of `01a21099-…`, `gpt-6.2-astra` max,
+    19:00:50–19:45, 2,666.287 s charged (workspace 2,259.040, focused 407.247); rc 0, peak
+    17,669,758,976 B, oom 0; `check 797 --stage amendment9` OK 2,518 citations; 11 PASS + 1 NA
+    (`director-live-r4`); 3 measurements = 3 PASS; 2 deviations; no questions; verdict DONE; nine
+    earlier reports pinned `0b4b3bfb…`/`dafd90f3…`/`cadeed35…`/`1add9c95…`/`0692606f…`/`b0c84042…`/
+    `ce148d5e…`/`6a5eadc2…`/`50e54cca…`; the run wrote `report-amendment9.json` `c4663688…`
+    (4,508,705 B), canonical check `d35adcfd…`, summary `ee72aff0…`; scope git-clean, 192 changes
+    all under `.temp/brief-797/` (191 added, 1 modified `PROGRESS.md`), 0 disclosures, no live
+    install/git/network/new unsafe/new dependency). Credited: the complete
+    `cargo test --offline --workspace --no-fail-fast` under the 3,400 s bound finished in
+    **2,259.040 s** with 70 result lines and raw 4,546/19/71, raw_exit 101, tree/post-tree
+    `318933db…`/5,851; the 19 raw failures are exactly the 793 sandbox's 19 (ten accepted + nine
+    loopback; host receipt `c0b96f27…`); the reconciled bar is **4,555/10/71**; the two publication
+    balance tests are the only added passing names and absent from both 793 logs; zero removed,
+    including the 15/14 interleaved libtest records; six compiler children green with `+1.85.0`
+    argv, hygiene green (24 streams), six remnants green; the four stale C01 discoveries are
+    ordering artifacts with four rechecks green. The D-workspace checkpoint `2dc02580…` precedes
+    the final flag-on LP 3+1+1/0 (5/0/0: lp658×2, lp03/04/05), the final class-lease 197/0/0 (593
+    filtered; Q25 rows included) and the final fmt 0; the D-final checkpoint `8c823564…` follows
+    them. The R4 handoff: 92 snapshot rows (47 modified/43 carried/2 baseline absences), 90
+    byte-identical copies, 60 changed paths (9/15/18/18), 190 mapped paths (165 overlays/9
+    additions/1 additions manifest/15 carried or adopted) and the four sealed trees; I re-parsed
+    the three logs (including the interleaved records), re-hashed all 190 sealed sources and all
+    190 live parent files (all match; 18 paths change), all 90 copies and the 92 snapshot rows,
+    and re-ran both closeout-wrapper shapes (format suffix accepted, Path join verified). Budget:
+    charged 2,666.287, cumulative **26,290.861**; remaining B 922.685, C 2,571.517, D workspace
+    1,373.277, D focused 385.071, director R4 5,200; carve 37,550 unchanged; director used 0.
+    Ruling 822 orders the director R4 install: install the 190 armed paths, verify the five
+    rendered production witnesses, four postimages, zero-overlay real promotion and both anchors,
+    replay F13/ownership/class/chain/LP01/typed-slot/both promotion configurations on the
+    integrated checkout, reconstruct the seal and compare the live crates digest/count with
+    `318933db…`/5,851, repeat workspace/flag-on LP/class-lease/fmt, quote the native verdicts and
+    deliver the R4 receipts to brief 798. Brief 798 stays held until that receipt; Q25's thirteen
+    rows stay named stops; 744/745/746 held; CM5 unauthorized; agy window saved (carbon, high);
+    cdx the worker (quota death stops and asks).
+
   - G15-CM4 continuation 168 — brief 797's Amendment 7 Stage B.4 STOP is correct: the retained
     promotion selector consumes the B.6 promotion inventory and the shared additions manifest
     follows the chain, so the retained block moves after the seal and the baseline delta is

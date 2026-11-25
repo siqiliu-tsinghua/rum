@@ -979,3 +979,32 @@ C 9,900; worker D 1,150; director R4 2,000) + workspace 11,100 (worker D 7,900, 
 Charged so far 23,624.574; remaining after the top-up: B 922.685, C 2,571.517, D workspace
 3,632.317, D focused 792.318, director R4 5,200. Unspent returns; a projected overrun stops for a
 ruling, never a scope cut.
+
+## Amendment 10 (gate c170) — the director R4 install
+
+The Amendment 9 run (unit `brief-797-cdx-20261125-190050-2945563`, 19:00:50–19:45, 2,666.287 s
+charged (workspace 2,259.040, focused 407.247); `report-amendment9.json` `c4663688…`, the
+canonical check `d35adcfd…`, the summary `ee72aff0…`, 2,518 citations; 11 PASS + 1 NA; verdict
+DONE) completed the workspace rerun, the closing gates and the R4 handoff. Ruling 822 accepts it
+and orders the director's R4 leg.
+
+**The install.** From the repository root, reread the package with `python3 -B
+scripts/run-bounded.py --timeout 65 -- python3 -B .temp/brief-797/renderer/amendment9/handoff9.py
+readback`. Install the 190 armed paths in `handoff/r4-paths.tsv` (165 overlays, nine additions,
+the additions manifest and 15 carried or adopted paths) from the sealed armed image; every
+`armed_sha256` and every live `parent_sha256` was verified by the gate. Preserve inherited work,
+check the whole live crates delta, and install the exact release bytes.
+
+**The bars.** Verify the five rendered production witnesses, the four postimages, the zero-overlay
+real promotion and both promotion anchors. Replay F13, ownership, class, chain, LP01, typed-slot
+and both promotion configurations on the integrated checkout before its first acceptance suite.
+Independently reconstruct the seal and compare the whole live crates digest and file count with
+sealed armed `318933db…` (5,851 files). Repeat the workspace, flag-on LP 3+1+1/0, class-lease
+197/0 and formatting gates on that checkout. Quote each native verdict and retain the producer
+receipts; pin the post-suite bytes and deliver the R4 receipts to brief 798. The director has
+**5,200 s** (2,000 focused + 3,200 workspace); unspent returns, and a projected overrun stops for
+a ruling, never a scope cut.
+
+**The boundaries.** Brief 798 stays held until the R4 receipt. Q25's thirteen rows remain named
+stops; 744/745/746 stay held; CM5 has no authorization. No tag, no network, no new dependency and
+no new `unsafe` in `rum-core`/`rum-runtime`.
