@@ -3987,6 +3987,31 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 159 — brief 796's Stage C STOP is correct against the declared bar; the
+    fast-check bar is revised to the codebase's own cold-load cost (4 instructions per check,
+    address formation included) and Stage D proceeds under it (2026-11-25): unit
+    `brief-796-cdx-20261125-092539-2593447` (fork of `01a21034-…`, `gpt-6.2-astra` max,
+    09:25:39–10:12:26, ≈2,808 s dispatch wall, rc 0, peak 3,027,365,888 B, oom 0; `check 796
+    --stage amendment1` OK 725 citations; the canonical `report.json` pinned at `ebaa8a42…`).
+    Stage A closed (`PROBE GATE SITES expected=915 observed=915 outside=0 unexplained=0`;
+    `EXTERNAL ORDINARY sites=280 measured=40 bounded=240 unexplained=0`; `ORDINARY SURFACE
+    sites=303 measured=43 bounded=260 unexplained=0`; 368 definitions / 612 spans / 84 internal
+    sites). Stage B: 79 lifecycle edges, six lifetimes, the mid-request Print-callback install
+    (false,true,true) rejecting hoisting, four falsifiers. Stage C: the `PUBLISHED` gate
+    executes `lea; mov; test; jne` = 4 at both StringReplace sites (declared bar 3) and 4+3=7
+    per typed adapter (bar 6); cold self Ir zero; repaired median 21,644.56 vs base 21,572.60
+    and control 21,621.52; forced mutant +111 slow Ir; driven ledger 26 lines / 1,741 B
+    byte-identical; focused 12/25/197/2 green. The bar was mine and stricter than the pattern:
+    in the same one-CGU release binary the codebase's own readers compile to 4
+    (`LEXICAL_PROFILE_ENABLED` `0x1ed380` lea;movzbl;cmp;je; `EVALUATION_CACHE_PROFILE_ACTIVE`
+    `0x1ee4be` lea;movzbl;cmp;jne), so the revised bar is 4 per check / 8 per iteration / 7 per
+    typed visit (address reuse ≤3); the 3-instruction form needs fat LTO and one whole-program
+    CGU and is not adopted (deferred open question). Amendment 2 (carve 1,400 s from the 2,492 s
+    unspent; no top-up) revalidates the staged report under the revised bar, executes Stage D
+    (decision for the runtime cold-load gate; the two drafts in `TEMPLATE.md` shape with
+    `cascade.md` and the 121-row projection) and resumes in `01a2104e-…`. Scope: 0 files outside
+    `.temp/brief-796/`, git clean, four roles equal entry, no git/network/epoch/reseal/R4.
+
   - G15-CM4 continuation 158 — brief 796 STOPs correctly at Stage A on the first unbounded
     ordinary-path hook of the wider probe surface; Amendment 1 reopens Stage A with a
     measured-bound method and the brief resumes in the same session (2026-11-25): unit

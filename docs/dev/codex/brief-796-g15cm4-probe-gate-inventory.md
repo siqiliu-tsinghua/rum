@@ -284,3 +284,63 @@ Charged ≈1,164 s of the 4,500 s carve (unit `brief-796-cdx-20261125-085620-257
 08:56:20–09:15:44, peak 2,818,207,744 B, oom 0); **3,336 s returned**; this amendment carves
 **5,300 s** (A 1,800 / B 1,200 / C 1,600 / D 700) = the returned 3,336 s plus an explicit
 **1,964 s** top-up. Unspent returns; a projected overrun stops for a ruling, never a scope cut.
+
+## Amendment 2 (gate c159) — the Stage C budget STOP accepted; the fast-check bar revised to the codebase's own cold-load cost; Stage D proceeds under it
+
+The Amendment 1 run (unit `brief-796-cdx-20261125-092539-2593447`, fork of `01a21034-…`,
+09:25:39–10:12:26, ≈2,808 s dispatch wall, rc 0, peak 3,027,365,888 B, oom 0; `check 796 --stage
+amendment1` OK 725 citations; the canonical `report.json` pinned at `ebaa8a42…`) closed Stage A
+and Stage B and ran the Stage C prototype, which stopped on the declared budget:
+
+- **Stage A**: `PROBE GATE SITES expected=915 observed=915 outside=0 unexplained=0`;
+  `EXTERNAL ORDINARY sites=280 measured=40 bounded=240 unexplained=0`; `ORDINARY SURFACE
+  sites=303 measured=43 bounded=260 unexplained=0`; module 368 definitions / 612 byte-line spans
+  / 84 audited internal sites.
+- **Stage B**: 79 lifecycle edges, six independent ownership lifetimes; the mid-request Print
+  callback installs `begin(false)` between two guarded StringReplace iterations and the reads see
+  false, true, true, so hoisting is rejected with the measured reason; the four falsifiers.
+- **Stage C**: the prototype's process-wide `PUBLISHED` gate compiles to `lea; mov; test; jne` —
+  **4 executed instructions per visit at both StringReplace sites** (declared bar 3) and 4+3=7
+  per typed adapter visit (declared bar 6); ordinary cold self Ir zero; the repaired process
+  median 21,644.56 Ir/iteration against base 21,572.60 and control 21,621.52; the forced-watch
+  mutant adds 111 inclusive slow-callee Ir at both sites; the driven ledger is 26 lines /
+  1,741 bytes byte-identical; 12 Route A falsifiers, 25 typed tests, 197 class fixtures and 2
+  publication-balance tests pass.
+
+The declared bar was mine and stricter than the pattern the hard line names. In the same
+one-codegen-unit release binary, the codebase's own cold-load readers compile to 4 executed
+instructions per check: `lexical_profile_configured_admitted` inlines to
+`lea 0xd2dbd1(%rip) # LEXICAL_PROFILE_ENABLED; movzbl (%rax); cmp $1; je` at `0x1ed380`, and
+`evaluation_cache_profile_active_admitted` to `lea 0xd2c825(%rip) # EVALUATION_CACHE_PROFILE_ACTIVE;
+movzbl (%rax); cmp $2; jne` at `0x1ee4be`. The 3-instruction form requires fat LTO and a single
+whole-program codegen unit to internalize the counter — a whole-binary build-configuration change
+with unmeasured layout effects, not structurally necessary for the hard line (the gate touches
+only a static flag: no TLS, no ledger, no per-frame state) and less enforceable. It is not
+adopted; the matched-link experiment is recorded as a deferred open question.
+
+**Revised bar.** At most **4** executed instructions per independent fast check, including any
+address formation, relaxed load, comparison and conditional transfer actually executed; 4 per
+StringReplace site and 8 per iteration; a check that reuses a live address at most 3 (the typed
+post-decode); at most 8 per typed adapter visit. Compile-time elimination counts zero. The
+prototype passes.
+
+Continue:
+
+1. **Re-validate the staged report** under the revised bar: `inline-budget`, `repaired-string`
+   and `repaired-typed` PASS with this amendment's evidence; the STOP is preserved as an
+   accepted deviation; the canonical `report.json` stays untouched; `report-amendment2.json`
+   carries verdict DONE and passes `report.py check 796 --stage amendment2`.
+2. **Execute Stage D**: the decision (a) the runtime cold-load gate over (b) a compile-time
+   default flip (it would zero the driven measurements in release builds) and (c) hoisting
+   (rejected by the callback evidence), with the measured reasons; the implementation/re-render
+   brief and the A/B completion brief in `TEMPLATE.md` shape, with the revised bars,
+   `cascade.md`'s steps (5 direct overlay rows and additions rows 1/3/9, 165 overlays, 9
+   additions, class 2,422/20,625, chain 152, F13 68, four postimages, 92/90 snapshot, 190 R4
+   paths) and the 121-row attribution projection (116 unchanged, 3 refresh, 1 rebind, 1 new
+   residual); every open question with a recommendation, the LTO question included as deferred.
+3. Drafts go under `.temp/brief-796/draft/` (the scope extends to it); all prior evidence stays
+   pinned; `.temp/brief-796/` remains the only writable root; the four roles stay read-only.
+
+Resume in the session `01a2104e-f8c6-7eb0-9f3d-3ed39557d260`. Budget: Amendment 1's 5,300 s
+carve, ≈2,808 s charged, **2,492 s remain**; this amendment carves **1,400 s** (C
+re-validation/report 300 + D 700 + closeout 400), returning ≈1,092 s; no new top-up.
