@@ -3987,6 +3987,48 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 167 — brief 797's Amendment 6 Stage B.2 STOP is correct: the c165
+    whole-tree control pins cannot survive the mandatory row-5 refresh of the shared overlay table,
+    so the seal bar becomes file-level and fail-closed, the real F13 re-runs in a scene-rooted
+    target, and Stage B resumes at 33,350 s (2026-11-25): ruling 819
+    (`.temp/director/ruling-819.md`). Amendment 6 unit `brief-797-cdx-20261125-153842-2804321`
+    (fork of `01a21099-…`, `gpt-6.2-astra` max, 15:38:42–16:08, 1,769.754 s charged; rc 0, peak
+    4,259,934,208 B, oom 0; `check 797 --stage amendment6` OK 216 citations; 16 checks = 12 PASS +
+    3 FAIL + 1 NA; 3 measurements = 2 PASS + 1 NA; 5 deviations; 1 question `shared-control-seals`;
+    six earlier reports pinned, the run wrote `ce148d5e…` (15,286,392 B); scope git-clean, 48,185
+    changes under `.temp/brief-797/` (48,162 added + 23 modified), one disclosure — the archived
+    rejected real target file — and the dispatch log the only other write). Credited: two
+    independent source emissions identical in four roles (baseline `fa01b3d1…`/5,842, real
+    `6ce4a8cd…`/5,851, disabled `5b197bd4…`, armed `58026553…`); against c165 the controls change
+    zero paths and each arm one (`lib.rs`, exactly two one-byte `e` insertions, `println!`→
+    `eprintln!`, my own byte diff); the packaging rewrites exactly one marker per test and reads
+    the expected marker from the transformed text (796 prototype read-only `a5a9d951…`, c165 copy
+    `5573c2a4…`); zero unprefixed stdout hits in all four carriers with the red witness kept; the
+    122-row projection, 303 sites, source certificate 165/9/152/4/9/3, four postimages, 514/54 of
+    568 frames, census site, MIR/guard owner and the real carry `4337950c…` with its mutant; four
+    rustup dispatches through the proxy; the arm F13s green (68 records, 18 cells, F55 armed
+    `cc02870a…`/disabled `00ab2c45…`, 62 falsifiers each); entry over four 793 parents, four c165
+    seals, six reports and 101 inputs. **The finding**: row 5 of the shared overlay table carries
+    the carrier `lib.rs` payloads by value (hex), so the two insertions grow the row
+    1,013,872→1,013,880 bytes; two serializers agree on the required row (`0b161f07…`) and the old
+    one (`6c535856…`); replacing only row 5 changes both control pins (baseline `8849fe55…`, real
+    `372727f7…`), so `31b1d674…`/`9f2d0bfc…` cannot be kept; the chain records the armed
+    `lib.rs` and changes (additions row 4 follows), the mutant table's schema column is the overlay
+    pin, and the F13 row refreshes from the adopted arms. The real F13 reused a work-level cached
+    executable whose embedded manifest was the prior candidate, wrote into the sealed role's
+    `target/` (`626149bc…`, archived) and was refused; all four seals reauthenticate (reproduced).
+    Budget: charged 1,769.754, cumulative 15,211.478; B start 2,357.884, remaining 588.130; the
+    remaining plan prices at 3,856.041 (batch 1,528.962 + retained verdicts 818.086 + real F13 580
+    + class 2.303 + chain 0.233 + B.4 10.162 + checkpoints 18.672 + closeout 897.622); top-up
+    **3,600 s** → Stage B 10,500, carve **33,350 s** = focused 25,850 + workspace 7,500; remaining
+    B 4,188.130, C 5,231.719, D 389.635 + 2,322.449, R4 5,200. **Ruling**: the seal bar is
+    file-level — control source emissions byte-identical, `delta(baseline)={overlays,mutants}`,
+    `delta(real)⊆{overlays,mutants,chain,additions,class}`, the arms' delta within the declared
+    producer set, every changed path's bytes equal the independent reconstruction,
+    `predicted(role)` pins must equal the final seals, the class table's fresh SHA is addition
+    row 7 under the c166 allowance, and the chain/additions rebuild before the seal; the real F13
+    runs in a scene-rooted fresh target with native provenance; F13 target reuse is retired.
+    Amendment 7 resumes from `checkpoint-B.2-stop` with the full B–D replay.
   - G15-CM4 continuation 166 — brief 797's Stage D STOP is correct: the six compiler-driver reds
     are the workspace driver's PATH and the one hygiene red is the gate's own `println!` markers in
     the carrier `lib.rs`, so the renderer moves the two markers to `eprintln!` and Amendment 6
