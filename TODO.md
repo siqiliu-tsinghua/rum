@@ -3987,6 +3987,45 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 169 — brief 797's Amendment 8 Stage D workspace stop at the native bound
+    is correct: Stage B and C are sealed, the prefix's 19 failures equal 793's exactly, and the
+    complete workspace rerun plus the closing gates are authorized at 37,550 s (2026-11-25):
+    ruling 821 (`.temp/director/ruling-821.md`). Amendment 8 unit
+    `brief-797-cdx-20261125-165751-2846846` (fork of `01a21099-…`, `gpt-6.2-astra` max,
+    16:57:51–18:54, 6,913.691 s charged (B 1,766.040, C 2,660.202, D workspace 2,290.132, D
+    focused 197.317); rc 0, peak 17,513,132,032 B, oom 0; `check 797 --stage amendment8` OK 1,826
+    citations; 39 PASS + 1 FLAGGED + 1 FAIL + 2 NA; 3 measurements = 3 PASS; 5 deviations; 1
+    question `workspace-budget`; verdict STOP; eight earlier reports pinned `0b4b3bfb…`/
+    `dafd90f3…`/`cadeed35…`/`1add9c95…`/`0692606f…`/`b0c84042…`/`ce148d5e…`/`6a5eadc2…`, the run
+    wrote `report-amendment8.json` `50e54cca…` (9,016,933 B); scope git-clean, 357 changes under
+    `.temp/brief-797/`, 0 disclosures). Credited: B.5 chain `130f3040…` and additions `ed54d95e…`;
+    B.6 promotions `7c546372…`/`1786ed34…` with the four designed discovery 101 → check 0 ordering
+    artifacts and the R3 rechecks (8/8/9/9); B.7 final seals `ec602109…`/`022d60af…`/`c7156d50…`/
+    `318933db…`, overlay `0eed88cb…`, mutants `adeb7e4b…`, row 5 `0b161f07…` (1,013,880 B),
+    deltas 3/4/7/7 with every predicted pin equal (my own recomputation), class `d183c38e…`
+    unchanged, independent rerender byte-identical, idempotence 10/0; the retained block 9 passes
+    per arm, the mutation groups 15/15 and 6/6, typed-full 10/0/1 with 15 identical reports;
+    Stage C bars 4.0/4.0 cli and 7.0×4 typed both draws, ledger 26/1,741 `a2c48c90…`, scene 122
+    rows (116/3/1/2; 97/25/26/14; hot 21; missing 0; ws 0) with six controls, ordinary body
+    `dc859d7c…`, source auth 6 cold primaries/2 restores/12 receipts/32 proofs, F48 2/0, fourteen
+    selectors 14/0, fmt; checkpoints B.5 `a9746354…`, B.6 `ab239616…`, B.7 `13abe6fd…`, B
+    `12b022a6…`, C `44be781c…`, D-workspace-stop `860cca63…`. The STOP: the workspace command
+    under a 2,290 s limit expired at `typed_slot_compile_controls` after 58/70 result lines
+    (4,317 passed, 19 failed, 71 ignored, raw_exit 124, tree unchanged); the 19 failures are
+    exactly the 793 sandbox's 19 (ten accepted + nine loopback; host receipt `c0b96f27…`; I
+    re-parsed both logs — identical name sets); the two publication tests pass and are absent from
+    both 793 logs (the two added passing names, zero removed); six compiler children green with
+    offline `+1.85.0` argv receipts, hygiene green, six remnants green; the 793 sandbox workspace
+    itself took 2,240.183 s and the host 2,235.013 s, so the stop is honest. Budget: charged
+    6,913.691, cumulative 23,624.574; top-up 4,200 (worker workspace +3,600 → remaining 3,632.317;
+    worker focused +600 → remaining 792.318); carve 37,550 = focused 26,450 + workspace 11,100;
+    remaining B 922.685, C 2,571.517, R4 5,200. Amendment 9 resumes from the D-workspace-stop
+    checkpoint: the complete workspace rerun under a 3,400 s bound (70 result lines, 4,555/10/71
+    reconciled, the six compiler children and hygiene by name, the two added names, zero removed),
+    then the final flag-on LP 3+1+1/0, the final class-lease 197/0, the final fmt, the R4 handoff
+    and the clean closeout (`report-amendment9.json`, nine reports pinned, `check --stage
+    amendment9`).
+
   - G15-CM4 continuation 168 — brief 797's Amendment 7 Stage B.4 STOP is correct: the retained
     promotion selector consumes the B.6 promotion inventory and the shared additions manifest
     follows the chain, so the retained block moves after the seal and the baseline delta is

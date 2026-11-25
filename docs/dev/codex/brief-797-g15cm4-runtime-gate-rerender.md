@@ -941,3 +941,41 @@ B.5 ~1 + B.6 617 + B.7 58 + the retained block 818.086 + checkpoints ~20 = 1,514
 1,174.6; no top-up. The carve stays **33,350 s** = focused 25,850 (A 1,400, A2 1,500, B 10,500,
 C 9,900; worker D 550; director R4 2,000) + workspace 7,500 (worker D 4,300, director 3,200).
 Unspent returns; a projected overrun stops for a ruling, never a scope cut.
+
+## Amendment 9 (gate c169)
+
+The Amendment 8 run (unit `brief-797-cdx-20261125-165751-2846846`, 16:57:51–18:54, 6,913.691 s
+charged; `report-amendment8.json` `50e54cca…`) completed Stage B and Stage C and stopped honestly
+at the Stage D workspace bound: `cargo test --offline --workspace --no-fail-fast` under a 2,290 s
+command limit expired at `typed_slot_compile_controls` after 58 of 70 result lines (4,317 passed,
+19 failed, 71 ignored, raw_exit 124, the tree unchanged). Ruling 821 accepts the stop and
+authorizes the complete rerun.
+
+**The rerun.** `cargo test --offline --workspace --no-fail-fast` under a **3,400 s** bound, with
+the exact bar: all 70 result lines; 4,555 passed / 10 failed / 71 ignored after the authoritative
+loopback reconciliation; the 19 raw failures exactly the ten accepted plus the nine loopback reds
+(the 793 receipt `c0b96f27…`; I re-parsed both logs, the name sets are identical); the six
+compiler children green by name with their offline `+1.85.0` argv receipts; the stdout hygiene
+test green; the two added passing names (the two publication balance tests, absent from both 793
+logs) and zero removed names; then the workspace checkpoint of all four roles. A red outside that
+set, a missing line, or a name difference is a STOP.
+
+**The closing gates.** After the workspace checkpoint: the final flag-on LP 3+1+1/0, the final
+flag-on class-lease 197/0 (the Stage C `class-flag 197/0/0` is credited; the closing re-run stays
+only if the order requires it), the final fmt, and the R4 handoff package (the exact handoff
+receipts the director's install leg will verify).
+
+**Closeout.** Fix the two wrapper bugs so the closeout runs clean: the summary-check membership
+must accept the filename suffix on the verdict line, and `checked8.py` must not subscript a
+rebound `ROOT`. Write `report-amendment9.json`, pin the nine earlier reports (`0b4b3bfb…`,
+`dafd90f3…`, `cadeed35…`, `1add9c95…`, `0692606f…`, `b0c84042…`, `ce148d5e…`, `6a5eadc2…`,
+`50e54cca…`), and pass `python3 scripts/report.py check 797 --stage amendment9`. All writes stay
+under `.temp/brief-797/`; no git, no tag, no network; one Cargo dev-dependency line at most; no new
+`unsafe` in `rum-core`/`rum-runtime`.
+
+**Budget.** Top-up **4,200 s**: worker workspace 2,322.449→5,922.449 (+3,600) and worker focused
+389.635→989.635 (+600). Carve **33,350→37,550 s** = focused 26,450 (A 1,400, A2 1,500, B 10,500,
+C 9,900; worker D 1,150; director R4 2,000) + workspace 11,100 (worker D 7,900, director 3,200).
+Charged so far 23,624.574; remaining after the top-up: B 922.685, C 2,571.517, D workspace
+3,632.317, D focused 792.318, director R4 5,200. Unspent returns; a projected overrun stops for a
+ruling, never a scope cut.
