@@ -3987,6 +3987,32 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 161 — brief 797 STOPs correctly at Stage A: the armed parent is 243,786
+    bytes (243,761 is the disabled role) and the measured adapter duplicates the 970-byte ordinary
+    body; both ruled — Stage B.1 corrected and the adapter re-shaped to one body with a cold
+    observations helper — and Amendment 1 resumes in the same session (2026-11-25): unit
+    `brief-797-cdx-20261125-104633-2634808` (session `01a21099-…`, `gpt-6.2-astra` max,
+    10:46:33–11:00:32, ≈840 s dispatch wall, worker Stage A 838.952/1,000 s, rc 0, peak
+    305,225,728 B, oom 0; `check 797` OK 108 citations; 8 checks = 5 PASS + 2 FAIL + 1 NA;
+    verdict STOP; 3 deviations; 2 questions). Reproduced: armed `lib.rs` 243,786 B /
+    `0c67b9de…`, disabled 243,761 B / `6325e17a…`, exactly one differing line (`ENABLED`
+    57→32 B, the 25-byte delta); the prototype's `resume` (lines 56–77) and
+    `resume_with_probe_state` (101–122) carry byte-identical 970-byte bodies (`dc859d7c…`), and
+    the helper's whole body equals the parent's method body. Stage A work accepted: four role
+    pins entry=exit, five carrier transforms matching in memory, helper emitter fork agreeing,
+    16-row allowance, four Q25 regions on the packaged source, test-packaging witness. Ruling:
+    one ordinary body stays in `resume` behind the gate; the three pre-decode observations move
+    to `#[cold] #[inline(never)] run_cm740_probe_observations` returning the driven decision;
+    `resume_cm740_driven_620` unchanged; no `resume_ordinary`, no second copy, no new inline
+    attribute on the body; the fast path is unchanged so the measured 4+3 transfers (post-decode
+    3 or 4 both pass; above 4 or above 8 is a STOP); ledger 26 lines / 1,741 B / `a2c48c90…` and
+    the callback false,true,true stay required; the 121-row projection keeps its count with the
+    residual row renamed and the `resume` row keeping the post-decode hook. Scope: git clean,
+    0 files outside `.temp/brief-797/` except the dispatch log; the first log archived
+    (`.temp/brief-797/logs/dispatch-first.log`, `6f813bc8…`). Budget: Stage A +300 s (total
+    17,300 = 1,231.45 returned + 16,068.55 top-up); resume via `CDX_FORK=01a21099-…`. Brief 798
+    stays held until 797's R4.
+
   - G15-CM4 continuation 160 — brief 796 is DONE: Amendment 2 re-validates the revised bars from
     the retained raw profiles, the runtime publication gate is adopted, and brief 797
     (implement, re-render, R4) is ordered at a 17,000 s carve (2026-11-25): unit

@@ -52,7 +52,7 @@ language and embedding contracts unchanged. Safe Rust and existing dependencies 
 | Authoring target in the successor renderer | Sealed carrier (one-based data row) | Required change |
 | --- | --- | --- |
 | `crates/rum-runtime/src/lib.rs` | `overlays.tsv` row 5 | Author publication, the six independent ownership transitions, cold predicates, recorder entry guards and the balance tests. Change the helper template as well as the carried module. |
-| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | `overlays.tsv` row 109 | Test publication before the original three pre-decode probe operations; re-read after decode at the original control observation. |
+| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | `overlays.tsv` row 109 | Test publication before the original three pre-decode probe operations; re-read after decode at the original control observation; the ordinary body stays single and the observations move to a cold helper (the shape below). |
 | `crates/rum-runtime/src/cm740_probe/class_lease.rs` | `additions.tsv` row 1 | Count the independent class flag, preserving its enabled check and inactive return values. |
 | `crates/rum-runtime/src/cm740_probe/q25_ownership.rs` | `additions.tsv` row 3 | Count ACTIVE and the independent watch flag separately; preserve explicit capability consumption and teardown. |
 | `crates/rum-runtime/src/cm740_probe/tests/cm743_route_a_falsifiers.rs` | `additions.tsv` row 9 | Construct the test authority through the same publication owner. |
@@ -98,6 +98,51 @@ before decrementing. Repeated transitions are idempotent. RAII balances thread e
 frames, replacement and scope restore. The calling thread's increment precedes its later load;
 another thread's publication may add slow work but can never remove an outstanding unit.
 
+## The typed adapter shape (a departure is a STOP)
+
+The ordinary body stays **single**, exactly as the parent has it; only the entry gains the gate
+and the three pre-decode observations move into a cold helper. The driven decision is the
+helper's return value:
+
+```rust
+impl<F: TypedFrame> ErasedFrame for TypedAdapter<F> {
+    fn resume(&self, session: &mut Session, input: &mut Result<Slot, EvalError>) -> Action {
+        if crate::cm740_probe::possibly_active() && self.run_cm740_probe_observations() {
+            return Self::resume_cm740_driven_620(self, session, input);
+        }
+        // The parent's 970-byte ordinary body, byte-identical (sha dc859d7c…):
+        // decode …, the sole token mint, control::active("Some"), resume, option-slot print, action.
+    }
+    // output_boundary, inner_frame unchanged.
+}
+
+impl<F: TypedFrame> TypedAdapter<F> {
+    #[cold]
+    #[inline(never)]
+    fn run_cm740_probe_observations(&self) -> bool {
+        let _resumed = crate::cm740_probe::control::resume::<F, _>(self);
+        crate::cm740_probe::class_lease::note_typed_consumer(
+            self as *const Self as *const () as usize,
+            std::any::type_name::<F>(),
+        );
+        crate::cm740_probe::driven()
+    }
+
+    #[cold]
+    #[inline(never)]
+    #[allow(dead_code)]
+    fn resume_cm740_driven_620(&self, session: &mut Session, input: &mut Result<Slot, EvalError>) -> Action {
+        // Unchanged from the parent, including the observe conjunction and the option-route scope.
+    }
+}
+```
+
+No `resume_ordinary` may be introduced and no second copy of the ordinary block may exist; the
+Stage C source witness records the block's single occurrence and its sha. The fast path is the
+entry load, its branch and the body with no call in between; the cold helper runs the three
+observations in the parent's order and returns the driven decision. `resume_cm740_driven_620`
+stays exactly as the parent has it.
+
 ## Stage A — source authority and publication (1,000 s)
 
 1. Authenticate the 793 handoff (`sealed-trees.tsv`): baseline `fa01b3d1…`/5,842, armed
@@ -113,8 +158,9 @@ another thread's publication may add slow work but can never remove an outstandi
    `recorder_removal.py`. Apply the certified transformations to the carrier and the four other
    files. Verify original and successor spans independently of the serializer. Keep the 16-row
    historical ordinary allowance and the four Q25 inserted regions separately certified.
-3. Author the shape above into the carried module and the adapter. Close the 303-site inventory
-   in the successor sources.
+3. Author the shape above into the carried module and the typed adapter shape of the next section.
+   Close the 303-site inventory in the successor sources, and record the adapter's single
+   occurrence of the 970-byte ordinary block with its sha (`dc859d7c…`).
 4. Keep the two publication tests runnable in the default parallel workspace. The scratch balance
    cases require a zero global count; the control case requires `RUM_CM740_SEMANTIC=Some` and
    `RUM_CM740_OMIT=Some`. Run each exact body in a fresh test process: a test-only parent wrapper
@@ -124,7 +170,7 @@ another thread's publication may add slow work but can never remove an outstandi
    test-only packaging delta from the scratch bytes and bind it in the source witness before
    regeneration. For the `Bound` case check a real successful bind and balanced release through
    FRAMES and RESUMED, including a nonzero intermediate publication and a final zero. Keep
-   ordinary production code identical to the measured source transformation. Defer acceptance
+   ordinary production code identical to the amended production shape. Defer acceptance
    tests until the standing replays in Stage B.
 
 ## Stage B — re-emission, standing inventories and seal (2,800 s)
@@ -133,7 +179,8 @@ Use the tool/input/output/STOP table in `.temp/brief-796/evidence/amendment1/cas
 step records complete input SHA-256s, actual argv, role, feature mode, exit and independently
 regenerated bytes.
 
-1. Render `lib.rs` from its 243,761-byte, 6,173-line armed parent. Apply the established three
+1. Render `lib.rs` from its 243,786-byte, 6,173-line armed parent (the disabled role is 243,761
+   bytes; the 25-byte delta is the sole `ENABLED` declaration substitution). Apply the established three
    disabled-role substitutions, carry baseline preimages, place additions in armed/disabled/real,
    and keep all nine additions absent in baseline. Verify the four 791 postimages by exact byte
    lengths and hashes (`frame_root_trace/derived_inventory.rs`, `frame_root_trace.rs`,
@@ -193,8 +240,10 @@ regenerated bytes.
   instructions. Require **≤4 per independent check, ≤3 with a reused address, ≤8 per guarded-hit
   iteration, ≤8 per typed adapter visit**; compile-time elimination costs zero. The prototype
   measured 4/4 and 4+3 in four reached typed bodies (350/700 entries); verify all 97 adapter
-  entry sequences. Require zero ordinary slow-predicate and lexical self Ir. Preserve the
-  positive workload, decode order, suspended frame identity and ordered ledger.
+  entry sequences and record whether the post-decode check reuses the entry address (3) or
+  reloads it (4) — both are within the bar; a count above 4 or a visit above 8 is a STOP.
+  Require zero ordinary slow-predicate and lexical self Ir. Preserve the positive workload,
+  decode order, suspended frame identity and ordered ledger.
 - Exercise all four falsifiers. Require the real P0256 hit, all 12 Route A falsifiers and the same
   26 ordered lines / 1,741 bytes (SHA prefix `a2c48c90`). Run the mid-request Print callback and
   retain both reached StringReplace edges. In a disposable forced arm publish the independent Q25
@@ -206,10 +255,13 @@ regenerated bytes.
   new real. Require `ws=0`, all 21 hot matches, zero missing/unmatched, the four session facades
   and exactly three attributable `Local` witnesses. The direct projection is **121 rows**: 116
   unchanged, three typed control digest refreshes (`enter`, `drop`, `is_active`), one rebound
-  `resume`, one new residual `resume_with_probe_state` — 96 diffs, 25 extensions, 26 shapes,
-  14 owners. Rebind all postimage-dependent witnesses to the final scene; stop on unexplained
-  deviation. The required line is `PROBE CLOSURE facades=4 outside=3 attributed=3
-  unexplained=0`. Check `host_payload_ledger.rs/check_entry` and
+  `resume`, one new residual cold helper `run_cm740_probe_observations` (the original ordered
+  observations; same `typed resume observations` shape and owner) — 96 diffs, 25 extensions, 26
+  shapes, 14 owners. The `resume` row keeps the `active("Some")` post-decode hook and gains the
+  entry gate; no row is added for a body copy. A different row count, a differently named
+  residual or any unexplained difference is a STOP before acceptance. Rebind all
+  postimage-dependent witnesses to the final scene. The required line is `PROBE CLOSURE facades=4
+  outside=3 attributed=3 unexplained=0`. Check `host_payload_ledger.rs/check_entry` and
   `reconcile.rs/is_local_construct` and `reconcile_falsifier_disposition` explicitly.
 - Follow 793 §6 against the final role pins: the six historic red-to-green selectors, full
   typed-slot 10/0/1 per arm, the P0543 lane with nine changed manifests, two configurations ×
@@ -271,13 +323,14 @@ P2416 and P2418. Briefs 744/745/746 remain held. CM5 has no authorization.
 
 ## Budget
 
-Focused **11,000 s** (A 1,000 / B 2,800 / C 4,800; worker D 400; director R4 leg 2,000) +
-workspace **6,000 s** (worker 2,800; director 3,200) + epoch 0 = **17,000 s**. Funded by the
-**1,231.45 s returned by brief 796** plus an explicit **15,768.55 s** top-up under the standing
-2026-11-19 ruling → reserve 0 at the carve. The measured basis is in ruling 812 (6,652.395 s of
-same-shape inputs plus successor authoring, independent emissions, repeated live work and
-attribution). Unspent returns; a projected overrun stops for a director ruling, never a scope
-cut.
+Focused **11,300 s** (A 1,300 / B 2,800 / C 4,800; worker D 400; director R4 leg 2,000) +
+workspace **6,000 s** (worker 2,800; director 3,200) + epoch 0 = **17,300 s**. Funded by the
+**1,231.45 s returned by brief 796** plus an explicit **16,068.55 s** top-up under the standing
+2026-11-19 ruling → reserve 0 at the carve. Stage A's +300 s is Amendment 1's top-up after the
+first dispatch spent 838.952 s of its 1,000 s at the Stage A STOP. The measured basis is in
+ruling 812 (6,652.395 s of same-shape inputs plus successor authoring, independent emissions,
+repeated live work and attribution). Unspent returns; a projected overrun stops for a director
+ruling, never a scope cut.
 
 ## Report format
 
@@ -286,3 +339,59 @@ exits, test counts, the full carrier and replay deltas, all measured instruction
 scope, peak/OOM, historical accepted exclusions, and verbatim verdict lines. The director
 supplies separate R4 receipt paths. Run `python3 scripts/report.py check 797` and return the
 validated summary. A missing integration receipt leaves its gate open.
+
+## Amendment 1 (gate c161) — the Stage A STOP is correct; the armed parent is 243,786 bytes and the adapter keeps one ordinary body
+
+The first dispatch (unit `brief-797-cdx-20261125-104633-2634808`, `gpt-6.2-astra` max,
+10:46:33–11:00:32, ≈840 s dispatch wall; worker Stage A 838.952 s of 1,000 s; rc 0, peak
+305,225,728 B, oom 0; `check 797` OK 108 citations; 8 checks = 5 PASS + 2 FAIL + 1 NA; verdict
+STOP) stopped at Stage A on two named questions. Both are correct and are accepted, together
+with the delivered Stage A work: the four role pins matched at entry and exit; the five carrier
+transforms reproduced the measured digests in memory; the helper emitter fork agrees with the
+carried module; the 16-row allowance and the four Q25 regions re-authenticate; the test-only
+packaging has its witness. The first report's two FAIL rows (`armed-parent-length`,
+`typed-adapter-body`) are the accepted STOP, and this amendment resolves them.
+
+**D1 — the armed parent is 243,786 bytes.** My brief carried 243,761 from brief 796's cascade
+note, where it is the disabled role's length. The director's own check: the armed `lib.rs` is
+243,786 B, sha `0c67b9de…` (the carrier's `old`), and the disabled file 243,761 B, sha
+`6325e17a…`; the two differ on exactly one line, `pub const ENABLED: bool = !cfg!(disabled) &&
+!cfg!(live);` (57 B) vs `pub const ENABLED: bool = false;` (32 B) — the 25-byte delta. Stage
+B.1 now reads 243,786 bytes; every other row of the brief is unchanged.
+
+**D2 — one ordinary body; the observations move to a cold helper.** The 796 prototype placed a
+second byte-identical copy of the 970-byte decode-through-return block in
+`resume_with_probe_state`; a duplicated body is forbidden here and is avoidable. Author the
+"typed adapter shape" section above exactly: `resume` keeps the parent's single ordinary body
+byte-identical (`dc859d7c…`) behind the gate; `run_cm740_probe_observations` is the
+`#[cold] #[inline(never)]` helper holding `control::resume`, `note_typed_consumer` and `driven()`
+in the parent's order and returning the driven decision; `resume_cm740_driven_620` stays exactly
+as the parent has it. No `resume_ordinary`, no second copy of the ordinary block, no new inline
+attribute on the body. The driven order is unchanged: observations → `driven()` →
+`resume_cm740_driven_620`.
+
+**D3 — fresh witnesses under this shape.**
+- Stage C re-measures the final binary: the bars are unchanged (≤4 per independent check, ≤3
+  with a reused address, ≤8 per guarded-hit iteration, ≤8 per typed adapter visit; the
+  prototype's 4+3 is the reference). Record for each reached adapter whether the post-decode
+  check reuses the entry address (3) or reloads it (4) — both pass; above 4 or above 8 is a STOP.
+- The driven ledger stays 26 lines / 1,741 bytes / `a2c48c90…`, and the mid-request Print
+  callback witness stays false, true, true.
+- The 794 classifier re-derives on the emitted scene. The 121-row projection is the baseline;
+  the expected delta is exactly: the residual row is named `run_cm740_probe_observations` (same
+  `typed resume observations` shape, same owner, detail = the original ordered observations), the
+  `resume` row keeps the `active("Some")` post-decode hook and gains the entry gate, and no row
+  is added for a body copy. Any other row count, a differently named residual or an unexplained
+  difference is a STOP before acceptance; `PROBE CLOSURE facades=4 outside=3 attributed=3
+  unexplained=0` still decides.
+- The source witness binds the three-method diff, the ordinary block's single occurrence and sha,
+  the helper's hook order, and the already-witnessed test-packaging delta.
+
+**D4 — resume and budget.** Resume in session `01a21099-0601-7271-8f24-952473a7c14a` at the
+corrected Stage B.1 and the amended adapter shape, on the pinned 793 inputs; the Stage A receipts
+stay as evidence. Stage A gains a **+300 s** top-up (carve 1,300 s; total **17,300 s** funded
+1,231.45 returned + 16,068.55 top-up; B 2,800 / C 4,800 / worker D 400 / director R4 leg 2,000;
+workspace 6,000; epoch 0). The first dispatch's ≈840 s is charged to the original Stage A carve.
+The resumed dispatch writes `report-amendment1.json` (the first `report.json` stays untouched and
+pinned) and passes `python3 scripts/report.py check 797 --stage amendment1`. Unspent returns;
+a projected overrun stops for a ruling, never a scope cut.
