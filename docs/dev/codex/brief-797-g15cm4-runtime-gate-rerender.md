@@ -653,3 +653,81 @@ this brief's measured F13+ownership share): carve **21,100 s** = focused 15,100 
 A2 1,500 / B 5,000 / C 4,800; worker D 400; director R4 leg 2,000) + workspace 6,000 +
 epoch 0; remaining focused **11,374.883 s**, of which Stage B has 3,368.294 s left. Unspent
 returns; a projected overrun stops for a ruling, never a scope cut.
+
+## Amendment 5 (gate c165) — the Stage B.4 STOP on the class-target destructor digests is correct; the class table is adopted with the certified source-driven destructor delta
+
+The Amendment 4 resume (unit `brief-797-cdx-20261125-123600-2688027`, fork of
+`01a21099-0601-7271-8f24-952473a7c14a`, `gpt-6.2-astra` max, 12:36:00–12:57, 1,309.842 s
+charged to report; rc 0, peak 2,887,794,688 B, oom 0; `report.py check 797 --stage amendment4`
+OK with 332 citations; 18 checks = 16 PASS + 1 FAIL + 1 NA; 1 measurement PASS + 1 NA; 4
+deviations; 1 question `class-target-destructor-seals`; verdict STOP) is accepted through the
+Stage B.4 STOP. Verified and credited: the c164 getter (`getter_delta` prototype `70d6bcc5…`,
+c162 `24ef0748…`, c164 `e2f1ca42…`; `FLAG.with(|flag| flag.get())` at 42:33); two byte-identical
+source emissions in all four roles (baseline `fa01b3d1…`/5,842, armed `ef48d0e2…`/5,851,
+disabled `e1cf3b42…`/5,851, real `6ce4a8cd…`/5,851); the 122-row classifier projection
+(116 unchanged, 3 refreshes, 1 rebind, 2 new; 97/25/26/14), the 303-site surface and
+`PROBE CLOSURE facades=4 outside=3 attributed=3 unexplained=0`; unchanged MIR/guard verdicts and
+exact postimages; F13 on armed (`4543670c…`), disabled (`05969f4e…`) and real (`626149bc…`)
+with F55 adoption, reread and 62 falsifiers; the real promotion carry `4337950c…` re-attested
+with its mutants; the ownership reviews green 4/0 on both arms with
+`OWNERSHIP IDENTITY PASS roles=armed,disabled class_lease.rs:42:33=preserved
+historical_exclusions=preserved Local=2 positions=792 additions=2 all_rows_bound=true`,
+`lost_historical_UnknownConstruct=0`, `changed_records=794`, the restored `unknown_captures.tsv`
+(3,949 rows) and the seven common tables installed in all four roles with only the two declared
+disabled `cfg!` rows differing; and the two exact native class discoveries (29,907 twenty-field
+records per arm, `raw_exit 0`, trees stable), the capture map (`stable_keys=29,754 added_keys=153
+removed_keys=75 required_targets_added=0 required_targets_removed=0`) and both independent
+20,625-row reviews at `d183c38e…` with 18,203 source rows unchanged and the eight declared
+absences preserved.
+
+**The finding is correct.** All 2,422 class targets' conservative destructor field and the
+semantic digest that embeds it moved (`old_semantic_digests_matched=0/2422` on both arms), so
+Stage B.4's "Preserve stable identities and semantic digest fields" bar fired and the table was
+not installed.
+
+**The ruling.** The `destructors` field is a conservative fingerprint over the whole crate's ADT
+and `Drop` bodies (`resolve.rs`: "A conservative dependency fingerprint includes every ADT and
+Drop body. It may over-invalidate; it cannot bless an unseen destructor change."), not a
+per-target fact. The gate deliberately adds `PublishedFlag` with its balancing `Drop` and
+replaces four `Cell<bool>` declarations with it; the witness (802 files both scenes; parent
+`3615ec32…`/2,246 terms, candidate `552860c6…`/2,248 terms, 2,422/2,422 targets matched)
+enumerates the entire delta — four removed terms (the old `q25_ownership::State { watch: bool }`,
+`RunAuthority { current: Cell<bool> }`, `Installing { … bound: Cell<bool> }`, `Bound { …
+emitted: Cell<bool> }`) and six added (the same four with `PublishedFlag`, plus `struct
+PublishedFlag` and `impl Drop for PublishedFlag`), every term in the two certified files
+(`lib.rs`, `q25_ownership.rs`). All other target fields are equal (`other_field_changes=0`), the
+source rows are unchanged, the eight absences hold and no new absence appears, and both arms
+agree byte-for-byte. So the regenerated table is adopted exactly as produced:
+`d183c38eb2dfc47ed3d3332a16dec0dfdd77a22a06e9e30a2c26f10c6ea6505b`, installed as the common
+armed-authored addition in armed, disabled and real (baseline keeps it absent per 793's
+routing), then reread (20,625 rows, eight absences, unchanged source rows, the file digest).
+The adoption check is rebuilt as a fail-closed attribution check — identical target keys,
+tokens, tails and every other field, the same eight absences and zero new, unchanged source rows,
+arms byte-equal, and only the destructor field and the row's semantic digest differing, only to
+values reproduced by the native producers and certified by the per-term witness — and ships two
+falsifiers: a mutated token is refused, and a destructor digest that does not match the certified
+native value is refused. The ruling is recorded as a report deviation; both tables
+(`626eb3d4…` historical, `d183c38e…` adopted) and the complete capture deltas (153/75 keys, 480
+line, 8 order, 8 tail, per-source attributed) stay as evidence; nothing is hand-edited.
+
+**Resume.** Continue in session `01a21099-0601-7271-8f24-952473a7c14a` from the accepted state
+(the checkpoint trees armed `78d14631…`, disabled `329ac494…`, real `297f79a6…`, baseline
+`65f37cbf…`; the two class reviews at `d183c38e…`; the destructor witness) by installing and
+rereading the class table, rebuilding the adoption check with its two falsifiers, then Stage
+B.4's remaining producers (class negatives, `logical_counter_port`, the eight LP01 producer
+paths, the 875 bindings, the typed-slot source receipts with the recorded splits), Stage B.5
+(chain and additions, with the class table's new SHA/length among the nine additions), B.6 (the
+promotion reviews on armed and disabled in both configurations with adoption and recheck; zero
+rejections, two bodies, three production marks, four probe marks, the two 793 rendered anchors),
+B.7 (the 165-row overlay seal, 151 mutants, nine additions, four role pins, `overlay_digest.py`,
+clean rerender idempotence), then Stages C and D unchanged, including the 122-row scene table,
+`PROBE CLOSURE facades=4 outside=3 attributed=3 unexplained=0`, the 793 §6 source-auth gate, the
+workspace, flag-on and fmt gates and the R4 handoff. The resumed dispatch writes
+`report-amendment5.json` and passes `python3 scripts/report.py check 797 --stage amendment5`;
+the five earlier reports stay pinned.
+
+**Budget.** Charged: 3,725.117 + 1,309.842 = **5,034.959 s**. Stage B has spent 2,941.548 s of
+5,000 s; remaining **2,058.452 s**; focused remaining **10,065.041 s**. No top-up now: the
+remaining B.4 tail plus B.5–B.7 measures ≈1,300–1,500 s from this run's components (source, F13
+and ownership ≈270 s; B.4 discovery and projection ≈680 s measured) and 793's same-shape
+remainder. Unspent returns; a projected overrun stops for a ruling, never a scope cut.

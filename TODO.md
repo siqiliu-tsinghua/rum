@@ -3987,6 +3987,43 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 165 — brief 797's Stage B.4 STOP on the class-target destructor digests is
+    correct: the class table `d183c38e…` is adopted with the certified 4-removed/6-added destructor
+    delta and Stage B.4 resumes (2026-11-25): unit `brief-797-cdx-20261125-123600-2688027` (fork
+    of `01a21099-…`, `gpt-6.2-astra` max, 12:36:00–12:57, 1,309.842 s charged to report; rc 0, peak
+    2,887,794,688 B, oom 0; `check 797 --stage amendment4` OK 332 citations; 18 checks = 16 PASS +
+    1 FAIL + 1 NA; 1 measurement PASS + 1 NA; 4 deviations; 1 question
+    `class-target-destructor-seals`; five earlier reports pinned
+    `0b4b3bfb…`/`dafd90f3…`/`cadeed35…`/`1add9c95…`). Verified: the c164 getter
+    `FLAG.with(|flag| flag.get())` at `class_lease.rs:42:33` (`getter_delta` prototype `70d6bcc5…`,
+    c162 `24ef0748…`, c164 `e2f1ca42…`); two byte-identical emissions in four roles (baseline
+    `fa01b3d1…`, armed `ef48d0e2…`, disabled `e1cf3b42…`, real `6ce4a8cd…`); the 122-row projection
+    (116 unchanged / 3 refresh / 1 rebind / 2 new; 97/25/26/14), 303 sites and `PROBE CLOSURE
+    facades=4 outside=3 attributed=3 unexplained=0`; F13 ×3 (armed `4543670c…`, disabled
+    `05969f4e…`, real `626149bc…`) with F55 and 62 falsifiers; the carry `4337950c…` re-attested;
+    ownership 4/0 both arms with `OWNERSHIP IDENTITY PASS … class_lease.rs:42:33=preserved
+    historical_exclusions=preserved Local=2 positions=792 additions=2 all_rows_bound=true`,
+    `lost_historical_UnknownConstruct=0`, `changed_records=794`; the two native class discoveries
+    (29,907 twenty-field records, trees stable), the capture map (`stable=29,754 added=153
+    removed=75 required_targets_added/removed=0`) and both independent 20,625-row reviews
+    `d183c38e…` with 18,203 source rows unchanged and the 8 declared absences. The STOP: all 2,422
+    targets' conservative destructor field and semantic digest moved
+    (`old_semantic_digests_matched=0/2422`); the field is a global ADT/Drop fingerprint by contract
+    (`resolve.rs`), and the gate's `PublishedFlag` + `Drop` plus the four replaced `Cell<bool>`
+    declarations produce exactly the certified 4-removed/6-added term delta, all in
+    `lib.rs`/`q25_ownership.rs`; `other_field_changes=0`, 0 new absences, arms byte-equal. Ruling:
+    adopt `d183c38e…` as the common armed-authored addition (baseline absent), reread 20,625 rows /
+    8 absences / source rows / digest, rebuild the preservation check as a fail-closed attribution
+    check with two falsifiers (mutated token refused; non-certified destructor refused), record the
+    deviation, keep both tables and the capture deltas; then B.4's remaining producers (negatives,
+    `logical_counter_port`, eight LP01 paths, 875 bindings, typed-slot receipts), B.5 (class
+    table's new SHA among the nine additions), B.6, B.7, C/D unchanged, writing
+    `report-amendment5.json` and passing `check 797 --stage amendment5`. Scope: git clean, 0 files
+    outside `.temp/brief-797/` except the dispatch log; 495 entries (441 added, 54 modified).
+    Budget: charged 3,725.117 + 1,309.842 = 5,034.959 s; Stage B spent 2,941.548 of 5,000,
+    remaining 2,058.452; no top-up now; focused remaining 10,065.041 s; resume via
+    `CDX_FORK=01a21099-…`. Brief 798 stays held.
+
   - G15-CM4 continuation 164 — brief 797's Amendment 3 Stage B.3 STOP on the lost historical
     class-getter closure is correct: the closure is restored in the authored source and every
     source-dependent proof replays before Stage B.4 (2026-11-25): unit
