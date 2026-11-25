@@ -3987,6 +3987,41 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 163 — brief 797's Amendment 2 Stage B.2 STOP on the real role is correct:
+    the zero-overlay receipt control carries the baseline promotion inventory by role contract, its
+    regenerated F13 stays, and Amendment 3 resumes Stage B at 19,900 s (2026-11-25): unit
+    `brief-797-cdx-20261125-112946-2653243` (fork of `01a21099-…`, `gpt-6.2-astra` max,
+    11:29:46–11:53, ≈1,400 s dispatch wall; A2 704.873 s of 1,500, B native 420.759 s and report
+    closeout 691.644 s of 2,800; rc 0, peak 2,847,981,568 B, oom 0; `check 797 --stage amendment2`
+    OK 351 citations; 12 checks = 10 PASS + 1 FAIL + 1 NA; 3 deviations; 1 question
+    `real-promotion-role`; first two reports pinned `0b4b3bfb…`/`dafd90f3…`). Verified: the
+    970-byte `dc859d7c…` ordinary block exactly once per arm; `_4: Option<ResumeScope>` held across
+    `bb2`/`bb4` with cleanup `bb8` and zero guard locals in the hot `resume`; 122 rows (97/25/26/14)
+    on raw and canonical sources; 303 sites (280 external / 23 internal; 43 measured / 260
+    bounded); two byte-identical source emissions; 514/54 of 568 frames and census `405:58–405:68`;
+    F13 on armed `40040a57…`, disabled `a713577b…`, real `b7ed6171…` (68 records, first 18 cells, 68
+    fresh, 62 falsifiers, F55). The STOP: real's three changed additions move the F13 closure, so
+    all 68 fingerprints and 11 direct marks per mode moved; the acceptance review cannot run in
+    `--no-default-features`, where real's lib test exits 101 with E0432 at `reconcile.rs:10:5`
+    (manifest preimage `6dcfaa9f…`, sha2 optional behind the default `hash` feature). Ruling: real
+    is the zero-overlay receipt control (793 `ARMS=armed,disabled`; 790 `promoted.tsv` common
+    `4337950c…`, F13 role-specific; 793 snapshot carried), so its promotion inventory is the
+    baseline carry `4337950c…` — the third, explicit Stage B.2 carry basis, the non-producing
+    control role, as baseline's F54 preimage already is — while real's F13 is a producer output and
+    is retained. The repair is rejected: the only build path is the 791 manifest postimage
+    (`67be9610…`) = overlay row 124, which would give the control one overlay row and delete the
+    source-auth gate's only zero-overlay shape (792 receipt pin `9c7d156d…`); the `--features
+    sha2/compress` fallback stays unauthorized, and real's unbuildable no-default lib test is a role
+    property. Enforcement: `PROMOTION CARRY PASS role=real sha256=4337950c… baseline_sha256=4337950c…
+    equal=true basis=zero-overlay-receipt-control` plus a one-byte-mutant falsifier, routing
+    `f13=armed,disabled,real promotions=armed,disabled real_promotion=baseline-carry`, seal/snapshot
+    carried, report deviation. Scope: git clean, 0 files outside `.temp/brief-797/` except the
+    dispatch log; 378 entries (377 added, `PROGRESS.md` modified). Budget: charged 2,785.055 s;
+    B 2,800→3,800 (+1,000 top-up) → carve 19,900 = focused 13,900 (A 1,400 / A2 1,500 / B 3,800 /
+    C 4,800; D 400; R4 2,000) + workspace 6,000; funded 1,231.45 returned + 17,668.55 + 1,000.00
+    top-ups; remaining focused 11,114.945 s; resume via `CDX_FORK=01a21099-…`, writing
+    `report-amendment3.json` and passing `check 797 --stage amendment3`. Brief 798 stays held.
+
   - G15-CM4 continuation 162 — brief 797's second Stage A STOP is correct: the Boolean helper
     drops the resumed-frame guard before both `Some` observations — the guard is owned by the
     cold gated path and the ordinary body keeps one `#[inline(always)]` definition — and

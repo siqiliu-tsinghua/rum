@@ -496,4 +496,84 @@ focused **12,900 s** (A 1,400 / A2 1,500 / B 2,800 / C 4,800; worker D 400; dire
 **17,668.55 s** of explicit top-ups. The two dispatches charged 1,388.538 s. Unspent returns; a
 projected overrun stops for a ruling, never a scope cut.
 
-Co-Authored-By: Claude Code <noreply@anthropic.com>
+## Amendment 3 (gate c163) — the real promotion STOP is correct; the zero-overlay control carries the baseline promotion inventory and Stage B resumes
+
+The Amendment 2 resume (unit `brief-797-cdx-20261125-112946-2653243`, fork of
+`01a21099-0601-7271-8f24-952473a7c14a`, `gpt-6.2-astra` max, 11:29:46–11:53, ≈1,400 s dispatch
+wall; Stage A2 704.873 s of 1,500; Stage B native 420.759 s, report closeout 691.644 s of 2,800;
+rc 0, peak 2,847,981,568 B, oom 0; `report.py check 797 --stage amendment2` OK with 351
+citations; 12 checks = 10 PASS + 1 FAIL + 1 NA; 3 deviations; 1 question `real-promotion-role`;
+verdict STOP) is accepted through Stage B.2's real-role STOP. Verified and credited: the four 793
+parent trees and 101 pins at entry and exit; the single 970-byte ordinary block (`dc859d7c…`)
+exactly once in each arm; the cold owner's guard `_4` dropping in `bb2`/`bb4` after each branch
+with cleanup in `bb8` and zero guard locals in the hot `resume`; the itemized 122-row projection
+(97 diffs, 25 extensions, 26 shapes, 14 owners) identical on raw and canonical sources; 303
+ordinary sites (280 external / 23 internal; 43 measured / 260 bounded); two byte-identical
+source emissions (`SOURCE IDEMPOTENCE PASS roles=4 fresh_emissions=2 byte_identical=true`); the
+514/54-of-568 frame split and census `405:58–405:68`; and F13 on armed, disabled and real (68
+records, first 18 cells preserved, 68 fresh fingerprints, 62 falsifiers, F55 adoption, reread).
+The first two reports stayed pinned (`0b4b3bfb…`, `dafd90f3…`); scope was git-clean with all
+writes under `.temp/brief-797/`.
+
+**The finding is correct.** Real's three changed additions alter the F13 closure (every `crates`
+`.rs`/`.py`/`.toml` is hashed), so all 68 real fingerprints moved, and the promotion inventory's
+direct-contract marks moved with them: `REAL PROMOTION INPUT PASS role=real bodies=2
+feature_modes=2 direct_marks_per_mode=11 changed_real_F13_marks=11 carried_cells=4
+common_armed_routing=false`. Re-earning the cells needs the `local_production_acceptance` review
+in both configurations, and real's `--no-default-features` lib test cannot build: its manifest is
+the preimage `6dcfaa9f…` and `sha2` is optional behind the default `hash` feature, so the build
+exits 101 with `error[E0432]: unresolved import sha2` at
+`crates/rum-stdlib/src/tests/ownership_graph/reconcile.rs:10:5` (zero tests; `tree == post_tree`
+= `d0d956cf…`). Stage B.2's carry rule admits exact unchanged inputs or armed-authored
+common-table routing; neither holds, so the STOP is the honest outcome.
+
+**The ruling.** Real is the zero-overlay receipt control. Its role is defined by the 793 handoff
+("Baseline and real keep the three Rust preimages and the manifest preimage `6dcfaa9f…`; real is
+the zero-overlay receipt control"), whose `ARMS = ("armed", "disabled")` never ran the F13 or
+promotion producers on real, and by 790's scene membership, where `promoted.tsv` is common at
+`4337950c…` while `local-contracts.tsv` is role-specific (`79e44283…` at 793 — already its own
+value). Real has never been a promotion producer, and the delivered 793 R4 accepted exactly that
+state. Therefore:
+
+1. Real's `promoted.tsv` is the baseline promotion inventory
+   (`4337950c5b5e5f2a26f94d4aee66aacc0263a62b732d34b74e3021d1182dbbc7`), byte-identical to
+   baseline's, carried as the control's role bytes. This is the third carry basis: **the
+   non-producing control role**, whose generated tables are its declared preimage, exactly as
+   baseline's F54 preimage role already is. The exception covers the promotion inventory only;
+   real's F13 is a producer output and stays.
+2. The replay must print `PROMOTION CARRY PASS role=real sha256=4337950c… baseline_sha256=4337950c…
+   equal=true basis=zero-overlay-receipt-control`, with a one-byte-mutant falsifier proving the
+   check can fail (`PROMOTION CARRY FALSIFIER PASS rejected_mutated=true`), and record the role
+   routing `f13=armed,disabled,real promotions=armed,disabled real_promotion=baseline-carry`.
+   The seal's real role pin and the R4 snapshot must record the real `promoted.tsv` as carried
+   (input == final), and the report's deviations must carry this ruling. No claim that real
+   certifies promotions may appear anywhere.
+3. The repair option is rejected: the only on-record way to build real's no-default lib test is
+   the 791 manifest postimage (`67be9610…`), which is overlay row 124 (preimage `6dcfaa9f…`).
+   Installing it would give the zero-overlay control one overlay row and delete the only
+   no-overlay shape of the source-auth gate, invalidating 792's pinned receipt specification
+   (`9c7d156d…`), the six-case real leg and the 793 R4. The `--features sha2/compress` fallback
+   stays unauthorized (793 §1). The promotion producer therefore runs on armed and disabled
+   only, in both configurations, as briefed; real's unbuildable no-default lib test is a role
+   property, not a defect to repair in this brief.
+
+**Resume.** Continue in session `01a21099-0601-7271-8f24-952473a7c14a` from the accepted state
+(the two byte-identical source emissions and the three F13 adoptions: armed `9dd31a24…`,
+disabled `ce7f40ed…`, real `d0d956cf…`, each 5,851 files, debris 0) at the remaining Stage B.2
+replay, then Stage B.3's ownership producers and seven-table reconciliation on the two arms, the
+disabled diagnostic's two declared `cfg!` differences, B.4 (class discoveries, the 20,625-row
+class table, negatives, LP01, the 875 bindings, the typed-slot source receipts), B.5 (chain and
+additions), B.6 (the promotion reviews/checks on armed and disabled in both configurations with
+adoption and recheck; zero rejections, two bodies, three production marks, four probe marks, the
+two rendered anchors), B.7 (the 165-row overlay seal, 151 mutants, nine additions, four role
+pins, `overlay_digest.py`, idempotence), then Stages C and D unchanged, including the 122-row
+scene table and `PROBE CLOSURE facades=4 outside=3 attributed=3 unexplained=0`. The resumed
+dispatch writes `report-amendment3.json` and passes `python3 scripts/report.py check 797 --stage
+amendment3`; the earlier three reports stay pinned.
+
+**Budget.** Charged: 838.952 + 549.586 + 704.873 + 691.644 = **2,785.055 s**. Amendment 3 tops up
+Stage B **2,800 → 3,800 s** (+1,000 s, funded by an explicit 1,000 s top-up under the 2026-11-19
+ruling): carve **19,900 s** = focused 13,900 (A 1,400 / A2 1,500 / B 3,800 / C 4,800; worker D
+400; director R4 leg 2,000) + workspace 6,000 + epoch 0; remaining focused **11,114.945 s**. The
+793 same-shape remainder (F13 start to seal end, 01:50:08–02:25:49) measured 2,141 s. Unspent
+returns; a projected overrun stops for a ruling, never a scope cut.
