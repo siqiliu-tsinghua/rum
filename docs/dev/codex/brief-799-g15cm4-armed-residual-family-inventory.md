@@ -1,14 +1,19 @@
 # Brief 799 — G15-CM4: the armed residual family and the whole-panel capture qualification (design-only)
 
 Status: design-only, `Scope: NONE — no source change`. Dispatched after ruling 827 (gate c175);
-Amendment 1 after ruling 828 (gate c176): the first attempt's Stage A STOP is correct — this
-brief, not the evidence, was wrong in three places (the negative-family count, the unguarded
-label's two sites, the flag-formation PC count) and a fourth phrase presumed a calibration that
-does not exist. The corrections are marked "(Amendment 1)" below. The stopped attempt's Stage A
-entry work is retained under `.temp/brief-799/` (`evidence-index.json`, `entry-verdicts.log`,
-`pinned-files.log`, `index-final.log`, `bar-pin-lines.log`); you may re-verify and reuse it, but
-every pin you cite must be re-read, and the STOP rules below are unchanged.
-Every statement here is a pinned input from the retained evidence; a mismatch is a STOP.
+Amendment 1 after ruling 828 (gate c176); Amendment 2 after ruling 829 (gate c177). Both prior
+attempts stopped in Stage A on defects in this brief, not in the evidence: Amendment 1 fixed the
+negative-family count, the unguarded label's two sites, the flag-formation PC count and a
+presumed calibration; Amendment 2 fixes the three cost labels (the body rows are **self** Ir; the
+inclusive costs are the incoming-edge sums), the allocation population ("the one unstable family"
+is true only among the eight largest positive families), and a leftover "58 PCs" wording, and it
+refines the STOP rule below. Amendments are marked "(Amendment 2)" or "(Amendment 1)" where they
+apply. Both stopped attempts' scratch is retained under `.temp/brief-799/` (the first attempt's
+`evidence-index.json`, `entry-verdicts.log`, `pinned-files.log`, `index-final.log`,
+`bar-pin-lines.log`; the second's `a1-*` pin checks and `e1-*` verification); you may re-verify
+and reuse it, but every pin you cite must be re-read.
+Every statement here is a pinned input from the retained evidence; the STOP rule below governs
+identity and decision-changing mismatches.
 
 ## Goal
 
@@ -96,12 +101,16 @@ no build and start no capture.
   address formation" +14,124,585 vs control +33; flag-formation PCs 33/33/57 base/control/new per
   `residual-family-proof.json` `flag_formation_PCs`, i.e. 24 extra PCs in `new` — not 58: the 58
   is the `pattern-unguarded` absolute new price per iteration, 5 base + 53 delta (Amendment 1);
-  qualified per-iteration prices +19/+19/+53/+21 vs both controls); `definitions` +9,725,686 (`collect_upvalue_candidate_symbols`
-  665,503 new-only visits, inclusive +52,180,871); `allocation and reclamation` +7,482,626
+  qualified per-iteration prices +19/+19/+53/+21 vs both controls); `definitions` +9,725,686
+  (`collect_upvalue_candidate_symbols` 665,503 new-only visits, **self** +52,180,871 Ir,
+  incoming-edge **inclusive** 2,063,338,931 Ir over its two `try_apply_up_values` callers —
+  Amendment 2); `allocation and reclamation` +7,482,626
   (range [−3,922,868, +8,302,460]; control [−8,648,385, −3,121,525]); `pattern_matching` +6,273,782
-  (`BindingSnapshot::capture` 426,421 new-only, inclusive +33,261,184); `scoping` +2,100,570
+  (`BindingSnapshot::capture` 426,421 new-only, self +33,261,184, incoming-edge inclusive
+  141,432,726 over its two `match_compiled_owned` callers — Amendment 2); `scoping` +2,100,570
   (`resume_module_initializers` 5,157 new-only); the `drop_in_place<eval_set_cm740_driven::{{closure}}>`
-  body 397,600 new-only visits (inclusive +6,361,600); then `kernel_data` +1,277,282,
+  body 397,600 new-only visits (self +6,361,600, incoming-edge inclusive 14,313,600 from
+  `association_lvalue_current` — Amendment 2); then `kernel_data` +1,277,282,
   `eval_dispatch` +548,784, `rum_stdlib::strings` +240,168, `drop glue` +203,558,
   `evaluation_cache` +138,487, `loader` +51,842, `session` +33,013, and the
   negatives led by `builtin_adapters` −2,050,856 and `alloc::raw_vec` −1,122,580 (−3.72M total).
@@ -148,8 +157,9 @@ evidence per field), and the narrative in the report's `sections`:
    - enumerate the repair candidates with their exact source shape and falsifier: (i) the env-gated
      cold-load `AtomicU8` pattern; (ii) an out-of-line `#[cold]`/`#[inline(never)]` check; (iii) a
      const/static form the compiler can fold; (iv) hoisting the check out of the per-value path.
-     For each: which of the 58 PCs it removes, the expected per-visit saving, what it must not
-     change, and how the falsifier shows the flag still works when set.
+     For each: which of the 57 flag-formation PCs (24 of them extra in `new`) it removes, the
+     expected per-visit saving, what it must not change, and how the falsifier shows the flag
+     still works when set (Amendment 2).
 2. **The new-only call-edge families.** For each of `definitions`
    (`definition_analysis_helpers::collect_upvalue_candidate_symbols`, 665,503), `pattern_matching`
    (`BindingSnapshot::capture`, 426,421), `scoping` (`resume_module_initializers`, 5,157) and the
@@ -158,9 +168,14 @@ evidence per field), and the narrative in the report's `sections`:
    `control` execute 0, whether the edge is behind any flag or unconditional in `armed`, the
    per-visit inclusive/exclusive cost, and whether it is the class form's required semantic work
    (observation/driven evaluation) or an avoidable default-path cost — with the source proof.
-3. **The allocation family.** Explain why it is the one unstable family (range −3.9M..+8.3M; the
-   control side −8.6M..−3.1M), which allocation sites move, and whether the movement is downstream
-   of families 1–2 or independent (allocator-layout coupling). Name the retained evidence rows.
+3. **The allocation family.** Explain its sign instability across the retained attempts: 19 of
+   the 92 disjoint non-gate families have ranges that cross zero over the nine new−base contrasts
+   (`all-attempt-family-contrasts.tsv`); allocation is the only one among the eight largest
+   positive families (`a3_localize.py:111–112`), with range [−3,922,868, +8,302,460] and control
+   [−8,648,385, −3,121,525] — the next-largest crossing family is `rum_core::expr` at
+   [−310,866, +943,263] and `evaluation_cache` at [−1,549,867, +564,980]. Explain which
+   allocation sites move, and whether the movement is downstream of families 1–2 or independent
+   (allocator-layout coupling). Name the retained evidence rows (Amendment 2).
 4. **The remainder.** Assign every nonzero body of the 1,743-row table and every nonzero family,
    including the small positives and all seventeen negatives (19 positive / 57 zero / 17 negative
    families totalling −3,722,338; the reducer's `fam[-12:]` display hides `call_preparation` −480,
@@ -246,9 +261,18 @@ paths.
 
 ## STOP, with the fact named
 
-- a missing, mismatched or unverifiable input pin; any write outside `.temp/brief-799/`; any live,
-  role or sealed edit; any `git` command; any build, capture, perf or valgrind run; any network
-  use;
+- **STOP** on a missing, unverifiable or identity-changing input pin (a hash, count, file or
+  verdict without which a stage's decision cannot be verified), on any mismatch that changes a
+  bar or a decision, on any write outside `.temp/brief-799/`, on any live, role or sealed edit,
+  on any `git` command, on any build, capture, perf or valgrind run, and on any network use;
+- **record and correct** any mislabeled or misquoted non-identity quantity when the retained
+  evidence gives the correct value and no bar or decision depends on the mislabel: proceed with
+  the corrected value and list it in the report's `brief_defects` section (the brief line, the
+  quoted claim, the corrected value, the evidence `file:line`). The worked examples are the body
+  rows' `new_minus_base` values, which are **self** Ir (the inclusive cost is the sum of
+  `inclusive_Ir` over the incoming call edges), and "the one unstable family", true only among
+  the eight largest positive families; Amendment 2 pre-corrects these, but the rule covers any
+  further instance (Amendment 2);
 - any body or family that cannot be assigned to a construct from the retained evidence (name the
   exact missing measurement);
 - any claim without `path:line` or a retained-evidence file:line;
@@ -267,9 +291,10 @@ through `scripts/run-bounded.py` with a data-sized bound. The tree stays untouch
 
 Write `.temp/brief-799/report.json` in the `rum-report/1` schema (`python3 scripts/report.py
 schema`), one `sections` entry per stage with tags (`family-inventory`, `evaluator`, `call-edges`,
-`allocation`, `bar`, `qualification`, `repair-plan`, `drafts`), every verdict line quoted verbatim
-from a saved log, and every file listed in `changes` (scratch only). Your final message is
-`python3 scripts/report.py summary 799` and nothing else.
+`allocation`, `bar`, `qualification`, `repair-plan`, `drafts`), a `brief-defects` section listing
+every recorded-and-corrected non-identity mislabel (Amendment 2), every verdict line quoted
+verbatim from a saved log, and every file listed in `changes` (scratch only). Your final message
+is `python3 scripts/report.py summary 799` and nothing else.
 
 Standing exclusions restated: the 637 `valueq-undefined-symbol-definitions-8000` exclusion is the
 one visible exclusion of the 120-label panel; the 0.069595 s bound is the Amendment 3 rule under
