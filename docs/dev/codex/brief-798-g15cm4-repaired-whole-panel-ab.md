@@ -17,6 +17,19 @@ too low. They live at `.temp/brief-796/evidence/`, byte-equal to the producer's
 `accepted-input-pins.json`; the paths and pins below are corrected. That attempt charged
 93.001 s (total 97.946 s), so the remaining carve is 2,702.054 s.
 
+**Amendment 3 (ruling 826, gate c174).** Amendment 2 completed Stage A, the three releases, the
+120-label timing panel, the nine hardware draws and 34 of 96 mandatory profiles, then stopped as
+the brief requires: one capture was contaminated by sibling load, and the fresh signed hardware
+envelope fails (`new_minus_base=+38,126,375` against the control interval
+`[−1,399,860, +3,517,248]`). The per-site repair is confirmed (4+4 Ir, typed 4+3, zero ordinary
+slow/lexical self Ir, control unreached), but the panel is not recovered and the residual family
+is unattributed because the whole-panel profiles never ran. This amendment reuses the qualified
+Stage C evidence and the 33 qualified profiles, completes the remaining 63 mandatory and 48
+extra profiles plus the three whole-panel profiles under a quarantine-and-retry protocol, and
+returns the attributed residual family. The attempt charged 351.757 s (total 449.703 s), so the
+remaining carve is 2,350.297 s. The envelope failure is a signed result and is not re-drawn; the
+expected verdict is `STOP` with the attribution.
+
 The four successor roles are sealed, the runtime publication gate is rendered into them, and the
 R4 package is installed in live. This brief measures the final release against its base and its
 layout control: it decides whether the repaired gate recovers the complete 795 hot panel within
@@ -270,7 +283,14 @@ output and label order across all three arms on the canonical program, and the s
 2. **The capture protocol.** Four independent paired N=50/100 draws per arm in Stage C's four
    orders, six captures per draw (3 arms × 2 N), a minimum of 24 per label and 96 for the four;
    `taskset` plus `valgrind --tool=callgrind --dump-instr=yes --vgdb=no --enable-debuginfod=no`
-   with individual raw files, as in 795. Verify the exact source/ELF/input identities and the
+   with individual raw files, as in 795. Amendment 3's capture protocol: before each capture the
+   harness qualifies both siblings against the 0.069595 s busy-time bound; a capture whose
+   window records a violation is quarantined and retained, then retried only after a fresh
+   qualification window shows both siblings idle, at most twice per capture, with the rule fixed
+   before any result is read and identical for every arm; the capture driver and every
+   worker-side helper run pinned to CPUs 0-13 (`taskset -c 0-13`) so no worker process can touch
+   CPUs 14/15; a capture still violating after its retries is a STOP for that capture. Verify
+   the exact source/ELF/input identities and the
    successful completion marker; quote every event total. Compute `(Ir100 − Ir50)/50` per draw,
    then its median. Report process and disjoint self/edge slopes, per-visit exclusive and
    inclusive quantities, distinct PC rows and actual visit counts. Show same-tier neighbours
@@ -375,9 +395,10 @@ from `real` in anything but the one declared patch file.
 ## Budget
 
 Focused **2,800 s** (A 200 / B 600 / C 550 / D 1,200 / E 250) + workspace **0** + epoch **0** =
-**2,800 s**; the two stopped attempts charged 4.946 s and 93.001 s (total 97.946 s), leaving
-**2,702.054 s** for Amendment 2. The stage carves A 195.054 / B 600 / C 550 / D 1,200 / E 250
-stay guidance; the total is binding. Funded by brief 797's returned remainder (5,906.190 s: B 922.685, C 2,571.517,
+**2,800 s**; the three attempts charged 4.946 s, 93.001 s and 351.757 s (total 449.703 s),
+leaving **2,350.297 s** for Amendment 3 before the report seal. The stage carves A 195.054 /
+B 600 / C 550 / D 1,200 / E 250 stay guidance; the total is binding. Funded by brief 797's
+returned remainder (5,906.190 s: B 922.685, C 2,571.517,
 D workspace 1,373.277, D focused 385.071, director R4 247.051, unallocated 406.589); the 798
 carve consumes 2,800 s of it and the rest stays unspent. The same-shape basis: 795 used 23.308 s
 for the classifier verification, 201.055 s for three builds, 19.311 s for twelve timing panels,
