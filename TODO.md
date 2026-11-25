@@ -3987,6 +3987,39 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 157 — brief 795 STOPs correctly on an attributable ordinary-path cost
+    in the released probe gate; the A/B line stays open and brief 796, the design-only probe-gate
+    inventory and repair plan, is ordered (2026-11-25): unit
+    `brief-795-cdx-20261125-081829-2554988` (`gpt-6.2-astra` max, 08:18:29–08:42:03, ≈1,414 s
+    dispatch wall, worker-measured 1,351.6 s, rc 0, peak 3,203,534,848 B, oom 0). Stages A–C
+    reproduced: stage A byte-identical to 794's amended verify (191 lines, `084649ad…`; the four
+    role pins; live `a7de3a76…`/4,700; my `pins.py exit` rerun 62 inputs `9ea0f8cc…`); three
+    one-codegen-unit release builds from one source path and one target (real `d703b165…` →
+    `c3e50ede…`; armed `c04bbf82…` → `561f2817…`; control `4ec68e28…` → `f300ea2d…`, one
+    never-called `#[cold]` perturbator retained at `e71d9`, zero calls/self Ir in 8 profiles;
+    base/control functional stdout both `c193d87f…`); twelve interleaved panels on one program
+    (`dc6af977…`, 120 labels, non-clock-equal, no fallbacks); nine `perf stat
+    cpu_core/instructions/u` counts on CPU 14 (medians 16,069,730,355 / 16,150,112,761 /
+    16,069,316,559 → new−base +80,382,406, base/new disjoint, control overlapping; envelope
+    median 0.5239%, p90 2.6326%, max 19.2427%); the 24-profile settlement of
+    `stringreplace-guarded-hit` (total slopes 21,572.60 / 21,905.12 / 21,621.52; both probe sites
+    `replace.rs:38` and `:775` at target `0xbbbcf0` with 112.0 inclusive Ir per call, one call
+    per site per iteration; self slopes driven 2 / run_is_driven 82 / lexical_current 86; base
+    and control zero). The defect: live is the armed release; the `crates/rum-runtime/src/lib.rs`
+    overlay payload (243,761 B / 6,173 lines) carries `cm740_probe`; `driven()` →
+    `run_is_driven()` has only the compile-time `ENABLED` gate (no build sets
+    `--cfg live`/`--cfg disabled`) and then walks the TLS ledger, violating the hard line's
+    env-gated cold-load `AtomicU8` shape; `enter`/`around` share the walk, the panel delta is
+    only partly localized (`zero_unexplained_established=false`), and three selected probes were
+    left unrun. Exit: four trees equal entry, live R4, 596 changed paths all under
+    `.temp/brief-795/`, git clean, no git attempt, `report.py check 795` OK 592 citations.
+    Budget: 4,400 s carve, 1,414 s charged, 2,986 s returned. Brief 796 (design-only, carve
+    4,500 s = 2,986 returned + 1,514 top-up) must close the ordinary-path probe surface, the
+    driven-run lifecycle, the cold-load gate and IR budget, the render/seal cascade (overlay
+    table, seal `57e9acbd…`, F13, postimages, R4 re-install, the 794 `Local` rows and three
+    witnesses), the re-measurement protocol and the falsifiers; the re-freeze stays blocked until
+    the repair and the completed A/B.
+
   - G15-CM4 continuation 156 — brief 794 DONE: the final-tree attribution closes with zero
     unknown and the probe bar is a structural closure; brief 795 issued (2026-11-25): the
     Amendment 1 resume (unit `brief-794-cdx-20261125-075055-2541224`, fork of `01a20fe7-…`,
