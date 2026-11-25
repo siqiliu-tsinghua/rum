@@ -3,6 +3,13 @@
 **Diagnostic measurement brief (`Scope: .temp/brief-798/` only).** One gate. It continues ruling
 823 (gate c171) and adopts brief 796's Stage D decision and drafted A/B brief
 (`.temp/brief-796/draft/{decision-and-open-questions.md,brief-798-g15cm4-repaired-hotpath-ab.md}`).
+
+**Amendment 1 (ruling 824, gate c172).** The Stage A STOP on the role pins was correct: the
+sealed final scene is `.temp/brief-797/amendment6/images/`, and `.temp/brief-797/images/` is the
+stale Amendment 5-era working root. This amendment corrects the scene root and the seven-table
+wording below; everything else stands. The stopped attempt charged 4.946 s, so the remaining
+carve is 2,795.054 s (A 195.054 / B 600 / C 550 / D 1,200 / E 250).
+
 The four successor roles are sealed, the runtime publication gate is rendered into them, and the
 R4 package is installed in live. This brief measures the final release against its base and its
 layout control: it decides whether the repaired gate recovers the complete 795 hot panel within
@@ -46,9 +53,10 @@ When this brief is done, in `.temp/brief-798/` only:
   brief 797 (the final render, the seal, R4 and the final performance evidence), brief 794 (the
   classifier and its attribution), briefs 703/708 (the timing reducers and the Callgrind slope
   settlement).
-- The final scene: `.temp/brief-797/images/{baseline,real,disabled,armed}` and
+- The final scene: `.temp/brief-797/amendment6/images/{baseline,real,disabled,armed}` and
   `.temp/brief-797/amendment6/handoff/` (the 92-snapshot / 90-file package, `r4-paths.tsv`, the
-  release manifest).
+  release manifest). `.temp/brief-797/images/` is the stale Amendment 5-era working root
+  (pre-Amendment-8 bytes) and must never be read as the scene.
 - The director's R4 receipts: `.temp/director/r4-install/{receipt.md,install-receipt.json,
   install-verify.json,workspace/verdict-fixed.json}`.
 - The 795 instruments and evidence: `.temp/brief-795/tmp/{run,build,measure,hardware,probe,ir,
@@ -115,9 +123,15 @@ When this brief is done, in `.temp/brief-798/` only:
 | 795 saved binaries | base `c3e50ede12a0fc80e21fcc8a447cc377d87627f3bdab6f0d070ae57e6bdd5e85`, new `561f2817a8489347ae3f4d389ddac9c6bc0bd028f758531bd09f94894e471ff8`, control `f300ea2dad962c8f379ac2e0cb6f657f46725f04e5cd8df6a03c471cba351dd6` (historical references only; never measured as a 798 arm) |
 | probe programs | guarded-hit 50 `f1f530b313942b7083c1cc679b3aeabf25e0d351152ca459fbc6a92cbdd14b45` / 100 `cdead8a7f1c53c7636b87d2ecad341368f5da6f7f3f1e1163e42e93ae7a713bd`; guarded-decline-fallback 50 `8221165edbece04558e6ef976ac38b564a9b441b7fe0a1fff69843b1d547d67b` / 100 `e2344af663d331719f7ac1c03d760eb16cc10a87dd8bc5c2387092ecc7df87cd`; pattern-unguarded 50 `60511061a34d29806104d8efe696d540c763911488ffa5d3f5c18e806c8ca1c7` / 100 `de2ae8b0a69ba977db4e6ace662eab07348667f94064dfbb7fcb3954fcbb8f60`; single-literal-unguarded 50 `e03eca7732b5fce0f62b6639886fdacf207f4e560a85db3c22d03d7131cf1c72` / 100 `5d730e8a27278e28479f07216e368b061df5d932cbf0b839a73bb0dc12981f4c` |
 
-The four roles' seven shared tables are the R4-certified bytes: F13 `cc02870a…`, promoted
-`7c546372…`, class `d183c38e…`, chain `130f3040…`, overlays `0eed88cb…`, additions
-`ed54d95e…`, mutants `adeb7e4b…`. The R4 install line is `R4 INSTALL PASS rows=190 changed=18
+The **armed** role's seven shared tables are the R4-certified bytes (they are what the R4
+install landed in live, `live == armed`): F13 `cc02870a…`, promoted `7c546372…`, class
+`d183c38e…`, chain `130f3040…`, overlays `0eed88cb…`, additions `ed54d95e…`, mutants
+`adeb7e4b…`. The other roles carry their own sealed table bytes: F13 and promoted are
+role-specific (baseline `ead1d6de…`/`4337950c…`, real `626149bc…`/`4337950c…`, disabled
+`00ab2c45…`/`1786ed34…`), baseline carries no class or chain table, and overlays, additions and
+mutants are `0eed88cb…`/`ed54d95e…`/`adeb7e4b…` in all four roles. Never substitute a table
+across roles; the role pins above are the authority for every role's bytes. The R4 install line
+is `R4 INSTALL PASS rows=190 changed=18
 live_crates=6bab0093f65537d11fdb1afb608011e515d1a08de9b7ea96cd471c5e467a7c9a/4700
 armed_crates=6bab0093.../4700 equal=True seconds=0.290`; the verify line is `R4 LIVE VERIFY PASS
 mapping=190 witnesses=5 postimages=4 real_promotion=zero_overlay anchors=2 chain=152 tables=7
@@ -132,7 +146,7 @@ repair or re-derive a sealed artifact: return it to the producer.
 1. Recompute the four role pins with the 795 `release.py tree()` shape (sorted walk, symlink and
    debris refusal, per-file SHA-256) and require the four rows above. Bind the certification
    chain: the 797 report, its checked summary and the handoff package; the R4 receipts by hash;
-   the seven shared table hashes; the `checks.crates` equality and the `tree_delta=1+20`
+   the armed role's seven table hashes; the `checks.crates` equality and the `tree_delta=1+20`
    explanation. The two `crates` digests are two different tree algorithms over the same 4,700
    files (`install.armed_crates` and `checks.crates`); both must read as recorded. No fresh hash
    of the live git-tracked checkout is required — the receipts carry it.
@@ -352,7 +366,8 @@ from `real` in anything but the one declared patch file.
 ## Budget
 
 Focused **2,800 s** (A 200 / B 600 / C 550 / D 1,200 / E 250) + workspace **0** + epoch **0** =
-**2,800 s**. Funded by brief 797's returned remainder (5,906.190 s: B 922.685, C 2,571.517,
+**2,800 s**; the stopped Stage A attempt charged 4.946 s, leaving **2,795.054 s** for Amendment 1
+(A 195.054 / B 600 / C 550 / D 1,200 / E 250). Funded by brief 797's returned remainder (5,906.190 s: B 922.685, C 2,571.517,
 D workspace 1,373.277, D focused 385.071, director R4 247.051, unallocated 406.589); the 798
 carve consumes 2,800 s of it and the rest stays unspent. The same-shape basis: 795 used 23.308 s
 for the classifier verification, 201.055 s for three builds, 19.311 s for twelve timing panels,
