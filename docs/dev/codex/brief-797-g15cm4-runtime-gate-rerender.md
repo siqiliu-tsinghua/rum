@@ -731,3 +731,76 @@ the five earlier reports stay pinned.
 remaining B.4 tail plus B.5–B.7 measures ≈1,300–1,500 s from this run's components (source, F13
 and ownership ≈270 s; B.4 discovery and projection ≈680 s measured) and 793's same-shape
 remainder. Unspent returns; a projected overrun stops for a ruling, never a scope cut.
+
+## Amendment 6 (gate c166)
+
+The Amendment 5 run (unit `brief-797-cdx-20261125-130657-2704631`, 13:06:57–15:27, 8,406.765 s
+charged; `report-amendment5.json` `b0c84042…`) completed Stages B and C and correctly STOPped at
+Stage D: the workspace returned 4,539/26/71 against the 4,555/10/71 bar, and the seven
+unrecognized reds are six compiler-driver setup failures and the stdout hygiene test. Ruling 818
+accepts the stop and amends the render and the driver.
+
+**Repair 1 — the balance-test markers move to stderr.** The two marker emissions that
+`renderer/test_packaging.py` appends to the carrier `crates/rum-runtime/src/lib.rs` change from
+`println!` to `eprintln!`; the marker strings, the test names, the module, the order and the
+whole child-isolation protocol stay byte-identical, and the expected-marker extraction reads the
+transformed text. The 796 prototype under `.temp/brief-796/scratch/amendment1/balance.rs` stays
+read-only: pin its SHA, carry the two-token transformation in the 797 renderer, and declare the
+delta in the report. The choice is mandatory, not a preference: `eprintln!` is captured by
+libtest through the same output capture and replayed on the child's stdout under
+`--show-output` (verified on the pinned 1.85.0), so `publication_test_child`'s stdout assertions
+do not change; the carrier `lib.rs` already writes its probe diagnostics with `eprintln!`
+(lines 1015, 1016, 1290). Do not move the tests to a new `/tests/` file (a tenth armed-only
+addition breaks B.5/B.7's nine-row contract, and a module prefix renames the two tests the Stage
+D reconciliation binds) and do not touch the hygiene test. Rebuild the stdout witness: zero
+unprefixed hits in all four roles' `lib.rs`, the red witness (`logs/a5-stdout-witness-1.log`
+and the workspace raw log) retained as the proof that the check fires, and the workspace hygiene
+test green.
+
+**Repair 2 — the workspace driver's nested selector path.** Keep
+`compiler_driver.py::proxy_environment` (PATH `/usr/bin:/bin` before the offline toolchain, the
+brief-local `RUSTUP_HOME` with the symlinked installed toolchain, `RUSTUP_TOOLCHAIN=1.85.0`,
+`RUSTUP_AUTO_INSTALL=0`, offline dist URLs) and `workspace.py::main`'s installation of it.
+Re-run the rustup dispatch verification (`binding` and `version` for cargo and rustc) in the
+same dispatch, and re-run the complete workspace under that environment: the six nested tests
+(`compiler_oracle_agrees_with_resolution_claims`,
+`census_constructor_resolutions_are_compiler_observed`, `inherent_method_claims_match_rustc`,
+`exact_types_and_constructor_claims_match_rustc`, `local_probe_claims_match_stable_rustc`,
+`local_option_read_claims_match_stable_rustc`) must be green by name, with fresh child receipts
+showing `+1.85.0` still in argv and the six now passing. The reconcile must again require
+exactly the two added passing names (the balance tests), no removed names, the ten accepted reds
+(0 missing) and the nine inherited loopback names re-attested from the 793 host receipt.
+
+**Replay.** The emitted bytes change for armed and disabled (two tokens in the carrier
+`lib.rs`), and baseline and real must reproduce their Amendment 5 seals exactly — baseline
+`31b1d674…` (5,842 files), real `9f2d0bfc…` (5,851 files) — as the blast-radius falsifier.
+Every source-dependent proof replays: entry and exit trees and two byte-identical emissions per
+role; the source certificate, the 122-row projection, the 303-site surface, the MIR/guard
+witnesses and the four 791 postimages; F13 on all three roles with F55 adoption and the carry
+with its one-byte mutant; the ownership reviews on both arms (`lost_historical_UnknownConstruct=0`,
+`Local=2`, the exclusions, the seven common tables); the two native class discoveries and the
+adoption check with its two falsifiers, fail-closed — the only new allowance is the two named
+test rows' semantic digests if the discovery covers them (target keys, tokens, tails and all
+other fields equal; arms byte-equal; any other row change is a STOP), with the fresh table SHA
+pinned as addition row 7; B.5's chain and nine additions (the set stays nine — no new file);
+B.6's promotions on armed and disabled in both configurations with adoption and recheck; B.7's
+165-overlay seal, 151 mutants, nine additions, four role pins, `overlay_digest.py`, independent
+rerender and idempotence; Stage C's instruction bars on the new tree, the 26-line/1,741-byte/
+`a2c48c90…` ledger, the 122-row scene and its closure line, the six source-auth cases in both
+configurations, F48 2/0, the fourteen selectors 14/0 and fmt; then Stage D's final flag-on
+LP 3+1+1/0 and class 197/0, final fmt and the R4 handoff (92 snapshot rows / 90 files, the
+190-path mapping).
+
+**Report.** Continue in session `01a21099-0601-7271-8f24-952473a7c14a` from the Amendment 5
+state; write `report-amendment6.json`, pin the six earlier reports (`0b4b3bfb…`, `dafd90f3…`,
+`cadeed35…`, `1add9c95…`, `0692606f…`, `b0c84042…`), and pass
+`python3 scripts/report.py check 797 --stage amendment6`. All writes stay under
+`.temp/brief-797/`; no git, no tag, no network; one Cargo dev-dependency line at most; no new
+`unsafe` in `rum-core`/`rum-runtime`.
+
+**Budget.** Top-up **8,650 s**: Stage B 5,000→6,900, Stage C 4,800→9,900, D worker focused
+400→550 and workspace 2,800→4,300. Carve **29,750 s** = focused 22,250 (A 1,400, A2 1,500,
+B 6,900, C 9,900, worker D 550, director R4 2,000) + workspace 7,500 (worker D 4,300, director
+3,200). Charged so far 13,441.724; remaining after the top-up: B 2,357.884, C 5,231.719,
+D worker 389.635 + 2,322.449, director 5,200. Unspent returns; a projected overrun stops for a
+ruling, never a scope cut.

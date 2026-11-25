@@ -3987,6 +3987,49 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 166 — brief 797's Stage D STOP is correct: the six compiler-driver reds
+    are the workspace driver's PATH and the one hygiene red is the gate's own `println!` markers in
+    the carrier `lib.rs`, so the renderer moves the two markers to `eprintln!` and Amendment 6
+    replays Stages B–D (2026-11-25): ruling 818 (`.temp/director/ruling-818.md`). Amendment 5 unit
+    `brief-797-cdx-20261125-130657-2704631` (fork of `01a21099-…`, `gpt-6.2-astra` max,
+    13:06:57–15:27, 8,406.765 s charged: B 1,600.568, C 4,668.281, D workspace 1,977.551,
+    D focused 160.365; rc 0, peak 13,146,828,800 B, oom 0; `check 797 --stage amendment5` OK
+    6,457 citations; 39 PASS + 1 FAIL + 1 NA; 6 measurements PASS; 12 deviations; 1 question
+    `publication-test-stdout`; six earlier reports pinned `0b4b3bfb…`/`dafd90f3…`/`cadeed35…`/
+    `1add9c95…`/`0692606f…`, the run wrote `b0c84042…`; scope git-clean, 181 changes under
+    `.temp/brief-797/`, the dispatch log the only other write). Credited: Stage B complete — class
+    adoption `d183c38e…` in all three producing roles with both falsifiers and the reread, B.4
+    standing 3/5/8/875/15/535/80 with the LP01 modes and controls, B.5 chain 152 `b6f78bf6…` and
+    nine additions `6dd0ebb9…` with the class table as row 7, B.6 reviews (the four stale-certificate
+    ordering artifacts archived) → F55 adoption → checks with `R3 RECHECK PASS builds=2 green=2
+    whole_cells=4 byte_identical=true` and rejections=0/bodies=2/instances=3/probes=4, B.7 seal
+    165/151/9 (`b334d19a…`/`a5fc8445…`) idempotent and independent, `STANDING REPLAY PASS
+    stage_b_seconds=1600.568`; Stage C complete — CLI entry=4 and 4+4, typed 4+3=7/8, ordinary
+    cold self-cost 0, callback false,true,true, forced-watch 111, ledger 26 lines/1,741 B/
+    `a2c48c90…` with balance=2 typed=25 class=197, the 122-row scene with `PROBE CLOSURE
+    facades=4 outside=3 attributed=3 unexplained=0` and six controls, the 970-byte `dc859d7c…`
+    block once per arm, the source-auth gate's 8 builds/12 receipts/6 cases/23 minima, F48 2/0,
+    14 selectors 14/0 after the P0543 lane repair, fmt. Stage D: the workspace 4,539/26/71 over
+    70 result lines and 4,636 named results, reconciled 4,548/17/71 against the 4,555/10/71 bar;
+    the seven unrecognized reds are exactly six nested `+1.85.0` invocations rejected by the bare
+    toolchain cargo/rustc (the driver's PATH; all six green in the 793 host and dispatch receipts;
+    children archived with argv/exit/stderr; `proxy_environment` staged with `/usr/bin:/bin` first,
+    a brief-local `RUSTUP_HOME` and the pinned 1.85.0, verification PASS) and
+    `runtime::tests::hygiene::kernel_crates_do_not_write_stdout_outside_tests_and_bins` on the two
+    `println!` markers at carrier `lib.rs` 6437/6471 (armed/disabled 2 hits each, baseline/real 0,
+    checker byte-identical). Ruling: the markers become `eprintln!` (marker text, names, module and
+    child protocol unchanged; 1.85.0 libtest replays captured stderr on the child's stdout —
+    director-verified; the carrier already uses `eprintln!` at 1015/1016/1290; relocation rejected
+    as a tenth armed-only addition and a rename; weakening the hygiene test rejected), the 796
+    prototype stays read-only with the two-token delta declared, the workspace driver keeps the
+    rustup proxies ahead of the toolchain with the six green by name, baseline `31b1d674…` and real
+    `9f2d0bfc…` must reproduce as the blast-radius falsifier, and all of Stages B–D replay with the
+    class adoption's fail-closed attribution extended only to the two named test rows. Budget:
+    charged 8,406.765, cumulative 13,441.724; Stage B 4,542.116/5,000, C 4,668.281/4,800, D worker
+    1,977.551/2,800 + 160.365/400; top-up 8,650 → carve 29,750 s = focused 22,250 (A 1,400 /
+    A2 1,500 / B 6,900 / C 9,900; worker D 550; director R4 2,000) + workspace 7,500 (worker D
+    4,300 / director 3,200); remaining B 2,357.884, C 5,231.719, D worker 389.635 + 2,322.449.
+    Brief 798 held until 797's authenticated R4.
   - G15-CM4 continuation 165 — brief 797's Stage B.4 STOP on the class-target destructor digests is
     correct: the class table `d183c38e…` is adopted with the certified 4-removed/6-added destructor
     delta and Stage B.4 resumes (2026-11-25): unit `brief-797-cdx-20261125-123600-2688027` (fork
