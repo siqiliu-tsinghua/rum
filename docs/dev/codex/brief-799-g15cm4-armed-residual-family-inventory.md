@@ -11,13 +11,19 @@ is true only among the eight largest positive families), and a leftover "58 PCs"
 refines the STOP rule below. **Amendment 3 accepts the Amendment 2 attempt's Stage B
 source-attribution STOP as correct, applies the four `brief_defects` it recorded, carries the
 allocation family as measured non-systematic variation (removing its STOP power), and replaces
-the all-nonzero-body assignment bar with the decision-relevant ≥10,000 bar.** Amendments are
-marked "(Amendment 1)", "(Amendment 2)" or "(Amendment 3)" where they apply. All three attempts'
+the all-nonzero-body assignment bar with the decision-relevant ≥10,000 bar. Amendment 4 accepts
+the Amendment 3 attempt's Stage B.4 STOP as correct — body row 158, the libc `bcmp` leaf, cannot
+be assigned from the retained captures — applies the fifth `brief_defect`, carries the
+external-object class and the layout terms by a pre-registered rule, fixes the re-billing pair
+accounting, and re-orders the stages so the bar/qualification design and the classification
+completion precede the remainder assignment.** Amendments are marked "(Amendment 1)",
+"(Amendment 2)", "(Amendment 3)" or "(Amendment 4)" where they apply. All four attempts'
 scratch is retained under `.temp/brief-799/` (the first attempt's `evidence-index.json`,
 `entry-verdicts.log`, `pinned-files.log`, `index-final.log`, `bar-pin-lines.log`; the second's
 `a1-*` pin checks and `e1-*` verification; the third's `a2-*` checks, logs and
-`family-inventory.tsv`); you may re-verify and reuse it, but every pin you cite must be re-read.
-Amendment 3's carve: B.4 200 s / C 700 s / D 1,000 s / E 400 s = 2,300 s.
+`family-inventory.tsv`; the fourth's `a3-*` checks, bcmp logs and final report); you may
+re-verify and reuse it, but every pin you cite must be re-read.
+Amendment 4's carve: A 200 s / C 800 s / D.0 700 s / B.4r 600 s / D.1 500 s / E 400 s = 3,200 s.
 Every statement here is a pinned input from the retained evidence; the STOP rule below governs
 identity and decision-changing mismatches.
 
@@ -188,7 +194,8 @@ evidence per field), and the narrative in the report's `sections`:
    every base attempt; the control arm — a one-file layout patch with no class-form source change
    — lies below both arms throughout; the new arm's own spread (11,405,494) exceeds the attempt-1
    new−base delta (+7,482,626); and the empty-head branch counts move by tens of thousands with
-   identical request counts (11,321,292±600 calls, 39,023 requests >1,024 B in every run;
+   valid request totals 11,321,292 .. 11,322,005 (spread 713), 39,023 requests >1,024 B in every
+   run (Amendment 4 — the fifth `brief_defect`: this line said "11,321,292±600");
    `a2-allocation-conditions.log`, `a2-condition-proof.log`, `a2-allocator-branch.log`). The
    family is therefore **not a repair target and does not STOP this design**: carry the
    nine-pairing range [−3,922,868, +8,302,460] as a measured noise term into the repair plan and
@@ -198,21 +205,34 @@ evidence per field), and the narrative in the report's `sections`:
    sign-crossing census stands (allocation is the only large positive one among the eight largest;
    the next-largest crossing families are `rum_core::expr` at [−310,866, +943,263] and
    `evaluation_cache` at [−1,549,867, +564,980]).
-4. **The remainder — the decision-relevant assignment bar (Amendment 3; 200 s).** Assign every
-   body row whose |`new_minus_base`| or |`control_minus_base`| is at least 10,000 — 112 rows over
-   the 1,743-row table, carrying 37,659,664 / −9,973,234; verify both counts and both sums from
-   `quarantine-diagnostic-whole-bodies.tsv` — individually to one of the constructs above, the
-   carried allocation family, the loader, or a named measurement artifact, with `path:line` or a
-   retained-evidence file:line — no anonymous balancing cell. Assign the remaining 1,631 rows
-   (|Δ| < 10,000; sums −15,143 new and +78,216 control; max |Δ| 9,912) as an aggregate by family
-   mechanism, printing the aggregate and its bound. State the result as `rows_individually=112
-   rows_aggregate=1631 unassigned=0 dust_new=−15143 dust_control=+78216` (with the family table's
-   `family_unassigned=0` over all 1,743 memberships), or STOP naming the exact missing measurement
-   for any row ≥10,000 that cannot be assigned. The seventeen negatives stay named as in the
-   Amendment 1 text (19 positive / 57 zero / 17 negative families; −3,722,338; the five hidden
-   −1,183).
+4. **The material partition — pre-registered (Amendment 4).** The 112 rows with
+   |`new_minus_base`| or |`control_minus_base`| ≥ 10,000 carry 37,659,664 / −9,973,234; the 1,631
+   dust rows carry −15,143 / +78,216 with max |Δ| 9,912 (verify both counts and both sums from
+   `quarantine-diagnostic-whole-bodies.tsv`). The assignment is Stage B.4r; it uses the partition
+   ruling 831 verified: **47 assigned** (23 publication sites, 17 allocation rows, 2 scoping, 1
+   loader, 1 `collect_upvalue_candidate_symbols`, 1 `BindingSnapshot::capture`, 2 drop) +96,549,800
+   / −8,645,278; **6 linked counterparts** of the four proved re-billing pairs (`try_apply_up_values`
+   −42,270,243 and '2 −938,134; `match_compiled_owned` −11,217,175 and '2 −15,770,227; the
+   `builtin_module` adapter −2,066,250 and '2 −78,161) −72,340,190 / 0; **2 evaluator rows**
+   (1115 +115,528, 1116 +11,680,078) +11,795,606 / +4,829; **6 external-object rows** (libc 158
+   −415,996 / +283,477, 159 +199,453 / +7,184; four `object ???` rows summing −2 / −6) −216,545 /
+   +290,655; **51 remainder rows** +1,870,993 / −1,623,440. The five counts sum to 112 and the five
+   sums to +37,659,664 / −9,973,234 — verify both.
+   The **carry rule** (mechanical, applied to the 51 remainder rows): take the row's contrast row
+   in `all-attempt-body-contrasts.tsv` (the merged name; a trailing `'N` instance suffix is another
+   recording context of the same body); if `new_base_observed_range` and
+   `control_base_observed_range` share a value, the row is carried with its per-row nine-pairing
+   bound; otherwise it is separated and must be assigned. It yields **35 separated rows +2,092,224
+   / +5,051** (kernel_data 14 +1,252,027 / +4,362; `alloc::raw_vec` 1 −1,124,204 / −224;
+   definitions 12 +756,060 / 0; eval_dispatch 1 +541,202 / +913; strings 3 +252,072 / 0; drop glue
+   1 +205,000 / 0; builtin_adapters 1 +94,551 / 0; evaluation_cache 1 +82,512 / 0; session 1
+   +33,004 / 0) and **16 carried rows −221,231 / −1,628,491**. The six external rows are carried by
+   class. The carried 22 rows total −437,776 / −1,337,836 (range-sum [−4,321,914, +1,961,317] new
+   and [−4,845,125, +1,755,242] control) — negative in both arms; no positive cost is carried. The
+   seventeen negatives stay named as in the Amendment 1 text (19 positive / 57 zero / 17 negative
+   families; −3,722,338; the five hidden −1,183).
 
-## Stage C — the bar and the capture rule (700 s)
+## Stage C — the bar and the capture rule (800 s)
 
 1. **`stringreplace-pattern-unguarded`.** Read the recipe
    (`.temp/brief-798/callgrind/amendment3/stringreplace-pattern-unguarded-{50,100}.rum`) and the
@@ -259,11 +279,11 @@ evidence per field), and the narrative in the report's `sections`:
    the decision; the translated decomposition reports the range — and do not re-open the allocator
    trace in this design (Amendment 3).
 
-## Stage D — the classification completion, the repair plan and the drafted briefs (1,000 s)
+## Stage D.0 — the classification completion (700 s)
 
-1. **The classification completion (Amendment 3).** For `eval_core`, `definitions`,
-   `pattern_matching`, `scoping` and the paired `drop` rows, finish the required-vs-avoidable
-   classification with source proof:
+1. **The classification completion (Amendments 3 and 4).** For `eval_core`, `definitions`,
+   `pattern_matching`, `scoping`, the paired `drop` rows and the ten new-only bodies priced in
+   Stage D.0's next bullet, finish the required-vs-avoidable classification with source proof:
    - the evaluator's four candidates from Stage B item 1: state the isolated same-profile build
      experiment that alone can price them (both arms built at one path with one codegen unit; the
      candidate shapes; the falsifier that the flag still works when set) — the Amendment 2 attempt
@@ -274,9 +294,39 @@ evidence per field), and the narrative in the report's `sections`:
      `path:line`, and whether restoring the inlined shape is semantics-preserving (the call counts
      per site are identical across arms; the deltas +8,972,494 and +6,273,782 are consistent with
      call overhead, but that is a hypothesis until the source proof);
+   - **the outlining class at the next scale (Amendment 4)**: ten separated material rows are
+     new-only standalone bodies (visits [0, N, 0]) — `normalize_rewrite_rules` +917,686 / 14,012;
+     `build_guarded_replace_plan_from_targets` +819,234 / 7,002;
+     `resume_replace_string_value_with_output` +693,198 / 7,002; `resume_replace_after_target`
+     +672,576 / 14,012; `current_symbol_held_update_value` +630,000 / 6,000;
+     `normalize_association_set_lvalue_target` +516,110 / 8,802; `bulk_part_update_replacements`
+     +276,000 / 2,400; `association_lvalue_has_valid_direct_proof` +224,584 / 2,402;
+     `resume_association_set_lvalue_selector_evaluation` +220,800 / 2,400;
+     `normalize_value_table_target_expr` +92,848 / 8,802 — together +5,063,036 before their
+     callers' negatives, offset by the same modules' negatives to the +2,092,224 net. For each:
+     the same source proof (why the body is a standalone symbol in `armed` and inlined in
+     `real`/`control`, the attribute or render difference with `path:line`, whether restoring the
+     inlined shape is semantics-preserving), and the repair lever it prices;
    - the net of each re-billing pair (`scoping`/`builtin_adapters` −43,841; the paired closure
      drop +6,361,600 / −6,361,600 at 16 self Ir per drop), with proof;
-   - the carried allocation family as stated in Stage B item 3 — no allocation repair is priced.
+   - the carried allocation family as stated in Stage B item 3 — no allocation repair is priced;
+     the 16 layout rows and 6 external rows are carried with their bounds — no layout or
+     external-object repair is priced.
+
+## Stage B.4r — the remainder assignment (600 s)
+
+Assign the 35 separated rows individually: each to a construct or to a new-only-body pair, with
+the source `path:line` at both ends of the call edge, the outlining/inlining mechanism, the visit
+counts, the net, and the mechanism class (required class-form shape or avoidable inlining change).
+The ten new-only rows' counterparts must be named explicitly — the caller row that lost the
+inlined body — and each pair's net must equal the two rows' sum. The 16 rule-carried rows and the
+6 external rows are carried with their per-row nine-pairing bounds; do not re-open them. STOP only
+if a *separated* row cannot be assigned from the retained evidence, naming the exact missing
+measurement. Print `rows_individually=90 rows_carried=22 rows_aggregate=1631 unassigned=0`,
+`carried_new_minus_base=−437776 carried_control_minus_base=−1337836`, and the dust line.
+
+## Stage D.1 — the repair plan and the drafted briefs (500 s)
+
 2. The repair plan, ordered by family, each with: the exact code shape to change (`path:line`), the
    "must not change" list (captured behavior, order of execution, observable rows, the gate's 4 Ir
    per visit, the typed 4+3, the falsifiers), the expected per-visit saving and its evidence, the
@@ -285,8 +335,10 @@ evidence per field), and the narrative in the report's `sections`:
    falsifier: the repaired armed build's whole-panel delta must land inside the repaired control
    interval, with the resumed path equal to the queued path (rum against rum).
 3. The combined expected delta: new translated and native, over the nine-pairing range, with the
-   residual that would remain if any family is a required class-form cost and the carried
-   allocation noise term. If any family is required, state the exact user decision that would be
+   residual that would remain if any family is a required class-form cost, the carried
+   allocation noise term, the 16 rule-carried layout rows and the 6 external-object rows (carried
+   total −437,776 / −1,337,836; range-sum [−4,321,914, +1,961,317] new and [−4,845,125,
+   +1,755,242] control). If any family is required, state the exact user decision that would be
    needed — do not assume it.
 4. Draft the follow-up implementation briefs in `TEMPLATE.md` shape (one per stage), naming files,
    functions, the gate tests, the standing-inventory replays (retention fingerprints, ownership,
@@ -306,10 +358,12 @@ paths.
 
 - `python3 -B scripts/run-bounded.py --timeout 20 -- python3 scripts/report.py check 799` — every
   cited line verbatim, no FAIL hidden, the verdict agrees with the rows.
-- The family rows' `new_minus_base` must sum to +37,644,521; the body assignment must cover every
-  row with |Δ| ≥ 10,000 individually and the remaining rows as an aggregate with its bound, with
-  the family table covering all 1,743 memberships and `family_unassigned = 0`; print the
-  assignment line and the dust line (Amendment 3).
+- The family rows' `new_minus_base` must sum to +37,644,521; the material population must be
+  partitioned exactly as Stage B item 4 states (47 assigned / 6 linked / 2 evaluator / 6 external
+  / 51 remainder, the five counts summing to 112 and the five sums to +37,659,664 / −9,973,234);
+  every separated row must be assigned, the 16 rule-carried and 6 external rows carried with their
+  bounds, and the family table must cover all 1,743 memberships with `family_unassigned = 0`;
+  print the assignment line, the carried sums and the dust line (Amendment 4).
 - No source change: `Scope: NONE`. If the plan requires a build or a capture, name it and STOP;
   the director owns that dispatch.
 
@@ -327,9 +381,10 @@ paths.
   `inclusive_Ir` over the incoming call edges), and "the one unstable family", true only among
   the eight largest positive families; Amendment 2 pre-corrects these, but the rule covers any
   further instance (Amendment 2);
-- any body row ≥10,000 or family that cannot be assigned to a construct from the retained
-  evidence (name the exact missing measurement); the carried allocation family (Stage B item 3)
-  is declared carried by this amendment and is not a STOP;
+- any *separated* body row (Stage B item 4's rule) or family that cannot be assigned to a
+  construct from the retained evidence (name the exact missing measurement). The carried
+  allocation family, the 16 rule-carried layout rows and the 6 external-object rows are declared
+  carried by Amendment 4 and are not STOPs; a carried row that separates under the rule is a STOP;
 - any claim without `path:line` or a retained-evidence file:line;
 - a classification that rests on assumption (e.g., "probably the profiler") rather than source
   proof;
