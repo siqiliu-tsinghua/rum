@@ -3987,6 +3987,38 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 158 — brief 796 STOPs correctly at Stage A on the first unbounded
+    ordinary-path hook of the wider probe surface; Amendment 1 reopens Stage A with a
+    measured-bound method and the brief resumes in the same session (2026-11-25): unit
+    `brief-796-cdx-20261125-085620-2577714` (`gpt-6.2-astra` max, 08:56:20–09:15:44, ≈1,164 s
+    dispatch wall, rc 0, peak 2,818,207,744 B, oom 0, 216,383 tokens). Stage A delivered the
+    textual census (907 literals = 839 Rust + 43 Markdown + 25 TSV, plus 8 supplemental facade
+    spellings; my recount 915 rows) and the measured panel surface (120 labels, 119 eligible,
+    32 physical `driven` sites in 77 labels, 122 windows, 149 label×site rows, every one at
+    112 inclusive Ir per visit, 45,398 visits / 5,084,576 Ir; both guarded StringReplace sites
+    once per iteration; the 859-Ir first-entry `eval_request` cost in the eight armed captures,
+    base and control zero). The STOP: `typed/adapter.rs:52` runs `control::resume` before
+    `driven()`; the ordinary driver calls `TypedAdapter::resume` (`core/driver.rs:79`, `:117`);
+    `control::resume` (`lib.rs:624-646`) unconditionally touches FRAMES/RESUMED, has no
+    standalone symbol (`DEFINED control::resume 0`), is inlined into 97 adapter bodies, and
+    none of the 24 profiles or 149 panel rows reaches one; `METER 927.56` s of the 1,000 s
+    Stage A carve, the static binding alone `902` s. The class is wider: `enter`/`around`/
+    `driven` call `run_is_driven` on the ordinary path and the panel priced only `driven`
+    calls, so the +80,382,406 whole-panel delta stays partly attributed. Scope: 0 files outside
+    `.temp/brief-796/`, git clean, no git attempt, armed copy `c04bbf82…`/5,851 before and
+    after, `report.py check 796` OK 225 citations (source/text/panel/scope PASS; cost-bound and
+    closure FAIL; standing NA; one scratch-only deviation; one question recommending the
+    continuation). Amendment 1 (`.temp/director/ruling-810.md`) names the module's internal
+    families, replaces the symbol-less disassembly bar with a positive-control measured delta
+    against a one-line hook-disabled scratch mutant (one codegen unit, paired draws; static
+    bounds where a symbol exists), extends the panel table to `run_is_driven` entries, restates
+    the closure `ORDINARY SURFACE sites=N measured=M bounded=K unexplained=0`, and carries the
+    surface into stages B–D (the gate covers every family; the prototype measures the
+    typed-adapter family beside the two StringReplace sites). Budget: 4,500 s carve, 1,164 s
+    charged, 3,336 s returned; the amendment carves 5,300 s = 3,336 + 1,964 top-up; resume via
+    `CDX_FORK=01a21034-20a9-75b2-8f3b-e631a20e0a16`. The re-freeze stays blocked until the
+    repair and the completed A/B.
+
   - G15-CM4 continuation 157 — brief 795 STOPs correctly on an attributable ordinary-path cost
     in the released probe gate; the A/B line stays open and brief 796, the design-only probe-gate
     inventory and repair plan, is ordered (2026-11-25): unit

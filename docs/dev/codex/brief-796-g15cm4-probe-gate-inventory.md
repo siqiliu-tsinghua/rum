@@ -214,3 +214,73 @@ for a director ruling, never a scope cut.
 receipts, checks and measurements; the observed counts, scope and any refused git attempt;
 verbatim verdict lines from saved brief-local logs, including STOP evidence. Run
 `python3 scripts/report.py check 796` before handoff.
+
+## Amendment 1 (gate c158) — the Stage A STOP accepted; Stage A reopens with a measured-bound method, the surface names the module's internal families, and the brief resumes in the same session
+
+The first dispatch stopped correctly at Stage A's cost rule. It delivered:
+
+- the textual census — `907` literals (`839` Rust, `43` Markdown, `25` TSV) plus `8` supplemental
+  facade spellings, every one carried by `evidence/occurrences-initial.tsv`;
+- the measured panel surface — `120` labels (`119` eligible, the `637` exclusion
+  `valueq-undefined-symbol-definitions-8000` present), `32` physical `driven` sites in `77`
+  labels, `122` timed windows, `149` label×site rows at **112 inclusive Ir per visit** (self
+  `1`), the two guarded StringReplace sites once per iteration, and the fixed `859`-Ir first-entry
+  cost at `eval_request` in the eight armed captures with base and control zero;
+- and the STOP — `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs:52` runs
+  `control::resume::<F, _>` before `driven()` at `:57`; `TypedAdapter::resume` is the ordinary
+  `ErasedFrame` implementation (the driver calls it at `suspension/core/driver.rs:79` and `:117`);
+  `control::resume` (armed `lib.rs:624-646`) unconditionally touches `FRAMES` and `RESUMED`; it
+  has no standalone symbol and is inlined into `97` adapter bodies; none of the `24` profiles or
+  `149` panel rows reaches any of them.
+
+The bar was mine and it was incomplete: Stage A item 1's hook-kind list named the
+`driven`/`enter`/`around`/recorder families and the four `session.rs` facades but not the
+module's internal `control`/`class_lease`/`q25` helpers, and Stage A item 2's "bound it from the
+disassembly and the call edges" assumed a helper with a symbol to disassemble. The site is real,
+ordinary-reachable and unbounded; the STOP is the rule working. The continuation keeps the
+delivered evidence byte-untouched and reopens Stage A with:
+
+1. **The complete family list.** Every `cm740_probe::` helper family is in scope, including
+   `control::{resume, active, emit_resumed, authority, source}`, `class_lease::*` (with
+   `engaged()`'s `ENABLED && TLS FLAG` shape), `q25::*`, `frame`,
+   `driven`/`run_is_driven`/`lexical_current`, `enter`/`inactive`, the `around` family, the
+   recorders and the four `session.rs` facades (plus `call_unprotected_cm740_driven`). For each
+   site: `path:line`, enclosing function, guard shape (none, compile-time `ENABLED`, TLS flag,
+   TLS ledger), ordinary reachability, and the per-visit cost.
+2. **The measured bound for a symbol-less helper.** A positive-control **undriven**
+   suspend/resume workload that executes at least one of the 97 `ErasedFrame::resume` bodies; the
+   typed suspension tests (`crates/rum-runtime/src/runtime/suspension/typed/tests.rs`,
+   `tests/live.rs`) are candidates, and the run must print the entry count so a non-executed body
+   cannot be mistaken for zero cost. Measure the armed source against a scratch mutant whose only
+   difference is the hook call itself (for example `control::resume` → `None`,
+   `note_typed_consumer` → nothing, `control::active` → `false`), both at one path with
+   `CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1`, with at least two paired draws; the per-visit cost is
+   the inclusive-Ir delta divided by the paired call count. The instantiations not reached are
+   bounded by the shared generic body (`F` enters only `type_name::<F>()` on the non-empty path)
+   or measured individually where that argument fails. Where a helper does have a symbol (for
+   example `class_lease::note_typed_consumer`, size `0x18`), a verified static bound computed
+   from its disassembly and callee spans is acceptable.
+3. **The panel table covers every gate entry.** Calls to `run_is_driven` reached from
+   `enter`/`around`/`driven` are priced as the `driven` calls are, or proven not to execute; the
+   whole-panel `+80,382,406` delta is attributed by site or the residual is named with its
+   measured bound.
+4. **The closure.** `ORDINARY SURFACE sites=N measured=M bounded=K unexplained=0`, with the
+   per-family guard shape and reachability. A site without a bound is still a STOP.
+5. **Stages B–D gain the surface.** Stage B's cold-load gate covers every hook-family entry, not
+   only `run_is_driven` — the fast path one relaxed load plus a predicted-not-taken branch, the
+   TLS ledger and class-lease state behind the cold path, the install/retire counter balanced;
+   Stage C's prototype applies the gate to the whole surface and measures the repaired
+   typed-adapter family as well as the two `stringreplace-guarded-hit` sites (against `21,905.12`
+   Ir/iteration and `112` Ir/call), with the driven path and the focused probe tests green; Stage
+   D's decision states its cost to the driven measurements.
+
+Resume in the same session with `CDX_FORK=01a21034-20a9-75b2-8f3b-e631a20e0a16`, at Stage A
+with the items restated above (the delivered census and panel rows stand), then Stages B–D.
+Preserve the first run's evidence, tables, logs, scratch and `report.json`; the new report
+includes this amendment and the accepted STOP as a deviation. The four trees stay read-only;
+`.temp/brief-796/` remains the only writable root.
+
+Charged ≈1,164 s of the 4,500 s carve (unit `brief-796-cdx-20261125-085620-2577714`,
+08:56:20–09:15:44, peak 2,818,207,744 B, oom 0); **3,336 s returned**; this amendment carves
+**5,300 s** (A 1,800 / B 1,200 / C 1,600 / D 700) = the returned 3,336 s plus an explicit
+**1,964 s** top-up. Unspent returns; a projected overrun stops for a ruling, never a scope cut.
