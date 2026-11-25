@@ -26,6 +26,53 @@ pub mod cm740_probe {
 
     pub const ENABLED: bool = !cfg!(disabled) && !cfg!(live);
 
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    static PUBLISHED: AtomicUsize = AtomicUsize::new(0);
+
+    #[inline(always)]
+    pub(crate) fn possibly_active() -> bool {
+        PUBLISHED.load(Ordering::Relaxed) != 0
+    }
+
+    #[derive(Debug)]
+    struct PublishedFlag(std::cell::Cell<bool>);
+
+    impl PublishedFlag {
+        const fn off() -> Self {
+            Self(std::cell::Cell::new(false))
+        }
+
+        fn active() -> Self {
+            let flag = Self::off();
+            flag.set(true);
+            flag
+        }
+
+        fn get(&self) -> bool {
+            self.0.get()
+        }
+
+        fn set(&self, value: bool) {
+            if self.get() == value {
+                return;
+            }
+            if value {
+                PUBLISHED.fetch_add(1, Ordering::Relaxed);
+                self.0.set(true);
+            } else {
+                self.0.set(false);
+                PUBLISHED.fetch_sub(1, Ordering::Relaxed);
+            }
+        }
+    }
+
+    impl Drop for PublishedFlag {
+        fn drop(&mut self) {
+            self.set(false);
+        }
+    }
+
     #[derive(Clone, Debug, Eq, PartialEq, Ord, PartialOrd)]
     struct Episode {
         row: String,
@@ -102,7 +149,7 @@ pub mod cm740_probe {
     struct RunAuthority {
         episode: Option<Episode>,
         queued: bool,
-        current: std::cell::Cell<bool>,
+        current: PublishedFlag,
     }
     fn run_current(run: &Run) -> bool {
         run.source_authority.current.get()
@@ -249,7 +296,7 @@ pub mod cm740_probe {
             let source_authority = std::rc::Rc::new(RunAuthority {
                 episode: pair.episode.clone(),
                 queued,
-                current: std::cell::Cell::new(true),
+                current: PublishedFlag::active(),
             });
             assert!(l.run_authority.replace(source_authority.clone()).is_none());
             l.current = Some(Run {
@@ -382,8 +429,14 @@ pub mod cm740_probe {
         l.scope_authority.guard_sources.remove(&active.activation);
     }
 
-    #[inline(never)]
+    #[inline(always)]
     fn run_is_driven() -> bool {
+        ENABLED && possibly_active() && run_is_driven_slow()
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn run_is_driven_slow() -> bool {
         if !ENABLED {
             return false;
         }
@@ -398,7 +451,7 @@ pub mod cm740_probe {
             run_current(run) && run.pair.episode.is_some()
         })
     }
-    #[inline(never)]
+    #[inline(always)]
     #[allow(dead_code)]
     pub fn driven() -> bool {
         run_is_driven()
@@ -421,13 +474,14 @@ pub mod cm740_probe {
         }
     }
 
-    #[inline(never)]
+    #[inline(always)]
     pub fn enter(row: &'static str) -> Guard {
         if !run_is_driven() {
             return Guard(None);
         }
         enter_slow(row)
     }
+    #[cold]
     #[inline(never)]
     fn enter_slow(row: &'static str) -> Guard {
         LEDGER.with(|cell| {
@@ -479,6 +533,7 @@ pub mod cm740_probe {
         use std::sync::Arc;
 
         struct Installing {
+            _publication: PublishedFlag,
             row: &'static str,
             kind: &'static str,
             authority: Rc<RunAuthority>,
@@ -488,6 +543,7 @@ pub mod cm740_probe {
         }
 
         struct Bound {
+            _publication: PublishedFlag,
             row: &'static str,
             kind: &'static str,
             authority: Rc<RunAuthority>,
@@ -527,7 +583,20 @@ pub mod cm740_probe {
             }
         }
 
+        #[inline(always)]
         pub(crate) fn source<F: 'static>(
+            allowed: &[&'static str],
+            deferred: bool,
+        ) -> Option<SourceScope> {
+            if !super::possibly_active() {
+                return None;
+            }
+            source_slow::<F>(allowed, deferred)
+        }
+
+        #[cold]
+        #[inline(never)]
+        fn source_slow<F: 'static>(
             allowed: &[&'static str],
             deferred: bool,
         ) -> Option<SourceScope> {
@@ -548,6 +617,7 @@ pub mod cm740_probe {
                 arm_source(row, "control-frame-source", "", false);
             }
             let source = Rc::new(Installing {
+                _publication: PublishedFlag::active(),
                 row,
                 kind: std::any::type_name::<F>(),
                 authority,
@@ -560,7 +630,21 @@ pub mod cm740_probe {
             })
         }
 
+        #[inline(always)]
         pub(super) fn allocated<T: ?Sized + 'static>(
+            actual: &Arc<T>,
+            kind: &'static str,
+            generation: u64,
+        ) {
+            if !super::possibly_active() {
+                return;
+            }
+            allocated_slow(actual, kind, generation)
+        }
+
+        #[cold]
+        #[inline(never)]
+        fn allocated_slow<T: ?Sized + 'static>(
             actual: &Arc<T>,
             kind: &'static str,
             generation: u64,
@@ -592,6 +676,7 @@ pub mod cm740_probe {
             s.bound.set(true);
             let weak = Arc::downgrade(actual);
             let frame = Rc::new(Bound {
+                _publication: PublishedFlag::active(),
                 row: s.row,
                 kind,
                 authority: Rc::clone(&s.authority),
@@ -621,7 +706,17 @@ pub mod cm740_probe {
             }
         }
 
+        #[inline(always)]
         pub(crate) fn resume<F: 'static, A>(adapter: &A) -> Option<ResumeScope> {
+            if !super::possibly_active() {
+                return None;
+            }
+            resume_slow::<F, A>(adapter)
+        }
+
+        #[cold]
+        #[inline(never)]
+        fn resume_slow<F: 'static, A>(adapter: &A) -> Option<ResumeScope> {
             let address = std::ptr::from_ref(adapter) as usize;
             let frame = FRAMES.with(|frames| frames.borrow_mut().remove(&address));
             let previous = RESUMED.with(|slot| slot.take());
@@ -645,7 +740,17 @@ pub mod cm740_probe {
             })
         }
 
+        #[inline(always)]
         pub(crate) fn active(row: &str) -> bool {
+            if !super::possibly_active() {
+                return false;
+            }
+            active_slow(row)
+        }
+
+        #[cold]
+        #[inline(never)]
+        fn active_slow(row: &str) -> bool {
             RESUMED.with(|slot| {
                 slot.borrow().as_ref().is_some_and(|f| {
                     f.row == row
@@ -655,7 +760,17 @@ pub mod cm740_probe {
             })
         }
 
+        #[inline(always)]
         pub(crate) fn emit_resumed(row: &'static str, phase: &str) -> bool {
+            if !super::possibly_active() {
+                return false;
+            }
+            emit_resumed_slow(row, phase)
+        }
+
+        #[cold]
+        #[inline(never)]
+        fn emit_resumed_slow(row: &'static str, phase: &str) -> bool {
             if !active(row) || !frame(row) {
                 return false;
             }
@@ -688,6 +803,7 @@ pub mod cm740_probe {
             body()
         }
     }
+    #[cold]
     #[inline(never)]
     fn around_armed<R>(row: &'static str, body: impl FnOnce() -> R) -> R {
         let _guard = enter_slow(row);
@@ -706,6 +822,7 @@ pub mod cm740_probe {
             body()
         }
     }
+    #[cold]
     #[inline(never)]
     fn around_ok_armed<T, E>(
         row: &'static str,
@@ -734,6 +851,7 @@ pub mod cm740_probe {
             body()
         }
     }
+    #[cold]
     #[inline(never)]
     fn around_some_armed<T, E>(
         row: &'static str,
@@ -762,6 +880,7 @@ pub mod cm740_probe {
             body()
         }
     }
+    #[cold]
     #[inline(never)]
     fn around_hit_armed<R>(
         row: &'static str,
@@ -812,7 +931,21 @@ pub mod cm740_probe {
     /// from the two suspension-frame installation sinks in `runtime::suspension::core`).
     /// Binds a live `&Arc<T>` frame allocation and non-zero `SuspensionGeneration`
     /// to the active armed ancestor wrapper W on the unqueued half.
+    #[inline(always)]
     pub(crate) fn record_descendant_frame<T: ?Sized + 'static>(
+        actual: &std::sync::Arc<T>,
+        kind: &'static str,
+        generation: u64,
+    ) {
+        if !possibly_active() {
+            return;
+        }
+        record_descendant_frame_slow(actual, kind, generation)
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn record_descendant_frame_slow<T: ?Sized + 'static>(
         actual: &std::sync::Arc<T>,
         kind: &'static str,
         generation: u64,
@@ -1039,6 +1172,7 @@ pub mod cm740_probe {
         }
     }
 
+    #[cold]
     #[inline(never)]
     fn around_ok_profile_return_armed<T, E>(
         row: &'static str,
@@ -1237,13 +1371,33 @@ pub mod cm740_probe {
                 .is_some_and(|e| e.row == row)
         })
     }
+    #[inline(always)]
     pub fn ordinary(row: &str) -> bool {
+        if !possibly_active() {
+            return false;
+        }
+        ordinary_slow(row)
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn ordinary_slow(row: &str) -> bool {
         if !ENABLED {
             return false;
         }
         LEDGER.with(|c| eligible(&c.borrow(), row, true).is_some())
     }
+    #[inline(always)]
     pub fn frame(row: &str) -> bool {
+        if !possibly_active() {
+            return false;
+        }
+        frame_slow(row)
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn frame_slow(row: &str) -> bool {
         if !ENABLED {
             return false;
         }
@@ -1275,7 +1429,23 @@ pub mod cm740_probe {
             && run.pair.source_records.contains_key(&source))
         .then(|| receipt.clone())
     }
+    #[inline(always)]
     pub fn hit(row: &str, phase: &str) {
+        if !possibly_active() {
+            return inactive_hit();
+        }
+        hit_slow(row, phase)
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn inactive_hit() {
+        panic!("active run")
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn hit_slow(row: &str, phase: &str) {
         if !class_lease::authorize_existing_hit(row) {
             return;
         }
@@ -6163,6 +6333,142 @@ pub mod cm740_probe {
                 actual.0, actual.1, proposed.0, proposed.1
             );
             proposed
+        }
+    }
+
+    #[cfg(test)]
+    fn publication_test_child(name: &str, control: bool, expected: &str) -> bool {
+        const CHILD: &str = "RUM_CM740_PUBLICATION_TEST_CHILD";
+        if std::env::var(CHILD).as_deref() == Ok(name) {
+            return true;
+        }
+        let mut command = std::process::Command::new(std::env::current_exe().unwrap());
+        command
+            .args([name, "--exact", "--test-threads=1", "--show-output"])
+            .env(CHILD, name)
+            .env_remove("RUST_TEST_NOCAPTURE");
+        if control {
+            command
+                .env("RUM_CM740_SEMANTIC", "Some")
+                .env("RUM_CM740_OMIT", "Some");
+        }
+        let output = command.output().expect("launch isolated publication test");
+        let stdout = String::from_utf8_lossy(&output.stdout);
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        let result = format!("test {name} ... ok");
+        assert!(
+            output.status.success()
+                && stdout.lines().any(|line| line == result)
+                && stdout.lines().any(|line| line == expected),
+            "{name} exited with {}\n{stdout}\n{stderr}",
+            output.status
+        );
+        false
+    }
+
+    #[test]
+    fn publication_balances_each_independent_owner() {
+        if publication_test_child(
+            "cm740_probe::publication_balances_each_independent_owner",
+            false,
+            "PUBLICATION BALANCE run_replacement=true queued_miss=true cross_thread=false thread_exit=balanced class_independent=true q25_independent=true watch_independent=true final=0",
+        ) {
+            fn count() -> usize {
+                PUBLISHED.load(Ordering::Relaxed)
+            }
+            assert_eq!(count(), 0);
+            begin(true, "unmatched");
+            assert!(!driven());
+            assert_eq!(count(), 1);
+            end();
+            begin(false, "replace");
+            begin(false, "replace");
+            assert!(driven());
+            assert_eq!(count(), 1);
+            std::thread::spawn(|| {
+                assert!(!driven());
+                begin(false, "worker");
+                assert!(driven());
+                q25::watch_pairs(true);
+                assert_eq!(count(), 3);
+            })
+            .join()
+            .unwrap();
+            assert_eq!(count(), 1);
+            end();
+            assert_eq!(count(), 0);
+            q25::watch_pairs(true);
+            q25::watch_pairs(true);
+            assert_eq!(count(), 1);
+            assert!(!driven());
+            q25::watch_pairs(false);
+            let bytes = include_bytes!(
+                "../../rum-stdlib/tests/suspension_oracle/fixtures/obligations/programs/f0af0146fc1b47cf2fba78283f322b4d96ca93ad85dcc9e7b1f813b20560410d.rum"
+            );
+            assert!(class_lease::install("P0216", true, bytes));
+            assert!(class_lease::install("P0216", false, bytes));
+            assert!(!driven());
+            class_lease::remember_concrete_kind(17, "Concrete");
+            assert_eq!(class_lease::concrete_kind_for(17), "Concrete");
+            assert_eq!(count(), 1);
+            class_lease::clear();
+            assert_eq!(class_lease::concrete_kind_for(17), "dyn ErasedFrame");
+            let program = r#"InputString["prior"];StringCases["ab",x_:>If[c15once,(c15once=False;Input["finish"]),"X"]]"#;
+            let setup = "log={};scope=17;c15index=0;c15once=True;";
+            let receipt = "0".repeat(64);
+            let cap = q25::issue(
+                q25::Mode::Siblings,
+                q25::Half::Unqueued,
+                program,
+                setup,
+                &[("prior", "prior"), ("finish", "\"X\"")],
+                1,
+                1,
+                &receipt,
+                &receipt,
+            )
+            .unwrap();
+            q25::install(cap);
+            assert_eq!(count(), 1);
+            assert!(!driven());
+            assert!(q25::siblings_mode());
+            q25::on_end();
+            assert_eq!(count(), 0);
+            eprintln!(
+                "PUBLICATION BALANCE run_replacement=true queued_miss=true cross_thread=false thread_exit=balanced class_independent=true q25_independent=true watch_independent=true final=0"
+            );
+        }
+    }
+
+    #[test]
+    fn publication_preserves_control_scope() {
+        if publication_test_child(
+            "cm740_probe::publication_preserves_control_scope",
+            true,
+            "CONTROL PUBLICATION source_scope=true retired=true final=0",
+        ) {
+            let count = || PUBLISHED.load(Ordering::Relaxed);
+            assert_eq!(count(), 0);
+            begin(false, "CM740-SEMANTIC");
+            let s = control::source::<u8>(&["Some"], true).expect("selected semantic source");
+            assert_eq!(count(), 2);
+            let instance = std::sync::Arc::new(5u8);
+            record_descendant_frame(&instance, std::any::type_name::<u8>(), 1);
+            assert!(count() >= 2);
+            assert_eq!(count(), 3);
+            drop(s);
+            assert_eq!(count(), 2);
+            assert!(!control::active("Some"));
+            let _claim = control::resume::<u8, _>(instance.as_ref()).expect("parked frame");
+            assert!(control::active("Some"));
+            assert_eq!(count(), 2);
+            drop(_claim);
+            assert!(!control::active("Some"));
+            assert!(control::resume::<u8, _>(instance.as_ref()).is_none());
+            assert_eq!(count(), 1);
+            end();
+            assert_eq!(count(), 0);
+            eprintln!("CONTROL PUBLICATION source_scope=true retired=true final=0");
         }
     }
 

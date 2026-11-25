@@ -4066,6 +4066,44 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     rows stay named stops; 744/745/746 held; CM5 unauthorized; agy window saved (carbon, high);
     cdx the worker (quota death stops and asks).
 
+  - G15-CM4 continuation 171 — brief 797's director R4 install leg is accepted: the 190-path
+    armed install, the independent seal reconstruction and every live replay and gate pass, and
+    the workspace repeat reconciles to the credited 4,555/10/71 bar (2026-11-25): ruling 823
+    (`.temp/director/ruling-823.md`). Install: 190 paths (165 overlays/9 additions/1 additions
+    manifest/15 carried or adopted), 18 files changed, 0.290 s, every live parent rechecked;
+    live crates subtree `6bab0093…`/4,700 equals sealed armed. Verify (re-run after every gate):
+    `R4 LIVE VERIFY PASS mapping=190 witnesses=5 postimages=4 real_promotion=zero_overlay
+    anchors=2 chain=152 tables=7 tree_delta=1+20` (the 20 extras are post-seal brief documents,
+    `TODO.md` the single content delta, no missing file; seven sealed tables live==armed: F13
+    `cc02870a…`, promoted `7c546372…`, class `d183c38e…`, chain `130f3040…`, overlays `0eed88cb…`,
+    additions `ed54d95e…`, mutants `adeb7e4b…`; five witnesses and four postimages equal the
+    certified bytes; real promotion carried `4337950c…`; both anchors in the live promoted table).
+    Workspace repeat: 2,107.435 s, raw_exit 101, tree unchanged; the per-binary comparison to the
+    793 host reference differs only in rum-runtime lib (+2 publication passes) and
+    `tests/suspension_oracle.rs` (−2/+2); failure set = the ten accepted reds +
+    `cm_p0543_receipts_exact` + `cm_receipts_exact`; ignored = the exact 71; six remnants, six
+    compiler children, hygiene and source-auth control green; top-level 4,552/12/71 reconciled to
+    4,554/10/71, naive 4,555/10/71 over 70 result lines. The two lane reds were the worker's
+    deleted lane build root (`.temp/brief-797/amendment6/stable-probe/active`); reproduced at one
+    thread (rc 101, 95.415 s, `SourceIdentity`/`Program`), the exact `98c91345…`/5,851 tree
+    restored, `cm_p0543_receipts_exact` green at one thread (103.741 s), the one-thread
+    `cm_receipts_exact` rerun over a 900 s bound (rc 124, no verdict), both green at eight threads
+    in the fourteen-selector gate (14/0/0, 776 filtered, 1,277.320 s). Focused: flag-on LP 5/0/0
+    (29.492 s), flag-on class-lease 197/0/0 (27.937 s), fmt 0 (2.937 s), F48 2/0/0 (38.793 s).
+    Replays on the live copy at the sealed population: class `source_rows=29907` (`c7bf6393…`),
+    F13 `cc02870a…` byte-identical with `falsifiers=62`, both promotion configurations
+    (review/check true/false rc 0, `f630f153…`/`0c0a4013…`), ownership 7/7, LP01 10/10,
+    typed-slot 15/15 — all byte-identical to the worker's certified archives. Deviation, accepted:
+    the workspace and focused gates ran before the replays; the order guard was secured by the
+    pre-suite sealed-table equality and every replay reproduced its installed artifact. Budget:
+    charged 5,352.949 (workspace 2,107.435, focused 2,528.992, replays 716.523); top-up
+    5,200→5,600 (+400 from the carve's unallocated remainder); cumulative 31,643.810; remaining
+    B 922.685, C 2,571.517, D workspace 1,373.277, D focused 385.071, director R4 247.051,
+    unallocated 406.589. Ruling 823 unblocks brief 798 (the repaired whole-panel A/B, 2,800 s at
+    dispatch), then the re-freeze and fresh epoch, the Stage C/C10 readmission and the 744
+    restart; Q25's thirteen rows stay named stops, 744/745/746 held, CM5 unauthorized, agy saved
+    (carbon, high), cdx the worker (quota death stops and asks).
+
   - G15-CM4 continuation 168 — brief 797's Amendment 7 Stage B.4 STOP is correct: the retained
     promotion selector consumes the B.6 promotion inventory and the shared additions manifest
     follows the chain, so the retained block moves after the seal and the baseline delta is

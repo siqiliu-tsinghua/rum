@@ -9,16 +9,16 @@ UnknownHostPayload	crates/rum-core/src/expr.rs	801	25	public input rum_core::exp
 UnknownHostPayload	crates/rum-core/src/expr.rs	805	39	public input rum_core::expr::impl(Expr)@780::contextual_symbol(context): opaque owned payload impl AsRef < str >
 UnknownHostPayload	crates/rum-core/src/expr.rs	805	62	public input rum_core::expr::impl(Expr)@780::contextual_symbol(name): opaque owned payload impl AsRef < str >
 UnknownHostPayload	crates/rum-core/src/expr.rs	809	32	public input rum_core::expr::impl(Expr)@780::system_symbol(name): opaque owned payload impl AsRef < str >
-UnknownHostPayload	crates/rum-runtime/src/cm740_probe/q25_ownership.rs	381	51	public input rum_runtime::cm740_probe::q25::around_handoff(body): opaque owned payload impl FnOnce () -> R
-UnknownHostPayload	crates/rum-runtime/src/lib.rs	496	19	rum_runtime::cm740_probe::control::Bound.live/std::boxed::Box[Own]/arg0: opaque owned payload dyn Fn () -> bool
-UnknownHostPayload	crates/rum-runtime/src/lib.rs	684	47	public input rum_runtime::cm740_probe::around(body): opaque owned payload impl FnOnce () -> R
-UnknownHostPayload	crates/rum-runtime/src/lib.rs	701	15	public input rum_runtime::cm740_probe::around_ok(body): opaque owned payload impl FnOnce () -> Result < T , E >
-UnknownHostPayload	crates/rum-runtime/src/lib.rs	729	15	public input rum_runtime::cm740_probe::around_some(body): opaque owned payload impl FnOnce () -> Result < Option < T > , E >
-UnknownHostPayload	crates/rum-runtime/src/lib.rs	757	15	public input rum_runtime::cm740_probe::around_hit(body): opaque owned payload impl FnOnce () -> R
-UnknownHostPayload	crates/rum-runtime/src/lib.rs	1033	15	public input rum_runtime::cm740_probe::around_ok_profile_return(body): opaque owned payload impl FnOnce () -> Result < T , E >
-UnknownHostPayload	crates/rum-runtime/src/lib.rs	2743	23	rum_runtime::cm740_probe::Operations.constructing/std::vec::Vec[Own]/arg0/tuple/.2/alias(rum_runtime::cm740_probe::Projection)/std::boxed::Box[Own]/arg0: opaque owned payload dyn Fn (& dyn std :: any :: Any) -> Option < OperationKey >
-UnknownHostPayload	crates/rum-runtime/src/lib.rs	3201	52	public input rum_runtime::cm740_probe::impl(OperationPermit)@3109::call(f): opaque owned payload impl FnOnce () -> T
-UnknownHostPayload	crates/rum-runtime/src/lib.rs	4872	50	public input rum_runtime::cm740_probe::queue_transport::omit_evaluation_pass(publication): opaque owned payload impl Into < PublicationReceiver >
+UnknownHostPayload	crates/rum-runtime/src/cm740_probe/q25_ownership.rs	401	51	public input rum_runtime::cm740_probe::q25::around_handoff(body): opaque owned payload impl FnOnce () -> R
+UnknownHostPayload	crates/rum-runtime/src/lib.rs	552	19	rum_runtime::cm740_probe::control::Bound.live/std::boxed::Box[Own]/arg0: opaque owned payload dyn Fn () -> bool
+UnknownHostPayload	crates/rum-runtime/src/lib.rs	799	47	public input rum_runtime::cm740_probe::around(body): opaque owned payload impl FnOnce () -> R
+UnknownHostPayload	crates/rum-runtime/src/lib.rs	817	15	public input rum_runtime::cm740_probe::around_ok(body): opaque owned payload impl FnOnce () -> Result < T , E >
+UnknownHostPayload	crates/rum-runtime/src/lib.rs	846	15	public input rum_runtime::cm740_probe::around_some(body): opaque owned payload impl FnOnce () -> Result < Option < T > , E >
+UnknownHostPayload	crates/rum-runtime/src/lib.rs	875	15	public input rum_runtime::cm740_probe::around_hit(body): opaque owned payload impl FnOnce () -> R
+UnknownHostPayload	crates/rum-runtime/src/lib.rs	1166	15	public input rum_runtime::cm740_probe::around_ok_profile_return(body): opaque owned payload impl FnOnce () -> Result < T , E >
+UnknownHostPayload	crates/rum-runtime/src/lib.rs	2913	23	rum_runtime::cm740_probe::Operations.constructing/std::vec::Vec[Own]/arg0/tuple/.2/alias(rum_runtime::cm740_probe::Projection)/std::boxed::Box[Own]/arg0: opaque owned payload dyn Fn (& dyn std :: any :: Any) -> Option < OperationKey >
+UnknownHostPayload	crates/rum-runtime/src/lib.rs	3371	52	public input rum_runtime::cm740_probe::impl(OperationPermit)@3279::call(f): opaque owned payload impl FnOnce () -> T
+UnknownHostPayload	crates/rum-runtime/src/lib.rs	5042	50	public input rum_runtime::cm740_probe::queue_transport::omit_evaluation_pass(publication): opaque owned payload impl Into < PublicationReceiver >
 UnknownHostPayload	crates/rum-runtime/src/runtime/accounting_mode/bridge.rs	33	23	public input rum_runtime::runtime::accounting_mode::bridge::impl(CallbackFailure < '_ , 'id , M >)@26::suspend(continuation): opaque owned payload impl FnOnce () -> C
 UnknownHostPayload	crates/rum-runtime/src/runtime/accounting_mode/frozen.rs	86	23	public input rum_runtime::runtime::accounting_mode::frozen::impl(RetentionContext < '_ , 'id , M >)@78::suspend(continuation): opaque owned payload impl FnOnce () -> C
 UnknownHostPayload	crates/rum-runtime/src/runtime/accounting_mode/retained.rs	109	55	public input rum_runtime::runtime::accounting_mode::retained::impl(Session)@105::with_unarmed_retention(body): opaque owned generic parameter F where F : for < 'id > FnOnce (RetentionContext < '_ , 'id , Unarmed > , RetainedValues < 'id , Unarmed > ,) -> Result < RetainedResult < 'id , Unarmed > , EvalError > ,

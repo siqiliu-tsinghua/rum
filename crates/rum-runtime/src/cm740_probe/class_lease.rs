@@ -6,7 +6,7 @@ use std::sync::Arc;
 mod class_rows;
 
 thread_local! {
-    static FLAG: Cell<u8> = const { Cell::new(0) };
+    static FLAG: super::PublishedFlag = const { super::PublishedFlag::off() };
     static LEASE: RefCell<Option<Lease>> = const { RefCell::new(None) };
     static KINDS: RefCell<Vec<(usize, &'static str)>> = const { RefCell::new(Vec::new()) };
 }
@@ -39,7 +39,7 @@ struct Lease {
 
 #[inline(always)]
 fn engaged() -> bool {
-    super::ENABLED && FLAG.with(|flag| flag.get()) != 0
+    super::ENABLED && FLAG.with(|flag| flag.get())
 }
 
 pub fn digest(bytes: &[u8]) -> String {
@@ -151,12 +151,12 @@ pub fn install(row: &'static str, commit: bool, program_bytes: &[u8]) -> bool {
         });
     });
     KINDS.with(|slot| slot.borrow_mut().clear());
-    FLAG.with(|flag| flag.set(1));
+    FLAG.with(|flag| flag.set(true));
     true
 }
 
 pub fn clear() {
-    FLAG.with(|flag| flag.set(0));
+    FLAG.with(|flag| flag.set(false));
     LEASE.with(|slot| *slot.borrow_mut() = None);
     KINDS.with(|slot| slot.borrow_mut().clear());
 }
@@ -181,6 +181,15 @@ pub fn authorized_hits() -> u64 {
 
 #[inline(always)]
 pub fn authorize_existing_hit(row: &str) -> bool {
+    if !super::possibly_active() {
+        return true;
+    }
+    authorize_existing_hit_slow(row)
+}
+
+#[cold]
+#[inline(never)]
+fn authorize_existing_hit_slow(row: &str) -> bool {
     if !engaged() {
         return true;
     }
@@ -219,7 +228,17 @@ fn with_lease(mut body: impl FnMut(&mut Lease)) {
     });
 }
 
+#[inline(always)]
 pub fn remember_concrete_kind(addr: usize, kind: &'static str) {
+    if !super::possibly_active() {
+        return;
+    }
+    remember_concrete_kind_slow(addr, kind)
+}
+
+#[cold]
+#[inline(never)]
+fn remember_concrete_kind_slow(addr: usize, kind: &'static str) {
     if !engaged() || kind == "dyn ErasedFrame" {
         return;
     }
@@ -233,7 +252,17 @@ pub fn remember_concrete_kind(addr: usize, kind: &'static str) {
     });
 }
 
+#[inline(always)]
 pub fn concrete_kind_for(addr: usize) -> &'static str {
+    if !super::possibly_active() {
+        return "dyn ErasedFrame";
+    }
+    concrete_kind_for_slow(addr)
+}
+
+#[cold]
+#[inline(never)]
+fn concrete_kind_for_slow(addr: usize) -> &'static str {
     if !engaged() {
         return "dyn ErasedFrame";
     }
@@ -257,7 +286,17 @@ fn veto_erased(lease: &mut Lease, kind: &str) -> bool {
     }
 }
 
+#[inline(always)]
 pub fn note_allocation(addr: usize, kind: &'static str, generation: u64, issuer: &'static str) {
+    if !super::possibly_active() {
+        return;
+    }
+    note_allocation_slow(addr, kind, generation, issuer)
+}
+
+#[cold]
+#[inline(never)]
+fn note_allocation_slow(addr: usize, kind: &'static str, generation: u64, issuer: &'static str) {
     with_lease(|lease| {
         if veto_erased(lease, kind) {
             return;
@@ -334,11 +373,31 @@ fn note_return_kind(row: &'static str, generation: u64, kind: &'static str) {
     });
 }
 
+#[inline(always)]
 pub fn note_input_return(row: &'static str, generation: u64) {
+    if !super::possibly_active() {
+        return;
+    }
+    note_input_return_slow(row, generation)
+}
+
+#[cold]
+#[inline(never)]
+fn note_input_return_slow(row: &'static str, generation: u64) {
     note_return_kind(row, generation, "EvalError::InputRequired");
 }
 
+#[inline(always)]
 pub fn observe_producer_return(row: &'static str) {
+    if !super::possibly_active() {
+        return;
+    }
+    observe_producer_return_slow(row)
+}
+
+#[cold]
+#[inline(never)]
+fn observe_producer_return_slow(row: &'static str) {
     if wants_input_return(row) {
         note_return_kind(row, 0, "guarded-producer-return");
     }
@@ -346,6 +405,15 @@ pub fn observe_producer_return(row: &'static str) {
 
 #[inline(always)]
 pub fn wants_input_return(row: &str) -> bool {
+    if !super::possibly_active() {
+        return false;
+    }
+    wants_input_return_slow(row)
+}
+
+#[cold]
+#[inline(never)]
+fn wants_input_return_slow(row: &str) -> bool {
     if !engaged() {
         return false;
     }
@@ -358,6 +426,15 @@ pub fn wants_input_return(row: &str) -> bool {
 
 #[inline(always)]
 pub fn wants_cursor() -> bool {
+    if !super::possibly_active() {
+        return false;
+    }
+    wants_cursor_slow()
+}
+
+#[cold]
+#[inline(never)]
+fn wants_cursor_slow() -> bool {
     if !engaged() {
         return false;
     }
@@ -368,7 +445,17 @@ pub fn wants_cursor() -> bool {
     })
 }
 
+#[inline(always)]
 pub fn note_cursor_discriminant(discriminant: &'static str) {
+    if !super::possibly_active() {
+        return;
+    }
+    note_cursor_discriminant_slow(discriminant)
+}
+
+#[cold]
+#[inline(never)]
+fn note_cursor_discriminant_slow(discriminant: &'static str) {
     with_lease(|lease| {
         if lease.group != "cursor" {
             return;
@@ -382,7 +469,17 @@ pub fn note_cursor_discriminant(discriminant: &'static str) {
     });
 }
 
+#[inline(always)]
 pub fn note_typed_constructor(kind: &'static str) {
+    if !super::possibly_active() {
+        return;
+    }
+    note_typed_constructor_slow(kind)
+}
+
+#[cold]
+#[inline(never)]
+fn note_typed_constructor_slow(kind: &'static str) {
     with_lease(|lease| {
         if veto_erased(lease, kind) {
             return;
@@ -410,7 +507,17 @@ pub fn note_typed_constructor(kind: &'static str) {
     });
 }
 
+#[inline(always)]
 pub fn note_queued_span(row: &'static str) {
+    if !super::possibly_active() {
+        return;
+    }
+    note_queued_span_slow(row)
+}
+
+#[cold]
+#[inline(never)]
+fn note_queued_span_slow(row: &'static str) {
     with_lease(|lease| {
         if lease.row == row && lease.group == "queued-success" {
             lease
@@ -443,7 +550,17 @@ fn note_consumer(addr: usize, issuer: &'static str, kind: &'static str) {
     });
 }
 
+#[inline(always)]
 pub fn begin_row<F: 'static>(frame: &Arc<F>) {
+    if !super::possibly_active() {
+        return;
+    }
+    begin_row_slow(frame)
+}
+
+#[cold]
+#[inline(never)]
+fn begin_row_slow<F: 'static>(frame: &Arc<F>) {
     if !engaged() {
         return;
     }
@@ -451,7 +568,17 @@ pub fn begin_row<F: 'static>(frame: &Arc<F>) {
     note_consumer(addr, "ArcResume", std::any::type_name::<F>());
 }
 
+#[inline(always)]
 pub fn note_legacy_front<T: ?Sized>(frame: &Arc<T>) {
+    if !super::possibly_active() {
+        return;
+    }
+    note_legacy_front_slow(frame)
+}
+
+#[cold]
+#[inline(never)]
+fn note_legacy_front_slow<T: ?Sized>(frame: &Arc<T>) {
     if !engaged() {
         return;
     }
@@ -475,6 +602,16 @@ pub fn note_legacy_front<T: ?Sized>(frame: &Arc<T>) {
     });
 }
 
+#[inline(always)]
 pub fn note_typed_consumer(addr: usize, kind: &'static str) {
+    if !super::possibly_active() {
+        return;
+    }
+    note_typed_consumer_slow(addr, kind)
+}
+
+#[cold]
+#[inline(never)]
+fn note_typed_consumer_slow(addr: usize, kind: &'static str) {
     note_consumer(addr, "TypedAdapter", kind);
 }

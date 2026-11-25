@@ -16,7 +16,7 @@ const FINISH_ANSWER: &str = "\"X\"";
 const OMIT_PHASE: &str = "OmitActualStringCaseAppend";
 
 thread_local! {
-    static ACTIVE: Cell<bool> = Cell::new(false);
+    static ACTIVE: super::PublishedFlag = const { super::PublishedFlag::off() };
     static STATE: RefCell<State> = RefCell::new(State::new());
 }
 
@@ -105,7 +105,7 @@ struct State {
     offer: Option<Offer>,
     queue_len: usize,
     log: Vec<String>,
-    watch: bool,
+    watch: super::PublishedFlag,
     consumed_append: bool,
 }
 
@@ -117,14 +117,24 @@ impl State {
             offer: None,
             queue_len: 0,
             log: Vec::new(),
-            watch: false,
+            watch: super::PublishedFlag::off(),
             consumed_append: false,
         }
     }
 }
 
+#[inline(always)]
 fn interested() -> bool {
-    ACTIVE.with(Cell::get) || STATE.with(|s| s.borrow().watch)
+    if !super::possibly_active() {
+        return false;
+    }
+    interested_slow()
+}
+
+#[cold]
+#[inline(never)]
+fn interested_slow() -> bool {
+    ACTIVE.with(super::PublishedFlag::get) || STATE.with(|s| s.borrow().watch.get())
 }
 
 fn tag(st: &State) -> String {
@@ -144,7 +154,7 @@ fn log(st: &mut State, line: impl AsRef<str>) {
 
 #[inline]
 fn active_lease() -> bool {
-    ACTIVE.with(Cell::get)
+    ACTIVE.with(super::PublishedFlag::get)
 }
 
 pub fn guest_grant() -> bool {
@@ -324,7 +334,7 @@ pub fn on_end() {
 }
 
 pub fn watch_pairs(enabled: bool) {
-    STATE.with(|cell| cell.borrow_mut().watch = enabled);
+    STATE.with(|cell| cell.borrow().watch.set(enabled));
 }
 
 #[inline]
@@ -368,7 +378,17 @@ pub fn note_successful_arm(row: &str, phase: &str, prompt: &str) {
     });
 }
 
+#[inline(always)]
 pub fn siblings_mode() -> bool {
+    if !super::possibly_active() {
+        return false;
+    }
+    siblings_mode_slow()
+}
+
+#[cold]
+#[inline(never)]
+fn siblings_mode_slow() -> bool {
     active_lease()
         && STATE.with(|cell| {
             cell.borrow()
@@ -440,8 +460,17 @@ fn pending_for(guard: &Guard) -> bool {
     })
 }
 
-#[inline]
+#[inline(always)]
 pub fn note_physical_insert(kind: &'static str, generation: u64, entry_kind: &'static str) {
+    if !super::possibly_active() {
+        return;
+    }
+    note_physical_insert_slow(kind, generation, entry_kind)
+}
+
+#[cold]
+#[inline(never)]
+fn note_physical_insert_slow(kind: &'static str, generation: u64, entry_kind: &'static str) {
     if !active_lease() {
         return;
     }
@@ -537,8 +566,17 @@ fn precheck(addr: usize, kind: &'static str) -> Result<(), &'static str> {
     })
 }
 
-#[inline]
+#[inline(always)]
 pub fn offer_front<T: ?Sized>(frame: &Arc<T>, decoded_value: bool) -> OfferGuard {
+    if !super::possibly_active() {
+        return OfferGuard { armed: false };
+    }
+    offer_front_slow(frame, decoded_value)
+}
+
+#[cold]
+#[inline(never)]
+fn offer_front_slow<T: ?Sized>(frame: &Arc<T>, decoded_value: bool) -> OfferGuard {
     if !active_lease() {
         return OfferGuard { armed: false };
     }
@@ -572,8 +610,17 @@ impl Drop for OfferGuard {
     }
 }
 
-#[inline]
+#[inline(always)]
 pub fn note_front_kind(entry_kind: &'static str) {
+    if !super::possibly_active() {
+        return;
+    }
+    note_front_kind_slow(entry_kind)
+}
+
+#[cold]
+#[inline(never)]
+fn note_front_kind_slow(entry_kind: &'static str) {
     if !active_lease() {
         return;
     }
@@ -583,7 +630,17 @@ pub fn note_front_kind(entry_kind: &'static str) {
     });
 }
 
+#[inline(always)]
 pub fn note_disposed(addr: usize) {
+    if !super::possibly_active() {
+        return;
+    }
+    note_disposed_slow(addr)
+}
+
+#[cold]
+#[inline(never)]
+fn note_disposed_slow(addr: usize) {
     if !active_lease() {
         return;
     }
@@ -624,7 +681,17 @@ pub fn note_disposed(addr: usize) {
     }
 }
 
+#[inline(always)]
 pub fn retire_decode_fault() {
+    if !super::possibly_active() {
+        return;
+    }
+    retire_decode_fault_slow()
+}
+
+#[cold]
+#[inline(never)]
+fn retire_decode_fault_slow() {
     if !active_lease() {
         return;
     }
@@ -638,7 +705,17 @@ pub fn retire_decode_fault() {
     });
 }
 
+#[inline(always)]
 pub fn retire_abandon(addr: usize) {
+    if !super::possibly_active() {
+        return;
+    }
+    retire_abandon_slow(addr)
+}
+
+#[cold]
+#[inline(never)]
+fn retire_abandon_slow(addr: usize) {
     if !active_lease() {
         return;
     }
@@ -676,7 +753,17 @@ pub fn transfer_suffix(birth: u64, custody: u64) {
     });
 }
 
+#[inline(always)]
 pub fn begin_concrete<F: 'static>(frame: &Arc<F>) -> ClaimGuard {
+    if !super::possibly_active() {
+        return ClaimGuard { resume: None };
+    }
+    begin_concrete_slow(frame)
+}
+
+#[cold]
+#[inline(never)]
+fn begin_concrete_slow<F: 'static>(frame: &Arc<F>) -> ClaimGuard {
     if !active_lease() {
         return ClaimGuard { resume: None };
     }

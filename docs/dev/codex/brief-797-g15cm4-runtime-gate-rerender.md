@@ -1008,3 +1008,47 @@ a ruling, never a scope cut.
 **The boundaries.** Brief 798 stays held until the R4 receipt. Q25's thirteen rows remain named
 stops; 744/745/746 stay held; CM5 has no authorization. No tag, no network, no new dependency and
 no new `unsafe` in `rum-core`/`rum-runtime`.
+
+## Director gate (c171) — the R4 install is accepted
+
+Ruling 823. The director installed the 190 armed paths (165 overlays, nine additions, the
+additions manifest, 15 carried or adopted): 18 files changed in 0.290 s after every live parent
+hash was rechecked, and the live `crates/` subtree `6bab0093…`/4,700 equals the sealed armed
+image. `verify_install.py`, re-run after every gate, reports `R4 LIVE VERIFY PASS mapping=190
+witnesses=5 postimages=4 real_promotion=zero_overlay anchors=2 chain=152 tables=7
+tree_delta=1+20`: the seven sealed tables are live == armed (F13 `cc02870a…`, promoted
+`7c546372…`, class `d183c38e…`, chain `130f3040…`, overlays `0eed88cb…`, additions
+`ed54d95e…`, mutants `adeb7e4b…`), the five rendered production witnesses and four 791
+postimages equal the certified bytes, the real promotion is the inherited `4337950c…`, and the
+live promoted table carries both anchors. The seal reconstruction over the whole tree gives
+5,871 live files against 5,851 armed: the 20 extras are post-seal brief documents, `TODO.md`
+is the single content delta, nothing is missing, and `crates/` is byte-identical.
+
+The live workspace repeat (2,107.435 s, raw exit 101, tree unchanged) gives top-level
+4,552/12/71 over 69 binaries. Per binary it differs from the 793 host reference only in
+rum-runtime's lib (+2 passed: the two credited publication tests) and `tests/suspension_oracle.rs`
+(−2/+2); the failure set is the ten accepted reds plus `cm_p0543_receipts_exact` and
+`cm_receipts_exact`, the ignored set is the exact 71, and the six remnants, six compiler
+children, hygiene and the source-auth control are green. Reconciled 4,554/10/71; naive
+4,555/10/71 over 70 result lines — the credited Amendment 9 bar exactly.
+
+The two lane reds were environmental: the closeout deleted the lane binary's compile-time
+source root `.temp/brief-797/amendment6/stable-probe/active` (tree `98c91345…`/5,851). They
+reproduced at `--test-threads=1` (rc 101, 95.415 s, `SourceIdentity`/`Program`), the exact tree
+was restored, `cm_p0543_receipts_exact` went green at one thread (103.741 s), and both names are
+green at the standard eight threads in the fourteen-selector gate (14/0/0, 776 filtered,
+1,277.320 s). The lane source is returned to the protocol state (absent).
+
+The focused gates: flag-on LP 5/0/0 (29.492 s), flag-on class-lease 197/0/0 (593 filtered,
+27.937 s), fmt clean (2.937 s), F48 2/0/0 (38.793 s). The standing replays on the live copy at
+the sealed population: class `source_rows=29907` (`c7bf6393…`); F13 `cc02870a…` byte-identical
+with `falsifiers=62`; both promotion configurations (review and check, true and false, all rc 0)
+producing `f630f153…`/`0c0a4013…`; ownership 7/7, LP01 10/10 and typed-slot 15/15
+byte-identical to the live/armed tables and to the worker's certified archives.
+
+Deviation, accepted and disclosed: the workspace and focused gates ran before the seven
+replays; the order guard was secured by the pre-suite sealed-table equality and by every replay
+reproducing its installed artifact byte-for-byte. Budget: 5,352.949 s charged (workspace
+2,107.435, focused 2,528.992, replays 716.523); director R4 top-up 5,200 → 5,600 (+400 from the
+carve's unallocated remainder); cumulative 31,643.810; unspent 247.051 returns. Brief 798 is
+unblocked with the receipts in `.temp/director/r4-install/`.

@@ -9,8 +9,8 @@ UnknownConstruct	crates/rum-runtime/src/cm740_probe/class_rows.rs	1	1	source fil
 UnknownConstruct	crates/rum-runtime/src/cm740_probe/q25_ownership.rs	86	14	rum_runtime::cm740_probe::q25::Slot.type_id: foreign representation std::any::TypeId: TypeId
 UnknownConstruct	crates/rum-runtime/src/lib.rs	13	5	conditional public input signature test_logical_profile_snapshot
 UnknownConstruct	crates/rum-runtime/src/lib.rs	18	5	conditional public input signature test_logical_profile_reset
-UnknownConstruct	crates/rum-runtime/src/lib.rs	2352	17	rum_runtime::cm740_probe::ProfileKey.thread: foreign representation std::thread::ThreadId: std :: thread :: ThreadId
-UnknownConstruct	crates/rum-runtime/src/lib.rs	2871	24	rum_runtime::cm740_probe::OperationConstruction._construction/std::option::Option[Own]/arg0: manual storage/destructor protocol: std :: mem :: ManuallyDrop < ConstructionGuard >
+UnknownConstruct	crates/rum-runtime/src/lib.rs	2522	17	rum_runtime::cm740_probe::ProfileKey.thread: foreign representation std::thread::ThreadId: std :: thread :: ThreadId
+UnknownConstruct	crates/rum-runtime/src/lib.rs	3041	24	rum_runtime::cm740_probe::OperationConstruction._construction/std::option::Option[Own]/arg0: manual storage/destructor protocol: std :: mem :: ManuallyDrop < ConstructionGuard >
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/bridge.rs	13	14	rum_runtime::runtime::accounting_mode::bridge::CallbackValue.receipt: unresolved/ambiguous type (): M :: Receipt
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/counter.rs	22	13	rum_runtime::runtime::accounting_mode::counter::Counter.pushes: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize
 UnknownConstruct	crates/rum-runtime/src/runtime/accounting_mode/counter.rs	23	11	rum_runtime::runtime::accounting_mode::counter::Counter.pops: foreign representation std::sync::atomic::AtomicUsize: AtomicUsize

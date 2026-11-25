@@ -49,15 +49,27 @@ impl<F: TypedFrame> FrameAbandon for TypedAdapter<F> {
 
 impl<F: TypedFrame> ErasedFrame for TypedAdapter<F> {
     fn resume(&self, session: &mut Session, input: &mut Result<Slot, EvalError>) -> Action {
-        let _resumed = crate::cm740_probe::control::resume::<F, _>(self);
-        crate::cm740_probe::class_lease::note_typed_consumer(
-            self as *const Self as *const () as usize,
-            std::any::type_name::<F>(),
-        );
-        if crate::cm740_probe::driven() {
-            return Self::resume_cm740_driven_620(self, session, input);
+        if crate::cm740_probe::possibly_active() {
+            return Self::resume_with_probe_state(self, session, input);
         }
+        Self::resume_ordinary_body(self, session, input)
+    }
 
+    fn output_boundary(&self) -> OutputBoundary {
+        self.inner.output_boundary()
+    }
+
+    fn inner_frame(&self) -> &dyn FrameRootTrace {
+        self.inner.as_ref()
+    }
+}
+impl<F: TypedFrame> TypedAdapter<F> {
+    #[inline(always)]
+    fn resume_ordinary_body(
+        &self,
+        session: &mut Session,
+        input: &mut Result<Slot, EvalError>,
+    ) -> Action {
         let decoded = match std::mem::replace(input, Err(EvalError::Abort)) {
             Ok(slot) => match decode::<F::Input>(slot, CodecKey::new()) {
                 Ok(value) => Ok(value),
@@ -82,15 +94,24 @@ impl<F: TypedFrame> ErasedFrame for TypedAdapter<F> {
         action
     }
 
-    fn output_boundary(&self) -> OutputBoundary {
-        self.inner.output_boundary()
+    #[cold]
+    #[inline(never)]
+    fn resume_with_probe_state(
+        &self,
+        session: &mut Session,
+        input: &mut Result<Slot, EvalError>,
+    ) -> Action {
+        let _resumed = crate::cm740_probe::control::resume::<F, _>(self);
+        crate::cm740_probe::class_lease::note_typed_consumer(
+            self as *const Self as *const () as usize,
+            std::any::type_name::<F>(),
+        );
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_620(self, session, input);
+        }
+        Self::resume_ordinary_body(self, session, input)
     }
 
-    fn inner_frame(&self) -> &dyn FrameRootTrace {
-        self.inner.as_ref()
-    }
-}
-impl<F: TypedFrame> TypedAdapter<F> {
     #[cold]
     #[inline(never)]
     #[allow(dead_code)]

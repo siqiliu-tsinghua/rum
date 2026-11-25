@@ -52,7 +52,7 @@ fn begin_with_row(queued: bool, row: &str, program: &str) {
         let source_authority = std::rc::Rc::new(RunAuthority {
             episode: pair.episode.clone(),
             queued,
-            current: std::cell::Cell::new(true),
+            current: PublishedFlag::active(),
         });
         assert!(l.run_authority.replace(source_authority.clone()).is_none());
         l.current = Some(Run {
