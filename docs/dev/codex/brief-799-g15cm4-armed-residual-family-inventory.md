@@ -1,6 +1,13 @@
 # Brief 799 — G15-CM4: the armed residual family and the whole-panel capture qualification (design-only)
 
-Status: design-only, `Scope: NONE — no source change`. Dispatch after ruling 827 (gate c175).
+Status: design-only, `Scope: NONE — no source change`. Dispatched after ruling 827 (gate c175);
+Amendment 1 after ruling 828 (gate c176): the first attempt's Stage A STOP is correct — this
+brief, not the evidence, was wrong in three places (the negative-family count, the unguarded
+label's two sites, the flag-formation PC count) and a fourth phrase presumed a calibration that
+does not exist. The corrections are marked "(Amendment 1)" below. The stopped attempt's Stage A
+entry work is retained under `.temp/brief-799/` (`evidence-index.json`, `entry-verdicts.log`,
+`pinned-files.log`, `index-final.log`, `bar-pin-lines.log`); you may re-verify and reuse it, but
+every pin you cite must be re-read, and the STOP rules below are unchanged.
 Every statement here is a pinned input from the retained evidence; a mismatch is a STOP.
 
 ## Goal
@@ -84,9 +91,12 @@ no build and start no capture.
   `exclusive_Ir_per_visit=4` at `guarded/replace.rs:38` and `:775` in all draws, typed 4+3,
   slow/lexical self Ir 0, perturbator 0.
 - Family leaders: `eval_core` +11,786,999 (`evaluate_inner_unstable` +11,795,606 self Ir over
-  1,055,174 visits; +11.19/visit; opcode class "lexical profiler flag address formation"
-  +14,124,585 vs control +33; flag-formation PCs 33/33/58 base/control/new; qualified per-iteration
-  prices +19/+19/+53/+21 vs both controls); `definitions` +9,725,686 (`collect_upvalue_candidate_symbols`
+  base/new/control visits 1,055,174/1,055,154/1,055,196, the two body rows +11,680,078 and
+  +115,528; +11.19/visit as the per-arm mean 249.25 → 260.44; opcode class "lexical profiler flag
+  address formation" +14,124,585 vs control +33; flag-formation PCs 33/33/57 base/control/new per
+  `residual-family-proof.json` `flag_formation_PCs`, i.e. 24 extra PCs in `new` — not 58: the 58
+  is the `pattern-unguarded` absolute new price per iteration, 5 base + 53 delta (Amendment 1);
+  qualified per-iteration prices +19/+19/+53/+21 vs both controls); `definitions` +9,725,686 (`collect_upvalue_candidate_symbols`
   665,503 new-only visits, inclusive +52,180,871); `allocation and reclamation` +7,482,626
   (range [−3,922,868, +8,302,460]; control [−8,648,385, −3,121,525]); `pattern_matching` +6,273,782
   (`BindingSnapshot::capture` 426,421 new-only, inclusive +33,261,184); `scoping` +2,100,570
@@ -123,8 +133,9 @@ evidence per field), and the narrative in the report's `sections`:
    `evaluator-opcode-classes.tsv`, `residual-disassembly/`, and the `real`/`armed` source trees:
    - identify the exact instruction groups composing the "lexical profiler flag address formation"
      class and their source constructs (the flag, its accessor, the branch, the inlined region);
-   - explain the 33→58 PC difference: the same function body text
-     (`function_sha256=002608d0…`) compiles with 25 extra flag-formation PCs in `armed`; name the
+   - explain the 33→57 PC difference: the same function body text
+     (`function_sha256=002608d0…`) compiles with 24 extra flag-formation PCs in `armed`
+     (Amendment 1); name the
      source/definition/attribute difference between the two trees that changed the inlining or the
      constant-folding (the class-form additions around `eval_core/mod.rs`; the lexical-profiler
      definitions; any `#[inline]`/`#[cold]`/statics/atomic initialization), with `path:line` and the
@@ -151,7 +162,10 @@ evidence per field), and the narrative in the report's `sections`:
    control side −8.6M..−3.1M), which allocation sites move, and whether the movement is downstream
    of families 1–2 or independent (allocator-layout coupling). Name the retained evidence rows.
 4. **The remainder.** Assign every nonzero body of the 1,743-row table and every nonzero family,
-   including the small positives and the twelve negatives, to one of the constructs above, the
+   including the small positives and all seventeen negatives (19 positive / 57 zero / 17 negative
+   families totalling −3,722,338; the reducer's `fam[-12:]` display hides `call_preparation` −480,
+   `model` −460, `substitution` −210, `alloc::string` −30 and `std::sys` −3, which sum to −1,183)
+   — Amendment 1 — to one of the constructs above, the
    loader, or a named measurement artifact — no anonymous balancing cell. State the zero-unknown
    result (`bodies assigned = 1,743`, `families = 93`, `unassigned = 0`) or STOP naming the exact
    missing measurement.
@@ -160,7 +174,9 @@ evidence per field), and the narrative in the report's `sections`:
 
 1. **`stringreplace-pattern-unguarded`.** Read the recipe
    (`.temp/brief-798/callgrind/amendment3/stringreplace-pattern-unguarded-{50,100}.rum`) and the
-   two sites (`crates/rum-stdlib/src/strings/patterns/search/guarded/replace.rs:38` and `:775`):
+   two sites (`crates/rum-stdlib/src/strings/patterns/search/rules.rs:59` and `:751`; the
+   `guarded/replace.rs:38`/`:775` PCs belong to the two guarded labels, whose multiplicities are
+   1,1 and whose per-iteration price is 8 — Amendment 1):
    show the exact statement(s) that produce the 1 and 3 visits per iteration, why the multiplicity
    is 3 (three matches), and that each visit pays the same 4 Ir. State the correct per-iteration
    budget rule (per-visit price × declared multiplicity, with the multiplicity derived from the
@@ -170,8 +186,13 @@ evidence per field), and the narrative in the report's `sections`:
    corrected rule, state the verdict and its evidence. Do not pass the label silently.
 2. **The qualification rule.** From the nine receipts and `a3_capture.py`'s decision code:
    - reconstruct the accounting: `busy − (user + sys)` per attempt, its rate per second of window,
-     and the same ratio on the 144 short label captures; find the 795 calibration that produced
-     0.069595 s and quote the window shape it was measured on;
+     and the same ratio on the 144 short label captures; trace every retained adoption of the
+     0.069595 s number (the 798 harness hard-codes it at `a3_entry.py:89` and `a2_report.py:82`;
+     the only occurrence in the sealed trees is the brief-622 workload `elapsed_seconds` value),
+     quote each provenance line, and state from evidence whether it was ever a calibrated
+     sibling-load bound and on which window shape. The provenance section above is explicit that
+     no 795 calibration exists in the retained evidence; if your searches find none, say so and
+     name the searches rather than asserting one (Amendment 1);
    - decide from evidence whether the 0.079–0.118 s is kernel-side accounting of the capture itself
      or competing load (the pre-launch windows show episodic 0.08–0.21 s bursts on CPU 14, so
      competition exists at times; prove which component the during-run figure contains — if the
