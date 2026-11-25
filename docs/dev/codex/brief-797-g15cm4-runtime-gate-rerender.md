@@ -577,3 +577,79 @@ ruling): carve **19,900 s** = focused 13,900 (A 1,400 / A2 1,500 / B 3,800 / C 4
 400; director R4 leg 2,000) + workspace 6,000 + epoch 0; remaining focused **11,114.945 s**. The
 793 same-shape remainder (F13 start to seal end, 01:50:08–02:25:49) measured 2,141 s. Unspent
 returns; a projected overrun stops for a ruling, never a scope cut.
+
+## Amendment 4 (gate c164) — the Stage B.3 historical-identity STOP is correct; the class getter's historical closure is restored and every source-dependent proof replays
+
+The Amendment 3 resume (unit `brief-797-cdx-20261125-120908-2676003`, fork of
+`01a21099-0601-7271-8f24-952473a7c14a`, `gpt-6.2-astra` max, 12:09:08–12:24:48, 940.062 s
+charged to report; rc 0, peak 1,245,569,024 B, oom 0; `report.py check 797 --stage amendment3`
+OK with 572 citations; 18 checks = 16 PASS + 1 FAIL + 1 NA; 2 measurements PASS; 6 deviations;
+1 question `class-lease-capture`; verdict STOP) is accepted through the Stage B.3 STOP.
+Verified and credited: the four 793 parent trees and 101 pins at entry and exit (baseline
+`fa01b3d1…`/5,842; real `d703b165…`→`d0d956cf…`; disabled `60ad65ed…`→`ce7f40ed…`; armed
+`c04bbf82…`→`9dd31a24…`; each 5,851 files, debris 0; second emissions unchanged at `99f032a8…`,
+`eb2fd226…`, `c7618f0e…`); the three pinned prior reports (`0b4b3bfb…`, `dafd90f3…`,
+`cadeed35…`); the real promotion carry `4337950c…` equal to baseline with the one-byte
+falsifier reproduced (offset 0 → `2b564378…`) and the routing line; the four exact ignored
+ownership reviews green 4/0 on both arms after the one stale adapter witness position (141:1
+recorded, 162:1 verified) was refreshed from native output through the successor 776 extractor,
+with the historical input `33651b33…` retained and the successor input `62544b6b…` differing
+by that single line; the seven whole tables per arm (armed 10,382 rows: 9,587 exact, 790
+position by mapped line, 2 position by source owner and occurrence order, 3 change records;
+`Local=2`; `new_UnknownHostPayload=0`; `unowned=0`; the disabled diagnostic's two declared
+`cfg!` rows at `lib.rs:27:32` and `lib.rs:27:51`); and the two explained new `UnknownConstruct`
+rows (the `Debug` derive at `lib.rs:38:5`, the `panic!` at `lib.rs:1443:9`).
+
+**The finding is correct.** The parent's `class_lease.rs:42:33` is
+`    super::ENABLED && FLAG.with(|flag| flag.get()) != 0`, a closure occurrence recorded in the
+parent's `unknown_captures.tsv` line 8. The authored source supplies
+`FLAG.with(super::PublishedFlag::get)`, a function item, so the row is gone: historical
+occurrences 3, current 2 (the setter closures at 154:15 and 159:15 survive). The producer is
+purely syntactic — `visit_expr_closure` records every closure from its `move`-ness and
+parameter spelling — so the row's existence depends only on the source form, and Stage B.3's
+bar fires correctly.
+
+**The ruling.** The brief mandates the prototype's `PublishedFlag` lifecycle for the class
+`FLAG`, not the getter's argument spelling. The lifecycle is untouched either way: `FLAG` stays
+`super::PublishedFlag` with `off()`, `active()`, `get`, `set` and `Drop` preserving the six
+balanced owner lifetimes, and the two setter closures keep their form. The parent's closure is
+semantically identical (a zero-capture closure and a `fn(&PublishedFlag) -> bool` both inline to
+the same read), so the historical form is restored: line 42 becomes
+`    super::ENABLED && FLAG.with(|flag| flag.get())` (no `!= 0`; `get` returns `bool`),
+preserving line 42, column 33 and the closure text. Nothing else in the five authored files
+changes, and the source certificate records the one-expression declared delta from the
+prototype, as it already records the three formatter reflows. Accepting the removal instead
+would be an exception to the identity contract the 775/776 reconciliation exists to enforce,
+bought for an incidental prototype spelling; it is rejected.
+
+**Resume.** Continue in session `01a21099-0601-7271-8f24-952473a7c14a` from the accepted state
+(the entry checkpoint `9dd31a24…`/`ce7f40ed…`/`d0d956cf…`, the carry verdicts, the refreshed
+witness input and the reconciled seven tables) by re-authoring the class getter as above and
+replaying everything that depends on the source bytes before Stage B.4: the two independent
+byte-identical source emissions in all four roles (baseline stays `fa01b3d1…`); the source
+certificate with the declared prototype delta, the 122-row classifier projection, the 303-site
+surface, the MIR/guard verdicts (the adapter is untouched), the four 791 postimages, the
+514/54-of-568 frame split and the census `405:58–405:68`; F13 on armed, disabled and real with
+F55 adoption and the promotion carry re-attested verbatim; and the four ownership reviews on
+both arms with the seven-table reconciliation required to show
+`lost_historical_UnknownConstruct=0`, the same two disclosed additions,
+`new_UnknownHostPayload=0`, `unowned=0`, `changed_records=794` (792 positions + 2 additions),
+every row bound, both `Local` dispositions and the historical exclusions preserved, and the
+disabled diagnostic's two declared `cfg!` rows. The witness input stays at the refreshed
+`162:1` form; a repeat witness mismatch is a STOP, not another refresh. Then Stage B.4–B.7
+unchanged (class discoveries, the 20,625-row class table, negatives, LP01, the 875 bindings,
+the typed-slot receipts; chain and additions; the promotion reviews on armed and disabled in
+both configurations; the 165-row overlay seal, 151 mutants, nine additions, four role pins,
+`overlay_digest.py`, idempotence), then Stages C and D unchanged, including the 122-row scene
+table and `PROBE CLOSURE facades=4 outside=3 attributed=3 unexplained=0`. The resumed dispatch
+writes `report-amendment4.json` and passes `python3 scripts/report.py check 797 --stage
+amendment4`; the four earlier reports stay pinned.
+
+**Budget.** Charged: 838.952 + 549.586 + 704.873 + 691.644 + 940.062 = **3,725.117 s**. Stage B
+has spent 1,631.706 s of 3,800 s. Amendment 4 tops up Stage B **3,800 → 5,000 s** (+1,200 s,
+funded by an explicit top-up under the 2026-11-19 ruling; the rest-of-B.3 replay measures
+≈1,200 s from this run's components and B.4–B.7 ≈1,740 s from 793's same-shape remainder less
+this brief's measured F13+ownership share): carve **21,100 s** = focused 15,100 (A 1,400 /
+A2 1,500 / B 5,000 / C 4,800; worker D 400; director R4 leg 2,000) + workspace 6,000 +
+epoch 0; remaining focused **11,374.883 s**, of which Stage B has 3,368.294 s left. Unspent
+returns; a projected overrun stops for a ruling, never a scope cut.

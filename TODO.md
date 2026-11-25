@@ -3987,6 +3987,46 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 164 — brief 797's Amendment 3 Stage B.3 STOP on the lost historical
+    class-getter closure is correct: the closure is restored in the authored source and every
+    source-dependent proof replays before Stage B.4 (2026-11-25): unit
+    `brief-797-cdx-20261125-120908-2676003` (fork of `01a21099-…`, `gpt-6.2-astra` max,
+    12:09:08–12:24:48, 940.062 s charged to report; rc 0, peak 1,245,569,024 B, oom 0;
+    `check 797 --stage amendment3` OK 572 citations; 18 checks = 16 PASS + 1 FAIL + 1 NA; 2
+    measurements; 6 deviations; 1 question `class-lease-capture`; four earlier reports pinned
+    `0b4b3bfb…`/`dafd90f3…`/`cadeed35…`). Verified: entry=exit role trees (baseline
+    `fa01b3d1…`/5,842; real `d703b165…`→`d0d956cf…`; disabled `60ad65ed…`→`ce7f40ed…`; armed
+    `c04bbf82…`→`9dd31a24…`, 5,851 files, debris 0) and the 101 pins; the real carry `4337950c…`
+    equal to baseline with the one-byte falsifier reproduced (offset 0 → `2b564378…`) and the
+    routing line; the four exact ignored ownership reviews green 4/0 on both arms after one stale
+    witness position 141:1→162:1 refreshed from native output (historical input `33651b33…`
+    retained, successor `62544b6b…` one line different); the seven tables per arm (armed 10,382
+    row-map rows: 9,587 exact, 790 mapped-line + 2 owner/order position, 3 change records;
+    `Local=2`; no new host payload; no unowned row; disabled diagnostic `lib.rs:27:32`/`27:51`)
+    and the two explained additions (`Debug` at `lib.rs:38:5`, `panic!` at `lib.rs:1443:9`). The
+    STOP: `class_lease.rs:42:33` lost the `|flag|` closure — parent
+    `FLAG.with(|flag| flag.get()) != 0` (3 occurrences; row `unknown_captures.tsv` line 8) vs
+    authored `FLAG.with(super::PublishedFlag::get)` (2); the producer is purely syntactic
+    (`visit_expr_closure`), so the row exists only if the closure does; `changed_records=795`,
+    `lost_historical_UnknownConstruct=1` both arms. Ruling: the brief mandates the prototype's
+    `PublishedFlag` lifecycle, not the getter's argument spelling; the lifecycle
+    (`off`/`active`/`get`/`set`/`Drop`, six balanced owners) and the two setter closures stay, and
+    the zero-capture closure and function item inline identically, so line 42 is restored to
+    `super::ENABLED && FLAG.with(|flag| flag.get())` (no `!= 0`; `get` returns `bool`), preserving
+    line/column and closure text, with the one-expression declared prototype delta in the source
+    certificate; accepting the removal is rejected as an unjustified exception to the 775/776
+    identity contract. Resume replays everything source-dependent (two byte-identical emissions in
+    four roles, baseline `fa01b3d1…`; certificate/122-row projection/303-site surface/MIR-guard/
+    postimages/frame split/census; F13 ×3 with F55; carry re-attested; ownership with
+    `lost_historical_UnknownConstruct=0`, same two additions, `changed_records=794`, `Local=2`,
+    no witness refresh — a repeat mismatch is a STOP), then B.4–B.7 and C/D unchanged, writing
+    `report-amendment4.json` and passing `check 797 --stage amendment4`. Scope: git clean, 0 files
+    outside `.temp/brief-797/` except the dispatch log; 462 entries (461 added, `PROGRESS.md`
+    modified). Budget: charged 2,785.055 + 940.062 = 3,725.117 s; B 3,800→5,000 (+1,200 top-up) →
+    carve 21,100 = focused 15,100 (A 1,400 / A2 1,500 / B 5,000 / C 4,800; D 400; R4 2,000) +
+    workspace 6,000; funded 1,231.45 returned + 17,668.55 + 1,000.00 + 1,200.00 top-ups;
+    remaining focused 11,374.883 s; resume via `CDX_FORK=01a21099-…`. Brief 798 stays held.
+
   - G15-CM4 continuation 163 — brief 797's Amendment 2 Stage B.2 STOP on the real role is correct:
     the zero-overlay receipt control carries the baseline promotion inventory by role contract, its
     regenerated F13 stays, and Amendment 3 resumes Stage B at 19,900 s (2026-11-25): unit
