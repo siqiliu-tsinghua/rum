@@ -3987,6 +3987,39 @@ Status checkpoint: 2026-11-14. The committed tree runs through:
     Residual + 0 Lost; 51 owners and five source duties Open; CHANGELOG.md and S10 blocked; CM5
     unauthorized; 745/746 held; sealed c76–c99 stays sealed.
 
+  - G15-CM4 continuation 162 — brief 797's second Stage A STOP is correct: the Boolean helper
+    drops the resumed-frame guard before both `Some` observations — the guard is owned by the
+    cold gated path and the ordinary body keeps one `#[inline(always)]` definition — and
+    Amendment 2 resumes in the same session (2026-11-25): unit
+    `brief-797-cdx-20261125-110822-2643829` (fork of `01a21099-…`, `gpt-6.2-astra` max,
+    11:08:22–11:17:32, ≈550 s dispatch wall; rc 0, peak 2,055,196,672 B, oom 0; `check 797
+    --stage amendment1` OK 101 citations; 4 checks = 2 PASS + 1 FAIL + 1 NA; verdict STOP; 4
+    deviations; 1 question `guard-owner`; first report `report.json` pinned `0b4b3bfb…`).
+    Reproduced: the helper binds `let _resumed = control::resume::<F,_>(self)` and returns only
+    `driven()`, so `ResumeScope::drop` restores `RESUMED` before `resume_cm740_driven_620`'s
+    observe conjunct and the body's post-decode `control::active("Some")` (the disabled role's
+    semantic `Some` likewise); the parent's MIR keeps `_4: Option<ResumeScope>` to the return
+    blocks (331/340/357) while the helper drops `_2` inside itself (69/143); the owner's control
+    contract reads `scoped_frame=lost disabled_required=InternalContinuationSome[5]
+    armed_required=5` against the parent's PASS. Ruling: the guard is returned, but its owner is
+    the cold gated function `resume_with_probe_state` (order `control::resume` →
+    `note_typed_consumer` → `driven()` → driven call or body), and the ordinary body has one
+    definition `resume_ordinary_body` (`#[inline(always)]`, sha `dc859d7c…`) inlined at both call
+    sites, so the undriven entry is the load, its branch and the body with no call and no probe
+    state — holding an `Option<ResumeScope>` in `resume` was rejected as off-by-default state and
+    a drop region in the hot frame. Amendment 1's helper, its name and its `no resume_ordinary`
+    clause are superseded, as is ruling 813's rejection of the shared body. The 794 projection is
+    now 122 rows (97 diffs, 25 extensions, 26 shapes, 14 owners: the 116 unchanged, the three
+    typed digest refreshes, `resume` gate, `resume_ordinary_body` hook, `resume_with_probe_state`
+    observations), re-derived in Stage A and required to match the Stage C scene; closure
+    `PROBE CLOSURE facades=4 outside=3 attributed=3 unexplained=0` decides. Scope: git clean, 0
+    files outside `.temp/brief-797/` except the dispatch log; 35 changes (34 added, `PROGRESS.md`
+    modified). Budget: the two dispatches charged 1,388.538 s; Stage A re-allocated 1,400 (+ the
+    88.538 overrun) plus A2 1,500; carve 18,900 = focused 12,900 (A 1,400 / A2 1,500 / B 2,800 /
+    C 4,800; D 400; R4 2,000) + workspace 6,000; funded 1,231.45 returned + 17,668.55 top-ups;
+    resume via `CDX_FORK=01a21099-…`, writing `report-amendment2.json` and passing `check 797
+    --stage amendment2`. Brief 798 stays held until 797's R4.
+
   - G15-CM4 continuation 161 — brief 797 STOPs correctly at Stage A: the armed parent is 243,786
     bytes (243,761 is the disabled role) and the measured adapter duplicates the 970-byte ordinary
     body; both ruled — Stage B.1 corrected and the adapter re-shaped to one body with a cold

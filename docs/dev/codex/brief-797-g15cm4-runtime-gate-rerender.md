@@ -52,7 +52,7 @@ language and embedding contracts unchanged. Safe Rust and existing dependencies 
 | Authoring target in the successor renderer | Sealed carrier (one-based data row) | Required change |
 | --- | --- | --- |
 | `crates/rum-runtime/src/lib.rs` | `overlays.tsv` row 5 | Author publication, the six independent ownership transitions, cold predicates, recorder entry guards and the balance tests. Change the helper template as well as the carried module. |
-| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | `overlays.tsv` row 109 | Test publication before the original three pre-decode probe operations; re-read after decode at the original control observation; the ordinary body stays single and the observations move to a cold helper (the shape below). |
+| `crates/rum-runtime/src/runtime/suspension/typed/adapter.rs` | `overlays.tsv` row 109 | Test publication before the original three pre-decode probe operations; re-read after decode at the original control observation; the ordinary body keeps one `#[inline(always)]` definition and the resumed-frame guard is owned by the cold gated path through both branches (the shape below). |
 | `crates/rum-runtime/src/cm740_probe/class_lease.rs` | `additions.tsv` row 1 | Count the independent class flag, preserving its enabled check and inactive return values. |
 | `crates/rum-runtime/src/cm740_probe/q25_ownership.rs` | `additions.tsv` row 3 | Count ACTIVE and the independent watch flag separately; preserve explicit capability consumption and teardown. |
 | `crates/rum-runtime/src/cm740_probe/tests/cm743_route_a_falsifiers.rs` | `additions.tsv` row 9 | Construct the test authority through the same publication owner. |
@@ -100,32 +100,47 @@ another thread's publication may add slow work but can never remove an outstandi
 
 ## The typed adapter shape (a departure is a STOP)
 
-The ordinary body stays **single**, exactly as the parent has it; only the entry gains the gate
-and the three pre-decode observations move into a cold helper. The driven decision is the
-helper's return value:
+The guard returned by `control::resume` restores the previous `RESUMED` frame when it drops. The
+parent holds that guard to the end of `resume`, so the driven branch's
+`control::active("Some")` and the ordinary body's post-decode observation both run with the
+resumed frame in place. The gated shape keeps exactly that ownership while the undriven entry
+carries no probe state: the guard is owned by the cold gated function, and the ordinary block
+keeps one definition that both callers inline.
 
 ```rust
 impl<F: TypedFrame> ErasedFrame for TypedAdapter<F> {
     fn resume(&self, session: &mut Session, input: &mut Result<Slot, EvalError>) -> Action {
-        if crate::cm740_probe::possibly_active() && self.run_cm740_probe_observations() {
-            return Self::resume_cm740_driven_620(self, session, input);
+        if crate::cm740_probe::possibly_active() {
+            return Self::resume_with_probe_state(self, session, input);
         }
-        // The parent's 970-byte ordinary body, byte-identical (sha dc859d7c…):
-        // decode …, the sole token mint, control::active("Some"), resume, option-slot print, action.
+        Self::resume_ordinary_body(self, session, input)
     }
     // output_boundary, inner_frame unchanged.
 }
 
 impl<F: TypedFrame> TypedAdapter<F> {
+    // The parent's 970-byte block, byte-identical (sha dc859d7c…): decode …, the sole token
+    // mint, control::active("Some"), resume, option-slot print, action. One definition; inlined
+    // at both call sites so the undriven entry carries no call and no probe state.
+    #[inline(always)]
+    fn resume_ordinary_body(&self, session: &mut Session, input: &mut Result<Slot, EvalError>) -> Action {
+        // <the block, unchanged>
+    }
+
+    // The gated path owns the resumed-frame guard from the first observation to the end of both
+    // branches, exactly as the parent's local did.
     #[cold]
     #[inline(never)]
-    fn run_cm740_probe_observations(&self) -> bool {
+    fn resume_with_probe_state(&self, session: &mut Session, input: &mut Result<Slot, EvalError>) -> Action {
         let _resumed = crate::cm740_probe::control::resume::<F, _>(self);
         crate::cm740_probe::class_lease::note_typed_consumer(
             self as *const Self as *const () as usize,
             std::any::type_name::<F>(),
         );
-        crate::cm740_probe::driven()
+        if crate::cm740_probe::driven() {
+            return Self::resume_cm740_driven_620(self, session, input);
+        }
+        Self::resume_ordinary_body(self, session, input)
     }
 
     #[cold]
@@ -137,13 +152,23 @@ impl<F: TypedFrame> TypedAdapter<F> {
 }
 ```
 
-No `resume_ordinary` may be introduced and no second copy of the ordinary block may exist; the
-Stage C source witness records the block's single occurrence and its sha. The fast path is the
-entry load, its branch and the body with no call in between; the cold helper runs the three
-observations in the parent's order and returns the driven decision. `resume_cm740_driven_620`
-stays exactly as the parent has it.
+**Guard ownership (a departure is a STOP).** The `ResumeScope` returned by `control::resume`
+must be a live local of `resume_with_probe_state` across both the driven call and the ordinary
+body, and drop on every return path after the return value is computed. `resume`'s undriven
+path must construct, hold and drop no probe guard and no probe state: no `Option<ResumeScope>`
+local, no drop region, no call in the hot frame. The MIR witness records the guard's drop blocks
+in `resume_with_probe_state`, the absence of any guard local in `resume`, and the parent's drop
+sites for comparison. The owner-written control contract must now pass: the disabled role's
+`InternalContinuationSome[5]` requirement and the armed route's `5` are restored.
 
-## Stage A — source authority and publication (1,000 s)
+**Single block.** No second copy of the ordinary block may exist: it has exactly one definition,
+`resume_ordinary_body`, and the Stage C source witness records its single occurrence and its
+sha. The undriven entry is the load, its branch and the inlined body with no call in between;
+the open branch calls the cold function, which runs the three observations in the parent's
+order and then either the driven call or the same body. `resume_cm740_driven_620` stays exactly
+as the parent has it.
+
+## Stage A — source authority and publication (1,400 s; Amendment 2 adds a 1,500 s resume allowance)
 
 1. Authenticate the 793 handoff (`sealed-trees.tsv`): baseline `fa01b3d1…`/5,842, armed
    `c04bbf82…`/5,851, disabled `60ad65ed…`/5,851, real `d703b165…`/5,851, each debris-free.
@@ -159,8 +184,12 @@ stays exactly as the parent has it.
    files. Verify original and successor spans independently of the serializer. Keep the 16-row
    historical ordinary allowance and the four Q25 inserted regions separately certified.
 3. Author the shape above into the carried module and the typed adapter shape of the next section.
-   Close the 303-site inventory in the successor sources, and record the adapter's single
-   occurrence of the 970-byte ordinary block with its sha (`dc859d7c…`).
+   Close the 303-site inventory in the successor sources, record the adapter's single occurrence
+   of the 970-byte ordinary block with its sha (`dc859d7c…`) and its function, and re-derive the
+   frozen 794 classification on the amended eight-path sources in paired scratch views before the
+   render: write the amended disposition table (122 rows as itemized in Stage C) and record the
+   classifier's own emitted labels verbatim. A row outside that itemization or a missing row is a
+   STOP before the render.
 4. Keep the two publication tests runnable in the default parallel workspace. The scratch balance
    cases require a zero global count; the control case requires `RUM_CM740_SEMANTIC=Some` and
    `RUM_CM740_OMIT=Some`. Run each exact body in a fresh test process: a test-only parent wrapper
@@ -253,16 +282,19 @@ regenerated bytes.
   fixtures. Record the precise driven boundary, all exits and the ledger comparison.
 - Re-run the 794 classifier and its same-name multiset and mutation controls on new armed versus
   new real. Require `ws=0`, all 21 hot matches, zero missing/unmatched, the four session facades
-  and exactly three attributable `Local` witnesses. The direct projection is **121 rows**: 116
-  unchanged, three typed control digest refreshes (`enter`, `drop`, `is_active`), one rebound
-  `resume`, one new residual cold helper `run_cm740_probe_observations` (the original ordered
-  observations; same `typed resume observations` shape and owner) — 96 diffs, 25 extensions, 26
-  shapes, 14 owners. The `resume` row keeps the `active("Some")` post-decode hook and gains the
-  entry gate; no row is added for a body copy. A different row count, a differently named
-  residual or any unexplained difference is a STOP before acceptance. Rebind all
-  postimage-dependent witnesses to the final scene. The required line is `PROBE CLOSURE facades=4
-  outside=3 attributed=3 unexplained=0`. Check `host_payload_ledger.rs/check_entry` and
-  `reconcile.rs/is_local_construct` and `reconcile_falsifier_disposition` explicitly.
+  and exactly three attributable `Local` witnesses. The direct projection is **122 rows**: 116
+  unchanged, three typed control digest refreshes (`enter`, `drop`, `is_active`), and the typed
+  adapter's three rows — `resume` (diff: the entry publication gate and the two dispatches;
+  rebound span and detail), `resume_ordinary_body` (diff: the single post-decode
+  `control::active("Some")` observation, same `typed resume observations` shape and owner as the
+  baseline `resume` row), and `resume_with_probe_state` (diff: the original ordered observations,
+  owning the resumed-frame guard through both branches; the baseline cold-helper name and
+  description) — 97 diffs, 25 extensions, 26 shapes, 14 owners. The scene table must equal the
+  Stage A projection; a row outside this itemization, a missing row or any unexplained difference
+  is a STOP before acceptance. Rebind all postimage-dependent witnesses to the final scene. The
+  required line is `PROBE CLOSURE facades=4 outside=3 attributed=3 unexplained=0`. Check
+  `host_payload_ledger.rs/check_entry` and `reconcile.rs/is_local_construct` and
+  `reconcile_falsifier_disposition` explicitly.
 - Follow 793 §6 against the final role pins: the six historic red-to-green selectors, full
   typed-slot 10/0/1 per arm, the P0543 lane with nine changed manifests, two configurations ×
   three roles, six cold primary builds, two disabled restores, twelve source-auth receipts, six
@@ -323,14 +355,15 @@ P2416 and P2418. Briefs 744/745/746 remain held. CM5 has no authorization.
 
 ## Budget
 
-Focused **11,300 s** (A 1,300 / B 2,800 / C 4,800; worker D 400; director R4 leg 2,000) +
-workspace **6,000 s** (worker 2,800; director 3,200) + epoch 0 = **17,300 s**. Funded by the
-**1,231.45 s returned by brief 796** plus an explicit **16,068.55 s** top-up under the standing
-2026-11-19 ruling → reserve 0 at the carve. Stage A's +300 s is Amendment 1's top-up after the
-first dispatch spent 838.952 s of its 1,000 s at the Stage A STOP. The measured basis is in
-ruling 812 (6,652.395 s of same-shape inputs plus successor authoring, independent emissions,
-repeated live work and attribution). Unspent returns; a projected overrun stops for a director
-ruling, never a scope cut.
+Focused **12,900 s** (A 1,400 — the 1,300 s carve plus the 88.538 s closeout overrun of the two
+dispatches; A2 1,500 / B 2,800 / C 4,800; worker D 400; director R4 leg 2,000) + workspace
+**6,000 s** (worker 2,800; director 3,200) + epoch 0 = **18,900 s**. Funded by the **1,231.45 s
+returned by brief 796** plus explicit top-ups of **16,068.55 s** (the original carve) and
+**1,600.00 s** (Amendment 2) under the standing 2026-11-19 ruling → reserve 0 at the carve. The
+two dispatches charged 838.952 s and 549.586 s = **1,388.538 s** of Stage A. The measured basis
+is in ruling 812 (6,652.395 s of same-shape inputs plus successor authoring, independent
+emissions, repeated live work and attribution). Unspent returns; a projected overrun stops for a
+director ruling, never a scope cut.
 
 ## Report format
 
@@ -395,3 +428,72 @@ workspace 6,000; epoch 0). The first dispatch's ≈840 s is charged to the origi
 The resumed dispatch writes `report-amendment1.json` (the first `report.json` stays untouched and
 pinned) and passes `python3 scripts/report.py check 797 --stage amendment1`. Unspent returns;
 a projected overrun stops for a ruling, never a scope cut.
+
+## Amendment 2 (gate c162) — the guard-lifetime STOP is correct; the guard is owned by the cold gated path and the ordinary body keeps one inline definition
+
+The Amendment 1 resume (unit `brief-797-cdx-20261125-110822-2643829`, fork of
+`01a21099-0601-7271-8f24-952473a7c14a`, `gpt-6.2-astra` max, 11:08:22–11:17:32, ≈550 s dispatch
+wall; rc 0, peak 2,055,196,672 B, oom 0; `report.py check 797 --stage amendment1` OK with 101
+citations; 4 checks = 2 PASS + 1 FAIL + 1 NA; 4 deviations; 1 question; verdict STOP) stopped on
+`resume-ownership` before any render, suite or inventory. The finding is correct and is accepted.
+
+**The finding.** Amendment 1's helper returns only the driven decision, so its local
+`Option<ResumeScope>` drops at the helper's return and restores the previous `RESUMED` frame
+before either consumer. The recorded MIR line is `AMENDED MIR STOP guard=_2 driven=bb14
+drop=bb13 return=bb1 caller_guard=absent postdecode_Some=after_drop driven_Some=after_drop`, and
+the owner's control contract records `CONTROL CONTRACT STOP outermost_previous=None
+restored_before=Some scoped_frame=lost disabled_required=InternalContinuationSome[5]
+armed_required=5` against `PARENT SCOPE PASS owner=TypedAdapter::resume
+both_branches=covered route=StatusFunctionProjectionFrame row=Some`. My own check agrees: the
+parent's MIR keeps `_4: Option<ResumeScope>` and drops it on the return blocks after `driven()`
+(bb paths 331/340/357), while the amended helper drops `_2` inside itself on both return paths.
+The lost observation is the driven route's `observe` conjunct and the ordinary body's post-decode
+`control::active("Some")`, including the disabled role's semantic `Some` behavior. The parent's
+`ResumeScope::drop` restores `RESUMED` to `previous` and forgets the bound frame; nothing else
+re-establishes it.
+
+**The shape.** The guard must be returned to its owner, but the owner is not `resume`: holding an
+`Option<ResumeScope>` in `resume` would put always-present probe state and a drop-tested guard
+region in the undriven hot frame — off-by-default state and per-visit cost, which the hard line
+forbids and which only LLVM's discretion could remove, not the structure. So the ordinary block
+keeps one definition, `resume_ordinary_body`, marked `#[inline(always)]` and inlined at both call
+sites, and the cold gated function `resume_with_probe_state` owns the guard from the first
+observation through both branches. The undriven entry is then the load, its branch and the
+inlined body with no call and no probe state; the open branch calls the cold function. The body
+block is byte-identical (970 B, sha `dc859d7c…`) and the observation order
+(`control::resume` → `note_typed_consumer` → `driven()` → driven call or body) is the parent's.
+This supersedes Amendment 1's D2 helper shape, its `run_cm740_probe_observations` name and its
+`no resume_ordinary` clause, and ruling 813's rejection of a shared ordinary body: with the guard
+lifetime proved, the extraction is the structural necessity, and it is the shape the 796
+prototype measured (4 at the entry and 3 at the post-decode check) with the duplication removed.
+
+**Consequences bound into the amendment.**
+- The MIR witness records the guard's drop blocks in `resume_with_probe_state`, no guard local in
+  `resume`, and the parent's drop sites; the owner's control contract must pass both the disabled
+  `InternalContinuationSome[5]` and the armed `5` requirements.
+- The 794 classifier re-derives on the amended sources in Stage A and on the emitted scene in
+  Stage C; the projection is **122 rows** (97 diffs, 25 extensions, 26 shapes, 14 owners): the
+  116 unchanged, the three typed control digest refreshes, `resume` (entry gate, rebound span and
+  detail), `resume_ordinary_body` (the single post-decode hook; the baseline `resume` row's shape
+  and owner) and `resume_with_probe_state` (the original ordered observations; the baseline
+  cold-helper name and description). A row outside the itemization, a missing row or any
+  unexplained difference is a STOP; `PROBE CLOSURE facades=4 outside=3 attributed=3
+  unexplained=0` still decides.
+- Stage C re-measures the final binary under the unchanged bars (≤4 per independent check, ≤3
+  with a reused address, ≤8 per guarded-hit iteration, ≤8 per typed adapter visit; the
+  post-decode check may reuse the address (3) or reload it (4); above 4 or above 8 is a STOP).
+  The undriven adapter entry must show no call to `resume_ordinary_body` and no guard local; the
+  driven ledger stays 26 lines / 1,741 bytes / `a2c48c90…` and the mid-request Print callback
+  stays false, true, true.
+
+**Resume and budget.** Resume in session `01a21099-0601-7271-8f24-952473a7c14a` on the pinned 793
+inputs; the first two reports stay pinned (`report.json` = `0b4b3bfb…`; `report-amendment1.json`
+written) and the resumed dispatch writes `report-amendment2.json` and passes
+`python3 scripts/report.py check 797 --stage amendment2`. Amendment 2 adds a **1,500 s** Stage A
+allowance and absorbs the 88.538 s closeout overrun in Stage A's allocation: the carve is now
+focused **12,900 s** (A 1,400 / A2 1,500 / B 2,800 / C 4,800; worker D 400; director R4 leg
+2,000) + workspace **6,000 s** + epoch 0 = **18,900 s**, funded by 1,231.45 returned plus
+**17,668.55 s** of explicit top-ups. The two dispatches charged 1,388.538 s. Unspent returns; a
+projected overrun stops for a ruling, never a scope cut.
+
+Co-Authored-By: Claude Code <noreply@anthropic.com>
