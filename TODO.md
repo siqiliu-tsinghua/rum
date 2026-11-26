@@ -15004,3 +15004,49 @@ accounting and quoting the exact diff; all nine calibrations are re-taken under 
 807c/807d/807e cells being historical evidence. The 807/807a/807b/807c/807d/807e records stay
 sealed and read-only; the two class-form decisions still return to the user at the fresh
 residual.
+
+## 2026-11-26 — G15-CM4 fresh epoch: brief 807f stopped at Stage E (gate c199); defect #36 and brief 808
+
+Brief 807f (unit `brief-807-cdx-20261126-184820-3928546`, 18:48:20–19:22:38, 275,748 tokens,
+peak 2,579,685,376 B, oom 0, oom_kill 0, rc 0) froze the v2.5 policy first at `08c03054…` (0444,
+monotonic 406,216.534 s, `calibration_runs=0 measurement_runs=0`; exactly the five briefed leaf
+substitutions against 807e's `457e5a77…`), re-verified 229 pins (drift 0) and the three 807a ELFs,
+carried the ten tools with only `passive.py`/`calibrate.py`/`capture.py` changed inside their
+declared allowances, passed both sampler preflights (`TREE PREFLIGHT PASS burn=1.000001242
+child_last_seen=1.015329106 n_tasks=2 delta=+0.002981353 cap=0.040000000`), took all nine
+calibrations on their first attempt (three quiet ADMIT E14 +0.090289 / +0.069643 / +0.095704; six
+red REJECT with the v2.3 proof), and admitted all nine hardware draws at 100.00 % running with
+n_tasks=2 and tree deltas 9.1–18.9 ms ≤ 40 ms: base median 16,005,773,875, new median
+16,028,956,417, control median 16,014,411,180, `new − base = +23,182,542`, control interval
+[−1,002,341, +13,155,370], **10,027,172 above the upper edge**; Stage E stopped. The timing panel
+took its 12 passes (8 of 119 flagged, none recovered); the four StringReplace prices are exactly
+8 / 8 / 16 / 8 Ir per iteration in all four draws; the four falsifiers fire (driven ledger
+`a2c48c90…`, 26 lines / 1,741 B); the nine whole profiles reconcile with zero arithmetic remainder
+(representative +18,018,645, nine-pair median +18,018,645, range [10,679,546, 24,478,984]); the
+fresh joint price is 13,633,633 against the accepted 13,556,424 (+77,209, reported as data); the
+38 publication gates read 366,888 / 366,916 / 366,929 visits and 1,464,035 / 1,464,147 / 1,464,199
+Ir. Scope: 5,897 live files, entry == exit `f22f4dfb…`, zero changes, zero `.git-attempts`; seal
+1,881 artifacts verified, check OK 1,637; charge 1,999.404 s (A0 148.442/200, A2 443.007/1,500,
+C 513.005/4,200, D 387.607/4,000, E 9.209/2,500, F 498.134/800); cumulative 14,647.010 of 28,400;
+pool **13,752.999 s**.
+
+Ruling 851 accepts the STOP and names my defect #36: the brief made the fresh envelope a pass bar
+and demanded a native PC attribution. The known residual exceeds the control band's upper edge by
+construction (the 804 ledger held 19,057,870 as conditional remainder), and the native excess is
+the translated excess plus the instrument gap (23,182,542 − 18,018,645 = 5,163,897), inside the
+control arm's own same-code gap (8,637,305 − 218,763 = 8,418,542) — explained, not unattributed.
+The corrected rule: the explanation bar is the translated zero-remainder accounting plus a native
+gap no larger than the control's same-code gap; the envelope is a determination, never a pass
+condition. The stable residual (nine-pair exact or near-exact): eval_core +8,005,829..+8,107,809
+(`evaluate_inner_unstable'2` +7,970,633 at unchanged visits, +7.61/visit), pattern_matching exactly
++6,273,782 (`BindingSnapshot::capture` +33,261,184 new-only against callers −27,988,402: the
+inlining flipped), the 38 gates 1,464,035..1,464,199 (class-form necessary; user decision),
+scoping/adapters +2,100,570/−2,050,876 (net +0.05M), libc +1.53..2.10M (data-dependent), and small
+items; the three draw-dependent families (allocation −9.3..+5.2M, builtin_catalog −15k..+6.83M,
+evaluation_cache −1.25..+2.21M) are read by their nine-pair ranges, never the representative
+pairing. The two class-form decisions are restated: the 38 publication gates' 1,464,055 Ir (fund or
+redesign) and the fastpath's 41,712 inside the 51,790 band (exclude, per 804). Brief 808 is ordered
+design-only: the second residual-repair inventory (the stable mechanisms, candidate placements with
+isolation falsifiers, the J0/J1 joint-build design with the closure-corrected price bars, and the
+drafts of the measurement/landing brief). The class campaign's Stage C/C10 readmission and the 744
+restart stay behind a qualified epoch.

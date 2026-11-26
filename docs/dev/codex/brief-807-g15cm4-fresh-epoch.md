@@ -316,3 +316,42 @@ from the last live set, agreement within `2/HZ × 2`). Brief 807f resumes the ep
 carrying the ten tools with only `passive.py` changed in the tree accounting and quoting the
 exact diff. The 807, 807a, 807b, 807c, 807d and 807e records stay sealed and read-only. The two
 class-form decisions remain the user's at the fresh residual.
+
+## Director gate (2026-11-26, gate c199)
+
+Brief 807f stopped correctly at Stage E: the fresh native envelope did not close. The v2.5
+policy froze first at `08c03054…` (0444, 7,758 B, monotonic 406,216.534 s, zero calibration
+and zero measurement runs; exactly the five briefed leaf substitutions against 807e's
+`457e5a77…`), the 229 pins re-verified (drift 0), the three reused 807a ELFs re-hashed, the
+ten tools carried with only the three declared diffs, both sampler preflights green
+(`TREE PREFLIGHT PASS burn=1.000001242 child_last_seen=1.015329106 n_tasks=2
+delta=+0.002981353 cap=0.040000000`), and all nine calibrations passed on their first
+attempt (three quiet ADMIT E14 +0.090289 / +0.069643 / +0.095704; six red REJECT with the
+v2.3 proof: burn 1.000000033–1.000000446 s contained inside the job, E 1.020–1.128,
+F 1.000–1.029, injected-CPU sliding maximum ≥ 0.511). All nine hardware draws admitted at
+100.00 % running with n_tasks=2 and tree deltas 9.1–18.9 ms ≤ 40 ms: base median
+16,005,773,875, new median 16,028,956,417, control median 16,014,411,180,
+`new − base = +23,182,542`, control interval [−1,002,341, +13,155,370], 10,027,172 above
+the upper edge. The timing panel took its 12 passes (8 of 119 labels flagged, none
+recovered); the four StringReplace prices are exactly 8 / 8 / 16 / 8 Ir per iteration in all
+four draws; the four falsifiers fire (driven ledger `a2c48c90…`, 26 lines / 1,741 B); the
+nine whole profiles reconcile with zero arithmetic remainder (+18,018,645 representative,
+nine-pair median +18,018,645, range [10,679,546, 24,478,984]); the fresh joint price is
+13,633,633 against the accepted 13,556,424 (+77,209, reported as data); the 38 publication
+gates read 366,888 / 366,916 / 366,929 visits and 1,464,035 / 1,464,147 / 1,464,199 Ir.
+Scope: 5,897 live files, entry == exit `f22f4dfb…`, zero changes, zero `.git-attempts`;
+seal 1,881 artifacts verified, check OK 1,637; charge 1,999.404 s (A0 148.442/200,
+A2 443.007/1,500, C 513.005/4,200, D 387.607/4,000, E 9.209/2,500, F 498.134/800); cumulative
+14,647.010 of 28,400; pool 13,752.999 s. Ruling 851 accepts the STOP and names my defect
+#36: the brief made the envelope a pass bar and demanded a native PC attribution. The known
+residual exceeds the control band's upper edge by construction, and the native excess is
+the translated excess plus the instrument gap (5,163,897), which is inside the control
+arm's own same-code gap (8,637,305 − 218,763 = 8,418,542) — explained, not unattributed.
+The corrected rule: the explanation bar is the translated zero-remainder accounting plus a
+native gap no larger than the control's same-code gap; the envelope is a determination.
+The stable residual is eval_core +8.0M (the evaluator instance, unchanged visits),
+pattern_matching +6.27M exactly (the capture's inlining flipped), the 38 gates 1.46M (user
+decision), and small items; the three draw-dependent families (allocation, builtin_catalog,
+evaluation_cache) are read by their nine-pair ranges, never by the representative pairing.
+Brief 808 is ordered design-only: the second residual-repair inventory. The class
+campaign's Stage C/C10 readmission and the 744 restart stay behind a qualified epoch.
