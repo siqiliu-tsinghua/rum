@@ -320,3 +320,21 @@ pool 6,041.152 s; cumulative 22,358.848 of 28,400. 810 is cancelled; the residua
 closes; the 38 publication gates' 1,464,035–1,464,239 Ir and the fastpath's 41,712 within 51,790
 return to the user; the class campaign's C/C10 and the 744 restart remain behind a qualified
 epoch.
+
+## Director decision (2026-11-26, c205, ruling 857) — publication funded, fastpath excluded
+
+The user adopted the director's recommendation on the two items returned at the c204 gate:
+
+- **Publication — funded.** The 38 publication gates' 1,464,035–1,464,239 Ir (37 independent at
+  4 Ir/visit + 1 reused at 3; 363,371 × 4 + 3,517 × 3 = 1,464,035; the draw-dependent Set gate
+  raises the top to 366,939 visits / 1,464,239) are booked as the class form's necessary,
+  invariant cost. No redesign line is opened.
+- **Fastpath — excluded per 804.** The evaluator fastpath's 41,712 Ir differential inside the
+  51,790 band is not booked and the placement is not landed; it stays an excluded general
+  optimization, and a default-path optimization line remains a separate future decision.
+
+The decision record and its revisit conditions are committed at
+`docs/dev/residual-cost-decisions.md`; the working record is `.temp/director/ruling-857.md`
+(c205). The D.1/D.2 residual account now has no open user items; the class campaign's Stage
+C/C10 readmission and the 744 restart are unblocked, subject to the campaign epoch being built
+and qualified under the v2.5 budget.

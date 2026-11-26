@@ -15199,3 +15199,25 @@ pool **6,041.152 s**; cumulative **22,358.848 of 28,400**. The residual repair l
 38 publication gates' 1,464,035–1,464,239 Ir and the fastpath's 41,712 within 51,790 return to
 the user; the class campaign's C/C10 readmission and the 744 restart remain behind a qualified
 epoch; the 798–809 evidence must survive until the epoch's final gate.
+
+## 2026-11-26 — the class-form cost decisions made (c205, ruling 857): publication funded, fastpath excluded per 804
+
+The two items returned at the c204 gate are decided by the user on the director's recommendation,
+and the decision point is documented for future reconsideration at
+`docs/dev/residual-cost-decisions.md`:
+
+- **Publication — funded.** The 38 publication gates' 1,464,035–1,464,239 Ir (37 independent ×
+  4 Ir/visit + 1 reused × 3; 363,371 × 4 + 3,517 × 3 = 1,464,035; the draw-dependent Set gate
+  raises the top to 366,939 visits / 1,464,239) are booked as the class form's necessary,
+  invariant cost; the amount is identical across armed and real (briefs 807f/809; 13/13 cells,
+  slow self 0). No redesign line.
+- **Fastpath — excluded per 804.** The placement saves ≈44.6M in both roles but its
+  armed-minus-real differential 41,712 sits inside the 51,790 same-code band (20,120 armed +
+  31,670 real), so it cannot be booked as a repair; it is a default-path optimization outside
+  this line, not landed, no credit. A separate optimization line stays a future user decision.
+
+The D.1/D.2 residual account has no open user items. The class campaign's Stage C/C10 readmission
+and the 744 restart are unblocked by these decisions and remain subject to the campaign epoch
+being built and qualified under the v2.5 budget. 810 stays cancelled, the residual repair line
+closed, the 798–809 records sealed. No charge (a decision); pool 6,041.152 s; cumulative
+22,358.848 of 28,400.
