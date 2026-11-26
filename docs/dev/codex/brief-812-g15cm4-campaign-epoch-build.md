@@ -945,3 +945,183 @@ proofs, qualification and immutable readbacks. Seal the complete payload and rep
 the live exit census and charge every operation. Class admissions, member cells, new catches
 and schedule credit are zero. The thirteen Q25 STOPs, the 744/745/746 holds and CM5 hold carry
 forward.
+
+## Director gate (c215, 2026-11-27) — the Stage C warning STOP is accepted: the 754 contract was measured on the pre-install sources, the post-install roles carry the D.2 diagnostic delta (real +1, each copied arm +11), and Amendment 6 re-bases the contract on the authenticated 797 release transcripts
+
+The Amendment 5 attempt (unit `brief-812-cdx-20261127-032622-8556`) ran 2026-11-27
+03:26:22 → 04:08:55, rc 0, 427,211 tokens, peak 3,119,050,752 B, oom 0/0, verdict STOP.
+I verified: the seal 91,654 payloads / 14,828,579,933 B `b3e24975…` (all re-hashed equal)
+and the 14 envelope rows; report `eb3177d5…` (1,218,807 B; check OK 5,833), PROGRESS
+`b5531ba7…`, summary `971eb70d…`, charge `1b87434b…`; A0 PASS (the Amendment 4 record, the
+four stopped records, the 811 design, the four 806e parents, the three four-edit children,
+the retained F13, and the two c214 appends as strict appends — `TODO.md` `d6591d96…` +
+2,866 B = `e47d04d0…`, the brief `482cb33b…` + 21,957 B = `1df00ae3…`); entry == exit
+`02856220…` at 5,903 paths (0 added, 0 removed, 0 changed); `git status` clean at HEAD
+`6d8254e8`; zero live changes, git invocations, member cells, catches or schedule credit.
+Stage B delivered and I read its code: the three role deltas are exactly `mod.rs`
+`b29014ce…`→`63ead2d1…`, `tests.rs` `cde634e6…`→`9f5aea09…` and `manifests.rs`
+`e8740d51…`→`0b7ffbe5…` (2,390 B, producer `2cfcea30…`, independent spec equal); the six-leg
+buildability matrix with the real/no-default E0432 at `reconcile.rs:10:5`; the five native
+F13 cells (`04cd25a9…`, `4b2daee7…` ×2, `349f6783…` ×2) with 62+62 controls each and the
+independent projection equal; the real zero-overlay promotion `4337950c…` and the four C01
+review ordering artifacts with green check rounds; the seven standing replays (2,422 class
+keys both modes, census 1,195 = 10/1,147/38/16, chain 152, LP01 1,115, 15 typed receipts);
+`MODEL PASS cases=211 positives=37 negatives=174` and the six producer guards; the R4 render
+(190 rows, 165 overlays, 330 images, two serializers, `bd1e9479…`/14,068,709 B, additions 0);
+the observer re-freeze (`3953aa9f…`, `08c03054…`, 151/28/3/7/113, 9,060/9,511/151). Stage C
+stopped on `default-real`: Cargo exit 0 and a fresh release ELF `ac842db5…` (73,107,432 B,
+`cache_hit=false`, 104.101 s) with one `dead_code` warning (`class_provenance` at
+`coverage/bindings.rs:112`) against the frozen allowance 0. I reproduced the chain: the 754
+contract (`2377f246…`) is the pre-install surface (0/130/132 on a 5,806-file presentation
+`a5084dd2…`); the real `coverage/bindings.rs` `faa15189…` is the 806e parent file and has
+the declaration with zero callers (each copied arm's `25ea77fa…` has two class-form callers);
+the 797 post-install release transcript (log `e3a8ee84…`, tree `022d60af…`) already records
+exactly 1 real, 141 disabled and 143 armed diagnostics, and every post-754 addition sits in
+a file byte-identical to the final source (real 1 `dead_code`; per arm 2 `Cell`
+`unused_imports` + 9 `dead_code`). Charge 2,544.393 s (A0 62.153/200, B 2,149.892/6,822.697,
+C 123.477/7,800; D/E/F 0; pre-A0 55.526, close 153.345); unspent 32,078.303622 s; cumulative
+33,459.807325 of 65,538.110947. **Defect #48 (mine):** the warning bar re-applied the
+pre-install contract to the post-D.2 sources and was unsatisfiable for every role; the
+resolving record was already a catalogue input. **Amendment 6** re-bases the contract on the
+authenticated post-install transcripts and continues C–F at 27,776.523 s, no top-up.
+
+## Amendment 6 — C–F on the post-install warning contract (implementation continuation)
+
+**Scope.** The accepted Amendment 5 B products stand and the Stage C STOP is accepted. No
+source re-edit and no design change: the lane model, the source presentation, the rendered
+tables, the observer freeze and the standing replays are as sealed. This amendment re-bases
+the one input that stopped Stage C — the warning contract — and then completes Stage C and
+stages D–F exactly as Amendment 5 wrote them (brief 812 lines 164–304, Amendment 1 lines
+415–417 and the Amendment 5 stage texts).
+
+**Material, confinement and clocks.** Use `W=$PWD/.temp/cm4-campaign-epoch`,
+`A5=$W/amendment-5`, and a fresh `N=$W/amendment-6` for every writable role, review, target,
+control, renderer, label and receipt. `SA=crates/rum-stdlib/tests/suspension_oracle/mutations/source_auth`.
+The live workspace, the 811 record, the four 806e roots, the stopped records and all
+Amendment 4/5 payloads stay read-only. Preserve Amendment 5's offline Rust 1.85.0, locked
+dependencies, edition 2024, eight jobs and test threads, single release codegen unit,
+disabled incrementality and memory-growth instrumentation, clean environment, scratch temp
+directories, 16 GiB bound, serial work and process-group timeouts. Pin cwd, build/target
+roots, exact argv and environment, monotonic start/finish, raw output, status, features,
+compiler and any binary for each operation. Use closed stdin. The original one-thread
+controls and serial OOM accounting apply. Stop at the first unsupported discrepancy,
+projected overrun or stage deadline. Record each entry and exit CLOCK, the next immutable
+cell and attributable live changes. Only the director operates version control.
+
+**Stage A0 (300 s) — closure by hash identity.** Authenticate the Amendment 5 record after
+its director relocation: the seal `b3e249751d10ac011c9aa29f74b573a9d7a5533577c6ccee8f79aa780ed4abe2`
+(91,654 payloads / 14,828,579,933 B; re-hash every payload and the 14 envelope rows; the
+report and PROGRESS are at `.temp/director/812-stop-5/report.json` `eb3177d5…` and
+`PROGRESS.md` `b5531ba7…`, re-hashed equal); charge `1b87434b…`; the four 806e parents
+(baseline `cb9205a6…`/5,842; real `dda9146e…`; disabled `30cd48fc…`; armed `df0db63c…`/5,851
+each), the three four-edit children (`689b9188…`, `f9661a93…`, `450b9e2f…`), the retained
+real/default F13 `8d6ba3f0…` with receipt `d20465a0…` and raw `6a376127…`, the 811 design
+`da2fdf55…`/30 payloads/632 pins; the five native F13 cells `04cd25a9…`, `4b2daee7…` (both
+disabled modes), `349f6783…` (both armed modes); the render tables (`overlays.tsv` `bd1e9479…`
+/14,068,709 B, `mutants.tsv` `32bb4f7f…`, `additions.tsv` `33478d6e…`, `source_schema.txt`
+`015ca3c3…`), the R4 ledger `05f3cf3b…`, the ten-output record, the observer manifest
+`50cc4a95…`; the final role trees (`b0bdcee9…`/`084f8cc8…`/`d5267244…`) with their freeze
+manifests (`8ae746d2…`/`318ef7c7…`/`cbd1bd3c…`). Reconcile the live census against
+`02856220…` at 5,903 paths, permitting only this gate's two strict appends from the c214
+state — `TODO.md` (`e47d04d0…`, 1,129,911 B) and this brief (`1df00ae3…`, 73,595 B) — each
+verified by slicing at the old size, matching the old prefix hash, and printed as
+`C215 APPEND PASS` with old prefix, appended range and new hash. Any other difference stops.
+Print `A0 PASS`.
+
+**Stage C (7,676.523 s).** Stages C–F of Amendment 5 (brief 812 lines 164–304 and the
+Amendment 5 text) apply unchanged, with one re-based input and the twelve labels rebuilt
+fresh in this attempt.
+
+1. **Warning contract v2.** For each role build the catalogue from two authenticated
+   authorities: the 754 report's warning policy (the `WARNING CLASS/REFERENCE/SITES` lines,
+   families and counts 0 real / 130 disabled / 132 armed, 124 parentheses per copied role)
+   and the 797 source-gate post-install release transcript for `default-<role>`
+   (`.temp/brief-797/amendment6/source-gate/builds/default-<role>.json` and its
+   `probe/logs/<key>.log`; require cargo exit 0, `--release`, no cache hit). Relocate every
+   transcript diagnostic's primary spans onto the final role files by difflib matching
+   blocks with exact source-text equality; a missing mapping, a changed source line, a
+   changed message or a changed family stops. The allowed multiset is the relocated
+   transcript set; the 754 contract (families and counts, the 124-parentheses sites rule and
+   the 0/130/132 totals) must remain a sub-multiset of it. The frozen allowed counts are
+   **real 1** (`dead_code` 1), **disabled 141** (124 `unused_parens`, 4 `unused_imports`,
+   1 `non_camel_case_types`, 2 `non_snake_case`, 1 `unused_must_use`, 9 `dead_code`) and
+   **armed 143** (the same plus 2 `unexpected_cfgs`). Record the post-754 delta per role
+   line by line (real +1 `dead_code` `class_provenance` at `coverage/bindings.rs:112`; each
+   copied arm +2 `Cell` `unused_imports` + 9 `dead_code` at `cm740_probe/class_lease.rs`,
+   `class_rows.rs`, `q25_ownership.rs`, `suspension/core.rs:708`), each with its verified
+   site, message and final file digest. Freeze the catalogue and print its digest. Nothing
+   else may be added later.
+2. **Twelve fresh labels.** Build in the Amendment 5 order (`default-real default-disabled
+   default-armed default-spot no-default-real no-default-disabled no-default-armed
+   no-default-spot lane-real lane-disabled lane-armed lane-spot`) at one stable source and
+   target path, exactly once per label, with the exact `cargo test --offline --locked -j 8
+   -p rum-stdlib --message-format=json --test suspension_oracle --no-run --release F`
+   command, 1,400 s inner and 1,495 s outer bounds, `cache_hit=false`, one release codegen
+   unit, the start/finish journal, the explicit compiler artifact and the exact ELF digest.
+   For each label the warning receipt must equal its role's frozen allowed multiset exactly:
+   no missing, no extra, no unknown family, the site and source-text checks, and the
+   parentheses counts. A warning verdict FAIL stops. For each spot force a genuine rebuild
+   at the same paths; compare each spot to real and distinguish the three role ELFs per
+   configuration. For each lane role derive the physical lane presentation from the final
+   role root with the nine exact `manifest_bytes` substitutions (the archived constructor
+   `.temp/brief-797/tools/gate/lane_build.py:9–15`), verify the nine before/after pairs and
+   the raw diff, and set the four `RUM_CM739_LANE_*` values; `lane-spot` == real. The
+   twelve-label journal carries all four lane labels; the six-build class index has only
+   ordinary labels.
+3. **Lane receipts.** Adapt the seven-field and sorted-triple wire in
+   `.temp/brief-797/tools/gate/receipts.py:34–51` to the final table and sources. Set
+   `configuration=p0543-unchecked`; check the guest/image pair for every manifest; real
+   emits zero triples, disabled and armed exactly 165; only row 128 carries the verified
+   physical lane post, every other copied triple the independently decoded ordinary arm
+   post; decode with the field/order and key/cardinality predicates at `receipts.py:53–80`
+   and require exact per-field and per-triple equality; exercise both swap directions.
+   Keep `overlays.tsv` ordinary and the two real importer ELFs ordinary.
+4. **Rust selector runs.** Stage the selector fixture at an admitted scratch root: the
+   ordinary and lane snapshots of the three roles, the twelve label ELFs and receipts,
+   `cases.tsv` with SHA-256 `b91020d7…` (205 rows) and `snapshot-order.txt` (5,851 keys).
+   Invoke the compiled selector
+   `oracle::mutations::source_auth::tests::cm_mutation_lane_authentication_controls` on the
+   built `default-real` and `no-default-real` ELFs under `scripts/run-bounded.py
+   --timeout 180 -- <mode-real-ELF> … --exact --nocapture --test-threads=8` with
+   `RUM_CM740_LANE_CONTROLS=<fixture>`; require the exact
+   `P0543 RUST MATRIX PASS cases=205 accepted=37 rejected=168 producer_guards=6
+   row128_ordinary_lane_visits=0 copied_lane_overlays=164 copied_ordinary_overlays=165
+   real_overlays=0 manifest_checks=9` line from both. Use the forced real/spot ELF
+   readbacks for binary identity. These are the two release-importer controls Amendment 5
+   left pending; the six producer-pair and wrong-root guards run at the generator boundary
+   as sealed in Amendment 4.
+5. **Carry** the separate `default-disabled` diagnostic receipt and foreign-binary
+   rejection, the four auxiliary drive builds and 20 drives, the five armed identities, the
+   disabled cohorts, the caller/fixture counts and the three memory peels; preserve the
+   private-frame E0603 falsifier; freeze the `W/control` generator/continuation/twin/
+   pure-compiler package including the two importers' fourteen signed compiler controls.
+   The eight ordinary journal labels, the independent build and the drives retain their
+   existing contracts.
+
+**Stage D (14,400 s), Stage E (3,000 s), Stage F (2,400 s).** As Amendment 5 wrote them,
+including every bound, cost and stop: the nine CLI companions and both frozen programs,
+fixed stderr and the exact 120-pair 5,519-byte normalized stdout; the six workspace cases
+with the ordered seven skip pairs, nine host groups, current target-by-target comparison,
+exact same-binary adjudications and six ledgers; the full time normalization, falsifier and
+hardware rules of brief 812 lines 223–270; the six-build subject freeze, the ordinary
+mode-specific importers, zero-build-credit controls, spots and named negatives; six fresh
+C10 runs with both importers at 0/151 on the build-only control and 1/150 on C10 (55 real
+keys, one hit, zero settlements, partial-index status 101); no lane build in the index; and
+the child epoch identity, complete payload/report seal, live exit census and continuous
+charge. Class admissions, member cells, new catches and schedule credit are zero.
+
+**Charge.** The Amendment 5 attempt charged 2,544.393377992 s of 34,622.697 (A0 62.153/200,
+B 2,149.892/6,822.697, C 123.477/7,800; D/E/F 0; pre-A0 55.526, close 153.345); unspent
+**32,078.303622008 s**; pool after the top-up 34,622.697000185 s; cumulative
+33,459.807324807 of 65,538.110947. This amendment allocates A0 300 / C 7,676.523 / D 14,400 /
+E 3,000 / F 2,400 = **27,776.523 s** of that unspent amount; **no new top-up**; the remaining
+4,301.780622 s stays unallocated. Charge is continuous from dispatch; every stage box is
+measured from its own CLOCK entry; a stage stops at its deadline.
+
+**Stops.** The thirteen Q25 STOPs are P0214, P0216, P1070, P2348, P2354, P2379, P2381,
+P2385, P2387, P2409, P2411, P2416, P2418. Briefs 744, 745 and 746 stay held; CM5 stays
+unauthorized. Stop on a pin, sourceset, warning (missing/extra/unknown family, site or
+source-text mismatch, a changed message, a changed 754 family or count, or a warning verdict
+failing), parser vector, producer, position/identity, visibility, build/spot, raw receipt,
+functional or comparison mismatch, a missing bound input, an unavailable required
+interference proof, a first failed label, a projected overrun or a stage deadline.

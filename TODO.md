@@ -15556,3 +15556,50 @@ the C10 runs and the seal. The Amendment 4 report and PROGRESS move to
 `.temp/director/812-done-5/`; the log archives. Q25's thirteen STOPs stand; 744/745/746 held;
 CM5 unauthorized; the 811 record, the 806e freeze and the preserved ancestors stay sealed to
 the campaign epoch's final gate.
+
+**2026-11-27 — c215: brief 812 Amendment 5's Stage C warning STOP is accepted (ruling 867);
+the 754 warning contract was the pre-install surface and the post-D.2 roles carry the delta,
+so the contract is re-based on the authenticated 797 release transcripts and Amendment 6
+continues C–F.** The attempt (unit `brief-812-cdx-20261127-032622-8556`, 03:26:22 → 04:08:55,
+427,211 tokens, peak 3,119,050,752 B, oom 0/0, rc 0) delivered A0 PASS (62.153 s), Stage B
+PASS (2,149.892 s: the source presentation with exactly `mod.rs` `b29014ce…`→`63ead2d1…`,
+`tests.rs` `cde634e6…`→`9f5aea09…` and `manifests.rs` `e8740d51…`→`0b7ffbe5…` per role, the
+2,390-byte table `0b7ffbe5…` from producer `2cfcea30…`, the six-leg buildability matrix with
+the real/no-default E0432 at `reconcile.rs:10:5`, the five native F13 cells `04cd25a9…`/
+`4b2daee7…`/`349f6783…` with 62+62 controls each and the independent projection equal, the
+real zero-overlay promotion `4337950c…` and the four C01 ordering artifacts with green
+check rounds, the standing replays — 2,422 class keys both modes, census 1,195 =
+10/1,147/38/16, chain 152, LP01 1,115, 15 typed receipts — `MODEL PASS cases=211
+positives=37 negatives=174` with the six producer guards, the R4 render 190 rows / 165
+overlays / 330 images / `bd1e9479…` 14,068,709 B / additions 0 / ten outputs, and the
+observer re-freeze `3953aa9f…`/`08c03054…`, 151/28/3/7/113, 9,060/9,511/151), then Stage C
+STOP on `default-real` (123.477 s): Cargo exit 0 and a fresh release ELF `ac842db5…`
+(73,107,432 B, `cache_hit=false`) with one `dead_code` warning (`class_provenance` at
+`coverage/bindings.rs:112`) against the frozen allowance 0. **The cause:** the 754 contract
+(`2377f246…`) is the pre-install surface (real 0 / disabled 130 / armed 132, a 5,806-file
+presentation `a5084dd2…`); the post-D.2 sources (5,851 keys) carry the install's diagnostics
+— the real `coverage/bindings.rs` `faa15189…` is the 806e parent file with the declaration
+and zero callers, each copied arm's `25ea77fa…` has two class-form callers — and the 797
+post-install release transcript (log `e3a8ee84…`, tree `022d60af…`) already records exactly
+1 real / 141 disabled / 143 armed, every post-754 addition in a file byte-identical to the
+final source (real +1 `dead_code`; per arm +2 `Cell` `unused_imports` + 9 `dead_code` at
+`cm740_probe/class_lease.rs`, `class_rows.rs`, `q25_ownership.rs`, `suspension/core.rs:708`).
+**Defect #48 (mine):** the warning bar re-applied the pre-install contract to the post-D.2
+sources and was unsatisfiable for every role; the resolving record was already a catalogue
+input. I verified the seal 91,654 payloads / 14,828,579,933 B `b3e24975…` (all re-hashed
+equal) and the 14 envelope rows, report `eb3177d5…` (1,218,807 B, check OK 5,833), A0
+(including the two c214 appends as strict appends: TODO `d6591d96…` + 2,866 B = `e47d04d0…`,
+brief `482cb33b…` + 21,957 B = `1df00ae3…`), entry == exit `02856220…` at 5,903 paths, git
+clean at `6d8254e8`, and the STOP chain by hand. **Charge:** 2,544.393 s of 34,622.697
+(A0 62.153/200, B 2,149.892/6,822.697, C 123.477/7,800; D/E/F 0; pre-A0 55.526, close
+153.345); unspent **32,078.303622 s**; cumulative **33,459.807325 of 65,538.110947**.
+**Amendment 6** continues at A0 300 / C 7,676.523 / D 14,400 / E 3,000 / F 2,400 =
+**27,776.523 s** of that unspent amount, **no new top-up** (4,301.780622 s stays
+unallocated): the warning contract v2 (allowed = the relocated 797 transcript per role —
+real 1, disabled 141, armed 143 — with the 754 families and counts as a required
+sub-multiset and the post-754 delta recorded line by line), the twelve fresh labels, the
+lane presentations and receipts, the two 205-case Rust selector runs on the built real
+importers (fixture `cases.tsv` `b91020d7…`), the auxiliary builds and drives, then D–F
+unchanged. The Amendment 5 report and PROGRESS move to `.temp/director/812-stop-5/`; the log
+archives. Q25's thirteen STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record,
+the 806e freeze and the preserved ancestors stay sealed to the campaign epoch's final gate.
