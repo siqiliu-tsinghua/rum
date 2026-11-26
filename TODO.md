@@ -15175,3 +15175,27 @@ frozen J0, the B2 matrix as diagnostic scratch (12 profiles), the definitive pri
 subtraction on the deduplicated nonpublication union with the 81-price interval and the b0+b1
 bar, the predeclared selection rule, the microbench A/B and the standing producers only after a
 qualified landing, and no acceptance (the 38 gates and the fastpath stay with the user).
+
+## 2026-11-26 — brief 809 DONE (gate c204, ruling 856); both placements refuted, no landing, no 810, the residual repair line closes
+
+The 809 attempt (cdx, unit `brief-809-cdx-20261126-210431-3999868`, 21:04:31–22:12:15, 422,752
+tokens, peak 3,945,791,488 B, oom 0, oom_kill 0, rc 0) is DONE with no STOP and no qualifying
+form. I re-hashed all 13,108 seal artifacts (12,194,582,583 B; 0 missing, 0 bad), all 287 pins,
+re-decoded all 39 raw profiles (30 fresh + the nine 807f J0 draws) and reproduced the union
+totals, the price statistics and the four J0 seed vectors exactly; the two placements apply
+byte-exactly to the authenticated preimages and every build parent equals the 806 role roots.
+Entry == exit at 5,899 files (exactly the three declared paths against the 808 exit); git clean
+at `950937f9`; zero `.git-attempts`, zero live source edits, zero standing replays, zero
+acceptance. **E** (closure `move`) is structurally false — the armed call boundary does not reuse
+the base, boundary price −185 against a 1,530 bar, differential +1,139,602 inside b0+b1 3,294,906
+and a zero-crossing 81-span, with both E builds costing ~12–13M more absolute on the union.
+**M** (ordinary `#[inline]`) is an exact null — price 0, the standalone capture body keeps
+426,421 calls and all 19 external witnesses, the hint inert on the 807a tree. **EM** inherits
+both. The predeclared rule lands nothing and ends the sequence without 810; the B2 diagnostic
+matrix passes its controlled columns with the stock diagonal unresolved (recorded, no price, no
+landing credit). Charge 4,019.003 s of the 6,300 s allocation (A 129.727/200, B 1,570.746/1,800,
+C 2,264.876/2,500, D 0.001/1,500, E 33.383/300; every box respected); unspent 2,281.0 s returns;
+pool **6,041.152 s**; cumulative **22,358.848 of 28,400**. The residual repair line closes; the
+38 publication gates' 1,464,035–1,464,239 Ir and the fastpath's 41,712 within 51,790 return to
+the user; the class campaign's C/C10 readmission and the 744 restart remain behind a qualified
+epoch; the 798–809 evidence must survive until the epoch's final gate.

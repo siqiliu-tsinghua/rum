@@ -284,3 +284,39 @@ arithmetic, falsifiers, decisions, the landing or no-landing record and the char
 `python3 -I scripts/report.py check .temp/brief-809/report.json`; detach the summary; seal and
 rehash; audit the exit. Return the class-form funding/redesign and the fastpath to the user; no
 acceptance.
+
+## Director gate (2026-11-26, gate c204, ruling 856) — DONE, no qualifying form, no landing
+
+The attempt (cdx, unit `brief-809-cdx-20261126-210431-3999868`, 21:04:31–22:12:15, 422,752
+tokens, peak 3,945,791,488 B, oom 0, oom_kill 0, rc 0) is **DONE**: no STOP, `report.py check 809`
+OK 471 citations (and with `--against-git`), seal 13,108 artifacts / 12,194,582,583 B (I re-hashed
+all 13,108: 0 missing, 0 bad; report `ba3a733b…` equal; detached summary equal), 287 pins re-hash
+equal, entry == exit at 5,899 files with exactly `TODO.md` and brief 808 modified and brief 809
+added against `.temp/brief-808/live-exit.json` `7aed5c5a…`, git clean at `950937f9`, zero
+`.git-attempts`, zero live source edits, zero standing replays, zero acceptance.
+
+I reproduced the measurement independently: all 39 raws (30 fresh + the nine 807f J0 draws)
+re-decoded with the retained decoder; every total and every `self_raw` cell equals the resolved
+summaries; publication attribution rebuilt from the gate asm equals theirs; the three union totals
+arrays reproduce `report.json` and the price statistics reproduce `decisions.json` (E +1,139,602,
+strictly inside b0+b1 3,294,906 and a zero-crossing 81-span; M exactly 0; EM +1,369,130 inside
+3,298,662); the four J0 seed vectors reproduce the sealed 808 pins exactly. The two placements
+apply byte-exactly (`timing.rs` `2e3d38e2…` → `fc830701…`; `core.rs` real `7f2682ec…` →
+`a175ac25…`, armed `53fe924b…` → `faf6afc9…`), and each build's parent manifest is byte-identical
+to the 806 role roots (real `dda9146e…`, armed `df0db63c…`, 5,851 files). Semantics: 120 ordered
+labels `c193d87f…` in every build on both programs; contracts, features, auxiliaries, shorts,
+rollback, load identity and the publication verification (37 invariant sites + the draw-dependent
+Set gate, slow 0) all pass; 116 attempts all admitted, bound and decoded.
+
+**Outcome:** E is refuted structurally (the armed call boundary does not reuse the base; boundary
+price −185 against 1,530; differential unseparated; both E builds cost ~+12–13M absolute on the
+union); M is an exact null (the standalone capture body keeps 426,421 calls and all 19 witnesses;
+price 0); EM inherits both. Neither single qualifies, so the predeclared rule lands nothing and
+ends the sequence without 810. The B2 diagnostic matrix passes its controlled columns with the
+stock diagonal unresolved (recorded; diagnostic only, no price, no landing credit). No brief
+defect. Charge 4,019.003 s of the 6,300 s allocation (A 129.727/200, B 1,570.746/1,800, C
+2,264.876/2,500, D 0.001/1,500, E 33.383/300; every box respected); unspent 2,281.0 s returns;
+pool 6,041.152 s; cumulative 22,358.848 of 28,400. 810 is cancelled; the residual repair line
+closes; the 38 publication gates' 1,464,035–1,464,239 Ir and the fastpath's 41,712 within 51,790
+return to the user; the class campaign's C/C10 and the 744 restart remain behind a qualified
+epoch.
