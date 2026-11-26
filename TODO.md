@@ -14926,3 +14926,38 @@ proof block, with the diff quoted. Brief 807d resumes the epoch at 12,600 s (A0 
 C 4,200 / D 4,000 / E 2,500 / F 800; reserve 4,579.990 s; no top-up); the 807/807a/807b/807c
 records stay sealed and read-only; the two class-form decisions still return to the user at
 the fresh residual.
+
+## 2026-11-26 — G15-CM4 fresh epoch: brief 807d stopped at Stage A2 (gate c197); budget v2.4 and brief 807e
+
+Brief 807d (cdx, unit `brief-807-cdx-20261126-175700-3910768`, 17:57:00–18:07, peak
+1,867,517,952 B, oom 0, oom_kill 0, rc 0) froze the v2.3 policy at `0c8d99bc…` first (0444,
+17:59:25, zero calibration and zero measurement runs; only `version`, `inputs` and the
+briefed `calibration` substitution differ from 807c), re-verified the pins and the three
+reused 807a ELFs, carried the 807c measurement path byte-identically (calibration driver diff
+confined to the red proof block), and ran the base quiet cell to
+`BUDGET … verdict=REJECT E14=+0.813502 F14=+0.753502 max_window14=+0.040190 … cap_E=0.255253
+cap_F=0.255253 cap_window=0.070000 T=47.050509` — 4,705 samples at 100.020 Hz, exit 0, 120
+labels equal, zero signal calls, zero stops, tree-vs-wait4 0.91 ms; one cell failed, eight
+unattempted, zero measurement draws. Scope: 5,895 live files, entry/exit digest `854ab241…`,
+zero changes, zero `.git-attempts`; report check OK 197 citations; seal 73 artifacts; charge
+592.989 s (A0 147.542/200, A2 93.219/900, F 352.228/800); cumulative 11,813.008 of 28,400;
+pool 16,587.001 s.
+
+Ruling 849 accepts the STOP. The instrument is not at fault: my replications of the identical
+job give `E14` +0.091700 (the 807c cell), +0.813502 (the 807d cell), +1.093822 and +2.398637
+in two windows at 18:13–18:16, and +0.103140, +0.112114, +0.107107 in three windows at
+18:26–18:31; a thread-level watcher (tasks in state R whose processor field is 14) saw no
+other task running on CPU 14 in the quiet windows. The host alternates between the historical
+0.10–0.11 s baseline and transient 0.8–2.4 s excursions while the desktop and agent sessions
+are active, so a single-shot 47-s quiet cell is a coin flip; the one contaminated window that
+also carried a uid shield kept its excursion, so the owner is not this uid's pinnable tasks —
+named, not claimed. Budget **v2.4** adds only a declared quiet-cell retry rule: at most three
+attempts, fresh prelaunch each, every attempt retained under its own `try` folder, retry only
+on a REJECT with zero signal calls and zero observation stops, tree-vs-wait4 within `2/HZ`,
+exit 0 with 120 normalized-equal labels, and a pure integral excursion (E and/or F above cap
+while both sliding one-second maxima stay under the window cap); a pause footprint, any other
+failure, or three contaminated attempts stays a STOP; red cells remain one-shot. Brief 807e
+resumes the epoch at 13,200 s (A0 200 / A2 1,500 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve
+3,387.001 s; no top-up), carrying the 807c/807d measurement path byte-identically; the
+807/807a/807b/807c/807d records stay sealed and read-only; the two class-form decisions still
+return to the user at the fresh residual.

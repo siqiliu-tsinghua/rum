@@ -252,3 +252,32 @@ sliding one-second maximum ≥ 0.25, the verdict REJECT; everything else stands.
 resumes the epoch at 12,600 s (A0 200 / A2 900 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve
 4,579.990 s; no top-up), carrying the 807c measurement path byte-identically. The two
 class-form decisions remain the user's at the fresh residual.
+
+## Director gate (2026-11-26, gate c197)
+
+Brief 807d stopped correctly at Stage A2 on the base quiet cell. The v2.3 policy froze first
+at `0c8d99bc…` (0444, 17:59:25, zero calibration and zero measurement runs; the only deltas
+against 807c are `version`, `inputs` and the briefed `calibration` substitution), the pins and
+the three reused 807a ELFs re-verified, the 807c measurement path carried byte-identically
+(the calibration driver's diff confined to the red proof block), and the cell returned
+`BUDGET … verdict=REJECT E14=+0.813502 F14=+0.753502 max_window14=+0.040190 … cap_E=0.255253
+cap_F=0.255253 cap_window=0.070000 T=47.050509` with 4,705 samples at 100.020 Hz, exit 0, 120
+labels equal, zero signal calls, zero observation stops and tree-vs-wait4 agreement 0.91 ms;
+one cell failed, eight unattempted, zero measurement draws. Scope: 5,895 live files, entry and
+exit digest `854ab241…`, zero changes, zero `.git-attempts`; report check OK 197 citations;
+seal 73 artifacts; charge 592.989 s (A0 147.542/200, A2 93.219/900, F 352.228/800); cumulative
+11,813.008 of 28,400; pool 16,587.001 s. Ruling 849 accepts the STOP: the instrument is not at
+fault — director replications of the identical job give `E14` +0.091700 (the 807c cell),
++0.813502 (the 807d cell), +1.093822 and +2.398637 in two windows at 18:13–18:16, and
++0.103140, +0.112114, +0.107107 in three windows at 18:26–18:31, with a thread-level watcher
+seeing no other task running on CPU 14 in the quiet windows. The host alternates between the
+historical baseline and transient excursions while the desktop and agent sessions are active,
+so a single-shot 47-s quiet cell is a coin flip. Budget **v2.4** adds only a declared quiet-cell
+retry rule: at most three attempts, fresh prelaunch each, every attempt retained, retry only
+on a REJECT with zero signal calls and zero stops, tree-vs-wait4 within `2/HZ`, exit 0 with 120
+labels, and a pure integral excursion (E and/or F above cap while both sliding maxima stay
+under the window cap); a pause footprint, any other failure, or three contaminated attempts
+stays a STOP; red cells remain one-shot. Brief 807e resumes the epoch at 13,200 s (A0 200 /
+A2 1,500 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve 3,387.001 s; no top-up), carrying the
+807c/807d measurement path byte-identically. The two class-form decisions remain the user's at
+the fresh residual.
