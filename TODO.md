@@ -15494,3 +15494,32 @@ cumulative **29,208.679 of 63,164.917**. Amendment 3 allocates A0 200 / B0 1,200
 its dispatch. The stop-3 report and PROGRESS move to `.temp/director/812-stop-3/`; the log
 archives. Q25's thirteen STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record, the
 806e freeze and the preserved ancestors stay sealed to the campaign epoch's final gate.
+
+**2026-11-27 — c213: brief 812 Amendment 3's B0.1 STOP is accepted (ruling 865); the lane
+image function is the archived 797 constructor, and Amendment 4 continues the design.** The
+attempt (unit `brief-812-cdx-20261127-024107-4178488`, 02:41:07 → 02:52, 144,514 tokens, peak
+359,161,856 B, oom 0/0, rc 0) stopped at Stage B0 item 1: the brief's two-feature substitution
+literal exists only in `crates/rum-stdlib/Cargo.toml`; the other eight lane manifests carry
+`features = ["test-builtin-memory-growth"]` and their lane form is `features = []` (−28 B), so
+24 of 27 role-manifest cells were no-ops and the missing-substitution control could not fire.
+**Defect #47 (mine):** I over-generalized row 128's literal to all nine without reading the
+eight — same class as #42–#46. I recomputed all 27 cells against the archived constructor
+`.temp/brief-797/tools/gate/lane_build.py:10–15` (`manifest_bytes`): 27/27 reproduce the
+recorded pairs (real row 128 `6dcfaa9f…` 982 B → `7976deb8…` 952 B; class form `67be9610…`
+1,010 B → `7327bd4e…` 980 B). A0 passed (stop-3 seal `37ac1d36…` re-hashed, stop-2/stop-1
+records, parents/children, retained F13 `8d6ba3f0…`, 811 design `da2fdf55…`, gate c212 strict
+appends 3,314 B `484b4c94…` and 7,100 B `aabcfa85…` re-derived from git); entry == exit
+`e70e2449…` at 5,903 paths; zero edits/builds/producers/replays/suites/git. **Charge:** 665.241
+s of 1,700 (A0 51.565/200, B0 297.995/1,200, F0 222.166/300); unspent 1,034.759 s; pool
+**33,290.997 s**; cumulative **29,873.920 of 63,164.917**. **The correction (Amendment 4,
+design-only):** the lane image function is the archived constructor, stated once (delete the
+memory-growth feature from every `rum-runtime =`/`rum-host =` line with `features = [`; exactly
+nine files change; the computed pairs must equal the role's recorded pair, fail closed); the
+eight singletons `[]`, row 128 continuation-only; the missing-substitution control fires on all
+nine; items 2–6 stand with the lane branch owning all nine (row 128 included) and the receipt's
+row-128 entry carrying (pin, lane post); the generated `manifests.rs` producer and the
+falsifier matrix are designed before any edit. Amendment 4 allocates A0 200 / B0 1,200 / F0 300
+= 1,700 s, no new top-up; the implementation amendment will carry the 3,031.700 s explicit
+top-up at its dispatch. The stop-4 record moves to `.temp/director/812-stop-4/`; the log
+archives. Q25's thirteen STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record, the
+806e freeze and the preserved ancestors stay sealed to the campaign epoch's final gate.

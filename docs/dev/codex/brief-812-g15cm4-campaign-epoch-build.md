@@ -566,3 +566,103 @@ amendment that follows will allocate A0 200 / B 6,822.697 / C 7,800 / D 14,400 /
 F 2,400 = 34,622.697 s, with its top-up (about 2,366 s at a full design spend) made explicit at
 its dispatch under the 2026-11-19 rule. Charge is continuous from dispatch; every stage box is
 measured from its own CLOCK entry.
+
+## Director gate (c213, 2026-11-27) — the B0.1 STOP is accepted: the two-feature literal exists only at row 128, the eight singletons are `features = []`; the archived 797 constructor is the lane image function and Amendment 4 continues the design from it
+
+The Amendment 3 attempt (unit `brief-812-cdx-20261127-024107-4178488`) ran 2026-11-27 02:41:07
+→ 02:52, rc 0, 144,514 tokens, peak 359,161,856 B, oom 0/0, verdict STOP at Stage B0 item 1.
+I verified: the seal 39 payloads / 1,871,036 B `bc7a931c…` (all re-hashed equal) and the 13
+envelope rows; report `99e13901…` (check OK 138), PROGRESS `05e1857c…`, charge `ec3b744d…`;
+A0 PASS (the stop-3 seal `37ac1d36…` with the two moved rows re-hash equal, the stop-2 and
+stop-1 seals, four parents, three child trees, the retained F13 `8d6ba3f0…`, the 811 design
+`da2fdf55…`/632 pins, and the gate c212 strict appends — `TODO.md` `cbb60278…` + 3,314 B
+`484b4c94…` = `f92ad7fc…`, the brief `f6546e18…` + 7,100 B `aabcfa85…` = `c970cbe3…` — which
+I re-derived from `git show 85909f0f:`/`git show 64b5cb47:`); entry == exit `e70e2449…` at
+5,903 paths; `git status` clean at HEAD `64b5cb47`; zero edits, builds, producers, replays,
+suites, adoptions or git attempts. Charge 665.241 s (A0 51.565/200, B0 297.995/1,200, F0
+222.166/300; close 222.492). **Defect #47 (mine):** B0.1's two-feature literal was row 128's
+only; the eight singletons' lane form is `features = []` (−28 B), so 24 of 27 cells were
+no-ops and the missing-substitution control could not fire. I recomputed all 27 cells against
+the archived constructor `.temp/brief-797/tools/gate/lane_build.py:10–15` (`manifest_bytes`):
+27/27 reproduce the recorded pairs (real row 128 `6dcfaa9f…` 982 B → `7976deb8…` 952 B; class
+form `67be9610…` 1,010 B → `7327bd4e…` 980 B). Amendment 4 continues the design with the
+constructor as the lane image function.
+
+## Amendment 4 — the lane model design continued (design-only, no source edits)
+
+**Scope.** Design only: zero source edits, zero builds, zero producers, zero replays, zero
+suites, zero adoptions, zero git. Every output under `W/amendment-4/`; the report at
+`.temp/brief-812/report.json`; the stopped record at `.temp/director/812-stop-4/`.
+
+**Stage A0 (200 s) — closure by hash identity.** The stop-4 record: the seal `bc7a931c…` (39
+payloads / 1,871,036 B), the report `99e13901…` and PROGRESS `05e1857c…` (re-hash equal at
+`.temp/director/812-stop-4/`), the charge `ec3b744d…`; the stop-3/stop-2/stop-1 records and
+their seals; the four parents; the three child role trees; the retained F13; the 811 design
+seal; and the live census against `.temp/cm4-campaign-epoch/amendment-3/live-exit-stat.json`
+(`e70e2449…`, 5,903 paths), where the only permitted differences are `TODO.md` and this brief
+as strict appends from the c212 state (`f92ad7fc…`, `c970cbe3…`) — old prefix + appended
+range + new hash printed as `C213 APPEND PASS`; any other difference stops. `git status` clean
+at the gate commit.
+
+**Stage B0 (1,200 s) — the lane model design.** The archive from Amendment 3
+(`lane-model.md`, `lane-falsifiers.json`, `pair-evidence.json`, `pin-producer.py.txt`) is
+retained evidence, not an admitted design; the design record (`lane-model.md`) and the
+executable falsifier matrix (`lane-falsifiers.json`) are written fresh under `W/amendment-4/`:
+
+1. **The lane image function.** State the archived constructor `manifest_bytes`
+   (`.temp/brief-797/tools/gate/lane_build.py:10–15`) as the single function: for every line
+   beginning `rum-runtime =` or `rum-host =` that contains `features = [`, delete
+   `"test-builtin-memory-growth", ` then `, "test-builtin-memory-growth"` then
+   `"test-builtin-memory-growth"`; exactly nine files change and every other byte is
+   identical; the computed pairs must equal the role's recorded pair (the 797 wire for the
+   class form, `manifests.rs` for the real) exactly once per path — fail closed on either.
+   State the corrected table: the eight singletons `["test-builtin-memory-growth"]` → `[]`
+   (−28 B); row 128 two-feature → continuation-only (−30 B); role-relative only at row 128
+   (`6dcfaa9f…` 982→952 `7976deb8…`; `67be9610…` 1,010→980 `7327bd4e…`). The
+   missing-substitution input (the guest itself) is rejected on **all nine**.
+2. **The verifier contract.** The role-relative table shape and the named producer (inputs:
+   the 797 wire `ffed5667…`, the legacy table `e8740d51…`, the three role roots and the
+   row-128 overlay row; output bytes pinned by their own hash; a generated-table adoption
+   named in the commit). The `source_auth/mod.rs` restructure: in the lane configuration the
+   nine manifests are all checked by the lane branch (the ordinary overlay loop does not check
+   them there — row 128 included); the guest is the baseline's bytes for the real arm and for
+   the eight non-overlay manifests on the copied arms, and the ordinary postimage derivation
+   for row 128 on the copied arms; the copied file must equal the role's lane image; the
+   receipt's row-128 overlay entry carries (pin, lane post) while the other 164 entries and
+   the ordinary default/no-default configurations are unchanged; `schema.rs` unchanged; the
+   branch must be proven reachable for row 128 with exactly one checking site per manifest.
+3. **The falsifier matrix.** Positive: the three lane guests, lane-real == lane-spot, the nine
+   pairs, the 28-byte and 30-byte lines. Negative, each with its one-fault input, required
+   verdict and error site: for each of the nine paths the guest itself (missing substitution);
+   an extra or wrong substitution; the cross-role pair in both directions (including the c212
+   STOP's own line); the receipt ordinary-vs-lane swap; an ordinary configuration carrying
+   lane bytes; the eight manifests left unchanged; a lane guest that is not its role's guest.
+   Every case must be executable under the constructor rule (Amendment 3's static matrix
+   proved 24 of 27 positives infeasible — the corrected rule must make all of them feasible).
+4. **The lane build plan.** The four labels (`lane-real`, `lane-disabled`, `lane-armed`, and
+   `lane-spot` == `lane-real`); the three derived physical roots; the nine substitutions; the
+   `RUM_CM739_LANE_*` fields; no seat in the six-build class index; the twelve-label journal
+   unchanged otherwise.
+5. **The ripple.** The verifier and generator edits are under `crates/`: the F13 flat context
+   moves, so the native producers run only on the final sources; the review destinations are
+   re-rendered from the role trees plus the revised edits; the buildability matrix is re-run;
+   the observer re-freeze covers the mutated verifier files; the 62 controls, the promotion,
+   the eight non-lane builds and the drives are unchanged.
+6. **The implementation draft** (`draft-amendment-5.md`): the exact edits, the producer and its
+   pin, the falsifier runs, the F13 cells and the rest of Stage B, stages C–F unchanged.
+
+A STOP fires on any remaining unknown, on any edit outside the authorized files without a
+named generated-table adoption, and on any falsifier that cannot be made to fire.
+
+**Stage F0 (300 s) — seal and report.** The design record and findings under `W/amendment-4/`;
+the report citing every evidence line; the seal with every payload; the exit audit (zero live
+changes, zero source edits, builds, producers, replays, suites and git attempts).
+
+**Charge.** The Amendment 3 attempt charged 665.241 s of 1,700 (A0 51.565 of 200, B0 297.995 of
+1,200, F0 222.166 of 300; the close interval 222.492 charged); unspent 1,034.759 s; pool
+**33,290.997 s**; cumulative 29,873.920 of 63,164.917. This amendment allocates A0 200 / B0
+1,200 / F0 300 = **1,700 s** inside that pool; no new top-up. The implementation amendment
+that follows will allocate A0 200 / B 6,822.697 / C 7,800 / D 14,400 / E 3,000 / F 2,400 =
+34,622.697 s, with its explicit top-up (3,031.700 s at a full design spend) at its dispatch
+under the 2026-11-19 rule. Charge is continuous from dispatch; every stage box is measured
+from its own CLOCK entry.
