@@ -163,3 +163,62 @@ a band; a placement that changes whether or when something happens; any git atte
 unexplained live change. Q25's thirteen named STOPs stand (P0214, P0216, P1070, P2348, P2354,
 P2379, P2381, P2385, P2387, P2409, P2411, P2416, P2418); 744/745/746 held; CM5 unauthorized; no
 tag; no network; no new dependency; no new `unsafe`; `.temp` only, never `/tmp`; no git.
+
+## Director gate (2026-11-26, gate c200)
+
+The attempt (cdx, unit `brief-808-cdx-20261126-194014-3953965`, 19:40:14–19:51, 145,854
+tokens, peak 255,578,112 B, oom 0, oom_kill 0, rc 0) **stopped at Stage A**: the 300 s box
+elapsed during evidence discovery with zero pins authenticated — `STAGE A STOP
+elapsed_s=526.311 box_s=300 overrun_s=226.311 authenticated_pins=0 required=all` (first
+clock at +42.7 s, deadline 409494.939, stop observed 409721.250). `pin-status.json` lists
+`authenticated: []` with 69 pending paths and 6 pending logical checks; the 61 exec calls
+are reads only and no hash command, build, capture, disassembly, inventory replay or
+acceptance suite ran. Report `d9c88337…`, `report.py check` OK 6 citations, seal 11
+artifacts (every hash equal, detached summary equal), exit audit zero worker live changes
+and zero git attempts; charge 655.740 s (A 526.311/300, E 129.429/400); pool **13,097.259 s**
+after; the 10,352.999 s reserve unallocated. My live census reads 5,898 files: the 807f exit
+5,897 plus exactly the three paths of gate c199's commit `5817b7bf` (`TODO.md` and
+`brief-807-g15cm4-fresh-epoch.md` modified, this brief added); git clean. Ruling 852 accepts
+the STOP and names my defect #37: Stage A packed the mandatory reading of ten documents
+(~181 KB) and the 69-pin re-hash into one 300 s box with the reading list first, and the
+brief stated a live position (5,897) that my own commit had already made stale. The stopped
+record is archived at `.temp/director/808-stop-1/`.
+
+## Amendment 1 (ruling 852, gate c200)
+
+Everything above stands except the stage carve, the input order and the live baseline. The
+reading list and the pin set are unchanged in content and now carry exact paths; the stage
+plan is **3,700 s of the 13,097.259 s pool** (9,397.259 s stays unallocated; no top-up):
+A0 250 / A 350 / B 1,600 / C 700 / D 400 / E 400.
+
+- **Stage A0 (250 s) — the pins first.** Before any reading beyond this brief, re-hash every
+  pin listed under "Pins" in one scripted pass and quote a `PASS`/`STOP` line per pin; a
+  stale pin is a STOP. The set is small — the nine whole-draw Callgrind outputs are ~720 KB
+  each and the three 807a ELFs are 13,263,120 / 18,689,432 / 13,263,240 B, so a full pass is
+  seconds. Also record the entry live census (the 806e exclusions: `.temp`, `.git`, `target`,
+  `.agents`, `.codex`, `.aws`) and compare its path set with
+  `.temp/brief-807f/evidence/live-exit.json`: the expected count is **5,898** and the expected
+  extra paths are exactly `TODO.md`, `docs/dev/codex/brief-807-g15cm4-fresh-epoch.md` and this
+  brief; any other path is a STOP.
+- **Stage A (350 s) — the reading, with exact paths.** Briefs
+  `docs/dev/codex/brief-799-g15cm4-armed-residual-family-inventory.md`,
+  `docs/dev/codex/brief-803-g15cm4-real-batteries-and-outline-completion.md`,
+  `docs/dev/codex/brief-804-g15cm4-repair-plan-d1.md`,
+  `docs/dev/codex/brief-805-g15cm4-joint-measurement-and-implementation.md`,
+  `docs/dev/codex/brief-807-g15cm4-fresh-epoch.md`,
+  `docs/dev/codex/brief-807f-g15cm4-fresh-epoch-v25.md`; rulings
+  `.temp/director/ruling-832.md`, `-844.md`, `-850.md`, `-851.md`. Quote the lines each stage
+  depends on; re-read the 807f fresh residual table and the nine draws' family pairings.
+- **Stages B, C, D, E (1,600 / 700 / 400 / 400 s).** As written above.
+- **Clock discipline.** Append `CLOCK stage=<A0|A|B|C|D|E> t=<monotonic_ns>` to
+  `PROGRESS.md` at every stage entry and exit. A stage that reaches its deadline stops there
+  with the exact missing measurement — the previous attempt discovered its deadline 226.311 s
+  late; that must not recur.
+- **Outputs.** The stopped attempt's record is the archived receipt at
+  `.temp/director/808-stop-1/`; this Amendment writes fresh outputs under `.temp/brief-808/`
+  and reports as `rum-report/1` with `"brief": 808`, `"stage": "Amendment 1"`.
+
+Everything else — the design-only scope (`Scope: NONE`), the zero-unknown mechanism
+inventory, the candidate placements with isolation falsifiers and bands, the J0/J1 joint
+design, the drafts of 809 and 810, the STOP rules and the seal/check/exit audit — stands
+unchanged.

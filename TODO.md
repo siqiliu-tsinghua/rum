@@ -15050,3 +15050,25 @@ design-only: the second residual-repair inventory (the stable mechanisms, candid
 isolation falsifiers, the J0/J1 joint-build design with the closure-corrected price bars, and the
 drafts of the measurement/landing brief). The class campaign's Stage C/C10 readmission and the 744
 restart stay behind a qualified epoch.
+
+## 2026-11-26 — brief 808's Stage A STOP accepted (gate c200, ruling 852); Amendment 1 re-paves the inventory's Stage A
+
+Brief 808's attempt (cdx, unit `brief-808-cdx-20261126-194014-3953965`, 19:40:14–19:51, 145,854
+tokens, peak 255,578,112 B, oom 0, oom_kill 0, rc 0) stopped at Stage A with zero pins
+authenticated: `STAGE A STOP elapsed_s=526.311 box_s=300 overrun_s=226.311 authenticated_pins=0
+required=all` (first clock at +42.7 s; deadline detected 226.311 s late). `pin-status.json` holds
+`authenticated: []`, 69 pending paths and 6 pending logical checks; the 61 exec calls are reads
+only (no hash command, build, capture, disassembly, inventory replay or acceptance suite). Report
+`d9c88337…`, check OK 6 citations, seal 11 artifacts (all hashes equal; detached summary equal),
+exit audit zero worker live changes and zero git attempts; charge 655.740 s (A 526.311/300,
+E 129.429/400); pool **13,097.259 s** after; the 10,352.999 s reserve unallocated. The live
+census is **5,898** files — the 807f exit 5,897 plus exactly the three paths of gate c199's
+commit `5817b7bf` (`TODO.md` and `brief-807-g15cm4-fresh-epoch.md` modified, brief 808 added);
+git clean. Ruling 852 accepts the STOP and names my defect #37: Stage A packed the mandatory
+reading of ten documents (~181 KB) and the 69-pin re-hash into one 300 s box with the reading
+list first, and the brief stated a live position (5,897) that my own commit had already made
+stale. Amendment 1 re-dispatches brief 808 at 3,700 s of the 13,097.259 s pool (A0 250 pins
+first / A 350 reading with exact paths / B 1,600 / C 700 / D 400 / E 400; 9,397.259 s
+unallocated): a `CLOCK` line at every stage entry and exit, a stage stopping at its deadline and
+never late, the expected entry census 5,898 with exactly the three-path delta, and fresh outputs
+under `.temp/brief-808/` (the stopped record archived at `.temp/director/808-stop-1/`).
