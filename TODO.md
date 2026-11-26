@@ -15454,3 +15454,43 @@ D 14,400 / E 3,000 / F 2,400 = 34,622.697 s; no new top-up. The stop-2 report an
 move to `.temp/director/812-stop-2/`; the log archives. Q25's thirteen STOPs stand; 744/745/746
 held; CM5 unauthorized; the 811 record, the 806e freeze and the preserved ancestors stay
 sealed to the campaign epoch's final gate.
+
+## 2026-11-27 — brief 812 Amendment 2's Stage B pin STOP accepted (c212, ruling 864): the P0543 lane pairs are role-relative after the class form, the copied-arm lane branch cannot reach the row-128 overlay, and Amendment 3 designs the two-stage lane model first
+
+The Amendment 2 attempt (unit `brief-812-cdx-20261127-021929-4163331`, 02:19:29 → 02:32, rc 0,
+161,415 tokens, peak 2,882,793,472 B, oom 0/0) returned **STOP** at Stage B: the sealed 797 lane
+diff and `source_auth/manifests.rs` disagree at `crates/rum-stdlib/Cargo.toml` (R4 row 128) —
+`67be9610…`→`7327bd4e…` (class form) vs `6dcfaa9f…`→`7976deb8…` (real), exactly one 28-byte
+`sha2` dev-dependency line apart — and the copied-arm verifier's ordinary overlay Postimage
+check (`mod.rs:192–196`) preempts the lane branch (`:220`/`:227`/`:231–237`) for that row.
+**A0 PASS** and **the six-leg buildability matrix PASS** (real/default `1955e78c…`, real/no-default
+the expected E0432 at `reconcile.rs:10`, disabled/default `659047df…`, disabled/no-default
+`3bb6c315…`, armed/default `2dd61cdd…`, armed/no-default `87af548a…`; zero tests, zero
+producers); zero source edits, replays, adoptions, labels, suites, C10 runs, member cells,
+credit or git invocations.
+
+I verified: the seal 83,936 payloads / 7,111,155,719 B `37ac1d36…` with **every payload
+re-hashed equal**, all 14 envelope rows, report `70a17f86…` (check OK 169), PROGRESS
+`a75466eb…`, entry == exit `013f4294…` at 5,903 paths, the two c211 strict appends re-derived
+against HEAD `85909f0f`, the stop-2/stop-1 records, the parents, the child trees, the retained
+F13, the 811 design seal, and — independently — all nine lane pairs (8 agree, row 128 differs)
+plus the exact substitution relation on both guest bases.
+
+**Defect #46 (mine):** the design asserted that the two lane authorities agree and that the
+verifier admits the nine substitutions, without checking either against the class-form
+artifacts; same class as #42–#45; the brief's own "verify both digests and the raw diff" found
+it before any producer. **The correction (Amendment 3, design-only):** the lane pairs become
+role-relative at row 128 (real `6dcfaa9f`→`7976deb8`; class form `67be9610`→`7327bd4e`), the
+lane image is derived from the authenticated guest with the recorded pair as a fail-closed
+cross-check, and in the lane configuration the nine manifests route through the lane branch —
+including the overlay row — with the guest derived per arm; the generated `manifests.rs`
+producer, the `mod.rs` restructure, the receipt semantics and the falsifier matrix are designed
+in B0 before any edit; the verifier edits land before the F13 producers, and the eight
+non-lane builds and drives stay unchanged.
+
+**Charge:** 773.009 s of 36,000 (A0 52.153, B 236.784, close 380.030); unspent **33,956.238 s**;
+cumulative **29,208.679 of 63,164.917**. Amendment 3 allocates A0 200 / B0 1,200 / F0 300 =
+1,700 s; no new top-up; the implementation amendment will carry the ~2,366 s explicit top-up at
+its dispatch. The stop-3 report and PROGRESS move to `.temp/director/812-stop-3/`; the log
+archives. Q25's thirteen STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record, the
+806e freeze and the preserved ancestors stay sealed to the campaign epoch's final gate.

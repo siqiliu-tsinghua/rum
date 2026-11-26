@@ -477,3 +477,92 @@ new_bytes=… new_sha256=…`; any other difference stops. `git status` clean at
 / C 7,800 / D 14,400 / E 3,000 / F 2,400 = 34,622.697 s inside that unspent; no new top-up. Its
 charge is continuous from its dispatch; the report at `.temp/brief-812/report.json` covers this
 attempt and cites the stop-2 record; every stage box is measured from its own CLOCK entry.
+
+## Director gate (c212, 2026-11-27) — the Stage B pin STOP is accepted: the P0543 lane pairs are role-relative after the class form, and the copied-arm lane branch cannot reach the row-128 overlay; Amendment 3 designs the two-stage lane model first
+
+The Amendment 2 attempt (unit `brief-812-cdx-20261127-021929-4163331`) ran 2026-11-27 02:19:29
+→ 02:32, rc 0, 161,415 tokens, peak 2,882,793,472 B, oom 0/0, verdict STOP at Stage B. I
+verified: the seal 83,936 payloads / 7,111,155,719 B `37ac1d36…` with **every payload re-hashed
+equal** (0 missing, 0 bad) and all 14 envelope rows; report `70a17f86…` (check OK 169),
+PROGRESS `a75466eb…`; A0 PASS (the stop-2 seal `a5bfaa5f…` with the two moved rows re-hash
+equal, the stop-1 record `6c5fac1d…`/`cc3818f4…`, four parents, three child trees, retained F13
+`8d6ba3f0…`, 811 design `da2fdf55…`/632 pins, the two c211 strict appends verified against HEAD
+`85909f0f`); entry == exit `013f4294…` at 5,903 paths; **the six-leg buildability matrix PASS**
+(real/default `1955e78c…`, real/no-default the expected E0432 at `reconcile.rs:10`,
+disabled/default `659047df…`, disabled/no-default `3bb6c315…`, armed/default `2dd61cdd…`,
+armed/no-default `87af548a…`; zero tests run, zero producers); **the pin STOP** — I recomputed
+all nine lane pairs independently: eight agree, row 128 differs, `67be9610…`→`7327bd4e…` (797,
+class form) vs `6dcfaa9f…`→`7976deb8…` (verifier, real), the difference being exactly one
+28-byte `sha2 = { workspace = true }` dev-dependency line, and the substitution maps each guest
+to its lane image; the source consequences (`artifacts.rs:55–58` Manifest; the ordinary
+Postimage at `mod.rs:192–196` before the lane branch at `:220`/`:227`/`:231–237`). Charge
+773.009 s (A0 52.153, B 236.784, close 380.030). **Defect #46 (mine):** the design asserted the
+two lane authorities agree and that the verifier admits the nine substitutions, without
+checking either against the class-form artifacts; the brief's own "verify both digests and the
+raw diff" found it, before any producer. Amendment 3 designs the two-stage role-relative lane
+model; implementation follows.
+
+## Amendment 3 — the P0543 lane model design (design-only, no source edits)
+
+**Scope.** Design only: zero source edits, zero builds, zero producers, zero replays, zero
+suites, zero adoptions, zero git. Every output under `W/amendment-3/`; the report at
+`.temp/brief-812/report.json`; the stopped record at `.temp/director/812-stop-3/`.
+
+**Stage A0 (200 s) — closure by hash identity.** The stop-3 seal `37ac1d36…` (83,936 payloads
+/ 7,111,155,719 B, manifest `f887ba91…`; the report `70a17f86…` and PROGRESS `a75466eb…`
+re-hash equal at `.temp/director/812-stop-3/`); the stop-2 and stop-1 records; the four
+parents; the three child role trees; the retained F13; the 811 design seal; and the live
+census against `.temp/cm4-campaign-epoch/amendment-2/live-exit-stat.json` (`013f4294…`, 5,903
+paths), where the only permitted differences are `TODO.md` and this brief as strict c213
+appends (old prefix + appended range + new hash printed as `C213 APPEND PASS`); any other
+difference stops. `git status` clean at the gate commit.
+
+**Stage B0 (1,200 s) — the lane model design.** One design record (`lane-model.md`) with
+`path:line` evidence and one falsifier matrix (`lane-falsifiers.json`):
+
+1. **The two records and the role-relative pairs.** State the 797 diff's nine pairs and
+   `manifests.rs`'s nine PINS; the eight that agree; row 128's two pairs (`6dcfaa9f…` →
+   `7976deb8…` real; `67be9610…` → `7327bd4e…` class form); and the exact relation (the
+   797 before is the real guest plus the single `sha2 = { workspace = true }` dev-dependency
+   line; the substitution `["test-builtin-memory-growth", "test-continuation-slots"]` →
+   `["test-continuation-slots"]` occurs exactly once per manifest and maps each guest to its
+   lane image). Derive and state the lane image function.
+2. **The verifier contract.** The role-relative table shape and the generated `manifests.rs`
+   producer (inputs, output bytes, its pin); the `source_auth/mod.rs` restructure: in the lane
+   configuration the nine manifests route to the lane branch (including the row-128 overlay —
+   the guest is the baseline for the real arm and the ordinary postimage derivation for the
+   copied arms; the copied file must equal the role's lane image; the receipt carries the lane
+   post for the nine; the ordinary default/no-default configurations are unchanged); the error
+   variants and the fail-closed order; `schema.rs` unchanged.
+3. **The falsifier matrix.** Positive: the three lane guests, lane-real == lane-spot, the nine
+   pairs, the 28-byte line. Negative, each with its one-fault input, required verdict and error
+   site: a missing/extra/wrong substitution per manifest; the cross-role pair in both
+   directions (including the c212 STOP's own line); the receipt ordinary-vs-lane swap; an
+   ordinary configuration carrying a lane manifest; the eight manifests unchanged; a lane guest
+   that is not its role's guest.
+4. **The lane build plan.** The four labels (`lane-real`, `lane-disabled`, `lane-armed`, and
+   `lane-spot` == `lane-real`); the three derived physical roots; the nine substitutions; the
+   `RUM_CM739_LANE_*` fields; no seat in the six-build class index; the twelve-label journal
+   unchanged otherwise.
+5. **The ripple.** The verifier and generator edits are under `crates/`: the F13 flat context
+   moves, so the native producers run only on the final sources; the review destinations are
+   re-rendered from the role trees plus the revised edits; the buildability matrix is re-run;
+   the observer re-freeze covers the mutated verifier files; the 62 controls, the promotion,
+   the eight non-lane builds and the drives are unchanged.
+6. **The implementation draft** (`draft-amendment-4.md`): the exact edits, the producer and its
+   pin, the falsifier runs, the F13 cells and the rest of Stage B, stages C–F unchanged.
+
+A STOP fires on any remaining unknown, on any edit outside the authorized files without a
+named generated-table adoption, and on any falsifier that cannot be made to fire.
+
+**Stage F0 (300 s) — seal and report.** The design record and findings under `W/amendment-3/`;
+the report citing every evidence line; the seal with every payload; the exit audit (zero live
+changes, zero source edits, builds, producers, replays, suites and git attempts).
+
+**Charge.** The Amendment 2 attempt charged 773.009 s of 36,000 (A0 52.153 of 200, B 236.784 of
+6,822.697); unspent 33,956.238 s; cumulative 29,208.679 of 63,164.917. This amendment allocates
+A0 200 / B0 1,200 / F0 300 = **1,700 s** inside that unspent; no new top-up. The implementation
+amendment that follows will allocate A0 200 / B 6,822.697 / C 7,800 / D 14,400 / E 3,000 /
+F 2,400 = 34,622.697 s, with its top-up (about 2,366 s at a full design spend) made explicit at
+its dispatch under the 2026-11-19 rule. Charge is continuous from dispatch; every stage box is
+measured from its own CLOCK entry.
