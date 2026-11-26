@@ -14760,3 +14760,34 @@ adopted inventory files stay staged for the render. After this line: brief 806
 replaced qualification rule, Stage C/C10 readmission and the 744 restart); the
 38 publication gates' 1,464,055 Ir and the fastpath's 41,712 Ir remain named
 decisions for the fresh residual.
+
+## 2026-11-26 — G15-CM4 D.2 render installed: brief 806 accepted (gate c192)
+
+The D.2 render regenerated the seven inventory tables and three manifests from
+the nine landed sources and installed them through the 190-row R4 map: ten
+outputs changed (local-contracts `d3588fb9…`, promoted `1c48e15a…`,
+class-provenance `70a6da97…`, emission_chain `99f7c5bb…`, unknown_attributes
+`dc648d65…`, unknown_captures `8e29c41f…`, unknown_macros `2ac559d1…`,
+additions `feca9443…`/1,221 B, mutants `c214a4aa…`, overlays `44bb8f11…`),
+180 mapped rows identity — rows 35/45/51 at the three D.2 sources' final
+hashes and row 170 at the AMEND-5 census — and the live crates equal the
+rendered armed image (`9ecd668d…`/4,700 files). The adopted verifier reads
+`R4 LIVE VERIFY PASS mapping=190 … content_delta=3 doc_extras=36`; the
+whole-tree delta is `TODO.md`, 36 declared brief documents and the two
+host-owned harness type files (ruling 843). The four role trees and counters
+are re-frozen: 126 scene rows (101 diffs, 25 extensions, 27 shapes, 15 owners,
+21 hot, 14,239 classified); census `4b5fcd37…` = 1,195 = 10/1,147/38. The
+acceptance on the rendered tree: lib 1,115/0/58 (the serial rerun matched all
+1,173 staged outcomes after the eight-thread process hit the 16 GiB scope
+cap), class 197/0/0, the fourteen selectors 14/0/0 with the lane bind, the
+eight selectors 8/8, the census 1/0/0 with `PUBLIC_WRAPPER=16`, source-auth
+green on the rendered scene, F48 2/0/0. The director's full workspace gate on
+the installed tree reads 4,553/16/71: all 229 prior reds green, the 12 pinned
+reds unchanged (the lane pair green in this brief's lane-bound 14/0/0), the
+one load flake `primary_sigint` green 5/5 standalone at eight threads and 2/2
+at one thread, and the 71 ignores exact. Charge 3,936.768 s; cumulative
+7,795.125 of 28,400; 20,604.875 s remain. After this line: brief 807 (the
+fresh epoch with the replaced qualification rule, the qualified whole-panel
+captures, the reconciliations, Stage C/C10 readmission and the 744 restart);
+the 38 publication gates' 1,464,055 Ir and the fastpath's 41,712 Ir remain
+named decisions for the fresh residual.

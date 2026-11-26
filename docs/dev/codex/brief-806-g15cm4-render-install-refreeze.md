@@ -122,3 +122,25 @@ stops at the deadline with the exact missing measurement.
 - Q25's thirteen named STOPs stand (P0214, P0216, P1070, P2348, P2354, P2379, P2381, P2385, P2387,
   P2409, P2411, P2416, P2418); 744/745/746 held; CM5 unauthorized; no tag; no network; no new
   dependency; no new `unsafe`; `.temp` only, never `/tmp`; no git.
+
+## Director gate (2026-11-26, gate c192)
+
+Brief 806 is DONE via 806e: the render's ten outputs installed through the 190-row R4 map (ten
+changed, 180 identity — rows 35/45/51 at the three D.2 sources' final hashes, row 170 at the
+AMEND-5 census `db1c5a08…`/23,299 B), the live crates equal to the rendered armed image
+(`9ecd668d…`/4,700 files), and the adopted verifier `R4 LIVE VERIFY PASS mapping=190 witnesses=5
+postimages=4 real_promotion=zero_overlay anchors=2 chain=152 tables=7 crates=b5440879a057/4700
+content_delta=3 doc_extras=36` with the two host-owned harness type cells declared under ruling
+843. The four role trees and the counters are re-frozen (126 scene rows / 101 diffs / 25
+extensions / 27 shapes / 15 owners / 21 hot / 14,239 classified; census `4b5fcd37…` = 1,195 =
+10/1,147/38). The acceptance on the rendered tree: lib 1,115/0/58 (the serial rerun matched all
+1,173 staged outcomes after the eight-thread process hit the 16 GiB scope cap), class 197/0/0,
+the fourteen selectors 14/0/0 with the lane bind, the eight selectors 8/8, the census 1/0/0 with
+`PUBLIC_WRAPPER=16`, source-auth green on the rendered scene, F48 2/0/0. The director's full
+workspace gate on the installed tree reads 4,553/16/71: all 229 prior reds green, the 12 pinned
+reds unchanged (the lane pair green in this brief's lane-bound 14/0/0), the one load flake
+`primary_sigint` green 5/5 standalone at eight threads and 2/2 at one thread, and the 71 ignores
+exact. The four disclosed deviations (the serial lib rerun, P0470's split raw pair, the duration
+selector's parent/child records, the freeze reader's census trailer) are accepted after raw-log
+verification. Charge 3,936.768 s (A 91.806 / C 3,737.095 / D 79.996 / F 27.871); cumulative
+7,795.125 of 28,400; 20,604.875 s remain. Ruling 844 (`.temp/director/ruling-844.md`).
