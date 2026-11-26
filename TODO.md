@@ -15324,3 +15324,49 @@ drafts (the epoch build, the readmission, the 744 restart), with the zero-unknow
 the seal. Charge 1,111.554 s of 3,000; unspent 1,888.446 s returns; pool **3,570.900 s**;
 cumulative **24,829.100 of 28,400**. Q25's thirteen STOPs stand; 744/745/746 held; CM5
 unauthorized; the preserved records and the 806e freeze stay sealed to the epoch's final gate.
+
+## 2026-11-27 — brief 811 Amendment 3 DONE (c209, ruling 861): the campaign epoch design is accepted; brief 812 (the epoch build) is authorized at 36,000 s
+
+Amendment 3 (unit `brief-811-cdx-20261127-005727-4120538`) is DONE. Stage A PASS (73.437 s):
+the stop-3 record, the 460 external pins, the three epoch witnesses, the four 806e manifests, the
+preservation witness, the 36 loss lines, the entry census 5,902 / `24e487cb…`, the role relation
+(5,851 equal guest keys; 165 diff paths; zero additions relative to real; 199 source seals, 0
+conflicts), the zero literal `33478d6e…`, the R4 coverage (190/165/330/10/152), and the
+historical import binding (six builds, 20 member-mode bindings, 60 class rows). Stage B (754.615
+s): `DESIGN MATRIX PASS cases=52 zero_prefixes_checked=32 reference_vectors=17
+native_executions=0`; the index grammar (12 columns, six builds, two spots, 66 class / 12
+calibration / 6 auth-only lines); the schedule (510 = 20 + 244 + 246; twelve pre-repair
+selections retired; 100 acquisition shapes); the command design (17 jobs, seven exact skips);
+the three drafts (top-ups 36,000 / 2,400 / 14,400); the historical subsequence correction (the
+755 ledger controls; zero conflicts). Stage C (951.398 s): `draft-epoch.md`, `draft-readmission.md`,
+`draft-744.md`. Stage D (265.616 s): the 632-pin recheck; the four frozen-tree readbacks; the R4
+readback (190 rows, 760 four-role cells, 330 decoded images, one native F13 parent preimage
+exception, ten old, nine D2 paths, zero child added keys); the proof order (six native
+producers, 68 flat-context rows, 18 identity columns, 151 mutants, zero predicted child hashes);
+the selection join (510, 9,060 program keys, 9,511 constituents, 151 own tuple joins); the
+shakedown 244; the readmission design (20 cells; C10 and c96 zero credit); the index check
+(0/151, 10/141, 1/150, partial 101); `ZERO UNKNOWN PASS` (36 lost roots accounted, 52
+falsifiers, the independent fixture positive, the eight named missing execution measurements).
+Stage E (262.870 s): check OK 122; seal 30.
+
+I verified: 632/632 design pins; 30/30 seal payloads (report `58b35673…`, seal `da2fdf55…`);
+entry == exit byte-identical at 5,902 files; `git status` clean at `af0fbdb8`; zero scope;
+charge 2,335.817 s continuous (A 73.437/250, B 754.615/900, C 951.398/1,000, D 265.616/300, E
+262.870/300; dispatch→A 27.881); the one deviation is the worker's own read-only query
+corrections, each rechecked with no measurement lost. I read the 52 falsifier cases (each with
+its one-fault input, required verdict and error site) and the 190 R4 dispositions (165 overlays
++ 9 additions + 15 carried/adopted + 1 addition manifest; ten old-ten rows; rows 171/172/182–188
+explicit), and verified the schedule myself (the 755 ledger 244 + 246 + 20 = 510; the 744
+pre-repair `unspent-745.json` differs in exactly six rows × two configurations — P0249, P0339,
+P0350, P0351, P1155, P1610 — so 755 controls) and the six-case workspace basis (the 754 report:
+three arms × both modes, 414 targets, armed 48 / disabled 49 named differences).
+
+**Decisions:** the design is adopted; **brief 812 (the campaign epoch build) is authorized at
+36,000 s** = the 811 pool's 1,235.083 s + an explicit 34,764.917 s top-up; the authorized total
+becomes 63,164.917 s and the cumulative 27,164.917; the readmission (2,400 s) and shakedown
+(14,400 s) top-ups are scheduled for their own dispatches; the shakedown re-verifies, never
+re-runs, the rustc-spawning private-types probe (the epoch owns the fourteen invocations); the
+755 ledger is the schedule authority; the six workspace cases follow the 754 protocol with the
+806e class-form differences registered by exact test name and paired receipt. Q25's thirteen
+STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record, the 806e freeze and the
+preserved ancestors stay sealed to the campaign epoch's final gate.
