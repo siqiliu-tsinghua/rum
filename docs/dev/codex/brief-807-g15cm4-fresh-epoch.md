@@ -198,3 +198,28 @@ release and the fractional caps are meaningful — and the F integral caps gain 
 `2/HZ` tick allowance (`F ≤ 0.005×T + 2/HZ`), matching the E, prelaunch and window caps.
 Brief 807b resumes the epoch at 12,300 s (A0 200 / A2 600 / C 4,200 / D 4,000 / E 2,500 /
 F 800; reserve 5,975.642 s).
+
+## Director gate (2026-11-26, gate c195)
+
+Brief 807b stopped correctly at Stage A2: the policy froze first at `a3f80d1c…` (0444, 17:21,
+zero calibration and zero measurement runs), the 229 pins and the three reused 807a ELFs
+verified, and the base arm's quiet whole-panel Callgrind cell (T=47.827237 s, 4,784 samples,
+effective 100.006 Hz, max gap 0.0112 s, exit 0, 120 labels equal) returned
+`BUDGET … verdict=REJECT E14=+0.465496 F14=+0.385496 max_window14=+0.031881 … cap_E=0.259136
+cap_F=0.259136 cap_window=0.070000`; one cell failed, eight unattempted, zero measurement
+draws. Scope: 5,893 live files entry/exit, equal digests, zero changes, zero `.git-attempts`;
+report check OK 150 citations; seal 58 artifacts; charge 548.340 s (A0 159.764/200,
+A2 103.474/600, F 285.102/800); cumulative 10,672.698 of 28,400; pool 17,727.302 s. Ruling
+847 accepts the STOP and names my defect #33: the v2/v2.1 partition binds every endpoint of
+`meas` to `wait4`, which can only be sampled by stopping the child — 4,782 observation stops,
+`stop_request_through_resume_s=0.398569 s`, `idle14=0` — so the instrument booked its own
+pause windows as foreign CPU-14 time. The identical job replicated under two samplers gives
+pause `E14=+0.463976` (4,642 stops) and passive `E14=+0.079120` (no signals), the latter equal
+to 798's `other_busy[14]` 0.079–0.118 s band and inside the cap; `schedstat` matches wait4
+within 2 ms. Budget **v2.2** makes the sampler passive: `meas` at each 100 Hz endpoint is the
+sum of `/proc/<pid>/task/<tid>/schedstat` field 1 over the measured tree (the hardware draws
+measure `perf` plus its child), the terminal total is `wait4`, agreement within `2/HZ`
+required or the capture is `unavailable`; every cap, coverage rule, calibration and stage
+stands. Brief 807c resumes the epoch at 12,300 s (A0 200 / A2 600 / C 4,200 / D 4,000 /
+E 2,500 / F 800; reserve 5,427.302 s). The two class-form decisions remain the user's at the
+fresh residual.

@@ -14856,3 +14856,37 @@ calibrations, all other stages and pins). Brief 807b is the resumed epoch:
 E 2,500 / F 800; reserve 5,975.642 s; no top-up); the 807 and 807a records stay
 sealed and read-only; the two class-form decisions still return to the user at
 the fresh residual.
+
+## 2026-11-26 — G15-CM4 fresh epoch: brief 807b stopped at Stage A2 (gate c195); budget v2.2 and brief 807c
+
+Brief 807b (cdx, unit `brief-807-cdx-20261126-171837-3893781`, 17:18:37–17:28,
+124,380 tokens, peak 1,890,627,584 B, oom 0, rc 0) froze the v2.1 policy at
+`a3f80d1c…` first (0444, 17:21, zero calibration and zero measurement runs),
+re-verified all 229 pins and the three reused 807a ELFs, and ran the base arm's
+quiet whole-panel Callgrind calibration (T=47.827237 s, 4,784 samples,
+effective 100.006 Hz, max gap 0.0112 s, exit 0, 120 labels equal) to
+`BUDGET … verdict=REJECT E14=+0.465496 F14=+0.385496 max_window14=+0.031881 …
+cap_E=0.259136 cap_F=0.259136 cap_window=0.070000`; it stopped per the frozen
+rule with one genuine cell, eight unattempted and zero measurement draws. Scope:
+5,893 live files entry and exit with equal digests, zero changes, zero
+`.git-attempts`; report check OK 150 citations; seal 58 artifacts; charge
+548.340 s (A0 159.764/200, A2 103.474/600, F 285.102/800); cumulative
+10,672.698 of 28,400; pool 17,727.302 s.
+
+Ruling 847 accepts the STOP and names my defect #33: the v2/v2.1 partition
+binds every endpoint of `meas` to `wait4`, which can only be sampled by stopping
+the child, so the sampler SIGSTOPped the measured child at every 100 Hz endpoint
+(4,782 stops, `stop_request_through_resume_s=0.398569 s`, `idle14=0` for the
+whole job) and booked its own stop windows as foreign CPU-14 time. My
+replication of the identical job gives pause `E14=+0.463976` (4,642 stops) and
+passive `E14=+0.079120` (no signals) — the latter equals 798's `other_busy[14]`
+0.079–0.118 s band and sits inside the 0.259 s cap; `schedstat` matches wait4
+within 2 ms, so the child's runtime is sound. Budget **v2.2**: the sampler is
+passive (no signal to any measured task); `meas` at each endpoint is the sum of
+`/proc/<pid>/task/<tid>/schedstat` field 1 over the measured tree, the terminal
+total is `wait4` and must agree within `2/HZ` or the capture is `unavailable`;
+every cap, coverage rule, the nine calibrations and every other stage stand.
+Brief 807c resumes the epoch: 12,300 s of the 17,727.302 s pool (A0 200 /
+A2 600 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve 5,427.302 s; no top-up);
+the 807, 807a and 807b records stay sealed and read-only; the two class-form
+decisions still return to the user at the fresh residual.
