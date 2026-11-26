@@ -14823,3 +14823,36 @@ Brief 807a is the resumed epoch: 13,100 s of the 19,317.119 s pool (A 300 /
 B 700 / A2 600 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve 6,217.119 s);
 the 807 STOP record stays sealed and read-only; the two class-form decisions
 still return to the user at the fresh residual.
+
+## 2026-11-26 — G15-CM4 fresh epoch: brief 807a stopped at Stage A2 (gate c194); budget v2.1 and brief 807b
+
+Brief 807a stopped correctly at Stage A2: the base quiet calibration ADMITTED
+(`CAL GREEN arm=base injected=none verdict=ADMIT`), but the CPU-14 red
+calibration could not fire — the calibration job (the native hardware-draw
+command minus `perf`) ran 1.067653 s while the fixed spinner release is at
+5.000 s, so exactly 0 CPU-s of the injection fell inside the job; seven cells
+remained unattempted and zero measurement draws started. The attempt's Stage B
+is sound and reused: base ← real `dda9146e…` (ELF `524c2bc2…`), new ← armed
+`df0db63c…` (ELF `2fa652ea…`), control ← real + the re-derived patch
+(712 B `8cfd8faa…`, one changed file, one cold perturbator with one address
+reference and zero static calls, ELF `c166a2ff…`), one path, one codegen unit,
+offline; functional equality across 120 labels. Pins 229/0; live tree clean
+(5,892 files, entry/exit digest equal); report check OK 236 citations; seal
+9,399 artifacts; charge 1,041.477 s (A 144.552/300, B 344.676/700,
+A2 132.868/600, F 419.381/800); cumulative 10,124.358 of 28,400; pool
+18,275.642 s.
+
+Ruling 846 accepts the STOP and corrects two defects of mine: #31, the v2
+substitution moved the calibration job to the ~1.2 s hardware-draw shape, where
+the fixed 5.000 s release and the fractional caps were never meaningful — v2.1
+restores the v1 calibration job (whole-panel Callgrind with the 796 full-panel
+options, T≈48–50 s; 799's nine ~48.2–50.1 s attempts are the reference) — and
+#32, the F integral caps lacked the tick allowance a tick-counter instrument
+needs (5.3 ms < one 10 ms tick at T≈1.2 s; the quiet cell passed by 0.6 ms);
+v2.1 sets `F14`/`F15` ≤ `0.005×T + 2/HZ`, matching the E, prelaunch and window
+caps. Everything else stands (the v2 partition, coverage rules, nine per-arm
+calibrations, all other stages and pins). Brief 807b is the resumed epoch:
+12,300 s of the 18,275.642 s pool (A0 200 / A2 600 / C 4,200 / D 4,000 /
+E 2,500 / F 800; reserve 5,975.642 s; no top-up); the 807 and 807a records stay
+sealed and read-only; the two class-form decisions still return to the user at
+the fresh residual.

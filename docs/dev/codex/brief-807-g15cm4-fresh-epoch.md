@@ -178,3 +178,23 @@ max gap ≤0.100 s, else unavailable), the same nine per-arm calibrations; every
 bound is retained conservatively (`F ≤ E` termwise). Brief 807a resumes the epoch at 13,100 s
 (A 300 / B 700 / A2 600 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve 6,217.119 s). The
 two class-form decisions remain the user's at the fresh residual.
+
+## Director gate (2026-11-26, gate c194)
+
+Brief 807a stopped correctly at Stage A2: the base quiet cell ADMITTED (`CAL GREEN arm=base
+injected=none verdict=ADMIT`), but the CPU-14 red cell could not fire because the calibration
+job ran 1.067653 s while the fixed spinner release is at 5.000 s
+(`INJECTION … in_job_lower_s=0.000000`); seven cells unattempted, zero measurement draws. The
+attempt's Stage B is sound and reused: three release builds at one path with one codegen unit
+(base ← real `dda9146e…`, ELF `524c2bc2…`; new ← armed `df0db63c…`, ELF `2fa652ea…`; control
+← real + re-derived patch `8cfd8faa…`/712 B, ELF `c166a2ff…`), functional equality across 120
+labels, zero static calls to the perturbator. Pins 229/0; live tree clean (5,892 files,
+entry/exit digest equal); report check OK 236 citations; seal 9,399 artifacts; charge
+1,041.477 s (A 144.552/300, B 344.676/700, A2 132.868/600, F 419.381/800); cumulative
+10,124.358 of 28,400; pool 18,275.642 s. Ruling 846 accepts the STOP and corrects my v2
+substitution (defects #31, #32): the calibration job is restored to the v1 text — the
+whole-panel Callgrind job with the 796 full-panel options (T≈48–50 s), where the fixed 5.000 s
+release and the fractional caps are meaningful — and the F integral caps gain the declared
+`2/HZ` tick allowance (`F ≤ 0.005×T + 2/HZ`), matching the E, prelaunch and window caps.
+Brief 807b resumes the epoch at 12,300 s (A0 200 / A2 600 / C 4,200 / D 4,000 / E 2,500 /
+F 800; reserve 5,975.642 s).
