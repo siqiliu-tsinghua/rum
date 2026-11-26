@@ -223,3 +223,32 @@ required or the capture is `unavailable`; every cap, coverage rule, calibration 
 stands. Brief 807c resumes the epoch at 12,300 s (A0 200 / A2 600 / C 4,200 / D 4,000 /
 E 2,500 / F 800; reserve 5,427.302 s). The two class-form decisions remain the user's at the
 fresh residual.
+
+## Director gate (2026-11-26, gate c196)
+
+Brief 807c stopped correctly at Stage A2. The v2.2 policy froze first at `0e146abe…` (0444,
+17:44:31, zero calibration and zero measurement runs; parent `a3f80d1c…`, only the briefed
+substitutions), the 229 pins re-verified with 0 missing and 0 bad, the three reused 807a ELFs
+byte-equal, the passive-sampler preflight green (`signal_call_count=0`, tree-vs-wait4 5.2 ms),
+and two cells ran: the base quiet whole-panel Callgrind cell admitted at
+`E14=+0.091700 F14=+0.031700 max_window14=+0.019245 … cap_E=0.249348 cap_F=0.249348
+cap_window=0.070000 T=45.869501` — 798's `other_busy[14]` 0.079–0.118 s band, so v2.2 is
+validated — and the base CPU-14 injection cell rejected at `E14=+1.087461 F14=+1.017461
+max_window14=+0.511799 … cap_E=0.256189 cap_F=0.256189 cap_window=0.070000 T=47.237817`,
+but the brief's one-second injection proof failed: the spinner's certified burn is
+1.000000203 CPU-s over 2.000042858 wall seconds, wholly inside the job (+5.000445 s to
++7.000488 s of 47.237817 s), while the fixed window [+5.000, +6.000] holds only
+0.499533668–0.499535129 CPU-s against the required 0.990. One genuine cell, one failed, seven
+unattempted, zero measurement draws. Scope: 5,894 live files, entry and exit digest
+`e2cdcc2a…`, zero changes, zero `.git-attempts`; report check OK 188 citations; seal 82
+artifacts; charge 547.312 s (A0 140.671/200, A2 124.398/600, F 282.243/800); cumulative
+11,220.010 of 28,400; pool 17,179.990 s. Ruling 848 accepts the STOP and names my defect #34:
+the measured job and the spinner are two runnable tasks on one CPU, so CFS shares it at about
+one half each and no one-second window can hold 0.990 CPU-s of the burn — the rule was
+unsatisfiable by construction (the disputed second's witness: 0.493287–0.504824 s of measured
+tree plus 0.4995 s of spinner). Budget **v2.3** replaces only the calibration proof: certified
+total burn ≥ 0.99, containment inside the job, E ≥ 0.97 and F ≥ 0.90 on the injected CPU, the
+sliding one-second maximum ≥ 0.25, the verdict REJECT; everything else stands. Brief 807d
+resumes the epoch at 12,600 s (A0 200 / A2 900 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve
+4,579.990 s; no top-up), carrying the 807c measurement path byte-identically. The two
+class-form decisions remain the user's at the fresh residual.

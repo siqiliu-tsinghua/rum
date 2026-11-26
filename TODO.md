@@ -14890,3 +14890,39 @@ Brief 807c resumes the epoch: 12,300 s of the 17,727.302 s pool (A0 200 /
 A2 600 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve 5,427.302 s; no top-up);
 the 807, 807a and 807b records stay sealed and read-only; the two class-form
 decisions still return to the user at the fresh residual.
+
+## 2026-11-26 — G15-CM4 fresh epoch: brief 807c stopped at Stage A2 (gate c196); budget v2.3 and brief 807d
+
+Brief 807c (cdx, unit `brief-807-cdx-20261126-174213-3904624`, 17:42:13–17:52, 118,261
+tokens, peak 1,852,739,584 B, oom 0, rc 0) froze the v2.2 policy at `0e146abe…` first (0444,
+17:44:31, zero calibration and zero measurement runs), re-verified all 229 pins (0 missing, 0
+bad) and the three reused 807a ELFs, passed the passive-sampler preflight
+(`signal_call_count=0`, tree-vs-wait4 5.2 ms), and ran two base cells: the quiet whole-panel
+Callgrind cell ADMITTED at `E14=+0.091700 F14=+0.031700 max_window14=+0.019245 … cap_E=0.249348
+cap_F=0.249348 cap_window=0.070000 T=45.869501` (4,588 samples, 100.001 Hz, exit 0, 120 labels
+equal) — the historical 798 band, so v2.2 is validated — and the CPU-14 injection cell
+REJECTED at `E14=+1.087461 F14=+1.017461 max_window14=+0.511799 … cap_E=0.256189 cap_F=0.256189
+cap_window=0.070000 T=47.237817`, but the brief's one-second injection proof failed: the
+spinner's certified burn is 1.000000203 CPU-s over 2.000042858 wall seconds, wholly inside the
+47.237817 s job, while the fixed window [+5.000, +6.000] holds only 0.499533668–0.499535129
+CPU-s against the required 0.990. One genuine cell, one failed, seven unattempted, zero
+measurement draws. Scope: 5,894 live files, entry and exit digest `e2cdcc2a…`, zero changes,
+zero `.git-attempts`; report check OK 188 citations; seal 82 artifacts; charge 547.312 s (A0
+140.671/200, A2 124.398/600, F 282.243/800); cumulative 11,220.010 of 28,400; pool
+17,179.990 s.
+
+Ruling 848 accepts the STOP and names my defect #34: the measured job and the spinner are two
+runnable tasks on one CPU, so CFS shares it at about one half each — the burn takes ~2.0 wall
+seconds and no one-second window can hold 0.990 CPU-s of it (the disputed second's witness:
+0.493287–0.504824 s of measured tree plus 0.4995 s of spinner). An unsatisfiable rule, not a
+mis-parameterized one; the instrument itself is sound (quiet at the historical baseline, red
+REJECT 3.9×–7.3× above the caps). Budget **v2.3** replaces only the calibration proof:
+certified total burn ≥ `minimum_tagged_cpu_s` 0.99, `burn_containment` inside the job,
+`minimum_integral_foreign_s` 0.97 (E) and `minimum_partitioned_foreign_s` 0.90 (F) on the
+injected CPU, `minimum_peak_window_s` 0.25, verdict REJECT; the partition, coverage, caps,
+prelaunch, attempts, nine cells and every stage stand. The 807c measurement path is carried
+byte-identically (ten tool hashes pinned); the calibration driver may change only its red-cell
+proof block, with the diff quoted. Brief 807d resumes the epoch at 12,600 s (A0 200 / A2 900 /
+C 4,200 / D 4,000 / E 2,500 / F 800; reserve 4,579.990 s; no top-up); the 807/807a/807b/807c
+records stay sealed and read-only; the two class-form decisions still return to the user at
+the fresh residual.
