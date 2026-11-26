@@ -14791,3 +14791,35 @@ fresh epoch with the replaced qualification rule, the qualified whole-panel
 captures, the reconciliations, Stage C/C10 readmission and the 744 restart);
 the 38 publication gates' 1,464,055 Ir and the fastpath's 41,712 Ir remain
 named decisions for the fresh residual.
+
+## 2026-11-26 — G15-CM4 fresh epoch: brief 807 stopped at Stage A (gate c193); budget v2 and brief 807a
+
+Brief 807 stopped correctly at Stage A: the policy was frozen first
+(`5d0109b6…`, 16:38, `calibration_runs=0 measurement_runs=0`), three fresh
+100 Hz prelaunch screens passed on CPUs 14 and 15, then every host-tracepoint
+attempt returned EACCES on all seven required scheduler/IRQ IDs and `perf`
+exited 129, so zero calibration workloads and zero measurement workloads ran.
+The cause is host-level and reproduced outside the sandbox as uid 1000:
+`/sys/kernel/tracing` is 0700 root:root and `perf_event_paranoid=2`. The pins
+passed (229, drift 0); the live tree is unchanged (5,891 files, entry/exit
+digest equal, zero git attempts); report check OK 125 citations; seal 44
+artifacts; charge 1,287.756 s (A 914.933/1,200, F 372.823/800); cumulative
+9,082.881 of 28,400; pool 19,317.119 s.
+
+Ruling 845 strikes the v1 per-event lossless partition as unimplementable for
+the measurement user (brief defect #29) and corrects the stage order — the
+per-arm calibrations must follow the builds they bind (defect #30). Budget v2
+uses `/proc/stat` per-CPU fields plus the measured child's `wait4(user+sys)`:
+`busy_c = Δ(user+nice+system+irq+softirq+steal)`, `E14 = busy14 − meas`,
+`E15 = busy15`, `F14 = busy14 − irq14 − steal14 − meas`,
+`F15 = busy15 − irq15 − steal15`; limits `E14`/`E15` ≤ `0.005×T + 2/HZ`,
+`F14`/`F15` ≤ `0.005×T`, every sliding 1-s window ≤ `0.050 + 2/HZ`, identical
+all arms; coverage 100 Hz (effective ≥ 50 Hz, max gap ≤ 0.100 s, else
+unavailable); the same nine per-arm calibrations (quiet ADMIT; a 1.000 CPU-s
+foreign spinner on CPU 14 REJECT; on CPU 15 REJECT) now follow the arm
+builds, on the same native whole-panel job as the Stage C draws. Every v1
+admission bound is retained (`F ≤ E` termwise); the loss is diagnostic only.
+Brief 807a is the resumed epoch: 13,100 s of the 19,317.119 s pool (A 300 /
+B 700 / A2 600 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve 6,217.119 s);
+the 807 STOP record stays sealed and read-only; the two class-form decisions
+still return to the user at the fresh residual.

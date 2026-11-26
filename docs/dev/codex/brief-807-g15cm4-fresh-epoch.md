@@ -159,3 +159,22 @@ declared bar or a falsifier that fails to fire; any live change; any git attempt
 named STOPs stand (P0214, P0216, P1070, P2348, P2354, P2379, P2381, P2385, P2387, P2409, P2411,
 P2416, P2418); 744/745/746 held; CM5 unauthorized; no tag; no network; no new dependency; no new
 `unsafe`; `.temp` only, never `/tmp`; no git.
+
+## Director gate (2026-11-26, gate c193)
+
+The attempt stopped correctly at Stage A before any calibration or measurement: the policy was
+frozen first at `5d0109b6…` (16:38, `calibration_runs=0 measurement_runs=0`), three fresh 100 Hz
+prelaunch screens passed on CPUs 14/15, then every tracepoint attempt returned EACCES on all
+seven IDs and `perf` exited 129. I reproduced the cause outside the sandbox as uid 1000:
+`/sys/kernel/tracing` is 0700 root:root and `perf_event_paranoid=2`. Pins passed (229, drift 0);
+the live tree is unchanged (5,891 files, entry/exit digest equal, zero git attempts); report
+check OK 125 citations; seal 44 artifacts; charge 1,287.756 s (A 914.933/1,200, F 372.823/800);
+pool 19,317.119 s. Ruling 845 strikes the event partition as unimplementable for this host
+(brief defect #29) and corrects the stage order — the per-arm calibrations must follow the
+builds they bind (defect #30) — and re-specifies the epoch budget as v2: `/proc/stat` per-CPU
+fields plus the measured child's `wait4`, IRQ and steal separated, `E14`/`E15` ≤ `0.005×T+2/HZ`,
+`F14`/`F15` ≤ `0.005×T`, sliding 1-s window ≤ `0.050+2/HZ`, 100 Hz coverage (≥50 Hz effective,
+max gap ≤0.100 s, else unavailable), the same nine per-arm calibrations; every v1 admission
+bound is retained conservatively (`F ≤ E` termwise). Brief 807a resumes the epoch at 13,100 s
+(A 300 / B 700 / A2 600 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve 6,217.119 s). The
+two class-form decisions remain the user's at the fresh residual.
