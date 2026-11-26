@@ -15423,3 +15423,34 @@ D 14,400 / E 3,000 / F 2,400 = 34,622.697 s inside the unspent; no new top-up. T
 report and PROGRESS move to `.temp/director/812-stop-1/` and the log archives. Q25's thirteen
 STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record, the 806e freeze and the
 preserved ancestors stay sealed to the campaign epoch's final gate.
+
+## 2026-11-27 — brief 812 Amendment 1's Stage A0 STOP accepted (c211, ruling 863): the live-census pin was taken before the gate's own commit, so Amendment 2 closes A0 by hash identity and resumes Stage B unchanged
+
+The Amendment 1 attempt (unit `brief-812-cdx-20261127-020931-4157751`, 02:09:31 → 02:15, rc 0,
+68,926 tokens, peak 254,267,392 B, oom 0/0) returned **STOP** at Stage A0 after 88.612 s of
+200: the live census (`bcbd3e14…`, 5,903 paths) does not equal the stopped attempt's
+`80af125f…` because gate c210's commit appended 4,498 B to `TODO.md` and 7,456 B to the brief
+— exactly the two documents every gate edits. I verified the two appends against git
+(`909a217c` blobs `b854d5e5…`/`12508298…` + appended `6d21c462…`/`3657f0b7…` = live
+`1f4c7203…`/`02715ca5…`; a pure 147-line insertion in exactly those files), the attempt's
+25-payload seal `a5bfaa5f…` (1,688,101 B, 12/12 `seal.sha256` rows), report `478ef432…`
+(check OK 57), PROGRESS `89ae27d4…`, entry == exit == now, and the stopped record's
+re-authentication (30,084 / 1,742,945,265 B `6c5fac1d…`/`cc3818f4…`, four parents, three child
+trees, retained F13 `8d6ba3f0…`, 811 seal `da2fdf55…` / 632 pins). Zero source edits, builds,
+replays, suites, C10 runs, labels, member cells or credit; zero git invocations.
+
+**Defect #45 (mine):** the A0 bar pinned the census taken before gate c210's own commit,
+which appended to the two documents the gate must edit — unsatisfiable by construction; same
+class as #42–#44. **The correction (Amendment 2):** A0 closes by hash identity from the stop-2
+record with the c211 appends to the same two documents permitted as strict appends (prefix +
+appended range + new hash printed; any other difference stops); Stage B is as Amendment 1,
+unchanged — buildability matrix first, five native F13 cells, the calibrated projection
+falsifier, adoption, the corrected promotion, the 62 controls and the rest; stages C–F
+unchanged.
+
+**Charge:** 375.018 s of 36,000 (A0 88.612/200); unspent **34,729.248 s**; cumulative
+**28,435.669 of 63,164.917**. Amendment 2 allocates the same A0 200 / B 6,822.697 / C 7,800 /
+D 14,400 / E 3,000 / F 2,400 = 34,622.697 s; no new top-up. The stop-2 report and PROGRESS
+move to `.temp/director/812-stop-2/`; the log archives. Q25's thirteen STOPs stand; 744/745/746
+held; CM5 unauthorized; the 811 record, the 806e freeze and the preserved ancestors stay
+sealed to the campaign epoch's final gate.

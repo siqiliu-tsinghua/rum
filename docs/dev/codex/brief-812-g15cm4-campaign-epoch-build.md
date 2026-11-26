@@ -421,3 +421,59 @@ not the lib test target).
 / E 3,000 / F 2,400 = 34,622.697 s inside that unspent; no new top-up. Its own charge is
 continuous from its dispatch; the report at `.temp/brief-812/report.json` covers this attempt
 and cites the stopped record; every stage box is measured from its own CLOCK entry.
+
+## Director gate (c211, 2026-11-27) — the A0 STOP is accepted: the live-census pin was taken before gate c210's own commit, so Amendment 2 closes A0 by hash identity and resumes Stage B unchanged
+
+The Amendment 1 attempt (unit `brief-812-cdx-20261127-020931-4157751`) ran 2026-11-27 02:09:31
+→ 02:15, rc 0, 68,926 tokens, peak 254,267,392 B, oom 0/0, verdict STOP at Stage A0 after
+88.612 s of 200. I verified: this attempt's seal 25 payloads / 1,688,101 B `a5bfaa5f…` with all
+12 `seal.sha256` rows equal; report `478ef432…` (44,629 B, check OK 57), PROGRESS `89ae27d4…`;
+entry == exit == now `bcbd3e14…` at 5,903 paths; against the stopped census `80af125f…`
+exactly two cells differ — `TODO.md` (`b854d5e5…` + 4,498 B `6d21c462…` = `1f4c7203…`) and
+this brief (`12508298…` + 7,456 B `3657f0b7…` = `02715ca5…`), both gate c210's appends (I
+re-derived the old blobs at `909a217c` and the live files at `542aa932`; the diff is a pure
+147-line insertion in exactly those two files); the stopped record re-authenticates
+(`6c5fac1d…`, `cc3818f4…`, 30,084 files / 1,742,945,265 B, the two moved rows at
+`.temp/director/812-stop-1/`, four parents, three child trees
+`689b9188…`/`f9661a93…`/`450b9e2f…`, retained F13 `8d6ba3f0…` + receipt `d20465a0…` + raw
+`6a376127…`, 811 seal `da2fdf55…` / 632 pins); zero source edits, replays, builds, suites, C10
+runs, labels, member cells, credit or git invocations. Charge 375.018 s (A0 88.612/200,
+dispatch→A0 25.948, the close interval 260.458). **Defect #45 (mine):** the A0 bar pinned the
+census taken before gate c210's own commit, which appended to the two documents every gate must
+edit — the pin was unsatisfiable by construction; the STOP is the rule working. Amendment 2
+closes A0 by hash identity with the permitted appends named and resumes Stage B unchanged.
+
+## Amendment 2 — the A0 closure by hash identity and the resumed Stage B
+
+**Stage A0 (200 s) — closure, then proceed.** Re-hash the stop-2 record at
+`.temp/director/812-stop-2/` (report `478ef432…` 44,629 B, PROGRESS `89ae27d4…` 322 B) against
+this attempt's seal `a5bfaa5f…` (6,813 B; the two moved payloads re-hash equal at the new root;
+the other 23 rows stay put); the stop-1 record (`stop/payloads.tsv` `6c5fac1d…`,
+`stop/seal.json` `cc3818f4…`, the moved report `79ae58b0…` and PROGRESS `6e421647…` at
+`.temp/director/812-stop-1/`); the four parents (`cb9205a6…`, `dda9146e…`, `30cd48fc…`,
+`df0db63c…` with manifests `ffbfe330…`, `1e02d222…`, `b782aa97…`, `3dc7f9bc…`); the three
+child role trees (`689b9188…`, `f9661a93…`, `450b9e2f…`, 5,851 files each, four edits); the
+retained R/default F13 `8d6ba3f0…` with receipt `d20465a0…` and raw `6a376127…`; the 811
+design seal `da2fdf55…` (30 payloads, 632 pins); and the live census against
+`.temp/cm4-campaign-epoch/amendment-1/live-exit-stat.json` (`bcbd3e14…`, 792,151 B, 5,903
+paths), where the only permitted differences are `TODO.md` and this brief, each verified as a
+strict append and printed as `C211 APPEND PASS path=… old_bytes=… old_sha256=… added_bytes=…
+new_bytes=… new_sha256=…`; any other difference stops. `git status` clean at the gate commit.
+
+**Stage B (6,822.697 s) — as Amendment 1, unchanged.**
+
+1. Buildability matrix first, exactly as Amendment 1 item 1.
+2. Five native F13 cells, exactly as Amendment 1 item 2.
+3. The calibrated independent projection as a falsifier, never a binding, exactly as
+   Amendment 1 item 3.
+4. Adoption, exactly as Amendment 1 item 4.
+5. The corrected promotion, exactly as Amendment 1 item 5.
+6. Stage B's remaining items, exactly as Amendment 1 item 6.
+
+**Stages C–F unchanged** (7,800 / 14,400 / 3,000 / 2,400 s).
+
+**Charge.** The Amendment 1 attempt charged 375.018 s of 36,000 (A0 88.612 of 200); unspent
+34,729.248 s; cumulative 28,435.669 of 63,164.917. This amendment allocates A0 200 / B 6,822.697
+/ C 7,800 / D 14,400 / E 3,000 / F 2,400 = 34,622.697 s inside that unspent; no new top-up. Its
+charge is continuous from its dispatch; the report at `.temp/brief-812/report.json` covers this
+attempt and cites the stop-2 record; every stage box is measured from its own CLOCK entry.
