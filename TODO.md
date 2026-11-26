@@ -15280,3 +15280,47 @@ inventories the contract lineage, designs the proof with its falsifiers, and dra
 implementation briefs (the epoch build, the readmission, the 744 restart). Charge 978.531 s of
 3,800; pool 4,682.454 s; cumulative 23,717.546 of 28,400. Q25's thirteen STOPs stand;
 744/745/746 held; CM5 unauthorized.
+
+## 2026-11-27 — brief 811 Amendment 2's Stage B STOP accepted (c208, ruling 860): the zero-additions form needs a reader change, and the F13 row must bind to native producer replays
+
+Amendment 2 (unit `brief-811-cdx-20261127-002958-4106839`) passed Stage A (the stopped Amendment
+1 record authenticated; 358 pins re-hashed 0 missing 0 bad, the re-rooted preservation witness
+`e23ce813…` byte-equal; 36 c154 loss lines; the epoch digest `7af7b461…` in three fields; nine
+witnesses; `R4 LIVE VERIFY PASS`; the four 806e role trees 23,395 files; entry census 5,902 /
+`c4f6341b…`) and stopped correctly at Stage B after the lineage (`LINEAGE PASS` — the 755
+importer binds each non-spot build to the real tree, no real overlays, 144 copied triples; the
+ten class-admission members' 20 bindings; C10 packet `f46ccfd3` zero credit; the 743-era nine
+cannot have been the current nine; the original parser/spelling is not preserved), the role
+delta (5,851 equal keys; 165 diff paths; 164 real preimages exact; 330 postimages exact; nine
+additions in all guests), the seed projections (overlays 14,068,709 B `534ccde8…`; mutants
+43,621 B `57b2f3e7…`; additions 32 B `33478d6e…`) and the F13 projections (real
+`217bec91…`→`b44ee865…`, disabled `40e92684…`→`271d4276…`, armed `d3588fb9…`→`98bd5891…`;
+68/68 fingerprints changed; 18 identity columns; `native_replays=0`).
+
+The STOP: the compiled reader rejects both an explicit zero marker (`schema.rs:59`) and a
+header-only table (`schema.rs:77`), and the source-auth tests unwrap the first addition
+(`tests.rs:163`); a reader change is required, and because the reader and tests are under
+`crates/`, it moves all 68 F13 fingerprints in each guest role (the flat context is
+`fnv1a64` over `DEPENDENCIES` plus every `.rs`/`.py`/`.toml` under `crates/`;
+`overlay_digest.py:64–96` implements `local/contracts.rs:88–133` and `interface.rs:26–35`).
+Therefore the F13 row (R4 171, overlays line 156) cannot be pinned to the 806e hashes in the
+rebuilt epoch: the four 806e trees stay immutable parent evidence, and the child overlay's
+real preimage and both copied postimages come from the native producer runs on the final tree
+in each role; the parser-only projection is illustrative and inadmissible as a binding
+identity. The ordering is forced: reader and fixtures final → native producer replay in both
+feature modes → adopt only producer output → encode the 165 overlays → propagate the digest
+through the 151 mutants and `source_schema.txt` → record every changed R4 row → re-freeze.
+Director defect #43: B.2 specified the empty-set form without checking the compiled reader,
+the tests, or the flat-context ripple (recorded in this line's c188 history). Q811-F13
+answered: the child binds to the native outputs; the parents are pins only; the projection is
+not an identity; publication waits for the positive real/disabled/armed proofs and the named
+negatives (ruling 840's role-specific F13 precedent).
+
+Brief 811 **Amendment 3** (design-only, 2,750 s: A 250 / B 900 / C 1,000 / D 300 / E 300; no
+top-up) designs the reader change with its rejection matrix and the tests' controls, the F13
+binding rule and the end-to-end ordering, the render/install reconciliation (the changed R4
+rows, the ten outputs, the six builds, the two indices), and the three implementation brief
+drafts (the epoch build, the readmission, the 744 restart), with the zero-unknown check and
+the seal. Charge 1,111.554 s of 3,000; unspent 1,888.446 s returns; pool **3,570.900 s**;
+cumulative **24,829.100 of 28,400**. Q25's thirteen STOPs stand; 744/745/746 held; CM5
+unauthorized; the preserved records and the 806e freeze stay sealed to the epoch's final gate.
