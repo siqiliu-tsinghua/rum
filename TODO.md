@@ -15523,3 +15523,36 @@ falsifier matrix are designed before any edit. Amendment 4 allocates A0 200 / B0
 top-up at its dispatch. The stop-4 record moves to `.temp/director/812-stop-4/`; the log
 archives. Q25's thirteen STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record, the
 806e freeze and the preserved ancestors stay sealed to the campaign epoch's final gate.
+
+**2026-11-27 — c214: brief 812 Amendment 4's lane model design is accepted (ruling 866); the
+archived constructor reproduced all 27 role pairs and the 211-case matrix is executable; the
+implementation is authorized as Amendment 5 at 34,622.697 s.** The attempt (unit
+`brief-812-cdx-20261127-025916-4188007`, 02:59:16 → 03:16, 172,136 tokens, peak
+416,980,992 B, oom 0/0, rc 0) delivered the lane model (`lane-model.md` `3d0fd800…`), the
+executable matrix (`lane-falsifiers.json` `52b46cc1…`; 211 cases, 37 accepted / 174 rejected,
+the 27 missing-substitution inputs rejected on all nine paths per role), the pair evidence
+(`pair-evidence.json` `c13f22a5…`), the branch/routing model (`model.py` `a3346734…`), the
+named producer (`render_lane_pins.py.txt` `2cfcea30…`) and the implementation draft
+(`draft-amendment-5.md` `f8455201…`). I re-ran the design myself: `ground.loads()` reproduces
+27/27 pairs from the archived constructor (eight singletons −28 B; row 128 real `6dcfaa9f…`/982
+→ `7976deb8…`/952, class `67be9610…`/1,010 → `7327bd4e…`/980), regenerates the 13,404-byte
+class wire `ffed5667…` byte-for-byte and derives the 13,346-byte real wire `66a8e8bd…` (the
+58 serialized characters of the 28-byte `sha2` dev-dependency line); the lane trees are
+`40147b53…`/`a55b447b…`/`2ba74bd2…` with `lane-spot` == real; `table_spec` gives 2,390 B
+`0b7ffbe5…`; `model.py verify` gives 37/174/0 unexpected; the seal 73 payloads / 7,057,217 B
+`b39ecb6d…` re-hashes equal; report `34e63803…` (310,631 B, check OK 1,052); entry == exit
+`2fc5bcbe…` at 5,903 paths (my own census re-run equal); the c213 appends re-derived from
+`git show 64b5cb47:` (TODO.md `f92ad7fc…` + 2,618 B `cad5a933…` = `d6591d96…`; brief
+`c970cbe3…` + 8,149 B `8e6f8f2f…` = `482cb33b…`); zero edits/builds/producers/replays/suites/
+adoptions/git. **Charge:** 1,041.494 s of 1,700 (A0 40.013/200, B0 849.130/1,200, F0
+106.549/300); unspent 658.506 s; pool **32,249.503 s**; cumulative **30,915.414 of
+63,164.917**. **Amendment 5** implements the design at A0 200 / B 6,822.697 / C 7,800 / D
+14,400 / E 3,000 / F 2,400 = **34,622.697 s** with the explicit **2,373.193947 s** top-up at
+dispatch (authorized total 65,538.110947 s): the handwritten `mod.rs` + `tests.rs`, the
+generated `manifests.rs` adoption (2,390 B `0b7ffbe5…`), the 211-case Rust selector, the
+buildability matrix, the five native F13 cells and 62 controls, the inventory jobs and the
+observer re-freeze, then the twelve labels and the lane receipt writer, the workspace cases,
+the C10 runs and the seal. The Amendment 4 report and PROGRESS move to
+`.temp/director/812-done-5/`; the log archives. Q25's thirteen STOPs stand; 744/745/746 held;
+CM5 unauthorized; the 811 record, the 806e freeze and the preserved ancestors stay sealed to
+the campaign epoch's final gate.
