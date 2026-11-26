@@ -1125,3 +1125,141 @@ source-text mismatch, a changed message, a changed 754 family or count, or a war
 failing), parser vector, producer, position/identity, visibility, build/spot, raw receipt,
 functional or comparison mismatch, a missing bound input, an unavailable required
 interference proof, a first failed label, a projected overrun or a stage deadline.
+
+## Director gate (c216, 2026-11-27) — the Stage C drive STOP is accepted: the 754 pin-hold presented the ordinary source bytes to the class-form loader; Amendment 7 re-bases the drive's presentation on the class-form authority
+
+Amendment 6 (this brief, implementation continuation, 27,776.523 s of the unspent epoch
+allocation, no top-up) was dispatched 2026-11-27 04:20:07 as unit
+`brief-812-cdx-20261127-042007-45219` (background task `basarvvbn`, log
+`.temp/logs/cdx_brief_812.log`; Codex CLI 0.171.0, `gpt-6.2-astra`, effort max,
+workspace-write, session `01a21983-f473-7ca3-a4bb-52abd08ecffb`) and returned rc 0 at 05:02,
+425,207 tokens, peak 6,716,817,408 B, oom 0/0, verdict **STOP**.
+
+A0 PASS (82.455 s): the moved Amendment 5 record re-authenticated (report `eb3177d5…` 1,218,807 B,
+PROGRESS `b5531ba7…`, seal `b3e24975…` 91,654 / 14,828,579,933 B, charge `1b87434b…`), the
+four 806e parents and three four-edit children, the retained real/default F13, the 811 design
+`da2fdf55…`, the render inputs and the observer manifest `50cc4a95…`, the final role trees (real
+`b0bdcee9…`, disabled `084f8cc8…`, armed `d5267244…`) and the five native F13 cells; the two
+c215 appends as strict appends (`TODO.md` `e47d04d0…` + 4,178 B = `06cbc0d1…`; this brief
+`1df00ae3…` + 14,802 B = `99149770…`). The warning contract v2 held: the catalogue froze at
+`05c456a9…` (real 1 / disabled 141 / armed 143, the post-754 delta recorded line by line), all
+twelve labels passed with `cache_hit=false`, Cargo exit 0, one codegen unit and their own
+receipts (`missing=0 extra=0 unknown_families=none source_mismatches=0`), the three spots
+reproduced the real ELFs, the twelve receipts and eight opposite-post swap rejections passed,
+the three lane trees differ from their roles in exactly the nine manifests, both 205-case Rust
+selectors passed with the exact matrix line on the freshly built `default-real`/`no-default-real`
+ELFs (fixture `b91020d7…`), and the `default-disabled` diagnostic binary accepted its own
+receipt and rejected the indexed binary at `Binary`. Stage C then stopped at the first carrier
+drive, `default-armed` P0267: `CM742C81 DRIVE RED programs table rejected: SourceIdentity`,
+exit 101 before plan selection. The worker had applied the historical 754 pin-hold, presenting
+the real role's ordinary bytes over 60 paths of the armed drive tree (`presented=c7a3d9d6…`,
+`compiled=d73aa794…`); the installed class-form loader rejected
+`crates/rum-host/src/session.rs` at `class-provenance.tsv` line 254 (expected `7127298d…`,
+supplied `ef78a1de…`), 2 canonical rows of 141. The record: seal 403,636 payloads /
+15,243,990,447 B `b9e200e9…` (all re-hashed, 14 envelope rows), report `b0be6df3…`
+(1,404,532 B, check OK 2,047), PROGRESS `dbba8210…`, summary `2cc643e7…`, finding `30a8e13f…`,
+charge `b531f7ff…`; entry == exit `49bd8faf…` at 5,903 paths, `git status` clean at `3a705b64`;
+zero live changes, git invocations, member cells or credit. Charge 2,545.405144187 s of
+27,776.523 (A0 82.455/300, C 1,970.313/7,676.523; pre-A0 50.042, close 442.596); unspent
+25,231.117856 s; returned 29,532.898478 s; cumulative 36,005.212469 of 65,538.110947.
+
+**The substance and defect #49 (mine).** The loader (`fixtures/obligations/guest.rs:1319–1363`,
+with the guest-route and dependency checks at `:1429–1445` and `:1547–1558`) resolves sources
+through `class_provenance()` — the class table `70a6da97…`, identical in all three role trees,
+whose 141 canonical-source rows carry `LEDGER_PIN 73ec2ff5…` — and its pins are the **class
+form** (the armed bytes). The 199 pinned paths are the ordinary table's key set with different
+hashes: the real tree satisfies the ordinary authority exactly but misses the class authority
+at 60 paths, the armed tree satisfies the class authority everywhere, and the disabled tree
+satisfies every canonical row but misses two non-canonical loader inputs
+(`eval_dispatch/mod.rs`, guest-route for the P0543/P0544/P0508/P1147 rows;
+`profiling/logical/segments.rs`, the C10 dependency). The 754 pin-hold presented ordinary
+(real) bytes — satisfiable only against the pre-install `provenance()` loader — and on the
+post-install tree it mismatches the class loader at exactly two canonical rows
+(`session.rs:254`, `worker.rs:260`), stopping the drive. My reproduction: the two tables share
+the 199-key set; the real tree has 2 canonical mismatches, armed 0, disabled 0 canonical /
+2 non-canonical; the presented tree `c7a3d9d6…` is rebuilt byte-exactly from the compiled tree +
+real bytes at the 60 differing paths; and **the corrected presentation passes the drive live**
+— the sealed drive binary `e539fb09…` on the compiled tree `d73aa794…` loaded, fired and
+passed in 3.28 s (`CM742_JOIN_HIT_ID program="CM740-GUEST" pair=1 activation=[("P1568", 1),
+("P1577", 0), ("P0267", 3)] producer_occurrence=0 generation=2 namespace=…`,
+`CM742C81 DRIVE VERDICT row=P0267 armed=true fired=true`, tree unchanged). **Defect #49
+(mine):** the drive clause carried the 754 pin-hold (the ordinary authority) onto the
+post-install tree without the class-authority rebase — the same defect class as #48, one stage
+later. The STOP is the rule working; no worker error.
+
+## Amendment 7 — the class-form drive presentation and the C–F completion (implementation continuation)
+
+**Scope.** Continue brief 812 from the accepted Amendment 6 products. No source edit; every
+build and measurement lands under `.temp/cm4-campaign-epoch/amendment-7/`; the sealed parents
+and the 754/797/806e records stay read-only. The twelve canonical labels, the three spot
+identities, the two 205-case Rust selector runs, the `default-disabled` diagnostic and the
+`default-armed` drive build (`e539fb09…` on `d73aa794…`) are reused by hash identity — no
+re-run, no rebuild; their receipts are re-read from the Amendment 6 seal.
+
+**A0 (300 s).** Close by hash identity against the Amendment 6 record: the seal `b9e200e9…`
+(403,636 payloads / 15,243,990,447 B), report `b0be6df3…`, PROGRESS `dbba8210…`, summary
+`2cc643e7…`, finding `30a8e13f…`, charge `b531f7ff…`; the moved report/PROGRESS at
+`.temp/director/812-stop-6/`; the four 806e parents, three children, five native F13 cells and
+the observer manifest; and the live census against `49bd8faf…`, permitting only `TODO.md` and
+this brief to differ, each verified as a strict append and printed as `C216 APPEND PASS` (old
+prefix, appended range, new hash); any other difference stops. The live entry census is taken
+after this gate's commit.
+
+**Stage C (6,500 s). The drive's source presentation is the loader's authority.** For each of
+the four drive trees (default and lane × disabled/armed: the role or lane tree plus the
+reviewed `cm742_c81_drive.rs` helper and the `obligations/mod.rs` hook — two drive-only
+differences), before every run: verify the loader's own predicate set on the drive tree — the
+`program-table` seal and every one of the 199 pinned paths of `class-provenance.tsv`
+(canonical-source, guest-route and guest-dependency) — presenting, where the drive tree differs
+from the class-form pin, the **class-form bytes (the armed role tree's files)** at exactly those
+paths, and print the compiled tree, the presented tree and the replaced count; require zero
+remaining mismatches and stop on any. The computed presentation is 0 paths for the armed and
+lane-armed trees and 2 for the disabled and lane-disabled trees
+(`crates/rum-runtime/src/runtime/eval_dispatch/mod.rs`,
+`crates/rum-runtime/src/runtime/profiling/logical/segments.rs`); any other set stops. The 754
+ordinary pin-hold (real-byte presentation) is unavailable on the post-install tree and must
+never be re-applied; its two-row rejection (`session.rs:254`, `worker.rs:260`) is this
+amendment's STOP. After each run, restore the compiled tree and require its tree hash equal to
+the build tree. Then execute the 20 drives (four trees × P0267/P0312/P0323/P1470/P1471) and
+check the five armed identities per configuration (join rows P0267/P0312/P0323, queue rows
+P1470/P1471: exactly one source hit and one class id with `pair=`, `producer_occurrence=`,
+`generation=`, `namespace=` and the `SELECTOR_ARMED < SOURCE_HIT < id` order), the inert
+disabled cohorts 60/60/60/45/45 (`class_hits=0 queue_hits=0 join_hits=0`), the 62 scheduled
+callers present in the frozen drive trees, the ten supplemental and 26 withholding fixtures,
+the three peels (19,184 bytes/level + 3,360 intercept, depth 48 = 924,192), and the
+private-frame E0603 falsifier; then freeze the `W/control` generator/continuation/twin/
+pure-compiler package (the `generator-check.py` interface with positive and one-fault tables,
+the two-test resolver control with the generic-receiver AmbiguousDispatch and
+concrete-resolution calibrations, the structural/dynamic generator controls, the P2593/P0813
+twins, the pure compiler fixture) and run the two ordinary importers' fourteen signed compiler
+controls on the fresh real ELFs with their actual rustc argv/stderr, zero schedule credit.
+Reconcile 12 canonical + 1 independent + 4 drive, plus the itemized functional CLI and
+workspace/producer jobs. Each auxiliary build carries its own source/ELF receipt and zero
+campaign labels.
+
+**Stage D (14,400 s), Stage E (3,000 s), Stage F (2,400 s).** As Amendment 5 wrote them,
+including every bound, cost and stop: the nine CLI companions and both frozen programs, fixed
+stderr and the exact 120-pair, 5,519-byte normalized stdout; the six workspace cases with the
+ordered seven skip pairs, nine host groups, current target-by-target comparison, exact
+same-binary adjudications and six ledgers; the full time normalization, falsifier and hardware
+rules of brief 812 lines 223–270; the six-build subject freeze, the ordinary mode-specific
+importers, zero-build-credit controls, spots and named negatives; six fresh C10 runs with both
+importers at 0/151 on the build-only control and 1/150 on C10 (55 real keys, one hit, zero
+settlements, partial-index status 101); no lane build in the index; and the child epoch
+identity, complete payload/report seal, live exit census and continuous charge. Class
+admissions, member cells, new catches and schedule credit are zero.
+
+**Charge.** The Amendment 6 attempt charged 2,545.405144187 s of 27,776.523 (A0 82.455/300,
+C 1,970.313/7,676.523; D/E/F 0; pre-A0 50.042, close 442.596); unspent **25,231.117856 s**;
+returned 29,532.898478 s of the 32,078.303622 s pool; cumulative 36,005.212469 of
+65,538.110947. This amendment allocates A0 300 / C 6,500 / D 14,400 / E 3,000 / F 2,400 =
+**26,600 s** of that returned pool; **no new top-up**; the remaining 2,932.898478 s stays
+unallocated. Charge is continuous from dispatch; every stage box is measured from its own CLOCK
+entry; a stage stops at its deadline.
+
+**Stops.** The thirteen Q25 STOPs are P0214, P0216, P1070, P2348, P2354, P2379, P2381, P2385,
+P2387, P2409, P2411, P2416, P2418. Briefs 744, 745 and 746 stay held; CM5 stays unauthorized.
+Stop on a pin, sourceset, warning, parser vector, producer, position/identity, visibility,
+build/spot, raw receipt, functional or comparison mismatch, a missing bound input, an
+unavailable required interference proof, a drive pin preflight mismatch, a first failed drive,
+a projected overrun or a stage deadline.

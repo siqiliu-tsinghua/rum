@@ -15603,3 +15603,54 @@ importers (fixture `cases.tsv` `b91020d7…`), the auxiliary builds and drives, 
 unchanged. The Amendment 5 report and PROGRESS move to `.temp/director/812-stop-5/`; the log
 archives. Q25's thirteen STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record,
 the 806e freeze and the preserved ancestors stay sealed to the campaign epoch's final gate.
+
+## 2026-11-27 — brief 812 Amendment 6's Stage C drive STOP accepted (c216, ruling 868): the 754 pin-hold presented ordinary source bytes to the class-form loader; the drive's presentation is re-based on the class-form authority and Amendment 7 completes C–F
+
+Amendment 6 (implementation continuation, 27,776.523 s of the unspent epoch allocation, no
+top-up) was dispatched 2026-11-27 04:20:07 as unit `brief-812-cdx-20261127-042007-45219`
+(task `basarvvbn`) and returned rc 0 at 05:02: 425,207 tokens, peak 6,716,817,408 B, oom 0/0,
+verdict STOP. **The warning contract v2 held:** the catalogue froze at `05c456a9…` (real 1 /
+disabled 141 / armed 143; the post-754 delta recorded line by line — real +1 `dead_code` at
+`coverage/bindings.rs:112`, each copied arm +2 `Cell` `unused_imports` + 9 `dead_code` at the
+CM740 probe files and `suspension/core.rs:708`); all twelve labels passed with
+`cache_hit=false`, Cargo exit 0, one codegen unit, their own receipts and
+`missing=0 extra=0 unknown_families=none source_mismatches=0`; the three spots reproduced the
+real ELFs (`bbf2841e…`, `33d4a14b…`, `c2780db3…`); the twelve receipts and eight opposite-post
+swap rejections passed; the three lane trees differ from their roles in exactly the nine
+manifests; both 205-case Rust selectors passed with the exact matrix line on the freshly built
+`default-real`/`no-default-real` ELFs (fixture `cases.tsv` `b91020d7…`); the
+`default-disabled` diagnostic accepted its own receipt and rejected the indexed binary at
+`Binary`; A0 PASS with the two c215 appends as strict appends (TODO `e47d04d0…` + 4,178 B =
+`06cbc0d1…`; brief `1df00ae3…` + 14,802 B = `99149770…`). **Stage C stopped at the first
+carrier drive,** `default-armed` P0267: exit 101 `SourceIdentity` before plan selection. The
+worker applied the historical 754 pin-hold, presenting the real role's ordinary bytes over 60
+paths of the armed drive tree; the installed class loader rejected `crates/rum-host/src/
+session.rs` at `class-provenance.tsv:254` (expected `7127298d…` = armed, supplied `ef78a1de…`
+= real), 2 canonical rows of 141. **My reproduction:** the class table `70a6da97…` (identical
+in all three roles) pins the class form at the same 199 paths as the ordinary table; the real
+tree misses the class authority at 60 paths (2 canonical: `session.rs:254`, `worker.rs:260`),
+the armed tree misses 0, the disabled tree misses 0 canonical but 2 non-canonical loader
+inputs (`eval_dispatch/mod.rs` guest-route, `profiling/logical/segments.rs` C10 dependency);
+the presented tree `c7a3d9d6…` is rebuilt byte-exactly from the compiled `d73aa794…` plus the
+real bytes at the 60 differing paths; and the corrected presentation passes the drive live —
+the sealed binary `e539fb09…` on `d73aa794…` loaded, fired and passed in 3.28 s
+(`CM742_JOIN_HIT_ID program="CM740-GUEST" pair=1 activation=[("P1568", 1), ("P1577", 0),
+("P0267", 3)] producer_occurrence=0 generation=2 namespace=…`, `VERDICT row=P0267
+armed=true fired=true`), tree unchanged. **Defect #49 (mine):** the drive clause carried the
+754 pin-hold (ordinary authority) onto the post-install tree without the class-authority
+rebase — the same class as #48. I verified the seal 403,636 payloads / 15,243,990,447 B
+`b9e200e9…` (all re-hashed, 14 envelope rows), report `b0be6df3…` (check OK 2,047), A0,
+entry == exit `49bd8faf…` at 5,903 paths, git clean at `3a705b64`, zero live changes or credit.
+**Charge:** 2,545.405 s of 27,776.523 (A0 82.455/300, C 1,970.313/7,676.523; pre-A0 50.042,
+close 442.596); unspent **25,231.117856 s**; returned **29,532.898478 s**; cumulative
+**36,005.212469 of 65,538.110947**. **Amendment 7** continues at A0 300 / C 6,500 / D 14,400 /
+E 3,000 / F 2,400 = **26,600 s** of the returned pool, **no new top-up** (2,932.898478 s stays
+unallocated): the twelve labels, three spots, two selectors, the diagnostic and the
+default-armed drive build reused by hash identity; the corrected class-form drive presentation
+(0 replaced for armed/lane-armed, 2 for disabled/lane-disabled) with the loader-predicate
+preflight and per-run restore; the 20 drives, five armed identities per configuration, the
+disabled cohorts, the scheduled callers, the supplemental/withholding fixtures, the three
+peels, the E0603 falsifier and the `W/control` package; then D–F unchanged. The Amendment 6
+report and PROGRESS move to `.temp/director/812-stop-6/`; the log archives. Q25's thirteen
+STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record, the 806e freeze and the
+preserved ancestors stay sealed to the campaign epoch's final gate.
