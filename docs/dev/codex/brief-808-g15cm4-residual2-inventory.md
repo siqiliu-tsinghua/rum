@@ -222,3 +222,44 @@ Everything else — the design-only scope (`Scope: NONE`), the zero-unknown mech
 inventory, the candidate placements with isolation falsifiers and bands, the J0/J1 joint
 design, the drafts of 809 and 810, the STOP rules and the seal/check/exit audit — stands
 unchanged.
+
+## Director gate (2026-11-26, gate c201)
+
+The attempt (cdx, unit `brief-808-cdx-20261126-195656-3963728`, 19:56:56–20:06, 61,791
+tokens, peak 331,476,992 B, oom 0, oom_kill 0, rc 0) **stopped at Stage A0**: the 250 s box
+was exceeded by 19.570 s of clock time (A0 clock entry 410217.344, exit 410486.913, elapsed
+269.570; charged from dispatch 289.974) — `STAGE A0 STOP elapsed_between_CLOCK_s=269.569775
+box_s=250 overrun_s=19.569775 charged_since_dispatch_s=289.974391 physical_pins=66
+stale_pins=0`. The substance is delivered: **all 66 pins PASS** (I re-ran every hash: 0
+missing, 0 bad, each equal to the 807f `pins.json` reference), the census PASS (5,898 =
+5,897 + exactly the three paths of gate c200's commit; the exit census equals the entry),
+and the logical readbacks PASS except the worker's **extra** 38-gate catalogue predicate
+(its 37-independent + 1-reused reading is correct, and I re-derived the 37 nonzero entries /
+363,371 visits from the TSV; the two first-pass STOPs were the verifier's own expectation
+errors — the residual table augments the joint object, the 799 projection omits
+`body_records` — corrected to PASS in the final pass and disclosed). Report `d85a0e9e…`,
+check OK 163 citations, seal 24 artifacts (all hashes equal; `pin-verdicts.txt`
+`8611af7c…`, `live-exit.json` `659d0385…`), exit audit zero live changes and zero git
+attempts; charge 540.604 s (A0 289.974 from dispatch — 269.570 clocked plus 20.405
+pre-clock; E 250.630; A–D 0); pool **12,556.655 s**. Ruling 853 accepts the STOP and names
+my defect #38: the 250 s box was sized to the physical work, leaving no slack for the Pins
+section's own logical readbacks, and the wording did not separate the required readbacks
+from extra predicates; the worker's keeping the box open past its deadline is a recurring
+discipline finding. The stopped record is archived at `.temp/director/808-stop-2/`.
+
+## Amendment 2 (ruling 853, gate c201)
+
+A0 is **closed by hash identity**: re-hash the 66 pins and require equality with the stop-2
+verdicts (`.temp/director/808-stop-2/pin-verdicts.txt` `8611af7c…`; equality
+authenticates, any difference is a STOP); compare the entry census with the stop-2 exit
+census (`.temp/director/808-stop-2/live-exit.json` `659d0385…`), allowing exactly `TODO.md`
+and this brief to differ (gate c201's commit) and requiring 5,898 paths with no addition or
+removal; the six logical readbacks and the catalogue count (37 independent + 1 reused = 38)
+are credited from that record and are not re-run. The stage plan is **3,750 s of the
+12,556.655 s pool** (8,806.655 s unallocated; no top-up): **A0 150 / A 500 / B 1,600 /
+C 700 / D 400 / E 400**. Each stage's box is measured from its own `CLOCK` entry; the
+charge stays continuous from dispatch and the pre-clock interval is charged to the attempt.
+A stage that reaches its deadline stops there with the exact missing measurement; no stage
+may be kept open for extra work. Stage A is the reading with the exact paths already listed
+in Amendment 1 (plus the stop-2 `final-binding-verdicts.txt` as context); Stages B, C, D
+and E are unchanged. Everything else stands.

@@ -15072,3 +15072,32 @@ first / A 350 reading with exact paths / B 1,600 / C 700 / D 400 / E 400; 9,397.
 unallocated): a `CLOCK` line at every stage entry and exit, a stage stopping at its deadline and
 never late, the expected entry census 5,898 with exactly the three-path delta, and fresh outputs
 under `.temp/brief-808/` (the stopped record archived at `.temp/director/808-stop-1/`).
+
+## 2026-11-26 — brief 808 Amendment 1's Stage A0 STOP accepted (gate c201, ruling 853); the pins are authenticated and Amendment 2 resumes at Stage A by hash identity
+
+The Amendment 1 attempt (cdx, unit `brief-808-cdx-20261126-195656-3963728`, 19:56:56–20:06,
+61,791 tokens, peak 331,476,992 B, oom 0, oom_kill 0, rc 0) stopped at Stage A0: the 250 s box was
+exceeded by 19.570 s of clock time (`STAGE A0 STOP elapsed_between_CLOCK_s=269.569775 box_s=250
+overrun_s=19.569775 charged_since_dispatch_s=289.974391 physical_pins=66 stale_pins=0`; A0 clock
+entry 410217.344, exit 410486.913). The substance is delivered: **66/66 pins PASS** (I re-ran every
+hash: 0 missing, 0 bad, each equal to the 807f `pins.json` reference, covering the 807f seal/report/
+summary/PROGRESS and eleven evidence files, the nine whole-draw Callgrind outputs, the three 807a
+ELFs with receipts and seal, the 795 instruments and panel files, the 796 scripts, the
+799/804/798/805 ledgers, and the two anchors); `CENSUS PASS predecessor_files=5897 entry_files=5898
+added=1 modified=2 deleted=0 unexpected=0` (exactly gate c200's three paths; exit census equal);
+and the logical readbacks PASS except the worker's extra 38-gate catalogue predicate (37 nonzero
+catalogue rows / 363,371 visits, which I re-derived, plus the reused 3,517-visit gate = 38; the two
+first-pass STOPs were the verifier's own expectation errors, corrected to PASS in the final pass and
+disclosed). Report `d85a0e9e…`, check OK 163 citations, seal 24 artifacts (all hashes equal;
+`pin-verdicts.txt` `8611af7c…`, `live-exit.json` `659d0385…`), exit audit zero live changes and zero
+git attempts; charge 540.604 s (A0 289.974 from dispatch — 269.570 clocked plus 20.405 pre-clock;
+E 250.630; A–D 0); pool **12,556.655 s**; reserve 9,397.259 unallocated. Ruling 853 accepts the
+STOP and names my defect #38: the 250 s box was sized to the physical work, leaving no slack for the
+Pins section's own logical readbacks, and the wording did not separate required readbacks from extra
+predicates; keeping the box open past the deadline is a recurring discipline finding. **Amendment 2**
+closes A0 by hash identity (re-hash the 66 pins against the stop-2 verdicts; equality authenticates,
+any difference is a STOP; the entry census against the stop-2 exit, allowing exactly `TODO.md` and
+this brief to differ), credits the six logical readbacks and the catalogue count from that record,
+and allocates 3,750 s of the 12,556.655 s pool (A0 150 / A 500 / B 1,600 / C 700 / D 400 / E 400;
+8,806.655 s unallocated) with each stage's box measured from its own CLOCK entry and a stage
+stopping at its deadline rather than being kept open.
