@@ -281,3 +281,38 @@ stays a STOP; red cells remain one-shot. Brief 807e resumes the epoch at 13,200 
 A2 1,500 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve 3,387.001 s; no top-up), carrying the
 807c/807d measurement path byte-identically. The two class-form decisions remain the user's at
 the fresh residual.
+
+## Director gate (2026-11-26, gate c198)
+
+Brief 807e stopped correctly at Stage C on the first base hardware draw. The v2.4 policy froze
+first at `457e5a77…` (0444, 18:28:48, zero calibration and zero measurement runs; the only
+deltas against 807d are `version`, `inputs.entry` and the briefed `quiet_retry` block), the 229
+pins and three reused 807a ELFs re-verified, the 807c/807d measurement path carried
+byte-identically (the calibration driver `d07a882b…` → `f003f21d…`, diff confined to the quiet
+attempt loop and the policy block), and all nine calibration cells passed on their first
+attempt: three quiet ADMIT (E14 +0.081019 / +0.108603 / +0.103788, F14 +0.021019 / +0.018603 /
++0.023788, sliding maxima +0.022680 / +0.016751 / +0.025685 against caps ≈0.25 / 0.070) and six
+red REJECT meeting the v2.3 proof (burn 1.000000098–1.000000480 s contained inside the job,
+E 1.030–1.110, F 1.000–1.020, injected-CPU sliding maximum ≥ 0.511). The first base hardware
+draw then exhausted three attempts, each exit 0 with 120 labels equal and 100.00 % running:
+`HARDWARE TREE … delta_ns=1027330696` (try2 1027451624, try3 1035372380) against the 0.020 s
+cap. Scope: 5,896 live files, entry and exit digest `85fc789d…`, zero changes, zero
+`.git-attempts`; report check OK 341 citations; seal 224 artifacts; charge 834.598 s (A0
+129.579/200, A2 502.985/1,500, C 6.7/4,200, F 195.334/800); cumulative 12,647.606 of 28,400;
+pool 15,752.403 s. Ruling 850 accepts the STOP and names my defect #35: the partition defined
+`meas` over live descendants only, so when the ELF child exits before `perf` its whole runtime
+leaves the last tree sum while `wait4`'s `RUSAGE_BOTH` still carries it — the delta is exactly
+`wait4` minus the root-only sum, and the same artifact books the vanished child as +1.027764 /
++1.026109 / +1.029758 s in the sliding window. Rebuilt under monotone per-task last-seen
+accounting the three attempts admit (E14 −0.005857 / −0.001715 / −0.000487, F14 −0.015857 /
+−0.001715 / −0.000487, maxima +0.011779 / +0.011658 / +0.013034) and the agreement residuals
+fall to +0.009743 / +0.004288 / +0.012717 s against a 0.040 s cap. Budget **v2.5** defines
+`meas` as the sum over every task ever observed of its last successfully read schedstat
+runtime (monotone; a vanished task keeps its value), the agreement cap as `2/HZ × n_tasks`,
+a STOP for trees above four tasks or with a descendant outliving the root's wait, and a
+vanishing-child A0 preflight (`perf stat -- <1-s burner>`: child retained ≥ 0.99 s, absent
+from the last live set, agreement within `2/HZ × 2`). Brief 807f resumes the epoch at 13,200 s
+(A0 200 / A2 1,500 / C 4,200 / D 4,000 / E 2,500 / F 800; reserve 2,552.403 s; no top-up),
+carrying the ten tools with only `passive.py` changed in the tree accounting and quoting the
+exact diff. The 807, 807a, 807b, 807c, 807d and 807e records stay sealed and read-only. The two
+class-form decisions remain the user's at the fresh residual.

@@ -14961,3 +14961,46 @@ resumes the epoch at 13,200 s (A0 200 / A2 1,500 / C 4,200 / D 4,000 / E 2,500 /
 3,387.001 s; no top-up), carrying the 807c/807d measurement path byte-identically; the
 807/807a/807b/807c/807d records stay sealed and read-only; the two class-form decisions still
 return to the user at the fresh residual.
+
+## 2026-11-26 — G15-CM4 fresh epoch: brief 807e stopped at Stage C (gate c198); budget v2.5 and brief 807f
+
+Brief 807e (unit `brief-807-cdx-20261126-182643-3920920`, 18:26:43–18:41:16) froze the v2.4
+policy first at `457e5a77…` (0444, 18:28:48, calibration and measurement runs 0; only version,
+`inputs.entry` and the briefed `quiet_retry` block differ from 807d), re-verified 229 pins and
+the three 807a ELFs, carried the 807c/807d measurement path byte-identically, and took all nine
+calibration cells on their first attempt under v2.4: three quiet `CAL GREEN … verdict=ADMIT`
+(E14 +0.081019 / +0.108603 / +0.103788, F14 +0.021019 / +0.018603 / +0.023788, sliding maxima
++0.022680 / +0.016751 / +0.025685 against caps ≈0.25 / 0.070, zero retries) and six `CAL RED …
+verdict=REJECT` meeting the v2.3 proof (burn 1.000000098–1.000000480 s wholly inside the job,
+E 1.030–1.110, F 1.000–1.020, injected-CPU sliding maximum ≥ 0.511, injector exit 0, foreign
+sibling). The first base hardware draw then exhausted its three declared attempts — each exit 0,
+120 normalized-equal labels, 100.00 % running — at the tree-vs-wait4 check: `delta_ns=1027330696`
+(try2 1027451624, try3 1035372380) against the 0.020 s cap; zero of nine draws admitted and
+Stage C stopped at 6.7 s. Scope: 5,896 live files, entry and exit digest `85fc789d…`, zero
+changes, zero `.git-attempts`; report check OK 341 citations; seal 224 artifacts; charge 834.598 s
+(A0 129.579/200, A2 502.985/1,500, C 6.7/4,200, F 195.334/800); cumulative 12,647.606 of 28,400;
+pool 15,752.403 s.
+
+Ruling 850 accepts the STOP and names my defect #35: the partition defined `meas` as the sum of
+schedstat runtimes over the measured process "and every live descendant", so when the ELF child
+exits before `perf` its entire runtime leaves the last tree sum while `wait4`'s `RUSAGE_BOTH`
+still carries it — the reported delta is exactly `wait4` minus the root-only sum (1,075,857,000 −
+48,526,304 = 1,027,330,696 ns; the last both-alive sample held 1,054,711,507 ns), and the same
+artifact books the vanished child as +1.027764 / +1.026109 / +1.029758 s in the sliding one-second
+window although E14/F14 stay inside their caps. Rebuilt under monotone per-task last-seen
+accounting all three attempts admit (E14 −0.005857 / −0.001715 / −0.000487, F14 −0.015857 /
+−0.001715 / −0.000487, maxima +0.011779 / +0.011658 / +0.013034) with agreement residuals
++0.009743 / +0.004288 / +0.012717 s against a 0.040 s cap, so the fix is sufficient; the host was
+quiet throughout (all quiet cells first-try). Budget **v2.5** changes only the tree definition:
+`meas` sums each task's last successfully read schedstat runtime over every task ever observed
+(monotone; a vanished task keeps its value; PID reuse cannot lower it), the terminal `wait4` must
+agree within `2/HZ × n_tasks` (n_tasks = distinct task keys ever observed, minimum 1), a tree
+above four tasks or with a descendant outliving the root's wait is a STOP, and the A0 passive
+preflight gains the vanishing-child case (`perf stat -- <1-s burner>`: the child's retained
+last-seen ≥ 0.99 s, absent from the last periodic live set, agreement within `2/HZ × 2`). Brief
+807f resumes the epoch at 13,200 s (A0 200 / A2 1,500 / C 4,200 / D 4,000 / E 2,500 / F 800;
+reserve 2,552.403 s; no top-up), carrying the ten tools with only `passive.py` changed in the tree
+accounting and quoting the exact diff; all nine calibrations are re-taken under v2.5, the
+807c/807d/807e cells being historical evidence. The 807/807a/807b/807c/807d/807e records stay
+sealed and read-only; the two class-form decisions still return to the user at the fresh
+residual.
