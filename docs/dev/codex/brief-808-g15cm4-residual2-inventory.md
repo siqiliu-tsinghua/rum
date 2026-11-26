@@ -263,3 +263,67 @@ A stage that reaches its deadline stops there with the exact missing measurement
 may be kept open for extra work. Stage A is the reading with the exact paths already listed
 in Amendment 1 (plus the stop-2 `final-binding-verdicts.txt` as context); Stages B, C, D
 and E are unchanged. Everything else stands.
+
+## Director gate (2026-11-26, gate c202)
+
+The attempt (cdx, unit `brief-808-cdx-20261126-200944-3971034`, 20:09:44–20:27, 160,752
+tokens, peak 625,360,896 B, oom 0, oom_kill 0, rc 0) **stopped at Stage B** under the
+zero-unknown rule — `STAGE B STOP zero_unknown=false earliest_blocking_requirement=B2
+placements=0 drafts=0 C=unentered D=unentered` — with the two missing measurements named
+(a same-pass pre-inline decision record or controlled role-equivalent builds for the
+matcher; a caller-tagged comparison trace for the libc leaf). A0 passed by hash identity:
+66/66 pins identical to the stop-2 verdicts `8611af7c…` (I re-ran every hash: 0 missing,
+0 bad, all equal), the entry census 5,898 with exactly `TODO.md` and this brief modified
+against the stop-2 exit, and the exit census equal (I re-walked the same 5,898-path set
+and re-hashed the eight non-tracked paths equal). The mechanism inventory is delivered
+and credited: every row balance has remainder 0; the family ranges reproduce the sealed
+807f record exactly (eval_core [8,005,829, 8,107,809], pattern_matching 6,273,782,
+kernel_data [784,262, 805,172], eval_dispatch [542,629, 554,970], definitions
+[348,183, 371,471], strings 240,168, drop glue [187,950, 218,472], scoping 2,100,570,
+builtin_adapters [−2,055,304, −2,046,448], raw_vec [−1,128,038, −1,113,089], publication
+[1,464,035, 1,464,199], libc family [1,526,514, 2,102,029]); the evaluator's bill is
+exact (the flag address held in r14 in base vs re-formed by RIP-relative LEA in armed at
+the same logical boundaries, `profiling/timing.rs:957`; row 1116 +7,970,633 with
+remainder 0; row 1115 +82,520); the matcher's ABI bill is exact (6,273,782 with remainder
+0; source byte-identical; the cold static caller 0x2727f7 has zero calls); the libc
+leaf's own range [1,346,267, 1,893,404] sits inside its family's. Two labels are
+corrected: the evaluator's 2,009/1,940 were seven-byte display lines (decoded: 1,636 /
+1,599), and the libc 1.53..2.10M range belongs to the family, not the leaf. Report
+`95549c36…`, check OK 529 citations, seal 56 artifacts (all hashes equal, detached
+summary equal), exit audit zero live changes and zero git attempts, two bounded serial
+objdumps (45 s each), `NO_SOURCE_EDIT`; charge 1,020.895 s (A0 35.737/150, A 77.683/500,
+B 615.700/1,600, E 274.109/400; C/D 0); pool **11,535.760 s**. Ruling 854 accepts the
+STOP and names my defect #39: the brief's items 2 and 5 demanded causal confirmations the
+retained instruments cannot carry (both ELFs have no remark or IR sidecar; Callgrind is
+`positions=instr,line`/`events=Ir`) while the STOP rule made those gaps fatal — the
+zero-unknown rule is a disposition-plus-named-missing-measurement bar, not a
+causal-proof bar. The stopped record is archived at `.temp/director/808-stop-3/`.
+
+## Amendment 3 (ruling 854, gate c202)
+
+A0 is closed by hash identity: re-hash the 66 pins against
+`.temp/director/808-stop-3/pin-verdicts.txt` `5c69f175…` (equality authenticates, any
+difference is a STOP); compare the entry census with the stop-3 exit
+`.temp/director/808-stop-3/live-exit.json` `cf68bd85…`, allowing exactly `TODO.md` and
+this brief to differ and requiring 5,898 paths with no addition or removal. The two ELF
+disassemblies (`base.dis` `bb4c9a45…`/90,754,260 B, `new.dis` `d372ac1d…`/129,665,438 B)
+and every mechanism table are read-only evidence under the archive and are not
+re-produced. **Stage B is closed** with the dispositions: eval_core and pattern_matching
+are repair targets; the matcher's causal test becomes a declared J1 cell in the 809
+design (a role-equivalent build independently varying the second cold user and the
+instrumentation, identical functional output, closed edges); the libc leaf is a carry
+(external leaf, no rum source, operands unrecordable with the retained instruments); the
+small families and the scoping/adapters pair are targets where a placement controls the
+mechanism and carries otherwise; raw_vec is favorable; the publication gates and the
+fastpath stay with the user. The stage plan is **1,900 s of the 11,535.760 s pool**:
+**A0 100 / C 1,000 / D 400 / E 400** (the 8,806.655 s reserve unallocated; no top-up).
+Stage C gives, for each repair-target item, the placement as code in the live source's
+shape with the must-not-change list, expected closure, price mechanism and band, and an
+isolation falsifier — or a justified carry naming what a controlled build would vary;
+the matcher prefers `#[inline]` over `#[inline(always)]` and its falsifier distinguishes
+"inlined again" from "disappeared"; the evaluator placement addresses the flag-address
+allocation, not the flag's semantics, with no default-path state in a hot frame; the
+J0/J1 protocol stands as written with the B2 cause variant as a declared cell. Stage D
+drafts 809 and 810; Stage E verifies, seals and reports. Each stage's box is measured
+from its own `CLOCK` entry; a stage that reaches its deadline stops there with the exact
+missing measurement. Everything else stands.

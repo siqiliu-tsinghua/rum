@@ -15101,3 +15101,42 @@ this brief to differ), credits the six logical readbacks and the catalogue count
 and allocates 3,750 s of the 12,556.655 s pool (A0 150 / A 500 / B 1,600 / C 700 / D 400 / E 400;
 8,806.655 s unallocated) with each stage's box measured from its own CLOCK entry and a stage
 stopping at its deadline rather than being kept open.
+
+## 2026-11-26 — brief 808 Amendment 2's Stage B STOP accepted (gate c202, ruling 854); the mechanism inventory is complete and Amendment 3 designs the placements
+
+The Amendment 2 attempt (cdx, unit `brief-808-cdx-20261126-200944-3971034`, 20:09:44–20:27,
+160,752 tokens, peak 625,360,896 B, oom 0, oom_kill 0, rc 0) stopped at Stage B under the
+zero-unknown rule — `STAGE B STOP zero_unknown=false earliest_blocking_requirement=B2
+placements=0 drafts=0 C=unentered D=unentered` — with the two missing measurements named (a
+same-pass pre-inline decision record or controlled role-equivalent builds for the matcher; a
+caller-tagged comparison trace for the libc leaf). A0 passed by hash identity: 66/66 pins
+identical to the stop-2 verdicts `8611af7c…` (I re-ran every hash: 0 missing, 0 bad), the entry
+census 5,898 with exactly `TODO.md` and this brief modified against the stop-2 exit, the exit
+census equal (my own walk reproduces the 5,898-path set and the eight non-tracked paths re-hash
+equal). The Stage B inventory is credited: every row balance remainder 0; the family ranges
+reproduce the sealed 807f record exactly (eval_core [8,005,829, 8,107,809], pattern_matching
+6,273,782, kernel_data [784,262, 805,172], eval_dispatch [542,629, 554,970], definitions
+[348,183, 371,471], strings 240,168, drop glue [187,950, 218,472], scoping 2,100,570,
+builtin_adapters [−2,055,304, −2,046,448], raw_vec [−1,128,038, −1,113,089], publication
+[1,464,035, 1,464,199], libc family [1,526,514, 2,102,029]); the evaluator's bill is exact (the
+flag address held in r14 in base vs re-formed by RIP-relative LEA in armed at the same logical
+boundaries, `profiling/timing.rs:957`; row 1116 +7,970,633, row 1115 +82,520); the matcher's ABI
+bill is exact (6,273,782; source byte-identical; the cold static caller 0x2727f7 has zero
+calls); the libc leaf's own range [1,346,267, 1,893,404] sits inside its family's. Two labels
+corrected: the evaluator's 2,009/1,940 were seven-byte display lines (decoded 1,636/1,599), and
+the libc 1.53..2.10M range belongs to the family, not the leaf. Report `95549c36…`, check OK 529
+citations, seal 56 artifacts (all hashes equal, detached summary equal), exit audit zero live
+changes and zero git attempts, two bounded serial objdumps (45 s each), `NO_SOURCE_EDIT`; charge
+1,020.895 s (A0 35.737/150, A 77.683/500, B 615.700/1,600, E 274.109/400; C/D 0); cumulative
+16,864.249 of 28,400; pool **11,535.760 s**; reserve 8,806.655 unallocated. Ruling 854 accepts
+the STOP and names my defect #39: items 2 and 5 demanded causal confirmations the retained
+instruments cannot carry (neither ELF has a remark or IR sidecar; Callgrind is
+`positions=instr,line`/`events=Ir`) while the STOP rule made those gaps fatal — the zero-unknown
+rule is a disposition-plus-named-missing-measurement bar, not a causal-proof bar. **Amendment 3**
+closes A0 by hash identity (the stop-3 verdicts `5c69f175…`, the stop-3 exit `cf68bd85…`), closes
+Stage B with the dispositions (eval_core and pattern_matching repair targets; the matcher's
+causal test as a declared J1 cell in the 809 design; the libc leaf carried; the small families
+and the scoping/adapters pair targets where a placement controls the mechanism, justified
+carries otherwise; raw_vec favorable; the publication gates and the fastpath stay with the user),
+and allocates 1,900 s of the 11,535.760 s pool (A0 100 / C 1,000 / D 400 / E 400; 8,806.655 s
+unallocated). The stop-3 record is archived at `.temp/director/808-stop-3/`.
