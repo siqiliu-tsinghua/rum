@@ -15140,3 +15140,38 @@ and the scoping/adapters pair targets where a placement controls the mechanism, 
 carries otherwise; raw_vec favorable; the publication gates and the fastpath stay with the user),
 and allocates 1,900 s of the 11,535.760 s pool (A0 100 / C 1,000 / D 400 / E 400; 8,806.655 s
 unallocated). The stop-3 record is archived at `.temp/director/808-stop-3/`.
+
+## 2026-11-26 — brief 808 Amendment 3 DONE (gate c203, ruling 855); the two placements, the J0/J1 design and the 809/810 drafts are sealed, and brief 809 is dispatched
+
+The Amendment 3 attempt (cdx, unit `brief-808-cdx-20261126-203522-3985262`, 20:35:22–21:00,
+345,296 tokens, peak 245,211,136 B, oom 0, oom_kill 0, rc 0) is DONE. A0 passed by hash identity:
+66/66 pins equal the stop-3 verdicts `5c69f175…` (I re-ran every hash: 0 missing, 0 bad), the
+entry census 5,898 with exactly `TODO.md` and the brief modified against the stop-3 exit, the
+exit census equal (my own walk reproduces the set). The design is delivered and checked: the two
+placements as literal one-site substitutions with all six role preimages hash-verified
+(`timing.rs` `2e3d38e2…` live/real/armed; `core.rs` `53fe924b…` live/armed and `7f2682ec…` real)
+and the live files read at the exact lines; E (the closure capture mode) against the flag-address
+register-allocation mechanism, band 0..8,107,809 with the four-row seed 8,034,374..8,090,378
+(b0=28,031, reproduced from the sealed body map); M (the ordinary `#[inline]`), band
+−376,710..+6,822,736 with the exact seed 6,273,782; the six must-preserve invariant blocks; the
+13 dispositions (ten carries with mechanisms, bands and controlled follow-ups; publication and
+fastpath user-owned; three draw families carried); the frozen J0 and the J1 estimator (18 pricing
+profiles, the deduplicated union and closure rule, the 805 subtraction, the all-81 price
+combinations, the b0+b1 bar and same-code controls); the B2 four-cell causal matrix (four
+diagnostic builds on saved bitcode, scratch-only, no price, with a named degradation); and the
+drafts of 809 and 810. Report `0f00aead…`, check OK 452 citations, seal 30 artifacts (all
+re-hashed equal, detached summary equal), exit audit zero live changes and zero `.git-attempts`,
+zero builds/captures/disassemblies/inventory replays/acceptance suites, `NO_SOURCE_EDIT`; charge
+1,475.596 s (A0 30.776/100, C 867.659/1,000, D 232.010/400, E 325.157/400; every stage inside its
+box); cumulative 18,339.845 of 28,400; pool **10,060.155 s**. Ruling 855 accepts the brief DONE
+with two gate notes: the M hint was inert in brief 802's pre-805 `1383-inline` cell (the J1 cell
+re-tests it on the 807a tree, and an inert result must be reported and the matcher residual
+carried), and the E placement is a codegen hypothesis whose falsifier's address-work column and
+negative control are the bar. **Brief 809** (`docs/dev/codex/brief-809-g15cm4-joint-measurement-
+and-landing.md`, implementation) is written from the draft at 6,300 s of the pool (A 200 /
+B 1,800 / C 2,500 / D 1,500 / E 300; 3,760.155 s unallocated for 810; no top-up): the two
+placements measured separately and jointly on armed and real (18 pricing profiles) against the
+frozen J0, the B2 matrix as diagnostic scratch (12 profiles), the definitive price by the 805
+subtraction on the deduplicated nonpublication union with the 81-price interval and the b0+b1
+bar, the predeclared selection rule, the microbench A/B and the standing producers only after a
+qualified landing, and no acceptance (the 38 gates and the fastpath stay with the user).

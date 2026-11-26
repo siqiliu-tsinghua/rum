@@ -327,3 +327,36 @@ J0/J1 protocol stands as written with the B2 cause variant as a declared cell. S
 drafts 809 and 810; Stage E verifies, seals and reports. Each stage's box is measured
 from its own `CLOCK` entry; a stage that reaches its deadline stops there with the exact
 missing measurement. Everything else stands.
+
+## Director gate (2026-11-26, gate c203)
+
+The Amendment 3 attempt (cdx, unit `brief-808-cdx-20261126-203522-3985262`, 20:35:22–21:00,
+345,296 tokens, peak 245,211,136 B, oom 0, oom_kill 0, rc 0) is **DONE**. A0 passed by hash
+identity: 66/66 pins equal the stop-3 verdicts `5c69f175…` (I re-ran every hash: 0 missing, 0
+bad, no additions or removals), the entry census 5,898 with exactly `TODO.md` and this brief
+modified against the stop-3 exit `cf68bd85…`, the exit census equal (my own walk reproduces the
+same 5,898-path set). The design is delivered and checked: two placements as literal one-site
+substitutions with all six role preimages hash-verified (`timing.rs` `2e3d38e2…` in live, real
+and armed; `core.rs` `53fe924b…` in live and armed, `7f2682ec…` in real) and the live files read
+at the exact lines (the closure at `timing.rs:156` under the existing `#[inline]`, the flag load
+at :957; `core.rs:42`, :63, :1085); the E mechanism (the flag-address register allocation) with
+band 0..8,107,809 and the four-row seed 8,034,374..8,090,378 (b0=28,031, which I reproduced from
+the sealed body map); the M hint with band −376,710..+6,822,736 and the exact seed 6,273,782;
+`invariants.json`'s six must-preserve blocks; the 13 dispositions (ten carries with mechanisms,
+bands and controlled follow-ups; publication and fastpath user-owned; three draw families
+carried); the J0/J1 estimator (J0 frozen on the three 807a ELFs and nine 807f draws; 18 pricing
+profiles; the deduplicated union and closure rule; the 805 subtraction; the all-81 price
+combinations; the b0+b1 bar and same-code controls); the B2 four-cell causal matrix with its
+scratch-only/no-price/degradation clauses; and the drafts of 809 and 810 with their stage plans
+and charges. Report `0f00aead…`, check OK 452 citations, seal 30 artifacts (I re-hashed all 30:
+0 missing, 0 bad; report sha equal; detached summary equal), exit audit zero live changes and
+zero `.git-attempts`, zero builds, captures, disassemblies, inventory replays or acceptance
+suites, `NO_SOURCE_EDIT`, the 808 archive untouched; charge 1,475.596 s (A0 30.776/100,
+C 867.659/1,000, D 232.010/400, E 325.157/400; every stage inside its box); pool
+**10,060.155 s**. Ruling 855 accepts the brief DONE with two gate notes: the M hint was measured
+inert in brief 802's `1383-inline` outline cell on the pre-805 tree (the J1 cell re-tests it on
+the 807a tree, and an inert result must be reported as an unpriced cell and the matcher residual
+carried), and the E placement is a codegen hypothesis whose falsifier's address-work column and
+negative control are the bar. Brief 809 is written from the draft at 6,300 s (A 200 / B 1,800 /
+C 2,500 / D 1,500 / E 300), with the two placements frozen, the B2 matrix included scratch-only,
+the selection rule predeclared, and the user's two class-form decisions untouched.
