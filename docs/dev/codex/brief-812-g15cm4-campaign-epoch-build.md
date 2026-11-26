@@ -327,3 +327,97 @@ own CLOCK entry; the charge is continuous from dispatch; a stage reaching its de
 there with the exact missing cell and its elapsed time, never kept open. Save each immutable cell
 before replacing a staging tree; at each checkpoint record the exact next cell and any live dirt
 attributable to this brief.
+
+## Director gate (c210, 2026-11-27) — the Stage B STOP is accepted: the real role cannot build a no-default lib-test target, so the F13 binding is corrected to native-per-role plus the calibrated projection
+
+The attempt (`brief-812-cdx-20261127-014159-4142336`, 01:41:59–01:56, rc 0, verdict STOP)
+delivered Stage A complete and one Stage B cell. I verified: the stop seal's 30,084 payloads
+re-hash equal (1,742,945,265 B; seal `cc3818f4…`, report `79ae58b0…`, PROGRESS `6e421647…`,
+charge `a6c5d94c…`); `report.py check` OK 341; the live tree is 5,903 files, entry == exit ==
+now byte-identical; the 632 design pins, the 811 seal (`58b35673…`/`da2fdf55…`), the 36 c154
+losses and the 10 witnesses; the four 806e parents (5,842/5,851/5,851/5,851; manifests
+`ffbfe330…`/`1e02d222…`/`b782aa97…`/`3dc7f9bc…`); the dispatch census (5,903, `modified=2
+added=1`); the four edits per child role tree (byte-identical across the three roles); the
+reader (`schema.rs:51` literal, `:54–56` the exact return, the ordinary path intact;
+`mod.rs:107–125` the seam with the production wrapper; `tests.rs:32–40` the in-memory fixture
+and its six negatives; `additions.tsv` = `33478d6e…`); the two-sided parser calibration (4
+binaries × 49 vectors = 196 `PARSER PASS`, changed `zero-positive → empty` at `:55`, all 47
+malformed/truncation vectors `→ OverlaySet`, original `zero-positive → OverlaySet` at `:60`,
+the no-default logs byte-identical to default); three `cargo fmt --all -- --check` runs exit
+0; the real/default F13 `8d6ba3f0…` (68 rows, 18 invariant columns), which **I re-derived
+independently from the tree** (context `f669b7ae5a458672`; 34 dependencies + 1,651 crate
+files; byte-equal); charge 895.734 s of 36,000 (A 364.758/1,200, B 177.303/7,200); memory
+peak 2.58 GB of 16 GiB, zero OOM; zero git attempts; `git status` clean at `909a217c`; zero
+adoptions, labels, C10 runs or credit.
+
+The STOP is correct and the cause is a construction fact: the **lib test** target of the
+frozen real role cannot compile in no-default. `crates/rum-stdlib/src/tests/ownership_graph/
+reconcile.rs:10` imports `sha2::{Digest, Sha256}` unconditionally; the real role's frozen
+`crates/rum-stdlib/Cargo.toml` (`6dcfaa9f…`, the class form's preimage at R4 row 128) keeps
+`sha2` optional behind the default-on `hash` feature and has no sha2 dev-dependency, so
+`--no-default-features` drops the dependency and rustc emits E0432 before any test runs. The
+two copied arms carry the class form's own manifest (`67be9610…`, `sha2` dev-dependency
+present, added to live at `e66e8531`). The real role is the uninstrumented pre-class-form
+reference; a no-default lib-test configuration does not exist there and cannot be created
+without rewriting the class form's preimage, which parent immutability and the 165 overlaid
+paths forbid. **Defect #44 (mine):** the 811 design's "two identical F13 byte streams per
+role / six outputs" (`source-proof.md:24`) and this brief's per-(role, mode) lib-test loop
+plus "native promotion reviews for hash=true/false" mandated those executions without a
+buildability check against the frozen roles — the same class as #42/#43.
+
+## Amendment 1 — the F13 matrix, the real zero-overlay promotion, and the resumed Stage B
+
+The stopped attempt's R/default F13 cell is retained and authenticated by hash identity; no
+other cell is credited. Resume in the same scene `W = .temp/cm4-campaign-epoch`; the stop
+record under `W/stop/` stays immutable.
+
+**Stage A0 (200 s) — authenticate by hash identity, then proceed.** The moved report
+`79ae58b0…` and PROGRESS `6e421647…` at `.temp/director/812-stop-1/`; the 30,082 in-place
+payloads of `W/stop/payloads.tsv` (the two moved rows re-hash equal at the new root); the
+seal `cc3818f4…`; the live census 5,903 equal to `W/stop/live-exit-stat.json`; the four
+parents and the three child role trees (`689b9188…`, `f9661a93…`, `450b9e2f…`); the four
+edits; the retained R/default F13 `8d6ba3f0…` with its receipt `d20465a0…` and raw
+`6a376127…`; `git status` clean. Any difference stops.
+
+**Stage B (6,822.697 s) — the corrected F13, controls and promotion, then Stage B unchanged.**
+
+1. **Buildability matrix (first, before any producer).** For each role and mode create or
+   reuse the review destination and run `cargo test --offline --locked -p rum-stdlib --lib
+   --no-run F` (plus a `--no-run` default leg); the matrix must hold exactly: R/default,
+   D/default, D/no-default, A/default, A/no-default build; R/no-default fails with E0432 at
+   `reconcile.rs:10`. Any deviation in either direction stops and returns to the gate.
+2. **F13 native cells (five).** R/default is retained; run D/default, D/no-default,
+   A/default, A/no-default with the brief's producer command in each destination. Require for
+   every output: 68 rows, the 18 identity columns, row order, header and comments preserved;
+   the arms' two streams byte-identical within each role; the 62 discharged red/green
+   falsifier files after each controls run (`local_concrete_contract_controls`): exactly the
+   62 `.red-green.txt` files under `target/brief-540/falsifiers`, each `RED stale contract
+   fingerprint` / `GREEN exact current mark`.
+3. **Independent projection (falsifier, never a binding).** With the sealed
+   `.temp/brief-790/overlay_digest.py` `f13_bytes`, calibrate on each frozen parent role tree
+   (`f13_bytes(parent, {})` must reproduce real `217bec91…`, disabled `40e92684…`, armed
+   `d3588fb9…`), then compute `f13_bytes(parent, {the four edits' bytes})` and require it to
+   equal every native stream of that role, including the retained real one. A disagreement
+   stops; the adopted bytes are always the native producer's (ruling 860 stands).
+4. **Adopt** each role's native F13 into its role tree and both mode workspaces before the
+   controls/acceptance runs, as before.
+5. **Promotion (corrected to the historical convention).** Real: no producer; require
+   `real/promoted.tsv == baseline/promoted.tsv` (`4337950c…`) and record it as the zero-overlay
+   control. Disabled and armed: native `local_production_acceptance` review and check in both
+   hash modes, merge complementary cells by body/instance with the parent role table as the
+   carry, adopt the merged table, and require review/check equality, C01/C02, 2 bodies / 3
+   marks / 4 probes, zero rejections and the retained negative evidence.
+6. Stage B's remaining items stand unchanged: the ownership review (its recorded recipe is
+   the default-mode lib test on the armed role, which builds), the 152-chain recomputation,
+   both class projections, LP01, typed receipts, the rejection census, the 190 R4 rows, the
+   ten re-emitted outputs, the two independent serializations and the observer re-freeze.
+
+**Stages C–F unchanged** (7,800 / 14,400 / 3,000 / 2,400 s), including the buildability the
+six release labels and the two importer test binaries already require (integration targets,
+not the lib test target).
+
+**Charge.** The stopped attempt: 895.734 s of 36,000, unspent 35,104.266 s, cumulative
+28,060.651 of 63,164.917. This amendment allocates A0 200 / B 6,822.697 / C 7,800 / D 14,400
+/ E 3,000 / F 2,400 = 34,622.697 s inside that unspent; no new top-up. Its own charge is
+continuous from its dispatch; the report at `.temp/brief-812/report.json` covers this attempt
+and cites the stopped record; every stage box is measured from its own CLOCK entry.

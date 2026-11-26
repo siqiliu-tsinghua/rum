@@ -15370,3 +15370,56 @@ re-runs, the rustc-spawning private-types probe (the epoch owns the fourteen inv
 806e class-form differences registered by exact test name and paired receipt. Q25's thirteen
 STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record, the 806e freeze and the
 preserved ancestors stay sealed to the campaign epoch's final gate.
+
+## 2026-11-27 — brief 812's Stage B STOP accepted (c210, ruling 862): the frozen real role cannot build a no-default lib-test target, so the F13 binding is corrected to native-per-role plus the calibrated projection, and Amendment 1 resumes the epoch
+
+Brief 812 (the campaign epoch build, 36,000 s) was dispatched 2026-11-27 01:41:59 as unit
+`brief-812-cdx-20261127-014159-4142336` (background task `b04dmbbq7`) and returned rc 0 at
+01:56 with verdict STOP: the native real/no-default F13 producer could not be compiled
+(`error[E0432]: unresolved import sha2` at `crates/rum-stdlib/src/tests/ownership_graph/
+reconcile.rs:10:5`; Cargo exit 101; the test never executed). Stage A passed complete: the
+632 design pins, the 811 seal (report `58b35673…`, seal `da2fdf55…`), the 36 c154 losses, the
+four 806e parents (5,842/5,851/5,851/5,851), the dispatch census 5,903 (`modified=2 added=1`),
+the four edits per child role tree, the zero-additions reader (`schema.rs:51` the 32-byte
+literal, `:54–56` the exact return, the ordinary path intact; `mod.rs:107–125` the seam with
+the production wrapper; `tests.rs:32–40` the in-memory fixture and six negatives;
+`additions.tsv` = `33478d6e…`), the two-sided parser calibration (4 binaries × 49 vectors =
+196 `PARSER PASS`; changed `zero-positive → empty` at `:55`, all 47 malformed/truncation
+vectors `→ OverlaySet`; original `zero-positive → OverlaySet` at `:60`; the no-default logs
+byte-identical to default), three `cargo fmt` checks exit 0, and the real/default F13
+`8d6ba3f0…` (68 rows, 18 invariant columns), which I re-derived independently from the tree
+(context `f669b7ae5a458672`, 34 dependencies + 1,651 crate files; byte-equal). The stop seal's
+30,084 payloads re-hash equal (1,742,945,265 B; seal `cc3818f4…`, report `79ae58b0…`);
+`report.py check` OK 341; the live tree is 5,903 files, entry == exit == now byte-identical;
+git clean at `909a217c`; zero adoptions, labels, C10 runs or credit.
+
+The STOP is correct and the cause is a construction fact: the real role's frozen
+`crates/rum-stdlib/Cargo.toml` (`6dcfaa9f…`, the class form's preimage at R4 row 128) keeps
+`sha2` optional behind the default-on `hash` feature and carries no sha2 dev-dependency, while
+`reconcile.rs:10` imports it unconditionally in the lib test target; `--no-default-features`
+therefore fails E0432 before any test runs. The copied arms carry the class form's manifest
+(`67be9610…`, `sha2` dev-dependency present, added to live at `e66e8531`); the real role is the
+uninstrumented pre-class-form reference and a no-default lib-test configuration cannot exist
+there without rewriting the class form's preimage. **Defect #44 (mine):** the 811 design's
+"two identical F13 byte streams per role / six outputs" (`source-proof.md:24`) and brief 812's
+per-(role, mode) lib-test loop plus "native promotion reviews for hash=true/false" mandated
+those executions without a buildability check — the same class as #42/#43.
+
+**The correction (ruling 862):** the F13 artifact is role-level (the producer is a pure
+function of the baked table and the tree's file names/bytes; no `cfg(feature` on the path, and
+I proved it by re-derivation). Five native cells: R/default (retained), D/default,
+D/no-default, A/default, A/no-default; a calibrated independent projection
+(`overlay_digest.f13_bytes`, reproduced `217bec91…`/`40e92684…`/`d3588fb9…` on the parents and
+`8d6ba3f0…` from the four edits) is a falsifier that must equal every native stream (never a
+binding — ruling 860 stands); the real role's no-default lib-test cell is declared impossible
+and checked by a positive buildability matrix; the 62 red/green controls run default-only on
+the real role and both modes on the arms; the real promotion follows the historical
+zero-overlay convention (`real/promoted.tsv == baseline/promoted.tsv`), the arms run native
+review/check in both hash modes. The rest of Stage B and stages C–F stand unchanged.
+
+**Charge:** 895.734 s of 36,000 (A 364.758/1,200, B 177.303/7,200); unspent 35,104.266 s;
+cumulative **28,060.651 of 63,164.917**. Amendment 1 allocates A0 200 / B 6,822.697 / C 7,800 /
+D 14,400 / E 3,000 / F 2,400 = 34,622.697 s inside the unspent; no new top-up. The stopped
+report and PROGRESS move to `.temp/director/812-stop-1/` and the log archives. Q25's thirteen
+STOPs stand; 744/745/746 held; CM5 unauthorized; the 811 record, the 806e freeze and the
+preserved ancestors stay sealed to the campaign epoch's final gate.
