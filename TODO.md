@@ -15250,3 +15250,33 @@ the loss disclosed); C10 and the importers are re-taken from the surviving packe
 restart is unaffected. Brief 811 Amendment 1 (design-only, 3,800 s of the returned allocation:
 A 300 / B 1,500 / C 1,200 / D 500 / E 300) re-dispatches on the surviving records. Charge
 380.167 s of 4,200 for the stopped attempt; pool 5,660.985 s; cumulative 22,739.015 of 28,400.
+
+## 2026-11-27 — brief 811 Amendment 1's Stage B STOP accepted (c207, ruling 859): the sealed source-auth contract cannot authenticate the six-build index against one baseline; the campaign epoch needs a role-aware source proof
+
+Amendment 1 (unit `brief-811-cdx-20261127-000427-4091885`) passed Stage A on the surviving
+witnesses (all eight hashes equal; 312 evidence pins + 3 witnesses + 36 c154 loss lines; the
+ledger 255 selections per mode, stage755 20 + stage744 244 + stage745 246 = 510, credit 0; the
+rebuild required, 12 labels, 0 qualified epochs) and stopped correctly at Stage B: the sealed
+source-auth contract uses one baseline (`mutations/receipts.rs:76–118`, `RUM_CM740_BASELINE`)
+whose real-arm check requires it to equal the real role tree byte-for-byte
+(`source_auth/artifacts.rs:35–63`) while the copied-arm checks require every declared addition
+absent from it (`source_auth/mod.rs:176–232`). The nine additions (`additions.tsv`
+`feca9443…`/1,221 B) include `class-provenance.tsv` (`70a6da97…`, 5,462,797 B), compiled into
+the real build at `coverage/bindings.rs:114` and present identically in real/disabled/armed and
+absent in baseline — so no single baseline satisfies both checks; the 165 overlay postimages
+match the copies, but one preimage (local-contracts.tsv) is anchored on the baseline role
+(`ead1d6de…`) while the real tree carries `217bec91…`. The tables are anchored on the render's
+baseline role, not the importer's baseline (the real tree); the tables landed live at
+`e66e8531` with the same nine rows, so the D.2 install did not create the contradiction.
+Director defect #42: ruling 858's re-grounding said "the importers re-run per mode" without
+verifying the contract against the D.2 role trees.
+
+The correction: a role-aware source proof regenerated from the real role tree as the baseline
+(5,851 files, zero real-arm overlays; 165 overlay rows with the real preimages and the existing
+postimages; the additions set empty with a fail-closed expression; the copied key sets equal to
+the baseline's; a complete falsifier matrix). Brief 811 **Amendment 2** (design-only, 3,000 s:
+A 300 / B 1,200 / C 800 / D 400 / E 300; 2,821.469 s from the return + a 178.531 s top-up)
+inventories the contract lineage, designs the proof with its falsifiers, and drafts the three
+implementation briefs (the epoch build, the readmission, the 744 restart). Charge 978.531 s of
+3,800; pool 4,682.454 s; cumulative 23,717.546 of 28,400. Q25's thirteen STOPs stand;
+744/745/746 held; CM5 unauthorized.
