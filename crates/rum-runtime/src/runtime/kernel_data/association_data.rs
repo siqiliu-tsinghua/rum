@@ -843,6 +843,7 @@ impl Session {
         Ok(Some(value))
     }
 
+    #[inline(always)]
     fn normalize_association_set_lvalue_target(
         &self,
         lhs: &Expr,
@@ -875,6 +876,7 @@ impl Session {
         Some(current)
     }
 
+    #[inline(always)]
     fn resume_association_set_lvalue_selector_evaluation(
         &mut self,
         symbol: Symbol,

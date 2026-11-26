@@ -176,13 +176,24 @@ fn exact_types_and_constructor_claims_match_rustc() {
     // LP04 R-638-2: the shared Session starter lets the walk enter
     // logical_phase_start; its early `return None` adds one context: 175.
     // Brief-713 admission-refusal None: evaluation_cache/profile/source.rs:316.
+    // Brief 805 (G15-CM4 D.2 package landing): the two adopted runtime-path
+    // timing wrappers return `T::default()` through run_configured_timing
+    // instead of an early `return None` (timing.rs 157:16 leaves the source),
+    // and the two slow calls now travel as closures whose bodies the frontier
+    // records as boundaries without following, so logical_phase_start's early
+    // `None` (logical/mod.rs 345:20) leaves the walk: 174. Paired by site
+    // against the accepted 176 rows: no other context moves, and no context is
+    // added. Ruled by the director 2026-11-26 (ruling 839): the first loss is
+    // a value-preserving spelling move (`Option::default()` is `None`), the
+    // second is the named retention-line closure-descent obligation, not a
+    // resolved context and never booked as an improvement.
     assert_eq!(
-        total, 176,
+        total, 174,
         "all live constructor contexts, including the direct unarmed guest entry"
     );
     assert_eq!(
         total + legacy_clone_claims,
-        178,
+        176,
         "all live contexts and both preserved clone-return contexts"
     );
     fs::write(directory.join("production.tsv"), out).unwrap();

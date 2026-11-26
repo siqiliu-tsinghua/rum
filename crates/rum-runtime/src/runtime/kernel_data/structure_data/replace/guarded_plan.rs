@@ -1,6 +1,7 @@
 use super::plan::insert_replace_plan_target;
 use super::*;
 
+#[inline(always)]
 pub(super) fn build_guarded_replace_plan_from_targets(
     targets: Vec<GuardedReplacePartTarget>,
     rules: &[ReplacePartRule],

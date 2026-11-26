@@ -14738,3 +14738,25 @@ wire tag) is named for `CHANGELOG.md` before S10, together with the earlier
 `EvalError::Syntax` break. After this line: continuation 38 of brief 623 on
 the installed source; then C2's settlement round, CM, `CHANGELOG.md` before
 S10, G13 S10-S54/F1-F23/R, E2.
+
+## 2026-11-26 — G15-CM4 D.2 package landed: brief 805 accepted (gate c187)
+
+The D.2 package (seven outline attributes and the coldout refactor) is measured
+and installed as nine live paths: the seven runtime sources, the retention
+rejection census re-pin (AMEND-5, 1,195 = 10/1,147/38) and the
+compiler-oracle constructor-context re-pin (AMEND-6, 176 → 174 / 178 → 176).
+The definitive joint price is armed 37,472,818 − real 23,916,394 =
+13,556,424 Ir; `additive_claimed` stays false and the nominal 18,586,651 is
+never booked. The live release is byte-identical to armed-J2 `c7706291…` /
+18,689,432 B with 52 measured ranges. The worker's seal: 1,709 artifacts, 0
+unexplained, 0 sealed differences, 54/54 captures; `report.py check 805` OK
+382. The live workspace on the 797 pinned recipe reads 4,323/241/71 (pinned
+4,552/12/71); the 229 new reds are all pre-render derived cells and every one
+is paired to a nine-source staged green receipt (lib 1,115/0/58; class
+197/0/0; the fourteen selectors 14/0/0 with the lane bind; the eight
+mutation/observer selectors 8/8; the census dump `4b5fcd37…`). The seven
+adopted inventory files stay staged for the render. After this line: brief 806
+(render, R4 install, re-freeze), then brief 807 (the fresh epoch with the
+replaced qualification rule, Stage C/C10 readmission and the 744 restart); the
+38 publication gates' 1,464,055 Ir and the fastpath's 41,712 Ir remain named
+decisions for the fresh residual.

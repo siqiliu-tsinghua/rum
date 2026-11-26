@@ -566,7 +566,7 @@ fn initialize_lexical_profile_detail_enabled() -> bool {
 }
 
 #[cold]
-fn initialize_lexical_profile_enabled() -> bool {
+pub(super) fn initialize_lexical_profile_enabled() -> bool {
     let enabled = std::env::var_os(LEXICAL_PROFILE_ENV)
         .is_some_and(|value| !value.is_empty() && value != "0");
     publish_cold_load(&LEXICAL_PROFILE_ENABLED, enabled)

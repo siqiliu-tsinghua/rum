@@ -392,14 +392,34 @@ fn baseline(source: &Source) {
     // the three historical abandon.rs sites by 7 lines. Fresh paired
     // emissions contain 1229 rows (14/1177/38), with no removed
     // rejection, classification change, retention mark or promotion.
+    // Brief 805 (G15-CM4 D.2 package landing): the two adopted runtime-path
+    // timing wrappers now pass their former slow callees as closures, and the
+    // scanner records each closure body as a rejected RET002 boundary instead
+    // of following the call. The frontier moves to 1195 (10/1147/38). Paired
+    // by kind/file/callee/reason against the accepted 1229 rows: 101 keep
+    // their identity and 31 keep it on a line shifted by the edits; no other
+    // file's population changes. The removals are the two wrappers'
+    // `!lexical_profile_enabled()` operands (timing.rs 156:8, 677:8), the two
+    // slow bodies the closures no longer reach (six rows: 171:70, 693:19,
+    // 694:26 twice, 694:45, 708:21), the `logical_phase_start` body they
+    // called (two rows, logical/mod.rs 344:12, 347:9) and the collector
+    // bodies below it (37 rows, profiling/logical/collector.rs); both
+    // logical sources are byte-equal to the parent. The 13 added positions
+    // are the two closure boundaries (timing.rs 156:27, 672:27) and eleven
+    // rows in the new run_configured_timing / run_configured_timing_cold
+    // helpers. Ruled by the director 2026-11-26 (ruling 838): the analysed
+    // surface narrows at the two new closure boundaries; the removed rows
+    // are not resolved rejections, and no classification, coverage mark,
+    // promotion or local-option mark moves. The closure-descent question
+    // stays with the retention line.
     assert_eq!(
         options.rejected.len(),
-        1229,
+        1195,
         "STOP: brief-545 exact legacy frontier inventory moved"
     );
     assert_eq!(
         kinds,
-        BTreeMap::from([(Kind::RET001, 14), (Kind::RET002, 1177), (Kind::RET003, 38)])
+        BTreeMap::from([(Kind::RET001, 10), (Kind::RET002, 1147), (Kind::RET003, 38)])
     );
     let wrapper = regions::frontier(
         source,

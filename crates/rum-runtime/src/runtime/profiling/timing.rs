@@ -153,11 +153,7 @@ pub(in crate::runtime) fn runtime_path_timing_start_adopted(
     session: &crate::runtime::Session,
     phase: &'static str,
 ) -> Option<RuntimePathTimingToken> {
-    if !lexical_profile_enabled() {
-        return None;
-    }
-
-    runtime_path_timing_start_adopted_slow(session, phase)
+    run_configured_timing(|| runtime_path_timing_start_adopted_slow(session, phase))
 }
 
 #[cold]
@@ -665,7 +661,6 @@ fn record_profile_builtin_timing_slow(token: BuiltinTimingToken, result_is_ok: b
         }
     });
 }
-
 #[inline]
 pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted<
     T: crate::runtime::profiling::logical::PhaseCompletion,
@@ -674,13 +669,10 @@ pub(in crate::runtime) fn record_profile_runtime_path_timing_adopted<
     token: Option<RuntimePathTimingToken>,
     result: &Result<T, crate::runtime::EvalError>,
 ) {
-    if !lexical_profile_enabled() {
-        return;
-    }
-
-    record_profile_runtime_path_timing_adopted_slow(session, token, result)
+    run_configured_timing(|| {
+        record_profile_runtime_path_timing_adopted_slow(session, token, result)
+    })
 }
-
 #[cold]
 #[inline(never)]
 fn record_profile_runtime_path_timing_adopted_slow<
@@ -950,4 +942,60 @@ fn runtime_path_timing_start_module_resume_slow() -> Option<RuntimePathTimingTok
     let token = runtime_path_timing_start_slow("module.resume_initializers");
     logical::module::open_resume_alias();
     token
+}
+
+#[inline]
+fn run_configured_timing<T: Default>(operation: impl FnOnce() -> T) -> T {
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    let Some(access) = super::lease::admit() else {
+        return T::default();
+    };
+    let value = LEXICAL_PROFILE_ENABLED.load(Ordering::Relaxed);
+    if value == 2 {
+        return T::default();
+    }
+    run_configured_timing_cold(
+        value,
+        #[cfg(any(
+            test,
+            feature = "test-builtin-memory-growth",
+            feature = "test-continuation-slots"
+        ))]
+        access,
+        operation,
+    )
+}
+
+#[cold]
+#[inline(never)]
+fn run_configured_timing_cold<T: Default>(
+    value: u8,
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    access: super::lease::Admitted,
+    operation: impl FnOnce() -> T,
+) -> T {
+    let enabled = (value == 1 || config::initialize_lexical_profile_enabled())
+        && config::lexical_profile_active_admitted(
+            #[cfg(any(
+                test,
+                feature = "test-builtin-memory-growth",
+                feature = "test-continuation-slots"
+            ))]
+            &access,
+        );
+    #[cfg(any(
+        test,
+        feature = "test-builtin-memory-growth",
+        feature = "test-continuation-slots"
+    ))]
+    drop(access);
+    if enabled { operation() } else { T::default() }
 }

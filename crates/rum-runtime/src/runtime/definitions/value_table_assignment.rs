@@ -106,6 +106,7 @@ impl ValueTableKind {
 }
 
 impl Session {
+    #[inline(always)]
     pub(in crate::runtime) fn normalize_value_table_target_expr(
         &self,
         expr: &Expr,

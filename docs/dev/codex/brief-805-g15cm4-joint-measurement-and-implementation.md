@@ -240,3 +240,29 @@ the report carries verbatim.
   workspace gate above is the acceptance.
 - After the seal: `python3 -I scripts/report.py check 805` must be OK, the detached summary equal to
   the report's, and the report must carry the verbatim printed lines and every evidence path.
+
+## Director gate (2026-11-26, gate c187)
+
+Brief 805 is DONE. The D.2 package is credited at nine live paths: the seven
+measured sources, the retention rejection census re-pin AMEND-5 (1,195 =
+10/1,147/38; live == staged == `db1c5a08…`; the preimage `4a76c2f5…` equals
+the armed image and R4 row 170) and the compiler-oracle constructor-context
+re-pin AMEND-6 (176 → 174 and 178 → 176; two sites only: `timing.rs 157:16`
+became `T::default()` and `logical/mod.rs 345:20` left the walk at the new
+closure boundary; the live amended test 289 agreements / 0 disagreements /
+173 witnesses). The release is byte-identical to armed-J2 `c7706291…` /
+18,689,432 B; the joint price is 13,556,424 Ir with `additive_claimed=false`.
+Brief 805b's one STOP (the sandbox cannot start the memory scope) is accepted
+as a sandbox limit; the director completed the live workspace gate on the 797
+pinned recipe: 4,322/242/71 on the eight-source tree and 4,323/241/71 on the
+final tree (pinned 4,552/12/71; the exact 71 ignores; the same 69 binaries;
+all 12 pinned failures still red; no unexpected pass). Every one of the 229
+new reds is paired to a nine-source staged green receipt: the lib suite
+1,115/0/58; the class gate 197/0/0 under the live flag-on env; the fourteen
+selectors 14/0/0 with the lane bind; the eight mutation/observer selectors
+8/8; the census 1/0/0 with the dump `4b5fcd37…`; the F48 pair 2/0/0; the
+source-auth control green live. The seven adopted inventory files stay staged
+for brief 806 (local-contracts `d3588fb9…`, promoted `1c48e15a…`, emission_chain
+`99f7c5bb…`, unknown_attributes `dc648d65…`, unknown_captures `8e29c41f…`,
+unknown_macros `2ac559d1…`, class-provenance `70a6da97…`). Charge 6,923.741 s
+of 16,000; 9,076.259 s return. Ruling 839 (`.temp/director/ruling-839.md`).

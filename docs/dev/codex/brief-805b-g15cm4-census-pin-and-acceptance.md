@@ -160,3 +160,24 @@ captures, the report's verbatim lines carrying every standing-producer, battery 
   P2387, P2409, P2411, P2416, P2418); 744/745/746 held; CM5 unauthorized; no tag; no network; no
   new dependency; no new `unsafe`; `.temp` only, never `/tmp`; no git; no render, install,
   re-freeze or epoch.
+
+## Director gate (2026-11-26, gate c187)
+
+Accepted as DONE with the workspace stage completed by the director: the
+dispatch sandbox cannot start the memory scope (the user bus is hidden), so the
+director ran the full live workspace suite on the 797 pinned recipe (22 GiB
+scope, the same env, a dedicated target). AMEND-5 landed as the eighth live
+path (`db1c5a08…`); AMEND-6 landed as the ninth (the compiler-oracle pin 176 →
+174 and 178 → 176, the two-site pairing in ruling 839). The live workspace:
+4,322/242/71 on the eight-source tree and 4,323/241/71 on the final tree
+(pinned 4,552/12/71; the exact 71 ignores; the same 69 binaries; all 12 pinned
+failures still red; no unexpected pass). Every one of the 229 new reds is
+paired to a nine-source staged green receipt: the lib suite 1,115/0/58, the
+class gate 197/0/0 under the live flag-on env, the fourteen selectors 14/0/0
+with the worker's lane bind, the eight mutation/observer selectors 8/8, the
+census 1/0/0 with the dump `4b5fcd37…` unchanged, and the F48 pair 2/0/0; the
+source-auth control is green live. The flat rot guard re-expired the 68
+contract fingerprints on the ninth edit; the F13 and promotion producers were
+replayed (local-contracts `d3588fb9…`, promoted `1c48e15a…`) and the census
+re-run green — the ordering-artifact rule, not a regression. Charge 6,923.741
+s of 16,000; 9,076.259 s return. Ruling 839 (`.temp/director/ruling-839.md`).

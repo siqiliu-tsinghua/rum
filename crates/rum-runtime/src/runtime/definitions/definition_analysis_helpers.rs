@@ -251,6 +251,7 @@ pub(in crate::runtime) fn expr_contains_symbol(expr: &Expr, target: &Symbol) -> 
     }
 }
 
+#[inline(always)]
 pub(in crate::runtime) fn collect_upvalue_candidate_symbols(args: &[Expr]) -> Vec<Symbol> {
     let mut symbols = UniqueSymbolCollector::with_capacity_hint(args.len());
     let mut has_nested_argument = false;
@@ -482,6 +483,7 @@ pub(in crate::runtime) fn base_head_symbol_of_nested_call(expr: &Expr) -> Option
     }
 }
 
+#[inline(always)]
 pub(in crate::runtime) fn normalize_rewrite_rules(expr: &Expr) -> Option<Vec<RewriteRule>> {
     match expr {
         Expr::Call { head, args } if is_system_symbol_name(head, "List") => {

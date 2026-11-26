@@ -379,6 +379,7 @@ impl Session {
         )))
     }
 
+    #[inline(always)]
     fn current_symbol_held_update_value(
         &mut self,
         operator: &'static str,
