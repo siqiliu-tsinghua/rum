@@ -1,0 +1,56 @@
+# Preserved evidence — directories scripts/clean-temp.py must never delete.
+#
+# Rule (2026-11-26, gate c206, ruling 858): the campaign line's and the
+# D.2/residual line's sealed records survive until the campaign epoch's
+# final gate. A listed entry whose directory is missing is a hard failure
+# in the dry-run too, so an evidence loss is detected at the next
+# clean-temp run instead of being assumed away.
+#
+# Incident behind the rule: the c154 run (2026-11-25 07:01) applied a plan
+# that deleted .temp/brief-743/{stage-a,stage-b,epoch,stage-c,...},
+# .temp/brief-754/{attempt-2,attempt-3} (the campaign epoch: 21 bound files
+# including the twelve release binaries and the identity 7af7b461…), the
+# 744 attempt directories and .temp/brief-755/{packets,evidence,receipts,
+# indices,import-view,calibration}, 508.8 GiB in all, as "old brief
+# subdirs". No snapshot exists (zpcachyos/ROOT/cos/home has none) and the
+# spare SSD carries no dataset, so the loss is irreversible; the surviving
+# root files and the re-grounding of the campaign are recorded at
+# .temp/director/ruling-858.md.
+#
+# Format: one `brief-NNN` or `gate-NNN` per line; `#` starts a comment.
+# A brief entry covers every root of that number (brief-807 covers
+# brief-807a..brief-807f); a gate entry covers every gate-<number>* dir.
+
+brief-743   # campaign Stage C: the 20 class cells, C92-C96 evidence
+brief-744   # campaign shakedown records (attempts 1/2 and the attempt-3 STOP)
+brief-754   # the campaign epoch identity 7af7b461… and the twelve release labels
+brief-755   # the 510-cell schedule, the class admission, the packet index, C10
+brief-793   # the sealed four-role release and its evidence; its target caches
+            # ride along, kept like ./target per the 2026-11-07 ruling
+brief-794   # final-tree attribution inventory (the C94 instrument)
+brief-795   # the probe/hot-path A/B instruments
+brief-796   # the whole-panel capture scripts
+brief-797   # amendment6 render images — the epoch rebuild's build source
+brief-798   # the repaired whole-panel A/B
+brief-799
+brief-800
+brief-801
+brief-802
+brief-803
+brief-804
+brief-805   # the nine landed D.2 sources and the joint price 13,556,424
+brief-806   # the render/install and the R4 verifier
+brief-807   # the fresh epoch (807a-807f)
+brief-808   # the placements design and the J0/J1 seed
+brief-809   # the joint measurement and the two class-form decisions
+
+gate-790
+gate-791
+gate-793
+gate-794
+gate-795
+gate-805
+gate-806
+gate-807
+gate-808
+gate-809

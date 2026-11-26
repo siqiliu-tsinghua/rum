@@ -15221,3 +15221,32 @@ and the 744 restart are unblocked by these decisions and remain subject to the c
 being built and qualified under the v2.5 budget. 810 stays cancelled, the residual repair line
 closed, the 798–809 records sealed. No charge (a decision); pool 6,041.152 s; cumulative
 22,358.848 of 28,400.
+
+## 2026-11-27 — brief 811's Stage A STOP accepted (c206, ruling 858): the c154 clean-temp apply destroyed the campaign epoch's raw evidence; preservation is now enforced and the campaign is re-grounded on the surviving records
+
+Brief 811 (design-only, `Scope: NONE`) stopped correctly at Stage A: the sealed 754 epoch
+identity `7af7b461…` and its 21 bound files (including the twelve release labels) are absent.
+The surviving witnesses authenticate — the 754 report `2377f246…`, the 755 authentication pair
+`9911a614…`, the 755 schedule `3e4532cf…`, class admission `6d556f4b…`, packet index
+`3e1644aa…` — and the entry/exit census is exact (5,901 files, 0 changes, 0 edits).
+
+The cause: `.temp/director/clean-temp-c154.log` (2026-11-25 07:01) applied, as "old brief
+subdirs", the campaign line's raw evidence — `brief-743` 105.01 GiB (including the 20 c96
+admission captures), `brief-754` 34.90 GiB (the epoch identity, freeze, six-comparison
+manifest, membership, selections, program matrix, own tuples, twelve release labels),
+`brief-744` attempt 2/3, `brief-755` packets (the C10 packet and importer payloads) and the
+gates 755-769. No copy, no ZFS snapshot, no spare-SSD dataset: irreversible. Director defects
+#40 (clean-temp had no preservation mechanism; I applied the plan) and #41 (the state asserted
+survival without a check; the brief pinned the deleted paths).
+
+The repair, landed with the gate: `docs/dev/preserved-evidence.txt` plus `scripts/clean-temp.py`
+enforcement — preserved brief/gate roots are never pruned, and a missing preserved entry fails
+the dry-run. Falsifiers watched: 71.3 GiB (including `brief-797/amendment6`, the rebuild's build
+source) → 717.6 MiB with 30 `PRESERVE` lines; a nonexistent entry exits 1.
+
+The re-grounding: qualification is forced to a rebuild on the current tree; the 20 c96 cells
+are re-measured in the readmission (20 + 244 + 246 = 510, all measured; the credit retired with
+the loss disclosed); C10 and the importers are re-taken from the surviving packet index; the 744
+restart is unaffected. Brief 811 Amendment 1 (design-only, 3,800 s of the returned allocation:
+A 300 / B 1,500 / C 1,200 / D 500 / E 300) re-dispatches on the surviving records. Charge
+380.167 s of 4,200 for the stopped attempt; pool 5,660.985 s; cumulative 22,739.015 of 28,400.

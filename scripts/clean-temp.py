@@ -19,6 +19,14 @@ Deleted:
   * .temp/director/gate-<number>* directories older than the newest
     KEEP_GATE_DIRS distinct numbers.
 
+Preserved evidence (gate c206, ruling 858): every `brief-NNN` and
+`gate-NNN` entry in docs/dev/preserved-evidence.txt is exempt from both
+rules above — its directories are never deleted — and an entry whose
+directory is missing is a hard failure, in the dry-run as well, so an
+evidence loss cannot pass silently. The c154 clean-temp run deleted the
+campaign epoch (743/744/754/755) and nearly deleted the 797 render
+images under the "old brief subdir" rule; this list is the barrier.
+
 Never touched: <repo>/target, .temp/probe/ (the probe build root and
 artifact cache), .temp/logs/, .temp/director/state.md and every other
 file, .temp/director/gate-state/ and the non-gate directories, and any
@@ -36,6 +44,7 @@ from pathlib import Path
 
 KEEP_BRIEF_ROOTS = 10
 KEEP_GATE_DIRS = 5
+PRESERVE_FILE = Path(__file__).resolve().parent.parent / "docs" / "dev" / "preserved-evidence.txt"
 
 ROOT = Path(subprocess.run(
     ["git", "rev-parse", "--show-toplevel"],
@@ -108,6 +117,39 @@ def brief_key(path: Path) -> tuple[int, str]:
     return (int(match.group(1)) if match else -1, path.name)
 
 
+def preserved_sets() -> tuple[set[int], set[int]]:
+    if not PRESERVE_FILE.is_file():
+        raise SystemExit(f"missing preservation list: {PRESERVE_FILE}")
+    briefs: set[int] = set()
+    gates: set[int] = set()
+    for line in PRESERVE_FILE.read_text().splitlines():
+        token = line.split("#", 1)[0].strip()
+        if not token:
+            continue
+        match = re.fullmatch(r"(brief|gate)-(\d+)", token)
+        if match is None:
+            raise SystemExit(
+                f"bad entry in {PRESERVE_FILE.name}: {token!r} "
+                "(expected brief-NNN or gate-NNN)")
+        (briefs if match.group(1) == "brief" else gates).add(int(match.group(2)))
+    return briefs, gates
+
+
+def preservation_failures(briefs: set[int], gates: set[int]) -> list[str]:
+    present_briefs = {
+        brief_key(entry)[0] for entry in TEMP.glob("brief-*") if entry.is_dir()
+    }
+    director = TEMP / "director"
+    present_gates = {
+        number for entry in director.glob("gate-*")
+        if entry.is_dir() and (number := gate_number(entry.name)) is not None
+    } if director.is_dir() else set()
+    return (
+        [f"brief-{number}" for number in sorted(briefs - present_briefs)]
+        + [f"gate-{number}" for number in sorted(gates - present_gates)]
+    )
+
+
 def gate_number(name: str) -> int | None:
     match = re.match(r"gate-(\d+)", name)
     return int(match.group(1)) if match else None
@@ -122,9 +164,11 @@ def assert_deletable(path: Path) -> None:
         raise SystemExit(f"refusing to delete a brief root: {resolved}")
 
 
-def plan() -> tuple[list[tuple[str, Path, int, str]], list[str]]:
+def plan() -> tuple[list[tuple[str, Path, int, str]], list[str], list[str]]:
     actions: list[tuple[str, Path, int, str]] = []
     skipped: list[str] = []
+    preserved: list[str] = []
+    preserved_briefs, preserved_gates = preserved_sets()
 
     briefs = sorted(
         (p for p in TEMP.iterdir()
@@ -132,6 +176,9 @@ def plan() -> tuple[list[tuple[str, Path, int, str]], list[str]]:
         key=brief_key,
     )
     for root in briefs[:-KEEP_BRIEF_ROOTS]:
+        if brief_key(root)[0] in preserved_briefs:
+            preserved.append(f".temp/{root.name} ({human(size_of(root))})")
+            continue
         for sub in sorted(root.iterdir()):
             if sub.is_dir() and not sub.is_symlink():
                 actions.append(
@@ -147,13 +194,18 @@ def plan() -> tuple[list[tuple[str, Path, int, str]], list[str]]:
                 number = gate_number(entry.name)
                 if number is not None:
                     gates.setdefault(number, []).append(entry)
-    numbers = sorted(gates)
+    numbers = sorted(number for number in gates if number not in preserved_gates)
     if len(numbers) > KEEP_GATE_DIRS:
         threshold = numbers[-KEEP_GATE_DIRS]
         for number in numbers:
             if number < threshold:
                 for entry in gates[number]:
                     actions.append(("delete", entry, size_of(entry), "old gate dir"))
+    for number in sorted(gates):
+        if number in preserved_gates:
+            for entry in gates[number]:
+                preserved.append(
+                    f".temp/director/{entry.name} ({human(size_of(entry))})")
 
     known = {"director", "logs", "probe"}
     for entry in sorted(TEMP.iterdir()):
@@ -161,7 +213,7 @@ def plan() -> tuple[list[tuple[str, Path, int, str]], list[str]]:
             continue
         skipped.append(f".temp/{entry.name} ({human(size_of(entry))})")
 
-    return actions, skipped
+    return actions, skipped, preserved
 
 
 def main(argv: list[str]) -> int:
@@ -176,6 +228,17 @@ def main(argv: list[str]) -> int:
             print(f"usage: {sys.argv[0]} [--apply]", file=sys.stderr)
             return 2
 
+    preserved_briefs, preserved_gates = preserved_sets()
+    missing = preservation_failures(preserved_briefs, preserved_gates)
+    if missing:
+        print("PRESERVE MISSING:", file=sys.stderr)
+        for entry in missing:
+            print(f"  - {entry}", file=sys.stderr)
+        print("refusing to plan until the preservation list is reconciled: "
+              "restore the evidence or retire the entry in "
+              f"{PRESERVE_FILE.relative_to(ROOT)}", file=sys.stderr)
+        return 1
+
     problems = preconditions()
     if problems and apply:
         print("REFUSED:", file=sys.stderr)
@@ -187,7 +250,7 @@ def main(argv: list[str]) -> int:
         for problem in problems:
             print(f"  - {problem}")
 
-    actions, skipped = plan()
+    actions, skipped, preserved = plan()
     free_before = shutil.disk_usage(ROOT).free
 
     print(f"repo: {ROOT}")
@@ -197,6 +260,8 @@ def main(argv: list[str]) -> int:
     for kind, path, size, detail in actions:
         total += size
         print(f"  {kind.upper():6} {path.relative_to(ROOT)} ({human(size)}) — {detail}")
+    for note in preserved:
+        print(f"  PRESERVE {note} — sealed evidence, never deleted")
     for note in skipped:
         print(f"  SKIP   {note} — unrecognised, left untouched")
     if not actions:
