@@ -1,0 +1,70 @@
+# Brief 813 — G15-CM4 class readmission and C10 calibration on the campaign epoch
+
+**Scope.** Re-measure exactly the 20 `stage=755` own cells on the published campaign epoch **E**, prove all ten CM4 class members in both ordinary feature modes with fresh receipts, calibrate C10 with zero schedule credit, publish the 510-row ledger and one atomic class decision, and release the 244-cell shakedown only after separate director acceptance. No source edit, no new binary, no suite of the repository, no git.
+
+**E (immutable).** `.temp/cm4-campaign-epoch/amendment-17/`: `subject.json` `ce5d42a06cca7c0cf66fecbd0cb4dbf63acbf7e1ee4cf8547ede1257202dde44` (16,506 B) with its `sha256/<subject>` copy; `epoch-identity.json` `8c1fdcd985d4f048c5c998fc32e2970481af607a70de45e504a0c6b08e2ddc49` with its content-addressed copy; `acceptance-attestation.json` `e29f754f7bca5e1b992f058f9df6c643b80c8e9fd6d5d9b2f3ab76b553a3473b`; `stage-readback.json` `1a4b951d7fc79fc8cb268a2619ecdc461fcd1e8843d27579c0cc47d304ed7fa7`; `calibration/attestation.json` `13b95f09deeac59a1aa3b29867abf57d77af2159ef8be60c268da939857231a3`; `seal.json` `1a28c59609ad5752f03ec0f413f2ad9a280061160e17b82f74bef6ceb3e25111` (785 payloads / 739,439,260 B); `payloads.tsv` `4068af8e3bd7fdb1d5566f95be5e60ac18cccc88be81fbef10a261561837a843`; `seal.sha256` `0f77be786f7540eed9422ac2a228dc408bc94d96df47da2d1565a3fc1aea966b`; `report.json` `0149407c474bf66c0db6aa46c17430fc2cdb37ed17335c25fb41939d81bf53c4`; `exit-audit.json` `f3caa5539bbdacba92196ee93d94f1caf502e9048bac334e47bb8c4509397f66`; `charge.json` `1224e58b95a126a8675958e02c127cf4da4f9be2446bbe3c5cf0757ab8479e64`; `PROGRESS.md` `8fc0baf6d7347934a608496e019a90b088d7b5f7d5068b317564b1bd005316a8`; `receipts/registry.json` `b7349e9c240fa2f5be3439d9b0fe8d0922fac3fd3a15a5613ad8d74021677659`; `freeze/identity.json` `e1b0b20d9ffd32e725d9ae925c206024899d1dd41bc6c1d6ac68cbc800b5e62a`; `indices/build-check.tsv` `ae1befa71cd9388c9ec8a6d6483640f6f959686ceb2848050f447d0d62be2ceb`; `indices/calibration.tsv` `18be26308d1432ffb8e088ce48c4bdca2e30a715634f629621adf54c4d7813c7`; `indices/class-skeleton.tsv` `ae1befa71cd9388c9ec8a6d6483640f6f959686ceb2848050f447d0d62be2ceb`; `live-entry-stat.json` `a0da812206825c12155793dbf9d0f9f09b4c826f1bda4e5104de4cdb254ccf9e`; `live-exit-stat.json` `1b676e76f06bc483441bfafc26f0883ef60a07eecc012ca1646fc5ad16dbe16d`. The three role trees are `b0bdcee9…`/`084f8cc8…`/`d5267244…` (5,851 files each) and the import view `b0bdcee9…`; the six ordinary builds + two spots and the six authentications are the ones bound in `receipts/registry.json`.
+
+**Authority (the 755 line, sealed).** `.temp/brief-755/full-schedule-ledger.json` `3e4532cf…` (the 510 selections), `class-admission.json` `6d556f4b…`, `packet-index.json` `3e1644aa…`, `ordinary-negatives.json` `e42ced67…`, `authentication-entry.json`/`authentication-closing.json` `9911a614…`; `presentation.py`, `project.py`, `protocol.py`, `import_packets.py`, `authenticate.py`, `admission.py` are read-only references. The 811 design: `.temp/brief-811/design-pins.json` (632 pins), `indices.json` (the exact index templates), `schedule-design.json`, and `draft-readmission.md` — this brief's own source. Rulings 762/763, 858-860 and 879 govern; Q25's thirteen STOPs stand; 744/745/746 held; CM5 unauthorized.
+
+**Work directory.** `W = .temp/cm4-class-readmission/` — outside every guest tree. Every write lives under W. Every measurement record binds the immutable E subject, each built tree, ELF, source schema, observer/policy, matrix, selected tuple and actual program bytes.
+
+## A. Entry and reservation (300 s)
+
+Verify E by hash identity: the subject and its content-addressed copy, the epoch identity, the acceptance attestation, the seal with every payload row re-hashed, the live census at entry modulo the two host-owned `.claude-plugin/types` cells (ruling 843, c191 — reported, never gated), the six builds and two spots with their authentications and proofs, the 12-label journal, the six comparisons, both published zero-credit calibrations, the 755 authority files above and the preservation witnesses. Match the actual compile feature hash, the real baseline, the per-arm tree and permissions, the 165 full overlays, the disjoint mode-specific build receipts and the frozen C10/member programs. Independently hash the finite read-only import view exactly as in the epoch. Require W outside all guest trees.
+
+Write the entire reserved ledger from the 510 selections in their original file order; reset the historic attempted/credit bits only in this NEW ledger and retain the historical status and hash as provenance; write a fresh per-cell attempted journal; open with 0 credited. The c154 deletion retired the c96/755 proof and credit; the new 20 occupy the same selected slots, never a second set of 20.
+
+## B. Capture the two classes and the calibration (1,200 s)
+
+Read the ascending order of this table; within each row acquire `default` then `no-default`, each through real full matrix, disabled full matrix, armed selected, armed forced ordinary, then the same-binary one-thread negative where prescribed. Finally C10 `default` then `no-default` with the same five commands in each mode. Reproduce all 100 entries of the `packet-index.json` `acquisition_order` in this order with fresh outputs and E identities: 80 primary/ordinary class runs + ten one-thread class negatives + ten calibration runs = 100. A semantic discrepancy gets one separately charged same-binary one-thread reproduction and a STOP. Never advance the ledger past a failed gate; reserve elapsed-time headroom before invoking a worker.
+
+| Row | Transport | Real keys | Forced-ordinary result in each mode |
+|---|---|---:|---|
+| P0256 | ProfileReturn | 60 | equivalent |
+| P0259 | ProfileReturn | 60 | equivalent |
+| P0266 | ProfileReturn | 60 | equivalent |
+| P0267 | DeferredPublication | 60 | (8,8,1,0,0) |
+| P0312 | DeferredPublication | 60 | (8,8,1,0,0) |
+| P0314 | ProfileReturn | 55 | equivalent |
+| P0315 | ProfileReturn | 55 | equivalent |
+| P0323 | DeferredPublication | 60 | (8,8,1,0,0) |
+| P0410 | ProfileReturn | 55 | (0,0,0,0,9) |
+| P0515 | ProfileReturn | 30 | (0,0,0,0,253) |
+| C10.prepared.profiled_consumer | NativeFault calibration | 55 | (0,0,0,0,1) |
+
+Use the read-only source presentation from `.temp/brief-755/presentation.py` and `project.py`, rebased only to E and W (their module-level paths to deleted drivers are dead; materialize a fresh stage-local bounded driver using their documented argv and the authenticated new paths). Clean environment: the five `RUM_PROFILE_{LEXICAL_SUBSTITUTION,BUILTIN_TIMING,DEFINITION_RULE_TIMING,RULE_RHS_TIMING,EVALUATION_CACHE}=1`, `RUM_PROFILE_EVALUATION_CACHE_INCREMENTAL=0`, `RUM_CM740_ROW=<row>`, `RUM_CM740_ARM=<arm>`, `RUM_CM740_PROFILE=on`, `RUM_CM740_BASELINE=E.real`; set `RUM_CM740_RECEIPT` to that copied arm's receipt and `RUM_CM740_OMIT=<row>` only on copied arms; set `RUM_CM740_PROGRAM` to the exact selected program only on armed; for the requested ordinary control add `RUM_CM740_ORDINARY=1`, otherwise absent. Command:
+
+    scripts/run-bounded.py --timeout 150 -- <mode-arm-oracle> oracle::mutations::source_worker::cm_copy_observation_worker --exact --nocapture --test-threads=8
+
+For one thread replace only the last argument with `--test-threads=1`. Preserve cwd, env, absolute argv and exit under W; retain the original log before any parse. Check in each raw run exactly one `CM740_RUN_ID` (source key, tail, schema, selector, ELF), exact `CM743_TRANSPORT` by class and forcing, and the complete real and disabled case/constituent/resumed-queued/lifecycle/observation/end records including repeated constituents, matching the epoch matrix; require disabled zero source hits and full record parity. Compare P0515 with only its three declared duration leaves by the shipped `duration_parity.rs` rules; retain their raw values and reject any fourth difference. Require the armed actual producer arm before its one declared hit, the correct selected key/program, phase/identity, before-quiescence observation for both queues and the exact declared predicate per constituent; all harmless constituents remain in the packet. `DeferredPublication` uses `OwnDeferredDefinitionPublicationAtActualProfileQueueJoin`. P0410 has `Err(Output)`, `public_output_exact=false`, `native_difference=true`; the other nine class catches have `Err(Native)`, true/true on the catching constituent, with allowed `Ok` constituents and the selected class/observer checked directly against the frozen row. Require worker success; reject quiescence alone, a wrong row, a spare program or foreign evidence.
+
+For C10 select `C12.consumer.Middle.phase_observation.trace`: both actual producer/consumer arms, one `completed-generation-inert-pause` hit, before-quiescence `queued=false`/`true`, `Err(Native)`, public exact/native difference true, `NativeEqual`. Preserve an independent calibration packet with `class_cells=0`, `shakedown_credit=0`; a later 744 C10 at its scheduled turn is a fresh measurement.
+
+For each forced-ordinary `equivalent` require the complete relevant observation record to match and `ordinary_forced=true`. For the five member negatives and C10 retain both eight-thread and one-thread raw process exits, the exact logical teardown tuple and the original ordinary stderr, with the complete real tuple/worker observation missing and the diagnosis `ObservationUnavailable`/`LogicalQuiescence` as applicable. Check dimensions, lane, epoch and ordering independently against the 12 records in `ordinary-negatives.json`; preserve fresh epoch numbers and timing as observations. Do not suppress, clear or convert faults, and never substitute a failed ordinary capture for a valid armed case.
+
+## C. Import and close each partition (450 s)
+
+Build a fresh finite read-only artifact view (`import_packets.py:13–43`) and verify every selected path, digest and mount. Emit indices from the original raw arm logs only: `class.tsv` — one header, six build lines with the two real spot fields, and 60 run lines; `calibration.tsv` — the identical six build bindings and six C10 run lines. Only fresh W raw triples and E-authenticated binaries are admissible; attach the ordinary-negative proofs separately. For each index run the `default-real` and `no-default-real` importers independently in their compiled source presentation with `RUM_CM740_BASELINE=<finite-view>` and `RUM_CM740_PACKETS=<visible-index>`:
+
+    scripts/run-bounded.py --timeout 180 -- <mode-real-oracle> oracle::mutations::receipts::cm_own_mutant_receipts_exact --exact --nocapture --test-threads=8
+
+Verify every expected per-row `CM4 OWN OMISSION RECEIPT PASS` with the table's `real_keys`, `hits=1`, the correct configuration, `disabled_record_exact=true` and `raw_builds_authenticated=true`; exactly one typed authenticated receipt per caught row; the exact blocked complement from the 151 named rows; no duplicates; zero settlements; exactly one final own-omission-gate-remains-red assertion with libtest exit 101. Match each full reconciliation line with the actual mode:
+
+    CM4 OWN RECEIPT RECONCILIATION configuration=MODE required=151 caught=10 PortBlocked=141 settlements=0
+    CM4 OWN RECEIPT RECONCILIATION configuration=MODE required=151 caught=1 PortBlocked=150 settlements=0
+
+A wrong build, spot, role, source or hash-feature binding, a missing constituent, a substituted ordinary output or a different panic fails the gate regardless of return code. A one-thread replay for a semantic discrepancy is recorded beside the original and stops. Never loosen a predicate to make an index complete.
+
+## D. Commit the class decision and the schedule (300 s)
+
+Join by (configuration, full frozen selection) and the epoch subject. Require a 10/10 class importer in each mode, two 1/1 zero-credit C10 importers, all 12 ordinary negatives and the ten equivalent ordinary cells. Atomically publish one admission containing seven `ProfileReturn` and three `DeferredPublication` rows with both-mode proofs; create the 20 measured own credits only when every bar closes. A partial run retains its attempted evidence, zero aggregate admission, unspent identities and the first missing measurement. On success split the exact 490 unspent into stage 744's 244 and stage 745's 246. Preserve all Q25 stops; supply hashes of the originals and of the ordered subsequences.
+
+## E. Report, stops and charge (150 s)
+
+Rehash every parent, E and W payload; compare the live metadata at entry and exit modulo the two host-owned types cells; record zero builds and zero source changes. Under W write `rum-report/1` with every verdict line verbatim, commands/receipts/ELFs and cost, stage CLOCK entries and exits, the next case and the complete ledger. Run `python3 -I scripts/report.py check W/report.json`, detach the summary, seal, re-read, and return only the summary.
+
+**Stops.** On a pin, sourceset, parser vector, producer, position/identity, visibility, build/warning/spot, raw receipt, functional or comparison mismatch, a missing bound input, an unsupported ordinary signature, a blocked input, a first failed class/mode/constituent, a projected overrun or stage deadline: preserve the scene and stop. No historical execution credit, source edits, new binaries, repository suites, network, new dependency, unsafe or git; no 744/745/746 execution and no CM5.
+
+**Charge.** Continuous from the dispatch to the E seal; A 300 / B 1,200 / C 450 / D 300 / E 150 = **2,400 s** as the scheduled readmission top-up (gate c209's schedule) — the authorized total becomes **86,895.886715772 s**; the cumulative before dispatch is **84,311.923978173 s** and the 183.962737599 s A17 return stays unallocated in the pool for Brief 814. The gate recomputes the pool from its own clock; the historical 755 focus cost was 850.339 s.
+
+**Report.** `rum-report/1` under W, `scripts/report.py check` clean, detached summary equal, payload seal with every row re-hashed, live entry/exit census recorded, charge every operation.
