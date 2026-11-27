@@ -68,3 +68,23 @@ Rehash every parent, E and W payload; compare the live metadata at entry and exi
 **Charge.** Continuous from the dispatch to the E seal; A 300 / B 1,200 / C 450 / D 300 / E 150 = **2,400 s** as the scheduled readmission top-up (gate c209's schedule) — the authorized total becomes **86,895.886715772 s**; the cumulative before dispatch is **84,311.923978173 s** and the 183.962737599 s A17 return stays unallocated in the pool for Brief 814. The gate recomputes the pool from its own clock; the historical 755 focus cost was 850.339 s.
 
 **Report.** `rum-report/1` under W, `scripts/report.py check` clean, detached summary equal, payload seal with every row re-hashed, live entry/exit census recorded, charge every operation.
+
+---
+
+## Gate c228 (director, 2026-11-28) — Stage A STOP accepted; Amendment 1 continues
+
+The cdx attempt (unit `brief-813-cdx-20261128-023018-26750`, 2026-11-28T02:30:18 → 02:37:46 +0800, rc 0, 97,592 tokens, peak 203,747,328 B, oom 0/0, zero filter lines) delivered Stage A in full — the 19+2 E pins, the 785-row seal re-hashed (739,439,260 B), the 632 design pins, the authority, the standing readbacks, the reserved 510-slot ledger and journal, the entry census with exactly the three authorized appends, the exit census equal, zero source edits — then stopped at the box: `STAGE A DEADLINE STOP gate_open=true workers=0 importers=0` (316.837365976 s against 300 s, 16.837 s past the deadline). Ruling 880 accepts the STOP (defect #58 mine: the box was sized below the pinned scope; the late gate-close is recorded, the substance credited as evidence only) and my gate check (`.temp/director/gate-228/`, 41 PASS / 0 mismatches) re-hashes the 785 epoch rows, the 19+1 E pins, the 30 design-seal files, all 632 design pins, the census, the ledger (510 in order, 20/244/246, the historical bits on the 20, every new bit zero), the journal, the seal's 26 rows and the charge arithmetic (438.169894178 s; cumulative 84,750.093872351 s).
+
+**Amendment 1 (continuation): A0 60 / B 1,100 / C 400 / D 250 / E 150 = 1,960 s of the 1,961.830105822 s unspent; the charge continues from 438.169894178 s and the gate recomputes the pool at the E seal.**
+
+A0 closes by hash identity against the attempt's record and re-runs none of it: `report.json` `5bbce74d…`, `seal.json` `3e3c158f…`, `payloads.tsv` `a84ac3e8…`, `charge.json` `85733e75…`, `summary.txt` `ee03c0e0…`, `seal-readback.txt` `600e0f67…`, `decision.json` `9731b819…`, `clock.json` `44dbe94f…`, `stop.log` `c8a3721f…`, `live-audit.json` `c847f609…`, `parent-bindings.json` `19ac11cc…`, `entry-census-delta.json` `60554bd6…`, `full-schedule-ledger.json` `32789cd5…`, `attempted-journal.jsonl` `5636cb5a…`; print `C228 CONTINUATION PASS` with each binding re-hashed; any difference stops. The reserved ledger and journal carry forward unchanged; the c227 append state of `TODO.md` and brief 812 and the new brief 813 remain the only allowed census deltas.
+
+B executes the 100 `packet-index.json` `acquisition_order` entries in order from entry 0 (P0256 `default` real full matrix, 8 threads), exactly as §B above specifies — the per-run checks, P0515's declared duration leaves, both before-quiescence captures, the carried predicates, the forced-ordinary equivalents and the twelve 8t/1t negative records — every raw retained before parsing.
+
+C builds the fresh finite import view as a physical tree under W — the real role's 5,851 files plus `.temp/brief-743/epoch-b/{source-real,source-disabled,source-armed}` physical role copies, the six binaries and six authentication receipts and two spots copied from E and re-hashed — renders `class.tsv` (6 build lines + 60 run lines) and `calibration.tsv` (6 + 6) from the 811 index templates, verifies both against the trusted registry, and runs the two same-mode real importers: class `caught=10 PortBlocked=141`, calibration `caught=1 PortBlocked=150`, settlements=0, exit 101, every transcript verified.
+
+D publishes the atomic admission (seven `ProfileReturn` + three `DeferredPublication`, both-mode proofs), sets the 20 measured credits in the reserved ledger, and splits the 490 unspent into 744's 244 and 745's 246.
+
+E writes the report, runs `report.py check`, detaches the summary, seals with every row re-hashed, and charges continuously from the original dispatch.
+
+Routing: per the user's 2026-11-28 ruling a cdx filter hit is a key event — the fallback finishes the risky stage and D+E return to cdx at once; no reworded retry, no scope cut. Q25's thirteen STOPs stand; 744/745/746 held; CM5 unauthorized.
