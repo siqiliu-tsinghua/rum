@@ -1476,3 +1476,44 @@ The Amendment 14 attempt (unit `brief-812-agy-20261127-141350-345161`, conversat
 **Charge.** Pool after gate c225 is **23,550.327329875 s**; this amendment allocates A0 300 / D 14,400 / F0 400 = **15,100 s**; the unspent remainder stays for E+F. Authorized total **70,526.304456245 s**; cumulative before dispatch **46,975.977126370 s**. Charge is continuous from dispatch; every stage box is measured from its own CLOCK entry; a stage stops at its deadline.
 
 **Stops.** As Amendment 14: the thirteen Q25 STOPs are P0214, P0216, P1070, P2348, P2354, P2379, P2381, P2385, P2387, P2409, P2411, P2416, P2418; briefs 744, 745 and 746 stay held; CM5 stays unauthorized; stop on a pin, sourceset, parser vector, producer, identity, receipt, structural-control or comparison mismatch, a missing bound input, a needed mount namespace or scope, a source edit, a new dependency, network, subagent use, a projected overrun or a stage deadline. A workspace or functional difference without its exact current test name and paired receipt stops; a verdict without its copied receipt line is not evidence.
+
+## Amendment 16 — Stage D continuation on agy from the director-takeover checkpoint
+
+**Scope.** Finish Stage D and F0 of this brief from the frozen plan and the director-produced cases, on the user's timed handback (2026-11-27, 「接下来你来接手吧/」 and 「…等它额度又有了，就再转给它继续干。」). No source edit; every write under `W = .temp/cm4-campaign-epoch/amendment-15/`; the sealed parents stay read-only. The director's instruments `.temp/director/812-takeover/{freeze.py, runner.py, score.py, assemble.py}` are read-only inputs: read each in full before running it, run it unchanged, verify every receipt it writes, and quote the exact verdict lines in the report.
+
+**A0 (300 s) — hash identity against the director checkpoint; any difference is a STOP; print `DIRECTOR CHECKPOINT PASS` at the end.** The pins:
+
+```
+688ed55725325410accd548a8ed8fc18fceb348c86298d77e25ecbfb34b0df5e  .temp/director/812-takeover/freeze/freeze.json
+7c2c9e83dc639f2b5a75fcb3c020fc455ba5bf5cfe0c4f53bef0c4b6cd589a9f  .temp/director/812-takeover/freeze2.json
+faeee8449e7d87cc433e493cae797884311e90ede57f43a48882cde6fdcf6198  .temp/director/812-takeover/diagnostics/real-source-population.json
+7db2211db692dd7dfae84c68f5433bdad8ca9ce31a122ddc6e286ac31607416e  .temp/director/812-takeover/finding-real-source-population.md
+8b6975c43153501bd3271dcade2241e9068d9698000ba05f5d6b4acd5b9971a1  .temp/director/812-takeover/logs/run.log
+5decc433e2c50d38eb12dc9680191db38bc51bf5cc7f92e2460773e27e536478  .temp/director/812-takeover/jobs/workspace-real-default/case.json
+5ac399e2464dce7b224851f4f005ff072dd0e4a1248a5047e074966e50c98aee  .temp/director/812-takeover/jobs/workspace-real-default/main/raw.log
+a3d4adfcc41e8b915e00aacbee11ae9aa8aa8ec08c6c053f0a80363c3a2b8643  .temp/director/812-takeover/jobs/workspace-real-no-default/case.json
+f27ca67aedd46156b2836630c604c2ef88098b1820e974342088d5874ffc5561  .temp/director/812-takeover/jobs/workspace-real-no-default/main/raw.log
+4a9e4ade6a40a20435fc2e629685964690138e54196f7edb42ff038f340dbf99  .temp/director/812-takeover/jobs/workspace-disabled-default/main/finish.json
+6baca65c70aa035b0010877259e007d607263fb22a6eca164799fff7a4dd194c  .temp/director/812-takeover/jobs/workspace-disabled-default/main/raw.log
+6f0793b512b81fa78fced1ce38bf31c758d445658bb20d3535502a1076180f99  .temp/cm4-campaign-epoch/amendment-15/live-entry-stat.json
+6b030b4b4b4bc8360a06403d6f917346bfaa08323ea61d6a873554e9c15c5b44  .temp/director/812-quota-1/attempt.json
+9895ef141cca9249fced179460e9a91230f8b610d0c8ebe8f2c26e870fa22f77  docs/dev/codex/brief-812-g15cm4-campaign-epoch-build.md, first 207,878 bytes (print BRIEF APPEND PASS with the old prefix, the appended range and its sha256; the file must be a strict extension)
+```
+
+Three cases are retained: `workspace-real-default` and `workspace-real-no-default` are complete (case records and raws pinned above); `workspace-disabled-default` ran its main suite (exit 101, 1,498.6 s, raw `6baca65c…`) and stopped before its follow-ups — the in-suite compiler-oracle child's `run-bounded: timed out after 700s` line is the adjudication case, not a wrapper timeout, so resume it from the retained main receipt and never re-run it.
+
+**D — the remaining cases `workspace-disabled-default` (resume at the follow-ups), `workspace-disabled-no-default`, `workspace-armed-default`, `workspace-armed-no-default` exactly as the frozen plan states.** Run, from `/home/remi/dev/rum`:
+
+```
+TAKEOVER_NO_SCOPE=1 python3 -I .temp/director/812-takeover/runner.py all
+```
+
+`freeze/freeze.json` holds every case's exact argv and environment. The runner skips the completed cases, resumes `workspace-disabled-default` from its retained main receipt, and for each case runs the three switched suites on the same binaries, the nine host names at one thread, the package certificate, and the compiler-oracle one-thread same-binary adjudication only if the suite failed it. `TAKEOVER_NO_SCOPE=1` is required: the dispatch scope (MemoryMax=24G) is the memory bound and nested `systemd-run --user` scopes are unavailable in the sandbox. Never overwrite or repeat a retained receipt. On the director host the nine loopback tests pass (no sandbox); no errno reproduction is applicable there and the same holds in the dispatch sandbox only if they run — record what the run actually prints.
+
+**Scoring.** After all six cases exist, read `.temp/director/812-takeover/score.py` and run it unchanged. The corrected rule is frozen in `freeze2.json` before the first arm case: the 754 declared groups are symmetric role differences (registered per name with their family); the real role's 17-name source-population carry under brief line 406 (Stage B item 5) applies only when both arms pass the name natively; no blanket 48/49 subtraction; a skipped name that runs, or `filtered != 7`, stops; anything else unexplained stops. It emits the six per-target ledgers and `six-comparisons.json`.
+
+**F0.** Read `.temp/director/812-takeover/assemble.py` and run it unchanged: `W/report.json` under `python3 -I scripts/report.py check`, `W/charge.json`, `W/exit-audit.json`, `W/PROGRESS.md`, the payload seal over every artifact produced, the live exit census equal to the entry census `6f0793b5…`, zero `.git-attempts`, zero campaign credit, zero member cells.
+
+**Charge.** From the dispatch to the F0 seal; the gate recomputes the pool. The agy attempt's 2,481.941439046 s and the director segment are already recorded as `W/charge.json` inputs.
+
+**Stops.** As Amendment 15, plus every A0 pin difference, any differing retained receipt, and any runner STOP; a quota death leaves the completed receipts intact and stops cleanly.
