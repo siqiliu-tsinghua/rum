@@ -188,3 +188,53 @@ census recorded, and the charge for every operation.
 | .temp/brief-741/SIGNATURES.md | 1df0ce00fd2fed44b404470c93078a868247047cdfdea75f54fde2067b7580fc | 51763 |
 | .temp/brief-741/epoch-signatures.json | 0495aa10008e82472c13fdf5ec629958afcd3503df3d3b718f73ce97f9a384a7 | 71444 |
 | .temp/brief-744/report.json | 314ca69da3f180178d63033996fca5aa1e125dc9b89ce11edc269732f7907320 | 374260 |
+---
+
+## Director gate c244 (2026-11-28) — DONE
+
+The design is accepted. The attempt (unit `brief-815-cdx-20261128-073411-212201`, Codex
+v0.172.0, gpt-6.2-astra, effort max, workspace-write, MemoryMax=16G, session
+`01a21f5b-fb2b-7cd3-9fd0-fa7c14b749b6`) dispatched 2026-11-28T07:34:11 +0800 → rc 0 at
+≈08:06:32, 329,045 tokens, peak 2,152,284,160 B, oom 0/0, zero filter events, no
+`.git-attempts`; stages A 165.718313093/600 s, B 878.191700255/1,800 s, C
+242.355256511/600 s, D 233.595457434/600 s, E 396.826825496/600 s; charge
+**1,916.687552789 s** continuous (dispatch 20,486,930,779,426 → seal readback
+22,403,618,332,215 ns); cumulative **96,648.101547079** of 104,510.353451391 s; return
+**2,283.312447211 s**; pool **7,862.251904312 s**; no top-up.
+
+A0: the 77 Appendix P pins (25,410,640 B) all re-hashed 77/77; the epoch parent's 785 rows /
+739,439,260 B and the c243 parent's 42,260 rows / 2,462,361,100 B all re-hashed (0 bad);
+live entry 5,906 paths, delta against the c243 exit exactly `TODO.md`, brief 814 (the c243
+appends) and brief 815; entry == exit == my own walk.
+
+The inventory: 246 cells / 123 rows in original order (identity projection `deea561b…`
+recomputed exact); 61 non-empty fields per cell; dispositions 71/13/7/32 rows =
+142/26/14/64 cells; the 13 Q25 rows = the c243 held keys = the 757 `proof needed` rows, 26
+identities, zero credit; 71 carried = `design-carried ∩ 745`; 39 non-class rows absent from
+757; families 51, districts 37; all 246 primary witnesses and 5,439 distinct witness triples
+verified byte-exactly in their 101 sealed files; 142 withheld verdicts and 142 install
+contracts verbatim in the sealed class raw. Importer: 151 keys, 123 scheduled, 0 proven
+native, conditional 0–32, 28 outside, lane 745 = 0, the 745-only view `caught=0
+PortBlocked=151 settlements=0` in both modes. Forecast retained (7,148.96 / 8,286.74 /
+19,172.71 s); the draft's 19,320 s boxes and six STOP forms verified (246 identity rows, 23
+block quotes and 13 held quotes exact). The stated top-up 13,741.060542899 s is computed
+against the pre-return remainder; against today's pool the payable top-up at any future
+measurement dispatch is 11,457.748095688 s — bookkeeping only, no spend released.
+
+Seal: 38 payloads / 13,365,529 B all re-hashed (tree 45 = 38 + 7 exclusions), 26 bindings
+and the 18-row envelope rehashed, `report.py check` OK 112 citations, detached summary
+equal. `release_to_745=0`, `release_to_746=0`, `design_credit=0`, CM5 false. `git status`
+clean at `89889f61`; zero source changes; zero foreign writes.
+
+The four first-attempt reader corrections are retained (runs + sealed logs), none
+measurement-affecting; the empty `deviations` array is noted and future briefs keep that
+field canonical.
+
+**Ruling (the 745-preflight question): the measurement draft stays held; a design-only
+witness-acquisition line for the 32 open rows is ordered next** — per-row source mechanism,
+expectation classes, acquisition recipe on the sealed builds, authenticity contract,
+falsifier matrix and the disposition rule from authenticated packet to measurement bar —
+then its implementation, the director disposition gate, and the stage-745 measurement
+implementation. Stage 745 remains stopped before measurement; 746 held; CM5 unauthorized;
+Q25's thirteen STOPs stand. Records: ruling `.temp/director/ruling-896.md`; gate check
+`.temp/director/gate-244/check244.py` → `check.out` 80 PASS / 0 FAIL.
