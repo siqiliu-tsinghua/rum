@@ -243,3 +243,42 @@ census recorded, and the charge for every operation.
 | .temp/brief-741/SIGNATURES.md | 1df0ce00fd2fed44b404470c93078a868247047cdfdea75f54fde2067b7580fc | 51763 |
 | .temp/brief-741/epoch-signatures.json | 0495aa10008e82472c13fdf5ec629958afcd3503df3d3b718f73ce97f9a384a7 | 71444 |
 | .temp/brief-744/report.json | 314ca69da3f180178d63033996fca5aa1e125dc9b89ce11edc269732f7907320 | 374260 |
+
+---
+
+## Director gate c245 (2026-11-28) — DONE
+
+The design is accepted. The attempt (unit `brief-816-cdx-20261128-082218-240206`, Codex v0.172.0,
+gpt-6.2-astra, effort max, workspace-write, MemoryMax=16G, session `01a21f88-0905-7932-a906-f8f4ff6d397a`)
+dispatched 2026-11-28T08:22:18.658686+0800 and **died on cdx's usage limit** at 08:37:13.045201
+(reset 2026-12-05T01:44 +0800): 894.386515 s, 207,485 tokens, peak 297,517,056 B, oom 0/0, rc 1,
+zero git attempts.
+
+A0 PASS: 82 Appendix P pins (512,579,492 B) re-hashed; the three parent payload sets re-hashed in
+full (W15 38/13,365,529 B, epoch 785/739,439,260 B, c243 42,260/2,462,361,100 B) with envelopes;
+three role trees 5,851 files each (`b0bdcee9…`/`084f8cc8…`/`d5267244…`); live 5,907 = the W15 exit
+5,906 plus TODO.md `118f5b7b…`, brief 815 `1d1f323e…`, brief 816 `ec4c5038…`.
+
+A complete: the 64-seat acquisition inventory (1,850,728 B TSV × 36 fields; 8,750,009 B JSON) with
+21,946 citations in 111 sealed files, the matrix bindings (2,945 keys), six families (rows
+5/5/9/5/2/6; seats 10/10/18/10/4/12) and one named missing measurement per seat — `A complete 64
+2945`; B–E never entered.
+
+The director takeover (entry 08:43:04.356844 +0800; no worker route until grk ≈2026-11-29, cdx
+2026-12-05) delivered B–E: the acquisition protocol (fff5cebb…), the falsifier matrix (292 controls:
+64 live, 228 transcript, every one with `applies_when`, an expected rejection line and a sealed
+precedent), the disposition schema/template (406bb899…), the zero-unknown reconciliation
+(`ZERO UNKNOWN rows=32 seats=64 unknown_rows=0 unknown_seats=0 named_missing_measurements=64`), the
+implementation-brief draft (7d94c0de…, 43 machine-generated pins over the actual files, 64 seats in
+original order, the six 744 STOP forms verbatim from `draft-745.md:89–96`, five acquisition-specific
+risks, boxes sized from the measured 744 own-row medians), and the report/seal (8933db64…, check OK
+44; 35 payloads / 16,369,136 B all re-hashed; envelope re-hashed; live entry == exit at 5,907).
+
+Charge: attempt 894.386515 + takeover 428.758802183 = **1,323.145317183 s** of the 4,200 s allocation
+(2,876.854682817 unspent; no top-up); pool **6,539.106587129 s**; cumulative **97,971.246864262** of
+104,510.353451391. The stage-745 measurement stays held behind the 32 dispositions; the acquisition
+implementation (brief 817 from the draft) is the next line, carried by the director unless a worker
+route returns first. Paused after this gate per the user's instruction. Records: ruling
+`.temp/director/ruling-897.md`; gate check 67 PASS / 0 FAIL; attempt record
+`.temp/director/816-quota-1/attempt.json`; log archived
+`.temp/logs/archive/cdx_brief_816.quota-1.log`.
